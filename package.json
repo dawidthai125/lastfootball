@@ -13,7 +13,8 @@
     "test": "npm run test -w @lastfootball/lfe",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build"
+    "validate": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build",
+    "db:types": "supabase gen types typescript --project-id ewgllyswhtlkdtiqsqrt --schema public > apps/web/src/types/database.ts"
   },
   "version": "0.0.1",
   "devDependencies": {
