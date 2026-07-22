@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 import { env } from '@/config/env';
+import type { Database } from '@/types/database';
 
 /**
  * Service-role client — server / cron / trusted jobs ONLY.
@@ -13,7 +14,7 @@ export function createAdminClient() {
     );
   }
 
-  return createClient(env.supabaseUrl, env.supabaseServiceRoleKey, {
+  return createClient<Database>(env.supabaseUrl, env.supabaseServiceRoleKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
