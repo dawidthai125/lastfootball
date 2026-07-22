@@ -1,0 +1,53 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# build
+dist
+.next
+out
+build
+*.tsbuildinfo
+
+# env / secrets — never commit
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.p12
+*.key
+credentials.json
+service-account*.json
+
+# debug / ide
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# vercel / supabase local
+.vercel
+supabase/.branches
+supabase/.temp
+supabase/functions/.env
+
+# coverage / test
+coverage
+playwright-report
+test-results
+*.lcov
+
+# misc
+*.log
+.turbo
+.cache
+tmp
+temp

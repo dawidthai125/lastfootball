@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Format · Typecheck · Lint · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      - name: Secret scan (basic)
+        run: |
+          if git grep -nE 'SUPABASE_SERVICE_ROLE_KEY\s*=\s*["'\'']?eyJ' -- ':!.github' ':!docs' ':!*.md' ; then
+            echo "Possible service-role secret committed"
+            exit 1
+          fi
+          if git grep -nE 'BEGIN (RSA |OPENSSH )?PRIVATE KEY' -- ':!.github' ; then
+            echo "Possible private key committed"
+            exit 1
+          fi
+          echo "Basic secret scan passed"

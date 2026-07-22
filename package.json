@@ -1,0 +1,27 @@
+{
+  "name": "lastfootball",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @lastfootball/web",
+    "build": "npm run build -w @lastfootball/web",
+    "lint": "npm run lint -w @lastfootball/web",
+    "typecheck": "npm run typecheck -w @lastfootball/lfe && npm run typecheck -w @lastfootball/domain && npm run typecheck -w @lastfootball/web",
+    "test": "npm run test -w @lastfootball/lfe",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build"
+  },
+  "version": "0.0.1",
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
