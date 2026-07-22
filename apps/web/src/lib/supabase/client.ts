@@ -1,6 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr';
 
 import { env } from '@/config/env';
+import type { Database } from '@/types/database';
 
 export function createClient() {
   if (!env.supabaseUrl || !env.supabaseAnonKey) {
@@ -9,5 +10,5 @@ export function createClient() {
     );
   }
 
-  return createBrowserClient(env.supabaseUrl, env.supabaseAnonKey);
+  return createBrowserClient<Database>(env.supabaseUrl, env.supabaseAnonKey);
 }
