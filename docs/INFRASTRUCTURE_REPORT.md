@@ -71,7 +71,7 @@
 
 ### Priority P0 (before real Production traffic)
 
-1. `git init` / push remote + create GitHub repo (if not done)
+1. Push remote + confirm GitHub repo exists (`docs/GITHUB.md`) — local `main` + `develop` already created
 2. Enable **branch protection** on `main` (and preferably `develop`) — `docs/GITHUB.md`
 3. Create **Supabase** project (EU), `supabase link` + `db push`
 4. Create **Vercel** project, connect Git, set Production=`main`, paste env vars
