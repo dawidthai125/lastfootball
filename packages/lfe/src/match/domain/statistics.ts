@@ -1,4 +1,5 @@
 import type { PlayerId, PitchSide } from './ids';
+import type { Player } from './player';
 
 /** Aggregate team counters — incremented by later systems. */
 export interface TeamStatistics {
@@ -56,10 +57,70 @@ export function emptyTeamStatistics(side: PitchSide): TeamStatistics {
   });
 }
 
-export function emptyStatistics(): Statistics {
+export function emptyPlayerStatistics(
+  playerId: PlayerId,
+  side: PitchSide,
+): PlayerStatistics {
+  return Object.freeze({
+    playerId,
+    side,
+    goals: 0,
+    assists: 0,
+    shots: 0,
+    passesAttempted: 0,
+    passesCompleted: 0,
+    tackles: 0,
+    foulsCommitted: 0,
+    yellowCards: 0,
+    redCards: 0,
+    minutesPlayed: 0,
+  });
+}
+
+/** One PlayerStatistics row per roster entry (lineup + bench). */
+export function createPlayersStatistics(
+  players: readonly Player[],
+): readonly PlayerStatistics[] {
+  return Object.freeze(
+    players.map((p) => emptyPlayerStatistics(p.id, p.side)),
+  );
+}
+
+export function emptyStatistics(
+  players: readonly PlayerStatistics[] = [],
+): Statistics {
   return Object.freeze({
     home: emptyTeamStatistics('home'),
     away: emptyTeamStatistics('away'),
-    players: Object.freeze([]),
+    players: Object.freeze([...players]),
   });
+}
+
+/** Immutable patch of one player's counters (no-op if playerId missing). */
+export function bumpPlayerStat(
+  players: readonly PlayerStatistics[],
+  playerId: PlayerId,
+  patch: Partial<
+    Pick<
+      PlayerStatistics,
+      | 'goals'
+      | 'assists'
+      | 'shots'
+      | 'passesAttempted'
+      | 'passesCompleted'
+      | 'tackles'
+      | 'foulsCommitted'
+      | 'yellowCards'
+      | 'redCards'
+      | 'minutesPlayed'
+    >
+  >,
+): readonly PlayerStatistics[] {
+  let found = false;
+  const next = players.map((row) => {
+    if (row.playerId !== playerId) return row;
+    found = true;
+    return Object.freeze({ ...row, ...patch });
+  });
+  return found ? Object.freeze(next) : players;
 }

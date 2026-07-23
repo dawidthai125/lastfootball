@@ -82,6 +82,8 @@ describe('EPIC-2 match domain', () => {
     const match = buildMinimalMatch();
     expect(match.seed).toBe(42);
     expect(match.state.players).toHaveLength(28);
+    expect(match.state.statistics.players).toHaveLength(28);
+    expect(match.state.statistics.players.every((p) => p.goals === 0)).toBe(true);
     expect(match.state.homeLineup.slots).toHaveLength(11);
     expect(match.state.goals).toHaveLength(2);
     expect(match.state.score).toEqual({ home: 0, away: 0 });

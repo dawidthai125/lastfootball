@@ -19,7 +19,7 @@ import { ZERO_SCORE } from './score';
 import type { Stadium } from './stadium';
 import { createStadium } from './stadium';
 import type { Statistics } from './statistics';
-import { emptyStatistics } from './statistics';
+import { createPlayersStatistics, emptyStatistics } from './statistics';
 import type { Substitution } from './substitution';
 import type { Team } from './team';
 import type { MatchTactics } from './tactics';
@@ -97,7 +97,7 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
     substitutions: Object.freeze([]),
     cards: Object.freeze([]),
     injuries: Object.freeze([]),
-    statistics: emptyStatistics(),
+    statistics: emptyStatistics(createPlayersStatistics(input.players)),
     tactics: createMatchTactics({
       formationCode: input.homeLineup.formationCode,
     }),

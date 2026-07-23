@@ -47,7 +47,13 @@ export type { Score } from './score';
 export { ZERO_SCORE, createScore } from './score';
 
 export type { Statistics, TeamStatistics, PlayerStatistics } from './statistics';
-export { emptyStatistics, emptyTeamStatistics } from './statistics';
+export {
+  emptyStatistics,
+  emptyTeamStatistics,
+  emptyPlayerStatistics,
+  createPlayersStatistics,
+  bumpPlayerStat,
+} from './statistics';
 
 export type { MatchClock, MatchPeriod } from './clock';
 export { createMatchClock } from './clock';

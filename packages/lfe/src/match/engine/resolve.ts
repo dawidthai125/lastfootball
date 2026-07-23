@@ -1,11 +1,13 @@
 import type { EngineEventType } from '../../events';
 import type { MatchState, PitchSide, TeamStatistics } from '../domain';
-import { createScore } from '../domain';
+import { bumpPlayerStat, createScore } from '../domain';
 import type { Rng } from '../../rng';
 import {
   decideActionFromState,
   decidePossessionFromState,
 } from '../../ai';
+
+import { attributePlayerForEvent } from './attribute-player';
 
 export type MatchEngineEmit = {
   readonly type: EngineEventType;
@@ -17,6 +19,10 @@ function bumpTeamStat(
   patch: Partial<TeamStatistics>,
 ): TeamStatistics {
   return Object.freeze({ ...stats, ...patch });
+}
+
+function oppositeSide(side: PitchSide): PitchSide {
+  return side === 'home' ? 'away' : 'home';
 }
 
 /** @deprecated Prefer decidePossessionFromState — kept for ENGINE-01 API compat. */
@@ -47,11 +53,13 @@ export function withPossessionTick(state: MatchState, side: PitchSide): MatchSta
 /**
  * Probabilistic in-possession resolution.
  * AI supplies chances; Engine rolls RNG and mutates MatchState + emit list.
+ * Optional playerId on GOAL/SHOT/FOUL is deterministic (no extra RNG).
  */
 export function resolvePossessionAction(
   state: MatchState,
   side: PitchSide,
   rng: Rng,
+  tick: number = 0,
 ): { state: MatchState; emits: MatchEngineEmit[] } {
   const emits: MatchEngineEmit[] = [];
   const decision = decideActionFromState(state, side);
@@ -60,13 +68,33 @@ export function resolvePossessionAction(
     return { state, emits };
   }
 
+  const actorId = attributePlayerForEvent(state, side, 'SHOT', tick);
+
   emits.push({ type: 'ATTACK', payload: { side, minute: state.clock.displayMinute } });
 
   if (rng.next() >= decision.shotChance) {
     if (rng.next() < decision.foulChance) {
-      emits.push({ type: 'FOUL', payload: { against: side, minute: state.clock.displayMinute } });
+      const foulerSide = oppositeSide(side);
+      const foulerId = attributePlayerForEvent(state, foulerSide, 'FOUL', tick);
+      emits.push({
+        type: 'FOUL',
+        payload: {
+          against: side,
+          minute: state.clock.displayMinute,
+          ...(foulerId !== undefined ? { playerId: foulerId } : {}),
+        },
+      });
       const team = side === 'home' ? state.statistics.away : state.statistics.home;
       const nextTeam = bumpTeamStat(team, { fouls: team.fouls + 1 });
+      let players = state.statistics.players;
+      if (foulerId !== undefined) {
+        const row = players.find((p) => p.playerId === foulerId);
+        if (row) {
+          players = bumpPlayerStat(players, foulerId, {
+            foulsCommitted: row.foulsCommitted + 1,
+          });
+        }
+      }
       return {
         state: Object.freeze({
           ...state,
@@ -74,6 +102,7 @@ export function resolvePossessionAction(
             ...state.statistics,
             home: side === 'away' ? nextTeam : state.statistics.home,
             away: side === 'home' ? nextTeam : state.statistics.away,
+            players,
           }),
         }),
         emits,
@@ -85,11 +114,23 @@ export function resolvePossessionAction(
   const onTarget = rng.next() < decision.onTargetChance;
   emits.push({
     type: 'SHOT',
-    payload: { side, onTarget, minute: state.clock.displayMinute },
+    payload: {
+      side,
+      onTarget,
+      minute: state.clock.displayMinute,
+      ...(actorId !== undefined ? { playerId: actorId } : {}),
+    },
   });
 
   let next = state;
   const team = side === 'home' ? state.statistics.home : state.statistics.away;
+  let players = next.statistics.players;
+  if (actorId !== undefined) {
+    const row = players.find((p) => p.playerId === actorId);
+    if (row) {
+      players = bumpPlayerStat(players, actorId, { shots: row.shots + 1 });
+    }
+  }
   next = Object.freeze({
     ...next,
     statistics: Object.freeze({
@@ -108,6 +149,7 @@ export function resolvePossessionAction(
               shotsOnTarget: team.shotsOnTarget + (onTarget ? 1 : 0),
             })
           : next.statistics.away,
+      players,
     }),
   });
 
@@ -131,8 +173,22 @@ export function resolvePossessionAction(
     return { state: next, emits };
   }
 
-  emits.push({ type: 'GOAL', payload: { side, minute: next.clock.displayMinute } });
+  emits.push({
+    type: 'GOAL',
+    payload: {
+      side,
+      minute: next.clock.displayMinute,
+      ...(actorId !== undefined ? { playerId: actorId } : {}),
+    },
+  });
   const scored = side === 'home' ? next.statistics.home : next.statistics.away;
+  let goalPlayers = next.statistics.players;
+  if (actorId !== undefined) {
+    const row = goalPlayers.find((p) => p.playerId === actorId);
+    if (row) {
+      goalPlayers = bumpPlayerStat(goalPlayers, actorId, { goals: row.goals + 1 });
+    }
+  }
   next = Object.freeze({
     ...next,
     score: createScore(
@@ -149,6 +205,7 @@ export function resolvePossessionAction(
         side === 'away'
           ? bumpTeamStat(scored, { goals: scored.goals + 1 })
           : next.statistics.away,
+      players: goalPlayers,
     }),
   });
 

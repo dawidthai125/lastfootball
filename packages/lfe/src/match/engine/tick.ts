@@ -98,7 +98,7 @@ export function simulateMatchTick(
   });
   next = withPossessionTick(next, side);
 
-  const resolved = resolvePossessionAction(next, side, input.rng);
+  const resolved = resolvePossessionAction(next, side, input.rng, input.tick);
   next = resolved.state;
   emits.push(...resolved.emits);
 

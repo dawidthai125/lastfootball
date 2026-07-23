@@ -1,4 +1,4 @@
-# Changelog (docs SSOT index)
+﻿# Changelog (docs SSOT index)
 
 ## Cel dokumentu
 
@@ -7,11 +7,27 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Release LFE Architecture Freeze + GDD Faza 2 (część) na `main` (2026-07-23).
+**LFE-PLAYER-MATCH-DATA-01** na `main` (po tym commicie). Wcześniej: LFE Architecture Freeze + GDD Faza 2 (część).
 
 ## Opis działania
 
 Nowy wpis po każdym release / zamknięciu EPIC lub GDD stage.
+
+---
+
+## [2026-07-24] — LFE-PLAYER-MATCH-DATA-01
+
+### LFE
+
+- `MatchState.statistics.players` inicjalizowane dla pełnego rosteru  
+- Deterministyczna atrybucja `attribute-player.ts` (bez dodatkowego RNG)  
+- Optional `playerId` na payloadach `GOAL` / `SHOT` / `FOUL`  
+- Bump `PlayerStatistics`: `goals`, `shots`, `foulsCommitted`  
+- `TeamStatistics` i drabina RNG bez zmian semantycznych  
+
+### Tests
+
+- `packages/lfe/src/match/engine/player-match-data01.test.ts`
 
 ---
 
@@ -53,4 +69,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — LFE-PLAYER-MATCH-DATA-01
