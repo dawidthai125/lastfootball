@@ -44,6 +44,10 @@ export interface LifecycleFacts {
   enableExtraTime: boolean;
   enablePenalties: boolean;
   scoreTied: boolean;
+  /** Match half length in simulation ms (drives MatchClock / half end). */
+  halfDurationMs: number;
+  /** Half-time break length in simulation ms. */
+  halfTimeDurationMs: number;
 }
 
 export interface SimulationSystem {

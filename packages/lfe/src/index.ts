@@ -1,8 +1,8 @@
 /**
  * Last Football Engine — public API surface.
- * EPIC-1…7: core · domain · state machine · systems · commands · session · positioning.
+ * EPIC-1…7 + GAMEPLAY + MATCH-ENGINE + MATCH-AI.
  * Public match entry: createMatch(config) → MatchSession.
- * No physics / AI / React.
+ * No physics / React.
  */
 
 export { LFE_VERSION, LFE_STATUS, getEngineStatus } from './status';
@@ -55,6 +55,7 @@ export type {
   Statistics,
   TeamStatistics,
   PlayerStatistics,
+  MatchTactics,
   PitchSide,
   PitchRole,
   PitchPoint,
@@ -76,6 +77,7 @@ export {
   createWeather,
   createStadium,
   createMatchSettings,
+  createMatchTactics,
   formationByCode,
   FORMATION_442,
   FORMATION_433,
@@ -84,6 +86,7 @@ export {
   DEFAULT_PLAYER_ATTRIBUTES,
   DEFAULT_PLAYER_SKILLS,
   DEFAULT_PLAYER_CONDITION,
+  DEFAULT_MATCH_TACTICS,
   ZERO_SCORE,
   emptyStatistics,
   isTerminalPhase,
@@ -134,8 +137,14 @@ export { createGameClock, createLogger, createTickEngine, createTimeController }
 export type { Rng, RngState } from './rng';
 export { createRng } from './rng';
 
-export type { EngineEvent, EngineEventType, EventBus, EventHandler } from './events';
-export { createEventBus } from './events';
+export type {
+  EngineEvent,
+  EngineEventType,
+  EventBus,
+  EventHandler,
+  GameplayMatchEventType,
+} from './events';
+export { createEventBus, GAMEPLAY_MATCH_EVENTS } from './events';
 
 export type { Scheduler, ScheduledJob, ScheduledJobId } from './scheduler';
 export { createScheduler } from './scheduler';
@@ -155,6 +164,7 @@ export {
   createClockSystem,
   createSchedulerSystem,
   createLifecycleSystem,
+  createMatchEngineSystem,
   createEventSystem,
   createReplaySystem,
 } from './simulation';
@@ -189,6 +199,16 @@ export type {
   EndMatchCommand,
   AbandonMatchCommand,
   DeclareWalkoverCommand,
+  TacticalCommand,
+  TacticalCommandType,
+  ChangeTacticsCommand,
+  SubstitutePlayerCommand,
+  SetPressingCommand,
+  SetTempoCommand,
+  SetWidthCommand,
+  SetMentalityCommand,
+  SetPlayerInstructionCommand,
+  ChangeFormationCommand,
 } from './commands';
 export {
   createCommandRegistry,
@@ -203,8 +223,47 @@ export {
   createEndMatchCommand,
   createAbandonMatchCommand,
   createDeclareWalkoverCommand,
+  createChangeTacticsCommand,
+  createSubstitutePlayerCommand,
+  createSetPressingCommand,
+  createSetTempoCommand,
+  createSetWidthCommand,
+  createSetMentalityCommand,
+  createSetPlayerInstructionCommand,
+  createChangeFormationCommand,
   MATCH_COMMAND_HANDLERS,
+  TACTICAL_COMMAND_HANDLERS,
 } from './commands';
+
+/** GAMEPLAY-01 facade — prefer createMatch for app entry. */
+export * as gameplay from './gameplay';
+
+export {
+  simulateMatchTick,
+  advanceMatchClock,
+  DISPLAY_MINUTES_PER_HALF,
+} from './match/engine';
+export type { MatchEngineTickInput, MatchEngineTickResult, MatchEngineEmit } from './match/engine';
+
+export type {
+  MatchAiActionDecision,
+  MatchAiContext,
+  MatchAiDecision,
+  MatchAiPossessionDecision,
+  MatchAiSideContext,
+  TacticStyle,
+} from './ai';
+export {
+  buildMatchAiContext,
+  decideAction,
+  decideActionFromState,
+  decidePossession,
+  decidePossessionFromState,
+  formationAggressiveness,
+  scorePhaseModifier,
+  sideContext,
+  styleFromMentality,
+} from './ai';
 
 export type { Vec2 } from './math';
 export { vec2 } from './math';

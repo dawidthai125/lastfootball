@@ -1,6 +1,6 @@
 {
   "name": "@lastfootball/lfe",
-  "version": "0.7.0-epic7",
+  "version": "0.9.1-match-ai01",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

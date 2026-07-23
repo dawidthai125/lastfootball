@@ -39,5 +39,28 @@ export {
   createAbandonMatchCommand,
   createDeclareWalkoverCommand,
 } from './match/commands';
+export type {
+  TacticalCommand,
+  TacticalCommandType,
+  ChangeTacticsCommand,
+  SubstitutePlayerCommand,
+  SetPressingCommand,
+  SetTempoCommand,
+  SetWidthCommand,
+  SetMentalityCommand,
+  SetPlayerInstructionCommand,
+  ChangeFormationCommand,
+} from './match/tactical-commands';
+export {
+  createChangeTacticsCommand,
+  createSubstitutePlayerCommand,
+  createSetPressingCommand,
+  createSetTempoCommand,
+  createSetWidthCommand,
+  createSetMentalityCommand,
+  createSetPlayerInstructionCommand,
+  createChangeFormationCommand,
+} from './match/tactical-commands';
 export { registerMatchCommands } from './match/index';
 export { MATCH_COMMAND_HANDLERS } from './match/handlers';
+export { TACTICAL_COMMAND_HANDLERS } from './match/tactical-handlers';

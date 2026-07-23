@@ -45,6 +45,8 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
     enableExtraTime: match.settings.enableExtraTime,
     enablePenalties: match.settings.enablePenalties,
     scoreTied: false,
+    halfDurationMs: match.settings.halfDurationMs,
+    halfTimeDurationMs: match.settings.halfTimeDurationMs,
   });
 
   lifecycle.transition('ready');

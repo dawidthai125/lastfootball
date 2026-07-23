@@ -16,6 +16,7 @@ export {
   createClockSystem,
   createSchedulerSystem,
   createLifecycleSystem,
+  createMatchEngineSystem,
   createEventSystem,
   createReplaySystem,
 } from './systems/index';

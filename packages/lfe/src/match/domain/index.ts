@@ -67,6 +67,9 @@ export { DEFAULT_MATCH_SETTINGS, createMatchSettings } from './settings';
 export type { MatchPhase } from './phase';
 export { isTerminalPhase, isPlayPhase, MATCH_PHASES } from './phase';
 
+export type { MatchTactics } from './tactics';
+export { DEFAULT_MATCH_TACTICS, createMatchTactics } from './tactics';
+
 export type { MatchState, CreateMatchStateInput } from './match-state';
 export { createMatchState } from './match-state';
 

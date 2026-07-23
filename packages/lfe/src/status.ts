@@ -1,4 +1,4 @@
-export const LFE_VERSION = '0.7.0-epic7';
+export const LFE_VERSION = '0.9.1-match-ai01';
 
 export type EngineStatus = 'foundation' | 'ready' | 'error';
 
@@ -76,8 +76,8 @@ const MODULES: EngineModuleStatus[] = [
   {
     id: 'ai',
     label: 'AI (roles, tactics)',
-    ready: false,
-    notes: 'Scaffold only — out of scope for EPIC-1',
+    ready: true,
+    notes: 'MATCH-AI-01: possession/action decisions — Engine executes via RNG',
   },
   {
     id: 'rules',
@@ -120,6 +120,24 @@ const MODULES: EngineModuleStatus[] = [
     label: 'Match positioning',
     ready: true,
     notes: 'EPIC-7: pitch coords, formation layout, zones, distances',
+  },
+  {
+    id: 'gameplay-foundation',
+    label: 'Gameplay foundation (MatchState · EventBus · CommandBus)',
+    ready: true,
+    notes: 'GAMEPLAY-01: event vocabulary + tactical commands',
+  },
+  {
+    id: 'match-engine',
+    label: 'Match Engine (tick simulation)',
+    ready: true,
+    notes: 'MATCH-ENGINE-01: clock, halves, events; decisions from Match AI',
+  },
+  {
+    id: 'match-ai',
+    label: 'Match AI (decisions)',
+    ready: true,
+    notes: 'MATCH-AI-01: tactics/score/phase/strength → probabilities for Engine',
   },
   {
     id: 'input',

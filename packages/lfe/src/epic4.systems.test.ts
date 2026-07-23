@@ -23,6 +23,7 @@ describe('EPIC-4 simulation systems', () => {
       'ClockSystem',
       'SchedulerSystem',
       'LifecycleSystem',
+      'MatchEngineSystem',
       'EventSystem',
       'ReplaySystem',
     ]);

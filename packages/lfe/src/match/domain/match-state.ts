@@ -22,12 +22,15 @@ import type { Statistics } from './statistics';
 import { emptyStatistics } from './statistics';
 import type { Substitution } from './substitution';
 import type { Team } from './team';
+import type { MatchTactics } from './tactics';
+import { createMatchTactics } from './tactics';
 import type { Weather } from './weather';
 import { createWeather } from './weather';
 
 /**
  * Mutable-at-runtime match snapshot — treated as immutable value object per tick.
  * Clone / replace fields when advancing (replay-friendly).
+ * Sole source of match truth for UI / Canvas (GAMEPLAY-01).
  */
 export interface MatchState {
   readonly phase: MatchPhase;
@@ -51,6 +54,8 @@ export interface MatchState {
   readonly cards: readonly Card[];
   readonly injuries: readonly Injury[];
   readonly statistics: Statistics;
+  /** Active tactics for the managing side (home by default until multi-manager). */
+  readonly tactics: MatchTactics;
   /** Tick index mirrored from simulation when bound (0 until core wiring). */
   readonly tick: number;
 }
@@ -93,6 +98,9 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
     cards: Object.freeze([]),
     injuries: Object.freeze([]),
     statistics: emptyStatistics(),
+    tactics: createMatchTactics({
+      formationCode: input.homeLineup.formationCode,
+    }),
     tick: 0,
   });
 }

@@ -88,6 +88,8 @@ export function createSimulation(options: SimulationOptions): Simulation {
     enableExtraTime: false,
     enablePenalties: false,
     scoreTied: false,
+    halfDurationMs: 45 * 60 * 1000,
+    halfTimeDurationMs: 15 * 60 * 1000,
   };
 
   for (const system of createBuiltinSystems()) {

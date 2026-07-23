@@ -31,6 +31,8 @@ describe('LFE foundation status', () => {
     expect(byId.positioning?.ready).toBe(true);
     expect(byId.input?.ready).toBe(true);
     expect(byId.physics?.ready).toBe(false);
-    expect(byId.ai?.ready).toBe(false);
+    expect(byId.ai?.ready).toBe(true);
+    expect(byId['match-ai']?.ready).toBe(true);
+    expect(byId['match-engine']?.ready).toBe(true);
   });
 });
