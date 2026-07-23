@@ -1,12 +1,14 @@
 /**
- * Shared domain DTOs — no I/O, no React, no Supabase.
- * Placeholder types for the foundation layer only.
+ * Shared domain DTOs — manager / persistence facing.
+ * Match simulation models live in `@lastfootball/lfe` → `match/domain` (EPIC-2).
+ * No I/O, no React, no Supabase.
  */
 
 export type PlayerId = string;
 export type TeamId = string;
 export type MatchId = string;
 
+/** Manager-layer attribute snapshot (subset). Engine uses richer PlayerAttributes. */
 export interface PlayerAttributes {
   speed: number;
   shooting: number;
@@ -15,6 +17,7 @@ export interface PlayerAttributes {
   stamina: number;
 }
 
+/** Club roster DTO — not the in-match Player aggregate. */
 export interface Player {
   id: PlayerId;
   teamId: TeamId;
@@ -25,6 +28,7 @@ export interface Player {
   isStarting: boolean;
 }
 
+/** Club entity DTO — not the in-match Team aggregate. */
 export interface Team {
   id: TeamId;
   name: string;
