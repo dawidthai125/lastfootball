@@ -23,12 +23,18 @@
 
 ## Next phases (from Architecture Review)
 
-1. Extract real LFE contracts + deterministic headless tests
-2. Supabase schema: teams / players
-3. Port manager parity from Hercules prototype
+1. ~~Extract real LFE contracts + deterministic headless tests~~ → **EPIC-1 done** (`docs/lfe/epic1-foundation.md`)
+2. ~~Match domain model~~ → **EPIC-2 done** (`docs/lfe/epic2-match-domain.md`)
+3. ~~Match state machine~~ → **EPIC-3 done** (`docs/lfe/epic3-state-machine.md`)
+4. ~~Simulation systems~~ → **EPIC-4 done** (`docs/lfe/epic4-simulation-systems.md`)
+5. ~~Match commands~~ → **EPIC-5 done** (`docs/lfe/epic5-commands.md`)
+6. ~~Match session~~ → **EPIC-6 done** (`docs/lfe/epic6-match-session.md`)
+7. ~~Match positioning~~ → **EPIC-7 done** (`docs/lfe/epic7-positioning.md`)
+8. Supabase schema: teams / players
+9. Later LFE epics: physics · AI · ball movement
+10. Port manager parity from Hercules prototype
 
-## Import boundaries
+## Product design (Faza 2)
 
-- `packages/lfe` must not import React, Next, or Supabase
-- `packages/domain` must not import `lfe` or `web`
-- Only future `features/match` may orchestrate LFE ↔ DB
+- GDD skeleton: `docs/game-design/GAME_DESIGN_DOCUMENT.md` (GDD-01)
+- UI principles: `docs/game-design/UI_DESIGN_GUIDE.md`
