@@ -1,16 +1,7 @@
-import type { MatchHandle, MatchInput } from './types';
-
 /**
- * Creates a match handle.
- * Foundation stub — does not run simulation.
+ * Match session entry — EPIC-6.
+ * @deprecated Import from `./session/index` or package root `createMatch`.
  */
-export function createMatch(_input: MatchInput): MatchHandle {
-  return {
-    runToEnd() {
-      throw new Error('LFE createMatch: simulation not implemented (foundation scaffold).');
-    },
-    getEvents() {
-      return [];
-    },
-  };
-}
+export { createMatch } from './session/create-match';
+export type { MatchSession, MatchSessionContext } from './session/session';
+export type { MatchSessionConfig, SessionStatus } from './session/types';
