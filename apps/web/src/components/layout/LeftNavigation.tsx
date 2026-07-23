@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { ClubCrest, NavIcon } from '@/components/assets';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
-import { sessionChrome } from '@/data/mock';
+import { dashboardMock, sessionChrome } from '@/data/mock';
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/';
@@ -21,6 +22,7 @@ function isActive(pathname: string, href: string): boolean {
 export function LeftNavigation() {
   const pathname = usePathname();
   const { navCollapsed } = useShell();
+  const { nextMatch } = dashboardMock;
 
   return (
     <aside
@@ -39,53 +41,56 @@ export function LeftNavigation() {
         className="border-b"
         style={{
           borderColor: 'var(--lf-color-border-subtle)',
-          padding: 'var(--lf-space-2)',
+          padding: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
         }}
       >
         {!navCollapsed ? (
-          <>
-            <div
-              className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-              style={{
-                fontSize: 'var(--lf-type-label)',
-                letterSpacing: 'var(--lf-type-tracking-label)',
-                color: 'var(--lf-color-text-faint)',
-              }}
-            >
-              Nawigacja
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
+            <ClubCrest shortName="FCL" clubName={sessionChrome.player.club} size="sm" />
+            <div style={{ minWidth: 0 }}>
+              <div
+                className="font-[family-name:var(--font-ui)] font-semibold uppercase truncate"
+                style={{
+                  fontSize: 'var(--lf-type-label)',
+                  letterSpacing: 'var(--lf-type-tracking-label)',
+                  color: 'var(--lf-color-text-faint)',
+                }}
+              >
+                Twój klub
+              </div>
+              <div
+                className="truncate font-[family-name:var(--font-ui)] font-semibold"
+                style={{
+                  marginTop: '2px',
+                  fontSize: 'var(--lf-type-table)',
+                  color: 'var(--lf-color-text-primary)',
+                }}
+              >
+                {sessionChrome.player.club}
+              </div>
             </div>
-            <div
-              className="truncate font-medium"
-              style={{
-                marginTop: 'var(--lf-space-1)',
-                fontSize: 'var(--lf-type-table)',
-                color: 'var(--lf-color-text-secondary)',
-              }}
-            >
-              {sessionChrome.player.club}
-            </div>
-          </>
+          </div>
         ) : (
-          <div
-            className="text-center font-[family-name:var(--font-ui)] font-bold"
-            style={{ color: 'var(--lf-color-gold-base)', fontSize: 'var(--lf-type-caption)' }}
-            title={sessionChrome.player.club}
-          >
-            FL
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <ClubCrest shortName="FCL" clubName={sessionChrome.player.club} size="sm" />
           </div>
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto" aria-label="Menu główne" style={{ paddingBlock: 'var(--lf-space-1)' }}>
+      <nav
+        className="flex-1 overflow-y-auto"
+        aria-label="Menu główne"
+        style={{ paddingBlock: 'var(--lf-space-2)' }}
+      >
         {NAV_GROUPS.map((group) => (
-          <div key={group.id} style={{ marginBottom: 'var(--lf-space-2)' }}>
+          <div key={group.id} style={{ marginBottom: 'var(--lf-space-3)' }}>
             {!navCollapsed ? (
               <div
                 className="font-[family-name:var(--font-ui)] font-semibold uppercase"
                 style={{
                   paddingInline: 'var(--lf-space-3)',
                   paddingBottom: 'var(--lf-space-1)',
-                  fontSize: '9px',
+                  fontSize: 'var(--lf-type-label)',
                   letterSpacing: 'var(--lf-type-tracking-label)',
                   color: 'var(--lf-color-text-faint)',
                 }}
@@ -100,31 +105,20 @@ export function LeftNavigation() {
                   key={item.id}
                   href={item.href}
                   title={item.label}
-                  className="flex items-center justify-between transition-colors"
+                  className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
                   style={{
-                    borderLeftWidth: 'var(--lf-border-width-thick)',
-                    borderLeftStyle: 'solid',
-                    borderLeftColor: active ? 'var(--lf-color-gold-base)' : 'transparent',
-                    background: active ? 'var(--lf-color-gold-soft)' : 'transparent',
                     color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',
-                    paddingBlock: 'var(--lf-space-1)',
                     paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
                     fontSize: 'var(--lf-type-table)',
                     justifyContent: navCollapsed ? 'center' : 'space-between',
-                    transitionDuration: 'var(--lf-motion-fast)',
-                    transitionTimingFunction: 'var(--lf-motion-easing)',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) e.currentTarget.style.background = 'var(--lf-color-bg-hover)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = active
-                      ? 'var(--lf-color-gold-soft)'
-                      : 'transparent';
                   }}
                 >
-                  <span className="truncate font-[family-name:var(--font-ui)] tracking-wide">
-                    {navCollapsed ? item.shortLabel : item.label}
+                  <span
+                    className="flex items-center truncate font-[family-name:var(--font-ui)]"
+                    style={{ gap: 'var(--lf-space-2)' }}
+                  >
+                    <NavIcon id={item.id} active={active} size={navCollapsed ? 18 : 16} />
+                    {navCollapsed ? null : item.label}
                   </span>
                   {!navCollapsed && item.badge ? (
                     <span
@@ -149,13 +143,62 @@ export function LeftNavigation() {
         ))}
       </nav>
 
+      {!navCollapsed ? (
+        <div
+          className="border-t"
+          style={{
+            borderColor: 'var(--lf-color-border-subtle)',
+            padding: 'var(--lf-space-3)',
+            background: 'var(--lf-color-bg-inset)',
+          }}
+        >
+          <div
+            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+            style={{
+              fontSize: 'var(--lf-type-label)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              color: 'var(--lf-color-text-gold)',
+            }}
+          >
+            Następny mecz
+          </div>
+          <div
+            className="truncate"
+            style={{
+              marginTop: 'var(--lf-space-1)',
+              fontSize: 'var(--lf-type-caption)',
+              color: 'var(--lf-color-text-primary)',
+              fontWeight: 600,
+            }}
+          >
+            vs {nextMatch.opponent}
+          </div>
+          <div style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-text-faint)' }}>
+            {nextMatch.when} · {nextMatch.countdown}
+          </div>
+          <Link
+            href="/match/m-next"
+            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+            style={{
+              display: 'inline-block',
+              marginTop: 'var(--lf-space-2)',
+              fontSize: 'var(--lf-type-label)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              color: 'var(--lf-color-gold-base)',
+            }}
+          >
+            Przygotuj →
+          </Link>
+        </div>
+      ) : null}
+
       <div className="border-t" style={{ borderColor: 'var(--lf-color-border-subtle)', paddingBlock: 'var(--lf-space-1)' }}>
         {!navCollapsed ? (
           <div
             style={{
               paddingInline: 'var(--lf-space-3)',
               paddingBottom: 'var(--lf-space-1)',
-              fontSize: '9px',
+              fontSize: 'var(--lf-type-label)',
               letterSpacing: 'var(--lf-type-tracking-label)',
               color: 'var(--lf-color-text-faint)',
               textTransform: 'uppercase',
@@ -171,20 +214,22 @@ export function LeftNavigation() {
               key={item.id}
               href={item.href}
               title={item.label}
-              className="flex transition-colors"
+              className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
               style={{
-                borderLeftWidth: 'var(--lf-border-width-thick)',
-                borderLeftStyle: 'solid',
-                borderLeftColor: active ? 'var(--lf-color-gold-base)' : 'transparent',
-                background: active ? 'var(--lf-color-gold-soft)' : 'transparent',
                 color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',
-                paddingBlock: 'var(--lf-space-1)',
                 paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
                 fontSize: 'var(--lf-type-table)',
                 justifyContent: navCollapsed ? 'center' : 'flex-start',
               }}
             >
-              {navCollapsed ? item.shortLabel : item.label}
+              {navCollapsed ? (
+                <NavIcon id={item.id} active={active} size={18} />
+              ) : (
+                <span className="flex items-center" style={{ gap: 'var(--lf-space-2)' }}>
+                  <NavIcon id={item.id} active={active} size={16} />
+                  {item.label}
+                </span>
+              )}
             </Link>
           );
         })}

@@ -26,13 +26,17 @@ function ShellFrame({ children }: { children: ReactNode }) {
     .filter(Boolean)
     .join(' ');
 
+  const mainClass = ['lf-app-shell__main', isLiveMatch ? 'lf-app-shell__main--live' : '']
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div className="lf-app-shell">
       <TopBar />
       <MobileNav />
       <div className={bodyClass}>
         <LeftNavigation />
-        <main className="lf-app-shell__main">{children}</main>
+        <main className={mainClass}>{children}</main>
         {railVisible ? (
           <div className="lf-app-shell__rail">
             <RightSidebar />

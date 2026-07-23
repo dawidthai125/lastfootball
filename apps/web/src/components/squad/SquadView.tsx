@@ -12,6 +12,7 @@ import {
   type SortKey,
   type SquadPlayer,
 } from '@/data/squad';
+import { PlayerPortrait } from '@/components/assets';
 
 const controlStyle: CSSProperties = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -325,7 +326,16 @@ export function SquadView() {
                       color: 'var(--lf-color-text-primary)',
                     }}
                   >
-                    {p.name}
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 'var(--lf-space-2)',
+                      }}
+                    >
+                      <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
+                      {p.name}
+                    </span>
                   </td>
                   <td style={{ padding: 'var(--lf-space-2)' }}>{p.position}</td>
                   <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}>

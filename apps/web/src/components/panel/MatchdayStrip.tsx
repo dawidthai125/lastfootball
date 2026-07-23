@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import { dashboardMock } from '@/data/mock';
 
 type MatchdayStripProps = {
@@ -19,8 +20,9 @@ export function MatchdayStrip({
   const awayShort = match.home ? match.opponentShort : clubShort;
 
   return (
-    <section
+    <AtmosphereLayer
       aria-label="Matchday"
+      layers={['floodlight', 'vignette']}
       style={{
         borderWidth: 'var(--lf-border-width-hair)',
         borderStyle: 'solid',
@@ -40,7 +42,7 @@ export function MatchdayStrip({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-3)', flex: '1 1 280px' }}>
-          <CrestInitials initials={homeShort} label={homeName} />
+          <ClubCrest shortName={homeShort} clubName={homeName} label={homeName} size="md" />
           <div style={{ textAlign: 'center', minWidth: '4rem' }}>
             <div
               className="font-[family-name:var(--font-ui)] font-bold"
@@ -55,7 +57,7 @@ export function MatchdayStrip({
               {match.countdown}
             </div>
           </div>
-          <CrestInitials initials={awayShort} label={awayName} />
+          <ClubCrest shortName={awayShort} clubName={awayName} label={awayName} size="md" />
         </div>
 
         <div style={{ flex: '1 1 200px', minWidth: 0 }}>
@@ -95,48 +97,7 @@ export function MatchdayStrip({
 
         <QuickActions />
       </div>
-    </section>
-  );
-}
-
-function CrestInitials({ initials, label }: { initials: string; label: string }) {
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div
-        className="font-[family-name:var(--font-ui)] font-bold"
-        title={label}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 'var(--lf-space-8)',
-          height: 'var(--lf-space-8)',
-          marginInline: 'auto',
-          background: 'var(--lf-color-bg-inset)',
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-subtle)',
-          color: 'var(--lf-color-text-primary)',
-          fontSize: 'var(--lf-type-table)',
-          borderRadius: 'var(--lf-radius-sm)',
-        }}
-      >
-        {initials}
-      </div>
-      <div
-        style={{
-          marginTop: 'var(--lf-space-1)',
-          maxWidth: '7rem',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          fontSize: 'var(--lf-type-label)',
-          color: 'var(--lf-color-text-muted)',
-        }}
-      >
-        {label}
-      </div>
-    </div>
+    </AtmosphereLayer>
   );
 }
 

@@ -1,113 +1,155 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import { ProgressBar } from '@/components/ui/ProgressBar';
-import { dashboardMock, sessionChrome } from '@/data/mock';
+import { ClubCrest } from '@/components/assets';
+import { dashboardMock } from '@/data/mock';
 
 /**
- * Right rail — match context only (WF / GX: not a second dashboard).
- * No duplicate daily tasks / notifications list.
+ * Right rail — match-day context only (WF / GX / DESIGN-REVIEW-02).
+ * Not a second dashboard: no energy/form/training duplicates.
  */
 export function RightSidebar() {
-  const { nextTraining, nextMatch, form, injuries } = dashboardMock;
-  const { energy } = sessionChrome;
+  const { nextMatch, injuries, club } = dashboardMock;
 
   return (
     <aside
-      className="flex h-full flex-col overflow-y-auto border-l"
+      className="flex h-full flex-col overflow-y-auto"
       style={{
         width: '100%',
         background: 'var(--lf-color-bg-raised)',
-        borderColor: 'var(--lf-color-border-subtle)',
-        padding: 'var(--lf-space-2)',
-        gap: 'var(--lf-space-2)',
+        padding: 'var(--lf-space-3)',
+        gap: 'var(--lf-space-3)',
       }}
     >
-      <RailWidget title="Następny mecz" href="/match/m-next">
+      <div
+        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+        style={{
+          fontSize: 'var(--lf-type-label)',
+          letterSpacing: 'var(--lf-type-tracking-label)',
+          color: 'var(--lf-color-text-faint)',
+        }}
+      >
+        Kontekst meczu
+      </div>
+
+      <RailBlock>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            gap: 'var(--lf-space-3)',
+          }}
+        >
+          <ClubCrest
+            shortName={nextMatch.opponentShort}
+            clubName={nextMatch.opponent}
+            size="md"
+          />
+          <div style={{ minWidth: 0 }}>
+            <div
+              className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+              style={{
+                fontSize: 'var(--lf-type-label)',
+                letterSpacing: 'var(--lf-type-tracking-label)',
+                color: 'var(--lf-color-text-gold)',
+              }}
+            >
+              Następny mecz
+            </div>
+            <div
+              className="truncate font-[family-name:var(--font-ui)] font-semibold"
+              style={{
+                marginTop: '2px',
+                fontSize: 'var(--lf-type-h2)',
+                color: 'var(--lf-color-text-primary)',
+              }}
+            >
+              vs {nextMatch.opponent}
+            </div>
+            <div style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}>
+              {nextMatch.competition}
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            marginTop: 'var(--lf-space-3)',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
             gap: 'var(--lf-space-2)',
           }}
         >
-          <span
-            className="font-semibold"
-            style={{ fontSize: 'var(--lf-type-table)', color: 'var(--lf-color-text-primary)' }}
-          >
-            {nextMatch.opponent}
-          </span>
-          <span
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              fontSize: 'var(--lf-type-label)',
-              padding: '0 var(--lf-space-1)',
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderRadius: 'var(--lf-radius-xs)',
-              borderColor: nextMatch.home
-                ? 'var(--lf-color-status-ok)'
-                : 'var(--lf-color-status-info)',
-              background: nextMatch.home
-                ? 'var(--lf-color-status-ok-soft)'
-                : 'var(--lf-color-bg-inset)',
-              color: nextMatch.home ? 'var(--lf-color-status-ok)' : 'var(--lf-color-status-info)',
-            }}
-          >
-            {nextMatch.home ? 'Dom' : 'Wyjazd'}
-          </span>
+          <MetaChip label="Kiedy" value={nextMatch.when} />
+          <MetaChip label="Odliczanie" value={nextMatch.countdown} tone="gold" />
+          <MetaChip label="Miejsce" value={nextMatch.home ? 'Dom' : 'Wyjazd'} />
+          <MetaChip label="Stawka" value={nextMatch.stake} />
         </div>
-        <p style={{ margin: 0, marginTop: 'var(--lf-space-1)', fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}>
-          {nextMatch.competition}
-        </p>
-        <p style={{ margin: 0, fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-faint)' }}>
-          {nextMatch.when} · {nextMatch.countdown}
-        </p>
-      </RailWidget>
 
-      <RailWidget title="Następny trening" href="/training">
         <div
-          className="font-semibold"
-          style={{ fontSize: 'var(--lf-type-table)', color: 'var(--lf-color-text-primary)' }}
+          style={{
+            marginTop: 'var(--lf-space-3)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--lf-space-2)',
+          }}
         >
-          {nextTraining.focus}
+          <ClubCrest shortName={club.shortName} clubName={club.name} size="sm" />
+          <span style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-faint)' }}>
+            {club.name}
+          </span>
         </div>
-        <p style={{ margin: 0, marginTop: 'var(--lf-space-1)', fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}>
-          {nextTraining.when}
-        </p>
-        <p style={{ margin: 0, fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-faint)' }}>
-          Intensywność: {nextTraining.intensity}
-        </p>
-      </RailWidget>
 
-      <RailWidget title="Energia">
-        <ProgressBar
-          value={energy.current}
-          max={energy.max}
-          tone={energy.current < 30 ? 'danger' : energy.current < 60 ? 'warn' : 'ok'}
-        />
-      </RailWidget>
+        <Link
+          href="/match/m-next"
+          className="font-[family-name:var(--font-ui)] font-semibold"
+          style={{
+            display: 'block',
+            marginTop: 'var(--lf-space-3)',
+            textAlign: 'center',
+            borderWidth: 'var(--lf-border-width-hair)',
+            borderStyle: 'solid',
+            borderColor: 'var(--lf-color-border-gold)',
+            background: 'var(--lf-color-gold-soft)',
+            color: 'var(--lf-color-gold-base)',
+            fontSize: 'var(--lf-type-caption)',
+            padding: 'var(--lf-space-2) var(--lf-space-3)',
+            borderRadius: 'var(--lf-radius-sm)',
+          }}
+        >
+          Przygotuj mecz
+        </Link>
+      </RailBlock>
 
-      <RailWidget title="Forma">
-        <ProgressBar value={form} tone={form >= 70 ? 'ok' : form >= 45 ? 'warn' : 'danger'} />
-      </RailWidget>
-
-      <RailWidget title="Kontuzje">
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-1)' }}>
+      <RailBlock title="Gotowość składu">
+        <ul
+          style={{
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--lf-space-1)',
+          }}
+        >
           {injuries.map((inj) => (
             <li
               key={inj.name}
               style={{
-                borderWidth: 'var(--lf-border-width-hair)',
-                borderStyle: 'solid',
-                borderColor: 'var(--lf-color-status-danger)',
+                borderLeftWidth: 'var(--lf-border-width-thick)',
+                borderLeftStyle: 'solid',
+                borderLeftColor: 'var(--lf-color-status-danger)',
                 background: 'var(--lf-color-status-danger-soft)',
                 padding: 'var(--lf-space-2)',
-                borderRadius: 'var(--lf-radius-sm)',
               }}
             >
-              <div style={{ fontSize: 'var(--lf-type-caption)', fontWeight: 600, color: 'var(--lf-color-text-primary)' }}>
+              <div
+                style={{
+                  fontSize: 'var(--lf-type-caption)',
+                  fontWeight: 600,
+                  color: 'var(--lf-color-text-primary)',
+                }}
+              >
                 {inj.name}
               </div>
               <div style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-status-danger)' }}>
@@ -116,46 +158,79 @@ export function RightSidebar() {
             </li>
           ))}
         </ul>
-      </RailWidget>
+      </RailBlock>
     </aside>
   );
 }
 
-function RailWidget({
-  title,
-  href,
-  children,
+function MetaChip({
+  label,
+  value,
+  tone,
 }: {
-  title: string;
-  href?: string;
-  children: ReactNode;
+  label: string;
+  value: string;
+  tone?: 'gold';
 }) {
   return (
-    <section
+    <div
       style={{
         borderWidth: 'var(--lf-border-width-hair)',
         borderStyle: 'solid',
         borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-panel)',
+        background: 'var(--lf-color-bg-inset)',
+        padding: 'var(--lf-space-2)',
         borderRadius: 'var(--lf-radius-sm)',
+        minWidth: 0,
       }}
     >
-      <header
+      <div
+        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderBottomWidth: 'var(--lf-border-width-hair)',
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel-alt)',
-          padding: 'var(--lf-space-2)',
+          fontSize: '9px',
+          letterSpacing: 'var(--lf-type-tracking-label)',
+          color: 'var(--lf-color-text-faint)',
         }}
       >
+        {label}
+      </div>
+      <div
+        className="truncate"
+        style={{
+          marginTop: '2px',
+          fontSize: 'var(--lf-type-caption)',
+          fontWeight: 600,
+          color: tone === 'gold' ? 'var(--lf-color-text-gold)' : 'var(--lf-color-text-secondary)',
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function RailBlock({ title, children }: { title?: string; children: ReactNode }) {
+  return (
+    <section
+      style={{
+        borderTopWidth: 'var(--lf-border-width-hair)',
+        borderBottomWidth: 'var(--lf-border-width-hair)',
+        borderRightWidth: 'var(--lf-border-width-hair)',
+        borderLeftWidth: 'var(--lf-border-width-thick)',
+        borderStyle: 'solid',
+        borderColor: 'var(--lf-color-border-subtle)',
+        borderLeftColor: 'var(--lf-color-border-gold)',
+        background: 'var(--lf-color-bg-panel)',
+        borderRadius: 'var(--lf-radius-sm)',
+        padding: 'var(--lf-space-3)',
+      }}
+    >
+      {title ? (
         <h2
           className="font-[family-name:var(--font-ui)] font-semibold uppercase"
           style={{
             margin: 0,
+            marginBottom: 'var(--lf-space-2)',
             fontSize: 'var(--lf-type-label)',
             letterSpacing: 'var(--lf-type-tracking-label)',
             color: 'var(--lf-color-text-gold)',
@@ -163,13 +238,8 @@ function RailWidget({
         >
           {title}
         </h2>
-        {href ? (
-          <Link href={href} style={{ color: 'var(--lf-color-text-gold)', fontSize: 'var(--lf-type-caption)' }}>
-            →
-          </Link>
-        ) : null}
-      </header>
-      <div style={{ padding: 'var(--lf-space-2)' }}>{children}</div>
+      ) : null}
+      {children}
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { AtmosphereLayer } from '@/components/assets';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import { SectionShell } from '@/components/panel/SectionShell';
@@ -194,7 +195,7 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
 
         {/* Center — hero + stakes + CTA */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
-          <section
+          <AtmosphereLayer
             aria-label="Hero meczu"
             style={{
               borderWidth: 'var(--lf-border-width-hair)',
@@ -384,7 +385,7 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                 Rozpocznij mecz
               </Link>
             </div>
-          </section>
+          </AtmosphereLayer>
 
           <SectionShell title="Ostatnie spotkania (H2H)">
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--lf-space-3)' }}>

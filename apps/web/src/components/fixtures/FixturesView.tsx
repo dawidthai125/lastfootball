@@ -4,6 +4,7 @@ import { useMemo, useState, type CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { NextMatchHero } from '@/components/fixtures/NextMatchHero';
+import { ClubCrest } from '@/components/assets';
 import {
   COMPETITION_LABEL,
   FIXTURES,
@@ -299,7 +300,16 @@ function FixtureTable({
                     color: 'var(--lf-color-text-primary)',
                   }}
                 >
-                  {f.opponent}
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 'var(--lf-space-2)',
+                    }}
+                  >
+                    <ClubCrest shortName={f.opponentShort} clubName={f.opponent} size="sm" />
+                    {f.opponent}
+                  </span>
                 </td>
                 <td style={{ padding: 'var(--lf-space-2)' }}>{COMPETITION_LABEL[f.competition]}</td>
                 <td style={{ padding: 'var(--lf-space-2)' }}>

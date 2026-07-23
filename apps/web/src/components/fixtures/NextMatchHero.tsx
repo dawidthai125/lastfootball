@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { AtmosphereLayer } from '@/components/assets';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { Fixture, PreMatchBundle } from '@/data/fixtures';
 import { getPreMatchBundle } from '@/data/fixtures';
@@ -16,7 +17,7 @@ export function NextMatchHero({ fixture }: NextMatchHeroProps) {
   const away = fixture.home ? bundle.theirTeam : bundle.ourTeam;
 
   return (
-    <section
+    <AtmosphereLayer
       aria-label="Następny mecz"
       style={{
         borderWidth: 'var(--lf-border-width-hair)',
@@ -134,7 +135,7 @@ export function NextMatchHero({ fixture }: NextMatchHeroProps) {
           <MetaRow label="Stawka" value={bundle.stakes[0]?.value ?? '—'} />
         </aside>
       </div>
-    </section>
+    </AtmosphereLayer>
   );
 }
 

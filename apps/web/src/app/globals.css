@@ -84,23 +84,23 @@
   --lf-z-toast: 60;
 
   --lf-grid-gutter: 12px;
-  --lf-grid-margin: 12px;
-  --lf-shell-nav: 168px;
+  --lf-grid-margin: 16px;
+  --lf-shell-nav: 184px;
   --lf-shell-nav-collapsed: 56px;
-  --lf-shell-rail: 220px;
-  --lf-shell-topbar: 36px;
+  --lf-shell-rail: 232px;
+  --lf-shell-topbar: 40px;
 
   --lf-overlay-panel-width: 400px;
   --lf-overlay-modal-width: 560px;
 
   --lf-type-hero: 36px;
-  --lf-type-h1: 22px;
+  --lf-type-h1: 24px;
   --lf-type-h2: 15px;
   --lf-type-body: 13px;
   --lf-type-caption: 11px;
   --lf-type-label: 10px;
   --lf-type-table: 12px;
-  --lf-type-tracking-label: 0.06em;
+  --lf-type-tracking-label: 0.08em;
 
   /* Legacy aliases → canonical */
   --lf-bg: var(--lf-color-bg-base);
@@ -203,7 +203,7 @@ textarea {
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
-  background: var(--lf-color-bg-base);
+  background: var(--lf-color-bg-void);
 }
 
 .lf-app-shell__body {
@@ -229,13 +229,117 @@ textarea {
   min-height: 0;
   overflow: hidden;
   background: var(--lf-color-bg-raised);
+  border-left: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
 }
 
 .lf-app-shell__main {
   min-width: 0;
   overflow-y: auto;
-  background: var(--lf-color-bg-base);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196, 163, 90, 0.06), transparent 55%),
+    var(--lf-color-bg-base);
   padding: var(--lf-grid-margin);
+}
+
+.lf-app-shell__main--live {
+  background: var(--lf-color-bg-void);
+  padding: var(--lf-space-3);
+}
+
+.lf-chrome-metric {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 var(--lf-space-2);
+  border-left: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-chrome-metric:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.lf-chrome-metric__label {
+  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-label);
+  font-weight: 600;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+  line-height: 1;
+}
+
+.lf-chrome-metric__value {
+  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--lf-color-text-primary);
+  line-height: 1.2;
+}
+
+.lf-chrome-metric__value--gold {
+  color: var(--lf-color-text-gold);
+}
+
+.lf-chrome-metric__value--ok {
+  color: var(--lf-color-status-ok);
+}
+
+.lf-section-shell {
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-right: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-left: var(--lf-border-width-thick) solid var(--lf-color-border-gold);
+  background: var(--lf-color-bg-panel);
+  border-radius: var(--lf-radius-sm);
+}
+
+.lf-section-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-section-shell__title {
+  margin: 0;
+  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-label);
+  font-weight: 600;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  border-left: var(--lf-border-width-thick) solid transparent;
+  transition:
+    background var(--lf-motion-fast) var(--lf-motion-easing),
+    color var(--lf-motion-fast) var(--lf-motion-easing),
+    border-color var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-nav-item:hover {
+  background: var(--lf-color-bg-hover);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-nav-item--active {
+  border-left-color: var(--lf-color-gold-base);
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-primary);
+}
+
+.lf-nav-item--active:hover {
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-primary);
 }
 
 .lf-grid {

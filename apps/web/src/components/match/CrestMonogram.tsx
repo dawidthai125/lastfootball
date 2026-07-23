@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react';
 
+import { ClubCrest } from '@/components/assets/ClubCrest';
 import type { FormResult } from '@/data/fixtures';
 
-const sizeMap = {
-  md: 'calc(var(--lf-space-8) + var(--lf-space-2))',
-  lg: 'calc(var(--lf-space-8) + var(--lf-space-5))',
-} as const;
-
+/**
+ * Crest from Asset Pack (API kept for existing call sites).
+ * `initials` = club shortName key (FCL, ORG, …).
+ */
 export function CrestMonogram({
   initials,
   label,
@@ -14,49 +14,9 @@ export function CrestMonogram({
 }: {
   initials: string;
   label?: string;
-  size?: keyof typeof sizeMap;
+  size?: 'md' | 'lg';
 }) {
-  const dim = sizeMap[size];
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div
-        className="font-[family-name:var(--font-ui)] font-bold"
-        title={label}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: dim,
-          height: dim,
-          marginInline: 'auto',
-          background: 'var(--lf-color-gold-soft)',
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-gold)',
-          color: 'var(--lf-color-gold-base)',
-          fontSize: size === 'lg' ? 'var(--lf-type-h1)' : 'var(--lf-type-h2)',
-          borderRadius: 'var(--lf-radius-sm)',
-        }}
-      >
-        {initials}
-      </div>
-      {label ? (
-        <div
-          style={{
-            marginTop: 'var(--lf-space-2)',
-            fontSize: 'var(--lf-type-caption)',
-            color: 'var(--lf-color-text-muted)',
-            maxWidth: 'calc(var(--lf-space-8) * 3)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {label}
-        </div>
-      ) : null}
-    </div>
-  );
+  return <ClubCrest shortName={initials} clubName={label} label={label} size={size} />;
 }
 
 export function FormPills({ form }: { form: FormResult[] }) {

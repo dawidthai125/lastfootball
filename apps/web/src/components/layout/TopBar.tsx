@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { formatMoney, sessionChrome } from '@/data/mock';
@@ -15,22 +16,17 @@ function Metric({
   value: string;
   tone?: 'gold' | 'ok';
 }) {
-  const color =
-    tone === 'gold'
-      ? 'var(--lf-color-text-gold)'
-      : tone === 'ok'
-        ? 'var(--lf-color-status-ok)'
-        : 'var(--lf-color-text-primary)';
-
   return (
-    <div
-      className="flex items-baseline gap-1 whitespace-nowrap"
-      style={{ paddingInline: 'var(--lf-space-2)', fontSize: 'var(--lf-type-caption)' }}
-    >
-      <span style={{ color: 'var(--lf-color-text-faint)' }}>{label}</span>
+    <div className="lf-chrome-metric">
+      <span className="lf-chrome-metric__label">{label}</span>
       <span
-        className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
-        style={{ color }}
+        className={
+          tone === 'gold'
+            ? 'lf-chrome-metric__value lf-chrome-metric__value--gold'
+            : tone === 'ok'
+              ? 'lf-chrome-metric__value lf-chrome-metric__value--ok'
+              : 'lf-chrome-metric__value'
+        }
       >
         {value}
       </span>
@@ -45,13 +41,16 @@ export function TopBar() {
 
   return (
     <header
-      className="flex shrink-0 items-center border-b"
+      className="flex shrink-0 items-center"
       style={{
         height: 'var(--lf-shell-topbar)',
         background: 'var(--lf-color-bg-raised)',
-        borderColor: 'var(--lf-color-border-subtle)',
-        paddingInline: 'var(--lf-space-2)',
-        gap: 'var(--lf-space-2)',
+        borderBottomWidth: 'var(--lf-border-width-hair)',
+        borderBottomStyle: 'solid',
+        borderBottomColor: 'var(--lf-color-border-subtle)',
+        boxShadow: 'inset 0 -1px 0 var(--lf-color-border-gold)',
+        paddingInline: 'var(--lf-space-3)',
+        gap: 'var(--lf-space-3)',
         zIndex: 'var(--lf-z-chrome)',
         position: 'relative',
       }}
@@ -61,14 +60,18 @@ export function TopBar() {
         onClick={toggleNav}
         aria-label={navCollapsed ? 'Rozwiń nawigację' : 'Zwiń nawigację'}
         aria-pressed={navCollapsed}
-        className="hidden border md:inline-flex"
+        className="hidden md:inline-flex"
         style={{
+          borderWidth: 'var(--lf-border-width-hair)',
+          borderStyle: 'solid',
           borderColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel)',
+          background: 'var(--lf-color-bg-inset)',
           color: 'var(--lf-color-text-muted)',
           fontSize: 'var(--lf-type-caption)',
           padding: 'var(--lf-space-1) var(--lf-space-2)',
           borderRadius: 'var(--lf-radius-sm)',
+          minWidth: 'var(--lf-space-6)',
+          justifyContent: 'center',
         }}
       >
         {navCollapsed ? '»' : '«'}
@@ -76,74 +79,73 @@ export function TopBar() {
 
       <Link
         href="/"
-        className="flex items-center border-r"
+        className="flex items-center"
         style={{
           gap: 'var(--lf-space-2)',
-          paddingRight: 'var(--lf-space-2)',
-          borderColor: 'var(--lf-color-border-subtle)',
+          paddingRight: 'var(--lf-space-3)',
+          borderRightWidth: 'var(--lf-border-width-hair)',
+          borderRightStyle: 'solid',
+          borderRightColor: 'var(--lf-color-border-subtle)',
+          minWidth: 0,
         }}
       >
-        <span
-          className="inline-flex items-center justify-center font-[family-name:var(--font-ui)] font-bold"
-          style={{
-            width: '20px',
-            height: '20px',
-            background: 'var(--lf-color-gold-soft)',
-            color: 'var(--lf-color-gold-base)',
-            fontSize: 'var(--lf-type-label)',
-            borderRadius: 'var(--lf-radius-xs)',
-          }}
-          aria-hidden
-        >
-          LF
-        </span>
-        <span
-          className="hidden font-[family-name:var(--font-ui)] font-semibold uppercase sm:inline"
-          style={{
-            fontSize: 'var(--lf-type-table)',
-            letterSpacing: 'var(--lf-type-tracking-label)',
-            color: 'var(--lf-color-text-primary)',
-          }}
-        >
-          LastFootball
-        </span>
+        <ClubCrest shortName="FCL" clubName="FC Lastovia" size="sm" style={{ lineHeight: 0 }} />
+        <div className="hidden min-w-0 sm:block">
+          <div
+            className="font-[family-name:var(--font-ui)] font-bold uppercase truncate"
+            style={{
+              fontSize: 'var(--lf-type-table)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              color: 'var(--lf-color-text-primary)',
+              lineHeight: 1.1,
+            }}
+          >
+            LastFootball
+          </div>
+          <div
+            className="truncate"
+            style={{
+              fontSize: 'var(--lf-type-label)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              color: 'var(--lf-color-text-gold)',
+              textTransform: 'uppercase',
+            }}
+          >
+            {player.club}
+          </div>
+        </div>
       </Link>
 
-      <div className="hidden items-center md:flex">
+      <div className="hidden items-center md:flex" style={{ gap: 0 }}>
         <Metric label="Serwer" value={server} />
-        <span style={{ color: 'var(--lf-color-border-strong)' }}>|</span>
         <Metric label="Sezon" value={String(season)} />
-        <span style={{ color: 'var(--lf-color-border-strong)' }}>|</span>
         <Metric label="Dzień" value={String(day)} />
       </div>
 
-      <div className="ml-auto flex items-center overflow-x-auto" style={{ gap: 'var(--lf-space-1)' }}>
-        <Metric label="€" value={formatMoney(money).replace(/\s/g, '\u00a0')} tone="ok" />
-        <span className="hidden sm:inline" style={{ color: 'var(--lf-color-border-strong)' }}>
-          |
-        </span>
-        <Metric label="LF" value={String(premium)} tone="gold" />
-        <span className="hidden sm:inline" style={{ color: 'var(--lf-color-border-strong)' }}>
-          |
-        </span>
-        <Metric label="Energia" value={`${energy.current}/${energy.max}`} />
+      <div className="ml-auto flex items-center overflow-x-auto" style={{ gap: 'var(--lf-space-2)' }}>
+        <div className="hidden items-center sm:flex" style={{ gap: 0 }}>
+          <Metric label="Budżet" value={formatMoney(money).replace(/\s/g, '\u00a0')} tone="ok" />
+          <Metric label="LF" value={String(premium)} tone="gold" />
+          <Metric label="Energia" value={`${energy.current}/${energy.max}`} />
+        </div>
 
         <button
           type="button"
           onClick={toggleNotifications}
-          className="relative border"
+          className="relative inline-flex items-center"
           style={{
-            marginLeft: 'var(--lf-space-1)',
+            borderWidth: 'var(--lf-border-width-hair)',
+            borderStyle: 'solid',
             borderColor: 'var(--lf-color-border-subtle)',
-            background: 'var(--lf-color-bg-panel)',
+            background: 'var(--lf-color-bg-inset)',
             color: 'var(--lf-color-text-muted)',
-            fontSize: 'var(--lf-type-caption)',
+            gap: 'var(--lf-space-1)',
             padding: 'var(--lf-space-1) var(--lf-space-2)',
             borderRadius: 'var(--lf-radius-sm)',
           }}
           aria-label={`Powiadomienia: ${notifications}`}
         >
-          Powiad.
+          <NavIcon id="messages" size={14} />
           {notifications > 0 ? (
             <span
               className="absolute flex items-center justify-center font-bold"
@@ -166,11 +168,12 @@ export function TopBar() {
 
         <Link
           href="/profile"
-          className="flex items-center border"
+          className="flex items-center"
           style={{
-            marginLeft: 'var(--lf-space-1)',
-            borderColor: 'var(--lf-color-border-subtle)',
-            background: 'var(--lf-color-bg-panel)',
+            borderWidth: 'var(--lf-border-width-hair)',
+            borderStyle: 'solid',
+            borderColor: 'var(--lf-color-border-gold)',
+            background: 'var(--lf-color-gold-soft)',
             gap: 'var(--lf-space-2)',
             paddingBlock: 'var(--lf-space-1)',
             paddingRight: 'var(--lf-space-2)',
@@ -178,28 +181,23 @@ export function TopBar() {
             borderRadius: 'var(--lf-radius-sm)',
           }}
         >
-          <span
-            className="flex items-center justify-center font-[family-name:var(--font-ui)] font-bold"
-            style={{
-              width: '20px',
-              height: '20px',
-              background: 'var(--lf-color-bg-panel-alt)',
-              color: 'var(--lf-color-gold-base)',
-              fontSize: '9px',
-              borderRadius: 'var(--lf-radius-xs)',
-            }}
-          >
-            {player.avatarInitials}
-          </span>
+          <PlayerPortrait playerId="manager" name={player.name} size="sm" style={{ width: 22, height: 22 }} />
           <div className="hidden leading-tight sm:block">
             <div
-              className="font-medium"
+              className="font-[family-name:var(--font-ui)] font-semibold"
               style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-primary)' }}
             >
               {player.name}
             </div>
-            <div style={{ fontSize: '9px', color: 'var(--lf-color-text-faint)' }}>
-              {player.club}
+            <div
+              className="font-[family-name:var(--font-ui)] uppercase"
+              style={{
+                fontSize: '9px',
+                letterSpacing: 'var(--lf-type-tracking-label)',
+                color: 'var(--lf-color-text-gold)',
+              }}
+            >
+              Menedżer
             </div>
           </div>
         </Link>

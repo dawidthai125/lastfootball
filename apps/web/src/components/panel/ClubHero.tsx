@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import { sessionChrome } from '@/data/mock';
 import { dashboardMock } from '@/data/mock';
 
@@ -13,11 +14,9 @@ export function ClubHero({
   season = sessionChrome.season,
 }: ClubHeroProps) {
   return (
-    <section
+    <AtmosphereLayer
       aria-label="Club Hero"
       style={{
-        position: 'relative',
-        overflow: 'hidden',
         borderWidth: 'var(--lf-border-width-hair)',
         borderStyle: 'solid',
         borderColor: 'var(--lf-color-border-subtle)',
@@ -27,47 +26,14 @@ export function ClubHero({
       }}
     >
       <div
-        aria-hidden
         style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(135deg, var(--lf-color-overlay-hero) 0%, transparent 55%), var(--lf-color-bg-panel-alt)',
-          opacity: 'var(--lf-opacity-muted)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div
-        style={{
-          position: 'relative',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           gap: 'var(--lf-space-4)',
         }}
       >
-        <div
-          className="font-[family-name:var(--font-ui)] font-bold"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 'calc(var(--lf-space-8) + var(--lf-space-6))',
-            height: 'calc(var(--lf-space-8) + var(--lf-space-6))',
-            flexShrink: 0,
-            background: 'var(--lf-color-gold-soft)',
-            borderWidth: 'var(--lf-border-width-hair)',
-            borderStyle: 'solid',
-            borderColor: 'var(--lf-color-border-gold)',
-            color: 'var(--lf-color-gold-base)',
-            fontSize: 'var(--lf-type-h1)',
-            borderRadius: 'var(--lf-radius-sm)',
-          }}
-          aria-hidden
-        >
-          {club.shortName}
-        </div>
+        <ClubCrest shortName={club.shortName} clubName={club.name} size="xl" />
 
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>
           <p
@@ -175,6 +141,6 @@ export function ClubHero({
           </Link>
         </div>
       </div>
-    </section>
+    </AtmosphereLayer>
   );
 }

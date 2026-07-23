@@ -1,5 +1,6 @@
 import { dashboardMock } from '@/data/mock';
 import { SectionLink, SectionShell } from '@/components/panel/SectionShell';
+import { ClubCrest } from '@/components/assets';
 
 export function LeagueSnapshot() {
   const rows = dashboardMock.standingsPreview;
@@ -61,7 +62,16 @@ export function LeagueSnapshot() {
                   color: r.self ? 'var(--lf-color-text-gold)' : 'var(--lf-color-text-secondary)',
                 }}
               >
-                {r.club}
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 'var(--lf-space-2)',
+                  }}
+                >
+                  <ClubCrest clubName={r.club} size="sm" />
+                  {r.club}
+                </span>
               </td>
               <td
                 className="tabular-nums"

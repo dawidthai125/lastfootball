@@ -13,7 +13,7 @@ import { TrainingToday } from '@/components/panel/TrainingToday';
  */
 export default function DashboardPage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-5)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-4)' }}>
       <ClubHero />
       <MatchdayStrip />
 

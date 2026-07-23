@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { NavIcon } from '@/components/assets';
 import { FLAT_NAV } from '@/lib/nav';
 
 function isActive(pathname: string, href: string): boolean {
@@ -26,7 +27,8 @@ export function MobileNav() {
       style={{
         background: 'var(--lf-color-bg-raised)',
         borderColor: 'var(--lf-color-border-subtle)',
-        padding: 'var(--lf-space-1)',
+        boxShadow: 'inset 0 -1px 0 var(--lf-color-border-gold)',
+        padding: 'var(--lf-space-1) var(--lf-space-2)',
         gap: 'var(--lf-space-1)',
         zIndex: 'var(--lf-z-chrome)',
       }}
@@ -37,17 +39,22 @@ export function MobileNav() {
           <Link
             key={item.id}
             href={item.href}
-            className="shrink-0 border whitespace-nowrap"
+            className="shrink-0 whitespace-nowrap"
             style={{
-              borderColor: active ? 'var(--lf-color-border-gold)' : 'transparent',
+              borderBottomWidth: 'var(--lf-border-width-thick)',
+              borderBottomStyle: 'solid',
+              borderBottomColor: active ? 'var(--lf-color-gold-base)' : 'transparent',
               background: active ? 'var(--lf-color-gold-soft)' : 'transparent',
               color: active ? 'var(--lf-color-gold-base)' : 'var(--lf-color-text-muted)',
               fontSize: 'var(--lf-type-caption)',
-              padding: 'var(--lf-space-1) var(--lf-space-2)',
-              borderRadius: 'var(--lf-radius-sm)',
+              padding: 'var(--lf-space-2)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--lf-space-1)',
             }}
           >
-            {item.label}
+            <NavIcon id={item.id} active={active} size={14} />
+            <span className="font-[family-name:var(--font-ui)]">{item.label}</span>
           </Link>
         );
       })}

@@ -114,12 +114,12 @@ export const zIndex = {
 export const grid = {
   columns: 12,
   gutter: space[3],
-  marginApp: space[3],
+  marginApp: space[4],
   shell: {
-    nav: '168px',
+    nav: '184px',
     navCollapsed: '56px',
-    rail: '220px',
-    topbar: '36px',
+    rail: '232px',
+    topbar: '40px',
   },
 } as const;
 
@@ -139,7 +139,7 @@ export const overlay = {
 export const typography = {
   size: {
     hero: '36px',
-    h1: '22px',
+    h1: '24px',
     h2: '15px',
     body: '13px',
     caption: '11px',
@@ -152,7 +152,7 @@ export const typography = {
     body: '1.35',
   },
   tracking: {
-    label: '0.06em',
+    label: '0.08em',
   },
 } as const;
 

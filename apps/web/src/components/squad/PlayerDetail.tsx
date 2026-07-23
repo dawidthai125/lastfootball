@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
+import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
 import { STATUS_LABEL, type SquadPlayer } from '@/data/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
+import { dashboardMock } from '@/data/mock';
 
 function statusTone(status: SquadPlayer['status']): {
   border: string;
@@ -42,7 +44,7 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
   const tone = statusTone(player.status);
 
   return (
-    <section
+    <AtmosphereLayer
       aria-label="Player Hero"
       style={{
         borderWidth: 'var(--lf-border-width-hair)',
@@ -61,25 +63,13 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
           gap: 'var(--lf-space-4)',
         }}
       >
-        <div
-          className="font-[family-name:var(--font-ui)] font-bold"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 'calc(var(--lf-space-8) + var(--lf-space-6))',
-            height: 'calc(var(--lf-space-8) + var(--lf-space-6))',
-            flexShrink: 0,
-            background: 'var(--lf-color-gold-soft)',
-            borderWidth: 'var(--lf-border-width-hair)',
-            borderStyle: 'solid',
-            borderColor: 'var(--lf-color-border-gold)',
-            color: 'var(--lf-color-gold-base)',
-            fontSize: 'var(--lf-type-h1)',
-            borderRadius: 'var(--lf-radius-sm)',
-          }}
-        >
-          {player.position}
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--lf-space-2)' }}>
+          <PlayerPortrait playerId={player.id} name={player.name} size="lg" />
+          <ClubCrest
+            shortName={dashboardMock.club.shortName}
+            clubName={dashboardMock.club.name}
+            size="sm"
+          />
         </div>
 
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>
@@ -116,6 +106,10 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
               color: 'var(--lf-color-text-muted)',
             }}
           >
+            <span>
+              Poz.{' '}
+              <strong style={{ color: 'var(--lf-color-text-primary)' }}>{player.position}</strong>
+            </span>
             <span>
               Wiek{' '}
               <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
@@ -161,7 +155,7 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
           {STATUS_LABEL[player.status]}
         </span>
       </div>
-    </section>
+    </AtmosphereLayer>
   );
 }
 
