@@ -49,7 +49,7 @@ export function LeftNavigation() {
             <ClubCrest shortName="FCL" clubName={sessionChrome.player.club} size="sm" />
             <div style={{ minWidth: 0 }}>
               <div
-                className="font-[family-name:var(--font-ui)] font-semibold uppercase truncate"
+                className="truncate font-[family-name:var(--font-ui)] font-semibold uppercase"
                 style={{
                   fontSize: 'var(--lf-type-label)',
                   letterSpacing: 'var(--lf-type-tracking-label)',
@@ -192,7 +192,10 @@ export function LeftNavigation() {
         </div>
       ) : null}
 
-      <div className="border-t" style={{ borderColor: 'var(--lf-color-border-subtle)', paddingBlock: 'var(--lf-space-1)' }}>
+      <div
+        className="border-t"
+        style={{ borderColor: 'var(--lf-color-border-subtle)', paddingBlock: 'var(--lf-space-1)' }}
+      >
         {!navCollapsed ? (
           <div
             style={{

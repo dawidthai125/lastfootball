@@ -36,8 +36,8 @@ Trzy główne płaszczyzny: **Product (GDD)**, **Engine (LFE)**, **Platform (Web
 
 ## Najważniejsze decyzje
 
-- Silnik nie zna platformy.  
-- Design nie jest kodem.  
+- Silnik nie zna platformy.
+- Design nie jest kodem.
 - Platforma nie definiuje reguł meczu — LFE + GDD.
 
 ## Powiązania

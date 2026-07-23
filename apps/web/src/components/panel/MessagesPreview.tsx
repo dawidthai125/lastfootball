@@ -7,7 +7,11 @@ export function MessagesPreview() {
   const messages = dashboardMock.messagesPreview;
 
   return (
-    <SectionShell title="Wiadomości" flush action={<SectionLink href="/messages">skrzynka →</SectionLink>}>
+    <SectionShell
+      title="Wiadomości"
+      flush
+      action={<SectionLink href="/messages">skrzynka →</SectionLink>}
+    >
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {messages.map((m) => (
           <li
@@ -50,7 +54,12 @@ export function MessagesPreview() {
                     Nowa
                   </span>
                 ) : null}
-                <span style={{ fontWeight: m.unread ? 600 : 400, color: 'var(--lf-color-text-primary)' }}>
+                <span
+                  style={{
+                    fontWeight: m.unread ? 600 : 400,
+                    color: 'var(--lf-color-text-primary)',
+                  }}
+                >
                   {m.subject}
                 </span>
                 <span
@@ -66,7 +75,11 @@ export function MessagesPreview() {
               </span>
               <span
                 className="tabular-nums"
-                style={{ flexShrink: 0, color: 'var(--lf-color-text-faint)', fontSize: 'var(--lf-type-caption)' }}
+                style={{
+                  flexShrink: 0,
+                  color: 'var(--lf-color-text-faint)',
+                  fontSize: 'var(--lf-type-caption)',
+                }}
               >
                 {m.when}
               </span>

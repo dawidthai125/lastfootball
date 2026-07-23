@@ -61,7 +61,7 @@ export default function TrainingPage() {
             </li>
             <li className="flex justify-between">
               <span className="text-[var(--lf-muted)]">Ryzyko kontuzji</span>
-              <span className="tabular-nums text-[var(--lf-warn)]">umiarkowane</span>
+              <span className="text-[var(--lf-warn)] tabular-nums">umiarkowane</span>
             </li>
             <li className="flex justify-between">
               <span className="text-[var(--lf-muted)]">Ostatnia sesja</span>

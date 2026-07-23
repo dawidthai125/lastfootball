@@ -41,7 +41,14 @@ export function MatchdayStrip({
           gap: 'var(--lf-space-4)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-3)', flex: '1 1 280px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--lf-space-3)',
+            flex: '1 1 280px',
+          }}
+        >
           <ClubCrest shortName={homeShort} clubName={homeName} label={homeName} size="md" />
           <div style={{ textAlign: 'center', minWidth: '4rem' }}>
             <div

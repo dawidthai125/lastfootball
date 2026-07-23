@@ -21,7 +21,14 @@ export function CrestMonogram({
 
 export function FormPills({ form }: { form: FormResult[] }) {
   return (
-    <div style={{ display: 'flex', gap: 'var(--lf-space-1)', justifyContent: 'center', flexWrap: 'wrap' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: 'var(--lf-space-1)',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
       {form.map((r, i) => {
         const style = formResultStyle(r);
         return (

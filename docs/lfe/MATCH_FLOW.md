@@ -14,8 +14,8 @@ Flow sesji działa (EPIC-6). Fazy lifecycle (EPIC-3) + komendy (EPIC-5). Brak ru
 
 Aplikacja (transitional) składa `MatchSessionConfig`:
 
-- seed, team IDs, names  
-- `players`, `homeLineup` / `awayLineup`, benches  
+- seed, team IDs, names
+- `players`, `homeLineup` / `awayLineup`, benches
 - opcjonalnie `engine` (`DeepPartial<LfeConfig>`), `logger`
 
 ### 2. Create
@@ -46,28 +46,28 @@ Simulation tickuje; systems aktualizują clock/scheduler/lifecycle/events/replay
 
 ### 5. Live control
 
-- `pause` / `resume`  
-- kolejne komendy (end, abandon, walkover, …)  
+- `pause` / `resume`
+- kolejne komendy (end, abandon, walkover, …)
 - UI czyta: `getMatchState()`, `getSpatialState()`, `getEvents()`
 
 ### 6. End
 
-- komenda końca / terminal lifecycle state  
-- `stop()` / `dispose()`  
+- komenda końca / terminal lifecycle state
+- `stop()` / `dispose()`
 - `MatchResult` / eventy pod Report (GDD §9)
 
 ### Mapowanie na GDD §9
 
-| GDD | LFE |
-|-----|-----|
-| Pre | config + createMatch + lineup |
-| Live | start/run/dispatch + spatial/state reads |
-| Report | events / result / snapshots |
-| Hub | dispose → powrót do app |
+| GDD    | LFE                                      |
+| ------ | ---------------------------------------- |
+| Pre    | config + createMatch + lineup            |
+| Live   | start/run/dispatch + spatial/state reads |
+| Report | events / result / snapshots              |
+| Hub    | dispose → powrót do app                  |
 
 ## Najważniejsze decyzje
 
-- UI nie omija sesji.  
+- UI nie omija sesji.
 - Tempo meczu = `run`/`step`, nie osobny „god mode” mutujący stan.
 
 ## Powiązania

@@ -3,9 +3,6 @@ import { sessionChrome } from '@/data/mock';
 
 export default function ProfilePage() {
   return (
-    <PlaceholderPage
-      title="Profil"
-      subtitle={`${sessionChrome.player.name} · konto gracza`}
-    />
+    <PlaceholderPage title="Profil" subtitle={`${sessionChrome.player.name} · konto gracza`} />
   );
 }

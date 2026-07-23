@@ -10,10 +10,7 @@ import {
 import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { createSessionFromFixture } from '@/gameplay/create-session-from-fixture';
-import {
-  createMatchCanvasHost,
-  type MatchCanvasHost,
-} from '@/gameplay/canvas-host';
+import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 
 export type LiveMatchSnapshot = {
   readonly matchState: MatchState;

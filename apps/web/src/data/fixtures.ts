@@ -294,7 +294,11 @@ export function getPreMatchBundle(id: string): PreMatchBundle | undefined {
     teamCondition: { label: 'Dobra', value: 78 },
     ticker: 'Kontuzja P. Lis — ograniczona dyspozycja. Kibice wierzą w punktację.',
     decisions: [
-      { id: 'lineup', label: 'Skład', hint: 'Potwierdź wyjściową jedenastkę (edycja w kolejnym EPIC)' },
+      {
+        id: 'lineup',
+        label: 'Skład',
+        hint: 'Potwierdź wyjściową jedenastkę (edycja w kolejnym EPIC)',
+      },
       { id: 'tactics', label: 'Taktyka', hint: 'Ustawienie i intensywność — tylko podgląd' },
       { id: 'setpieces', label: 'Stałe fragmenty', hint: 'Do rozbudowy w kolejnych EPIC' },
     ],
@@ -327,7 +331,7 @@ export function getLiveMatchBundle(id: string): LiveMatchBundle | undefined {
     events: [
       {
         id: 'e0',
-        minute: '0\'',
+        minute: "0'",
         kind: 'info',
         text: 'Oczekiwanie na pipeline symulacji LFE. Feed gotowy pod eventy silnika.',
       },

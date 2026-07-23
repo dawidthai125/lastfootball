@@ -58,7 +58,7 @@ export function createSessionFromFixture(fixture: Fixture): MatchSession {
   );
   const awayPlayers = padToEleven(theirRows).map((r, i) =>
     createPlayer({
-      id: (`away-${i}`) as PlayerId,
+      id: `away-${i}` as PlayerId,
       teamId: awayTeamId,
       side: 'away',
       name: r.name,

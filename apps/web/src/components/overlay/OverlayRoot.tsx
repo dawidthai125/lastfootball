@@ -103,7 +103,12 @@ export function OverlayRoot() {
                   }}
                 >
                   <span>{n.title}</span>
-                  <span style={{ color: 'var(--lf-color-text-faint)', fontSize: 'var(--lf-type-caption)' }}>
+                  <span
+                    style={{
+                      color: 'var(--lf-color-text-faint)',
+                      fontSize: 'var(--lf-type-caption)',
+                    }}
+                  >
                     {n.meta}
                   </span>
                 </Link>

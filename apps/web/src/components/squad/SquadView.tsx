@@ -54,7 +54,12 @@ function statusColor(status: PlayerStatus): { border: string; bg: string; text: 
   }
 }
 
-function comparePlayers(a: SquadPlayer, b: SquadPlayer, sort: SortKey, dir: 'asc' | 'desc'): number {
+function comparePlayers(
+  a: SquadPlayer,
+  b: SquadPlayer,
+  sort: SortKey,
+  dir: 'asc' | 'desc',
+): number {
   const mul = dir === 'asc' ? 1 : -1;
   switch (sort) {
     case 'name':
@@ -117,7 +122,11 @@ export function SquadView() {
         <div>
           <h1
             className="font-[family-name:var(--font-ui)] font-semibold"
-            style={{ margin: 0, fontSize: 'var(--lf-type-h1)', color: 'var(--lf-color-text-primary)' }}
+            style={{
+              margin: 0,
+              fontSize: 'var(--lf-type-h1)',
+              color: 'var(--lf-color-text-primary)',
+            }}
           >
             Kadra
           </h1>
@@ -207,7 +216,11 @@ export function SquadView() {
           >
             Sortuj
           </span>
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} style={controlStyle}>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            style={controlStyle}
+          >
             <option value="skill">Umiejętność</option>
             <option value="form">Forma</option>
             <option value="energy">Energia</option>
@@ -240,7 +253,8 @@ export function SquadView() {
           background: 'var(--lf-color-bg-panel)',
           borderRadius: 'var(--lf-radius-sm)',
           overflow: 'auto',
-          maxHeight: 'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-8) - var(--lf-space-8))',
+          maxHeight:
+            'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-8) - var(--lf-space-8))',
         }}
       >
         <table
@@ -338,17 +352,26 @@ export function SquadView() {
                     </span>
                   </td>
                   <td style={{ padding: 'var(--lf-space-2)' }}>{p.position}</td>
-                  <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}>
+                  <td
+                    className="tabular-nums"
+                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
+                  >
                     {p.age}
                   </td>
-                  <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}>
+                  <td
+                    className="tabular-nums"
+                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
+                  >
                     {p.form}
                   </td>
-                  <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}>
+                  <td
+                    className="tabular-nums"
+                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
+                  >
                     {p.energy}
                   </td>
                   <td
-                    className="tabular-nums font-semibold"
+                    className="font-semibold tabular-nums"
                     style={{
                       padding: 'var(--lf-space-2)',
                       textAlign: 'right',

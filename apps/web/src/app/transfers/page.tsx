@@ -51,7 +51,7 @@ export default function TransfersPage() {
                 key: 'fee',
                 header: 'Cena',
                 align: 'right',
-                render: (r) => <span className="tabular-nums text-[var(--lf-gold)]">{r.fee}</span>,
+                render: (r) => <span className="text-[var(--lf-gold)] tabular-nums">{r.fee}</span>,
               },
             ]}
           />

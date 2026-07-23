@@ -31,7 +31,8 @@ export function NextMatchHero({ fixture }: NextMatchHeroProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(10rem, 14rem)',
+          gridTemplateColumns:
+            'minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(10rem, 14rem)',
           gap: 'var(--lf-space-4)',
           padding: 'var(--lf-space-5)',
           alignItems: 'center',
@@ -139,13 +140,7 @@ export function NextMatchHero({ fixture }: NextMatchHeroProps) {
   );
 }
 
-function TeamBlock({
-  team,
-  side,
-}: {
-  team: PreMatchBundle['ourTeam'];
-  side: string;
-}) {
+function TeamBlock({ team, side }: { team: PreMatchBundle['ourTeam']; side: string }) {
   return (
     <div style={{ textAlign: 'center' }}>
       <p
@@ -192,7 +187,9 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       >
         {label}
       </div>
-      <div style={{ marginTop: 'var(--lf-space-1)', color: 'var(--lf-color-text-secondary)' }}>{value}</div>
+      <div style={{ marginTop: 'var(--lf-space-1)', color: 'var(--lf-color-text-secondary)' }}>
+        {value}
+      </div>
     </div>
   );
 }

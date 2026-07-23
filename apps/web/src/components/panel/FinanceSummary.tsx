@@ -11,7 +11,10 @@ export function FinanceSummary() {
   ];
 
   return (
-    <SectionShell title="Finanse — skrót" action={<SectionLink href="/finance">więcej →</SectionLink>}>
+    <SectionShell
+      title="Finanse — skrót"
+      action={<SectionLink href="/finance">więcej →</SectionLink>}
+    >
       <div
         style={{
           display: 'grid',

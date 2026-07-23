@@ -7,15 +7,7 @@ import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { formatMoney, sessionChrome } from '@/data/mock';
 
-function Metric({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: 'gold' | 'ok';
-}) {
+function Metric({ label, value, tone }: { label: string; value: string; tone?: 'gold' | 'ok' }) {
   return (
     <div className="lf-chrome-metric">
       <span className="lf-chrome-metric__label">{label}</span>
@@ -92,7 +84,7 @@ export function TopBar() {
         <ClubCrest shortName="FCL" clubName="FC Lastovia" size="sm" style={{ lineHeight: 0 }} />
         <div className="hidden min-w-0 sm:block">
           <div
-            className="font-[family-name:var(--font-ui)] font-bold uppercase truncate"
+            className="truncate font-[family-name:var(--font-ui)] font-bold uppercase"
             style={{
               fontSize: 'var(--lf-type-table)',
               letterSpacing: 'var(--lf-type-tracking-label)',
@@ -122,7 +114,10 @@ export function TopBar() {
         <Metric label="Dzień" value={String(day)} />
       </div>
 
-      <div className="ml-auto flex items-center overflow-x-auto" style={{ gap: 'var(--lf-space-2)' }}>
+      <div
+        className="ml-auto flex items-center overflow-x-auto"
+        style={{ gap: 'var(--lf-space-2)' }}
+      >
         <div className="hidden items-center sm:flex" style={{ gap: 0 }}>
           <Metric label="Budżet" value={formatMoney(money).replace(/\s/g, '\u00a0')} tone="ok" />
           <Metric label="LF" value={String(premium)} tone="gold" />
@@ -181,7 +176,12 @@ export function TopBar() {
             borderRadius: 'var(--lf-radius-sm)',
           }}
         >
-          <PlayerPortrait playerId="manager" name={player.name} size="sm" style={{ width: 22, height: 22 }} />
+          <PlayerPortrait
+            playerId="manager"
+            name={player.name}
+            size="sm"
+            style={{ width: 22, height: 22 }}
+          />
           <div className="hidden leading-tight sm:block">
             <div
               className="font-[family-name:var(--font-ui)] font-semibold"

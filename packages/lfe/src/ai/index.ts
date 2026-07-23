@@ -12,11 +12,7 @@ export type {
   MatchAiSideContext,
 } from './types';
 
-export {
-  buildMatchAiContext,
-  formationAggressiveness,
-  sideContext,
-} from './context';
+export { buildMatchAiContext, formationAggressiveness, sideContext } from './context';
 
 export {
   decideAction,

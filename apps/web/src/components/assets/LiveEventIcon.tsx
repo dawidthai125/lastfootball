@@ -13,12 +13,7 @@ type LiveEventIconProps = {
 /**
  * Live match event icon from Asset Pack.
  */
-export function LiveEventIcon({
-  kind,
-  size = 14,
-  highlight = false,
-  title,
-}: LiveEventIconProps) {
+export function LiveEventIcon({ kind, size = 14, highlight = false, title }: LiveEventIconProps) {
   if (!(kind in LIVE_ICON_FILES)) return null;
   const src = liveIconSrc(kind as LiveIconId);
   const color = highlight

@@ -60,7 +60,7 @@ React / Canvas
 
 ## Najważniejsze decyzje
 
-- Kolejność systems jest SSOT priorytetów (EPIC-4).  
+- Kolejność systems jest SSOT priorytetów (EPIC-4).
 - Replay jest częścią ticka, nie osobnym trybem app.
 
 ## Powiązania

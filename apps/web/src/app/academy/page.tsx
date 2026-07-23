@@ -35,7 +35,7 @@ export default function AcademyPage() {
               key: 'pot',
               header: 'Potencjał',
               align: 'right',
-              render: (r) => <span className="tabular-nums text-[var(--lf-gold)]">{r.pot}</span>,
+              render: (r) => <span className="text-[var(--lf-gold)] tabular-nums">{r.pot}</span>,
             },
           ]}
         />

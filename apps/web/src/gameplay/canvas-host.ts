@@ -61,9 +61,7 @@ export function createMatchCanvasHost(): MatchCanvasHost {
       renderer = next;
       if (!next) return;
       const el =
-        typeof document !== 'undefined'
-          ? document.getElementById(MATCH_CANVAS_ROOT_ID)
-          : null;
+        typeof document !== 'undefined' ? document.getElementById(MATCH_CANVAS_ROOT_ID) : null;
       if (el) next.mount(el);
       const model = host.getReadModel();
       if (model) next.render(model);

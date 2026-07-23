@@ -26,23 +26,23 @@ apps/web
 
 ### Zakazy importu
 
-| From → To | Dozwolone? |
-|-----------|------------|
-| lfe → web | **NIE** |
-| lfe → supabase client | **NIE** |
-| domain → lfe | **NIE** |
-| web → lfe deep paths | **NIE** (tylko package export) |
-| web → domain | TAK |
-| docs → runtime | n/a |
+| From → To             | Dozwolone?                     |
+| --------------------- | ------------------------------ |
+| lfe → web             | **NIE**                        |
+| lfe → supabase client | **NIE**                        |
+| domain → lfe          | **NIE**                        |
+| web → lfe deep paths  | **NIE** (tylko package export) |
+| web → domain          | TAK                            |
+| docs → runtime        | n/a                            |
 
 ### Zewnętrzne
 
-| Usługa | Użycie |
-|--------|--------|
-| Vercel | Hosting `apps/web` |
-| Supabase | Auth/DB (app), nie LFE |
-| GitHub Actions | CI validate |
-| Vitest / TypeScript | Dev |
+| Usługa              | Użycie                 |
+| ------------------- | ---------------------- |
+| Vercel              | Hosting `apps/web`     |
+| Supabase            | Auth/DB (app), nie LFE |
+| GitHub Actions      | CI validate            |
+| Vitest / TypeScript | Dev                    |
 
 ## Najważniejsze decyzje
 

@@ -94,13 +94,13 @@ Mecz (wynik, emocja, feedback) jest sercem pętli. Reszta systemów **obsługuje
 
 **Mapa horyzontów czasowych**
 
-| Horyzont | Gracz czuje | Główny „beat” |
-|----------|-------------|---------------|
-| Minuty 0–15 | „To mój klub, zaraz gram” | Onboarding → pierwszy mecz |
-| Dzień 1 | „Wiem, co robić dziś” | Hub + 1 decyzja + mecz / przygotowanie |
-| Tydzień 1 | „Jestem w lidze” | Kilka kolejek, rytm powrotów |
-| Sezon 1 | „Buduję historię” | Tabela, cele sezonowe |
-| Miesiące+ | „Mój klub ma tożsamość” | Prestige, rywalizacja, kolekcja chwil |
+| Horyzont    | Gracz czuje               | Główny „beat”                          |
+| ----------- | ------------------------- | -------------------------------------- |
+| Minuty 0–15 | „To mój klub, zaraz gram” | Onboarding → pierwszy mecz             |
+| Dzień 1     | „Wiem, co robić dziś”     | Hub + 1 decyzja + mecz / przygotowanie |
+| Tydzień 1   | „Jestem w lidze”          | Kilka kolejek, rytm powrotów           |
+| Sezon 1     | „Buduję historię”         | Tabela, cele sezonowe                  |
+| Miesiące+   | „Mój klub ma tożsamość”   | Prestige, rywalizacja, kolekcja chwil  |
 
 ---
 
@@ -454,16 +454,16 @@ Zdefiniować **uczciwe** haki retencji zgodne z menedżerem piłkarskim — nie 
 
 **Zestaw haków (doświadczenie)**
 
-| Hak | Jak działa w pętli | Uwagi |
-|-----|--------------------|--------|
-| Następny mecz w kalendarzu | Najsilniejszy powód powrotu | Zawsze widoczny na hubie |
-| Seria form / streak wyników | Emocja kontynuacji | Nie karać brutalnie za zerwanie |
-| Wiadomość „pilna” | 1 rzecz do przeczytania | Limit, by nie spamować (§21–22) |
-| Zadanie dzienne | Lekki bonus za wizytę | Opcjonalne względem meczu (§20) |
-| Pozycja w tabeli | Ambicja tygodnia | Czytelna zmiana vs poprzednio |
-| Odblokowanie warstwy | Progressive disclosure | Nagroda za czas w grze |
-| Powiadomienie o meczu | Soft remind | Opt-in, quiet hours (§22) |
-| Historia klubu | „Wróć do swojej historii” | Long-term |
+| Hak                         | Jak działa w pętli          | Uwagi                           |
+| --------------------------- | --------------------------- | ------------------------------- |
+| Następny mecz w kalendarzu  | Najsilniejszy powód powrotu | Zawsze widoczny na hubie        |
+| Seria form / streak wyników | Emocja kontynuacji          | Nie karać brutalnie za zerwanie |
+| Wiadomość „pilna”           | 1 rzecz do przeczytania     | Limit, by nie spamować (§21–22) |
+| Zadanie dzienne             | Lekki bonus za wizytę       | Opcjonalne względem meczu (§20) |
+| Pozycja w tabeli            | Ambicja tygodnia            | Czytelna zmiana vs poprzednio   |
+| Odblokowanie warstwy        | Progressive disclosure      | Nagroda za czas w grze          |
+| Powiadomienie o meczu       | Soft remind                 | Opt-in, quiet hours (§22)       |
+| Historia klubu              | „Wróć do swojej historii”   | Long-term                       |
 
 **Przebieg typowego powrotu po 24–48 h**
 
@@ -610,11 +610,11 @@ Minimalny, zaufany dostęp do konta — zero zbędnych pól.
 
 **Dane wymagane od użytkownika**
 
-| Ścieżka | Pola |
-|---------|------|
-| OAuth | Token dostawcy + akceptacja regulaminu |
-| Email | Adres email, hasło, akceptacja regulaminu |
-| Logowanie | Email+hasło **lub** OAuth |
+| Ścieżka   | Pola                                      |
+| --------- | ----------------------------------------- |
+| OAuth     | Token dostawcy + akceptacja regulaminu    |
+| Email     | Adres email, hasło, akceptacja regulaminu |
+| Logowanie | Email+hasło **lub** OAuth                 |
 
 **Walidacje (produktowe)**
 
@@ -900,8 +900,8 @@ Dać poczucie „mamy dom” bez budowania infrastruktury na starcie.
 
 **Przebieg**
 
-1. Na ekranie podsumowania pakietu: karta **Stadion** — nazwa szablonowa (np. „Arena [Nazwa klubu]”), pojemność startowa jako fakt z presetu.  
-2. Gracz **nie konfiguruje** trybun w onboardingu.  
+1. Na ekranie podsumowania pakietu: karta **Stadion** — nazwa szablonowa (np. „Arena [Nazwa klubu]”), pojemność startowa jako fakt z presetu.
+2. Gracz **nie konfiguruje** trybun w onboardingu.
 3. Jedno zdanie: „Dom klubu — rozbudowa obiektu później” (Future → §13.10).
 
 **Decyzje gracza**
@@ -920,8 +920,9 @@ Dać poczucie „mamy dom” bez budowania infrastruktury na starcie.
 
 - §13 Stadion (SSOT), §14 Finanse, domena Stadium w LFE (kontrakt nazwy).
 
-**Decyzje (domknięte w GDD-12 / §13)**  
-- Nazwa stadionu w MVP: **szablon automatyczny**; ręczne nazwanie = Future.  
+**Decyzje (domknięte w GDD-12 / §13)**
+
+- Nazwa stadionu w MVP: **szablon automatyczny**; ręczne nazwanie = Future.
 - Preset startowy: **jeden** dla ligi startowej (IV); warianty per szczebel = Future / content.
 
 ---
@@ -1109,20 +1110,20 @@ Jedno jasne zadanie = most do core loop (§3): doprowadzić do **pierwszego mecz
 **Cel**  
 Przewidzieć awarie UX, by gracz nigdy nie utknął bez CTA i bez utraty klubu „w połowie”.
 
-| Scenariusz | Zachowanie produktowe |
-|------------|------------------------|
-| Nazwa zajęta / nieprawidłowa | Inline error przy polu; zostań na kroku |
-| OAuth anulowany | Wróć do wyboru metody; bez alarmu |
-| Email już zarejestrowany | CTA „Zaloguj się” |
-| Sesja wygasła w trakcie wizarda | Zachowaj draft klubu po ponownym logowaniu **lub** poproś o powtórzenie tożsamości z jasnym komunikatem |
-| Utrata sieci przy Potwierdź | Retry; nie twórz duplikatu klubu |
-| Podwójne kliknięcie Potwierdź | Idempotencja — jeden klub |
-| Konto bez klubu po crashu | Przy logowaniu → wznów §5 |
-| Konto z klubem wchodzi w „Załóż klub” | Redirect do Hub |
-| Słowa zakazane w nazwie | Odrzuć z neutralnym komunikatem |
-| Brak szablonów herbów (awaria katalogu) | Fallback 1 domyślny herb + log wewnętrzny |
-| Gracz zamyka przeglądarkę w revealu | Draft / dokończenie przy powrocie |
-| Weryfikacja email soft-fail | Pozwól grać; przypomnij w hubie (jeśli wybrano soft policy) |
+| Scenariusz                              | Zachowanie produktowe                                                                                   |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Nazwa zajęta / nieprawidłowa            | Inline error przy polu; zostań na kroku                                                                 |
+| OAuth anulowany                         | Wróć do wyboru metody; bez alarmu                                                                       |
+| Email już zarejestrowany                | CTA „Zaloguj się”                                                                                       |
+| Sesja wygasła w trakcie wizarda         | Zachowaj draft klubu po ponownym logowaniu **lub** poproś o powtórzenie tożsamości z jasnym komunikatem |
+| Utrata sieci przy Potwierdź             | Retry; nie twórz duplikatu klubu                                                                        |
+| Podwójne kliknięcie Potwierdź           | Idempotencja — jeden klub                                                                               |
+| Konto bez klubu po crashu               | Przy logowaniu → wznów §5                                                                               |
+| Konto z klubem wchodzi w „Załóż klub”   | Redirect do Hub                                                                                         |
+| Słowa zakazane w nazwie                 | Odrzuć z neutralnym komunikatem                                                                         |
+| Brak szablonów herbów (awaria katalogu) | Fallback 1 domyślny herb + log wewnętrzny                                                               |
+| Gracz zamyka przeglądarkę w revealu     | Draft / dokończenie przy powrocie                                                                       |
+| Weryfikacja email soft-fail             | Pozwól grać; przypomnij w hubie (jeśli wybrano soft policy)                                             |
 
 **Decyzje gracza przy błędach**
 
@@ -1212,12 +1213,12 @@ Tożsamość (pozycja, talenty)
 
 **Granice rozdziałów**
 
-| Tu (§7) | Nie tu |
-|---------|--------|
-| Co zawodnik „jest” i jak się zmienia | Sesje/plany treningu → **§8** |
-| Statusy wpływające na gotowość | Taktyka XI → **§9** |
-| Wartość jako sygnał | Negocjacje/okna → **§12** |
-| Regres / starzenie (zasady) | Formuły liczbowe → później / balans |
+| Tu (§7)                              | Nie tu                              |
+| ------------------------------------ | ----------------------------------- |
+| Co zawodnik „jest” i jak się zmienia | Sesje/plany treningu → **§8**       |
+| Statusy wpływające na gotowość       | Taktyka XI → **§9**                 |
+| Wartość jako sygnał                  | Negocjacje/okna → **§12**           |
+| Regres / starzenie (zasady)          | Formuły liczbowe → później / balans |
 
 ---
 
@@ -1593,8 +1594,9 @@ Dać drugi tor wzrostu między meczami — podporządkowany meczowi, nie grind-r
 
 - §8 (właściciel UX sesji); §7.5/7.8/7.10; §3.6; §26 (koszty — później).
 
-**Decyzje (domknięte w GDD-07 / §8)**  
-- Odblokowanie treningu: po **2 rozegranych meczach** (§8.14).  
+**Decyzje (domknięte w GDD-07 / §8)**
+
+- Odblokowanie treningu: po **2 rozegranych meczach** (§8.14).
 - MVP: trening **zespołowy**; indywidualny = Future (§8.2, §8.13).
 
 ---
@@ -1708,8 +1710,9 @@ Dać sygnał „ile ten piłkarz znaczy na rynku” pod przyszłe transfery — 
 
 - §12; §14/§26; §6; §10.16; §9.14 (duma z wzrostu wartości).
 
-**Decyzje (domknięte w GDD-09 / §12)**  
-- Wartość widoczna od **odblokowania rynku transferowego** (§12.2).  
+**Decyzje (domknięte w GDD-09 / §12)**
+
+- Wartość widoczna od **odblokowania rynku transferowego** (§12.2).
 - Brak scouting fog wartości młodzieży w MVP (pasmo widoczne jak u seniorów).
 
 ---
@@ -1721,34 +1724,34 @@ Zamknąć shipowalny wycinek i ścieżkę głębi.
 
 **MVP — wchodzi**
 
-- Wiek + pasma, potencjał (pasmo), poziom aktualny  
-- Atrybuty: grupy + 3–6 kluczowych na karcie  
-- Doświadczenie jakościowe z meczów  
-- Forma, gotowość/zmęczenie, kontuzje (proste), morale (lekkie)  
-- Rozwój po meczu jako **primary**  
-- Haczyk treningu (impulsy) — UX sesji w §8  
-- 0–2 talenty  
-- Wartość jako sygnał (pasmo)  
-- Soft regres / starzenie sezonowe  
+- Wiek + pasma, potencjał (pasmo), poziom aktualny
+- Atrybuty: grupy + 3–6 kluczowych na karcie
+- Doświadczenie jakościowe z meczów
+- Forma, gotowość/zmęczenie, kontuzje (proste), morale (lekkie)
+- Rozwój po meczu jako **primary**
+- Haczyk treningu (impulsy) — UX sesji w §8
+- 0–2 talenty
+- Wartość jako sygnał (pasmo)
+- Soft regres / starzenie sezonowe
 
 **MVP — nie wchodzi**
 
-- Pełna siatka 30+ atrybutów na starcie UI  
-- Symulator medyczny / rehab mini-game  
-- Formuły publikowane graczowi  
-- Zaawansowany scouting potencjału  
-- Indywidualne programy 12-tygodniowe  
-- Negatywne talenty dense  
-- Dynamiczny rynek z AI ofertami (→ §12)  
+- Pełna siatka 30+ atrybutów na starcie UI
+- Symulator medyczny / rehab mini-game
+- Formuły publikowane graczowi
+- Zaawansowany scouting potencjału
+- Indywidualne programy 12-tygodniowe
+- Negatywne talenty dense
+- Dynamiczny rynek z AI ofertami (→ §12)
 
 **Plan rozbudowy (roboczy)**
 
-1. §8 pełny trening (plany, obciążenie)  
-2. Głębsze atrybuty + role na boisku  
-3. Akademię / youth intake  
-4. Scouting & hidden potential  
-5. Szczegółowa wartość + §12  
-6. Personality / media / leadership layer  
+1. §8 pełny trening (plany, obciążenie)
+2. Głębsze atrybuty + role na boisku
+3. Akademię / youth intake
+4. Scouting & hidden potential
+5. Szczegółowa wartość + §12
+6. Personality / media / leadership layer
 
 **Decyzje gracza**
 
@@ -1767,12 +1770,12 @@ Zamknąć shipowalny wycinek i ścieżkę głębi.
 
 ### 7.19 Kontrakty produktowe §7
 
-1. **Rozwój napędzają mecze**; trening jest uzupełnieniem (§8).  
-2. **Poziom + potencjał + statusy krótkie** wystarczą do decyzji XI w MVP.  
-3. **Unikalność = atrybuty grupowe + talenty + historia minut.**  
-4. **Zmęczenie/kontuzja wpływają na skład, nie na odblokowanie kolejki ligowej.**  
-5. **Regres jest łagodny w early game** i nie karze 1 dnia AFK.  
-6. **Wartość rynkowa to sygnał**, nie system transferowy.  
+1. **Rozwój napędzają mecze**; trening jest uzupełnieniem (§8).
+2. **Poziom + potencjał + statusy krótkie** wystarczą do decyzji XI w MVP.
+3. **Unikalność = atrybuty grupowe + talenty + historia minut.**
+4. **Zmęczenie/kontuzja wpływają na skład, nie na odblokowanie kolejki ligowej.**
+5. **Regres jest łagodny w early game** i nie karze 1 dnia AFK.
+6. **Wartość rynkowa to sygnał**, nie system transferowy.
 7. **Bez formuł w GDD** — balans liczbowy osobnym etapem.
 
 ---
@@ -1808,19 +1811,19 @@ Zaprojektować kompletny, czytelny system przygotowania kadry między meczami �
 
 **Granice rozdziałów**
 
-| Tu (§8) | Nie tu |
-|---------|--------|
-| Sesje, fokus, intensywność, harmonogram | Model zawodnika / potencjał → **§7** |
-| Wpływ na statusy i lekki rozwój | Doświadczenie meczu / raport → **§9** |
-| Koszt zmęczenia (zasada) | Kwoty finansowe treningu → **§14 / §26** |
-| UX ekranu treningu (produkt) | Implementacja UI / kod |
+| Tu (§8)                                 | Nie tu                                   |
+| --------------------------------------- | ---------------------------------------- |
+| Sesje, fokus, intensywność, harmonogram | Model zawodnika / potencjał → **§7**     |
+| Wpływ na statusy i lekki rozwój         | Doświadczenie meczu / raport → **§9**    |
+| Koszt zmęczenia (zasada)                | Kwoty finansowe treningu → **§14 / §26** |
+| UX ekranu treningu (produkt)            | Implementacja UI / kod                   |
 
 **Odpowiedzi na otwarte z §7.13 (domknięcie produktowe w §8)**
 
-| Pytanie §7.13 | Decyzja §8 (SSOT) |
-|---------------|------------------|
-| Kiedy odblokować trening? | Po **2 rozegranych meczach** — soft unlock z 1 CTA. |
-| Indywidualny w MVP? | **Nie** — MVP = trening **zespołowy**; indywidualny = Future (§8.2, §8.13). |
+| Pytanie §7.13             | Decyzja §8 (SSOT)                                                           |
+| ------------------------- | --------------------------------------------------------------------------- |
+| Kiedy odblokować trening? | Po **2 rozegranych meczach** — soft unlock z 1 CTA.                         |
+| Indywidualny w MVP?       | **Nie** — MVP = trening **zespołowy**; indywidualny = Future (§8.2, §8.13). |
 
 ---
 
@@ -1953,12 +1956,12 @@ Jedna oś decyzji „jak mocno dziś pchamy”.
 
 **Przebieg — pasma MVP**
 
-| Intensywność | Odczucie | Impuls rozwojowy | Zmęczenie | Ryzyko kontuzji | Morale |
-|--------------|----------|------------------|-----------|-----------------|--------|
-| **Lekka** | Bezpiecznie | Niski | Niski | Niskie | Neutral / lekki + |
-| **Normalna** | Default | Średni (wsparcie) | Średni | Umiarkowane | Neutral |
-| **Wysoka** | Push | Wyższy (nadal poniżej meczu) | Wysoki | Wyższe | + krótko / − przy przeciążeniu |
-| **Regeneracja** | Odnowa | Brak / mikro | Spadek zmęczenia / ↑ kondycja | Minimalne | + przy zmęczeniu |
+| Intensywność    | Odczucie    | Impuls rozwojowy             | Zmęczenie                     | Ryzyko kontuzji | Morale                         |
+| --------------- | ----------- | ---------------------------- | ----------------------------- | --------------- | ------------------------------ |
+| **Lekka**       | Bezpiecznie | Niski                        | Niski                         | Niskie          | Neutral / lekki +              |
+| **Normalna**    | Default     | Średni (wsparcie)            | Średni                        | Umiarkowane     | Neutral                        |
+| **Wysoka**      | Push        | Wyższy (nadal poniżej meczu) | Wysoki                        | Wyższe          | + krótko / − przy przeciążeniu |
+| **Regeneracja** | Odnowa      | Brak / mikro                 | Spadek zmęczenia / ↑ kondycja | Minimalne       | + przy zmęczeniu               |
 
 1. Gracz widzi jakościowe skutki przed potwierdzeniem (ikony strzałek, nie liczby formuł).
 2. Przy bardzo wysokim zmęczeniu kadry: ostrzeżenie + sugestia Regeneracji.
@@ -2123,12 +2126,12 @@ Zamknąć anti-abuse i czytelne soft-gate’y.
 
 **Przebieg — limity MVP**
 
-1. **1 sesja / dzień realny.**  
-2. Brak treningu indywidualnego.  
-3. Kontuzjowani poza obciążeniem rozwojowym.  
-4. Zawodnicy o krytycznie niskiej gotowości: ostrzeżenie; przy Wysokiej — soft-block lub auto-suggest Regeneracja.  
-5. Trening niedostępny, dopóki nie spełniono warunku odblokowania (§8 intro).  
-6. Nie można „doublować” sesji za premium w sposób pay-to-progress ponad mecz (§27 — fair: wygoda UI OK, nie 3× XP treningu).  
+1. **1 sesja / dzień realny.**
+2. Brak treningu indywidualnego.
+3. Kontuzjowani poza obciążeniem rozwojowym.
+4. Zawodnicy o krytycznie niskiej gotowości: ostrzeżenie; przy Wysokiej — soft-block lub auto-suggest Regeneracja.
+5. Trening niedostępny, dopóki nie spełniono warunku odblokowania (§8 intro).
+6. Nie można „doublować” sesji za premium w sposób pay-to-progress ponad mecz (§27 — fair: wygoda UI OK, nie 3× XP treningu).
 7. Skip / brak sesji: dozwolony; brak hard punishment za 1–2 dni.
 
 **Decyzje gracza**
@@ -2152,13 +2155,13 @@ Ekran treningu: jeden cel, mobilny, zgodny z UI Guide — bez kokpitu.
 
 **Przebieg / struktura ekranu**
 
-1. **Wejście:** Hub CTA „Trening” / kalendarz dnia niemeczowego.  
-2. **Nagłówek:** „Trening · dziś” + skrót gotowości kadry (np. 3 stany zbiorcze).  
-3. **Wybór fokusu** — 3–4 duże opcje (nie lista 20 ćwiczeń).  
-4. **Intensywność** — segment control / 3–4 chipy z podglądem skutków (strzałki).  
-5. **CTA primary:** **Przeprowadź trening**.  
-6. **Wynik sesji:** bottom sheet / krótki ekran sygnałów → powrót Hub.  
-7. Brak kart zawodników-excel na tym ekranie; link „Skład” secondary.  
+1. **Wejście:** Hub CTA „Trening” / kalendarz dnia niemeczowego.
+2. **Nagłówek:** „Trening · dziś” + skrót gotowości kadry (np. 3 stany zbiorcze).
+3. **Wybór fokusu** — 3–4 duże opcje (nie lista 20 ćwiczeń).
+4. **Intensywność** — segment control / 3–4 chipy z podglądem skutków (strzałki).
+5. **CTA primary:** **Przeprowadź trening**.
+6. **Wynik sesji:** bottom sheet / krótki ekran sygnałów → powrót Hub.
+7. Brak kart zawodników-excel na tym ekranie; link „Skład” secondary.
 8. Desktop = ten sam flow, szerszy układ; mobile-first.
 
 **Decyzje gracza**
@@ -2182,30 +2185,30 @@ Shipowalny wycinek + ścieżka rozbudowy.
 
 **MVP — wchodzi**
 
-- Trening zespołowy (3–4 fokusy + Regeneracja)  
-- Intensywność Lekka / Normalna / Wysoka (+ Regeneracja)  
-- 1 sesja / dzień  
-- Wpływ na zmęczenie, kondycję/gotowość, lekki rozwój grupowy, morale lekkie, ryzyko kontuzji  
-- Odblokowanie po **2 rozegranych meczach**  
-- UX 2–3 tapnięcia  
+- Trening zespołowy (3–4 fokusy + Regeneracja)
+- Intensywność Lekka / Normalna / Wysoka (+ Regeneracja)
+- 1 sesja / dzień
+- Wpływ na zmęczenie, kondycję/gotowość, lekki rozwój grupowy, morale lekkie, ryzyko kontuzji
+- Odblokowanie po **2 rozegranych meczach**
+- UX 2–3 tapnięcia
 
 **MVP — nie wchodzi**
 
-- Trening indywidualny  
-- Plany tygodniowe / periodyzacja  
-- Mini-gry treningowe  
-- Szczegółowe ćwiczenia per atrybut  
-- Staff skill trees trenerów (głębia)  
-- Formuły / widoczne XP bary treningu  
-- Pay-to-train power  
+- Trening indywidualny
+- Plany tygodniowe / periodyzacja
+- Mini-gry treningowe
+- Szczegółowe ćwiczenia per atrybut
+- Staff skill trees trenerów (głębia)
+- Formuły / widoczne XP bary treningu
+- Pay-to-train power
 
 **Future (kolejność robocza)**
 
-1. Trening indywidualny  
-2. Lekki buff taktyczny na 1 mecz  
-3. Plany 3–7 dni  
-4. Personel / jakość ośrodka (§6 / infrastruktura)  
-5. Integracja akademii (§16)  
+1. Trening indywidualny
+2. Lekki buff taktyczny na 1 mecz
+3. Plany 3–7 dni
+4. Personel / jakość ośrodka (§6 / infrastruktura)
+5. Integracja akademii (§16)
 
 **Decyzje gracza**
 
@@ -2223,13 +2226,13 @@ Shipowalny wycinek + ścieżka rozbudowy.
 
 ### 8.14 Kontrakty produktowe §8
 
-1. **Trening wspiera rozwój; nie przebija meczu** jako źródła wzrostu.  
-2. **MVP = trening zespołowy**; indywidualny później.  
-3. **1 sesja / dzień**; slot niewykorzystany nie buduje nieskończonego backlogu (MVP: przepada).  
-4. **Intensywność ↔ zmęczenie / kontuzja / regeneracja** — jawny trade-off.  
-5. **Terminologia:** kondycja, zmęczenie, gotowość.  
-6. **Odblokowanie po 2 rozegranych meczach.**  
-7. **Bez formuł i bez pay-to-progress treningowego.**  
+1. **Trening wspiera rozwój; nie przebija meczu** jako źródła wzrostu.
+2. **MVP = trening zespołowy**; indywidualny później.
+3. **1 sesja / dzień**; slot niewykorzystany nie buduje nieskończonego backlogu (MVP: przepada).
+4. **Intensywność ↔ zmęczenie / kontuzja / regeneracja** — jawny trade-off.
+5. **Terminologia:** kondycja, zmęczenie, gotowość.
+6. **Odblokowanie po 2 rozegranych meczach.**
+7. **Bez formuł i bez pay-to-progress treningowego.**
 8. **Nie blokuje kolejki ligowej**; wpływa na decyzje składu.
 
 ---
@@ -2491,9 +2494,9 @@ Dać poczucie **meczu piłkarskiego**: wynik, czas, wydarzenia, kontekst boiska 
 
 **Przebieg**
 
-1. Layout (produktowo):  
-   - góra: wynik + minutnik / połowa,  
-   - środek: strefa boiska / reprezentacja akcji (bez wymagań renderera),  
+1. Layout (produktowo):
+   - góra: wynik + minutnik / połowa,
+   - środek: strefa boiska / reprezentacja akcji (bez wymagań renderera),
    - dół lub bok: feed wydarzeń + szybkie akcje (§9.8).
 2. Wydarzenia kluczowe pojawiają się w feedzie (gol, kartka, kontuzja, zmiana…).
 3. Tempo domyślne dopasowane do sesji 5–15 min całego flow (niekoniecznie 90 min wall-clock).
@@ -2529,13 +2532,13 @@ Kilka zrozumiałych dźwigni — nie przejęcie kontroli nad każdym zawodnikiem
 
 **Przebieg (zestaw MVP — propozycja)**
 
-| Akcja | Kiedy | Uwagi |
-|-------|--------|------|
-| Pauza / wznów | Zawsze | Czytelny stan |
-| Tempo: normalne / szybciej | Zawsze | Pod sesję 5–15 min |
-| Do przerwy / do końca (skip fazy) | Od 1H | Z potwierdzeniem, jeśli skip całego meczu |
-| Taktyka preset (szybka zmiana) | W trakcie + przerwa | 3 presety z §9.4 |
-| Otwórz zmiany | Przerwa lub limity w trakcie (patrz §9.10) | |
+| Akcja                             | Kiedy                                      | Uwagi                                     |
+| --------------------------------- | ------------------------------------------ | ----------------------------------------- |
+| Pauza / wznów                     | Zawsze                                     | Czytelny stan                             |
+| Tempo: normalne / szybciej        | Zawsze                                     | Pod sesję 5–15 min                        |
+| Do przerwy / do końca (skip fazy) | Od 1H                                      | Z potwierdzeniem, jeśli skip całego meczu |
+| Taktyka preset (szybka zmiana)    | W trakcie + przerwa                        | 3 presety z §9.4                          |
+| Otwórz zmiany                     | Przerwa lub limity w trakcie (patrz §9.10) |                                           |
 
 **Czego nie ma w MVP onboardingu**
 
@@ -2836,19 +2839,19 @@ Ustanowić ligę jako **fundament kalendarza** i główne źródło motywacji se
 
 **Szybki kontrakt liczbowy MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Szczeble widoczne | 4 (Liga IV → Liga I) |
-| Start gracza | Liga IV |
-| Klubów w lidze | **12** |
-| Format | Dwukrotny każdy z każdym (home + away) |
-| Kolejek w sezonie | **22** |
-| Punkty | **3 / 1 / 0** |
-| Awans | miejsca **1–2** (automat) |
-| Spadek | miejsca **11–12** (automat) |
-| Baraże | **brak w MVP** |
-| Tempo kalendarza | **~1 mecz ligowy / dzień realny** (patrz §10.5) |
-| Rywal w tabeli MVP | kluby AI (bot) — PvP później |
+| Parametr           | Wartość MVP                                     |
+| ------------------ | ----------------------------------------------- |
+| Szczeble widoczne  | 4 (Liga IV → Liga I)                            |
+| Start gracza       | Liga IV                                         |
+| Klubów w lidze     | **12**                                          |
+| Format             | Dwukrotny każdy z każdym (home + away)          |
+| Kolejek w sezonie  | **22**                                          |
+| Punkty             | **3 / 1 / 0**                                   |
+| Awans              | miejsca **1–2** (automat)                       |
+| Spadek             | miejsca **11–12** (automat)                     |
+| Baraże             | **brak w MVP**                                  |
+| Tempo kalendarza   | **~1 mecz ligowy / dzień realny** (patrz §10.5) |
+| Rywal w tabeli MVP | kluby AI (bot) — PvP później                    |
 
 ---
 
@@ -3398,39 +3401,39 @@ Zamknąć zakres shipowalny i ścieżkę skalowania.
 
 **MVP — wchodzi**
 
-- 4 szczeble × 12 klubów × 22 kolejki × 3/1/0  
-- Awans 1–2 / spadek 11–12 / podłoga bez spadku  
-- 1 mecz/dzień + soft backlog 2  
-- Tabela + tie-breaki §10.8  
-- Kalendarz ligowy jako rdzeń Hubu  
-- Rywal AI  
-- **Lekki Puchar Krajowy** (satelita kalendarza — §11)  
+- 4 szczeble × 12 klubów × 22 kolejki × 3/1/0
+- Awans 1–2 / spadek 11–12 / podłoga bez spadku
+- 1 mecz/dzień + soft backlog 2
+- Tabela + tie-breaki §10.8
+- Kalendarz ligowy jako rdzeń Hubu
+- Rywal AI
+- **Lekki Puchar Krajowy** (satelita kalendarza — §11)
 
 **MVP — nie wchodzi**
 
-- Baraże  
-- Multi-grupy / regiony  
-- Pełny PvP w jednej tabeli  
-- Rozbudowane puchary kontynentalne / multi-cup  
-- Zmienne reguły punktów / bonusy stylu  
-- Sezon 38 kolejek  
+- Baraże
+- Multi-grupy / regiony
+- Pełny PvP w jednej tabeli
+- Rozbudowane puchary kontynentalne / multi-cup
+- Zmienne reguły punktów / bonusy stylu
+- Sezon 38 kolejek
 
 **Reguły meczowe ligi (kontrakt dla §9)**
 
-| Temat | MVP |
-|-------|-----|
-| Limit zmian | **5** (okna: głównie HT + late — spójnie z otwartym UX §9.10) |
-| Dogrywka / karne w lidze | **nie** (puchar: tak — §11) |
-| Walkover / soft AFK | wynik ustalony; tabela się aktualizuje |
+| Temat                    | MVP                                                           |
+| ------------------------ | ------------------------------------------------------------- |
+| Limit zmian              | **5** (okna: głównie HT + late — spójnie z otwartym UX §9.10) |
+| Dogrywka / karne w lidze | **nie** (puchar: tak — §11)                                   |
+| Walkover / soft AFK      | wynik ustalony; tabela się aktualizuje                        |
 
 **Plan rozbudowy (kolejność robocza)**
 
-1. ~~Puchar krajowy (§11)~~ — MVP (GDD-08)  
-2. Baraże  
-3. Więcej szczebli / branding  
-4. PvP mixed leagues / regiony  
-5. Opcjonalnie dłuższy format na top szczeblu  
-6. Puchary kontynentalne (§11 Future)  
+1. ~~Puchar krajowy (§11)~~ — MVP (GDD-08)
+2. Baraże
+3. Więcej szczebli / branding
+4. PvP mixed leagues / regiony
+5. Opcjonalnie dłuższy format na top szczeblu
+6. Puchary kontynentalne (§11 Future)
 
 **Decyzje gracza**
 
@@ -3453,12 +3456,12 @@ Zamknąć zakres shipowalny i ścieżkę skalowania.
 
 ### 10.18 Kontrakty produktowe §10
 
-1. **Liga jest SSOT kalendarza** w MVP.  
-2. **22 kolejki / 12 klubów / 3-1-0 / awans 2 / spadek 2** — liczby zamknięte dla designu kolejnych rozdziałów.  
-3. **Tempo ≈ 1 mecz ligowy / dzień** z miękkim backlogiem.  
-4. **Bez baraży w MVP.**  
-5. **Podłoga piramidy bez spadku; szczyt bez awansu wyżej.**  
-6. **Wpływ na ekonomię/rozwój = kategorie**; liczby → §14/§26.  
+1. **Liga jest SSOT kalendarza** w MVP.
+2. **22 kolejki / 12 klubów / 3-1-0 / awans 2 / spadek 2** — liczby zamknięte dla designu kolejnych rozdziałów.
+3. **Tempo ≈ 1 mecz ligowy / dzień** z miękkim backlogiem.
+4. **Bez baraży w MVP.**
+5. **Podłoga piramidy bez spadku; szczyt bez awansu wyżej.**
+6. **Wpływ na ekonomię/rozwój = kategorie**; liczby → §14/§26.
 7. **Puchary nie nadpisują priorytetu ligi** w dniu kolejki.
 
 ---
@@ -3488,25 +3491,25 @@ Zaprojektować lekki, dramatyczny tor pucharowy, który **nie zaburza ligi** (§
 
 **Zasady nadrzędne (decyzje GDD-08)**
 
-1. **Liga = tryb podstawowy**; puchar = satelita prestiżu i emocji KO.  
-2. **Jeden puchar w MVP:** Puchar Krajowy.  
-3. **Kalendarz:** puchar **nigdy nie kasuje** kolejki ligowej tego samego dnia (§10.15).  
-4. **Mecz pucharowy = prawdziwy mecz** (ten sam flow §9) — rozwój z gry jak w lidze, nie osobny silnik.  
-5. **Terminologia SSOT:** kondycja, zmęczenie, gotowość.  
-6. **Bez formuł / pay-to-win** (§27).  
+1. **Liga = tryb podstawowy**; puchar = satelita prestiżu i emocji KO.
+2. **Jeden puchar w MVP:** Puchar Krajowy.
+3. **Kalendarz:** puchar **nigdy nie kasuje** kolejki ligowej tego samego dnia (§10.15).
+4. **Mecz pucharowy = prawdziwy mecz** (ten sam flow §9) — rozwój z gry jak w lidze, nie osobny silnik.
+5. **Terminologia SSOT:** kondycja, zmęczenie, gotowość.
+6. **Bez formuł / pay-to-win** (§27).
 7. **Ship:** puchar wchodzi w MVP od **Sezonu 1** (mid-season start).
 
 **Szybki kontrakt liczbowy MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Nazwa robocza | Puchar Krajowy |
-| Format | Puchar eliminacyjny (KO), **1 mecz** (bez rewanżu) |
-| Drużyn | **16** |
-| Rundy | 1/8 → 1/4 → 1/2 → Finał (**4**) |
-| Start | Po **kolejce ligowej 8** (mid-season) |
-| Dogrywka / karne | **Tak** (tylko puchar; liga: nie) |
-| Priorytet dnia | **Liga > Puchar** |
+| Parametr         | Wartość MVP                                        |
+| ---------------- | -------------------------------------------------- |
+| Nazwa robocza    | Puchar Krajowy                                     |
+| Format           | Puchar eliminacyjny (KO), **1 mecz** (bez rewanżu) |
+| Drużyn           | **16**                                             |
+| Rundy            | 1/8 → 1/4 → 1/2 → Finał (**4**)                    |
+| Start            | Po **kolejce ligowej 8** (mid-season)              |
+| Dogrywka / karne | **Tak** (tylko puchar; liga: nie)                  |
+| Priorytet dnia   | **Liga > Puchar**                                  |
 
 ---
 
@@ -3517,14 +3520,14 @@ Dać „noc pucharową”: wyższa stawka emocjonalna, niski koszt poznawczy, ze
 
 **Przebieg**
 
-1. Puchar jest **opcjonalnym dramaturgicznie**, ale **obecny w MVP** — gracz może odpaść wcześnie bez kary dla awansu ligowego.  
-2. Copy i UI mówią: „bonusowa ścieżka prestiżu”, nie „musisz wygrać puchar, by rozwijać klub”.  
-3. Przegrana w pucharze = koniec ścieżki w sezonie + soft landing (wracasz do ligi).  
+1. Puchar jest **opcjonalnym dramaturgicznie**, ale **obecny w MVP** — gracz może odpaść wcześnie bez kary dla awansu ligowego.
+2. Copy i UI mówią: „bonusowa ścieżka prestiżu”, nie „musisz wygrać puchar, by rozwijać klub”.
+3. Przegrana w pucharze = koniec ścieżki w sezonie + soft landing (wracasz do ligi).
 4. Nie ma osobnego „trybu pucharowego” poza kontekstem meczu.
 
 **Decyzje gracza**
 
-- Jak mocno rotować skład pod puchar vs ligę.  
+- Jak mocno rotować skład pod puchar vs ligę.
 - Czy grać puchar od razu, gdy dostępny (po lidze dnia, jeśli kolizja).
 
 **Zależności**
@@ -3544,9 +3547,9 @@ Osadzić jeden turniej krajowy w piramidzie ligowej bez drugiego „świata”.
 
 **Przebieg**
 
-1. Puchar Krajowy jest **ogólnokrajowy** względem piramidy 4 szczebli (§10.1–10.2).  
-2. Nie ma w MVP pucharu ligowego / regionalnego / kontynentalnego.  
-3. Widoczność: Hub (gdy aktywny), kalendarz, ekran Rozgrywki (bracket + historia).  
+1. Puchar Krajowy jest **ogólnokrajowy** względem piramidy 4 szczebli (§10.1–10.2).
+2. Nie ma w MVP pucharu ligowego / regionalnego / kontynentalnego.
+3. Widoczność: Hub (gdy aktywny), kalendarz, ekran Rozgrywki (bracket + historia).
 4. Sezon pucharu = sezon ligowy; nowy sezon → nowa edycja pucharu.
 
 **Decyzje gracza**
@@ -3570,15 +3573,15 @@ Zagwarantować udział gracza i czytelne 16 drużyn.
 
 **Przebieg MVP**
 
-1. **Automatyczny udział klubu gracza** w Pucharze Krajowym (Sezon 1+).  
-2. Pozostałe miejsca: **11 klubów z ligi gracza** (cała liga 12) + **4 kluby z wyższego szczebla** (AI) jako „goście wyższej ligi”.  
-   - Jeśli gracz jest w Lidze I: 12 z Ligii I + 4 „dzikie karty” AI narracyjne / top formy (bez formuł publicznych).  
-3. Brak osobnego play-in / kwalifikacji w MVP.  
+1. **Automatyczny udział klubu gracza** w Pucharze Krajowym (Sezon 1+).
+2. Pozostałe miejsca: **11 klubów z ligi gracza** (cała liga 12) + **4 kluby z wyższego szczebla** (AI) jako „goście wyższej ligi”.
+   - Jeśli gracz jest w Lidze I: 12 z Ligii I + 4 „dzikie karty” AI narracyjne / top formy (bez formuł publicznych).
+3. Brak osobnego play-in / kwalifikacji w MVP.
 4. Kontuzje/zawieszenia nie wykluczają klubu — tylko wpływają na skład (§9).
 
 **Decyzje gracza**
 
-- Brak decyzji o zgłoszeniu (auto).  
+- Brak decyzji o zgłoszeniu (auto).
 - Skład na mecz pucharowy.
 
 **Zależności**
@@ -3598,15 +3601,15 @@ Jednoznaczne KO bez grup.
 
 **Przebieg**
 
-1. Format: **single elimination**.  
-2. Każda para: **jeden mecz**.  
-3. Remis po regulaminowym czasie → **dogrywka**, potem **rzuty karne** (produktowo; UX w §9).  
-4. Brak grup, baraży pucharowych, „best of”.  
+1. Format: **single elimination**.
+2. Każda para: **jeden mecz**.
+3. Remis po regulaminowym czasie → **dogrywka**, potem **rzuty karne** (produktowo; UX w §9).
+4. Brak grup, baraży pucharowych, „best of”.
 5. Limit zmian jak w lidze (**5**) — spójność §10.17 / §9.
 
 **Decyzje gracza**
 
-- Taktyka/skład pod mecz o wszystko.  
+- Taktyka/skład pod mecz o wszystko.
 - Tempo oglądania (§9.8).
 
 **Zależności**
@@ -3626,14 +3629,14 @@ Krótka drabinka: max 4 mecze pucharowe na sezon dla finalisty.
 
 **Przebieg**
 
-| Runda | Mecze w turnieju | Nazwa UX |
-|-------|------------------|----------|
-| 1 | 8 | 1/8 finału |
-| 2 | 4 | 1/4 finału |
-| 3 | 2 | Półfinał |
-| 4 | 1 | Finał |
+| Runda | Mecze w turnieju | Nazwa UX   |
+| ----- | ---------------- | ---------- |
+| 1     | 8                | 1/8 finału |
+| 2     | 4                | 1/4 finału |
+| 3     | 2                | Półfinał   |
+| 4     | 1                | Finał      |
 
-1. Gracz, który odpada, nie gra dalszych rund.  
+1. Gracz, który odpada, nie gra dalszych rund.
 2. AI domyka pozostałe pary w tle (wyniki w brackecie).
 
 **Decyzje gracza**
@@ -3657,10 +3660,10 @@ Czytelny, sprawiedliwy bracket bez kokpitu.
 
 **Przebieg MVP**
 
-1. Po starcie edycji (po K8): **jednorazowe losowanie pełnej drabinki 16**.  
-2. Seed: kluby wyższego szczebla rozstawione tak, by nie klikały się wszystkie w 1/8 (jakościowa reguła, bez wzoru).  
-3. Gracz widzi: „Wylosowano drabinkę” + swoją ścieżkę.  
-4. Brak losowań rundowych w MVP (prostsze).  
+1. Po starcie edycji (po K8): **jednorazowe losowanie pełnej drabinki 16**.
+2. Seed: kluby wyższego szczebla rozstawione tak, by nie klikały się wszystkie w 1/8 (jakościowa reguła, bez wzoru).
+3. Gracz widzi: „Wylosowano drabinkę” + swoją ścieżkę.
+4. Brak losowań rundowych w MVP (prostsze).
 5. Replay losowania / reroll: **zakazane**.
 
 **Decyzje gracza**
@@ -3684,11 +3687,11 @@ Ustalić miejsce meczu bez dwumeczów.
 
 **Przebieg**
 
-1. **Brak rewanżów** w MVP.  
-2. Gospodarz:  
-   - jeśli różny szczebel → **niższy szczebel podejmuje** (romantyczna reguła),  
-   - jeśli ten sam szczebel → **losowanie gospodarza** przy tworzeniu pary / drabinki.  
-3. Finał: **neutralny** (narracja „stadion finałowy”) — bez wyboru gracza.  
+1. **Brak rewanżów** w MVP.
+2. Gospodarz:
+   - jeśli różny szczebel → **niższy szczebel podejmuje** (romantyczna reguła),
+   - jeśli ten sam szczebel → **losowanie gospodarza** przy tworzeniu pary / drabinki.
+3. Finał: **neutralny** (narracja „stadion finałowy”) — bez wyboru gracza.
 4. Dom/wyjazd wpływa na copy i lekki kontekst §9; bez formuł home advantage tu.
 
 **Decyzje gracza**
@@ -3712,15 +3715,15 @@ Wpiąć 4 rundy w sezon 22 kolejek bez kolizji z priorytetem ligi.
 
 **Przebieg MVP (kotwice)**
 
-| Runda pucharu | Kotwica względem ligi |
-|---------------|----------------------|
-| 1/8 | Dzień **po** rozegraniu kolejki **8** (osobny slot pucharowy) |
-| 1/4 | Po kolejce **12** |
-| 1/2 | Po kolejce **16** |
-| Finał | Po kolejce **20** (przed finiszem ligi K21–22) **lub** w przerwie po K22 — patrz OQ |
+| Runda pucharu | Kotwica względem ligi                                                               |
+| ------------- | ----------------------------------------------------------------------------------- |
+| 1/8           | Dzień **po** rozegraniu kolejki **8** (osobny slot pucharowy)                       |
+| 1/4           | Po kolejce **12**                                                                   |
+| 1/2           | Po kolejce **16**                                                                   |
+| Finał         | Po kolejce **20** (przed finiszem ligi K21–22) **lub** w przerwie po K22 — patrz OQ |
 
-1. Slot pucharowy = wydarzenie kalendarza typu „Puchar”, nie kolejka ligowa.  
-2. Odblokowanie meczu pucharowego: gdy nadeszła kotwica **i** gracz ma zagrane wymagane kolejki ligowe (nie omija ligi).  
+1. Slot pucharowy = wydarzenie kalendarza typu „Puchar”, nie kolejka ligowa.
+2. Odblokowanie meczu pucharowego: gdy nadeszła kotwica **i** gracz ma zagrane wymagane kolejki ligowe (nie omija ligi).
 3. Soft backlog pucharu: max **1** zaległy mecz pucharowy (ciaśniej niż liga), by nie stackować KO.
 
 **Decyzje gracza**
@@ -3744,10 +3747,10 @@ Jednoznaczna hierarchia systemów.
 
 **Przebieg**
 
-1. Tabela / awans / spadek: **tylko liga**.  
-2. Puchar nie daje punktów ligowych.  
-3. Hub primary CTA: zawsze **najpierw zaległa/dostępna liga**, potem puchar.  
-4. Sezon bez awansu mimo wygrania pucharu — OK (soft landing + prestiż).  
+1. Tabela / awans / spadek: **tylko liga**.
+2. Puchar nie daje punktów ligowych.
+3. Hub primary CTA: zawsze **najpierw zaległa/dostępna liga**, potem puchar.
+4. Sezon bez awansu mimo wygrania pucharu — OK (soft landing + prestiż).
 5. Odpadnięcie z pucharu nie zmienia celów ligowych (§20).
 
 **Decyzje gracza**
@@ -3771,9 +3774,9 @@ Zero sytuacji „musisz skipnąć ligę dla pucharu”.
 
 **Przebieg**
 
-1. **Twarde:** w jednym dniu realnym nie wymuszamy meczu pucharowego kosztem dostępnej kolejki ligowej.  
-2. Jeśli oba wydarzenia „dojrzały” tego samego dnia: Hub pokazuje **liga = primary**, puchar = secondary („dostępny po lidze” / „jutro”).  
-3. Po zagraniu ligi tego dnia: puchar może odblokować się **tego samego dnia** jako drugi mecz **tylko jeśli** gracz świadomie wybierze (nie auto-chain); rekomendacja UX: sugerować regenerację / jutro przy wysokim zmęczeniu.  
+1. **Twarde:** w jednym dniu realnym nie wymuszamy meczu pucharowego kosztem dostępnej kolejki ligowej.
+2. Jeśli oba wydarzenia „dojrzały” tego samego dnia: Hub pokazuje **liga = primary**, puchar = secondary („dostępny po lidze” / „jutro”).
+3. Po zagraniu ligi tego dnia: puchar może odblokować się **tego samego dnia** jako drugi mecz **tylko jeśli** gracz świadomie wybierze (nie auto-chain); rekomendacja UX: sugerować regenerację / jutro przy wysokim zmęczeniu.
 4. Powiadomienia (§22): nie spamują pucharem nad ligą.
 
 **Decyzje gracza**
@@ -3797,10 +3800,10 @@ Te same narzędzia XI, inny kontekst stawki.
 
 **Przebieg**
 
-1. Flow przedmeczowy = §9 (skład / taktyka / formacja).  
-2. Nagłówek: „Puchar Krajowy · 1/4” + rywal.  
-3. Ostrzeżenia gotowości (§7 / §9.2) działają identycznie.  
-4. Rotacja zalecana narracyjnie przed serią ligową, nie wymuszona.  
+1. Flow przedmeczowy = §9 (skład / taktyka / formacja).
+2. Nagłówek: „Puchar Krajowy · 1/4” + rywal.
+3. Ostrzeżenia gotowości (§7 / §9.2) działają identycznie.
+4. Rotacja zalecana narracyjnie przed serią ligową, nie wymuszona.
 5. Zawieszenia/kartki: reguły dyscypliny jak w lidze (produktowo); OQ czy kartki pucharowe są osobną pulą.
 
 **Decyzje gracza**
@@ -3824,9 +3827,9 @@ Mecz pucharowy zużywa ten sam model zmęczenia / gotowości co liga.
 
 **Przebieg**
 
-1. Minuty pucharowe ↑ **zmęczenie**, wpływają na **kondycję / gotowość** (§7.8, §7.10).  
-2. Brak osobnego „pucharowego” paska.  
-3. Dzień po pucharze: trening regeneracyjny (§8.10) ma sens.  
+1. Minuty pucharowe ↑ **zmęczenie**, wpływają na **kondycję / gotowość** (§7.8, §7.10).
+2. Brak osobnego „pucharowego” paska.
+3. Dzień po pucharze: trening regeneracyjny (§8.10) ma sens.
 4. Dwa mecze / dzień (jeśli dozwolone): ostrzeżenie skumulowanego zmęczenia przed drugim.
 
 **Decyzje gracza**
@@ -3850,9 +3853,9 @@ Utrzymać hierarchię GDD-06: rozwój z **meczów**; puchar jest meczem.
 
 **Przebieg**
 
-1. Mecz pucharowy zasila **primary path** rozwoju (§7.12, §9.14) jak mecz ligowy.  
-2. Nie ma osobnego mnożnika „puchar = więcej XP” w MVP (anti-farm / prostota).  
-3. Trening nadal wspierający (§8); nie zastępuje minut pucharowych.  
+1. Mecz pucharowy zasila **primary path** rozwoju (§7.12, §9.14) jak mecz ligowy.
+2. Nie ma osobnego mnożnika „puchar = więcej XP” w MVP (anti-farm / prostota).
+3. Trening nadal wspierający (§8); nie zastępuje minut pucharowych.
 4. Odpadnięcie = brak dalszych impulsów pucharowych; liga kontynuuje rozwój.
 
 **Decyzje gracza**
@@ -3876,9 +3879,9 @@ Kierunki nagród bez kwot — ekonomia szczegółowa → §14 / §26 (nie mylić
 
 **Przebieg**
 
-1. Udział / awans rund / zwycięstwo: **kategorie** prestiżu i zasobów (bez liczb).  
-2. Wpływ na wartość zawodników: pośredni przez występy / prestiż klubu (§7.17) — bez rynku tu.  
-3. Transfery (§12): puchar może później zwiększać zainteresowanie AI; poza MVP detail.  
+1. Udział / awans rund / zwycięstwo: **kategorie** prestiżu i zasobów (bez liczb).
+2. Wpływ na wartość zawodników: pośredni przez występy / prestiż klubu (§7.17) — bez rynku tu.
+3. Transfery (§12): puchar może później zwiększać zainteresowanie AI; poza MVP detail.
 4. Premium (§27): brak kupna awansu / easy bracket.
 
 **Decyzje gracza**
@@ -3902,9 +3905,9 @@ Odczuwalne domknięcie runu pucharowego.
 
 **Przebieg**
 
-1. Po każdej wygranej rundzie: krótki feedback + kategoria nagrody.  
-2. Po odpadnięciu: podsumowanie „doszedłeś do X”.  
-3. Po finale (W/L): ekran trofeum / prestiżu.  
+1. Po każdej wygranej rundzie: krótki feedback + kategoria nagrody.
+2. Po odpadnięciu: podsumowanie „doszedłeś do X”.
+3. Po finale (W/L): ekran trofeum / prestiżu.
 4. Nagrody nie zastępują nagród ligowych sezonu.
 
 **Decyzje gracza**
@@ -3928,9 +3931,9 @@ Puchar buduje tożsamość klubu obok tabeli.
 
 **Przebieg**
 
-1. Zwycięstwo / finał: trwały wpis w historii klubu (§6 / §19).  
-2. Prestiż ≠ punkty ligowe.  
-3. Hub może pokazać badge „Finalista / Zdobywca” sezonu.  
+1. Zwycięstwo / finał: trwały wpis w historii klubu (§6 / §19).
+2. Prestiż ≠ punkty ligowe.
+3. Hub może pokazać badge „Finalista / Zdobywca” sezonu.
 4. Soft landing: wczesne odpadnięcie nie obniża prestiżu destrukcyjnie w Sezonie 1.
 
 **Decyzje gracza**
@@ -3954,11 +3957,11 @@ Drabinka czytelna na mobile; Hub bez konfliktu CTA.
 
 **Przebieg**
 
-1. Wejście: Hub secondary / zakładka Rozgrywki → Puchar.  
-2. Widok: bracket 16 (zwijany do „Twoja ścieżka” na mobile).  
-3. CTA meczu pucharowego: jak liga, z etykietą Puchar.  
-4. Po meczu: raport §9 → aktualizacja bracketu → Hub.  
-5. Kolizja dnia: liga primary (§11.10).  
+1. Wejście: Hub secondary / zakładka Rozgrywki → Puchar.
+2. Widok: bracket 16 (zwijany do „Twoja ścieżka” na mobile).
+3. CTA meczu pucharowego: jak liga, z etykietą Puchar.
+4. Po meczu: raport §9 → aktualizacja bracketu → Hub.
+5. Kolizja dnia: liga primary (§11.10).
 6. UI Guide: bez glow/neon; jeden cel ekranu.
 
 **Decyzje gracza**
@@ -3982,29 +3985,29 @@ Shipowalny wycinek + rozbudowa.
 
 **MVP — wchodzi**
 
-- 1× Puchar Krajowy, 16 drużyn, KO 1-meczowy, 4 rundy  
-- Start po K8, Sezon 1  
-- Dogrywka + karne  
-- Priorytet liga > puchar  
-- Ten sam flow meczu §9  
-- Nagrody/prestiż jako kategorie  
+- 1× Puchar Krajowy, 16 drużyn, KO 1-meczowy, 4 rundy
+- Start po K8, Sezon 1
+- Dogrywka + karne
+- Priorytet liga > puchar
+- Ten sam flow meczu §9
+- Nagrody/prestiż jako kategorie
 
 **MVP — nie wchodzi**
 
-- Puchary kontynentalne / ligowe / puchar pucharów  
-- Rewanże / dwumecze  
-- Faza grupowa  
-- Play-in kwalifikacje  
-- Multi-bracket / regiony  
-- Pay-to-enter / buy replay  
+- Puchary kontynentalne / ligowe / puchar pucharów
+- Rewanże / dwumecze
+- Faza grupowa
+- Play-in kwalifikacje
+- Multi-bracket / regiony
+- Pay-to-enter / buy replay
 
 **Future**
 
-1. Puchar kontynentalny (seed z ligi/pucharu)  
-2. Rewanże od półfinału  
-3. Osobne reguły kartek  
-4. Kosmetyczne trofeum na stadionie  
-5. Puchar dla akademii (§16)  
+1. Puchar kontynentalny (seed z ligi/pucharu)
+2. Rewanże od półfinału
+3. Osobne reguły kartek
+4. Kosmetyczne trofeum na stadionie
+5. Puchar dla akademii (§16)
 
 **Decyzje gracza**
 
@@ -4022,13 +4025,13 @@ Shipowalny wycinek + rozbudowa.
 
 ### 11.19 Kontrakty produktowe §11
 
-1. **Liga > puchar** w kalendarzu i CTA Hubu.  
-2. **MVP = jeden Puchar Krajowy**, 16 drużyn, KO bez rewanżu, 4 rundy.  
-3. **Start po kolejce ligowej 8**, od Sezonu 1.  
-4. **Puchar nie wpływa na tabelę / awans / spadek.**  
-5. **Mecz pucharowy = mecz (§9)** pod rozwój (§7) i zmęczenie (§7/§8).  
-6. **Dogrywka + karne tylko w pucharze** (liga: nie).  
-7. **Ekonomia = kategorie** (§14/§26); brak formuł i pay-to-win.  
+1. **Liga > puchar** w kalendarzu i CTA Hubu.
+2. **MVP = jeden Puchar Krajowy**, 16 drużyn, KO bez rewanżu, 4 rundy.
+3. **Start po kolejce ligowej 8**, od Sezonu 1.
+4. **Puchar nie wpływa na tabelę / awans / spadek.**
+5. **Mecz pucharowy = mecz (§9)** pod rozwój (§7) i zmęczenie (§7/§8).
+6. **Dogrywka + karne tylko w pucharze** (liga: nie).
+7. **Ekonomia = kategorie** (§14/§26); brak formuł i pay-to-win.
 8. **Udział gracza automatyczny.**
 
 ---
@@ -4056,26 +4059,26 @@ Umożliwić budowę i korektę kadry przez kupno/sprzedaż — **wspierająco** 
 
 **Zasady nadrzędne (decyzje GDD-09)**
 
-1. **Transfery nie zastępują meczu** — to przygotowanie / skutek między kolejkami.  
-2. **Wartość rynkowa = sygnał §7.17** — tu decyzje „co z nią zrobić”, nie nowa krzywa ceny.  
-3. **Prestiż klubu** (szczebel ligi + run pucharowy) wpływa na **atrakcyjność** ofert, nie na wynik meczu.  
-4. **Okna** ograniczają churn i chronią sezon ligowy.  
-5. **Kwoty i formuły → §14 / §26**; tu tylko kategorie i UX decyzji.  
-6. **Terminologia SSOT:** kondycja, zmęczenie, gotowość (przy ocenie „czy kupować kontuzjowanego”).  
-7. **Bez pay-to-buy power** (§27): Premium = wygoda UI, nie lepsi zawodnicy.  
+1. **Transfery nie zastępują meczu** — to przygotowanie / skutek między kolejkami.
+2. **Wartość rynkowa = sygnał §7.17** — tu decyzje „co z nią zrobić”, nie nowa krzywa ceny.
+3. **Prestiż klubu** (szczebel ligi + run pucharowy) wpływa na **atrakcyjność** ofert, nie na wynik meczu.
+4. **Okna** ograniczają churn i chronią sezon ligowy.
+5. **Kwoty i formuły → §14 / §26**; tu tylko kategorie i UX decyzji.
+6. **Terminologia SSOT:** kondycja, zmęczenie, gotowość (przy ocenie „czy kupować kontuzjowanego”).
+7. **Bez pay-to-buy power** (§27): Premium = wygoda UI, nie lepsi zawodnicy.
 8. **MVP bez wypożyczeń i klauzul złożonych.**
 
 **Szybki kontrakt MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Odblokowanie rynku | Pierwsze **okno mid-season** (po kolejce **11**) |
-| Okna | Mid-season (krótkie) + **międzysezonowe** (główne) |
-| Kadra | **min 18 / max 22** zawodników |
-| Akcje | Kup / sprzedaj / wolny agent (lekki) |
-| Negocjacje | Accept / Reject / **maksymalnie 1 kontroferta** |
-| Wypożyczenia / klauzule | **Future** |
-| Wartość UI | Pasmo §7.17 widoczne po odblokowaniu rynku |
+| Parametr                | Wartość MVP                                        |
+| ----------------------- | -------------------------------------------------- |
+| Odblokowanie rynku      | Pierwsze **okno mid-season** (po kolejce **11**)   |
+| Okna                    | Mid-season (krótkie) + **międzysezonowe** (główne) |
+| Kadra                   | **min 18 / max 22** zawodników                     |
+| Akcje                   | Kup / sprzedaj / wolny agent (lekki)               |
+| Negocjacje              | Accept / Reject / **maksymalnie 1 kontroferta**    |
+| Wypożyczenia / klauzule | **Future**                                         |
+| Wartość UI              | Pasmo §7.17 widoczne po odblokowaniu rynku         |
 
 ---
 
@@ -4086,14 +4089,14 @@ Rynek jako narzędzie „ulepszam skład”, nie giełda day-trading.
 
 **Przebieg**
 
-1. Gracz wraca na rynek w oknie, robi **1–3 sensowne ruchy**, wraca do ligi/pucharu.  
-2. Early soft landing: AI nie „okradnie” starterów w Sezonie 1 bez ostrzeżenia.  
-3. Narracja: kluby AI mają potrzeby pozycji; gracz buduje tożsamość kadry.  
+1. Gracz wraca na rynek w oknie, robi **1–3 sensowne ruchy**, wraca do ligi/pucharu.
+2. Early soft landing: AI nie „okradnie” starterów w Sezonie 1 bez ostrzeżenia.
+3. Narracja: kluby AI mają potrzeby pozycji; gracz buduje tożsamość kadry.
 4. Transfer sukcesu = odczucie na boisku (§9), nie spreadsheet ROI.
 
 **Decyzje gracza**
 
-- Czy w ogóle wchodzić w okno, czy grać składem startowym.  
+- Czy w ogóle wchodzić w okno, czy grać składem startowym.
 - Kupić teraz vs czekać na międzysezonie.
 
 **Zależności**
@@ -4113,15 +4116,15 @@ Jasne okresy aktywności rynku, spójne z kalendarzem ligi/pucharu.
 
 **Przebieg MVP**
 
-1. **Okno mid-season:** start po **kolejce ligowej 11**; trwa kilka dni realnych (krótki slot — bez dokładnej liczby balansowej tu).  
-2. **Okno międzysezonowe:** w przerwie §10.12 — **główne**, dłuższe, CTA Hubu „Transfery”.  
-3. Poza oknem: przegląd kadry i wartości **read-only**; brak finalizacji transferów.  
-4. Odblokowanie UI rynku = **pierwsze otwarcie okna mid-season S1**.  
+1. **Okno mid-season:** start po **kolejce ligowej 11**; trwa kilka dni realnych (krótki slot — bez dokładnej liczby balansowej tu).
+2. **Okno międzysezonowe:** w przerwie §10.12 — **główne**, dłuższe, CTA Hubu „Transfery”.
+3. Poza oknem: przegląd kadry i wartości **read-only**; brak finalizacji transferów.
+4. Odblokowanie UI rynku = **pierwsze otwarcie okna mid-season S1**.
 5. Kolizja z meczem: dzień kolejki / pucharu — Hub primary = mecz; rynek secondary.
 
 **Decyzje gracza**
 
-- Kiedy w oknie dokonać ruchu.  
+- Kiedy w oknie dokonać ruchu.
 - Czy domknąć deal przed zamknięciem okna (soft reminder §22).
 
 **Zależności**
@@ -4141,15 +4144,15 @@ Utrzymać grywalny rozmiar składu i wymusić sensowne decyzje.
 
 **Przebieg**
 
-1. **Minimum 18** — poniżej: ostrzeżenie; nie da się zatwierdzić XI na mecz, jeśli brak pełnego składu zdrowych (reguła §9; zawsze min. 1 GK).  
-2. **Maximum 22** — kupno zablokowane przy limicie (najpierw sprzedaj / zwolnij).  
-3. Pakiet startowy (§5.7) mieści się w limicie.  
-4. Wolne miejsce w kadrze = warunek przyjęcia transferu przychodzącego.  
+1. **Minimum 18** — poniżej: ostrzeżenie; nie da się zatwierdzić XI na mecz, jeśli brak pełnego składu zdrowych (reguła §9; zawsze min. 1 GK).
+2. **Maximum 22** — kupno zablokowane przy limicie (najpierw sprzedaj / zwolnij).
+3. Pakiet startowy (§5.7) mieści się w limicie.
+4. Wolne miejsce w kadrze = warunek przyjęcia transferu przychodzącego.
 5. Pozycje: miękki balans (bramkarz min. 2 — ostrzeżenie, nie hard iron w MVP poza niemożnością meczu bez GK).
 
 **Decyzje gracza**
 
-- Kogo sprzedać, by zrobić miejsce.  
+- Kogo sprzedać, by zrobić miejsce.
 - Czy trzymać depth vs quality.
 
 **Zależności**
@@ -4169,20 +4172,20 @@ Dwa kierunki ruchu zawodników z czytelnym UX.
 
 **Przebieg — kupno**
 
-1. Lista rynku: filtrowanie pozycja / pasmo wartości / szczebel (proste).  
-2. Karta zawodnika: poziom, potencjał, wartość (§7.17), status gotowości, klub.  
-3. Oferta gracza → AI: **Accept** / **Reject** / **maksymalnie 1 kontroferta**.  
+1. Lista rynku: filtrowanie pozycja / pasmo wartości / szczebel (proste).
+2. Karta zawodnika: poziom, potencjał, wartość (§7.17), status gotowości, klub.
+3. Oferta gracza → AI: **Accept** / **Reject** / **maksymalnie 1 kontroferta**.
 4. Po akceptacji: zawodnik w kadrze, budżet ↓ (kategoria §14/§26).
 
 **Przebieg — sprzedaż**
 
-1. Gracz wystawia zawodnika **na listę** (opcjonalnie) **lub** otrzymuje **ofertę AI**.  
-2. Oferta: pasmo względem wartości + kontekst (prestiż kupującego).  
+1. Gracz wystawia zawodnika **na listę** (opcjonalnie) **lub** otrzymuje **ofertę AI**.
+2. Oferta: pasmo względem wartości + kontekst (prestiż kupującego).
 3. Akceptacja → zawodnik opuszcza klub; miejsce w kadrze wolne; budżet ↑ kategorii.
 
 **Decyzje gracza**
 
-- Kogo kupić / sprzedać / wystawić.  
+- Kogo kupić / sprzedać / wystawić.
 - Przyjąć ofertę AI vs czekać.
 
 **Zależności**
@@ -4202,10 +4205,10 @@ Odczucie żywego rynku bez publikowania algorytmów.
 
 **Przebieg (zasady jakościowe)**
 
-1. AI kupuje, gdy ma **lukę pozycji** i pasuje **pasmo wartości / potencjału**.  
-2. AI chętniej handluje z klubami o **wyższym prestiżu** (szczebel + sukces pucharowy §11).  
-3. AI rzadziej atakuje kluczowych starterów gracza w Sezonie 1 (ochrona).  
-4. Odrzucenie oferty gracza: gdy oferta wyraźnie poniżej pasma wartości lub klub „nie sprzedaje”.  
+1. AI kupuje, gdy ma **lukę pozycji** i pasuje **pasmo wartości / potencjału**.
+2. AI chętniej handluje z klubami o **wyższym prestiżu** (szczebel + sukces pucharowy §11).
+3. AI rzadziej atakuje kluczowych starterów gracza w Sezonie 1 (ochrona).
+4. Odrzucenie oferty gracza: gdy oferta wyraźnie poniżej pasma wartości lub klub „nie sprzedaje”.
 5. Brak widocznego „scoring formula” dla gracza.
 
 **Decyzje gracza**
@@ -4229,10 +4232,10 @@ Użyć §7.17 jako kotwicy dealu — bez nowej definicji wartości.
 
 **Przebieg**
 
-1. Wartość na karcie = pasmo / skrót z §7.17.  
-2. Oferty AI i ask cenowy **orientują się wokół pasma** (jakościowo: poniżej / w paśmie / powyżej).  
-3. Kontuzja / niska gotowość: odczuwalnie słabsze oferty.  
-4. Po transferze wartość nie „wybucha”; aktualizacja jak w §7.17.  
+1. Wartość na karcie = pasmo / skrót z §7.17.
+2. Oferty AI i ask cenowy **orientują się wokół pasma** (jakościowo: poniżej / w paśmie / powyżej).
+3. Kontuzja / niska gotowość: odczuwalnie słabsze oferty.
+4. Po transferze wartość nie „wybucha”; aktualizacja jak w §7.17.
 5. Widoczność: od odblokowania rynku (§12.2); wcześniej może być ukryta / „—” na karcie.
 
 **Decyzje gracza**
@@ -4256,15 +4259,15 @@ Rynek nagradza hodowlę z meczów, nie tylko OVR „dziś”.
 
 **Przebieg**
 
-1. Wysoki potencjał + rosnący poziom (§7.3–7.4) ↑ atrakcyjność sprzedaży i cenę odczuwalną.  
-2. Brak minut / regres (§7.15) ↓ zainteresowanie AI.  
-3. Talenty (§7.16) jako tag zwiększający unikalność oferty.  
-4. Kupno młodzieży = inwestycja pod minuty meczowe (ryzyko KO / ligi).  
+1. Wysoki potencjał + rosnący poziom (§7.3–7.4) ↑ atrakcyjność sprzedaży i cenę odczuwalną.
+2. Brak minut / regres (§7.15) ↓ zainteresowanie AI.
+3. Talenty (§7.16) jako tag zwiększający unikalność oferty.
+4. Kupno młodzieży = inwestycja pod minuty meczowe (ryzyko KO / ligi).
 5. Trening (§8) wspiera rozwój między oknami; nie zastępuje wartości z gry.
 
 **Decyzje gracza**
 
-- Sprzedać prospet vs dać minuty.  
+- Sprzedać prospet vs dać minuty.
 - Kupić „gotowego” vs upside.
 
 **Zależności**
@@ -4284,10 +4287,10 @@ Sukces sportowy ułatwia handel w obie strony — bez formuł.
 
 **Przebieg**
 
-1. Wyższy szczebel ligi (§10) → łatwiej przyciągnąć lepsze pasma / zainteresowanie.  
-2. Głęboki run pucharowy / trofeum (§11.16) → krótki boost atrakcyjności klubu w kolejnym oknie.  
-3. Słaba pozycja / spadek → trudniej zatrzymać / drożej kupić (odczucie).  
-4. Prestiż **nie** kupuje wyniku meczu (§27).  
+1. Wyższy szczebel ligi (§10) → łatwiej przyciągnąć lepsze pasma / zainteresowanie.
+2. Głęboki run pucharowy / trofeum (§11.16) → krótki boost atrakcyjności klubu w kolejnym oknie.
+3. Słaba pozycja / spadek → trudniej zatrzymać / drożej kupić (odczucie).
+4. Prestiż **nie** kupuje wyniku meczu (§27).
 5. Badge / copy na rynku: „Finalista Pucharu” jako kontekst oferty.
 
 **Decyzje gracza**
@@ -4311,15 +4314,15 @@ Ograniczyć zakupy kategorią środków — liczby w §14/§26.
 
 **Przebieg**
 
-1. Klub ma **jedną kasę** oraz **budżet transferowy** jako **przydział (envelope)** z tej kasy — decyzja SSOT §14.5.  
-2. UX: pasek / pasmo „dostępne na transfery” w oknie.  
-3. Kupno wymaga wystarczającego budżetu transferowego; sprzedaż zasila kasę i może odświeżyć envelope (§14).  
-4. Nagrody ligowe/pucharowe (§10.16, §11.14) zasilają kasę (kategorie).  
+1. Klub ma **jedną kasę** oraz **budżet transferowy** jako **przydział (envelope)** z tej kasy — decyzja SSOT §14.5.
+2. UX: pasek / pasmo „dostępne na transfery” w oknie.
+3. Kupno wymaga wystarczającego budżetu transferowego; sprzedaż zasila kasę i może odświeżyć envelope (§14).
+4. Nagrody ligowe/pucharowe (§10.16, §11.14) zasilają kasę (kategorie).
 5. Brak pożyczek bankowych / overdraft w MVP.
 
 **Decyzje gracza**
 
-- Alokacja: jeden drogi vs kilku tańszych (odczucie pasm).  
+- Alokacja: jeden drogi vs kilku tańszych (odczucie pasm).
 - Czy sprzedać, by kupić.
 
 **Zależności**
@@ -4338,15 +4341,15 @@ Krótki rytuał dealu bez symulatora agentów.
 
 **Przebieg MVP**
 
-1. Ekran oferty: zawodnik + pasmo wartości + Twoja propozycja (presety: nisko / w paśmie / agresywnie — bez wpisywania formuł).  
-2. AI odpowiada w ramach SSOT: **Accept** / **Reject** / **Kontroferta** (maksymalnie jedna na łańcuch negocjacji).  
-3. Na kontrofertę: Accept / Reject (koniec — bez dalszych kontrofert).  
-4. Timeout: oferta wygasa z końcem dnia / okna (soft).  
+1. Ekran oferty: zawodnik + pasmo wartości + Twoja propozycja (presety: nisko / w paśmie / agresywnie — bez wpisywania formuł).
+2. AI odpowiada w ramach SSOT: **Accept** / **Reject** / **Kontroferta** (maksymalnie jedna na łańcuch negocjacji).
+3. Na kontrofertę: Accept / Reject (koniec — bez dalszych kontrofert).
+4. Timeout: oferta wygasa z końcem dnia / okna (soft).
 5. Brak chatów agentów / klauzul % w MVP.
 
 **Decyzje gracza**
 
-- Poziom otwarcia oferty.  
+- Poziom otwarcia oferty.
 - Przyjąć kontrofertę vs wyjść (Reject).
 
 **Zależności**
@@ -4365,10 +4368,10 @@ Domknąć stany oferty czytelnie dla gracza i AI.
 
 **Przebieg**
 
-1. Oferty przychodzące (AI → gracz): lista w Transferach + skrót §21.  
-2. Akceptacja: natychmiastowy transfer przy spełnionych limitach kadry/budżetu.  
-3. Odrzucenie: oferta znika; AI może wrócić później z inną (bez spamu).  
-4. Oferty wychodzące: status „oczekuje / zaakceptowana / odrzucona”.  
+1. Oferty przychodzące (AI → gracz): lista w Transferach + skrót §21.
+2. Akceptacja: natychmiastowy transfer przy spełnionych limitach kadry/budżetu.
+3. Odrzucenie: oferta znika; AI może wrócić później z inną (bez spamu).
+4. Oferty wychodzące: status „oczekuje / zaakceptowana / odrzucona”.
 5. Blokady: okno zamknięte, brak miejsca, brak środków, zawodnik kontuzjowany długo (soft-block sprzedaży załamanej ceny — OQ).
 
 **Decyzje gracza**
@@ -4392,15 +4395,15 @@ Transfery mają konsekwencje w szatni i XI.
 
 **Przebieg**
 
-1. Sprzedaż często grającego: ryzyko spadku morale / prośby innych (§7.9).  
-2. Kupno konkurenta na pozycję: morale „zagrożonego” może spaść; nowy — lekki plus.  
-3. Brak minut po drogim transferze: morale nowego spada (sygnał).  
-4. Po transferze: domyślnie nowy **nie** jest forcowany do XI — gracz decyduje w §9.  
+1. Sprzedaż często grającego: ryzyko spadku morale / prośby innych (§7.9).
+2. Kupno konkurenta na pozycję: morale „zagrożonego” może spaść; nowy — lekki plus.
+3. Brak minut po drogim transferze: morale nowego spada (sygnał).
+4. Po transferze: domyślnie nowy **nie** jest forcowany do XI — gracz decyduje w §9.
 5. Prośba o transfer (niskie morale): oferta wymuszona / lista — Future lub lekki MVP (OQ).
 
 **Decyzje gracza**
 
-- Komunikacja przez minuty i skład, nie przez dialogi.  
+- Komunikacja przez minuty i skład, nie przez dialogi.
 - Rotacja po wzmocnieniu.
 
 **Zależności**
@@ -4420,11 +4423,11 @@ Rynek mobilny, 2–4 tapnięcia do oferty, zgodny z UI Guide.
 
 **Przebieg / mapa ekranów**
 
-1. **Hub** → „Transfery” (gdy okno otwarte; inaczej z badge „zamknięte”).  
-2. **Taby:** Rynek · Twoja kadra · Oferty.  
-3. Lista + filtry proste; karta zawodnika; sheet oferty.  
-4. Potwierdzenie sukcesu: herb + nazwisko + „Dołącza do klubu” → skład / Hub.  
-5. Desktop: ta sama logika, szersza lista.  
+1. **Hub** → „Transfery” (gdy okno otwarte; inaczej z badge „zamknięte”).
+2. **Taby:** Rynek · Twoja kadra · Oferty.
+3. Lista + filtry proste; karta zawodnika; sheet oferty.
+4. Potwierdzenie sukcesu: herb + nazwisko + „Dołącza do klubu” → skład / Hub.
+5. Desktop: ta sama logika, szersza lista.
 6. Brak terminala Bloomberg / 50 kolumn.
 
 **Decyzje gracza**
@@ -4448,32 +4451,32 @@ Shipowalny rynek + ścieżka głębi.
 
 **MVP — wchodzi**
 
-- Okna mid-season + międzysezonowe  
-- Kupno / sprzedaż / lekki wolny agent  
-- Limity 18–22  
-- Wartość §7.17 + prestiż liga/puchar jako kontekst AI  
-- Budżet jako kategoria  
-- Accept / Reject / maksymalnie 1 kontroferta  
-- Morale lekkie  
-- Odblokowanie po K11 (pierwsze okno)  
+- Okna mid-season + międzysezonowe
+- Kupno / sprzedaż / lekki wolny agent
+- Limity 18–22
+- Wartość §7.17 + prestiż liga/puchar jako kontekst AI
+- Budżet jako kategoria
+- Accept / Reject / maksymalnie 1 kontroferta
+- Morale lekkie
+- Odblokowanie po K11 (pierwsze okno)
 
 **MVP — nie wchodzi**
 
-- Wypożyczenia  
-- Klauzule (sell-on, release, agent %)  
-- Draft / aukcje  
-- Scouting fog wartości  
-- Exchange (zawodnik+zawodnik)  
-- Pay-to-sign boost  
-- Wielowątkowe negocjacje  
+- Wypożyczenia
+- Klauzule (sell-on, release, agent %)
+- Draft / aukcje
+- Scouting fog wartości
+- Exchange (zawodnik+zawodnik)
+- Pay-to-sign boost
+- Wielowątkowe negocjacje
 
 **Future**
 
-1. Wypożyczenia  
-2. Klauzule i kontrakty wieloletnie detail  
-3. Scouting (§17) z discovery  
-4. Exchange deals  
-5. Prośby o transfer + mediacje  
+1. Wypożyczenia
+2. Klauzule i kontrakty wieloletnie detail
+3. Scouting (§17) z discovery
+4. Exchange deals
+5. Prośby o transfer + mediacje
 
 **Decyzje gracza**
 
@@ -4491,14 +4494,14 @@ Shipowalny rynek + ścieżka głębi.
 
 ### 12.15 Kontrakty produktowe §12
 
-1. **Transfery wspierają pętlę meczu**; nie są dziennym grindem.  
-2. **Wartość = §7.17**; rynek jej używa, nie redefiniuje.  
-3. **Prestiż ligi/pucharu wpływa na atrakcyjność handlu**, nie na fair-play wyniku.  
-4. **Okna: mid (po K11) + międzysezonie**; poza oknem brak finalizacji.  
-5. **Kadra 18–22.**  
-6. **Ekonomia dealu = kategorie §14/§26.**  
-7. **MVP: bez wypożyczeń i klauzul złożonych.**  
-8. **Bez pay-to-buy power (§27).**  
+1. **Transfery wspierają pętlę meczu**; nie są dziennym grindem.
+2. **Wartość = §7.17**; rynek jej używa, nie redefiniuje.
+3. **Prestiż ligi/pucharu wpływa na atrakcyjność handlu**, nie na fair-play wyniku.
+4. **Okna: mid (po K11) + międzysezonie**; poza oknem brak finalizacji.
+5. **Kadra 18–22.**
+6. **Ekonomia dealu = kategorie §14/§26.**
+7. **MVP: bez wypożyczeń i klauzul złożonych.**
+8. **Bez pay-to-buy power (§27).**
 9. **Negocjacje: Accept / Reject / maksymalnie 1 kontroferta.**
 
 ---
@@ -4527,26 +4530,26 @@ Dać klubowi czytelny **dom**: nazwa, pojemność, lekka frekwencja i bilety zas
 
 **Zasady nadrzędne (decyzje GDD-12)**
 
-1. **MVP = stadion statyczny** (brak rozbudowy, sektorów do kupienia, skyboxów).  
-2. Frekwencja jest **lekka** i spójna z §14.9.  
-3. Bilety (dom) → kategoria przychodu do **kasy** (§14).  
-4. Sukces sportowy i prestiż **wpływają na pasmo frekwencji**, nie na wynik meczu.  
-5. **Rozbudowa / hospitality / skyboxy = Future.**  
-6. Nazwa w MVP: **szablon auto** (§5.6); rename = Future.  
+1. **MVP = stadion statyczny** (brak rozbudowy, sektorów do kupienia, skyboxów).
+2. Frekwencja jest **lekka** i spójna z §14.9.
+3. Bilety (dom) → kategoria przychodu do **kasy** (§14).
+4. Sukces sportowy i prestiż **wpływają na pasmo frekwencji**, nie na wynik meczu.
+5. **Rozbudowa / hospitality / skyboxy = Future.**
+6. Nazwa w MVP: **szablon auto** (§5.6); rename = Future.
 7. **Bez formuł** frekwencji; bez pay-to-expand (§27).
 
 **Szybki kontrakt MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Stan obiektu | **Statyczny** preset startowy |
-| Nazwa | Szablon auto (np. Arena + klub) |
-| Pojemność | Stała wartość z presetu (widoczna w UI) |
-| Frekwencja | Pasmo lekkie (dom) |
-| Bilety | Kategoria → kasa po meczu domowym |
-| Puchar domowy | **Ten sam** model co liga |
-| Rozbudowa | **Future** |
-| Hospitality / skybox | **Future** |
+| Parametr             | Wartość MVP                             |
+| -------------------- | --------------------------------------- |
+| Stan obiektu         | **Statyczny** preset startowy           |
+| Nazwa                | Szablon auto (np. Arena + klub)         |
+| Pojemność            | Stała wartość z presetu (widoczna w UI) |
+| Frekwencja           | Pasmo lekkie (dom)                      |
+| Bilety               | Kategoria → kasa po meczu domowym       |
+| Puchar domowy        | **Ten sam** model co liga               |
+| Rozbudowa            | **Future**                              |
+| Hospitality / skybox | **Future**                              |
 
 ---
 
@@ -4557,14 +4560,14 @@ Stadion = tożsamość „nasz dom”, nie city-builder.
 
 **Przebieg**
 
-1. Gracz rozpoznaje obiekt po nazwie i pojemności.  
-2. Po meczu domowym czuje lekki wpływ frekwencji na kasę — bez mikrozarządzania cenami biletów.  
-3. Rozbudowa jest obietnicą Future, nie wymogiem Sezonu 1.  
+1. Gracz rozpoznaje obiekt po nazwie i pojemności.
+2. Po meczu domowym czuje lekki wpływ frekwencji na kasę — bez mikrozarządzania cenami biletów.
+3. Rozbudowa jest obietnicą Future, nie wymogiem Sezonu 1.
 4. Obiekt nie konkuruje z CTA meczu na Hubie.
 
 **Decyzje gracza**
 
-- Wejść w kartę stadionu (opcjonalne).  
+- Wejść w kartę stadionu (opcjonalne).
 - Brak decyzji budowy w MVP.
 
 **Zależności**
@@ -4584,9 +4587,9 @@ Osadzić obiekt w łuku klubu bez systemu budowy w MVP.
 
 **Przebieg**
 
-1. Stadion jest częścią **tożsamości klubu** (obok herbu, nazwy, ligi).  
-2. W MVP rozwój klubu = sport + finanse + kadra; stadion jest **stabilnym tłem**.  
-3. Future: rozbudowa jako kamień milowy §6 / prestiżu.  
+1. Stadion jest częścią **tożsamości klubu** (obok herbu, nazwy, ligi).
+2. W MVP rozwój klubu = sport + finanse + kadra; stadion jest **stabilnym tłem**.
+3. Future: rozbudowa jako kamień milowy §6 / prestiżu.
 4. Historia klubu może wspominać „domowe noce” (flavor §19).
 
 **Decyzje gracza**
@@ -4610,10 +4613,10 @@ Dać czytelny limit „ile ludzi się mieści” — kotwica frekwencji.
 
 **Przebieg**
 
-1. Pojemność = **stała** liczba/preset z pakietu startowego.  
-2. Widoczna na karcie stadionu i (skrót) w Finansach / przedmeczu opcjonalnie.  
-3. Frekwencja nigdy nie przekracza pojemności (pasmo ≤ 100% odczuciowo).  
-4. Brak sprzedaży miejsc / dynamicznej pojemności w MVP.  
+1. Pojemność = **stała** liczba/preset z pakietu startowego.
+2. Widoczna na karcie stadionu i (skrót) w Finansach / przedmeczu opcjonalnie.
+3. Frekwencja nigdy nie przekracza pojemności (pasmo ≤ 100% odczuciowo).
+4. Brak sprzedaży miejsc / dynamicznej pojemności w MVP.
 5. Wartość konkretna presetu = content / §26 — nie projektowana tu jako formuła.
 
 **Decyzje gracza**
@@ -4637,10 +4640,10 @@ Lekki sygnał zainteresowania kibiców na meczach domowych.
 
 **Przebieg**
 
-1. Frekwencja = **pasmo** (np. niska / solidna / wysoka / wyprzedane odczuciowo).  
-2. Dotyczy meczów **domowych** (liga i puchar — ten sam model).  
-3. Wpływ jakościowy: forma / ostatnie wyniki, atrakcyjność rywala, prestiż (§13.7–13.8).  
-4. Wyjazd: brak frekwencji własnej (ew. flavor „kibice wyjazdowi” bez przychodu).  
+1. Frekwencja = **pasmo** (np. niska / solidna / wysoka / wyprzedane odczuciowo).
+2. Dotyczy meczów **domowych** (liga i puchar — ten sam model).
+3. Wpływ jakościowy: forma / ostatnie wyniki, atrakcyjność rywala, prestiż (§13.7–13.8).
+4. Wyjazd: brak frekwencji własnej (ew. flavor „kibice wyjazdowi” bez przychodu).
 5. Nie blokuje kick-off; nie wymaga mikrozarządzania.
 
 **Decyzje gracza**
@@ -4664,10 +4667,10 @@ Przełożyć frekwencję na kategorię przychodu — bez cennika.
 
 **Przebieg**
 
-1. Po meczu **domowym**: kategoria „Bilety” wpływa do **kasy** (§14.2).  
-2. Wysokość kategorii jakościowo śledzi pasmo frekwencji.  
-3. Brak ustawiania cen biletów przez gracza w MVP.  
-4. Remis/porażka mogą obniżyć kolejne pasmo, nie kasują bieżącej wypłaty po meczu.  
+1. Po meczu **domowym**: kategoria „Bilety” wpływa do **kasy** (§14.2).
+2. Wysokość kategorii jakościowo śledzi pasmo frekwencji.
+3. Brak ustawiania cen biletów przez gracza w MVP.
+4. Remis/porażka mogą obniżyć kolejne pasmo, nie kasują bieżącej wypłaty po meczu.
 5. Kwoty → §26.
 
 **Decyzje gracza**
@@ -4691,10 +4694,10 @@ Jasny kontrakt z kasą i utrzymaniem obiektu.
 
 **Przebieg**
 
-1. **Przychód:** bilety domowe → kasa.  
-2. **Koszt:** lekkie **utrzymanie obiektu** (kategoria cykliczna §14.3) — stałe w MVP.  
-3. Brak CAPEX budowy w MVP.  
-4. Soft protection §14.13: niska frekwencja nie soft-lockuje.  
+1. **Przychód:** bilety domowe → kasa.
+2. **Koszt:** lekkie **utrzymanie obiektu** (kategoria cykliczna §14.3) — stałe w MVP.
+3. Brak CAPEX budowy w MVP.
+4. Soft protection §14.13: niska frekwencja nie soft-lockuje.
 5. Sponsor (§15) osobny tor; nie mylić z biletami.
 
 **Decyzje gracza**
@@ -4718,9 +4721,9 @@ Kibice reagują na formę — bez snowball ruinującego early game.
 
 **Przebieg**
 
-1. Seria zwycięstw / dobra forma → wyższe pasmo (soft).  
-2. Słaba passa → niższe pasmo; Sezon 1 chroniony przed spadkiem do „pustych trybun” ekstremalnych.  
-3. Pojedyncza porażka nie zeruje frekwencji.  
+1. Seria zwycięstw / dobra forma → wyższe pasmo (soft).
+2. Słaba passa → niższe pasmo; Sezon 1 chroniony przed spadkiem do „pustych trybun” ekstremalnych.
+3. Pojedyncza porażka nie zeruje frekwencji.
 4. Cel sponsorski oparty o mecze nadal osiągalny niezależnie od frekwencji.
 
 **Decyzje gracza**
@@ -4744,9 +4747,9 @@ Większa scena = większe zainteresowanie — spójnie z §11/§12/§15.
 
 **Przebieg**
 
-1. Wyższy szczebel ligi → bazowo wyższe pasmo frekwencji (odczucie po awansie — Future preset lub soft bump copy w MVP bez zmiany pojemności).  
-2. Puchar domowy / atrakcyjna runda → lekki boost frekwencji na ten mecz.  
-3. Finał na neutralnym (§11.7): brak biletów własnych / minimalny flavor.  
+1. Wyższy szczebel ligi → bazowo wyższe pasmo frekwencji (odczucie po awansie — Future preset lub soft bump copy w MVP bez zmiany pojemności).
+2. Puchar domowy / atrakcyjna runda → lekki boost frekwencji na ten mecz.
+3. Finał na neutralnym (§11.7): brak biletów własnych / minimalny flavor.
 4. Prestiż nie kupuje wyniku LFE.
 
 **Decyzje gracza**
@@ -4770,18 +4773,18 @@ Minimalny zestaw faktów o obiekcie.
 
 **Przebieg — karta stadionu MVP**
 
-| Element | MVP |
-|---------|-----|
-| Nazwa | Tak |
-| Pojemność | Tak |
-| Frekwencja ostatniego meczu domowego | Pasmo / skrót |
-| Utrzymanie obiektu | Pasmo kosztu (opcjonalnie) |
-| Przycisk rozbudowy | Wyszarzone „Wkrótce” / ukryte |
-| Mapa sektorów | Nie |
-| Cennik biletów | Nie |
+| Element                              | MVP                           |
+| ------------------------------------ | ----------------------------- |
+| Nazwa                                | Tak                           |
+| Pojemność                            | Tak                           |
+| Frekwencja ostatniego meczu domowego | Pasmo / skrót                 |
+| Utrzymanie obiektu                   | Pasmo kosztu (opcjonalnie)    |
+| Przycisk rozbudowy                   | Wyszarzone „Wkrótce” / ukryte |
+| Mapa sektorów                        | Nie                           |
+| Cennik biletów                       | Nie                           |
 
-1. Wejście: Hub / Klub / Finanse secondary.  
-2. Przedmecz: opcjonalny skrót frekwencji oczekiwanej.  
+1. Wejście: Hub / Klub / Finanse secondary.
+2. Przedmecz: opcjonalny skrót frekwencji oczekiwanej.
 3. Raport pomeczowy: linia biletów (§9.13 / §14).
 
 **Decyzje gracza**
@@ -4805,10 +4808,10 @@ Zarezerwować ścieżkę bez shipowania w MVP.
 
 **Przebieg Future (zarys)**
 
-1. Poziomy pojemności / sektory.  
-2. Koszt z kasy + czas budowy.  
-3. Trade-off: wyższe utrzymanie vs wyższy sufit biletów.  
-4. Gate: szczebel ligi / prestiż.  
+1. Poziomy pojemności / sektory.
+2. Koszt z kasy + czas budowy.
+3. Trade-off: wyższe utrzymanie vs wyższy sufit biletów.
+4. Gate: szczebel ligi / prestiż.
 5. MVP: tylko zapowiedź UI.
 
 **Decyzje gracza**
@@ -4832,8 +4835,8 @@ Oznaczyć jako poza MVP — tie-in §15.
 
 **Przebieg Future**
 
-1. Skyboxy / loże jako slot przychodu + branding sponsora.  
-2. Osobna kategoria przychodu vs bilety masowe.  
+1. Skyboxy / loże jako slot przychodu + branding sponsora.
+2. Osobna kategoria przychodu vs bilety masowe.
 3. MVP: brak.
 
 **Decyzje gracza**
@@ -4857,14 +4860,14 @@ Domknąć tożsamość obiektu bez tarcia onboardingu.
 
 **Przebieg MVP**
 
-1. Nazwa = **szablon automatyczny** przy kreacji (§5.6).  
-2. Widoczna wszędzie: karta, przedmecz domowy, historia.  
-3. **Brak** pola edycji w kreacji (ochrona budżetu czasu §5).  
+1. Nazwa = **szablon automatyczny** przy kreacji (§5.6).
+2. Widoczna wszędzie: karta, przedmecz domowy, historia.
+3. **Brak** pola edycji w kreacji (ochrona budżetu czasu §5).
 4. Future: zmiana nazwy (ew. limit / kosmetyka §27).
 
 **Decyzje gracza**
 
-- MVP: brak.  
+- MVP: brak.
 - Future: rename.
 
 **Zależności**
@@ -4884,9 +4887,9 @@ Jedna spokojna karta obiektu; mobile-first.
 
 **Przebieg**
 
-1. Ekran **Stadion**: bohater = nazwa; pojemność; ostatnia frekwencja; CTA secondary do Finansów.  
-2. Brak builder UI.  
-3. Live mecz: bez wymogu renderu stadionu 3D — Canvas LFE osobno; tu tylko dane produktowe.  
+1. Ekran **Stadion**: bohater = nazwa; pojemność; ostatnia frekwencja; CTA secondary do Finansów.
+2. Brak builder UI.
+3. Live mecz: bez wymogu renderu stadionu 3D — Canvas LFE osobno; tu tylko dane produktowe.
 4. UI Guide: atmosfera obiektu bez glow/neon sponsor splash.
 
 **Decyzje gracza**
@@ -4910,30 +4913,30 @@ Freeze zakresu.
 
 **MVP — wchodzi**
 
-- Preset statyczny (nazwa auto, pojemność stała)  
-- Frekwencja lekka (pasma)  
-- Bilety domowe → kasa  
-- Ten sam model liga/puchar domowy  
-- Lekkie utrzymanie obiektu  
-- Karta UI read-mostly  
-- Zapowiedź rozbudowy (opcjonalnie disabled)  
+- Preset statyczny (nazwa auto, pojemność stała)
+- Frekwencja lekka (pasma)
+- Bilety domowe → kasa
+- Ten sam model liga/puchar domowy
+- Lekkie utrzymanie obiektu
+- Karta UI read-mostly
+- Zapowiedź rozbudowy (opcjonalnie disabled)
 
 **MVP — nie wchodzi**
 
-- Rozbudowa pojemności / sektory  
-- Hospitality / skyboxy  
-- Cennik biletów  
-- Rename stadionu  
-- Budowa w czasie rzeczywistym  
-- Pay-to-expand  
+- Rozbudowa pojemności / sektory
+- Hospitality / skyboxy
+- Cennik biletów
+- Rename stadionu
+- Budowa w czasie rzeczywistym
+- Pay-to-expand
 
 **Future**
 
-1. Rozbudowa poziomów  
-2. Hospitality + sponsor slot  
-3. Rename / kosmetyka  
-4. Presety wizualne po awansie  
-5. Atmosfera / crowdy wpływ na morale (§7.9) lekko  
+1. Rozbudowa poziomów
+2. Hospitality + sponsor slot
+3. Rename / kosmetyka
+4. Presety wizualne po awansie
+5. Atmosfera / crowdy wpływ na morale (§7.9) lekko
 
 **Decyzje gracza**
 
@@ -4951,14 +4954,14 @@ Freeze zakresu.
 
 ### 13.15 Kontrakty produktowe §13
 
-1. **MVP = stadion statyczny** (bez rozbudowy).  
-2. **Nazwa auto**; rename = Future.  
-3. **Frekwencja lekka** na meczach domowych (liga = puchar).  
-4. **Bilety → kasa (§14)**; kwoty → §26.  
-5. **Wyniki i prestiż** wpływają na pasmo frekwencji, nie na fair-play wyniku.  
-6. **Hospitality / skyboxy = Future.**  
-7. **Utrzymanie obiektu** = lekka kategoria kosztu.  
-8. **Spójność z §5.6, §14.9, §15.**  
+1. **MVP = stadion statyczny** (bez rozbudowy).
+2. **Nazwa auto**; rename = Future.
+3. **Frekwencja lekka** na meczach domowych (liga = puchar).
+4. **Bilety → kasa (§14)**; kwoty → §26.
+5. **Wyniki i prestiż** wpływają na pasmo frekwencji, nie na fair-play wyniku.
+6. **Hospitality / skyboxy = Future.**
+7. **Utrzymanie obiektu** = lekka kategoria kosztu.
+8. **Spójność z §5.6, §14.9, §15.**
 9. **Bez algorytmów i pay-to-expand.**
 
 ---
@@ -4986,25 +4989,25 @@ Dać menedżerowi czytelny obraz „stać mnie / nie stać” wspierający decyz
 
 **Zasady nadrzędne (decyzje GDD-10)**
 
-1. **Ekonomia wspiera decyzje**, nie jest minigrą kary.  
-2. **Kategorie > liczby** w tym rozdziale; kwoty i krzywe → **§26**.  
-3. **Jedna kasa klubowa** + **budżet transferowy jako przydział (envelope)** z kasy (§12.9).  
-4. **Nagrody ligowe i pucharowe** zasilają kasę (i mogą odświeżać envelope) — zgodnie z §10 / §11.  
-5. **Brak pożyczek / overdraft / pay-to-bailout** w MVP (§27: Premium ≠ pieniądze na wynik).  
-6. **Soft landing:** ujemne trendy komunikowane wcześnie; brak game-over finansowego.  
+1. **Ekonomia wspiera decyzje**, nie jest minigrą kary.
+2. **Kategorie > liczby** w tym rozdziale; kwoty i krzywe → **§26**.
+3. **Jedna kasa klubowa** + **budżet transferowy jako przydział (envelope)** z kasy (§12.9).
+4. **Nagrody ligowe i pucharowe** zasilają kasę (i mogą odświeżać envelope) — zgodnie z §10 / §11.
+5. **Brak pożyczek / overdraft / pay-to-bailout** w MVP (§27: Premium ≠ pieniądze na wynik).
+6. **Soft landing:** ujemne trendy komunikowane wcześnie; brak game-over finansowego.
 7. **Terminologia:** środki / kasa / budżet transferowy — bez mylenia z kondycją/zmęczeniem/gotowością zawodników.
 
 **Szybki kontrakt MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Model kasy | **1 kasa** + **envelope transferowy** |
-| Waluta UX | Jedna waluta gry (nazwa brandowa later) |
-| Raport | Po meczu (skrót) + ekran Finansów + podsumowanie sezonu |
-| Bankructwo | **Brak hard fail** — tryb ochrony / soft recovery |
-| Sponsorzy | **1 sponsor bazowy** (prosty); głębokość → §15 |
+| Parametr   | Wartość MVP                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| Model kasy | **1 kasa** + **envelope transferowy**                             |
+| Waluta UX  | Jedna waluta gry (nazwa brandowa later)                           |
+| Raport     | Po meczu (skrót) + ekran Finansów + podsumowanie sezonu           |
+| Bankructwo | **Brak hard fail** — tryb ochrony / soft recovery                 |
+| Sponsorzy  | **1 sponsor bazowy** (prosty); głębokość → §15                    |
 | Frekwencja | **Lekki wpływ** na przychód meczowy (pasmo); detal stadionu → §13 |
-| Pożyczki | **Nie** |
+| Pożyczki   | **Nie**                                                           |
 
 ---
 
@@ -5015,14 +5018,14 @@ Finanse jako feedback sprawczości i ograniczenie sensownych wyborów — nie Ex
 
 **Przebieg**
 
-1. Gracz zawsze wie: stan kasy (pasmo/poziom), czy stać go na ruch transferowy, co właśnie wpłynęło.  
-2. Porażki sportowe bolą prestiżem i nagrodami, nie natychmiastowym ruinowaniem klubu.  
-3. Sezon 1: start z bezpiecznym buforem (pakiet §5) — bez tutorialowego bankruta.  
+1. Gracz zawsze wie: stan kasy (pasmo/poziom), czy stać go na ruch transferowy, co właśnie wpłynęło.
+2. Porażki sportowe bolą prestiżem i nagrodami, nie natychmiastowym ruinowaniem klubu.
+3. Sezon 1: start z bezpiecznym buforem (pakiet §5) — bez tutorialowego bankruta.
 4. Sukces (liga/puchar/sprzedaż) = odczuwalny zastrzyk, nie wykładniczy snowball bez limitu odczucia (balans → §26).
 
 **Decyzje gracza**
 
-- Wydać na transfer vs trzymać bufor.  
+- Wydać na transfer vs trzymać bufor.
 - Czy czytać raport finansowy (opcjonalne pogłębienie).
 
 **Zależności**
@@ -5042,15 +5045,15 @@ Wymienić kategorie wpływów bez kwot.
 
 **Przebieg — kategorie MVP**
 
-| Kategoria | Kiedy | Uwagi |
-|-----------|--------|------|
-| Nagroda meczowa (liga) | Po meczu ligowym | Zależna od wyniku jakościowo (W/R/P) |
-| Nagroda pozycyjna / sezonowa | Po sezonie / kamieniach | §10.16 |
-| Nagroda pucharowa | Po rundzie / trofeum | §11.14–11.15 |
-| Bilety / dzień meczowy | Po meczu domowym | Lekka frekwencja (§14.9) |
-| Sponsor bazowy | Cyklicznie / start sezonu | Prosty (§14.8, §15) |
-| Transfer sprzedaży | Przy finalizacji §12 | Zasilenie kasy |
-| Inne | — | Future (merch, TV deal detail) |
+| Kategoria                    | Kiedy                     | Uwagi                                |
+| ---------------------------- | ------------------------- | ------------------------------------ |
+| Nagroda meczowa (liga)       | Po meczu ligowym          | Zależna od wyniku jakościowo (W/R/P) |
+| Nagroda pozycyjna / sezonowa | Po sezonie / kamieniach   | §10.16                               |
+| Nagroda pucharowa            | Po rundzie / trofeum      | §11.14–11.15                         |
+| Bilety / dzień meczowy       | Po meczu domowym          | Lekka frekwencja (§14.9)             |
+| Sponsor bazowy               | Cyklicznie / start sezonu | Prosty (§14.8, §15)                  |
+| Transfer sprzedaży           | Przy finalizacji §12      | Zasilenie kasy                       |
+| Inne                         | —                         | Future (merch, TV deal detail)       |
 
 **Decyzje gracza**
 
@@ -5073,17 +5076,17 @@ Wymienić kategorie obciążeń bez kwot.
 
 **Przebieg — kategorie MVP**
 
-| Kategoria | Kiedy | Uwagi |
-|-----------|--------|------|
-| Pensje / utrzymanie kadry | Cyklicznie (tydzień/kolejka) | §14.10 |
-| Premie meczowe / sezonowe | Po wydarzeniach | §14.11 |
-| Transfer kupna | W oknie §12 | Z envelope |
-| Utrzymanie obiektu (bazowe) | Cyklicznie | Lekkie; upgrade’y → §13 Future/detail |
-| Kary / niespodzianki | Rzadko | Unikać w Sezonie 1 |
+| Kategoria                   | Kiedy                        | Uwagi                                 |
+| --------------------------- | ---------------------------- | ------------------------------------- |
+| Pensje / utrzymanie kadry   | Cyklicznie (tydzień/kolejka) | §14.10                                |
+| Premie meczowe / sezonowe   | Po wydarzeniach              | §14.11                                |
+| Transfer kupna              | W oknie §12                  | Z envelope                            |
+| Utrzymanie obiektu (bazowe) | Cyklicznie                   | Lekkie; upgrade’y → §13 Future/detail |
+| Kary / niespodzianki        | Rzadko                       | Unikać w Sezonie 1                    |
 
 **Decyzje gracza**
 
-- Wielkość kadry vs koszt utrzymania (odczucie).  
+- Wielkość kadry vs koszt utrzymania (odczucie).
 - Kupno vs oszczędność.
 
 **Zależności**
@@ -5103,15 +5106,15 @@ Jeden czytelny zasób „pieniądze klubu”.
 
 **Przebieg**
 
-1. **Kasa** = główne saldo środków.  
-2. UX: wartość pasmowa lub skrót liczby (gdy §26 dostarczy skalę) + trend ↑↓.  
-3. Hub: mini-wskaźnik kasy (nie dominuje CTA meczu).  
-4. Ekran Finansów: lista ostatnich ruchów (kategorie).  
+1. **Kasa** = główne saldo środków.
+2. UX: wartość pasmowa lub skrót liczby (gdy §26 dostarczy skalę) + trend ↑↓.
+3. Hub: mini-wskaźnik kasy (nie dominuje CTA meczu).
+4. Ekran Finansów: lista ostatnich ruchów (kategorie).
 5. Kasa nie spada w „ukryciu” — każdy duży ruch ma feedback.
 
 **Decyzje gracza**
 
-- Czy otwierać ekran Finansów.  
+- Czy otwierać ekran Finansów.
 - Reakcja na ostrzeżenie niskiej kasy.
 
 **Zależności**
@@ -5131,15 +5134,15 @@ Domknąć model z §12.9: envelope, nie druga waluta.
 
 **Przebieg**
 
-1. **Budżet transferowy** = część kasy **przydzielona** na okna transferowe (envelope).  
-2. Kupno §12 zużywa envelope (i kasę spójnie).  
-3. Sprzedaż zasila **kasę**; system może **auto-odświeżyć** envelope w oknie (zasada jakościowa).  
-4. Poza oknem: envelope widoczny jako plan / niedostępny do wydania.  
+1. **Budżet transferowy** = część kasy **przydzielona** na okna transferowe (envelope).
+2. Kupno §12 zużywa envelope (i kasę spójnie).
+3. Sprzedaż zasila **kasę**; system może **auto-odświeżyć** envelope w oknie (zasada jakościowa).
+4. Poza oknem: envelope widoczny jako plan / niedostępny do wydania.
 5. Gracz w MVP **nie** mikro-zarządza suwakiem alokacji (Future); przydział jest systemowy / sezonowy.
 
 **Decyzje gracza**
 
-- Wydawać envelope vs czekać na lepszy deal.  
+- Wydawać envelope vs czekać na lepszy deal.
 - Sprzedaż w celu odblokowania kupna.
 
 **Zależności**
@@ -5159,10 +5162,10 @@ Zmapować kategorie nagród z §10 na finanse.
 
 **Przebieg**
 
-1. **Po meczu ligowym:** nagroda meczowa (kategoria wynikowa).  
-2. **Po sezonie:** nagroda za miejsce — **pasmowa / skokowa u topu** (mistrz / awans / mid / utrzymanie / dół) — bez kwot; szczegół skali → §26.  
-3. Awans: dodatkowy zastrzyk kategorii „prestiż + środki”.  
-4. Spadek: głównie prestiż; środki — miękki spadek odczuwalny, nie ruin (§10 soft landing).  
+1. **Po meczu ligowym:** nagroda meczowa (kategoria wynikowa).
+2. **Po sezonie:** nagroda za miejsce — **pasmowa / skokowa u topu** (mistrz / awans / mid / utrzymanie / dół) — bez kwot; szczegół skali → §26.
+3. Awans: dodatkowy zastrzyk kategorii „prestiż + środki”.
+4. Spadek: głównie prestiż; środki — miękki spadek odczuwalny, nie ruin (§10 soft landing).
 5. Nie mylić z punktami tabeli.
 
 **Decyzje gracza**
@@ -5186,10 +5189,10 @@ Zmapować §11 na wpływy kasy.
 
 **Przebieg**
 
-1. Wygrana rundy → kategoria nagrody (§11.15).  
-2. Finał / trofeum → większy zastrzyk kategorii + prestiż.  
-3. Odpadnięcie: brak kary finansowej (tylko brak dalszych nagród).  
-4. Nagrody pucharowe **nie zastępują** ligowych.  
+1. Wygrana rundy → kategoria nagrody (§11.15).
+2. Finał / trofeum → większy zastrzyk kategorii + prestiż.
+3. Odpadnięcie: brak kary finansowej (tylko brak dalszych nagród).
+4. Nagrody pucharowe **nie zastępują** ligowych.
 5. Mogą zasilić kasę w trakcie sezonu (pomoc mid-window).
 
 **Decyzje gracza**
@@ -5213,9 +5216,9 @@ Prosty zastrzyk stabilności w MVP; głębokość w §15.
 
 **Przebieg MVP**
 
-1. **1 sponsor bazowy** — reguły pozyskania, celów i odnowienia → **§15** (SSOT).  
-2. Wpływ: cykliczny przychód kategorii + **1 cel sezonowy** (nie daily) — bez kar ciężkich.  
-3. Brak negocjacji wieloofertowych w MVP.  
+1. **1 sponsor bazowy** — reguły pozyskania, celów i odnowienia → **§15** (SSOT).
+2. Wpływ: cykliczny przychód kategorii + **1 cel sezonowy** (nie daily) — bez kar ciężkich.
+3. Brak negocjacji wieloofertowych w MVP.
 4. Branding UI: dyskretny (UI Guide), nie spam.
 
 **Future**
@@ -5224,7 +5227,7 @@ Prosty zastrzyk stabilności w MVP; głębokość w §15.
 
 **Decyzje gracza**
 
-- MVP: przegląd celu / odbór nagrody; brak shopu sponsorów.  
+- MVP: przegląd celu / odbór nagrody; brak shopu sponsorów.
 - Future: wybór oferty sponsora.
 
 **Zależności**
@@ -5243,9 +5246,9 @@ Lekki związek dzień meczowy ↔ przychód — bez pełnego symulatora stadionu
 
 **Przebieg MVP**
 
-1. Mecz **domowy** (liga lub puchar) generuje kategorię „bilety” zależną jakościowo od frekwencji — model SSOT → **§13.4–13.5**.  
-2. Mecz wyjazdowy: brak / minimalny przychód biletowy własny.  
-3. Pojemność, nazwa, UI obiektu → **§13**; upgrade’y = Future.  
+1. Mecz **domowy** (liga lub puchar) generuje kategorię „bilety” zależną jakościowo od frekwencji — model SSOT → **§13.4–13.5**.
+2. Mecz wyjazdowy: brak / minimalny przychód biletowy własny.
+3. Pojemność, nazwa, UI obiektu → **§13**; upgrade’y = Future.
 4. Frekwencja nie blokuje meczu i nie soft-lockuje.
 
 **Decyzje gracza**
@@ -5268,15 +5271,15 @@ Większa / droższa kadra = wyższe utrzymanie (odczucie).
 
 **Przebieg**
 
-1. Koszt utrzymania zależy jakościowo od: liczby zawodników, pasm wartości/poziomu, (lekko) wieku.  
-2. Po transferze przychodzącym: utrzymanie ↑; po sprzedaży ↓.  
-3. Ostrzeżenie, gdy utrzymanie „zjada” bufor kasy.  
-4. Brak indywidualnych negocjacji pensji w MVP (Future).  
+1. Koszt utrzymania zależy jakościowo od: liczby zawodników, pasm wartości/poziomu, (lekko) wieku.
+2. Po transferze przychodzącym: utrzymanie ↑; po sprzedaży ↓.
+3. Ostrzeżenie, gdy utrzymanie „zjada” bufor kasy.
+4. Brak indywidualnych negocjacji pensji w MVP (Future).
 5. Nie mylić z zmęczeniem zawodnika.
 
 **Decyzje gracza**
 
-- Limit 22 vs kosztowny lux composition.  
+- Limit 22 vs kosztowny lux composition.
 - Sprzedaż „martwych” miejsc w kadrze.
 
 **Zależności**
@@ -5296,9 +5299,9 @@ Krótkie, czytelne premie za osiągnięcia — bez arkusza bonusów.
 
 **Przebieg MVP**
 
-1. Premie kategorialne: np. zwycięstwo, awans rundy pucharu, awans ligowy.  
-2. Wypłata z kasy (koszt) **lub** neutralny flavor „premia wliczona w nagrodę” — **rekomendacja MVP:** premie zawodnicze jako **koszt kategorii** tylko przy dużych eventach (awans, trofeum), by nie spamować co mecz.  
-3. Brak ręcznego ustawiania premii przez gracza w MVP.  
+1. Premie kategorialne: np. zwycięstwo, awans rundy pucharu, awans ligowy.
+2. Wypłata z kasy (koszt) **lub** neutralny flavor „premia wliczona w nagrodę” — **rekomendacja MVP:** premie zawodnicze jako **koszt kategorii** tylko przy dużych eventach (awans, trofeum), by nie spamować co mecz.
+3. Brak ręcznego ustawiania premii przez gracza w MVP.
 4. Future: suwak premii szatni.
 
 **Decyzje gracza**
@@ -5322,9 +5325,9 @@ Domknięcie roku finansowego obok sportowego.
 
 **Przebieg**
 
-1. Po K22 / w przerwie: **raport sezonowy** — przychody vs koszty (kategorie), bilans ↑↓.  
-2. Porównanie do startu sezonu (pasmo).  
-3. Nie blokuje startu nowego sezonu.  
+1. Po K22 / w przerwie: **raport sezonowy** — przychody vs koszty (kategorie), bilans ↑↓.
+2. Porównanie do startu sezonu (pasmo).
+3. Nie blokuje startu nowego sezonu.
 4. Highlight 3 największych ruchów (np. sprzedaż, trofeum, pensje).
 
 **Decyzje gracza**
@@ -5348,13 +5351,13 @@ Nigdy nie zostawić gracza w stanie „nie mogę grać meczów / utknąłem”.
 
 **Przebieg**
 
-1. **Brak** bankructwa kończącego save w MVP.  
-2. Przy krytycznie niskiej kasie:  
-   - ostrzeżenia wcześniej,  
-   - soft aid: tymczasowy bufor / ograniczenie kupna / sugestia sprzedaży,  
-   - mecze ligowe/pucharowe **nadal dostępne**.  
-3. Envelope transferowy może spaść do zera — to OK; gra trwa.  
-4. Brak wymuszonej sprzedaży przez AI w Sezonie 1 bez ostrzeżenia (spójnie z §12.5).  
+1. **Brak** bankructwa kończącego save w MVP.
+2. Przy krytycznie niskiej kasie:
+   - ostrzeżenia wcześniej,
+   - soft aid: tymczasowy bufor / ograniczenie kupna / sugestia sprzedaży,
+   - mecze ligowe/pucharowe **nadal dostępne**.
+3. Envelope transferowy może spaść do zera — to OK; gra trwa.
+4. Brak wymuszonej sprzedaży przez AI w Sezonie 1 bez ostrzeżenia (spójnie z §12.5).
 5. Premium nie sprzedaje „pakietu ratunkowego wygrywającego ligę” (§27).
 
 **Decyzje gracza**
@@ -5378,10 +5381,10 @@ Jeden spójny przepływ środków ↔ rynek.
 
 **Przebieg**
 
-1. Kupno: wymaga envelope + spójność z kasą.  
-2. Sprzedaż: +kasa; odświeżenie envelope wg §14.5.  
-3. Poza oknem: brak finalizacji wydatków transferowych.  
-4. Wartość §7.17 kotwiczy odczucie ceny; kwoty → §26.  
+1. Kupno: wymaga envelope + spójność z kasą.
+2. Sprzedaż: +kasa; odświeżenie envelope wg §14.5.
+3. Poza oknem: brak finalizacji wydatków transferowych.
+4. Wartość §7.17 kotwiczy odczucie ceny; kwoty → §26.
 5. Limity kadry 18–22 niezależne od kasy (osobny gate).
 
 **Decyzje gracza**
@@ -5405,9 +5408,9 @@ Puchar jako równoległy tor zasilania kasy i prestiżu.
 
 **Przebieg**
 
-1. Nagrody rund/trofeum → kasa (§14.7).  
-2. Prestiż → atrakcyjność transferowa (§12.8), nie bezpośredni cheat finansowy.  
-3. Priorytet kalendarza liga > puchar bez zmian (§11.9–11.10).  
+1. Nagrody rund/trofeum → kasa (§14.7).
+2. Prestiż → atrakcyjność transferowa (§12.8), nie bezpośredni cheat finansowy.
+3. Priorytet kalendarza liga > puchar bez zmian (§11.9–11.10).
 4. Brak kary finansowej za odpadnięcie.
 
 **Decyzje gracza**
@@ -5431,11 +5434,11 @@ Finanse czytelne w 10 sekund; mobile-first.
 
 **Przebieg**
 
-1. Hub: mały wskaźnik kasy + alert tylko gdy krytycznie.  
-2. Ekran **Finanse**: saldo, envelope transferowy, ostatnie 5–10 ruchów, skrót sezonu.  
-3. Po meczu: 1 linia „+ kategoria nagrody” w raporcie (§9.13).  
-4. W oknie transferowym: envelope prominentny.  
-5. Brak wykresów candlestick; proste paski/pasma.  
+1. Hub: mały wskaźnik kasy + alert tylko gdy krytycznie.
+2. Ekran **Finanse**: saldo, envelope transferowy, ostatnie 5–10 ruchów, skrót sezonu.
+3. Po meczu: 1 linia „+ kategoria nagrody” w raporcie (§9.13).
+4. W oknie transferowym: envelope prominentny.
+5. Brak wykresów candlestick; proste paski/pasma.
 6. UI Guide: bez glow; jeden cel ekranu.
 
 **Decyzje gracza**
@@ -5459,33 +5462,33 @@ Shipowalny model + miejsce na §26 i §15.
 
 **MVP — wchodzi**
 
-- 1 kasa + envelope transferowy  
-- Kategorie przychodów/kosztów (§14.2–14.3)  
-- Nagrody ligowe + pucharowe (kategorie)  
-- 1 sponsor bazowy  
-- Lekka frekwencja biletowa  
-- Utrzymanie kadry (uproszczone)  
-- Premie tylko przy dużych eventach (rekomendacja)  
-- Raport sezonowy  
-- Soft protection (bez hard bankruptcy)  
-- Brak pożyczek  
+- 1 kasa + envelope transferowy
+- Kategorie przychodów/kosztów (§14.2–14.3)
+- Nagrody ligowe + pucharowe (kategorie)
+- 1 sponsor bazowy
+- Lekka frekwencja biletowa
+- Utrzymanie kadry (uproszczone)
+- Premie tylko przy dużych eventach (rekomendacja)
+- Raport sezonowy
+- Soft protection (bez hard bankruptcy)
+- Brak pożyczek
 
 **MVP — nie wchodzi**
 
-- Pełny model §26 liczbowy (osobny etap balansu)  
-- Multi-sponsor marketplace  
-- Pożyczki / inwestorzy / emisja akcji  
-- Ręczne pensje i klauzule premiowe  
-- Podatki / fair-play finansowy detail  
-- Pay-to-refill kasy  
+- Pełny model §26 liczbowy (osobny etap balansu)
+- Multi-sponsor marketplace
+- Pożyczki / inwestorzy / emisja akcji
+- Ręczne pensje i klauzule premiowe
+- Podatki / fair-play finansowy detail
+- Pay-to-refill kasy
 
 **Future**
 
-1. §15 głębocy sponsorzy  
-2. §13 upgrade’y stadionu ↔ przychód  
-3. §26 liczby i krzywe  
-4. Negocjacje pensji  
-5. Inwestycje / pożyczki soft  
+1. §15 głębocy sponsorzy
+2. §13 upgrade’y stadionu ↔ przychód
+3. §26 liczby i krzywe
+4. Negocjacje pensji
+5. Inwestycje / pożyczki soft
 
 **Decyzje gracza**
 
@@ -5503,14 +5506,14 @@ Shipowalny model + miejsce na §26 i §15.
 
 ### 14.18 Kontrakty produktowe §14
 
-1. **Ekonomia wspiera decyzje; nie soft-lockuje gry.**  
-2. **Jedna kasa + envelope transferowy** (nie druga waluta).  
-3. **Kwoty i formuły → §26**; tu kategorie i UX.  
-4. **Nagrody ligowe i pucharowe zasilają kasę.**  
-5. **Sponsor bazowy w MVP**; głębokość → §15.  
-6. **Frekwencja = lekki wpływ** na bilety; detal → §13.  
-7. **Brak pożyczek i hard bankruptcy w MVP.**  
-8. **Premium ≠ doładowanie wygrywające** (§27).  
+1. **Ekonomia wspiera decyzje; nie soft-lockuje gry.**
+2. **Jedna kasa + envelope transferowy** (nie druga waluta).
+3. **Kwoty i formuły → §26**; tu kategorie i UX.
+4. **Nagrody ligowe i pucharowe zasilają kasę.**
+5. **Sponsor bazowy w MVP**; głębokość → §15.
+6. **Frekwencja = lekki wpływ** na bilety; detal → §13.
+7. **Brak pożyczek i hard bankruptcy w MVP.**
+8. **Premium ≠ doładowanie wygrywające** (§27).
 9. **Spójność z §12:** kupno z envelope; sprzedaż do kasy.
 
 ---
@@ -5540,25 +5543,25 @@ Dać stabilne, uzupełniające źródło dochodu i lekki cel sezonowy — spójn
 
 **Zasady nadrzędne (decyzje GDD-11)**
 
-1. **MVP = 1 sponsor bazowy** (potwierdzenie §14.8).  
-2. Sponsoring **uzupełnia** ekonomię, nie zastępuje nagród ligowych/pucharowych.  
-3. Cele są **sezonowe / kamieniowe**, nie daily-login gates.  
-4. **Brak ciężkich kar** za niewykonanie celu w MVP (soft miss).  
-5. Prestiż ligi/pucharu wpływa na **jakość oferty przy odnowieniu** (Future mocniej; MVP lekko).  
-6. **Bez marketplace** i multi-slotów w MVP.  
+1. **MVP = 1 sponsor bazowy** (potwierdzenie §14.8).
+2. Sponsoring **uzupełnia** ekonomię, nie zastępuje nagród ligowych/pucharowych.
+3. Cele są **sezonowe / kamieniowe**, nie daily-login gates.
+4. **Brak ciężkich kar** za niewykonanie celu w MVP (soft miss).
+5. Prestiż ligi/pucharu wpływa na **jakość oferty przy odnowieniu** (Future mocniej; MVP lekko).
+6. **Bez marketplace** i multi-slotów w MVP.
 7. **Bez formuł / pay-to-sponsor-win** (§27).
 
 **Szybki kontrakt MVP (SSOT)**
 
-| Parametr | Wartość MVP |
-|----------|-------------|
-| Liczba sponsorów | **1** (bazowy) |
-| Pozyskanie | Auto przy kreacji klubu + odnowienie sezonowe |
-| Długość | **1 sezon ligowy** |
-| Cele | **1 cel sezonowy** prosty |
-| Kara za miss | **Brak** (tylko brak bonusu) |
-| Przychód bazowy | Kategoria cykliczna → kasa (§14) |
-| Zmiana w trakcie sezonu | **Nie** (tylko przy odnowieniu) |
+| Parametr                | Wartość MVP                                   |
+| ----------------------- | --------------------------------------------- |
+| Liczba sponsorów        | **1** (bazowy)                                |
+| Pozyskanie              | Auto przy kreacji klubu + odnowienie sezonowe |
+| Długość                 | **1 sezon ligowy**                            |
+| Cele                    | **1 cel sezonowy** prosty                     |
+| Kara za miss            | **Brak** (tylko brak bonusu)                  |
+| Przychód bazowy         | Kategoria cykliczna → kasa (§14)              |
+| Zmiana w trakcie sezonu | **Nie** (tylko przy odnowieniu)               |
 
 ---
 
@@ -5569,14 +5572,14 @@ Sponsor = partner tła: spokojny cashflow + jeden jasny cel, zero korporacyjnego
 
 **Przebieg**
 
-1. Gracz wie: kto sponsoruje, co płaci (kategoria), jaki jest cel sezonu.  
-2. Cel da się domknąć grając ligę/puchar naturalnie — bez „zaloguj się 7 dni”.  
-3. Miss celu nie psuje sezonu finansowo.  
+1. Gracz wie: kto sponsoruje, co płaci (kategoria), jaki jest cel sezonu.
+2. Cel da się domknąć grając ligę/puchar naturalnie — bez „zaloguj się 7 dni”.
+3. Miss celu nie psuje sezonu finansowo.
 4. Branding jest dyskretny (UI Guide).
 
 **Decyzje gracza**
 
-- Śledzić postęp celu (opcjonalnie).  
+- Śledzić postęp celu (opcjonalnie).
 - Odbierać bonus po realizacji.
 
 **Zależności**
@@ -5596,9 +5599,9 @@ Zdefiniować jedyny slot sponsorski shipowany w MVP.
 
 **Przebieg**
 
-1. Jeden podmiot (nazwa + logo szablonowe).  
-2. Pakiet: przychód cykliczny + 1 cel sezonowy + bonus za cel.  
-3. Widoczność: ekran Sponsor / skrót w Finansach / delikatny credit w Hubie.  
+1. Jeden podmiot (nazwa + logo szablonowe).
+2. Pakiet: przychód cykliczny + 1 cel sezonowy + bonus za cel.
+3. Widoczność: ekran Sponsor / skrót w Finansach / delikatny credit w Hubie.
 4. Brak drugiego slotu (rękawy, board) w MVP.
 
 **Decyzje gracza**
@@ -5622,9 +5625,9 @@ Zero tarcia w onboardingu.
 
 **Przebieg**
 
-1. Przy **kreacji klubu** (§5): sponsor bazowy jest **przyznawany** wraz z pakietem (reveal 1 linia).  
-2. Brak mini-gry „wybierz z 5 ofert” w MVP.  
-3. Po odblokowaniu Finansów: pełniejsza karta sponsora.  
+1. Przy **kreacji klubu** (§5): sponsor bazowy jest **przyznawany** wraz z pakietem (reveal 1 linia).
+2. Brak mini-gry „wybierz z 5 ofert” w MVP.
+3. Po odblokowaniu Finansów: pełniejsza karta sponsora.
 4. Future: przetarg ofert po sezonie / awansie.
 
 **Decyzje gracza**
@@ -5648,9 +5651,9 @@ Jasny horyzont umowy.
 
 **Przebieg**
 
-1. Umowa = **bieżący sezon ligowy** (do zamknięcia §10.12).  
-2. W trakcie sezonu umowa jest stała.  
-3. Po sezonie: flow odnowienia (§15.11).  
+1. Umowa = **bieżący sezon ligowy** (do zamknięcia §10.12).
+2. W trakcie sezonu umowa jest stała.
+3. Po sezonie: flow odnowienia (§15.11).
 4. Puchar nie przedłuża osobno umowy (ten sam sezon).
 
 **Decyzje gracza**
@@ -5674,17 +5677,17 @@ Jeden prosty cel na sezon, mierzalny bez daily pressure.
 
 **Przebieg MVP — typy celów (1 z puli na sezon)**
 
-| Typ | Przykład UX | Miernik |
-|-----|-------------|---------|
-| Frekwencja meczowa | „Rozegraj X meczów ligowych” | Licznik meczów (§10) |
-| Wynik zbiorczy | „Zdobądź Y punktów w sezonie” | Punkty tabeli |
-| Pozycja | „Zakończ w bezpiecznej strefie” | Miejsce po sezonie |
-| Puchar | „Dotrzyj do 1/4 Pucharu” | Runda §11 |
-| Rozwój | „Wypromuj minutes młodzieży” (lekki) | Sygnał §7 — tylko jeśli prosty |
+| Typ                | Przykład UX                          | Miernik                        |
+| ------------------ | ------------------------------------ | ------------------------------ |
+| Frekwencja meczowa | „Rozegraj X meczów ligowych”         | Licznik meczów (§10)           |
+| Wynik zbiorczy     | „Zdobądź Y punktów w sezonie”        | Punkty tabeli                  |
+| Pozycja            | „Zakończ w bezpiecznej strefie”      | Miejsce po sezonie             |
+| Puchar             | „Dotrzyj do 1/4 Pucharu”             | Runda §11                      |
+| Rozwój             | „Wypromuj minutes młodzieży” (lekki) | Sygnał §7 — tylko jeśli prosty |
 
-1. Cel wybiera system przy starcie sezonu (dopasowanie do szczebla — jakościowo).  
-2. Postęp widoczny na karcie sponsora.  
-3. **Nie** wymaga codziennego logowania — tylko postępu sportowego.  
+1. Cel wybiera system przy starcie sezonu (dopasowanie do szczebla — jakościowo).
+2. Postęp widoczny na karcie sponsora.
+3. **Nie** wymaga codziennego logowania — tylko postępu sportowego.
 4. Nie blokuje nagród ligowych/pucharowych.
 
 **Decyzje gracza**
@@ -5708,10 +5711,10 @@ Bonus odczuwalny, nie obligatoryjny do przeżycia.
 
 **Przebieg**
 
-1. **Przychód bazowy** płynie niezależnie od celu (kategoria cykliczna → kasa).  
-2. **Bonus za cel:** jednorazowa kategoria środków (+ ewentualnie prestiż lekki) po spełnieniu.  
-3. Wypłata: przy spełnieniu lub przy domknięciu sezonu (jeśli cel pozycyjny).  
-4. Miss: **brak bonusu**, bez potrącenia z przychodu bazowego.  
+1. **Przychód bazowy** płynie niezależnie od celu (kategoria cykliczna → kasa).
+2. **Bonus za cel:** jednorazowa kategoria środków (+ ewentualnie prestiż lekki) po spełnieniu.
+3. Wypłata: przy spełnieniu lub przy domknięciu sezonu (jeśli cel pozycyjny).
+4. Miss: **brak bonusu**, bez potrącenia z przychodu bazowego.
 5. Kwoty → §26.
 
 **Decyzje gracza**
@@ -5735,9 +5738,9 @@ Wyniki kształtują postęp celu i (lekko) przyszłe oferty.
 
 **Przebieg**
 
-1. Mecze ligowe/pucharowe naturalnie zbliżają do celu (§15.5).  
-2. Słaba passa nie kasuje umowy mid-season.  
-3. Przy odnowieniu: lepszy sezon → szansa na **lepsze pasmo** przychodu bazowego następnego kontraktu (jakościowo).  
+1. Mecze ligowe/pucharowe naturalnie zbliżają do celu (§15.5).
+2. Słaba passa nie kasuje umowy mid-season.
+3. Przy odnowieniu: lepszy sezon → szansa na **lepsze pasmo** przychodu bazowego następnego kontraktu (jakościowo).
 4. Brak wpływu na wynik meczu LFE / pay-win.
 
 **Decyzje gracza**
@@ -5761,9 +5764,9 @@ Prestiż zwiększa atrakcyjność sponsorską — spójnie z §12.8.
 
 **Przebieg**
 
-1. Wyższy szczebel (§10) → przy odnowieniu wyższe pasmo oferty bazowej (odczucie).  
-2. Głęboki run / trofeum (§11.16) → krótki boost przy odnowieniu (1 sezon).  
-3. MVP: gracz **nie** wybiera z listy; system przydziela pasmo.  
+1. Wyższy szczebel (§10) → przy odnowieniu wyższe pasmo oferty bazowej (odczucie).
+2. Głęboki run / trofeum (§11.16) → krótki boost przy odnowieniu (1 sezon).
+3. MVP: gracz **nie** wybiera z listy; system przydziela pasmo.
 4. Future: prestiż odblokowuje lepsze marki w marketplace.
 
 **Decyzje gracza**
@@ -5787,10 +5790,10 @@ Jeden spójny wpływ na kasę.
 
 **Przebieg**
 
-1. Przychód sponsorski = kategoria w §14.2 → **kasa**.  
-2. Bonus celu = osobna kategoria jednorazowa → kasa.  
-3. Nie tworzy osobnej waluty; nie zasila envelope bezpośrednio (chyba że §14.5 auto-refresh z kasy — bez specjalnej reguły sponsorskej).  
-4. Widok w ekranie Finansów: linia „Sponsor”.  
+1. Przychód sponsorski = kategoria w §14.2 → **kasa**.
+2. Bonus celu = osobna kategoria jednorazowa → kasa.
+3. Nie tworzy osobnej waluty; nie zasila envelope bezpośrednio (chyba że §14.5 auto-refresh z kasy — bez specjalnej reguły sponsorskej).
+4. Widok w ekranie Finansów: linia „Sponsor”.
 5. Soft protection §14.13 nadal ważniejsza niż sponsor.
 
 **Decyzje gracza**
@@ -5814,9 +5817,9 @@ Sponsor wspiera odczucie instytucji, nie OVR zawodników.
 
 **Przebieg**
 
-1. Stabilny cashflow ułatwia utrzymanie kadry / transfery pośrednio (§14 / §12).  
-2. Prestiż partnerski: badge / wpis historii klubu (§6 / §19) przy długiej współpracy Future.  
-3. Brak bezpośredniego buffa treningu (§8) ani atrybutów (§7).  
+1. Stabilny cashflow ułatwia utrzymanie kadry / transfery pośrednio (§14 / §12).
+2. Prestiż partnerski: badge / wpis historii klubu (§6 / §19) przy długiej współpracy Future.
+3. Brak bezpośredniego buffa treningu (§8) ani atrybutów (§7).
 4. Cel sponsorski może motywować minuty / wyniki = rozwój z gry.
 
 **Decyzje gracza**
@@ -5840,11 +5843,11 @@ Rytuał międzysezonowy bez tarcia.
 
 **Przebieg**
 
-1. Po zamknięciu sezonu (§10.12): ekran „Odnowienie współpracy”.  
-2. System proponuje: **ten sam sponsor** (często) lub **nowy brand** z puli (lekka rotacja).  
-3. Pasmo przychodu bazowego zależy jakościowo od sezonu + prestiżu (§15.7–15.8).  
-4. Nowy **1 cel** na kolejny sezon.  
-5. Gracz w MVP: **Akceptuj** (jedyny CTA) — brak shopu porównań.  
+1. Po zamknięciu sezonu (§10.12): ekran „Odnowienie współpracy”.
+2. System proponuje: **ten sam sponsor** (często) lub **nowy brand** z puli (lekka rotacja).
+3. Pasmo przychodu bazowego zależy jakościowo od sezonu + prestiżu (§15.7–15.8).
+4. Nowy **1 cel** na kolejny sezon.
+5. Gracz w MVP: **Akceptuj** (jedyny CTA) — brak shopu porównań.
 6. Skip: auto-accept przy starcie nowego sezonu, jeśli gracz nie otworzy ekranu.
 
 **Decyzje gracza**
@@ -5868,9 +5871,9 @@ Ustalić, kiedy wolno zmienić partnera.
 
 **Przebieg MVP**
 
-1. **W trakcie sezonu: zmiana niemożliwa.**  
-2. Zmiana tylko przez odnowienie (§15.11) — system może podmienić brand.  
-3. Brak ręcznego „wypowiedzenia” i kar za zerwanie.  
+1. **W trakcie sezonu: zmiana niemożliwa.**
+2. Zmiana tylko przez odnowienie (§15.11) — system może podmienić brand.
+3. Brak ręcznego „wypowiedzenia” i kar za zerwanie.
 4. Future: marketplace mid-season / buyout.
 
 **Decyzje gracza**
@@ -5894,10 +5897,10 @@ Jedna karta sponsora; mobilna; bez dashboardu reklamowego.
 
 **Przebieg**
 
-1. Wejście: Finanse → Sponsor **lub** Hub secondary „Sponsor”.  
-2. Karta: logo, nazwa, przychód bazowy (pasmo), cel + progress, CTA „Odbierz” gdy gotowe.  
-3. Odnowienie: pełnoekranowy beat międzysezonowy.  
-4. Branding w meczu: maksymalnie dyskretny (nie overlay na live).  
+1. Wejście: Finanse → Sponsor **lub** Hub secondary „Sponsor”.
+2. Karta: logo, nazwa, przychód bazowy (pasmo), cel + progress, CTA „Odbierz” gdy gotowe.
+3. Odnowienie: pełnoekranowy beat międzysezonowy.
+4. Branding w meczu: maksymalnie dyskretny (nie overlay na live).
 5. UI Guide: bez neon sponsor splash.
 
 **Decyzje gracza**
@@ -5921,31 +5924,31 @@ Ship vs rozbudowa.
 
 **MVP — wchodzi**
 
-- 1 sponsor bazowy  
-- Auto-przydział przy kreacji  
-- Umowa na 1 sezon  
-- 1 cel sezonowy (nie daily)  
-- Przychód bazowy + bonus za cel  
-- Soft miss (bez kary)  
-- Odnowienie z Accept / auto  
-- Brak zmiany mid-season  
+- 1 sponsor bazowy
+- Auto-przydział przy kreacji
+- Umowa na 1 sezon
+- 1 cel sezonowy (nie daily)
+- Przychód bazowy + bonus za cel
+- Soft miss (bez kary)
+- Odnowienie z Accept / auto
+- Brak zmiany mid-season
 
 **MVP — nie wchodzi**
 
-- Multi-sloty / marketplace  
-- Negocjacje wieloofertowe  
-- Kary za zerwanie  
-- Cele dzienne / weekly login  
-- Branding koszulek 3D detail  
-- Pay-to-upgrade sponsor  
+- Multi-sloty / marketplace
+- Negocjacje wieloofertowe
+- Kary za zerwanie
+- Cele dzienne / weekly login
+- Branding koszulek 3D detail
+- Pay-to-upgrade sponsor
 
 **Future**
 
-1. Marketplace 2–3 ofert przy odnowieniu  
-2. Dodatkowe sloty (rękaw, board)  
-3. Cele dynamiczne mid-season  
-4. Kary / renegocjacje  
-5. Tie-in z §13 stadion hospitality  
+1. Marketplace 2–3 ofert przy odnowieniu
+2. Dodatkowe sloty (rękaw, board)
+3. Cele dynamiczne mid-season
+4. Kary / renegocjacje
+5. Tie-in z §13 stadion hospitality
 
 **Decyzje gracza**
 
@@ -5963,14 +5966,14 @@ Ship vs rozbudowa.
 
 ### 15.15 Kontrakty produktowe §15
 
-1. **MVP = dokładnie 1 sponsor bazowy.**  
-2. **Pozyskanie auto** (kreacja); odnowienie co sezon.  
-3. **1 cel sezonowy** — bez daily-login pressure.  
-4. **Miss = brak bonusu**, nie kara finansowa.  
-5. **Przychody → kasa (§14)**; kwoty → §26.  
-6. **Prestiż ligi/pucharu** wpływa na pasmo przy odnowieniu.  
-7. **Brak zmiany sponsora w trakcie sezonu.**  
-8. **Brak marketplace i multi-slotów w MVP.**  
+1. **MVP = dokładnie 1 sponsor bazowy.**
+2. **Pozyskanie auto** (kreacja); odnowienie co sezon.
+3. **1 cel sezonowy** — bez daily-login pressure.
+4. **Miss = brak bonusu**, nie kara finansowa.
+5. **Przychody → kasa (§14)**; kwoty → §26.
+6. **Prestiż ligi/pucharu** wpływa na pasmo przy odnowieniu.
+7. **Brak zmiany sponsora w trakcie sezonu.**
+8. **Brak marketplace i multi-slotów w MVP.**
 9. **Spójność z §10–§12:** cele oparte o naturalną grę, nie osobny grind.
 
 ---
@@ -6260,23 +6263,23 @@ Plan faz dokumentacji i implementacji — żywy dokument.
 
 ## Historia dokumentu
 
-| Wersja | Data | Zmiana |
-|--------|------|--------|
-| 0.1.0-gdd01 | 2026-07-23 | Szkielet 30 rozdziałów (GDD-01) |
-| 0.2.0-gdd02 | 2026-07-23 | §3 Główna pętla rozgrywki — pełne opracowanie (GDD-02) |
-| 0.3.0-gdd03 | 2026-07-23 | §4 Rejestracja + §5 Tworzenie klubu (GDD-03) |
-| 0.4.0-gdd04 | 2026-07-23 | §9 Mecze — doświadczenie meczu (GDD-04) |
-| 0.5.0-gdd05 | 2026-07-23 | §10 Liga — rozgrywki i kalendarz (GDD-05) |
-| 0.6.0-gdd06 | 2026-07-23 | §7 Rozwój zawodników (GDD-06) |
-| 0.6.1-dcc | 2026-07-23 | DCC: §9.2/§9.14/§10.15 spójność z GDD-06 (bez zmian decyzji) |
-| 0.7.0-gdd07 | 2026-07-23 | §8 Trening — system treningowy (GDD-07) |
-| 0.7.1-dcc | 2026-07-23 | DCC: unlock treningu + §7.13 (bez zmian decyzji) |
-| 0.8.0-gdd08 | 2026-07-23 | §11 Puchary — Puchar Krajowy MVP (GDD-08) |
-| 0.9.0-gdd09 | 2026-07-23 | §12 Transfery — rynek MVP (GDD-09) |
-| 0.9.1-dcc | 2026-07-23 | DCC: kontroferta SSOT w §12 (bez zmian decyzji) |
-| 0.10.0-gdd10 | 2026-07-23 | §14 Finanse — kategorie i envelope (GDD-10) |
-| 0.11.0-gdd11 | 2026-07-23 | §15 Sponsorzy — sponsor bazowy MVP (GDD-11) |
-| 0.12.0-gdd12 | 2026-07-23 | §13 Stadion — obiekt statyczny MVP (GDD-12) |
+| Wersja       | Data       | Zmiana                                                       |
+| ------------ | ---------- | ------------------------------------------------------------ |
+| 0.1.0-gdd01  | 2026-07-23 | Szkielet 30 rozdziałów (GDD-01)                              |
+| 0.2.0-gdd02  | 2026-07-23 | §3 Główna pętla rozgrywki — pełne opracowanie (GDD-02)       |
+| 0.3.0-gdd03  | 2026-07-23 | §4 Rejestracja + §5 Tworzenie klubu (GDD-03)                 |
+| 0.4.0-gdd04  | 2026-07-23 | §9 Mecze — doświadczenie meczu (GDD-04)                      |
+| 0.5.0-gdd05  | 2026-07-23 | §10 Liga — rozgrywki i kalendarz (GDD-05)                    |
+| 0.6.0-gdd06  | 2026-07-23 | §7 Rozwój zawodników (GDD-06)                                |
+| 0.6.1-dcc    | 2026-07-23 | DCC: §9.2/§9.14/§10.15 spójność z GDD-06 (bez zmian decyzji) |
+| 0.7.0-gdd07  | 2026-07-23 | §8 Trening — system treningowy (GDD-07)                      |
+| 0.7.1-dcc    | 2026-07-23 | DCC: unlock treningu + §7.13 (bez zmian decyzji)             |
+| 0.8.0-gdd08  | 2026-07-23 | §11 Puchary — Puchar Krajowy MVP (GDD-08)                    |
+| 0.9.0-gdd09  | 2026-07-23 | §12 Transfery — rynek MVP (GDD-09)                           |
+| 0.9.1-dcc    | 2026-07-23 | DCC: kontroferta SSOT w §12 (bez zmian decyzji)              |
+| 0.10.0-gdd10 | 2026-07-23 | §14 Finanse — kategorie i envelope (GDD-10)                  |
+| 0.11.0-gdd11 | 2026-07-23 | §15 Sponsorzy — sponsor bazowy MVP (GDD-11)                  |
+| 0.12.0-gdd12 | 2026-07-23 | §13 Stadion — obiekt statyczny MVP (GDD-12)                  |
 
 ---
 

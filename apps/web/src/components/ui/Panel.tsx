@@ -27,7 +27,9 @@ export function Panel({
           <h2 className="font-[family-name:var(--font-ui)] text-[11px] font-semibold tracking-[0.06em] text-[var(--lf-gold)] uppercase">
             {title}
           </h2>
-          {action ? <div className="shrink-0 text-[11px] text-[var(--lf-muted)]">{action}</div> : null}
+          {action ? (
+            <div className="shrink-0 text-[11px] text-[var(--lf-muted)]">{action}</div>
+          ) : null}
         </header>
       ) : null}
       <div className={`${flush ? '' : 'p-2.5'} ${bodyClassName}`}>{children}</div>

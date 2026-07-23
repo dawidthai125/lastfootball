@@ -40,11 +40,7 @@ export function RightSidebar() {
             gap: 'var(--lf-space-3)',
           }}
         >
-          <ClubCrest
-            shortName={nextMatch.opponentShort}
-            clubName={nextMatch.opponent}
-            size="md"
-          />
+          <ClubCrest shortName={nextMatch.opponentShort} clubName={nextMatch.opponent} size="md" />
           <div style={{ minWidth: 0 }}>
             <div
               className="font-[family-name:var(--font-ui)] font-semibold uppercase"
@@ -66,7 +62,9 @@ export function RightSidebar() {
             >
               vs {nextMatch.opponent}
             </div>
-            <div style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}>
+            <div
+              style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}
+            >
               {nextMatch.competition}
             </div>
           </div>
@@ -152,7 +150,9 @@ export function RightSidebar() {
               >
                 {inj.name}
               </div>
-              <div style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-status-danger)' }}>
+              <div
+                style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-status-danger)' }}
+              >
                 {inj.detail}
               </div>
             </li>
@@ -163,15 +163,7 @@ export function RightSidebar() {
   );
 }
 
-function MetaChip({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: 'gold';
-}) {
+function MetaChip({ label, value, tone }: { label: string; value: string; tone?: 'gold' }) {
   return (
     <div
       style={{

@@ -23,13 +23,7 @@ type ClubCrestProps = {
  * Club crest from Asset Pack — replaces letter monograms.
  * Swap SVG under public/assets/pack-01/crests to upgrade art.
  */
-export function ClubCrest({
-  shortName,
-  clubName,
-  label,
-  size = 'lg',
-  style,
-}: ClubCrestProps) {
+export function ClubCrest({ shortName, clubName, label, size = 'lg', style }: ClubCrestProps) {
   const dim = sizeMap[size];
   const src = crestSrc(shortName, clubName);
   const alt = label ?? clubName ?? shortName ?? 'Herb klubu';

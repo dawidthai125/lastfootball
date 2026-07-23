@@ -10,28 +10,28 @@ Silnik gotowy do konsumowania przez app na poziomie session/spatial/commands. **
 
 ## Opis działania — warstwy
 
-| Warstwa | Odpowiedzialność |
-|---------|------------------|
-| **Session** | Fasada meczu: lifecycle sesji, dispatch, step/run, read models |
-| **Commands** | Walidacja + intencjonalne mutacje + eventy |
-| **State machine** | Fazy meczu (kickoff → play → HT → … → finished) |
-| **Simulation** | Tick loop + system pipeline |
-| **Domain** | Czyste dane meczu (Match, Player, Lineup, …) |
-| **Positioning** | Layout / spawn / zones / spatial snapshot (bez fizyki) |
-| **Core runtime** | Clock, time controller, tick engine, logger |
-| **RNG / Events / Scheduler / World / Replay / Config** | Determinizm, bus, jobs, kontener świata, snapshoty, config |
-| **RESERVED** | physics, ai, rules, ecs |
+| Warstwa                                                | Odpowiedzialność                                               |
+| ------------------------------------------------------ | -------------------------------------------------------------- |
+| **Session**                                            | Fasada meczu: lifecycle sesji, dispatch, step/run, read models |
+| **Commands**                                           | Walidacja + intencjonalne mutacje + eventy                     |
+| **State machine**                                      | Fazy meczu (kickoff → play → HT → … → finished)                |
+| **Simulation**                                         | Tick loop + system pipeline                                    |
+| **Domain**                                             | Czyste dane meczu (Match, Player, Lineup, …)                   |
+| **Positioning**                                        | Layout / spawn / zones / spatial snapshot (bez fizyki)         |
+| **Core runtime**                                       | Clock, time controller, tick engine, logger                    |
+| **RNG / Events / Scheduler / World / Replay / Config** | Determinizm, bus, jobs, kontener świata, snapshoty, config     |
+| **RESERVED**                                           | physics, ai, rules, ecs                                        |
 
 ## Granice
 
-- **IN:** seed, składy, settings, komendy, tick advancement.  
-- **OUT:** React, DOM, Supabase, sieć, ekonomia GDD, Canvas.  
+- **IN:** seed, składy, settings, komendy, tick advancement.
+- **OUT:** React, DOM, Supabase, sieć, ekonomia GDD, Canvas.
 - **Renderer** (przyszły) jest konsumentem — nie częścią LFE.
 
 ## Najważniejsze decyzje
 
-- Headless + determinism first.  
-- Session owns orchestration.  
+- Headless + determinism first.
+- Session owns orchestration.
 - Freeze definiuje co wolno eksportować.
 
 ## Powiązania

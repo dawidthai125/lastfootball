@@ -110,7 +110,11 @@ export function FixturesView() {
       >
         <h1
           className="font-[family-name:var(--font-ui)] font-semibold"
-          style={{ margin: 0, fontSize: 'var(--lf-type-h1)', color: 'var(--lf-color-text-primary)' }}
+          style={{
+            margin: 0,
+            fontSize: 'var(--lf-type-h1)',
+            color: 'var(--lf-color-text-primary)',
+          }}
         >
           Terminarz
         </h1>
@@ -233,30 +237,37 @@ function FixtureTable({
         </h2>
       </header>
 
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--lf-type-table)' }}>
+      <table
+        style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--lf-type-table)' }}
+      >
         <thead>
           <tr style={{ background: 'var(--lf-color-bg-inset)' }}>
-            {['Termin', 'Przeciwnik', 'Rozgrywki', 'Boisko', played ? 'Wynik' : 'Godzina', 'Status'].map(
-              (h) => (
-                <th
-                  key={h}
-                  className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                  style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 'var(--lf-z-sticky)',
-                    padding: 'var(--lf-space-2)',
-                    fontSize: 'var(--lf-type-label)',
-                    letterSpacing: 'var(--lf-type-tracking-label)',
-                    color: 'var(--lf-color-text-faint)',
-                    textAlign: 'left',
-                    background: 'var(--lf-color-bg-inset)',
-                  }}
-                >
-                  {h}
-                </th>
-              ),
-            )}
+            {[
+              'Termin',
+              'Przeciwnik',
+              'Rozgrywki',
+              'Boisko',
+              played ? 'Wynik' : 'Godzina',
+              'Status',
+            ].map((h) => (
+              <th
+                key={h}
+                className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+                style={{
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 'var(--lf-z-sticky)',
+                  padding: 'var(--lf-space-2)',
+                  fontSize: 'var(--lf-type-label)',
+                  letterSpacing: 'var(--lf-type-tracking-label)',
+                  color: 'var(--lf-color-text-faint)',
+                  textAlign: 'left',
+                  background: 'var(--lf-color-bg-inset)',
+                }}
+              >
+                {h}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -335,7 +346,13 @@ function FixtureTable({
                 </td>
                 <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)' }}>
                   {played ? (
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 'var(--lf-space-2)',
+                      }}
+                    >
                       {f.result ? (
                         <span
                           className="font-[family-name:var(--font-ui)] font-semibold uppercase"
@@ -356,7 +373,7 @@ function FixtureTable({
                       {f.score}
                     </span>
                   ) : (
-                    f.kickoff ?? '—'
+                    (f.kickoff ?? '—')
                   )}
                 </td>
                 <td style={{ padding: 'var(--lf-space-2)' }}>

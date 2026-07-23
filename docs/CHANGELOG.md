@@ -19,11 +19,11 @@ Nowy wpis po każdym release / zamknięciu EPIC lub GDD stage.
 
 ### LFE
 
-- `MatchState.statistics.players` inicjalizowane dla pełnego rosteru  
-- Deterministyczna atrybucja `attribute-player.ts` (bez dodatkowego RNG)  
-- Optional `playerId` na payloadach `GOAL` / `SHOT` / `FOUL`  
-- Bump `PlayerStatistics`: `goals`, `shots`, `foulsCommitted`  
-- `TeamStatistics` i drabina RNG bez zmian semantycznych  
+- `MatchState.statistics.players` inicjalizowane dla pełnego rosteru
+- Deterministyczna atrybucja `attribute-player.ts` (bez dodatkowego RNG)
+- Optional `playerId` na payloadach `GOAL` / `SHOT` / `FOUL`
+- Bump `PlayerStatistics`: `goals`, `shots`, `foulsCommitted`
+- `TeamStatistics` i drabina RNG bez zmian semantycznych
 
 ### Tests
 
@@ -35,29 +35,29 @@ Nowy wpis po każdym release / zamknięciu EPIC lub GDD stage.
 
 ### Added
 
-- LFE EPIC-1…7 (foundation → positioning)  
-- `docs/lfe/LFE_ARCHITECTURE_FREEZE.md` (PUBLIC API v1)  
-- `docs/game-design/*` (GDD + UI guide)  
+- LFE EPIC-1…7 (foundation → positioning)
+- `docs/lfe/LFE_ARCHITECTURE_FREEZE.md` (PUBLIC API v1)
+- `docs/game-design/*` (GDD + UI guide)
 - Docs SSOT suite (`PROJECT_*`, `HANDOFF`, LFE/GDD indexes)
 
 ### Commits (A–G)
 
-| Commit | Hash (short) | Opis |
-|--------|--------------|------|
-| A | `735a7b2` | feat(lfe): epic1 + systems |
-| B | `7c1960d` | feat(lfe): epic2 domain |
-| C | `a4e6477` | feat(lfe): epic3 state machine |
-| D | `a0e2ed2` | feat(lfe): epic5 commands |
-| E | `95501e4` | feat(lfe): session + positioning + surface |
-| F | `3dd3029` | docs(lfe): epics + freeze |
-| G | `5d37de9` | docs(gdd): phase 2 SSOT |
+| Commit | Hash (short) | Opis                                       |
+| ------ | ------------ | ------------------------------------------ |
+| A      | `735a7b2`    | feat(lfe): epic1 + systems                 |
+| B      | `7c1960d`    | feat(lfe): epic2 domain                    |
+| C      | `a4e6477`    | feat(lfe): epic3 state machine             |
+| D      | `a0e2ed2`    | feat(lfe): epic5 commands                  |
+| E      | `95501e4`    | feat(lfe): session + positioning + surface |
+| F      | `3dd3029`    | docs(lfe): epics + freeze                  |
+| G      | `5d37de9`    | docs(gdd): phase 2 SSOT                    |
 
 ---
 
 ## [2026-07-21] — Foundation / infra
 
-- Monorepo Next.js + LFE stub + domain  
-- Supabase / Vercel / CI bootstrap  
+- Monorepo Next.js + LFE stub + domain
+- Supabase / Vercel / CI bootstrap
 
 ## Najważniejsze decyzje
 

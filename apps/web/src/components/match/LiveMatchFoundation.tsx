@@ -29,9 +29,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
 
   const events =
-    feedFilter === 'all'
-      ? snapshot.feed
-      : snapshot.feed.filter((e) => e.kind === feedFilter);
+    feedFilter === 'all' ? snapshot.feed : snapshot.feed.filter((e) => e.kind === feedFilter);
 
   const playheadPct = clampPct((snapshot.matchState.clock.displayMinute / 90) * 100);
   const goalMarkers = snapshot.feed.filter((e) => e.kind === 'goal' || e.highlight);
@@ -70,7 +68,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-1)' }}>
           <span
-            className="font-[family-name:var(--font-ui)] font-bold uppercase inline-flex items-center"
+            className="inline-flex items-center font-[family-name:var(--font-ui)] font-bold uppercase"
             style={{
               alignSelf: 'flex-start',
               fontSize: 'var(--lf-type-label)',
@@ -122,14 +120,18 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
             }}
           >
             <span
-              className="font-[family-name:var(--font-ui)] font-semibold truncate"
-              style={{ fontSize: 'var(--lf-type-h2)', color: 'var(--lf-color-text-primary)', textAlign: 'right' }}
+              className="truncate font-[family-name:var(--font-ui)] font-semibold"
+              style={{
+                fontSize: 'var(--lf-type-h2)',
+                color: 'var(--lf-color-text-primary)',
+                textAlign: 'right',
+              }}
             >
               {homeName}
             </span>
             <ClubCrest shortName={homeShort} clubName={homeName} size="md" />
             <span
-              className="tabular-nums font-[family-name:var(--font-ui)] font-bold"
+              className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
               style={{
                 fontSize: 'var(--lf-type-hero)',
                 lineHeight: 1,
@@ -144,7 +146,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
 
           <div style={{ textAlign: 'center', paddingInline: 'var(--lf-space-2)' }}>
             <div
-              className="tabular-nums font-[family-name:var(--font-ui)] font-bold"
+              className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
               style={{
                 fontSize: 'var(--lf-type-h1)',
                 color: 'var(--lf-color-text-gold)',
@@ -177,7 +179,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
             }}
           >
             <span
-              className="tabular-nums font-[family-name:var(--font-ui)] font-bold"
+              className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
               style={{
                 fontSize: 'var(--lf-type-hero)',
                 lineHeight: 1,
@@ -190,7 +192,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
             </span>
             <ClubCrest shortName={awayShort} clubName={awayName} size="md" />
             <span
-              className="font-[family-name:var(--font-ui)] font-semibold truncate"
+              className="truncate font-[family-name:var(--font-ui)] font-semibold"
               style={{ fontSize: 'var(--lf-type-h2)', color: 'var(--lf-color-text-primary)' }}
             >
               {awayName}
@@ -200,7 +202,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
 
         <div style={{ textAlign: 'right', minWidth: 0 }}>
           <div
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase truncate"
+            className="truncate font-[family-name:var(--font-ui)] font-semibold uppercase"
             style={{
               fontSize: 'var(--lf-type-label)',
               letterSpacing: 'var(--lf-type-tracking-label)',
@@ -306,7 +308,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
                 }}
               >
                 <span
-                  className="tabular-nums font-[family-name:var(--font-ui)] font-semibold"
+                  className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
                   style={{ color: 'var(--lf-color-text-gold)' }}
                 >
                   {e.minute}
@@ -344,7 +346,14 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
         </section>
 
         {/* Canvas + timeline + momentum */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)', minHeight: 0 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--lf-space-3)',
+            minHeight: 0,
+          }}
+        >
           <div
             id={MATCH_CANVAS_ROOT_ID}
             data-lf-canvas-host="true"
@@ -481,11 +490,12 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
           </div>
 
           {/* Timeline with event markers */}
-          <section aria-label="Timeline" className="lf-section-shell" style={{ padding: 'var(--lf-space-3)' }}>
-            <div
-              className="lf-section-shell__title"
-              style={{ marginBottom: 'var(--lf-space-2)' }}
-            >
+          <section
+            aria-label="Timeline"
+            className="lf-section-shell"
+            style={{ padding: 'var(--lf-space-3)' }}
+          >
+            <div className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-2)' }}>
               Timeline
             </div>
             <div
@@ -558,7 +568,11 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
           </section>
 
           {/* Momentum */}
-          <section aria-label="Momentum" className="lf-section-shell" style={{ padding: 'var(--lf-space-3)' }}>
+          <section
+            aria-label="Momentum"
+            className="lf-section-shell"
+            style={{ padding: 'var(--lf-space-3)' }}
+          >
             <div
               style={{
                 display: 'flex',
@@ -568,7 +582,13 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
               }}
             >
               <div className="lf-section-shell__title">Momentum</div>
-              <div style={{ display: 'flex', gap: 'var(--lf-space-3)', fontSize: 'var(--lf-type-label)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 'var(--lf-space-3)',
+                  fontSize: 'var(--lf-type-label)',
+                }}
+              >
                 <span style={{ color: 'var(--lf-color-status-danger)' }}>{homeShort}</span>
                 <span style={{ color: 'var(--lf-color-text-gold)' }}>{awayShort}</span>
               </div>
@@ -684,7 +704,10 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
                   {snapshot.tactics.tempo} · mentalność {snapshot.tactics.mentality}
                 </p>
                 <div style={{ marginTop: 'var(--lf-space-4)' }}>
-                  <div className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-2)' }}>
+                  <div
+                    className="lf-section-shell__title"
+                    style={{ marginBottom: 'var(--lf-space-2)' }}
+                  >
                     Instrukcje
                   </div>
                   <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -752,7 +775,10 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
                   }}
                 >
                   Pozostałe zmiany:{' '}
-                  <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
+                  <strong
+                    className="tabular-nums"
+                    style={{ color: 'var(--lf-color-text-primary)' }}
+                  >
                     {bundle.subs.remaining}
                   </strong>
                 </p>
@@ -845,7 +871,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
           <ClubCrest shortName={homeShort} clubName={homeName} size="sm" />
           <span
-            className="tabular-nums font-[family-name:var(--font-ui)] font-bold"
+            className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
             style={{ color: 'var(--lf-color-status-danger)', fontSize: 'var(--lf-type-h2)' }}
           >
             {snapshot.possession.home}%
@@ -894,7 +920,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
           <span
-            className="tabular-nums font-[family-name:var(--font-ui)] font-bold"
+            className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
             style={{ color: 'var(--lf-color-text-gold)', fontSize: 'var(--lf-type-h2)' }}
           >
             {snapshot.possession.away}%
@@ -906,15 +932,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   );
 }
 
-function StatDualBar({
-  label,
-  home,
-  away,
-}: {
-  label: string;
-  home: number;
-  away: number;
-}) {
+function StatDualBar({ label, home, away }: { label: string; home: number; away: number }) {
   const total = home + away || 1;
   const homePct = (home / total) * 100;
   const awayPct = (away / total) * 100;
@@ -929,11 +947,14 @@ function StatDualBar({
           fontSize: 'var(--lf-type-caption)',
         }}
       >
-        <span className="tabular-nums font-semibold" style={{ color: 'var(--lf-color-status-danger)' }}>
+        <span
+          className="font-semibold tabular-nums"
+          style={{ color: 'var(--lf-color-status-danger)' }}
+        >
           {home}
         </span>
         <span style={{ color: 'var(--lf-color-text-muted)' }}>{label}</span>
-        <span className="tabular-nums font-semibold" style={{ color: 'var(--lf-color-text-gold)' }}>
+        <span className="font-semibold tabular-nums" style={{ color: 'var(--lf-color-text-gold)' }}>
           {away}
         </span>
       </div>
@@ -1001,7 +1022,11 @@ function MomentumChart({ values }: { values: number[] }) {
     <svg
       viewBox={`0 0 ${w} ${h}`}
       preserveAspectRatio="none"
-      style={{ width: '100%', height: 'calc(var(--lf-space-8) + var(--lf-space-2))', display: 'block' }}
+      style={{
+        width: '100%',
+        height: 'calc(var(--lf-space-8) + var(--lf-space-2))',
+        display: 'block',
+      }}
       aria-hidden
     >
       <line

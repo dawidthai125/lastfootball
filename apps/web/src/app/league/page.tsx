@@ -13,10 +13,7 @@ const fullTable = [
 export default function LeaguePage() {
   return (
     <div>
-      <SectionHeader
-        title="Liga"
-        subtitle={dashboardMock.club.division}
-      />
+      <SectionHeader title="Liga" subtitle={dashboardMock.club.division} />
       <Panel title="Tabela" flush>
         <Table
           rowKey={(r) => String(r.pos)}
@@ -26,7 +23,7 @@ export default function LeaguePage() {
             {
               key: 'pos',
               header: '#',
-              render: (r) => <span className="tabular-nums text-[var(--lf-faint)]">{r.pos}</span>,
+              render: (r) => <span className="text-[var(--lf-faint)] tabular-nums">{r.pos}</span>,
             },
             {
               key: 'club',
@@ -41,9 +38,7 @@ export default function LeaguePage() {
               key: 'gd',
               header: '+/−',
               align: 'right',
-              render: (r) => (
-                <span className="tabular-nums">{r.gd > 0 ? `+${r.gd}` : r.gd}</span>
-              ),
+              render: (r) => <span className="tabular-nums">{r.gd > 0 ? `+${r.gd}` : r.gd}</span>,
             },
             {
               key: 'pts',

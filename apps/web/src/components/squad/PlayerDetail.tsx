@@ -273,7 +273,9 @@ export function PlayerActions({ player }: { player: SquadPlayer }) {
           style={{
             borderWidth: 'var(--lf-border-width-hair)',
             borderStyle: 'solid',
-            borderColor: a.primary ? 'var(--lf-color-border-gold)' : 'var(--lf-color-border-strong)',
+            borderColor: a.primary
+              ? 'var(--lf-color-border-gold)'
+              : 'var(--lf-color-border-strong)',
             background: a.primary ? 'var(--lf-color-gold-soft)' : 'var(--lf-color-bg-panel-alt)',
             color: a.primary ? 'var(--lf-color-gold-base)' : 'var(--lf-color-text-secondary)',
             fontSize: 'var(--lf-type-caption)',

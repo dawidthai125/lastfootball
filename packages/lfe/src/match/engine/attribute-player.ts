@@ -13,14 +13,7 @@ const OFFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set([
   'LM',
 ]);
 
-const DEFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set([
-  'CB',
-  'CDM',
-  'RB',
-  'LB',
-  'RWB',
-  'LWB',
-]);
+const DEFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set(['CB', 'CDM', 'RB', 'LB', 'RWB', 'LWB']);
 
 /** Stable non-cryptographic hash — no RNG. */
 export function stableEventKindHash(kind: AttributeEventKind): number {
@@ -46,8 +39,7 @@ export function attributePlayerForEvent(
   tick: number,
 ): PlayerId | undefined {
   const lineup = actingSide === 'home' ? state.homeLineup : state.awayLineup;
-  const preferred =
-    kind === 'FOUL' ? DEFENSIVE_ROLES : OFFENSIVE_ROLES;
+  const preferred = kind === 'FOUL' ? DEFENSIVE_ROLES : OFFENSIVE_ROLES;
   const preferredSlots = lineup.slots.filter((s) => preferred.has(s.role));
   const candidates = preferredSlots.length > 0 ? preferredSlots : lineup.slots;
   if (candidates.length === 0) {

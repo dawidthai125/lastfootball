@@ -3,10 +3,7 @@
 import { useEffect, useMemo, useSyncExternalStore } from 'react';
 
 import type { Fixture, LiveMatchBundle } from '@/data/fixtures';
-import {
-  LiveMatchRuntime,
-  type LiveMatchSnapshot,
-} from '@/gameplay/live-match-runtime';
+import { LiveMatchRuntime, type LiveMatchSnapshot } from '@/gameplay/live-match-runtime';
 
 export function useLiveMatchRuntime(
   fixture: Fixture,

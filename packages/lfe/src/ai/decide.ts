@@ -47,8 +47,7 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
 
   const homeMentality = h.tactics.mentality / 100;
   const homePressing = h.tactics.pressing / 100;
-  let homeChance =
-    0.48 + (homeMentality - 0.5) * 0.12 + (homePressing - 0.5) * 0.06;
+  let homeChance = 0.48 + (homeMentality - 0.5) * 0.12 + (homePressing - 0.5) * 0.06;
 
   homeChance += strengthDelta(h.strength, a.strength);
   homeChance += (h.freshness - a.freshness) * 0.04;
@@ -65,10 +64,7 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
  * In-possession action ladder for `side`.
  * Baseline matches MATCH-ENGINE-01 when tactics default & score neutral.
  */
-export function decideAction(
-  ctx: MatchAiContext,
-  side: PitchSide,
-): MatchAiActionDecision {
+export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActionDecision {
   const ours = sideContext(ctx, side);
   const theirs = sideContext(ctx, side === 'home' ? 'away' : 'home');
   const t = ours.tactics;
@@ -84,15 +80,11 @@ export function decideAction(
   const attackChance = clamp01(
     0.08 + tempo * 0.06 + pressure * 0.6 + fresh + str * 0.5 + form + width * 0.5,
   );
-  const shotChance = clamp01(
-    0.35 + mentality * 0.15 + pressure * 0.5 + str * 0.4 + form * 0.5,
-  );
+  const shotChance = clamp01(0.35 + mentality * 0.15 + pressure * 0.5 + str * 0.4 + form * 0.5);
   const foulChance = clamp01(0.12 + (pressing - 0.5) * 0.06 + (1 - ours.freshness) * 0.04);
   const onTargetChance = clamp01(0.45 + str * 0.5 + (ours.strength - 0.5) * 0.1);
   const cornerChance = clamp01(0.25 + width * 0.5 + (t.width / 100 - 0.5) * 0.05);
-  const goalChance = clamp01(
-    0.22 + mentality * 0.08 + pressure * 0.35 + str * 0.6 + form * 0.4,
-  );
+  const goalChance = clamp01(0.22 + mentality * 0.08 + pressure * 0.35 + str * 0.6 + form * 0.4);
 
   return Object.freeze({
     side,
@@ -109,9 +101,6 @@ export function decidePossessionFromState(state: MatchState): MatchAiPossessionD
   return decidePossession(buildMatchAiContext(state));
 }
 
-export function decideActionFromState(
-  state: MatchState,
-  side: PitchSide,
-): MatchAiActionDecision {
+export function decideActionFromState(state: MatchState, side: PitchSide): MatchAiActionDecision {
   return decideAction(buildMatchAiContext(state), side);
 }

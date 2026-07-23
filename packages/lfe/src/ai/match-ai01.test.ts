@@ -166,8 +166,16 @@ describe('MATCH-AI-01', () => {
     const a = mk();
     const b = mk();
     expect(a.getMatchState().score).toEqual(b.getMatchState().score);
-    expect(a.context().events.history().map((e) => e.type)).toEqual(
-      b.context().events.history().map((e) => e.type),
+    expect(
+      a
+        .context()
+        .events.history()
+        .map((e) => e.type),
+    ).toEqual(
+      b
+        .context()
+        .events.history()
+        .map((e) => e.type),
     );
   });
 });

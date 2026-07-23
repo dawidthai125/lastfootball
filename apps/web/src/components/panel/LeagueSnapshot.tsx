@@ -84,7 +84,7 @@ export function LeagueSnapshot() {
                 {r.gd > 0 ? `+${r.gd}` : r.gd}
               </td>
               <td
-                className="tabular-nums font-semibold"
+                className="font-semibold tabular-nums"
                 style={{
                   padding: 'var(--lf-space-2)',
                   textAlign: 'right',

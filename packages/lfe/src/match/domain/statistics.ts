@@ -57,10 +57,7 @@ export function emptyTeamStatistics(side: PitchSide): TeamStatistics {
   });
 }
 
-export function emptyPlayerStatistics(
-  playerId: PlayerId,
-  side: PitchSide,
-): PlayerStatistics {
+export function emptyPlayerStatistics(playerId: PlayerId, side: PitchSide): PlayerStatistics {
   return Object.freeze({
     playerId,
     side,
@@ -78,17 +75,11 @@ export function emptyPlayerStatistics(
 }
 
 /** One PlayerStatistics row per roster entry (lineup + bench). */
-export function createPlayersStatistics(
-  players: readonly Player[],
-): readonly PlayerStatistics[] {
-  return Object.freeze(
-    players.map((p) => emptyPlayerStatistics(p.id, p.side)),
-  );
+export function createPlayersStatistics(players: readonly Player[]): readonly PlayerStatistics[] {
+  return Object.freeze(players.map((p) => emptyPlayerStatistics(p.id, p.side)));
 }
 
-export function emptyStatistics(
-  players: readonly PlayerStatistics[] = [],
-): Statistics {
+export function emptyStatistics(players: readonly PlayerStatistics[] = []): Statistics {
   return Object.freeze({
     home: emptyTeamStatistics('home'),
     away: emptyTeamStatistics('away'),

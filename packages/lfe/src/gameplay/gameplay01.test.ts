@@ -70,7 +70,12 @@ describe('GAMEPLAY-01 foundation', () => {
     const state = s.getMatchState();
     expect(state.score.home).toBe(0);
     expect(state.tactics.pressing).toBe(50);
-    expect(s.context().events.history().some((e) => e.type === 'MATCH_START')).toBe(true);
+    expect(
+      s
+        .context()
+        .events.history()
+        .some((e) => e.type === 'MATCH_START'),
+    ).toBe(true);
   });
 
   it('CommandBus SetPressing mutates MatchState and records EventBus event', () => {

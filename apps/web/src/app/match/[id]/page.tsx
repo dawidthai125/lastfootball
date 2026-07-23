@@ -18,14 +18,27 @@ export default async function PreMatchPage({ params }: PageProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
         <h1
           className="font-[family-name:var(--font-ui)] font-semibold"
-          style={{ margin: 0, fontSize: 'var(--lf-type-h1)', color: 'var(--lf-color-text-primary)' }}
+          style={{
+            margin: 0,
+            fontSize: 'var(--lf-type-h1)',
+            color: 'var(--lf-color-text-primary)',
+          }}
         >
           Mecz zakończony
         </h1>
-        <p style={{ margin: 0, fontSize: 'var(--lf-type-body)', color: 'var(--lf-color-text-muted)' }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 'var(--lf-type-body)',
+            color: 'var(--lf-color-text-muted)',
+          }}
+        >
           {fixture.opponent} · {fixture.score ?? '—'} · raport pomeczowy w kolejnym EPIC.
         </p>
-        <Link href="/matches" style={{ color: 'var(--lf-color-text-gold)', fontSize: 'var(--lf-type-caption)' }}>
+        <Link
+          href="/matches"
+          style={{ color: 'var(--lf-color-text-gold)', fontSize: 'var(--lf-type-caption)' }}
+        >
           ← Terminarz
         </Link>
       </div>

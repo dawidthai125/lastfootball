@@ -14,16 +14,16 @@ LFE to headless, deterministyczny silnik meczu. Aplikacja woła `createMatch` i 
 
 ## Dokumenty
 
-| Plik | Opis |
-|------|------|
-| [ENGINE_OVERVIEW.md](./ENGINE_OVERVIEW.md) | Warstwy, odpowiedzialności, granice |
-| [PUBLIC_API.md](./PUBLIC_API.md) | PUBLIC / ADVANCED / TESTING / INTERNAL / DEPRECATED / RESERVED / EXPERIMENTAL |
-| [MATCH_FLOW.md](./MATCH_FLOW.md) | Przebieg od createMatch do końca |
-| [ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md) | Diagram tekstowy pipeline |
-| [CURRENT_STATUS.md](./CURRENT_STATUS.md) | Status EPIC-1…7 |
-| [LFE_ARCHITECTURE_FREEZE.md](./LFE_ARCHITECTURE_FREEZE.md) | **Kontrakt zamrożony** |
-| [overview.md](./overview.md) | Layout katalogów src |
-| epic1…epic7 `*.md` | Notatki per EPIC |
+| Plik                                                       | Opis                                                                          |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [ENGINE_OVERVIEW.md](./ENGINE_OVERVIEW.md)                 | Warstwy, odpowiedzialności, granice                                           |
+| [PUBLIC_API.md](./PUBLIC_API.md)                           | PUBLIC / ADVANCED / TESTING / INTERNAL / DEPRECATED / RESERVED / EXPERIMENTAL |
+| [MATCH_FLOW.md](./MATCH_FLOW.md)                           | Przebieg od createMatch do końca                                              |
+| [ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md)                 | Diagram tekstowy pipeline                                                     |
+| [CURRENT_STATUS.md](./CURRENT_STATUS.md)                   | Status EPIC-1…7                                                               |
+| [LFE_ARCHITECTURE_FREEZE.md](./LFE_ARCHITECTURE_FREEZE.md) | **Kontrakt zamrożony**                                                        |
+| [overview.md](./overview.md)                               | Layout katalogów src                                                          |
+| epic1…epic7 `*.md`                                         | Notatki per EPIC                                                              |
 
 ## Najważniejsze decyzje
 

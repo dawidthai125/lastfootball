@@ -9,19 +9,19 @@
 
 ## 0. Verification (pre-freeze)
 
-| # | Question | Verdict |
-|---|----------|---------|
-| 1 | Does PUBLIC API match real app needs? | **YES** — status page today; match UX (build → run → command → read state/spatial/events → dispose) for GDD §9. Setup factories are **transitional** (see §3.3). |
-| 2 | Is `createMatch()` the only official entry? | **YES** (contract). `createSimulation` and deep barrels are **not** official app entry. |
-| 3 | Is `MatchSession` the only public engine façade? | **YES** (contract). All match control/read goes through the session. |
-| 4 | Does INTERNAL leak into PUBLIC? | **NO** in this freeze contract. Current `src/index.ts` still over-exports — that is **implementation debt**, not the frozen contract (see §11). |
-| 5 | Are ADVANCED / TESTING / INTERNAL / RESERVED correct? | **YES**, with Owner adjustments below. |
-| 6 | Owner remarks | **Applied** — see §1.1. |
+| #   | Question                                              | Verdict                                                                                                                                                          |
+| --- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Does PUBLIC API match real app needs?                 | **YES** — status page today; match UX (build → run → command → read state/spatial/events → dispose) for GDD §9. Setup factories are **transitional** (see §3.3). |
+| 2   | Is `createMatch()` the only official entry?           | **YES** (contract). `createSimulation` and deep barrels are **not** official app entry.                                                                          |
+| 3   | Is `MatchSession` the only public engine façade?      | **YES** (contract). All match control/read goes through the session.                                                                                             |
+| 4   | Does INTERNAL leak into PUBLIC?                       | **NO** in this freeze contract. Current `src/index.ts` still over-exports — that is **implementation debt**, not the frozen contract (see §11).                  |
+| 5   | Are ADVANCED / TESTING / INTERNAL / RESERVED correct? | **YES**, with Owner adjustments below.                                                                                                                           |
+| 6   | Owner remarks                                         | **Applied** — see §1.1.                                                                                                                                          |
 
 ### 1.1 Owner remarks (applied)
 
 1. **`getWorld()`** → **ADVANCED** (not part of recommended PUBLIC v1 surface). Prefer `getMatchState()` + `getSpatialState()`.
-2. **Domain factories** remain PUBLIC only as a **transitional** solution.  
+2. **Domain factories** remain PUBLIC only as a **transitional** solution.
    > **Note:** Docelowo aplikacja buduje `MatchSessionConfig`, a modele domenowe tworzy silnik.
 3. New category: **EXPERIMENTAL** — future APIs not yet part of the contract.
 
@@ -43,15 +43,15 @@
 
 ## 2. Layer definitions
 
-| Layer | Consumers | Stability |
-|-------|-----------|-----------|
-| **PUBLIC** | `apps/web`, future `features/match` | SemVer-stable; breaking = major |
-| **ADVANCED** | Debug, replay tooling, deep inspect | Stable intent; may evolve faster than PUBLIC |
-| **TESTING** | Vitest / CI / EPIC harness | No production imports |
-| **INTERNAL** | Code inside `packages/lfe` only | No guarantee |
-| **DEPRECATED** | Compat only | Remove after grace |
-| **RESERVED** | Named stubs for future EPICs | No API promise |
-| **EXPERIMENTAL** | Prototypes / candidates | May change or vanish without major |
+| Layer            | Consumers                           | Stability                                    |
+| ---------------- | ----------------------------------- | -------------------------------------------- |
+| **PUBLIC**       | `apps/web`, future `features/match` | SemVer-stable; breaking = major              |
+| **ADVANCED**     | Debug, replay tooling, deep inspect | Stable intent; may evolve faster than PUBLIC |
+| **TESTING**      | Vitest / CI / EPIC harness          | No production imports                        |
+| **INTERNAL**     | Code inside `packages/lfe` only     | No guarantee                                 |
+| **DEPRECATED**   | Compat only                         | Remove after grace                           |
+| **RESERVED**     | Named stubs for future EPICs        | No API promise                               |
+| **EXPERIMENTAL** | Prototypes / candidates             | May change or vanish without major           |
 
 ---
 
@@ -67,44 +67,44 @@ createMatch(config: MatchSessionConfig): MatchSession
 
 ### 3.2 Status
 
-| Export | Role |
-|--------|------|
-| `LFE_VERSION` | Engine version string |
-| `LFE_STATUS` | Coarse status constant |
-| `getEngineStatus()` | Module readiness report |
-| `EngineStatus` | Type |
-| `EngineModuleStatus` | Type |
-| `EngineStatusReport` | Type |
+| Export               | Role                    |
+| -------------------- | ----------------------- |
+| `LFE_VERSION`        | Engine version string   |
+| `LFE_STATUS`         | Coarse status constant  |
+| `getEngineStatus()`  | Module readiness report |
+| `EngineStatus`       | Type                    |
+| `EngineModuleStatus` | Type                    |
+| `EngineStatusReport` | Type                    |
 
 ### 3.3 Session façade
 
-| Export | Role |
-|--------|------|
-| `MatchSession` | **Only** public engine façade for running a match |
-| `MatchSessionConfig` | Session configuration |
-| `SessionStatus` | Session lifecycle (`created` … `disposed`) |
-| `MatchInput` | Base match composition input |
-| `MatchResult` | Lightweight end/report snapshot |
-| `MatchEvent` | Lightweight event record for UI |
+| Export               | Role                                              |
+| -------------------- | ------------------------------------------------- |
+| `MatchSession`       | **Only** public engine façade for running a match |
+| `MatchSessionConfig` | Session configuration                             |
+| `SessionStatus`      | Session lifecycle (`created` … `disposed`)        |
+| `MatchInput`         | Base match composition input                      |
+| `MatchResult`        | Lightweight end/report snapshot                   |
+| `MatchEvent`         | Lightweight event record for UI                   |
 
 **Guaranteed `MatchSession` methods (PUBLIC v1):**
 
-| Method | Semantics |
-|--------|-----------|
-| `start` / `pause` / `resume` / `stop` / `dispose` | Session control |
-| `dispatch(command)` | Command path (EPIC-5) |
-| `step` / `run` | Advance simulation |
-| `getMatchState()` | Primary match read model |
-| `getSpatialState()` | Spatial read model (EPIC-7) |
-| `getEvents()` | Event log for Report / debug-lite |
-| `snapshots()` / `latestSnapshot()` | Optional replay reads (allowed on façade; heavy use → ADVANCED patterns) |
+| Method                                            | Semantics                                                                |
+| ------------------------------------------------- | ------------------------------------------------------------------------ |
+| `start` / `pause` / `resume` / `stop` / `dispose` | Session control                                                          |
+| `dispatch(command)`                               | Command path (EPIC-5)                                                    |
+| `step` / `run`                                    | Advance simulation                                                       |
+| `getMatchState()`                                 | Primary match read model                                                 |
+| `getSpatialState()`                               | Spatial read model (EPIC-7)                                              |
+| `getEvents()`                                     | Event log for Report / debug-lite                                        |
+| `snapshots()` / `latestSnapshot()`                | Optional replay reads (allowed on façade; heavy use → ADVANCED patterns) |
 
 **Explicitly not PUBLIC (façade methods):**
 
-| Method | Layer |
-|--------|-------|
-| `getWorld()` | **ADVANCED** |
-| `context()` | **ADVANCED** |
+| Method       | Layer                   |
+| ------------ | ----------------------- |
+| `getWorld()` | **ADVANCED**            |
+| `context()`  | **ADVANCED**            |
 | `runToEnd()` | **DEPRECATED** (compat) |
 
 ### 3.4 Domain types (PUBLIC)
@@ -115,15 +115,15 @@ Read/write language for match setup and UI:
 
 ### 3.5 Domain factories (PUBLIC — transitional)
 
-| Export | Role |
-|--------|------|
-| `createPlayer` | Build roster entries for config |
-| `createTeam` | Team stub for config |
-| `createLineup` / `createBench` | XI + bench for config |
-| `createMatchSettings` | Settings overrides |
-| `formationByCode`, `FORMATION_442`, `FORMATION_433` | Formation presets |
-| `DEFAULT_MATCH_SETTINGS`, `DEFAULT_PITCH` | Defaults |
-| `DEFAULT_PLAYER_ATTRIBUTES`, `DEFAULT_PLAYER_SKILLS`, `DEFAULT_PLAYER_CONDITION` | Defaults |
+| Export                                                                           | Role                            |
+| -------------------------------------------------------------------------------- | ------------------------------- |
+| `createPlayer`                                                                   | Build roster entries for config |
+| `createTeam`                                                                     | Team stub for config            |
+| `createLineup` / `createBench`                                                   | XI + bench for config           |
+| `createMatchSettings`                                                            | Settings overrides              |
+| `formationByCode`, `FORMATION_442`, `FORMATION_433`                              | Formation presets               |
+| `DEFAULT_MATCH_SETTINGS`, `DEFAULT_PITCH`                                        | Defaults                        |
+| `DEFAULT_PLAYER_ATTRIBUTES`, `DEFAULT_PLAYER_SKILLS`, `DEFAULT_PLAYER_CONDITION` | Defaults                        |
 
 > **Transitional note (Owner):**  
 > Domain factories remain PUBLIC only as a transitional solution.  
@@ -133,31 +133,31 @@ Future direction: thinner app input (IDs, formation codes, shirt numbers) → en
 
 ### 3.6 Commands (thin PUBLIC)
 
-| Export | Role |
-|--------|------|
-| `Command`, `CommandResult`, `CommandSource` | Minimal dispatch contract |
-| `MatchCommand`, `MatchCommandType` | Match command union |
-| `StartMatchCommand`, `KickoffCommand`, `PauseMatchCommand`, `ResumeMatchCommand`, `EndMatchCommand`, `AbandonMatchCommand`, `DeclareWalkoverCommand` | Typed commands |
+| Export                                                                                                                                                                                         | Role                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `Command`, `CommandResult`, `CommandSource`                                                                                                                                                    | Minimal dispatch contract |
+| `MatchCommand`, `MatchCommandType`                                                                                                                                                             | Match command union       |
+| `StartMatchCommand`, `KickoffCommand`, `PauseMatchCommand`, `ResumeMatchCommand`, `EndMatchCommand`, `AbandonMatchCommand`, `DeclareWalkoverCommand`                                           | Typed commands            |
 | `createStartMatchCommand`, `createKickoffCommand`, `createPauseMatchCommand`, `createResumeMatchCommand`, `createEndMatchCommand`, `createAbandonMatchCommand`, `createDeclareWalkoverCommand` | Factories for UI/AI/tests |
 
 Session shortcuts (`start` / `pause` / `resume`) wrap the same command path.
 
 ### 3.7 Spatial read (PUBLIC)
 
-| Export | Role |
-|--------|------|
-| `Position` | 2D point on pitch |
-| `MatchSpatialState`, `SpatialPlayer`, `SpatialBall` | Spatial read model |
-| `createMatchSpatialState` | Helper; **prefer** `session.getSpatialState()` |
-| `findSpatialPlayer` | Lookup convenience |
+| Export                                              | Role                                           |
+| --------------------------------------------------- | ---------------------------------------------- |
+| `Position`                                          | 2D point on pitch                              |
+| `MatchSpatialState`, `SpatialPlayer`, `SpatialBall` | Spatial read model                             |
+| `createMatchSpatialState`                           | Helper; **prefer** `session.getSpatialState()` |
+| `findSpatialPlayer`                                 | Lookup convenience                             |
 
 ### 3.8 Config (PUBLIC)
 
-| Export | Role |
-|--------|------|
+| Export                     | Role                                             |
+| -------------------------- | ------------------------------------------------ |
 | `LfeConfig`, `DeepPartial` | Engine overrides via `MatchSessionConfig.engine` |
-| `DEFAULT_LFE_CONFIG` | Documented defaults (e.g. 20 ticks/s) |
-| `LogLevel` | Logging verbosity in config |
+| `DEFAULT_LFE_CONFIG`       | Documented defaults (e.g. 20 ticks/s)            |
+| `LogLevel`                 | Logging verbosity in config                      |
 
 ---
 
@@ -165,16 +165,16 @@ Session shortcuts (`start` / `pause` / `resume`) wrap the same command path.
 
 For debug, tooling, replay UIs, and deep inspection — **not required** for MVP match screens.
 
-| Area | Symbols / surface |
-|------|-------------------|
-| Session deep inspect | `MatchSession.context()`, `MatchSessionContext`, `MatchSession.getWorld()` |
-| World | `WorldState`, `MatchMeta`, `WorldSettings` |
-| Replay types | `ReplaySnapshot` (when imported directly) |
-| Runtime types (no factories) | `GameClock`, `TimeController`, `EventBus`, `EngineEvent`, `EngineEventType`, `Scheduler`, `ScheduledJob`, `ScheduledJobId`, `Rng`, `RngState`, `Logger`, `LogRecord` |
-| Lifecycle **read** types | `MatchLifecycleState`, `MatchLifecycleEventType` |
-| Phase helpers | `isTerminalPhase`, `isPlayPhase`, `MATCH_PHASES`, `isTerminalLifecycleState`, `isPlayLifecycleState` |
+| Area                                | Symbols / surface                                                                                                                                                                                                                                                           |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session deep inspect                | `MatchSession.context()`, `MatchSessionContext`, `MatchSession.getWorld()`                                                                                                                                                                                                  |
+| World                               | `WorldState`, `MatchMeta`, `WorldSettings`                                                                                                                                                                                                                                  |
+| Replay types                        | `ReplaySnapshot` (when imported directly)                                                                                                                                                                                                                                   |
+| Runtime types (no factories)        | `GameClock`, `TimeController`, `EventBus`, `EngineEvent`, `EngineEventType`, `Scheduler`, `ScheduledJob`, `ScheduledJobId`, `Rng`, `RngState`, `Logger`, `LogRecord`                                                                                                        |
+| Lifecycle **read** types            | `MatchLifecycleState`, `MatchLifecycleEventType`                                                                                                                                                                                                                            |
+| Phase helpers                       | `isTerminalPhase`, `isPlayPhase`, `MATCH_PHASES`, `isTerminalLifecycleState`, `isPlayLifecycleState`                                                                                                                                                                        |
 | Positioning (tactics editors / viz) | `pitchCoordinates`, `PitchCoordinates`, `HomeSide`, `AwaySide`, `sideOrientation`, `centreSpotPosition`, `buildFormationLayout`, `occupyFormationLayout`, `FormationLayout`, `FormationLayoutSlot`, `OccupiedSlot`, `createKickoffSpawnPoints`, `SpawnPoint`, `SpawnPoints` |
-| Math | `Vec2`, `vec2` |
+| Math                                | `Vec2`, `vec2`                                                                                                                                                                                                                                                              |
 
 **Rule:** Advanced may be published later as `@lastfootball/lfe/advanced`. Until then, treat as non-app contract even if currently re-exported from `index.ts`.
 
@@ -184,18 +184,18 @@ For debug, tooling, replay UIs, and deep inspection — **not required** for MVP
 
 For Vitest / CI / EPIC harness only. **No production app imports.**
 
-| Area | Symbols |
-|------|---------|
-| Simulation harness | `createSimulation`, `Simulation`, `SimulationOptions` |
-| Systems | `createSystemRegistry`, `SystemRegistry`, `SystemFn`, `SimulationSystem`, `SystemContext`, `LifecycleFacts`, `SystemPriority`, `compareSystemPriority`, priority types, `createSimulationPipeline`, `SimulationPipeline`, `createBuiltinSystems`, `createClockSystem`, `createSchedulerSystem`, `createLifecycleSystem`, `createEventSystem`, `createReplaySystem` |
-| Commands (wiring) | `createCommandBus`, `createCommandRegistry`, `CommandBus`, `CommandRegistry`, `CommandHandler`, `CommandValidator`, `CommandContext`, `ValidationError`, `nextCommandId`, `resetCommandIdSeq`, `registerMatchCommands`, `MATCH_COMMAND_HANDLERS` |
-| State machine | `applyLifecycleEvent`, `canApplyLifecycleEvent`, `nextLifecycleState`, `getAllowedEvents`, `getStateDefinition`, `transitionMatchState`, `defaultLifecycleContext`, `STATE_DEFINITIONS`, `TRANSITION_RULES`, `MATCH_LIFECYCLE_STATES`, `MATCH_LIFECYCLE_EVENTS`, lifecycle result/definition types |
-| Core factories | `createGameClock`, `createTimeController`, `createTickEngine`, `createLogger`, `createEventBus`, `createScheduler`, `createRng`, `createInitialWorldState`, `TickEngine`, `TickPhases`, `ClockSnapshot` |
-| Replay helpers | `captureSnapshot`, `cloneWorld`, `createSnapshotBuffer`, `SnapshotBuffer` |
-| Config helpers | `resolveConfig`, `tickDurationMs` |
-| Positioning unit math | `createPitchGrid`, `cellAt`, `cellCenter`, `sameCell`, `PitchGrid`, `GridCell`, `createZones`, `pointInZone`, `zonesContaining`, `longitudinalThird`, `PitchZone`, `PitchZoneId`, `distanceCalculator`, `DistanceCalculator`, `position` |
-| Domain heavy builders | `createMatchModel`, `withMatchState`, `createMatchState`, `createBall`, `createPitch`, `createGoals`, `createScore`, `createMatchClock`, `createReferee`, `createWeather`, `createStadium`, `emptyStatistics`, `ZERO_SCORE` |
-| Session internals | `SESSION_TRANSITIONS`, `createSessionLifecycle`, `isSessionActive`, `buildMatchFromConfig` |
+| Area                  | Symbols                                                                                                                                                                                                                                                                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Simulation harness    | `createSimulation`, `Simulation`, `SimulationOptions`                                                                                                                                                                                                                                                                                                              |
+| Systems               | `createSystemRegistry`, `SystemRegistry`, `SystemFn`, `SimulationSystem`, `SystemContext`, `LifecycleFacts`, `SystemPriority`, `compareSystemPriority`, priority types, `createSimulationPipeline`, `SimulationPipeline`, `createBuiltinSystems`, `createClockSystem`, `createSchedulerSystem`, `createLifecycleSystem`, `createEventSystem`, `createReplaySystem` |
+| Commands (wiring)     | `createCommandBus`, `createCommandRegistry`, `CommandBus`, `CommandRegistry`, `CommandHandler`, `CommandValidator`, `CommandContext`, `ValidationError`, `nextCommandId`, `resetCommandIdSeq`, `registerMatchCommands`, `MATCH_COMMAND_HANDLERS`                                                                                                                   |
+| State machine         | `applyLifecycleEvent`, `canApplyLifecycleEvent`, `nextLifecycleState`, `getAllowedEvents`, `getStateDefinition`, `transitionMatchState`, `defaultLifecycleContext`, `STATE_DEFINITIONS`, `TRANSITION_RULES`, `MATCH_LIFECYCLE_STATES`, `MATCH_LIFECYCLE_EVENTS`, lifecycle result/definition types                                                                 |
+| Core factories        | `createGameClock`, `createTimeController`, `createTickEngine`, `createLogger`, `createEventBus`, `createScheduler`, `createRng`, `createInitialWorldState`, `TickEngine`, `TickPhases`, `ClockSnapshot`                                                                                                                                                            |
+| Replay helpers        | `captureSnapshot`, `cloneWorld`, `createSnapshotBuffer`, `SnapshotBuffer`                                                                                                                                                                                                                                                                                          |
+| Config helpers        | `resolveConfig`, `tickDurationMs`                                                                                                                                                                                                                                                                                                                                  |
+| Positioning unit math | `createPitchGrid`, `cellAt`, `cellCenter`, `sameCell`, `PitchGrid`, `GridCell`, `createZones`, `pointInZone`, `zonesContaining`, `longitudinalThird`, `PitchZone`, `PitchZoneId`, `distanceCalculator`, `DistanceCalculator`, `position`                                                                                                                           |
+| Domain heavy builders | `createMatchModel`, `withMatchState`, `createMatchState`, `createBall`, `createPitch`, `createGoals`, `createScore`, `createMatchClock`, `createReferee`, `createWeather`, `createStadium`, `emptyStatistics`, `ZERO_SCORE`                                                                                                                                        |
+| Session internals     | `SESSION_TRANSITIONS`, `createSessionLifecycle`, `isSessionActive`, `buildMatchFromConfig`                                                                                                                                                                                                                                                                         |
 
 **Target entry:** `@lastfootball/lfe/testing` (future packaging; not required to exist before gameplay EPICs start).
 
@@ -216,12 +216,12 @@ Owned exclusively by `packages/lfe`. Application code must not import these path
 
 ## 7. Deprecated
 
-| Item | Replacement |
-|------|-------------|
-| `MatchHandle` | `MatchSession` |
-| `packages/lfe/src/match/session.ts` shim | Root `createMatch` / `match/session/` |
-| `Seed`, `ClockState` (`core/compat`) | `GameClock` |
-| `MatchSession.runToEnd()` | `run` + `stop` + `MatchResult` / events |
+| Item                                     | Replacement                             |
+| ---------------------------------------- | --------------------------------------- |
+| `MatchHandle`                            | `MatchSession`                          |
+| `packages/lfe/src/match/session.ts` shim | Root `createMatch` / `match/session/`   |
+| `Seed`, `ClockState` (`core/compat`)     | `GameClock`                             |
+| `MatchSession.runToEnd()`                | `run` + `stop` + `MatchResult` / events |
 
 **Grace:** Keep until an explicit cleanup pass after the first gameplay EPIC lands; do not use in new application code.
 
@@ -231,14 +231,14 @@ Owned exclusively by `packages/lfe`. Application code must not import these path
 
 Named placeholders for future work. **No contract.**
 
-| Module | Intent |
-|--------|--------|
-| `ecs/` | Future entity storage (today: World State) |
-| `ai/` | Tactics / decision AI |
-| `rules/` | Fouls, restarts, law enforcement |
-| `physics/` | Ball, collisions, movement |
-| `input/` stub barrel | Superseded by `MatchInput` on PUBLIC |
-| `utils/` | Internal helpers (`clamp`, `assertNever`) |
+| Module               | Intent                                     |
+| -------------------- | ------------------------------------------ |
+| `ecs/`               | Future entity storage (today: World State) |
+| `ai/`                | Tactics / decision AI                      |
+| `rules/`             | Fouls, restarts, law enforcement           |
+| `physics/`           | Ball, collisions, movement                 |
+| `input/` stub barrel | Superseded by `MatchInput` on PUBLIC       |
+| `utils/`             | Internal helpers (`clamp`, `assertNever`)  |
 
 ---
 
@@ -246,11 +246,11 @@ Named placeholders for future work. **No contract.**
 
 APIs that may appear during exploration **before** they join PUBLIC / ADVANCED.
 
-| Rule | Detail |
-|------|--------|
-| Marking | Prefix docs/`@experimental` / folder or export tag |
-| Stability | **None** — may break or disappear without a major bump |
-| Promotion | Requires Owner GO + update of this freeze doc + tests |
+| Rule                                | Detail                                                                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Marking                             | Prefix docs/`@experimental` / folder or export tag                                                                                               |
+| Stability                           | **None** — may break or disappear without a major bump                                                                                           |
+| Promotion                           | Requires Owner GO + update of this freeze doc + tests                                                                                            |
 | Examples (candidates, not promised) | Alternate match input DTOs, subscription helpers on `EventBus` for UI, richer Report DTO, tactics-editor-only layout APIs promoted from ADVANCED |
 
 Experimental must **not** be required by production match screens.
@@ -270,15 +270,15 @@ Experimental must **not** be required by production match screens.
 
 ## 11. Rules for adding exports
 
-| Proposed export | Allowed if… | Default layer |
-|-----------------|-------------|----------------|
-| New `MatchSession` method | UI cannot use existing reads/commands | PUBLIC (preferred) |
-| New command factory | New player/AI intent | PUBLIC |
-| New domain type field | Serialization / UI need | PUBLIC type; construction INTERNAL when possible |
-| New system / pipeline hook | Engine-only or tests | INTERNAL / TESTING |
-| Debug inspect | Tooling only | ADVANCED |
-| Unproven idea | Spike | EXPERIMENTAL |
-| Stub for later EPIC | Name reservation only | RESERVED |
+| Proposed export            | Allowed if…                           | Default layer                                    |
+| -------------------------- | ------------------------------------- | ------------------------------------------------ |
+| New `MatchSession` method  | UI cannot use existing reads/commands | PUBLIC (preferred)                               |
+| New command factory        | New player/AI intent                  | PUBLIC                                           |
+| New domain type field      | Serialization / UI need               | PUBLIC type; construction INTERNAL when possible |
+| New system / pipeline hook | Engine-only or tests                  | INTERNAL / TESTING                               |
+| Debug inspect              | Tooling only                          | ADVANCED                                         |
+| Unproven idea              | Spike                                 | EXPERIMENTAL                                     |
+| Stub for later EPIC        | Name reservation only                 | RESERVED                                         |
 
 **Forbidden without Owner GO:** promoting TESTING or INTERNAL symbols into PUBLIC “for convenience.”
 
@@ -304,23 +304,23 @@ A **breaking change** to PUBLIC API v1 includes any of:
 
 **Process:**
 
-1. Propose change + migration note  
-2. Owner GO  
-3. Major version (see SemVer) for PUBLIC breaks  
-4. Update this document in the same change set  
+1. Propose change + migration note
+2. Owner GO
+3. Major version (see SemVer) for PUBLIC breaks
+4. Update this document in the same change set
 
 ---
 
 ## 13. SemVer Policy
 
-| Version channel | Meaning |
-|-----------------|---------|
-| `0.x` (current package, e.g. `0.7.0-epic7`) | Pre-façade-hardening / EPIC milestone tags — historical |
-| **Architecture freeze** | This document = contract `PUBLIC API v1` regardless of npm patch until packaging aligned |
-| `1.0.0` (target package) | First release that **implements** export surface matching this freeze (narrowed `index` / subpath exports) |
-| `1.x` minors | Additive PUBLIC / documented ADVANCED |
-| `1.x` majors | PUBLIC breaking changes only |
-| Pre-release tags | `1.1.0-experimental.*` for EXPERIMENTAL bundles if ever published |
+| Version channel                             | Meaning                                                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `0.x` (current package, e.g. `0.7.0-epic7`) | Pre-façade-hardening / EPIC milestone tags — historical                                                    |
+| **Architecture freeze**                     | This document = contract `PUBLIC API v1` regardless of npm patch until packaging aligned                   |
+| `1.0.0` (target package)                    | First release that **implements** export surface matching this freeze (narrowed `index` / subpath exports) |
+| `1.x` minors                                | Additive PUBLIC / documented ADVANCED                                                                      |
+| `1.x` majors                                | PUBLIC breaking changes only                                                                               |
+| Pre-release tags                            | `1.1.0-experimental.*` for EXPERIMENTAL bundles if ever published                                          |
 
 Until `1.0.0` packaging lands, treat **this markdown** as the source of truth for what application code is **allowed** to depend on.
 
@@ -340,23 +340,23 @@ Internal modules remain non-exported path imports inside the package only.
 
 ## 15. Freeze checklist
 
-| Item | Status |
-|------|--------|
-| EPIC-1…7 complete | ✅ |
-| AUDIT-01…03 complete | ✅ |
-| `createMatch` sole official entry | ✅ (contract) |
-| `MatchSession` sole public façade | ✅ (contract) |
-| `getWorld` → ADVANCED | ✅ |
-| Domain factories transitional note | ✅ |
-| EXPERIMENTAL category | ✅ |
-| Gameplay / Physics / AI excluded | ✅ |
-| Code narrowed to match freeze | ❌ deferred (docs-only finalization) |
+| Item                               | Status                               |
+| ---------------------------------- | ------------------------------------ |
+| EPIC-1…7 complete                  | ✅                                   |
+| AUDIT-01…03 complete               | ✅                                   |
+| `createMatch` sole official entry  | ✅ (contract)                        |
+| `MatchSession` sole public façade  | ✅ (contract)                        |
+| `getWorld` → ADVANCED              | ✅                                   |
+| Domain factories transitional note | ✅                                   |
+| EXPERIMENTAL category              | ✅                                   |
+| Gameplay / Physics / AI excluded   | ✅                                   |
+| Code narrowed to match freeze      | ❌ deferred (docs-only finalization) |
 
 ---
 
 ## 16. Architecture ready?
 
-**YES** — for **architectural freeze** (contract).  
+**YES** — for **architectural freeze** (contract).
 
 Implementation alignment of `src/index.ts` with this document is a **follow-up packaging task**, not a blocker to declare the freeze document final.
 
@@ -365,5 +365,5 @@ Optional later: `REQUIRES CHANGES` only if Owner rejects transitional factories 
 
 ---
 
-*End of LFE Architecture Freeze document.*
+_End of LFE Architecture Freeze document._
 )

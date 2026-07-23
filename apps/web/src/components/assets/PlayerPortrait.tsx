@@ -19,12 +19,7 @@ type PlayerPortraitProps = {
  * Player portrait placeholder from Asset Pack.
  * Later: map playerId → final art in pack-01/portraits.
  */
-export function PlayerPortrait({
-  playerId,
-  name,
-  size = 'md',
-  style,
-}: PlayerPortraitProps) {
+export function PlayerPortrait({ playerId, name, size = 'md', style }: PlayerPortraitProps) {
   const dim = sizeMap[size];
   const src = portraitSrc(playerId);
   const alt = name ? `Portret: ${name}` : 'Portret zawodnika';

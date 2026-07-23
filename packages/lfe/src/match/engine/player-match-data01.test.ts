@@ -54,7 +54,12 @@ function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
     homeBench: createBench('home', benchHome),
     awayBench: createBench('away', []),
     players,
-    settings: { halfDurationMs, halfTimeDurationMs, enableExtraTime: false, enablePenalties: false },
+    settings: {
+      halfDurationMs,
+      halfTimeDurationMs,
+      enableExtraTime: false,
+      enablePenalties: false,
+    },
   });
 }
 
@@ -65,10 +70,7 @@ function openPlay(session: ReturnType<typeof makeSession>) {
   session.step();
 }
 
-function playerRow(
-  session: ReturnType<typeof makeSession>,
-  playerId: string,
-) {
+function playerRow(session: ReturnType<typeof makeSession>, playerId: string) {
   return session.getMatchState().statistics.players.find((p) => p.playerId === playerId);
 }
 
@@ -114,8 +116,16 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     expect(a.getMatchState().score).toEqual(b.getMatchState().score);
     expect(a.getMatchState().statistics.home).toEqual(b.getMatchState().statistics.home);
     expect(a.getMatchState().statistics.away).toEqual(b.getMatchState().statistics.away);
-    expect(a.context().events.history().map((e) => e.type)).toEqual(
-      b.context().events.history().map((e) => e.type),
+    expect(
+      a
+        .context()
+        .events.history()
+        .map((e) => e.type),
+    ).toEqual(
+      b
+        .context()
+        .events.history()
+        .map((e) => e.type),
     );
   });
 
@@ -168,12 +178,8 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
 
     const home = s.getMatchState().statistics.home;
     const away = s.getMatchState().statistics.away;
-    const playerGoals = s
-      .getMatchState()
-      .statistics.players.reduce((n, p) => n + p.goals, 0);
-    const playerShots = s
-      .getMatchState()
-      .statistics.players.reduce((n, p) => n + p.shots, 0);
+    const playerGoals = s.getMatchState().statistics.players.reduce((n, p) => n + p.goals, 0);
+    const playerShots = s.getMatchState().statistics.players.reduce((n, p) => n + p.shots, 0);
     const playerFouls = s
       .getMatchState()
       .statistics.players.reduce((n, p) => n + p.foulsCommitted, 0);
@@ -204,9 +210,7 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     );
     s.step();
 
-    expect(s.getMatchState().homeLineup.slots.some((x) => x.playerId === 'h-bench')).toBe(
-      true,
-    );
+    expect(s.getMatchState().homeLineup.slots.some((x) => x.playerId === 'h-bench')).toBe(true);
     // Prior goal counters unchanged for all rows that had goals
     for (const g of goalsBefore) {
       expect(playerRow(s, g.id)!.goals).toBe(g.goals);

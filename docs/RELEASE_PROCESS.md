@@ -12,8 +12,8 @@ Proces sprawdzony: 7 commitów lokalnych → testy na pełnym tree → push `mai
 
 ### 1. Przygotowanie
 
-1. Working tree zrozumiany (`git status`).  
-2. Plan commitów zatwierdzony (zakres plików, kolejność).  
+1. Working tree zrozumiany (`git status`).
+2. Plan commitów zatwierdzony (zakres plików, kolejność).
 3. Preflight: `npm run test --workspace=@lastfootball/lfe` (lub pełne `npm run validate`).
 
 ### 2. Commity
@@ -26,9 +26,9 @@ Proces sprawdzony: 7 commitów lokalnych → testy na pełnym tree → push `mai
   Longer why.
   "@
   ```
-- Stage **tylko** pliki danego commita (`git add` ścieżek).  
-- Nie używaj `git add -i` / rebase -i.  
-- Po każdym commicie kodowym: test + build workspace.  
+- Stage **tylko** pliki danego commita (`git add` ścieżek).
+- Nie używaj `git add -i` / rebase -i.
+- Po każdym commicie kodowym: test + build workspace.
 - Docs-only: wystarczy `git status` + diff stat.
 
 ### 3. Push
@@ -37,8 +37,8 @@ Proces sprawdzony: 7 commitów lokalnych → testy na pełnym tree → push `mai
 git push -u origin <current-branch>
 ```
 
-- Push **dopiero na Owner GO**.  
-- Preferuj feature branch + PR gdy branch protection wymaga PR.  
+- Push **dopiero na Owner GO**.
+- Preferuj feature branch + PR gdy branch protection wymaga PR.
 - Direct push na `main` możliwy tylko jeśli Owner świadomie akceptuje (release LFE tak zrobił; remote ostrzegał o regułach).
 
 ### 4. Weryfikacja po push
@@ -50,22 +50,22 @@ git log --oneline -5
 
 ### 5. Pull Request (opcjonalnie)
 
-- Twórz PR tylko na wyraźne GO (`gh pr create`).  
+- Twórz PR tylko na wyraźne GO (`gh pr create`).
 - Nie twórz PR „przy okazji” po push na `main` jeśli zmiany już wylądowały.
 
 ## Rollback
 
-| Sytuacja | Akcja |
-|----------|--------|
-| Przed pushem, zły ostatni commit | `git reset --soft HEAD~1` → popraw → nowy commit |
-| Przed pushem, cofnij serię | `git reset --soft <hash-przed-serią>` (unikaj `--hard` bez backupu) |
-| Po pushu na feature branch | revert lub fixing commit; force tylko na wyraźne GO |
-| Po pushu / merge na `main` | **revert** przez commit/PR — nie rewrite historii `main` |
+| Sytuacja                         | Akcja                                                               |
+| -------------------------------- | ------------------------------------------------------------------- |
+| Przed pushem, zły ostatni commit | `git reset --soft HEAD~1` → popraw → nowy commit                    |
+| Przed pushem, cofnij serię       | `git reset --soft <hash-przed-serią>` (unikaj `--hard` bez backupu) |
+| Po pushu na feature branch       | revert lub fixing commit; force tylko na wyraźne GO                 |
+| Po pushu / merge na `main`       | **revert** przez commit/PR — nie rewrite historii `main`            |
 
 ## Najważniejsze decyzje
 
-- Nie pushuj połowy łańcucha LFE (A–D) — checkout byłby niespójny.  
-- Nie mieszaj GDD i featu LFE w jednym commicie.  
+- Nie pushuj połowy łańcucha LFE (A–D) — checkout byłby niespójny.
+- Nie mieszaj GDD i featu LFE w jednym commicie.
 - Testuj na pełnym working tree (untracked files zostają na dysku między commitami).
 
 ## Powiązania

@@ -43,7 +43,12 @@ function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
     homeBench: createBench('home', []),
     awayBench: createBench('away', []),
     players,
-    settings: { halfDurationMs, halfTimeDurationMs, enableExtraTime: false, enablePenalties: false },
+    settings: {
+      halfDurationMs,
+      halfTimeDurationMs,
+      enableExtraTime: false,
+      enablePenalties: false,
+    },
   });
 }
 
@@ -69,7 +74,12 @@ describe('MATCH-ENGINE-01', () => {
     const s = makeSession(8_000);
     openPlay(s);
     s.run(400);
-    const types = new Set(s.context().events.history().map((e) => e.type));
+    const types = new Set(
+      s
+        .context()
+        .events.history()
+        .map((e) => e.type),
+    );
     expect(types.has('POSSESSION')).toBe(true);
     expect(types.has('ATTACK') || types.has('SHOT') || types.has('FOUL')).toBe(true);
   });
@@ -97,8 +107,16 @@ describe('MATCH-ENGINE-01', () => {
     b.run(120);
     expect(a.getMatchState().score).toEqual(b.getMatchState().score);
     expect(a.getMatchState().clock.displayMinute).toBe(b.getMatchState().clock.displayMinute);
-    expect(a.context().events.history().map((e) => e.type)).toEqual(
-      b.context().events.history().map((e) => e.type),
+    expect(
+      a
+        .context()
+        .events.history()
+        .map((e) => e.type),
+    ).toEqual(
+      b
+        .context()
+        .events.history()
+        .map((e) => e.type),
     );
   });
 });

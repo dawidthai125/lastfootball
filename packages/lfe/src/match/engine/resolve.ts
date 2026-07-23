@@ -2,10 +2,7 @@ import type { EngineEventType } from '../../events';
 import type { MatchState, PitchSide, TeamStatistics } from '../domain';
 import { bumpPlayerStat, createScore } from '../domain';
 import type { Rng } from '../../rng';
-import {
-  decideActionFromState,
-  decidePossessionFromState,
-} from '../../ai';
+import { decideActionFromState, decidePossessionFromState } from '../../ai';
 
 import { attributePlayerForEvent } from './attribute-player';
 
@@ -14,10 +11,7 @@ export type MatchEngineEmit = {
   readonly payload?: unknown;
 };
 
-function bumpTeamStat(
-  stats: TeamStatistics,
-  patch: Partial<TeamStatistics>,
-): TeamStatistics {
+function bumpTeamStat(stats: TeamStatistics, patch: Partial<TeamStatistics>): TeamStatistics {
   return Object.freeze({ ...stats, ...patch });
 }
 
@@ -161,8 +155,10 @@ export function resolvePossessionAction(
         ...next,
         statistics: Object.freeze({
           ...next.statistics,
-          home: side === 'home' ? bumpTeamStat(st, { corners: st.corners + 1 }) : next.statistics.home,
-          away: side === 'away' ? bumpTeamStat(st, { corners: st.corners + 1 }) : next.statistics.away,
+          home:
+            side === 'home' ? bumpTeamStat(st, { corners: st.corners + 1 }) : next.statistics.home,
+          away:
+            side === 'away' ? bumpTeamStat(st, { corners: st.corners + 1 }) : next.statistics.away,
         }),
       });
     }
@@ -198,13 +194,9 @@ export function resolvePossessionAction(
     statistics: Object.freeze({
       ...next.statistics,
       home:
-        side === 'home'
-          ? bumpTeamStat(scored, { goals: scored.goals + 1 })
-          : next.statistics.home,
+        side === 'home' ? bumpTeamStat(scored, { goals: scored.goals + 1 }) : next.statistics.home,
       away:
-        side === 'away'
-          ? bumpTeamStat(scored, { goals: scored.goals + 1 })
-          : next.statistics.away,
+        side === 'away' ? bumpTeamStat(scored, { goals: scored.goals + 1 }) : next.statistics.away,
       players: goalPlayers,
     }),
   });

@@ -36,9 +36,7 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
         {/* Left — lineup preview (no edit) */}
         <SectionShell
           title="Wybór składu"
-          action={
-            <span style={{ color: 'var(--lf-color-text-faint)' }}>{bundle.formation}</span>
-          }
+          action={<span style={{ color: 'var(--lf-color-text-faint)' }}>{bundle.formation}</span>}
         >
           <div
             style={{
@@ -66,12 +64,8 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                   borderColor: tab.active
                     ? 'var(--lf-color-border-gold)'
                     : 'var(--lf-color-border-subtle)',
-                  background: tab.active
-                    ? 'var(--lf-color-gold-soft)'
-                    : 'var(--lf-color-bg-inset)',
-                  color: tab.active
-                    ? 'var(--lf-color-gold-base)'
-                    : 'var(--lf-color-text-faint)',
+                  background: tab.active ? 'var(--lf-color-gold-soft)' : 'var(--lf-color-bg-inset)',
+                  color: tab.active ? 'var(--lf-color-gold-base)' : 'var(--lf-color-text-faint)',
                 }}
               >
                 {tab.label}
@@ -85,7 +79,8 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                 key={`${r.number}-${r.name}`}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'var(--lf-space-5) var(--lf-space-6) minmax(0, 1fr) auto auto',
+                  gridTemplateColumns:
+                    'var(--lf-space-5) var(--lf-space-6) minmax(0, 1fr) auto auto',
                   gap: 'var(--lf-space-2)',
                   alignItems: 'center',
                   borderBottomWidth: 'var(--lf-border-width-hair)',
@@ -238,7 +233,11 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
               <div style={{ minWidth: 'calc(var(--lf-space-8) * 2)' }}>
                 <div
                   className="font-[family-name:var(--font-ui)] font-bold"
-                  style={{ fontSize: 'var(--lf-type-hero)', color: 'var(--lf-color-text-gold)', lineHeight: 1 }}
+                  style={{
+                    fontSize: 'var(--lf-type-hero)',
+                    color: 'var(--lf-color-text-gold)',
+                    lineHeight: 1,
+                  }}
                 >
                   VS
                 </div>
@@ -327,10 +326,7 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                 label="Termin"
                 value={`${fixture.dateLabel ?? fixture.whenLabel}${fixture.kickoff ? ` · ${fixture.kickoff}` : ''}`}
               />
-              <MetaCell
-                label="Pogoda"
-                value={`${bundle.temperature} · ${bundle.weatherDetail}`}
-              />
+              <MetaCell label="Pogoda" value={`${bundle.temperature} · ${bundle.weatherDetail}`} />
             </div>
 
             <p
@@ -397,7 +393,9 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                   >
                     {h.score}
                   </span>
-                  <span style={{ marginLeft: 'var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
+                  <span
+                    style={{ marginLeft: 'var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}
+                  >
                     {h.when}
                   </span>
                 </div>
@@ -441,7 +439,12 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                     >
                       {d.label}
                     </div>
-                    <div style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}>
+                    <div
+                      style={{
+                        fontSize: 'var(--lf-type-caption)',
+                        color: 'var(--lf-color-text-muted)',
+                      }}
+                    >
                       {d.hint}
                     </div>
                   </div>
@@ -471,7 +474,8 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
               color: 'var(--lf-color-text-muted)',
             }}
           >
-            Styl gry: <strong style={{ color: 'var(--lf-color-text-secondary)' }}>{bundle.styleLabel}</strong>
+            Styl gry:{' '}
+            <strong style={{ color: 'var(--lf-color-text-secondary)' }}>{bundle.styleLabel}</strong>
           </p>
 
           <div style={{ display: 'grid', gap: 'var(--lf-space-3)' }}>
@@ -636,15 +640,17 @@ function MetaCell({ label, value }: { label: string; value: string }) {
 
 function ConditionBars({ value }: { value: number }) {
   return (
-    <span style={{ display: 'inline-flex', gap: 'var(--lf-border-width-hair)' }} aria-label={`Kondycja ${value}/4`}>
+    <span
+      style={{ display: 'inline-flex', gap: 'var(--lf-border-width-hair)' }}
+      aria-label={`Kondycja ${value}/4`}
+    >
       {[1, 2, 3, 4].map((n) => (
         <span
           key={n}
           style={{
             width: 'var(--lf-space-1)',
             height: 'var(--lf-space-3)',
-            background:
-              n <= value ? 'var(--lf-color-status-ok)' : 'var(--lf-color-bg-inset)',
+            background: n <= value ? 'var(--lf-color-status-ok)' : 'var(--lf-color-bg-inset)',
             borderRadius: 'var(--lf-radius-xs)',
           }}
         />

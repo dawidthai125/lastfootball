@@ -1,4 +1,9 @@
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from 'react';
 
 type FieldProps = {
   label: string;
@@ -45,11 +50,7 @@ export function Checkbox({
 }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
     <label className="inline-flex items-center gap-1.5 text-[12px] text-[var(--lf-text)]">
-      <input
-        type="checkbox"
-        {...props}
-        className="size-3.5 accent-[var(--lf-gold)]"
-      />
+      <input type="checkbox" {...props} className="size-3.5 accent-[var(--lf-gold)]" />
       <span>{label}</span>
     </label>
   );

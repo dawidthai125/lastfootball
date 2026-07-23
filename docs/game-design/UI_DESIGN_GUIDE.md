@@ -99,13 +99,13 @@ Szkielet oczekiwany:
 
 ## 5. Wzorce ekranów
 
-| Wzorzec | Kiedy | Unikać |
-|---------|--------|--------|
-| Hub | Start sesji, CTA dnia | Mini-dashboard z 12 kartami |
-| Lista + detal | Zawodnicy, oferty | Karty zamiast tabeli bez potrzeby |
-| Formularz decyzji | Transfer, trening | Wielostronicowe wizardy bez sensu |
-| Match view | Przed / w trakcie / po | Overlaye zasłaniające boisko |
-| Raport | Post-match, finanse | Infografiki bez akcji |
+| Wzorzec           | Kiedy                  | Unikać                            |
+| ----------------- | ---------------------- | --------------------------------- |
+| Hub               | Start sesji, CTA dnia  | Mini-dashboard z 12 kartami       |
+| Lista + detal     | Zawodnicy, oferty      | Karty zamiast tabeli bez potrzeby |
+| Formularz decyzji | Transfer, trening      | Wielostronicowe wizardy bez sensu |
+| Match view        | Przed / w trakcie / po | Overlaye zasłaniające boisko      |
+| Raport            | Post-match, finanse    | Infografiki bez akcji             |
 
 **Karty:** tylko gdy niosą interakcję lub czytelność. Domyślnie — lista / sekcja bez „card for card’s sake”.
 
@@ -204,6 +204,6 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 
 ## Historia
 
-| Wersja | Data | Zmiana |
-|--------|------|--------|
+| Wersja      | Data       | Zmiana                    |
+| ----------- | ---------- | ------------------------- |
 | 0.1.0-gdd01 | 2026-07-23 | Zasady bazowe UI (GDD-01) |

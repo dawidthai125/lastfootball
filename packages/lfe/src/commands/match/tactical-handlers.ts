@@ -36,10 +36,7 @@ function requireNotFinished(command: { type: string }, ctx: Parameters<CommandVa
   return errors;
 }
 
-function patchTactics(
-  state: MatchState,
-  patch: Partial<MatchState['tactics']>,
-): MatchState {
+function patchTactics(state: MatchState, patch: Partial<MatchState['tactics']>): MatchState {
   return Object.freeze({
     ...state,
     tactics: createMatchTactics({
@@ -69,7 +66,11 @@ export const changeTacticsHandler: CommandHandler<ChangeTacticsCommand> = {
       styleLabel: p.styleLabel ?? state.tactics.styleLabel,
     });
     ctx.setMatchState(next);
-    ctx.recordEvent('SYSTEM', { kind: 'tactics_change', commandId: command.id, tactics: next.tactics });
+    ctx.recordEvent('SYSTEM', {
+      kind: 'tactics_change',
+      commandId: command.id,
+      tactics: next.tactics,
+    });
   },
 };
 
@@ -210,12 +211,9 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
     const nextLineup = Object.freeze({
       ...lineup,
       slots: Object.freeze(nextSlots),
-      captainPlayerId:
-        lineup.captainPlayerId === playerOutId ? playerInId : lineup.captainPlayerId,
+      captainPlayerId: lineup.captainPlayerId === playerOutId ? playerInId : lineup.captainPlayerId,
     });
-    const nextBenchIds = bench.playerIds
-      .filter((id) => id !== playerInId)
-      .concat(playerOutId);
+    const nextBenchIds = bench.playerIds.filter((id) => id !== playerInId).concat(playerOutId);
     const nextBench = Object.freeze({
       ...bench,
       playerIds: Object.freeze(nextBenchIds),

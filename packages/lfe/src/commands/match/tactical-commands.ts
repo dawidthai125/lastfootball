@@ -95,24 +95,34 @@ export function createSubstitutePlayerCommand(
   opts: CreateCommandOpts & SubstitutePlayerCommand['payload'],
 ): SubstitutePlayerCommand {
   const { tick, source, id, side, playerOutId, playerInId } = opts;
-  return withPayload('SubstitutePlayer', { tick, source, id }, {
-    side,
-    playerOutId,
-    playerInId,
-  }) as SubstitutePlayerCommand;
+  return withPayload(
+    'SubstitutePlayer',
+    { tick, source, id },
+    {
+      side,
+      playerOutId,
+      playerInId,
+    },
+  ) as SubstitutePlayerCommand;
 }
 
 export function createSetPressingCommand(
   opts: CreateCommandOpts & { value: number },
 ): SetPressingCommand {
-  return withPayload('SetPressing', opts, { value: clamp01to100(opts.value) }) as SetPressingCommand;
+  return withPayload('SetPressing', opts, {
+    value: clamp01to100(opts.value),
+  }) as SetPressingCommand;
 }
 
-export function createSetTempoCommand(opts: CreateCommandOpts & { value: number }): SetTempoCommand {
+export function createSetTempoCommand(
+  opts: CreateCommandOpts & { value: number },
+): SetTempoCommand {
   return withPayload('SetTempo', opts, { value: clamp01to100(opts.value) }) as SetTempoCommand;
 }
 
-export function createSetWidthCommand(opts: CreateCommandOpts & { value: number }): SetWidthCommand {
+export function createSetWidthCommand(
+  opts: CreateCommandOpts & { value: number },
+): SetWidthCommand {
   return withPayload('SetWidth', opts, { value: clamp01to100(opts.value) }) as SetWidthCommand;
 }
 

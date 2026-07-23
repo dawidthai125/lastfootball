@@ -15,11 +15,7 @@ export function createMatchEngineSystem(): SimulationSystem {
     execute(ctx: SystemContext) {
       if (!ctx.matchState) return;
       const phase = ctx.matchState.phase;
-      if (
-        !isPlayLifecycleState(phase) &&
-        phase !== 'HALF_TIME' &&
-        phase !== 'FULL_TIME'
-      ) {
+      if (!isPlayLifecycleState(phase) && phase !== 'HALF_TIME' && phase !== 'FULL_TIME') {
         return;
       }
       // FULL_TIME: nothing to simulate (COMPLETE already queued from second half end)

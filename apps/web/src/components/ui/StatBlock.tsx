@@ -21,10 +21,14 @@ export function StatBlock({ label, value, hint, tone = 'default' }: StatBlockPro
       <div className="truncate text-[10px] tracking-wide text-[var(--lf-faint)] uppercase">
         {label}
       </div>
-      <div className={`mt-0.5 truncate font-[family-name:var(--font-ui)] text-sm font-semibold tabular-nums ${toneClass[tone]}`}>
+      <div
+        className={`mt-0.5 truncate font-[family-name:var(--font-ui)] text-sm font-semibold tabular-nums ${toneClass[tone]}`}
+      >
         {value}
       </div>
-      {hint ? <div className="mt-0.5 truncate text-[10px] text-[var(--lf-muted)]">{hint}</div> : null}
+      {hint ? (
+        <div className="mt-0.5 truncate text-[10px] text-[var(--lf-muted)]">{hint}</div>
+      ) : null}
     </div>
   );
 }

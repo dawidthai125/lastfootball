@@ -238,11 +238,7 @@ export {
 /** GAMEPLAY-01 facade — prefer createMatch for app entry. */
 export * as gameplay from './gameplay';
 
-export {
-  simulateMatchTick,
-  advanceMatchClock,
-  DISPLAY_MINUTES_PER_HALF,
-} from './match/engine';
+export { simulateMatchTick, advanceMatchClock, DISPLAY_MINUTES_PER_HALF } from './match/engine';
 export type { MatchEngineTickInput, MatchEngineTickResult, MatchEngineEmit } from './match/engine';
 
 export type {

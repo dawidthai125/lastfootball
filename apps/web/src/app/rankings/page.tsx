@@ -21,7 +21,7 @@ export default function RankingsPage() {
             {
               key: 'pos',
               header: '#',
-              render: (r) => <span className="tabular-nums text-[var(--lf-faint)]">{r.pos}</span>,
+              render: (r) => <span className="text-[var(--lf-faint)] tabular-nums">{r.pos}</span>,
             },
             {
               key: 'club',

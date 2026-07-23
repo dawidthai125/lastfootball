@@ -30,7 +30,7 @@ export default function FinancePage() {
             {
               key: 'day',
               header: 'Dzień',
-              render: (r) => <span className="tabular-nums text-[var(--lf-faint)]">{r.day}</span>,
+              render: (r) => <span className="text-[var(--lf-faint)] tabular-nums">{r.day}</span>,
             },
             { key: 'desc', header: 'Opis', render: (r) => r.desc },
             {
@@ -40,7 +40,7 @@ export default function FinancePage() {
               render: (r) => (
                 <span
                   className={[
-                    'tabular-nums font-medium',
+                    'font-medium tabular-nums',
                     r.amount >= 0 ? 'text-[var(--lf-ok)]' : 'text-[var(--lf-danger)]',
                   ].join(' ')}
                 >
