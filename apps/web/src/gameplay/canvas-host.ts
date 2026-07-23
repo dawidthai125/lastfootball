@@ -1,9 +1,9 @@
 /**
- * Canvas host contract — GAMEPLAY-01.
+ * Canvas host contract — GAMEPLAY-01 + CANVAS-RENDERER-01.
  * Canvas is a read-only renderer. It must not import CommandBus or mutate MatchState.
  */
 
-import type { MatchSession, MatchState, MatchSpatialState } from '@lastfootball/lfe';
+import type { EngineEvent, MatchSession, MatchState, MatchSpatialState } from '@lastfootball/lfe';
 
 export const MATCH_CANVAS_ROOT_ID = 'lf-match-canvas-root' as const;
 
@@ -12,6 +12,8 @@ export type MatchCanvasReadModel = {
   readonly matchState: MatchState;
   readonly spatial: MatchSpatialState;
   readonly tick: number;
+  /** EventBus history snapshot — read-only for FX / presentation. */
+  readonly events: readonly EngineEvent[];
 };
 
 export type MatchCanvasHost = {
@@ -20,11 +22,16 @@ export type MatchCanvasHost = {
   bind(session: MatchSession): void;
   unbind(): void;
   getReadModel(): MatchCanvasReadModel | null;
-  /** Reserved: future attach of Canvas renderer instance. */
+  /** Attach Canvas renderer instance (mounts into #lf-match-canvas-root when present). */
   attachRenderer(renderer: MatchCanvasRenderer | null): void;
+  /** Push latest live session read model into the attached renderer. */
+  pushFrame(): void;
+  /** Present an arbitrary read model (LIVE pulse or REPLAY frame). */
+  present(model: MatchCanvasReadModel): void;
+  getRenderer(): MatchCanvasRenderer | null;
 };
 
-/** Future Canvas engine plugs here — no gameplay dependency. */
+/** Canvas engine plugs here — no gameplay / Engine / AI dependency inside renderer. */
 export type MatchCanvasRenderer = {
   mount(root: HTMLElement): void;
   unmount(): void;
@@ -45,19 +52,25 @@ export function createMatchCanvasHost(): MatchCanvasHost {
       session = null;
       if (renderer) {
         renderer.unmount();
+        renderer = null;
       }
     },
     getReadModel() {
       if (!session || session.status === 'disposed') return null;
       const matchState = session.getMatchState();
+      const ctx = session.context();
       return {
         matchId: session.id,
         matchState,
         spatial: session.getSpatialState(),
         tick: matchState.tick,
+        events: [...ctx.events.history()],
       };
     },
     attachRenderer(next) {
+      if (renderer && renderer !== next) {
+        renderer.unmount();
+      }
       renderer = next;
       if (!next) return;
       const el =
@@ -65,6 +78,17 @@ export function createMatchCanvasHost(): MatchCanvasHost {
       if (el) next.mount(el);
       const model = host.getReadModel();
       if (model) next.render(model);
+    },
+    pushFrame() {
+      const model = host.getReadModel();
+      if (model) host.present(model);
+    },
+    present(model) {
+      if (!renderer) return;
+      renderer.render(model);
+    },
+    getRenderer() {
+      return renderer;
     },
   };
 
