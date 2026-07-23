@@ -16,7 +16,7 @@
     "validate": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build",
     "db:types": "supabase gen types typescript --project-id ewgllyswhtlkdtiqsqrt --schema public > apps/web/src/types/database.ts"
   },
-  "version": "0.0.1",
+  "version": "0.1.0",
   "devDependencies": {
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",

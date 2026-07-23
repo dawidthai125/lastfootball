@@ -1,0 +1,180 @@
+import Link from 'next/link';
+
+import { sessionChrome } from '@/data/mock';
+import { dashboardMock } from '@/data/mock';
+
+type ClubHeroProps = {
+  club?: typeof dashboardMock.club;
+  season?: number;
+};
+
+export function ClubHero({
+  club = dashboardMock.club,
+  season = sessionChrome.season,
+}: ClubHeroProps) {
+  return (
+    <section
+      aria-label="Club Hero"
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        borderWidth: 'var(--lf-border-width-hair)',
+        borderStyle: 'solid',
+        borderColor: 'var(--lf-color-border-subtle)',
+        background: 'var(--lf-color-bg-panel)',
+        borderRadius: 'var(--lf-radius-sm)',
+        padding: 'var(--lf-space-5)',
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(135deg, var(--lf-color-overlay-hero) 0%, transparent 55%), var(--lf-color-bg-panel-alt)',
+          opacity: 'var(--lf-opacity-muted)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: 'var(--lf-space-4)',
+        }}
+      >
+        <div
+          className="font-[family-name:var(--font-ui)] font-bold"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 'calc(var(--lf-space-8) + var(--lf-space-6))',
+            height: 'calc(var(--lf-space-8) + var(--lf-space-6))',
+            flexShrink: 0,
+            background: 'var(--lf-color-gold-soft)',
+            borderWidth: 'var(--lf-border-width-hair)',
+            borderStyle: 'solid',
+            borderColor: 'var(--lf-color-border-gold)',
+            color: 'var(--lf-color-gold-base)',
+            fontSize: 'var(--lf-type-h1)',
+            borderRadius: 'var(--lf-radius-sm)',
+          }}
+          aria-hidden
+        >
+          {club.shortName}
+        </div>
+
+        <div style={{ flex: '1 1 220px', minWidth: 0 }}>
+          <p
+            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+            style={{
+              margin: 0,
+              fontSize: 'var(--lf-type-label)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              color: 'var(--lf-color-text-gold)',
+            }}
+          >
+            Siedziba klubu
+          </p>
+          <h1
+            className="font-[family-name:var(--font-ui)] font-bold"
+            style={{
+              margin: 0,
+              marginTop: 'var(--lf-space-1)',
+              fontSize: 'var(--lf-type-hero)',
+              lineHeight: 1.1,
+              color: 'var(--lf-color-text-primary)',
+            }}
+          >
+            {club.name}
+          </h1>
+          <p
+            style={{
+              margin: 0,
+              marginTop: 'var(--lf-space-2)',
+              fontSize: 'var(--lf-type-caption)',
+              color: 'var(--lf-color-text-muted)',
+            }}
+          >
+            {club.stadium} · {club.division} · Sezon {season}
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 'var(--lf-space-4)',
+              marginTop: 'var(--lf-space-3)',
+              fontSize: 'var(--lf-type-caption)',
+            }}
+          >
+            <span>
+              <span style={{ color: 'var(--lf-color-text-faint)' }}>Reputacja </span>
+              <strong
+                className="tabular-nums"
+                style={{ color: 'var(--lf-color-text-gold)', fontWeight: 600 }}
+              >
+                {club.reputation}
+              </strong>
+            </span>
+            <span>
+              <span style={{ color: 'var(--lf-color-text-faint)' }}>Kibice </span>
+              <strong
+                className="tabular-nums"
+                style={{ color: 'var(--lf-color-text-primary)', fontWeight: 600 }}
+              >
+                {club.supporters.toLocaleString('pl-PL')}
+              </strong>
+            </span>
+            <span>
+              <span style={{ color: 'var(--lf-color-text-faint)' }}>Pozycja </span>
+              <strong
+                className="tabular-nums"
+                style={{ color: 'var(--lf-color-text-primary)', fontWeight: 600 }}
+              >
+                {club.place}.
+              </strong>
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 'var(--lf-space-2)', flexShrink: 0 }}>
+          <Link
+            href="/club"
+            style={{
+              borderWidth: 'var(--lf-border-width-hair)',
+              borderStyle: 'solid',
+              borderColor: 'var(--lf-color-border-strong)',
+              background: 'var(--lf-color-bg-panel-alt)',
+              color: 'var(--lf-color-text-secondary)',
+              fontSize: 'var(--lf-type-caption)',
+              padding: 'var(--lf-space-2) var(--lf-space-3)',
+              borderRadius: 'var(--lf-radius-sm)',
+            }}
+          >
+            Klub
+          </Link>
+          <Link
+            href="/squad"
+            style={{
+              borderWidth: 'var(--lf-border-width-hair)',
+              borderStyle: 'solid',
+              borderColor: 'var(--lf-color-border-subtle)',
+              background: 'transparent',
+              color: 'var(--lf-color-text-muted)',
+              fontSize: 'var(--lf-type-caption)',
+              padding: 'var(--lf-space-2) var(--lf-space-3)',
+              borderRadius: 'var(--lf-radius-sm)',
+            }}
+          >
+            Kadra
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -7,15 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-23
+
 ### Added
 
-- LFE EPIC-1…7 + Architecture Freeze (PUBLIC API v1 contract); release commits on `main`
-- Game Design Faza 2 docs (GDD §3–§5, §7–§15 + UI Design Guide)
-- Documentation SSOT suite under `docs/` (`HANDOFF.md`, project/lfe/game-design indexes)
+- Public UI baseline (LFE-UI-IMPL-01…05): App Shell, Design Tokens, Panel, Kadra, Zawodnik, Terminarz, Pre Match, Live Match foundation
+- IA navigation map and stub routes for remaining club modules
+- Verification captures under `docs/verification/`
 
-### Added (earlier)
+### Notes
 
-- Infrastructure bootstrap: GitHub/Vercel/Supabase prep, CI tests, security headers, ops docs
+- No gameplay / Canvas engine / Match engine in this release
+- Post-match report screen not yet implemented (planned before GAMEPLAY polish)
 
 ## [0.0.1] - 2026-07-21
 

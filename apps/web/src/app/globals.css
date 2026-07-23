@@ -1,14 +1,142 @@
 @import 'tailwindcss';
 
+/*
+ * CSS variables are seeded here for SSR first paint.
+ * ThemeProvider re-applies the same map from styles/tokens.ts (SSOT).
+ * Values must match LFE-DESIGN-TOKENS-01 — do not invent new ones.
+ */
+
 :root {
-  --bg: #0b1220;
-  --bg-elevated: #121a2b;
-  --border: #243049;
-  --text: #e8eefc;
-  --muted: #93a0b8;
-  --accent: #3dd68c;
-  --warn: #f5c542;
-  --danger: #f07178;
+  --lf-color-bg-void: #03050a;
+  --lf-color-bg-base: #080e18;
+  --lf-color-bg-raised: #0c1420;
+  --lf-color-bg-panel: #111a28;
+  --lf-color-bg-panel-alt: #152031;
+  --lf-color-bg-inset: #0a101a;
+  --lf-color-bg-hover: #1a2838;
+
+  --lf-color-border-subtle: #2a3a4f;
+  --lf-color-border-strong: #3d5168;
+  --lf-color-border-gold: #8a7340;
+
+  --lf-color-text-primary: #f0f4fa;
+  --lf-color-text-secondary: #d8e0ec;
+  --lf-color-text-muted: #8b9bb0;
+  --lf-color-text-faint: #5c6d82;
+  --lf-color-text-gold: #c4a35a;
+
+  --lf-color-gold-base: #c4a35a;
+  --lf-color-gold-dim: #8a7340;
+  --lf-color-gold-soft: rgba(196, 163, 90, 0.12);
+
+  --lf-color-status-ok: #5a9e6f;
+  --lf-color-status-ok-soft: rgba(90, 158, 111, 0.15);
+  --lf-color-status-warn: #c4a035;
+  --lf-color-status-warn-soft: rgba(196, 160, 53, 0.15);
+  --lf-color-status-danger: #b85a5a;
+  --lf-color-status-danger-soft: rgba(184, 90, 90, 0.15);
+  --lf-color-status-info: #5a7ea0;
+  --lf-color-status-live: #c23030;
+  --lf-color-pitch: #1f5c38;
+
+  --lf-color-overlay-scrim: rgba(3, 5, 10, 0.72);
+  --lf-color-overlay-hero: rgba(8, 12, 20, 0.55);
+
+  --lf-space-1: 4px;
+  --lf-space-2: 8px;
+  --lf-space-3: 12px;
+  --lf-space-4: 16px;
+  --lf-space-5: 24px;
+  --lf-space-6: 32px;
+  --lf-space-7: 40px;
+  --lf-space-8: 48px;
+
+  --lf-radius-none: 0px;
+  --lf-radius-xs: 1px;
+  --lf-radius-sm: 2px;
+  --lf-radius-md: 4px;
+
+  --lf-border-width-hair: 1px;
+  --lf-border-width-thick: 2px;
+
+  --lf-shadow-none: none;
+  --lf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --lf-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  --lf-motion-fast: 120ms;
+  --lf-motion-base: 180ms;
+  --lf-motion-slow: 280ms;
+  --lf-motion-easing: ease-out;
+
+  --lf-focus-ring-color: #c4a35a;
+  --lf-focus-ring-width: 1px;
+  --lf-focus-ring-offset: 1px;
+
+  --lf-opacity-disabled: 0.4;
+  --lf-opacity-muted: 0.7;
+
+  --lf-z-base: 0;
+  --lf-z-sticky: 10;
+  --lf-z-chrome: 20;
+  --lf-z-dropdown: 30;
+  --lf-z-overlay: 40;
+  --lf-z-modal: 50;
+  --lf-z-toast: 60;
+
+  --lf-grid-gutter: 12px;
+  --lf-grid-margin: 12px;
+  --lf-shell-nav: 168px;
+  --lf-shell-nav-collapsed: 56px;
+  --lf-shell-rail: 220px;
+  --lf-shell-topbar: 36px;
+
+  --lf-overlay-panel-width: 400px;
+  --lf-overlay-modal-width: 560px;
+
+  --lf-type-hero: 36px;
+  --lf-type-h1: 22px;
+  --lf-type-h2: 15px;
+  --lf-type-body: 13px;
+  --lf-type-caption: 11px;
+  --lf-type-label: 10px;
+  --lf-type-table: 12px;
+  --lf-type-tracking-label: 0.06em;
+
+  /* Legacy aliases → canonical */
+  --lf-bg: var(--lf-color-bg-base);
+  --lf-bg-raised: var(--lf-color-bg-raised);
+  --lf-panel: var(--lf-color-bg-panel);
+  --lf-panel-alt: var(--lf-color-bg-panel-alt);
+  --lf-panel-hover: var(--lf-color-bg-hover);
+  --lf-border: var(--lf-color-border-subtle);
+  --lf-border-strong: var(--lf-color-border-strong);
+  --lf-inset: var(--lf-color-bg-inset);
+  --lf-text: var(--lf-color-text-secondary);
+  --lf-text-strong: var(--lf-color-text-primary);
+  --lf-muted: var(--lf-color-text-muted);
+  --lf-faint: var(--lf-color-text-faint);
+  --lf-gold: var(--lf-color-gold-base);
+  --lf-gold-dim: var(--lf-color-gold-dim);
+  --lf-gold-soft: var(--lf-color-gold-soft);
+  --lf-ok: var(--lf-color-status-ok);
+  --lf-ok-soft: var(--lf-color-status-ok-soft);
+  --lf-warn: var(--lf-color-status-warn);
+  --lf-warn-soft: var(--lf-color-status-warn-soft);
+  --lf-danger: var(--lf-color-status-danger);
+  --lf-danger-soft: var(--lf-color-status-danger-soft);
+  --lf-info: var(--lf-color-status-info);
+  --lf-topbar-h: var(--lf-shell-topbar);
+  --lf-sidebar-w: var(--lf-shell-nav);
+  --lf-aside-w: var(--lf-shell-rail);
+  --lf-radius: var(--lf-radius-sm);
+  --bg: var(--lf-color-bg-base);
+  --bg-elevated: var(--lf-color-bg-panel);
+  --border: var(--lf-color-border-subtle);
+  --text: var(--lf-color-text-secondary);
+  --muted: var(--lf-color-text-muted);
+  --accent: var(--lf-color-gold-base);
+  --warn: var(--lf-color-status-warn);
+  --danger: var(--lf-color-status-danger);
 }
 
 * {
@@ -19,16 +147,153 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  height: 100%;
 }
 
 body {
-  background: radial-gradient(ellipse 80% 50% at 50% -20%, #1a3a2a 0%, transparent 55%), var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+  background: var(--lf-color-bg-base);
+  color: var(--lf-color-text-secondary);
+  font-family: var(--font-body), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-body);
+  line-height: 1.35;
   -webkit-font-smoothing: antialiased;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-primary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lf-color-border-strong) var(--lf-color-bg-inset);
+}
+
+*:focus-visible {
+  outline: var(--lf-focus-ring-width) solid var(--lf-focus-ring-color);
+  outline-offset: var(--lf-focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Shell grid */
+.lf-app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--lf-color-bg-base);
+}
+
+.lf-app-shell__body {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: var(--lf-shell-nav) minmax(0, 1fr);
+}
+
+.lf-app-shell__body--collapsed {
+  grid-template-columns: var(--lf-shell-nav-collapsed) minmax(0, 1fr);
+}
+
+.lf-app-shell__body--with-rail {
+  grid-template-columns: var(--lf-shell-nav) minmax(0, 1fr) var(--lf-shell-rail);
+}
+
+.lf-app-shell__body--collapsed.lf-app-shell__body--with-rail {
+  grid-template-columns: var(--lf-shell-nav-collapsed) minmax(0, 1fr) var(--lf-shell-rail);
+}
+
+.lf-app-shell__rail {
+  min-height: 0;
+  overflow: hidden;
+  background: var(--lf-color-bg-raised);
+}
+
+.lf-app-shell__main {
+  min-width: 0;
+  overflow-y: auto;
+  background: var(--lf-color-bg-base);
+  padding: var(--lf-grid-margin);
+}
+
+.lf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--lf-grid-gutter);
+}
+
+.lf-grid__span-12 {
+  grid-column: span 12;
+}
+.lf-grid__span-8 {
+  grid-column: span 8;
+}
+.lf-grid__span-7 {
+  grid-column: span 7;
+}
+.lf-grid__span-6 {
+  grid-column: span 6;
+}
+.lf-grid__span-5 {
+  grid-column: span 5;
+}
+.lf-grid__span-4 {
+  grid-column: span 4;
+}
+
+@media (max-width: 1199px) {
+  .lf-app-shell__body--with-rail {
+    grid-template-columns: var(--lf-shell-nav) minmax(0, 1fr);
+  }
+
+  .lf-app-shell__body--collapsed.lf-app-shell__body--with-rail {
+    grid-template-columns: var(--lf-shell-nav-collapsed) minmax(0, 1fr);
+  }
+
+  .lf-app-shell__rail {
+    display: none !important;
+  }
+
+  .lf-grid__span-8,
+  .lf-grid__span-7,
+  .lf-grid__span-6,
+  .lf-grid__span-5,
+  .lf-grid__span-4 {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 767px) {
+  .lf-app-shell__body,
+  .lf-app-shell__body--collapsed,
+  .lf-app-shell__body--with-rail,
+  .lf-app-shell__body--collapsed.lf-app-shell__body--with-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lf-app-shell__nav {
+    display: none !important;
+  }
 }

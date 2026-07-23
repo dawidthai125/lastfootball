@@ -1,23 +1,37 @@
-import Link from 'next/link';
+import { Grid, GridItem } from '@/components/layout/Grid';
+import { ClubHero } from '@/components/panel/ClubHero';
+import { FinanceSummary } from '@/components/panel/FinanceSummary';
+import { LeagueSnapshot } from '@/components/panel/LeagueSnapshot';
+import { MatchdayStrip } from '@/components/panel/MatchdayStrip';
+import { MessagesPreview } from '@/components/panel/MessagesPreview';
+import { RecentResults } from '@/components/panel/RecentResults';
+import { TrainingToday } from '@/components/panel/TrainingToday';
 
-export default function HomePage() {
+/**
+ * Panel menedżera — LFE-UI-IMPL-02
+ * Order: Club Hero → Matchday (+ Quick Actions) → data zones (WF-01 / GX-01)
+ */
+export default function DashboardPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-8 px-6 py-16">
-      <div className="space-y-3">
-        <p className="text-sm tracking-[0.2em] text-[var(--muted)] uppercase">Last Football</p>
-        <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Foundation ready</h1>
-        <p className="max-w-xl text-[var(--muted)]">
-          Monorepo scaffold: Next.js app, LFE package stubs, Supabase clients, CI, and Vercel
-          config. Game logic is intentionally not implemented yet.
-        </p>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-5)' }}>
+      <ClubHero />
+      <MatchdayStrip />
 
-      <Link
-        href="/status"
-        className="inline-flex w-fit items-center rounded-md border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2 text-sm font-medium transition hover:border-[var(--accent)]"
-      >
-        Engine status →
-      </Link>
-    </main>
+      <Grid>
+        <GridItem span={7}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
+            <LeagueSnapshot />
+            <RecentResults />
+            <FinanceSummary />
+          </div>
+        </GridItem>
+        <GridItem span={5}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
+            <TrainingToday />
+            <MessagesPreview />
+          </div>
+        </GridItem>
+      </Grid>
+    </div>
   );
 }

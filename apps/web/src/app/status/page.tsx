@@ -1,6 +1,10 @@
-import Link from 'next/link';
 import { getEngineStatus } from '@lastfootball/lfe';
 
+import { Badge } from '@/components/ui/Badge';
+import { Panel } from '@/components/ui/Panel';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { StatBlock } from '@/components/ui/StatBlock';
+import { Table } from '@/components/ui/Table';
 import { env } from '@/config/env';
 import { getSupabaseStatus } from '@/lib/supabase/status';
 
@@ -12,104 +16,74 @@ export default function EngineStatusPage() {
   const readyCount = engine.modules.filter((m) => m.ready).length;
 
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-6 py-12">
-      <div className="mb-10 space-y-3">
-        <Link href="/" className="text-sm text-[var(--muted)] hover:text-[var(--text)]">
-          ← Home
-        </Link>
-        <h1 className="text-3xl font-semibold tracking-tight">Engine status</h1>
-        <p className="text-[var(--muted)]">
-          Read-only foundation check for Last Football Engine. No match simulation is active.
-        </p>
+    <div>
+      <SectionHeader
+        title="Status silnika"
+        subtitle="Podgląd foundation LFE — bez aktywnej symulacji meczu"
+        action={<Badge tone="warn">{engine.status}</Badge>}
+      />
+
+      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+        <StatBlock label="Nazwa" value={engine.name} />
+        <StatBlock label="Wersja" value={engine.version} tone="gold" />
+        <StatBlock label="Moduły" value={`${readyCount}/${engine.modules.length}`} tone="ok" />
+        <StatBlock label="NODE_ENV" value={env.nodeEnv} />
       </div>
 
-      <section className="mb-8 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
-        <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          <div>
-            <dt className="text-[var(--muted)]">Name</dt>
-            <dd className="font-medium">{engine.name}</dd>
-          </div>
-          <div>
-            <dt className="text-[var(--muted)]">Version</dt>
-            <dd className="font-mono">{engine.version}</dd>
-          </div>
-          <div>
-            <dt className="text-[var(--muted)]">Status</dt>
-            <dd>
-              <span className="rounded-full border border-[var(--warn)]/40 bg-[var(--warn)]/10 px-2 py-0.5 text-[var(--warn)]">
-                {engine.status}
-              </span>
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[var(--muted)]">Modules ready</dt>
-            <dd className="font-mono">
-              {readyCount}/{engine.modules.length}
-            </dd>
-          </div>
-          <div className="sm:col-span-2">
-            <dt className="text-[var(--muted)]">Checked at</dt>
-            <dd className="font-mono text-xs">{engine.checkedAt}</dd>
-          </div>
-        </dl>
-      </section>
+      <div className="grid gap-2 lg:grid-cols-2">
+        <Panel title="Runtime">
+          <dl className="grid grid-cols-2 gap-1.5 text-[12px]">
+            <div>
+              <dt className="text-[10px] text-[var(--lf-faint)] uppercase">VERCEL_ENV</dt>
+              <dd className="font-mono">{env.vercelEnv ?? 'n/a'}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] text-[var(--lf-faint)] uppercase">Checked at</dt>
+              <dd className="font-mono text-[11px]">{engine.checkedAt}</dd>
+            </div>
+          </dl>
+        </Panel>
 
-      <section className="mb-8 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
-        <h2 className="mb-3 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
-          Runtime
-        </h2>
-        <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          <div>
-            <dt className="text-[var(--muted)]">NODE_ENV</dt>
-            <dd className="font-mono">{env.nodeEnv}</dd>
-          </div>
-          <div>
-            <dt className="text-[var(--muted)]">VERCEL_ENV</dt>
-            <dd className="font-mono">{env.vercelEnv ?? 'n/a'}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="mb-8 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
-        <h2 className="mb-3 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
-          Supabase
-        </h2>
-        <p className="text-sm">
+        <Panel title="Supabase">
           {supabase.configured ? (
-            <>
-              Configured · host{' '}
-              <span className="font-mono text-[var(--accent)]">{supabase.urlHost}</span>
-            </>
+            <p className="text-[12px]">
+              Skonfigurowany · host{' '}
+              <span className="font-mono text-[var(--lf-gold)]">{supabase.urlHost}</span>
+            </p>
           ) : (
-            <span className="text-[var(--warn)]">
-              Not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
-            </span>
+            <p className="text-[12px] text-[var(--lf-warn)]">
+              Brak konfiguracji — ustaw NEXT_PUBLIC_SUPABASE_URL i NEXT_PUBLIC_SUPABASE_ANON_KEY
+            </p>
           )}
-        </p>
-      </section>
+        </Panel>
 
-      <section className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5">
-        <h2 className="mb-4 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
-          LFE modules
-        </h2>
-        <ul className="divide-y divide-[var(--border)]">
-          {engine.modules.map((mod) => (
-            <li key={mod.id} className="flex items-start justify-between gap-4 py-3 text-sm">
-              <div>
-                <p className="font-medium">{mod.label}</p>
-                <p className="text-[var(--muted)]">{mod.notes}</p>
-              </div>
-              <span
-                className={
-                  mod.ready ? 'shrink-0 text-[var(--accent)]' : 'shrink-0 text-[var(--muted)]'
-                }
-              >
-                {mod.ready ? 'ready' : 'stub'}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </main>
+        <Panel title="Moduły LFE" flush className="lg:col-span-2">
+          <Table
+            rowKey={(m) => m.id}
+            rows={engine.modules}
+            columns={[
+              {
+                key: 'label',
+                header: 'Moduł',
+                render: (m) => <span className="font-medium">{m.label}</span>,
+              },
+              {
+                key: 'notes',
+                header: 'Notatki',
+                render: (m) => <span className="text-[var(--lf-muted)]">{m.notes}</span>,
+              },
+              {
+                key: 'ready',
+                header: 'Stan',
+                align: 'right',
+                render: (m) => (
+                  <Badge tone={m.ready ? 'ok' : 'default'}>{m.ready ? 'ready' : 'stub'}</Badge>
+                ),
+              },
+            ]}
+          />
+        </Panel>
+      </div>
+    </div>
   );
 }
