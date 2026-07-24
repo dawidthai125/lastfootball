@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { ClubCrest, NavIcon } from '@/components/assets';
-import { useClub } from '@/components/club/ClubProvider';
+import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
@@ -24,8 +24,9 @@ export function LeftNavigation() {
   const pathname = usePathname();
   const { navCollapsed } = useShell();
   const club = useClub();
-  const phase = resolveHubPhase(club);
-  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
+  const hasFixtures = useHasFixtures();
+  const phase = resolveHubPhase(club, { hasFixtures });
+  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
 
   return (
     <aside

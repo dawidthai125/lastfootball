@@ -1,6 +1,6 @@
 import type { HubNavAccess, HubPhase } from '@/lib/hub/types';
 
-/** Nav item ids available on EARLY_CLUB Day 1 (progressive disclosure). */
+/** Nav item ids available on EARLY_CLUB (progressive disclosure). */
 const EARLY_CLUB_OPEN = new Set([
   'panel',
   'club',
@@ -13,14 +13,22 @@ const EARLY_CLUB_OPEN = new Set([
   'status',
 ]);
 
+/** SEASON unlocks Liga on top of EARLY_CLUB opens. */
+const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league']);
+
 /**
  * Progressive unlock for shell navigation.
  * Soft-locked items stay visible with “Wkrótce” — they must not compete with Primary CTA.
- * Terminarz (`matches`) open after First Match (fixtures SSOT); Liga remains soft-locked.
  */
 export function resolveNavAccess(itemId: string, phase: HubPhase): HubNavAccess {
-  if (phase === 'EARLY_CLUB' || phase === 'NEW_CLUB') {
+  if (phase === 'NEW_CLUB') {
     return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
+  }
+  if (phase === 'EARLY_CLUB') {
+    return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
+  }
+  if (phase === 'SEASON') {
+    return SEASON_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
   return 'open';
 }

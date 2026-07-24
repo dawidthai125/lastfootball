@@ -15,21 +15,23 @@ import {
 } from '@/lib/hub';
 
 /**
- * EARLY_CLUB decision Hub — GDD §23 / LFE-HUB-01 + LFE-LEAGUE-01.
- * No mid-season mock; Club DTO + hub/fixtures SSOT only.
+ * Decision Hub — GDD §23 / LFE-HUB-01 + LFE-LEAGUE-02 (EARLY_CLUB / SEASON, one layout).
+ * No mid-season mock; Club DTO + hub/fixtures/league SSOT only.
  */
 export function EarlyClubHub({
   club,
   nextFixture = null,
   lastPlayedFixture = null,
   hasFixtures = false,
+  leaguePositionLabel = null,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
   lastPlayedFixture?: FixtureDto | null;
   hasFixtures?: boolean;
+  leaguePositionLabel?: string | null;
 }) {
-  const phase = resolveHubPhase(club);
+  const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
   const primary = resolvePrimaryCta(phase, session, {
     nextFixture,
@@ -38,7 +40,7 @@ export function EarlyClubHub({
   });
   const secondary = resolveSecondaryCtas(phase, { hasFixtures }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
-  const status = buildLightStatus(club, nextFixture);
+  const status = buildLightStatus(club, nextFixture, leaguePositionLabel);
   const message = buildWelcomeMessage(club, nextFixture);
 
   return (
@@ -265,6 +267,9 @@ function LightStatus({ status }: { status: ReturnType<typeof buildLightStatus> }
     >
       <StatusChip label="Poziom" value={status.clubLevelLabel} />
       <StatusChip label="Liga" value={status.league} />
+      {status.leaguePositionLabel ? (
+        <StatusChip label="Pozycja" value={status.leaguePositionLabel} />
+      ) : null}
       <StatusChip label="Stadion" value={status.stadium} />
     </section>
   );

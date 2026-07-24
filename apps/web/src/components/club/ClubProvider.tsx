@@ -4,14 +4,32 @@ import { createContext, useContext, type ReactNode } from 'react';
 
 import type { ClubDto } from '@/lib/club/types';
 
-const ClubContext = createContext<ClubDto | null>(null);
+type ClubContextValue = {
+  readonly club: ClubDto | null;
+  /** S1: fixtures slate exists → Hub SEASON (LFE-LEAGUE-02). */
+  readonly hasFixtures: boolean;
+};
 
-export function ClubProvider({ club, children }: { club: ClubDto | null; children: ReactNode }) {
-  return <ClubContext.Provider value={club}>{children}</ClubContext.Provider>;
+const ClubContext = createContext<ClubContextValue>({ club: null, hasFixtures: false });
+
+export function ClubProvider({
+  club,
+  hasFixtures = false,
+  children,
+}: {
+  club: ClubDto | null;
+  hasFixtures?: boolean;
+  children: ReactNode;
+}) {
+  return <ClubContext.Provider value={{ club, hasFixtures }}>{children}</ClubContext.Provider>;
 }
 
 export function useClub(): ClubDto | null {
-  return useContext(ClubContext);
+  return useContext(ClubContext).club;
+}
+
+export function useHasFixtures(): boolean {
+  return useContext(ClubContext).hasFixtures;
 }
 
 /** Prefer live club; fall back to mock identity only when DTO missing. */

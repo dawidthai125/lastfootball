@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
-import { useClub } from '@/components/club/ClubProvider';
+import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
@@ -30,8 +30,9 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: '
 
 export function TopBar() {
   const club = useClub();
-  const phase = resolveHubPhase(club);
-  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
+  const hasFixtures = useHasFixtures();
+  const phase = resolveHubPhase(club, { hasFixtures });
+  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
   const { toggleNotifications } = useOverlay();
   const { toggleNav, navCollapsed } = useShell();
 
@@ -125,7 +126,11 @@ export function TopBar() {
       <div className="hidden items-center md:flex" style={{ gap: 0 }}>
         <Metric label="Sezon" value="1" />
         <Metric label="Dzień" value={early ? '1' : '1'} />
-        {early ? <Metric label="Faza" value="Start" tone="gold" /> : null}
+        {phase === 'SEASON' ? (
+          <Metric label="Faza" value="Sezon" tone="gold" />
+        ) : early ? (
+          <Metric label="Faza" value="Start" tone="gold" />
+        ) : null}
       </div>
 
       <div
@@ -187,7 +192,7 @@ export function TopBar() {
                 color: 'var(--lf-color-text-gold)',
               }}
             >
-              {early ? 'Early club' : 'Klub'}
+              {phase === 'SEASON' ? 'Sezon' : early ? 'Early club' : 'Klub'}
             </div>
           </div>
         </Link>

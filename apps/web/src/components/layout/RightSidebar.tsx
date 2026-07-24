@@ -4,20 +4,21 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { ClubCrest } from '@/components/assets';
-import { useClub } from '@/components/club/ClubProvider';
+import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import { FIRST_MATCH_BOT } from '@/lib/first-match/constants';
 import { resolveHubPhase } from '@/lib/hub';
 
 /**
- * Right rail — EARLY_CLUB context (no mid-season matchday / injuries).
+ * Right rail — decision-phase context (EARLY_CLUB / SEASON; no mid-season FOMO).
  */
 export function RightSidebar() {
   const club = useClub();
-  const phase = resolveHubPhase(club);
-  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
+  const hasFixtures = useHasFixtures();
+  const phase = resolveHubPhase(club, { hasFixtures });
+  const decision = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
 
-  if (!early || !club) {
+  if (!decision || !club) {
     return (
       <aside
         className="flex h-full flex-col overflow-y-auto"

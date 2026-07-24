@@ -1,50 +1,71 @@
+import { redirect } from 'next/navigation';
+
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Table } from '@/components/ui/Table';
-import { dashboardMock } from '@/data/mock';
+import { getManagerClub } from '@/lib/club/get-manager-club';
+import { ensureClubFixtures } from '@/lib/fixtures';
+import { resolveLeagueTable } from '@/lib/league';
+import type { LeagueTableRowDto } from '@/lib/league';
 
-const fullTable = [
-  ...dashboardMock.standingsPreview,
-  { pos: 6, club: 'Stal Portowa', pts: 18, gd: -1, self: false },
-  { pos: 7, club: 'Górnik Wschód', pts: 16, gd: -4, self: false },
-  { pos: 8, club: 'Lechia Południe', pts: 14, gd: -6, self: false },
-];
+/**
+ * League table — fed only by resolveLeagueTable() (LFE-LEAGUE-02).
+ */
+export default async function LeaguePage() {
+  const club = await getManagerClub();
+  if (!club) redirect('/welcome');
 
-export default function LeaguePage() {
+  const fixtures = await ensureClubFixtures(club.id);
+  const table = resolveLeagueTable(club, fixtures);
+
   return (
     <div>
-      <SectionHeader title="Liga" subtitle={dashboardMock.club.division} />
+      <SectionHeader title="Liga" subtitle={`${table.leagueLabel} · ${table.seasonLabel}`} />
       <Panel title="Tabela" flush>
         <Table
-          rowKey={(r) => String(r.pos)}
-          rows={fullTable}
-          highlight={(r) => r.self}
+          rowKey={(r) => r.clubId}
+          rows={[...table.rows]}
+          highlight={(r) => r.isPlayer}
           columns={[
             {
               key: 'pos',
               header: '#',
-              render: (r) => <span className="text-[var(--lf-faint)] tabular-nums">{r.pos}</span>,
+              render: (r: LeagueTableRowDto) => (
+                <span className="text-[var(--lf-faint)] tabular-nums">{r.position}</span>
+              ),
             },
             {
               key: 'club',
               header: 'Klub',
-              render: (r) => (
-                <span className={r.self ? 'font-semibold text-[var(--lf-gold)]' : undefined}>
-                  {r.club}
+              render: (r: LeagueTableRowDto) => (
+                <span className={r.isPlayer ? 'font-semibold text-[var(--lf-gold)]' : undefined}>
+                  {r.name}
                 </span>
               ),
+            },
+            {
+              key: 'played',
+              header: 'M',
+              align: 'right',
+              render: (r: LeagueTableRowDto) => <span className="tabular-nums">{r.played}</span>,
             },
             {
               key: 'gd',
               header: '+/−',
               align: 'right',
-              render: (r) => <span className="tabular-nums">{r.gd > 0 ? `+${r.gd}` : r.gd}</span>,
+              render: (r: LeagueTableRowDto) => (
+                <span className="tabular-nums">
+                  {r.goalDifference > 0 ? `+${r.goalDifference}` : r.goalDifference}
+                </span>
+              ),
             },
             {
               key: 'pts',
               header: 'Pkt',
               align: 'right',
-              render: (r) => <span className="font-semibold tabular-nums">{r.pts}</span>,
+              render: (r: LeagueTableRowDto) => (
+                <span className="font-semibold tabular-nums">{r.points}</span>
+              ),
             },
           ]}
         />

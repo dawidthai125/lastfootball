@@ -20,6 +20,8 @@ export type HubLightStatus = {
   readonly dayLabel: string;
   readonly seasonLabel: string;
   readonly clubLevelLabel: string;
+  /** One-line position chip (LFE-LEAGUE-02); null = omit. */
+  readonly leaguePositionLabel: string | null;
 };
 
 /** Qualitative / scored last-match strip from fixtures SSOT when available. */
@@ -62,6 +64,7 @@ export function buildWelcomeMessage(
 export function buildLightStatus(
   club: ClubDto,
   nextFixture: FixtureDto | null = null,
+  leaguePositionLabel: string | null = null,
 ): HubLightStatus {
   const dayLabel = nextFixture ? `Kolejka ${nextFixture.matchday}` : 'Dzień 1';
   return {
@@ -70,5 +73,6 @@ export function buildLightStatus(
     dayLabel,
     seasonLabel: 'Sezon 1',
     clubLevelLabel: 'Klub startowy',
+    leaguePositionLabel,
   };
 }

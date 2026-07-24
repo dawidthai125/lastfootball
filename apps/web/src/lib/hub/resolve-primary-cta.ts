@@ -1,6 +1,8 @@
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { HubCta, HubCtaContext, HubPhase, HubSession } from '@/lib/hub/types';
 
+const DECISION_PHASES = new Set<HubPhase>(['EARLY_CLUB', 'SEASON']);
+
 /**
  * Exactly one Primary CTA for the Hub decision screen (GDD §23.4).
  */
@@ -9,7 +11,7 @@ export function resolvePrimaryCta(
   session: HubSession,
   ctx: HubCtaContext = { nextFixture: null },
 ): HubCta {
-  if (phase === 'EARLY_CLUB' && session === 'matchday' && ctx.nextFixture) {
+  if (DECISION_PHASES.has(phase) && session === 'matchday' && ctx.nextFixture) {
     return {
       id: 'play-next-match',
       label: 'Przygotuj mecz',
@@ -32,8 +34,9 @@ export function resolveSecondaryCtas(
   phase: HubPhase,
   ctx: Pick<HubCtaContext, 'hasFixtures'> = {},
 ): HubCta[] {
-  if (phase !== 'EARLY_CLUB') return [];
+  if (!DECISION_PHASES.has(phase)) return [];
   const fixturesOpen = Boolean(ctx.hasFixtures);
+  const leagueOpen = phase === 'SEASON';
   return [
     {
       id: 'club',
@@ -46,6 +49,12 @@ export function resolveSecondaryCtas(
       label: 'Terminarz',
       href: '/matches',
       access: fixturesOpen ? 'open' : 'soft_locked',
+    },
+    {
+      id: 'league',
+      label: 'Tabela',
+      href: '/league',
+      access: leagueOpen ? 'open' : 'soft_locked',
     },
     {
       id: 'message',

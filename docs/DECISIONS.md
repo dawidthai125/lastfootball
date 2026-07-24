@@ -96,9 +96,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `resolveClubSquad(club)` / `seedStarterSquad` — deterministyczny seed; tabela `players` dopiero przy transferach.  
 **Źródło:** LFE-LEAGUE-01.
 
+### D17 — League table = pure derive (`resolveLeagueTable`) · LFE-LEAGUE-02
+
+**Dlaczego:** tabela musi być wspólna dla `/league`, Hub chip i przyszłych modułów bez drugiej SSOT.  
+**Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); generator nadal 3 fixtures.  
+**Źródło:** LFE-LEAGUE-02.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D16 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D17 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 
 ## Powiązania
 
@@ -106,4 +112,4 @@ Każde złamanie D1–D16 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 IMPLEMENT

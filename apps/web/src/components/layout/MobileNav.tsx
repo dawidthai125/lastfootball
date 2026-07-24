@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavIcon } from '@/components/assets';
-import { useClub } from '@/components/club/ClubProvider';
+import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { FLAT_NAV } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
@@ -22,7 +22,8 @@ function isActive(pathname: string, href: string): boolean {
 export function MobileNav() {
   const pathname = usePathname();
   const club = useClub();
-  const phase = resolveHubPhase(club);
+  const hasFixtures = useHasFixtures();
+  const phase = resolveHubPhase(club, { hasFixtures });
 
   return (
     <nav

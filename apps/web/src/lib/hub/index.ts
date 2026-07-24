@@ -1,4 +1,11 @@
-export type { HubPhase, HubSession, HubCta, HubNavAccess, HubCtaContext } from '@/lib/hub/types';
+export type {
+  HubPhase,
+  HubSession,
+  HubCta,
+  HubNavAccess,
+  HubCtaContext,
+  HubPhaseContext,
+} from '@/lib/hub/types';
 export { resolveHubPhase, resolveHubSession } from '@/lib/hub/types';
 export { resolvePrimaryCta, resolveSecondaryCtas } from '@/lib/hub/resolve-primary-cta';
 export { resolveNavAccess, isModuleSoftLocked } from '@/lib/hub/unlock';
