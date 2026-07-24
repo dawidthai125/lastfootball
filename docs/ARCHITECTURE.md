@@ -143,4 +143,4 @@ Szczegóły: [`lfe/ENGINE_PIPELINE.md`](./lfe/ENGINE_PIPELINE.md) · [`lfe/GAMEP
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

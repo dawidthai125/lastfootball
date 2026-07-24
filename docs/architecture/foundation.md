@@ -1,5 +1,8 @@
 # Foundation — implementation notes
 
+> **Historyczny snapshot (2026-07-21).** Aktualny stan: [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../AI-HANDOFF.md`](../AI-HANDOFF.md).  
+> Non-goals poniżej dotyczą **fazy foundation** — Canvas / AI / Engine są już wdrożone później.
+
 **Mode:** FOUNDATION IMPLEMENTATION  
 **Date:** 2026-07-21
 

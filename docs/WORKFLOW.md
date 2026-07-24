@@ -2,49 +2,68 @@
 
 ## Cel dokumentu
 
-Jak prowadzimy pracę: etapy + role Owner / ChatGPT / Cursor.
+Jak prowadzimy pracę: etapy, role Owner / ChatGPT / Cursor oraz oczekiwane raporty.
 
 ## Aktualny stan
 
-Wzorzec potwierdzony na release LFE A–G: AUDIT → PLAN → EXECUTION (commity) → VERIFY → PUSH (na GO).
+Wzorzec potwierdzony na release LFE i serii match pipeline (Canvas → … → Docs):
+
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → OWNER GO → PUSH → CI → CLOSE
+```
+
+(HISTORYCZNY alias etapów: AUDIT → PLAN → DESIGN → IMPLEMENT → VERIFY → TEST → RELEASE → POST RELEASE — to samo w innych słowach.)
 
 ## Opis działania — etapy
 
-```
-AUDIT → PLAN → DESIGN → IMPLEMENT → VERIFY → TEST → RELEASE → POST RELEASE
-```
+| Etap           | Co się dzieje                                      | Kod?  | Commit?     | Push?       |
+| -------------- | -------------------------------------------------- | ----- | ----------- | ----------- |
+| **AUDIT**      | Analiza repo / API / SSOT; lista luk i ryzyk       | Nie   | Nie         | Nie         |
+| **PLAN**       | Zakres IN/OUT, pliki, testy, ryzyka                | Nie   | Nie         | Nie         |
+| **OWNER GO**   | Akceptacja planu / implementacji / push            | —     | —           | —           |
+| **IMPLEMENT**  | Kod lub docs zgodnie z PLAN; REUSE FIRST           | Tak*  | Nie†        | Nie         |
+| **VALIDATION** | format / typecheck / lint / test / build (wg EPIC) | —     | Nie         | Nie         |
+| **COMMIT**     | Conventional Commit; tylko pliki EPIC              | —     | Tak (po GO) | Nie         |
+| **PUSH**       | `git push` → monitoruj CI                          | —     | —           | Tak (po GO) |
+| **CI**         | Format · Typecheck · Lint · Test · Build = PASS    | —     | —           | —           |
+| **CLOSE**      | Raport; docs sync jeśli nie w EPIC                 | Docs* | Osobny GO   | Osobny GO   |
 
-| Etap             | Co się dzieje                                                     |
-| ---------------- | ----------------------------------------------------------------- |
-| **AUDIT**        | Analiza stanu (repo, API, freeze). **Bez** zmian kodu / commitów. |
-| **PLAN**         | Plan commitów / EPIC / GDD stage. Owner akceptuje.                |
-| **DESIGN**       | GDD / UI / Architecture docs. Docs-only gdy tryb design.          |
-| **IMPLEMENT**    | Kod zgodnie z planem; bez scope creep.                            |
-| **VERIFY**       | Status, diff, zgodność z SSOT / freeze.                           |
-| **TEST**         | `npm test`, typecheck/build workspace.                            |
-| **RELEASE**      | Commity A…N wg planu; push dopiero na GO.                         |
-| **POST RELEASE** | Handoff / status update / changelog.                              |
+\* DESIGN / docs-only EPIC: tylko dokumenty.  
+† Commit wyłącznie po Owner GO (nawet gdy IMPLEMENT gotowy).
 
 ### Zasady STOP
 
-- Po AUDIT / DESIGN stage: **STOP** — czekaj na Owner GO.
-- Nie zaczynaj FINALIZE / następnego GDD / Physics bez GO.
-- Nie pushuj niepełnych commitów LFE na `main` (A–D były lokalne do E).
+- Po **AUDIT** i po **PLAN**: STOP — czekaj na Owner GO.
+- Po **COMMIT**: STOP przed PUSH — osobne GO.
+- Nie zaczynaj Physics / Ratings / GDD-13 bez GO.
+- Nie pushuj niepełnego łańcucha commitów, jeśli PLAN wymaga serii atomowej.
 
 ## Współpraca ról
 
-| Rola        | Odpowiedzialność                                                          |
-| ----------- | ------------------------------------------------------------------------- |
-| **Owner**   | Priorytety, GO/NO-GO, decyzje produktowe, akceptacja freeze / release     |
-| **ChatGPT** | Planowanie, audyty, design GDD, dokumenty, rozbicie EPIC; nie omijać SSOT |
-| **Cursor**  | Implementacja w repo, commity na GO, testy, edycja plików, push na GO     |
+| Rola                              | Odpowiedzialność                                                      |
+| --------------------------------- | --------------------------------------------------------------------- |
+| **Owner**                         | Priorytety, GO/NO-GO, decyzje produktowe, akceptacja freeze / release |
+| **ChatGPT / Agent planujący**     | AUDIT, PLAN, design GDD, dokumenty; nie omijać SSOT                   |
+| **Cursor / Agent implementujący** | IMPLEMENT, VALIDATION, COMMIT/PUSH na GO, edycja plików               |
 
 ### Handoff między czatami
 
-1. Przeczytaj [`HANDOFF.md`](./HANDOFF.md).
-2. Potwierdź [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).
-3. Dla silnika: freeze + [`lfe/CURRENT_STATUS.md`](./lfe/CURRENT_STATUS.md).
-4. Dla produktu: GDD + [`game-design/CURRENT_DESIGN.md`](./game-design/CURRENT_DESIGN.md).
+1. [`AI-HANDOFF.md`](./AI-HANDOFF.md) (pełny) / [`HANDOFF.md`](./HANDOFF.md).
+2. [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) + [`ROADMAP.md`](./ROADMAP.md).
+3. Silnik: [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md) + freeze.
+4. Web match: [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md).
+5. Produkt: GDD + [`game-design/CURRENT_DESIGN.md`](./game-design/CURRENT_DESIGN.md).
+
+## Raportowanie
+
+Każdy etap → krótki raport w czacie (szablon w [`AI-HANDOFF.md`](./AI-HANDOFF.md) §6).  
+Nie twórz nowych plików `docs/*REPORT*` bez potrzeby.
+
+## WIP i dokumentacja
+
+- Duży WIP dziel na grupy (np. Canvas / Replay / Post Match / Bridge / Docs).
+- Po feature EPIC: zaktualizuj SSOT statusowe albo zaplanuj docs EPIC.
+- **SSOT FIRST** — nie duplikuj dokumentów.
 
 ## Najważniejsze decyzje
 
@@ -54,8 +73,8 @@ AUDIT → PLAN → DESIGN → IMPLEMENT → VERIFY → TEST → RELEASE → POST
 
 ## Powiązania
 
-[`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`DECISIONS.md`](./DECISIONS.md)
+[`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`DECISIONS.md`](./DECISIONS.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

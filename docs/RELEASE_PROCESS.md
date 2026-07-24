@@ -2,56 +2,78 @@
 
 ## Cel dokumentu
 
-Jak wykonywać release: commity, push, rollback. Wzorzec = LFE release A–G.
+Jak wykonywać release: commity, push, CI, rollback. Wzorzec = LFE release + match pipeline (Canvas…Docs).
 
 ## Aktualny stan
 
-Proces sprawdzony: 7 commitów lokalnych → testy na pełnym tree → push `main` po GO.
+Proces sprawdzony: lokalne VALIDATION → COMMIT (Owner GO) → PUSH (Owner GO) → CI Format→Build PASS.
 
 ## Opis działania
 
 ### 1. Przygotowanie
 
 1. Working tree zrozumiany (`git status`).
-2. Plan commitów zatwierdzony (zakres plików, kolejność).
-3. Preflight: `npm run test --workspace=@lastfootball/lfe` (lub pełne `npm run validate`).
+2. PLAN zatwierdzony (zakres plików, kolejność).
+3. Preflight: `npm run typecheck` + `npm test` (+ web vitest gdy dotyczy) + `npm run build` gdy EPIC web.
+4. `npm run format:check` — wymagane przez CI.
 
 ### 2. Commity
 
 - Conventional Commits, PowerShell:
   ```powershell
   git commit -m @"
-  feat(lfe): short summary
+  feat(web): short summary
 
   Longer why.
   "@
   ```
 - Stage **tylko** pliki danego commita (`git add` ścieżek).
 - Nie używaj `git add -i` / rebase -i.
-- Po każdym commicie kodowym: test + build workspace.
-- Docs-only: wystarczy `git status` + diff stat.
+- Po każdym commicie kodowym: VALIDATION na tree (WIP może zostać niezacommitowany).
+- Docs-only: `format:check` + przegląd diff; bez wymogu full build (zalecane typecheck gdy linki/API).
 
-### 3. Push
+### 3. WIP
+
+- Dziel na niezależne grupy (Canvas / Replay / Post Match / Bridge / Docs).
+- Nie stage’uj `undefined/`, sekretów, lokalnych dumpów.
+- Przed globalnym `prettier --write .`: `git stash push -u` (wzór LFE-CI-PRETTIER-01).
+
+### 4. Push
 
 ```powershell
-git push -u origin <current-branch>
+git push origin HEAD
 ```
 
 - Push **dopiero na Owner GO**.
 - Preferuj feature branch + PR gdy branch protection wymaga PR.
-- Direct push na `main` możliwy tylko jeśli Owner świadomie akceptuje (release LFE tak zrobił; remote ostrzegał o regułach).
+- Direct push na `main` możliwy tylko jeśli Owner świadomie akceptuje (historia projektu tak robiła; remote może ostrzegać).
 
-### 4. Weryfikacja po push
+### 5. Weryfikacja po push
 
 ```powershell
-git status -sb          # up to date with origin
-git log --oneline -5
+git fetch origin
+git rev-parse HEAD
+git rev-parse origin/main   # muszą być równe
+gh run list --branch main --limit 1
+gh run watch <id> --exit-status
 ```
 
-### 5. Pull Request (opcjonalnie)
+CI musi PASS: Format · Typecheck · Lint · Test · Build.
+
+### 6. Docs po feature
+
+Minimum (w tym samym EPIC lub osobnym docs commit na GO):
+
+- `docs/PROJECT_STATUS.md` / `docs/ROADMAP.md`
+- `docs/AI-HANDOFF.md` (gdy zmienia się stan / zakazy / pipeline)
+- `docs/CHANGELOG.md`
+
+### 7. Pull Request (opcjonalnie)
 
 - Twórz PR tylko na wyraźne GO (`gh pr create`).
 - Nie twórz PR „przy okazji” po push na `main` jeśli zmiany już wylądowały.
+
+**Relacja do CONTRIBUTING:** root `CONTRIBUTING.md` opisuje develop→PR. Dla Agentów wiążące jest **Owner GO** + ten dokument; nie zakładaj PR bez GO.
 
 ## Rollback
 
@@ -64,14 +86,14 @@ git log --oneline -5
 
 ## Najważniejsze decyzje
 
-- Nie pushuj połowy łańcucha LFE (A–D) — checkout byłby niespójny.
+- Nie pushuj połowy łańcucha, jeśli PLAN wymaga atomowej serii.
 - Nie mieszaj GDD i featu LFE w jednym commicie.
-- Testuj na pełnym working tree (untracked files zostają na dysku między commitami).
+- Testuj na pełnym working tree (untracked zostają na dysku między commitami).
 
 ## Powiązania
 
-[`WORKFLOW.md`](./WORKFLOW.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)
+[`WORKFLOW.md`](./WORKFLOW.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

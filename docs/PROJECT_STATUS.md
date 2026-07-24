@@ -43,7 +43,8 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego (docs sync kończy rozjazd WIP).
+- Brak otwartego EPIC implementacyjnego.
+- **AI-DOCS-CONSOLIDATION-01** — handbook Agenta uzupełniony lokalnie (commit tylko po Owner GO).
 - Dług: zawężenie PUBLIC LFE exports.
 
 ## Co następne (rekomendacja)
@@ -68,4 +69,4 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-SYNC-01
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

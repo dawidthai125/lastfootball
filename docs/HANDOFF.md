@@ -42,6 +42,8 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 1. **Player Ratings** (Post Match) — Owner GO.
 2. Albo GDD-13 §6 (docs).
 
+Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow).
+
 ## Zasady twarde
 
 - Canvas/Replay tylko read / nagrane dane.
@@ -51,4 +53,4 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-SYNC-01
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

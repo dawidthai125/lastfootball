@@ -8,12 +8,12 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 
 ## Aktualny stan
 
-| Moduł                      | Status                           |
-| -------------------------- | -------------------------------- |
-| LiveMatchRuntime + bridge  | ✅ DONE (na `main` od RELEASE C) |
-| Canvas Renderer 2D         | ✅ DONE (sprawdź WT / commit)    |
-| Replay Buffer + Controller | ✅ DONE (sprawdź WT / commit)    |
-| Post Match UI              | ✅ DONE (sprawdź WT / commit)    |
+| Moduł                          | Status            | Hash (orient.)          |
+| ------------------------------ | ----------------- | ----------------------- |
+| LiveMatchRuntime + Live Bridge | ✅ DONE na `main` | `33618e9` (+ RELEASE C) |
+| Canvas Renderer 2D             | ✅ DONE na `main` | `d752d22`               |
+| Replay Buffer + Controller     | ✅ DONE na `main` | `cf1d68c`               |
+| Post Match UI                  | ✅ DONE na `main` | `b25f479`               |
 
 ---
 
@@ -84,7 +84,19 @@ flowchart TD
 
 ### LiveMatchFoundation
 
-Orkiestracja UI Live + montaż Canvas + panel Replay + przełączenie na Post Match po `FINISHED` / `MATCH_END`.
+Orkiestracja UI Live:
+
+- montaż Canvas (`createMatchCanvasRenderer` → `canvasHost.attachRenderer`)
+- panel Replay (seek / play / speed) przez API `LiveMatchRuntime`
+- otwarcie **Post Match** po `FINISHED` / `MATCH_END`
+- seek z timeline Post Match → `findReplayIndexForEvent` + `replaySeek`
+
+Plik: `apps/web/src/components/match/LiveMatchFoundation.tsx`.
+
+### Live Bridge (zasada)
+
+`LiveMatchRuntime` jest **jedynym** miejscem, które w LIVE woła `session.run`, buduje `MatchCanvasReadModel`, robi `replayBuffer.append` i `canvasHost.present`.  
+W REPLAY **nie** woła Engine — tylko controller + `present` nagranych modeli.
 
 ---
 
@@ -114,4 +126,4 @@ MatchCanvasReadModel = {
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

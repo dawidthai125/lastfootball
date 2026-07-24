@@ -6,22 +6,23 @@ Indeks dokumentacji projektu. **To jest punkt startowy** dla nowego Chatu / Curs
 
 ## Aktualny stan
 
-| Warstwa   | Stan                                                     |
-| --------- | -------------------------------------------------------- |
-| LFE       | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`   |
-| Web match | Live + Canvas + Replay + Post Match (sprawdź git commit) |
-| GDD       | Faza 2 częściowo (§6 skeleton)                           |
-| Infra     | Next.js + Supabase + Vercel                              |
+| Warstwa   | Stan                                                                       |
+| --------- | -------------------------------------------------------------------------- |
+| LFE       | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01` |
+| Web match | Live Bridge + Canvas + Replay + Post Match na `main`                       |
+| GDD       | Faza 2 częściowo (§6 skeleton)                                             |
+| Infra     | Next.js + Supabase + Vercel · CI zielony                                   |
 
 ## Jak czytać (kolejność)
 
-1. [`AI-HANDOFF.md`](./AI-HANDOFF.md) — **handbook agenta** (pełny)
+1. [`AI-HANDOFF.md`](./AI-HANDOFF.md) — **handbook agenta** (pełny; reguły + pipeline + workflow)
 2. [`HANDOFF.md`](./HANDOFF.md) — szybki start
 3. [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) — gdzie jesteśmy
 4. [`ARCHITECTURE.md`](./ARCHITECTURE.md) — jak jest zbudowany
 5. [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md) — silnik gameplay
-6. [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) — Canvas / Replay / Post Match
-7. [`game-design/README.md`](./game-design/README.md) — design produktu
+6. [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) — Canvas / Replay / Post Match / Bridge
+7. [`WORKFLOW.md`](./WORKFLOW.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md)
+8. [`game-design/README.md`](./game-design/README.md) — design produktu
 
 ## Mapa dokumentów
 
@@ -97,8 +98,8 @@ Nowy agent **nie** powinien polegać na starym czacie. Czyta `AI-HANDOFF.md` / `
 
 ## Powiązania
 
-Root [`README.md`](../README.md) · [`CONTRIBUTING.md`](../CONTRIBUTING.md) · root [`CHANGELOG.md`](../CHANGELOG.md)
+Root [`README.md`](../README.md) · [`CONTRIBUTING.md`](../CONTRIBUTING.md) · chronologia docs: [`CHANGELOG.md`](./CHANGELOG.md) (root `CHANGELOG.md` = starsze release notes UI 0.1.0)
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-24 — AI-DOCS-CONSOLIDATION-01

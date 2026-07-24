@@ -7,7 +7,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Match pipeline na `main` (Canvas · Replay · Post Match · Live Bridge + Player Match Data). Docs sync LFE-DOCS-SYNC-01.
+Match pipeline na `main`. Handbook Agenta uzupełniony (AI-DOCS-CONSOLIDATION-01).
+
+---
+
+## [2026-07-24] — AI-DOCS-CONSOLIDATION-01
+
+### Docs (bez nowych plików SSOT)
+
+- Rozszerzony `AI-HANDOFF.md`: wolno/nie wolno, REUSE FIRST, workflow, raporty, WIP/docs
+- `WORKFLOW.md`, `CODING_STANDARDS.md`, `RELEASE_PROCESS.md` — proces Agenta
+- `web/MATCH_UI_PIPELINE.md` — status na `main` + Live Bridge
+- Disclaimery: `product/overview.md`, `architecture/foundation.md`, root `CHANGELOG.md`
 
 ---
 

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **Uwaga dla Agentów:** bieżąca chronologia match pipeline / docs jest w [`docs/CHANGELOG.md`](./docs/CHANGELOG.md).  
+> Ten plik (root) dokumentuje głównie release UI **0.1.0** i nie jest pełnym SSOT stanu `main` po Canvas/Replay/Post Match.
+
 ## [0.1.0] - 2026-07-23
 
 ### Added
@@ -15,10 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IA navigation map and stub routes for remaining club modules
 - Verification captures under `docs/verification/`
 
-### Notes
+### Notes (0.1.0 baseline)
 
-- No gameplay / Canvas engine / Match engine in this release
-- Post-match report screen not yet implemented (planned before GAMEPLAY polish)
+- W momencie tagu 0.1.0: brak pełnego Canvas/post-match w tym wpisie Keep-a-Changelog.
+- **Aktualnie na `main`:** Canvas · Replay · Post Match · Live Bridge · Player Match Data — patrz `docs/CHANGELOG.md` / `docs/AI-HANDOFF.md`.
 
 ## [0.0.1] - 2026-07-21
 
