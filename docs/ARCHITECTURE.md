@@ -6,8 +6,8 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`b5b64a3`** (LFE-LEAGUE-01 CLOSED).  
-LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub EARLY_CLUB + fixtures SSOT + match pipeline.
+Monorepo. Production baseline **`71ce442`** (LFE-LEAGUE-02 CLOSED).  
+LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures SSOT + league derive + match pipeline.
 
 ---
 
@@ -16,7 +16,7 @@ LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub
 ### Frontend (`apps/web`)
 
 - Next.js 15 App Router.
-- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub EARLY_CLUB.
+- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub (EARLY_CLUB / SEASON), `/league`.
 - **Shell:** TopBar / LeftNav / Right rail — progressive unlock per Hub phase.
 - **Match:** Pre Match, Live (`LiveMatchFoundation` + `LiveMatchRuntime`), Post Match.
 - `/status` → `getEngineStatus()`.
@@ -40,12 +40,13 @@ Auth + `clubs` (identity, `first_match_completed_at`) + **`fixtures`** (ligowy t
 ```
 Landing → Auth → Welcome → Club Wizard
   → First Match Intro → Prematch/Live/Post
-  → Welcome LF → Hub EARLY_CLUB
+  → Welcome LF → Hub (EARLY_CLUB → SEASON gdy fixtures)
+  → /league ← resolveLeagueTable()
 ```
 
 SSOT unlock Hub: `clubs.first_match_completed_at`.  
-Hub phase: `resolveHubPhase` · Session: `resolveHubSession` · Primary: `resolvePrimaryCta`.  
-Fixtures: `fixtures` / `getNextFixture` · Squad: `resolveClubSquad`.
+Hub phase: `resolveHubPhase(club, { hasFixtures })` · Session: `resolveHubSession` · Primary: `resolvePrimaryCta`.  
+Fixtures: `fixtures` / `getNextFixture` · Table: `resolveLeagueTable` · Squad: `resolveClubSquad`.
 
 Szczegóły: [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`platform/HUB.md`](./platform/HUB.md).
 
@@ -126,4 +127,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 CLOSE

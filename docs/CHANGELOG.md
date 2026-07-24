@@ -7,8 +7,22 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`b5b64a3`** (LFE-LEAGUE-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
-Platform + First Match + EARLY_CLUB Hub + fixtures Thin A.
+Production baseline **`71ce442`** (LFE-LEAGUE-02 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
+Platform + First Match + Hub SEASON + fixtures Thin A + league table derive.
+
+---
+
+## [2026-07-25] — LFE-LEAGUE-02 · CLOSED
+
+### Product
+
+- `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` = jedyne źródło tabeli (brak standings DB)
+- AI↔AI = deterministyczny derive (nie Match Engine)
+- Hub → `SEASON` via S1 (`first_match_completed` + `fixtures.length > 0`); jeden layout Hub
+- `/league` zasilane wyłącznie resolverem; Nav Liga open na SEASON
+- Chip pozycji (jedna linia) z `resolvePlayerLeaguePositionLabel`
+- Generator nadal 3 fixtures (bez zmian vs LEAGUE-01)
+- Prod commit `71ce442`; CI + Vercel GREEN
 
 ---
 

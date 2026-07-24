@@ -5,22 +5,22 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `b5b64a3` · LFE-LEAGUE-01 CLOSED · 2026-07-24
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `71ce442` · LFE-LEAGUE-02 CLOSED · 2026-07-25
 
 ---
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                 |
-| -------- | ----------------------------------------------------------------------- |
-| Prod URL | https://lastfootball.vercel.app                                         |
-| Commit   | `b5b64a34130a472628ca8305ef9151139114588d`                              |
-| Message  | feat(league): add fixtures SSOT and next-match Hub loop (LFE-LEAGUE-01) |
-| Status   | **PRODUCTION VERIFIED · GREEN**                                         |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                      |
-| Supabase | `anoeimngwptucjdugjme` (+ `fixtures` applied)                           |
-| CI       | Format · Typecheck · Lint · Test · Build                                |
-| Hosting  | Vercel Production                                                       |
+| Pole     | Wartość                                                                      |
+| -------- | ---------------------------------------------------------------------------- |
+| Prod URL | https://lastfootball.vercel.app                                              |
+| Commit   | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                   |
+| Message  | feat(league): implement league table derive and season hub (LFE-LEAGUE-02) |
+| Status   | **PRODUCTION VERIFIED · GREEN**                                              |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                           |
+| Supabase | `anoeimngwptucjdugjme` (+ `fixtures` applied)                                |
+| CI       | Format · Typecheck · Lint · Test · Build                                     |
+| Hosting  | Vercel Production                                                            |
 
 ---
 
@@ -30,7 +30,7 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 Browser → Next.js apps/web
             ├─ Auth / middleware / Club DTO
             ├─ Onboarding + First Match tunnel
-            ├─ Hub EARLY_CLUB (decision screen) + fixtures SSOT
+            ├─ Hub decision (EARLY_CLUB / SEASON) + fixtures + league derive
             └─ Match UI → LiveMatchRuntime → packages/lfe
 Supabase ← Auth + clubs + fixtures
 ```
@@ -66,7 +66,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Zakończone (kod na `main`)
 
-**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)**
+**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)** · **LFE-LEAGUE-02 (CLOSED)**
 
 **Silnik/UI meczu:** LFE EPIC-1…7 · Gameplay · AI · Engine · Player Match Data · Canvas · Replay · Post Match · Live Bridge · Ratings · CI Prettier
 
@@ -78,27 +78,28 @@ Brak otwartego EPIC implementacyjnego.
 
 ### Next Recommended EPIC
 
-**LFE-LEAGUE-02** — League table + opcjonalnie Hub `SEASON` (domknięcie GDD §10 po Thin A).
+**GDD-16+** lub **Economy / Transfers** (Owner wybiera).
 
 ### Typowe następne
 
-LFE-LEAGUE-02 · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physics (FUTURE)
+GDD-16+ · Economy/Transfers · 11-fixture calendar (opt.) · LFE PUBLIC export trim · Physics (FUTURE)
 
 ---
 
 ## 6. SSOT map
 
-| Domain              | SSOT                                         |
-| ------------------- | -------------------------------------------- |
-| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)  |
-| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`             |
-| Club identity       | `clubs` → `ClubDto`                          |
-| Hub unlock          | `first_match_completed_at`                   |
-| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`      |
-| League fixtures     | `fixtures` → `FixtureDto`                    |
-| Squad               | `resolveClubSquad`                           |
-| Match state         | `MatchState` + `EventBus` via `MatchSession` |
-| Agent onboarding    | `docs/AI/START_HERE.md`                      |
+| Domain              | SSOT                                              |
+| ------------------- | ------------------------------------------------- |
+| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)       |
+| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`                  |
+| Club identity       | `clubs` → `ClubDto`                               |
+| Hub unlock          | `first_match_completed_at`                        |
+| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`           |
+| League fixtures     | `fixtures` → `FixtureDto`                         |
+| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17)     |
+| Squad               | `resolveClubSquad`                                |
+| Match state         | `MatchState` + `EventBus` via `MatchSession`      |
+| Agent onboarding    | `docs/AI/START_HERE.md`                           |
 
 ---
 
@@ -136,7 +137,7 @@ LFE-LEAGUE-02 · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physi
 
 [`DECISIONS.md`](./DECISIONS.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md)
 
-Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT.
+Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17).
 
 ---
 
@@ -169,4 +170,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 CLOSE

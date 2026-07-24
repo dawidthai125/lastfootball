@@ -87,8 +87,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D15 — Fixtures DB = SSOT terminarza ligowego (Thin A) · CLOSED
 
 **Dlaczego:** Hub po First Match potrzebuje kolejnego meczu bez mid-season mock.  
-**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; faza Hub pozostaje `EARLY_CLUB` do pełnego slice SEASON.  
-**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`).
+**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; generator Thin A = 3 fixtures.  
+**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`).  
+**Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17.
 
 ### D16 — Squad seed SSOT (do czasu tabeli players) · CLOSED
 
@@ -96,11 +97,11 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `resolveClubSquad(club)` / `seedStarterSquad` — deterministyczny seed; tabela `players` dopiero przy transferach.  
 **Źródło:** LFE-LEAGUE-01.
 
-### D17 — League table = pure derive (`resolveLeagueTable`) · LFE-LEAGUE-02
+### D17 — League table = pure derive (`resolveLeagueTable`) · CLOSED
 
 **Dlaczego:** tabela musi być wspólna dla `/league`, Hub chip i przyszłych modułów bez drugiej SSOT.  
 **Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); generator nadal 3 fixtures.  
-**Źródło:** LFE-LEAGUE-02.
+**Źródło:** LFE-LEAGUE-02 (prod `71ce442`).
 
 ## Najważniejsze decyzje (meta)
 
@@ -112,4 +113,4 @@ Każde złamanie D1–D17 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 IMPLEMENT
+2026-07-25 — LFE-LEAGUE-02 CLOSE

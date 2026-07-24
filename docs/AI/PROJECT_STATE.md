@@ -6,8 +6,8 @@ Stan projektu dla Agenta: **gdzie jesteśmy**, bez historii czatu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN** — platform + First Match + EARLY_CLUB Hub + fixtures Thin A.  
-Baseline prod: **`b5b64a3`** (LFE-LEAGUE-01 **CLOSED**).
+**PRODUCTION VERIFIED · GREEN** — platform + First Match + Hub decision (SEASON) + fixtures + league table derive.  
+Baseline prod: **`71ce442`** (LFE-LEAGUE-02 **CLOSED**).
 
 ## Ukończone (skrót)
 
@@ -21,6 +21,7 @@ Baseline prod: **`b5b64a3`** (LFE-LEAGUE-01 **CLOSED**).
 | LFE-HUB-01      | Hub State Machine; EARLY_CLUB decision layout; shell soft-locks           |
 | LFE-DOCS-01     | AI / handoff docs consolidation                                           |
 | LFE-LEAGUE-01   | **CLOSED** · fixtures SSOT (3); Primary next match; Squad seed SSOT       |
+| LFE-LEAGUE-02   | **CLOSED** · `resolveLeagueTable`; Hub `SEASON` (S1); `/league`; chip     |
 
 ### Silnik / mecz UI
 
@@ -36,9 +37,9 @@ Brak otwartego EPIC implementacyjnego.
 
 ## Następne (rekomendacje — Owner wybiera)
 
-1. **LFE-LEAGUE-02** — League table + opcjonalnie `SEASON` (największa wartość MVP po Thin A).
-2. GDD-16+ (kolejny rozdział designu).
-3. Economy / transfers + `players` table.
+1. GDD-16+ (kolejny rozdział designu).
+2. Economy / transfers + `players` table.
+3. Pełny kalendarz 11 fixtures (opcjonalny follow-up ligowy).
 4. Zawężenie PUBLIC exports LFE (chore).
 5. Physics / Rules — FUTURE.
 
@@ -50,6 +51,7 @@ Brak otwartego EPIC implementacyjnego.
 | D-03 | Persist Replay                                | Otwarte   |
 | D15  | Fixtures Thin A                               | Zamknięte |
 | D16  | Squad seed SSOT                               | Zamknięte |
+| D17  | League table pure derive + SEASON S1          | Zamknięte |
 
 ## Powiązania
 
@@ -57,4 +59,4 @@ Brak otwartego EPIC implementacyjnego.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 CLOSE

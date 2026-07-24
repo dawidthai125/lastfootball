@@ -6,15 +6,15 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Production
 
-| Pole             | Wartość                                                                   |
-| ---------------- | ------------------------------------------------------------------------- |
-| URL              | https://lastfootball.vercel.app                                           |
-| Alias            | https://lastfootball.pl                                                   |
-| Branch           | `main`                                                                    |
-| Baseline commit  | `b5b64a34130a472628ca8305ef9151139114588d`                                |
-| Baseline message | `feat(league): add fixtures SSOT and next-match Hub loop (LFE-LEAGUE-01)` |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                           |
-| Verified         | 2026-07-24 — CI GREEN + Vercel Ready + migracja `fixtures` + smoke        |
+| Pole             | Wartość                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| URL              | https://lastfootball.vercel.app                                                    |
+| Alias            | https://lastfootball.pl                                                            |
+| Branch           | `main`                                                                             |
+| Baseline commit  | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                         |
+| Baseline message | `feat(league): implement league table derive and season hub (LFE-LEAGUE-02)`       |
+| Status           | **PRODUCTION VERIFIED · GREEN**                                                    |
+| Verified         | 2026-07-25 — CI GREEN + Vercel Ready + smoke routes `/hub` `/league`               |
 
 > Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit docs-only po CLOSE).
 
@@ -30,24 +30,26 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```
 Landing → Register/Login → Welcome → Club Wizard → Reveal
   → First Match Intro → Prematch (/match/first) → Live → Post Match
-  → Welcome LF → Hub EARLY_CLUB
+  → Welcome LF → Hub (EARLY_CLUB → SEASON gdy fixtures)
   → Primary „Przygotuj mecz” → /match/{fixtureId} → Live → Post → completeFixture → Hub
+  → /league ← resolveLeagueTable() · chip pozycji = tabela
 ```
 
 ## Critical SSOT columns / modules
 
-| SSOT                 | Gdzie                                    |
-| -------------------- | ---------------------------------------- |
-| Club identity        | `clubs` → `ClubDto`                      |
-| Hub unlock           | `clubs.first_match_completed_at`         |
-| Hub phase            | `resolveHubPhase(club)`                  |
-| Hub session          | `resolveHubSession(...)`                 |
-| Hub Primary CTA      | `resolvePrimaryCta(phase, session, ctx)` |
-| League fixtures      | `fixtures` → `FixtureDto`                |
-| Squad                | `resolveClubSquad(club)`                 |
-| First match session  | `createSessionFromFirstMatch(club)`      |
-| League match session | `createSessionFromLeagueFixture`         |
-| Match engine entry   | `createMatch()` → `MatchSession`         |
+| SSOT                 | Gdzie                                              |
+| -------------------- | -------------------------------------------------- |
+| Club identity        | `clubs` → `ClubDto`                                |
+| Hub unlock           | `clubs.first_match_completed_at`                   |
+| Hub phase            | `resolveHubPhase(club, { hasFixtures })`           |
+| Hub session          | `resolveHubSession(...)`                           |
+| Hub Primary CTA      | `resolvePrimaryCta(phase, session, ctx)`           |
+| League fixtures      | `fixtures` → `FixtureDto`                          |
+| League table         | `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` |
+| Squad                | `resolveClubSquad(club)`                           |
+| First match session  | `createSessionFromFirstMatch(club)`                |
+| League match session | `createSessionFromLeagueFixture`                   |
+| Match engine entry   | `createMatch()` → `MatchSession`                   |
 
 ## Done product EPICs (on `main`)
 
@@ -57,14 +59,15 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
 - **LFE-HUB-01** — EARLY_CLUB decision Hub + shell unlocks
 - **LFE-DOCS-01** — docs consolidation
 - **LFE-LEAGUE-01** Thin A — **CLOSED** · fixtures + next match CTA + squad SSOT
+- **LFE-LEAGUE-02** — **CLOSED** · `resolveLeagueTable` · Hub `SEASON` (S1) · `/league` · position chip
 
 ## Not on production (do not assume)
 
-- Live league table / Hub phase `SEASON`
+- Full 11-fixture calendar / standings DB
 - Economy / transfers / scouting systems
-- Mid-season Hub dashboard (removed from EARLY_CLUB)
+- Mid-season Hub dashboard FOMO (decision layout retained)
 - Physics / full rules
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE · baseline `b5b64a3`
+2026-07-25 — LFE-LEAGUE-02 CLOSE · baseline `71ce442`

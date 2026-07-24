@@ -17,8 +17,9 @@
 - **REUSE FIRST** · **ZERO DUPLICATE LOGIC** · **SSOT FIRST**.
 - Match mutations only via LFE `CommandBus` / session API.
 - Canvas / Replay never call Engine or mutate `MatchState`.
-- Hub is a **decision screen** (`EARLY_CLUB`), not a mid-season dashboard.
+- Hub is a **decision screen** (`EARLY_CLUB` / `SEASON`), not a mid-season dashboard.
 - First Hub unlock requires `clubs.first_match_completed_at` (First Match tunnel).
+- League table SSOT is `resolveLeagueTable()` only (no standings DB).
 
 ## Workflow
 
@@ -28,4 +29,4 @@ Details: [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md) · [`docs/WORKFL
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-25 — LFE-LEAGUE-02 CLOSE

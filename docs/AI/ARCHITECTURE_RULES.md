@@ -59,4 +59,4 @@ Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-25 — LFE-LEAGUE-02 CLOSE

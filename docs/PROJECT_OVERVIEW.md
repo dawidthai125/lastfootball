@@ -11,22 +11,23 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 | Warstwa               | Stan                                                        |
 | --------------------- | ----------------------------------------------------------- |
 | Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                         |
-| Platforma             | Landing · Auth · Club Wizard · First Match · Hub EARLY_CLUB |
-| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`      |
-| App web               | Shell + match pipeline + platform flows                     |
-| Supabase              | `anoeimngwptucjdugjme` · clubs + `first_match_completed_at` |
-| Physics / pełne Rules | **Nie rozpoczęte**                                          |
+| Platforma             | Landing · Auth · Club Wizard · First Match · Hub SEASON · tabela |
+| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`           |
+| App web               | Shell + match pipeline + platform flows                          |
+| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures                        |
+| Physics / pełne Rules | **Nie rozpoczęte**                                               |
 
-**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)  
+**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `71ce442`  
 **Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/
 
 ## Opis działania (produkt)
 
 1. Gracz zakłada konto i klub (Wizard).
 2. Rozgrywa **First Match** (tunel) — dopiero potem Hub.
-3. Hub EARLY_CLUB = ekran decyzji (1 Primary CTA).
-4. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
-5. Tożsamość klubu / auth → Supabase `clubs`.
+3. Hub = ekran decyzji (1 Primary CTA); po fixtures → faza `SEASON`.
+4. Tabela ligowa = `resolveLeagueTable()` (derive; bez standings DB).
+5. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
+6. Tożsamość klubu / auth → Supabase `clubs`.
 
 ## Stack
 
@@ -52,4 +53,4 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-25 — LFE-LEAGUE-02 CLOSE

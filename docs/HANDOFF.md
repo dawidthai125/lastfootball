@@ -5,13 +5,13 @@
 **Krótki start** (1 ekran). Pełne przekazanie: [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md).  
 Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGENTS.md).
 
-## Stan (2026-07-24) — PRODUCTION VERIFIED · GREEN
+## Stan (2026-07-25) — PRODUCTION VERIFIED · GREEN
 
 | Tor                | Stan                                                               |
 | ------------------ | ------------------------------------------------------------------ |
-| **Baseline**       | `b5b64a3` · LFE-LEAGUE-01 CLOSED · https://lastfootball.vercel.app |
-| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub + fixtures SSOT   |
-| **Hub**            | EARLY_CLUB · Primary next match · Squad SSOT                       |
+| **Baseline**       | `71ce442` · LFE-LEAGUE-02 CLOSED · https://lastfootball.vercel.app |
+| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON + tabela   |
+| **Hub**            | SEASON (S1) · Primary next match · Liga open · chip pozycji        |
 | **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings    |
 | **GDD**            | GDD-01…15 CLOSED                                                   |
 | **CI**             | Format → Typecheck → Lint · Test · Build — zielony                 |
@@ -26,8 +26,8 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Najbliższy cel
 
-**Next:** **LFE-LEAGUE-02** (league table + opcjonalnie `SEASON`) — AUDIT → PLAN.  
-Alternatywy: GDD-16+, Economy/Transfers.
+**Next:** GDD-16+ **lub** Economy / Transfers — Owner wybiera.  
+Opcjonalnie: pełny kalendarz 11 fixtures.
 
 ## Zasady twarde
 
@@ -36,7 +36,8 @@ Alternatywy: GDD-16+, Economy/Transfers.
 - First Match **przed** Hubem.
 - Canvas/Replay nie wołają Engine.
 - REUSE FIRST · ZERO DUPLICATE · SSOT FIRST.
+- Tabela ligowa = wyłącznie `resolveLeagueTable()` (D17).
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 CLOSE

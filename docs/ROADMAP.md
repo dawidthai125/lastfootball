@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production baseline **`b5b64a3`** (LFE-LEAGUE-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
-CI zielony; migracja `fixtures` applied na Supabase.
+Production baseline **`71ce442`** (LFE-LEAGUE-02 CLOSED) — PRODUCTION VERIFIED · GREEN.  
+CI zielony; Vercel Production Ready.
 
 ---
 
@@ -28,7 +28,8 @@ CI zielony; migracja `fixtures` applied na Supabase.
 | **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`             |
 | **LFE-HUB-01**                                         | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta`        |
 | **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                              |
-| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match · Squad SSOT · prod |
+| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match · Squad SSOT        |
+| **LFE-LEAGUE-02**                                      | **CLOSED** · table derive · Hub SEASON · `/league` · chip   |
 
 ## IN PROGRESS 🔄
 
@@ -38,14 +39,14 @@ CI zielony; migracja `fixtures` applied na Supabase.
 
 ## PLANNED ⬜
 
-| Item                               | Zależność                                |
-| ---------------------------------- | ---------------------------------------- |
-| **LFE-LEAGUE-02** (table / SEASON) | Follow-up po Thin A — rekomendowany next |
-| GDD-16+                            | Owner GO (docs)                          |
-| Zawężenie LFE PUBLIC exports       | chore                                    |
-| Transfer Market + players DB       | GDD §12                                  |
-| Economy                            | GDD §14                                  |
-| Ratings v2                         | bogatsze Player Match Data               |
+| Item                             | Zależność                       |
+| -------------------------------- | ------------------------------- |
+| GDD-16+                          | Owner GO (docs)                 |
+| Economy                          | GDD §14                         |
+| Transfer Market + players DB     | GDD §12                         |
+| Full 11-fixture calendar (opt.)  | po LEAGUE-02                    |
+| Zawężenie LFE PUBLIC exports     | chore                           |
+| Ratings v2                       | bogatsze Player Match Data      |
 
 ## FUTURE
 
@@ -60,8 +61,8 @@ CI zielony; migracja `fixtures` applied na Supabase.
 
 ## Next Recommended EPIC
 
-**LFE-LEAGUE-02 — League table + SEASON phase (thin)**  
-Uzasadnienie: po Thin A gracz ma kolejne mecze, ale brak tabeli i fazy `SEASON` — to największy brak GDD §10 względem „buduję historię w lidze”. Domknięcie SSOT wyników → tabela, bez Economy/Transfers.
+**GDD-16+** (Owner wybiera rozdział) **lub** Economy / Transfers.  
+Uzasadnienie: liga thin (fixtures + tabela + SEASON) jest na produkcji — największa luka MVP to design/ekonomika i kadra DB, nie kolejny slice tabeli.
 
 ## Decyzje roadmapy
 
@@ -69,6 +70,7 @@ Uzasadnienie: po Thin A gracz ma kolejne mecze, ale brak tabeli i fazy `SEASON` 
 - Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
+- Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
 
 ## Powiązania
 
@@ -76,4 +78,4 @@ Uzasadnienie: po Thin A gracz ma kolejne mecze, ale brak tabeli i fazy `SEASON` 
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01 CLOSE
+2026-07-25 — LFE-LEAGUE-02 CLOSE

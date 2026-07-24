@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (LFE-LEAGUE-01 CLOSE — awaiting Owner GO docs commit)
+### Docs (LFE-LEAGUE-02 CLOSE — awaiting Owner GO docs commit)
 
-- Status / baseline sync: LFE-LEAGUE-01 CLOSED · prod `b5b64a3`
+- Status / baseline sync: LFE-LEAGUE-02 CLOSED · prod `71ce442`
+
+### Added (shipped on `main` — LFE-LEAGUE-02)
+
+- League table pure derive (`resolveLeagueTable` → `LeagueTableDto`)
+- Hub phase `SEASON` (S1) + Nav Liga unlock + position chip
+- `/league` fed exclusively by resolver (no standings DB / mock)
 
 ### Added (shipped on `main` — LFE-LEAGUE-01)
 

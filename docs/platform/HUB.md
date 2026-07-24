@@ -70,4 +70,4 @@ GDD: §23 (z wyjątkiem Hub-before-match → tunnel) · §10 (tabela).
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 IMPLEMENT
+2026-07-25 — LFE-LEAGUE-02 CLOSE
