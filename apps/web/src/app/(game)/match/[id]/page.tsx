@@ -1,8 +1,12 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { PreMatchView } from '@/components/match/PreMatchView';
 import { getFixtureById, getPreMatchBundle } from '@/data/fixtures';
+import { isFirstMatchCompleted } from '@/lib/club/types';
+import { getManagerClub } from '@/lib/club/get-manager-club';
+import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
+import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
+import Link from 'next/link';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -10,6 +14,14 @@ type PageProps = {
 
 export default async function PreMatchPage({ params }: PageProps) {
   const { id } = await params;
+
+  if (id === FIRST_MATCH_ID) {
+    const club = await getManagerClub();
+    if (!club) redirect('/welcome');
+    if (isFirstMatchCompleted(club)) redirect('/hub');
+    return <PreMatchView bundle={buildFirstPreMatchBundle(club)} firstMatch />;
+  }
+
   const fixture = getFixtureById(id);
   if (!fixture) notFound();
 
@@ -43,10 +55,6 @@ export default async function PreMatchPage({ params }: PageProps) {
         </Link>
       </div>
     );
-  }
-
-  if (fixture.status === 'live') {
-    // Soft redirect target — live page is canonical during live
   }
 
   const bundle = getPreMatchBundle(id);

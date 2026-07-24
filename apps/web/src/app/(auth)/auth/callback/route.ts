@@ -19,7 +19,8 @@ export async function GET(request: Request) {
     if (!error && data.user) {
       const fallback = await getPostAuthPath(data.user.id);
       const next = sanitizeNextPath(nextParam, fallback);
-      const destination = fallback === '/welcome' ? '/welcome' : next;
+      const destination =
+        fallback === '/welcome' || fallback === '/onboarding/first-match' ? fallback : next;
       return NextResponse.redirect(new URL(destination, origin));
     }
   }

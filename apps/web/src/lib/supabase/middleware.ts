@@ -15,6 +15,7 @@ export async function updateSession(request: NextRequest): Promise<{
   response: NextResponse;
   userId: string | null;
   hasClub: boolean;
+  firstMatchCompleted: boolean;
   configured: boolean;
 }> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,7 +25,13 @@ export async function updateSession(request: NextRequest): Promise<{
   let response = NextResponse.next({ request });
 
   if (!configured || !url || !anonKey) {
-    return { response, userId: null, hasClub: false, configured: false };
+    return {
+      response,
+      userId: null,
+      hasClub: false,
+      firstMatchCompleted: false,
+      configured: false,
+    };
   }
 
   const supabase = createServerClient(url, anonKey, {
@@ -49,14 +56,16 @@ export async function updateSession(request: NextRequest): Promise<{
   } = await supabase.auth.getUser();
 
   let hasClub = false;
+  let firstMatchCompleted = false;
   if (user) {
     const { data, error } = await supabase
       .from('clubs')
-      .select('id')
+      .select('id, first_match_completed_at')
       .eq('owner_id', user.id)
       .maybeSingle();
-    const clubRow = data as { id: string } | null;
+    const clubRow = data as { id: string; first_match_completed_at: string | null } | null;
     const fromTable = !error && Boolean(clubRow?.id);
+    firstMatchCompleted = Boolean(clubRow?.first_match_completed_at);
 
     // Dev-only metadata fallback — production routing uses clubs table only.
     const metaFallback =
@@ -65,7 +74,10 @@ export async function updateSession(request: NextRequest): Promise<{
       user.user_metadata?.has_club === true;
 
     hasClub = fromTable || metaFallback;
+    if (metaFallback && !fromTable) {
+      firstMatchCompleted = true;
+    }
   }
 
-  return { response, userId: user?.id ?? null, hasClub, configured: true };
+  return { response, userId: user?.id ?? null, hasClub, firstMatchCompleted, configured: true };
 }

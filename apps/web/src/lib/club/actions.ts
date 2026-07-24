@@ -41,12 +41,13 @@ export async function createClub(
 
   const { data: existing } = await supabase
     .from('clubs')
-    .select('id')
+    .select('id, first_match_completed_at')
     .eq('owner_id', user.id)
     .maybeSingle();
 
   if (existing) {
-    redirect('/hub');
+    const row = existing as { id: string; first_match_completed_at: string | null };
+    redirect(row.first_match_completed_at ? '/hub' : '/onboarding/first-match');
   }
 
   // Database typings lag migrations in CI/local until regen — insert payload validated above.
@@ -72,5 +73,5 @@ export async function createClub(
   }
 
   revalidatePath('/', 'layout');
-  redirect('/hub');
+  redirect('/onboarding/first-match');
 }

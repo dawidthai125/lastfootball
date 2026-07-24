@@ -18,6 +18,7 @@ export type Database = {
           secondary_color: string;
           crest_template_id: string;
           created_at: string;
+          first_match_completed_at: string | null;
         };
         Insert: {
           id?: string;
@@ -28,6 +29,7 @@ export type Database = {
           secondary_color?: string;
           crest_template_id?: string;
           created_at?: string;
+          first_match_completed_at?: string | null;
         };
         Update: {
           id?: string;
@@ -38,6 +40,7 @@ export type Database = {
           secondary_color?: string;
           crest_template_id?: string;
           created_at?: string;
+          first_match_completed_at?: string | null;
         };
         Relationships: [];
       };

@@ -10,6 +10,9 @@ import {
 import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { createSessionFromFixture } from '@/gameplay/create-session-from-fixture';
+import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
+import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
+import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
 import {
@@ -78,10 +81,13 @@ export class LiveMatchRuntime {
   private readonly ticksPerPulse = 8;
   private playbackSource: PlaybackSource = 'live';
 
-  constructor(fixture: Fixture, shell: LiveMatchBundle) {
+  constructor(fixture: Fixture, shell: LiveMatchBundle, club?: ClubDto | null) {
     this.fixture = fixture;
     this.shell = shell;
-    this.session = createSessionFromFixture(fixture);
+    this.session =
+      fixture.id === FIRST_MATCH_ID && club
+        ? createSessionFromFirstMatch(club)
+        : createSessionFromFixture(fixture);
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
     this.replayBuffer = createReplayBuffer({ capacity: 3600 });
@@ -95,6 +101,10 @@ export class LiveMatchRuntime {
       baseIntervalMs: 50,
     });
     this.bootstrapMatch();
+  }
+
+  /** Call from useEffect — never start timers during render/useMemo. */
+  ensureSimulationRunning(): void {
     this.startSimulation();
   }
 

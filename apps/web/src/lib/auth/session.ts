@@ -1,6 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 
 import { env } from '@/config/env';
+import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { createClient } from '@/lib/supabase/server';
 
 export async function getAuthUser(): Promise<User | null> {
@@ -16,7 +17,6 @@ export async function userHasClub(userId: string): Promise<boolean> {
   if (!env.isSupabaseConfigured) return false;
   const supabase = await createClient();
 
-  // Dev-only metadata fallback (smoke/manual unlock). Production SSOT = clubs table.
   const allowMetaFallback =
     process.env.NODE_ENV === 'development' && process.env.LFE_DEV_CLUB_META_FALLBACK === '1';
   if (allowMetaFallback) {
@@ -38,9 +38,26 @@ export async function userHasClub(userId: string): Promise<boolean> {
   return Boolean(clubRow?.id);
 }
 
-/** Post-auth destination per PLAN: club → Hub, else Welcome. */
-export async function getPostAuthPath(userId: string): Promise<'/hub' | '/welcome'> {
-  return (await userHasClub(userId)) ? '/hub' : '/welcome';
+export async function userFirstMatchCompleted(userId: string): Promise<boolean> {
+  if (!env.isSupabaseConfigured) return false;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('clubs')
+    .select('first_match_completed_at')
+    .eq('owner_id', userId)
+    .maybeSingle();
+  if (error) return false;
+  const row = data as { first_match_completed_at: string | null } | null;
+  return Boolean(row?.first_match_completed_at);
+}
+
+/** Post-auth destination: welcome → first-match tunnel → hub. */
+export async function getPostAuthPath(
+  userId: string,
+): Promise<'/hub' | '/welcome' | '/onboarding/first-match'> {
+  if (!(await userHasClub(userId))) return '/welcome';
+  if (!(await userFirstMatchCompleted(userId))) return FIRST_MATCH_PATHS.intro;
+  return '/hub';
 }
 
 export function sanitizeNextPath(next: string | null | undefined, fallback: string): string {

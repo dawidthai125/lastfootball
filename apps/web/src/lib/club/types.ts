@@ -7,7 +7,13 @@ export type ClubDto = {
   secondaryColor: string;
   crestTemplateId: string;
   createdAt: string;
+  /** SSOT — set once after first match Post Match confirm. */
+  firstMatchCompletedAt: string | null;
 };
+
+export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {
+  return Boolean(club?.firstMatchCompletedAt);
+}
 
 export type ClubWizardDraft = {
   step: 1 | 2 | 3 | 4;

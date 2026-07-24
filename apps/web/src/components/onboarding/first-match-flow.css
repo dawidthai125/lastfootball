@@ -1,0 +1,48 @@
+/* First Match Intro + Welcome — auth shell, brand-first */
+
+.lf-fm {
+  width: min(28rem, 100%);
+  margin: 0 auto;
+  padding: var(--lf-space-6) 0 var(--lf-space-8);
+  text-align: center;
+}
+
+.lf-fm__crest {
+  display: flex;
+  justify-content: center;
+  margin: var(--lf-space-4) 0 var(--lf-space-3);
+}
+
+.lf-fm__lead {
+  margin: 0 0 var(--lf-space-3);
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+  line-height: 1.55;
+}
+
+.lf-fm__lead strong {
+  color: var(--lf-color-text-primary);
+  font-weight: 600;
+}
+
+.lf-fm__sub {
+  margin: 0 0 var(--lf-space-5);
+  color: var(--lf-color-text-muted);
+  font-size: var(--lf-type-caption);
+  line-height: 1.5;
+}
+
+.lf-fm__footnote {
+  margin: var(--lf-space-5) 0 0;
+  font-size: var(--lf-type-label);
+  color: var(--lf-color-text-faint);
+}
+
+.lf-fm__footnote a {
+  color: var(--lf-color-text-gold);
+  text-decoration: none;
+}
+
+.lf-fm .lf-landing__cta-row {
+  justify-content: center;
+}

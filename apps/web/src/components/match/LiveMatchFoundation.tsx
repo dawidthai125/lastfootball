@@ -5,6 +5,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 
 import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
+import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gameplay/canvas';
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
@@ -17,16 +18,25 @@ import {
   PostMatchView,
   type PostMatchTimelineItem,
 } from '@/components/match/post-match';
+import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstMatchButton';
 
 /**
  * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
  * Reads MatchState / EventBus via LiveMatchRuntime; commands go through CommandBus.
  * Canvas / Replay never mutate MatchState.
  */
-export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
+export function LiveMatchFoundation({
+  bundle,
+  club = null,
+  firstMatch = false,
+}: {
+  bundle: LiveMatchBundle;
+  club?: ClubDto | null;
+  firstMatch?: boolean;
+}) {
   const { fixture } = bundle;
-  const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(fixture, bundle);
-  const us = dashboardMock.club;
+  const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(fixture, bundle, club);
+  const us = club ?? dashboardMock.club;
   const homeName = fixture.home ? us.name : fixture.opponent;
   const awayName = fixture.home ? fixture.opponent : us.name;
   const homeShort = fixture.home ? us.shortName : fixture.opponentShort;
@@ -38,20 +48,22 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
   const [postMatchOpen, setPostMatchOpen] = useState(false);
 
-  const finished = isMatchFinished(snapshot.matchState, snapshot.events);
+  const finished = snapshot
+    ? isMatchFinished(snapshot.matchState, snapshot.events)
+    : false;
 
   useEffect(() => {
     if (finished) setPostMatchOpen(true);
   }, [finished]);
 
   useEffect(() => {
-    if (postMatchOpen) return;
+    if (!runtime || postMatchOpen) return;
     const renderer = createMatchCanvasRenderer({
       viewMode,
-      playbackMode: snapshot.replay.source === 'replay' ? 'replay' : 'live',
+      playbackMode: snapshot?.replay.source === 'replay' ? 'replay' : 'live',
     });
     runtime.canvasHost.attachRenderer(renderer);
-    if (snapshot.replay.source === 'live') {
+    if (snapshot?.replay.source === 'live') {
       runtime.canvasHost.pushFrame();
     } else {
       const model = runtime.replay.getCurrentModel();
@@ -64,10 +76,18 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   }, [runtime, viewMode, postMatchOpen]);
 
   useEffect(() => {
-    if (postMatchOpen) return;
+    if (!runtime || postMatchOpen || !snapshot) return;
     const renderer = runtime.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
     renderer?.setPlaybackMode?.(snapshot.replay.source === 'replay' ? 'replay' : 'live');
-  }, [runtime, snapshot.replay.source, postMatchOpen]);
+  }, [runtime, snapshot?.replay.source, postMatchOpen, snapshot]);
+
+  if (!runtime || !snapshot) {
+    return (
+      <p style={{ color: 'var(--lf-color-text-muted)', padding: 'var(--lf-space-5)' }}>
+        Ładowanie meczu…
+      </p>
+    );
+  }
 
   const replay = snapshot.replay;
   const isReplay = replay.source === 'replay';
@@ -102,6 +122,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
         onOpenReplay={() => openReplayAt()}
         onJumpToEvent={(item) => openReplayAt(item)}
         onDismiss={() => setPostMatchOpen(false)}
+        continueSlot={firstMatch ? <CompleteFirstMatchButton /> : undefined}
       />
     );
   }

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { isFirstMatchTunnelPath, FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { updateSession } from '@/lib/supabase/middleware';
 
 const PUBLIC_PREFIXES = ['/login', '/register', '/auth', '/regulamin', '/prywatnosc', '/status'];
@@ -39,26 +40,41 @@ function isSafeNext(path: string | null): path is string {
   return Boolean(path && path.startsWith('/') && !path.startsWith('//'));
 }
 
+function postAuthPath(hasClub: boolean, firstMatchCompleted: boolean): string {
+  if (!hasClub) return '/welcome';
+  if (!firstMatchCompleted) return FIRST_MATCH_PATHS.intro;
+  return '/hub';
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  const { response, userId, hasClub, configured } = await updateSession(request);
+  const { response, userId, hasClub, firstMatchCompleted, configured } =
+    await updateSession(request);
 
   const isPublic = pathname === '/' || startsWithAny(pathname, PUBLIC_PREFIXES);
   const isProtected = startsWithAny(pathname, PROTECTED_PREFIXES);
   const isAuthPage = pathname === '/login' || pathname === '/register';
   const isOnboarding = pathname === '/welcome' || pathname.startsWith('/onboarding');
+  const onFirstMatchTunnel = isFirstMatchTunnelPath(pathname);
 
-  // Landing: session → skip marketing (PLAN §4.1.5)
+  // Landing: session → skip marketing
   if (pathname === '/' && userId) {
     const url = request.nextUrl.clone();
-    url.pathname = hasClub ? '/hub' : '/welcome';
+    url.pathname = postAuthPath(hasClub, firstMatchCompleted);
     return NextResponse.redirect(url);
   }
 
   // Auth pages: already signed in → continue journey
   if (isAuthPage && userId) {
     const url = request.nextUrl.clone();
-    url.pathname = hasClub ? '/hub' : '/welcome';
+    const next = searchParams.get('next');
+    if (hasClub && firstMatchCompleted && isSafeNext(next)) {
+      url.pathname = next;
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
+    url.pathname = postAuthPath(hasClub, firstMatchCompleted);
+    url.search = '';
     return NextResponse.redirect(url);
   }
 
@@ -79,23 +95,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Has club + still on onboarding → Hub
-  if (userId && hasClub && isOnboarding) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/hub';
-    return NextResponse.redirect(url);
+  // First Match tunnel: has club, incomplete → only tunnel paths
+  if (userId && hasClub && !firstMatchCompleted) {
+    if (isProtected && !onFirstMatchTunnel) {
+      const url = request.nextUrl.clone();
+      url.pathname = FIRST_MATCH_PATHS.intro;
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
   }
 
-  // Honour safe ?next= only when already allowed (post-login handled in actions)
-  const next = searchParams.get('next');
-  if (userId && hasClub && isAuthPage && isSafeNext(next)) {
-    const url = request.nextUrl.clone();
-    url.pathname = next;
-    url.search = '';
-    return NextResponse.redirect(url);
+  // Completed first match: leave intro / club wizard / welcome → Hub
+  // Keep /onboarding/welcome-lf reachable once (post-match beat).
+  if (userId && hasClub && firstMatchCompleted) {
+    if (
+      pathname === FIRST_MATCH_PATHS.intro ||
+      pathname === '/welcome' ||
+      pathname === '/onboarding/club'
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/hub';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
   }
 
-  // Avoid unused warning — public paths fall through
   void isPublic;
 
   return response;
@@ -103,9 +127,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Skip static assets and Next internals.
-     */
     '/((?!_next/static|_next/image|favicon.ico|assets/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

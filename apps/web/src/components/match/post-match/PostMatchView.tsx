@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 import { ClubCrest, LiveEventIcon } from '@/components/assets';
 import type {
@@ -16,6 +16,8 @@ type PostMatchViewProps = {
   readonly onOpenReplay: () => void;
   readonly onJumpToEvent: (item: PostMatchTimelineItem) => void;
   readonly onDismiss?: () => void;
+  /** Primary continue CTA (e.g. First Match → Welcome). */
+  readonly continueSlot?: ReactNode;
 };
 
 /**
@@ -27,6 +29,7 @@ export function PostMatchView({
   onOpenReplay,
   onJumpToEvent,
   onDismiss,
+  continueSlot,
 }: PostMatchViewProps) {
   const mvp =
     summary.mvpPlayerId == null
@@ -126,9 +129,11 @@ export function PostMatchView({
               Pokaż boisko
             </button>
           ) : null}
-          <Link href="/matches" style={{ ...ghostBtn, textDecoration: 'none' }}>
-            Terminarz
-          </Link>
+          {continueSlot ?? (
+            <Link href="/matches" style={{ ...ghostBtn, textDecoration: 'none' }}>
+              Terminarz
+            </Link>
+          )}
         </div>
         <div
           style={{

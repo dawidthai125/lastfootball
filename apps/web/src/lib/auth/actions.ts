@@ -14,8 +14,8 @@ function mapAuthError(message: string): string {
   if (m.includes('user already registered'))
     return 'Konto z tym emailem już istnieje. Zaloguj się.';
   if (m.includes('password')) return 'Hasło nie spełnia wymagań (min. 6 znaków).';
-  if (m.includes('email')) return 'Podaj poprawny adres email.';
   if (m.includes('rate')) return 'Zbyt wiele prób. Spróbuj za chwilę.';
+  if (m.includes('invalid') && m.includes('email')) return 'Podaj poprawny adres email.';
   return 'Nie udało się dokończyć. Spróbuj ponownie.';
 }
 
@@ -44,7 +44,8 @@ export async function signInWithPassword(
 
   const fallback = await getPostAuthPath(data.user.id);
   const next = sanitizeNextPath(nextRaw || null, fallback);
-  const destination = fallback === '/welcome' ? '/welcome' : next;
+  const destination =
+    fallback === '/welcome' || fallback === '/onboarding/first-match' ? fallback : next;
 
   revalidatePath('/', 'layout');
   redirect(destination);

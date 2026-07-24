@@ -5,12 +5,19 @@ import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import { SectionShell } from '@/components/panel/SectionShell';
 import type { PreMatchBundle } from '@/data/fixtures';
+import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 
 /**
  * Pre Match — layout aligned to LFE-UI-01 mockup-16.
  * Lineup / tactics are read-only; decision panel stays placeholder.
  */
-export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
+export function PreMatchView({
+  bundle,
+  firstMatch = false,
+}: {
+  bundle: PreMatchBundle;
+  firstMatch?: boolean;
+}) {
   const { fixture } = bundle;
   const home = fixture.home ? bundle.ourTeam : bundle.theirTeam;
   const away = fixture.home ? bundle.theirTeam : bundle.ourTeam;
@@ -18,11 +25,18 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-4)' }}>
       <Breadcrumbs
-        items={[
-          { label: 'Rozgrywki', href: '/league' },
-          { label: 'Terminarz', href: '/matches' },
-          { label: `vs ${fixture.opponent}` },
-        ]}
+        items={
+          firstMatch
+            ? [
+                { label: 'Pierwszy mecz', href: FIRST_MATCH_PATHS.intro },
+                { label: `vs ${fixture.opponent}` },
+              ]
+            : [
+                { label: 'Rozgrywki', href: '/league' },
+                { label: 'Terminarz', href: '/matches' },
+                { label: `vs ${fixture.opponent}` },
+              ]
+        }
       />
 
       <div
@@ -349,21 +363,39 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                 justifyContent: 'center',
               }}
             >
-              <Link
-                href="/matches"
-                style={{
-                  borderWidth: 'var(--lf-border-width-hair)',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--lf-color-border-strong)',
-                  background: 'var(--lf-color-bg-panel-alt)',
-                  color: 'var(--lf-color-text-secondary)',
-                  fontSize: 'var(--lf-type-body)',
-                  padding: 'var(--lf-space-2) var(--lf-space-4)',
-                  borderRadius: 'var(--lf-radius-sm)',
-                }}
-              >
-                Wróć do terminarza
-              </Link>
+              {firstMatch ? (
+                <Link
+                  href={FIRST_MATCH_PATHS.intro}
+                  style={{
+                    borderWidth: 'var(--lf-border-width-hair)',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--lf-color-border-strong)',
+                    background: 'var(--lf-color-bg-panel-alt)',
+                    color: 'var(--lf-color-text-secondary)',
+                    fontSize: 'var(--lf-type-body)',
+                    padding: 'var(--lf-space-2) var(--lf-space-4)',
+                    borderRadius: 'var(--lf-radius-sm)',
+                  }}
+                >
+                  Wstecz
+                </Link>
+              ) : (
+                <Link
+                  href="/matches"
+                  style={{
+                    borderWidth: 'var(--lf-border-width-hair)',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--lf-color-border-strong)',
+                    background: 'var(--lf-color-bg-panel-alt)',
+                    color: 'var(--lf-color-text-secondary)',
+                    fontSize: 'var(--lf-type-body)',
+                    padding: 'var(--lf-space-2) var(--lf-space-4)',
+                    borderRadius: 'var(--lf-radius-sm)',
+                  }}
+                >
+                  Wróć do terminarza
+                </Link>
+              )}
               <Link
                 href={`/match/${fixture.id}/live`}
                 style={{
@@ -378,7 +410,7 @@ export function PreMatchView({ bundle }: { bundle: PreMatchBundle }) {
                   borderRadius: 'var(--lf-radius-sm)',
                 }}
               >
-                Rozpocznij mecz
+                {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Rozpocznij mecz'}
               </Link>
             </div>
           </AtmosphereLayer>

@@ -11,6 +11,7 @@ type ClubRow = {
   secondary_color: string;
   crest_template_id: string;
   created_at: string;
+  first_match_completed_at: string | null;
 };
 
 function mapClub(row: ClubRow): ClubDto {
@@ -23,6 +24,7 @@ function mapClub(row: ClubRow): ClubDto {
     secondaryColor: row.secondary_color,
     crestTemplateId: row.crest_template_id,
     createdAt: row.created_at,
+    firstMatchCompletedAt: row.first_match_completed_at,
   };
 }
 
@@ -38,7 +40,7 @@ export async function getManagerClub(): Promise<ClubDto | null> {
   const { data, error } = await supabase
     .from('clubs')
     .select(
-      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at',
+      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at',
     )
     .eq('owner_id', user.id)
     .maybeSingle();

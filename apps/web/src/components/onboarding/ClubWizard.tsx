@@ -352,7 +352,7 @@ export function ClubWizard() {
                   className="lf-landing__cta lf-landing__cta--primary lf-wizard__cta"
                   disabled={pending}
                 >
-                  {pending ? 'Zapisuję klub…' : 'Potwierdź i wejdź do Hubu'}
+                  {pending ? 'Zapisuję klub…' : 'Potwierdź i zagraj pierwszy mecz'}
                 </button>
               </form>
             </section>
