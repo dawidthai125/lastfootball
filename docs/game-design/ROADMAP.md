@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…14 ukończone. §3–§15 + §23 Hub wypełnione. Następny etap szkieletu = **Owner GO** (GDD-15+).
+GDD-01…15 ukończone. §3–§15 + §20 + §23 wypełnione. Następny etap szkieletu = **Owner GO** (GDD-16+).
 
 ## Completed
 
@@ -26,6 +26,7 @@ GDD-01…14 ukończone. §3–§15 + §23 Hub wypełnione. Następny etap szkiel
 | GDD-12 | §13 Stadium               |
 | GDD-13 | §6 Club development       |
 | GDD-14 | §23 Hub / main panel      |
+| GDD-15 | §20 Daily tasks           |
 
 ## In Progress
 
@@ -37,7 +38,7 @@ GDD-01…14 ukończone. §3–§15 + §23 Hub wypełnione. Następny etap szkiel
 
 | Stage        | Zakres                                            |
 | ------------ | ------------------------------------------------- |
-| GDD-15+      | Pozostałe rozdziały szkieletu (kolejność = Owner) |
+| GDD-16+      | Pozostałe rozdziały szkieletu (kolejność = Owner) |
 | Balance pass | §26 liczby (później)                              |
 
 ## Future
@@ -47,12 +48,13 @@ GDD-01…14 ukończone. §3–§15 + §23 Hub wypełnione. Następny etap szkiel
 - Esport / multiplayer design (jeśli w ogóle)
 - Infrastruktura / rozbudowa stadionu (poza MVP; kotwica §6 / §13)
 - Hub: personalizacja / konfigurowalne widgety (poza MVP; kotwica §23)
+- Zadania: advanced streaks / Quest Log / social (poza MVP; kotwica §20)
 
 ## Najważniejsze decyzje
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = SSOT metryk klubu; §23 = SSOT Hub (decyzja, nie dashboard).
+- §6 = metryki klubu · §20 = zadania · §23 = Hub.
 
 ## Powiązania
 
@@ -60,4 +62,4 @@ GDD-01…14 ukończone. §3–§15 + §23 Hub wypełnione. Następny etap szkiel
 
 ## Last updated
 
-2026-07-24 — GDD-14
+2026-07-24 — GDD-15

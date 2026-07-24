@@ -7,7 +7,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-GDD-14 (§23 Hub) uzupełniony. Match pipeline + Player Ratings + §6 na `main`.
+GDD-15 (§20 Zadania dzienne) uzupełniony. Match pipeline + Hub + §6 na `main`.
+
+---
+
+## [2026-07-24] — GDD-15
+
+### Docs (SSOT FIRST)
+
+- Wypełniony §20 Zadania dzienne: opcjonalne; 1 cel dnia na Hubie
+- Mecz > zadanie w dniu meczowym; soft FOMO; brak kar / obowiązkowego loginu / P2W
+- Nagrody = kategorie (§14 / §19 / §26); bez liczb
+- Cross-refs: §3.10, §23, §21, §22
+- Sync: CURRENT_DESIGN, roadmapy, status, handoff
 
 ---
 

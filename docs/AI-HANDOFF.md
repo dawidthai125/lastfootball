@@ -38,7 +38,7 @@ Indeks pełny: [`docs/README.md`](./README.md). Chronologia docs: [`docs/CHANGEL
 | **LFE**       | EPIC-1…7 + Gameplay + Match AI + Match Engine + **Player Match Data** · `0.9.1-match-ai01` |
 | **Web match** | Pre → **Live Bridge** → **Canvas** → **Replay** → **Post Match** na `main`                 |
 | **UI shell**  | Asset Pack + Shell polish                                                                  |
-| **GDD**       | Faza 2: GDD-01…14 CLOSED · §3–§15 + §23 Hub                                                |
+| **GDD**       | Faza 2: GDD-01…15 CLOSED · §3–§15 + §20 + §23                                              |
 | **CI**        | Format → Typecheck → Lint → Test → Build — **zielony** (po LFE-CI-PRETTIER-01)             |
 | **Prod**      | `https://lastfootball.vercel.app` · `/status` → `LFE_VERSION`                              |
 
@@ -221,7 +221,7 @@ Env: [`ENVIRONMENT.md`](./ENVIRONMENT.md) · Setup: [`DEV_SETUP.md`](./DEV_SETUP
 
 | Priorytet | EPIC                                      | Status            |
 | --------- | ----------------------------------------- | ----------------- |
-| 1         | GDD-15+ (kolejny szkielet)                | PLANNED (docs)    |
+| 1         | GDD-16+ (kolejny szkielet)                | PLANNED (docs)    |
 | 2         | Transfer / Economy / League / Multiplayer | FUTURE            |
 | —         | Physics / pełne Rules                     | FUTURE / RESERVED |
 | —         | Ratings v2 (assists / minutes)            | FUTURE            |
@@ -276,4 +276,4 @@ Env: [`ENVIRONMENT.md`](./ENVIRONMENT.md) · Setup: [`DEV_SETUP.md`](./DEV_SETUP
 
 ## Last updated
 
-2026-07-24 — GDD-14
+2026-07-24 — GDD-15

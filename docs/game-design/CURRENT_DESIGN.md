@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-14 CLOSED. §3–§15 oraz **§23 Hub** wypełnione. UI Guide istnieje. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub** wypełnione. UI Guide istnieje. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -24,14 +24,16 @@ GDD-14 CLOSED. §3–§15 oraz **§23 Hub** wypełnione. UI Guide istnieje. Pozo
 | §13      | Stadion             | Wypełniony                 |
 | §14      | Finanse             | Wypełniony                 |
 | §15      | Sponsorzy           | Wypełniony                 |
-| §23      | Panel główny (Hub)  | **Wypełniony (GDD-14)**    |
+| §20      | Zadania dzienne     | **Wypełniony (GDD-15)**    |
+| §23      | Panel główny (Hub)  | Wypełniony (GDD-14)        |
 | §24–§25  | UI (w Guide + GDD)  | Guide gotowy; §24 szkielet |
 | §26+     | Liczby / balance    | Future                     |
 
 ### Sygnały produktowe (nie zastępują GDD)
 
 - Mecz w centrum; 1 klub/account MVP.
-- Hub-first: dokładnie 1 Primary CTA, max 5 Secondary; stany nowy klub / dzień meczowy / po meczu / idle.
+- Hub-first: 1 Primary CTA, max 5 Secondary; stany nowy klub / dzień meczowy / po meczu / idle.
+- Zadania (§20): opcjonalne; 1 cel dnia na Hubie; w dniu meczowym mecz > zadanie; soft FOMO; nagrody = kategorie.
 - Liga: 12 klubów, 22 kolejki, awans/spadek bez playoffów MVP.
 - Trening: odblokowanie po 2 zagranych meczach; 1 sesja/dzień.
 - Transfery: Accept/Reject + max 1 kontroferta; skład 18–22.
@@ -42,7 +44,7 @@ GDD-14 CLOSED. §3–§15 oraz **§23 Hub** wypełnione. UI Guide istnieje. Pozo
 ## Najważniejsze decyzje
 
 Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.  
-Metryki rozwoju klubu: **tylko §6**. Hub = **§23** (decyzja, nie dashboard).
+§6 = metryki klubu · §20 = zadania · §23 = Hub.
 
 ## Powiązania
 
@@ -50,4 +52,4 @@ Metryki rozwoju klubu: **tylko §6**. Hub = **§23** (decyzja, nie dashboard).
 
 ## Last updated
 
-2026-07-24 — GDD-14
+2026-07-24 — GDD-15

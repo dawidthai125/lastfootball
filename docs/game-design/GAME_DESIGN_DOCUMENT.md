@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-14 (§3–§15 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-15 (§3–§15, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -32,7 +32,7 @@
 17. [Skauting](#17-skauting)
 18. [Ranking](#18-ranking)
 19. [Osiągnięcia](#19-osiągnięcia)
-20. [Zadania dzienne](#20-zadania-dzienne)
+20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
 21. [Wiadomości](#21-wiadomości)
 22. [Powiadomienia](#22-powiadomienia)
 23. [Panel główny](#23-panel-główny) ← **GDD-14**
@@ -454,16 +454,16 @@ Zdefiniować **uczciwe** haki retencji zgodne z menedżerem piłkarskim — nie 
 
 **Zestaw haków (doświadczenie)**
 
-| Hak                         | Jak działa w pętli          | Uwagi                           |
-| --------------------------- | --------------------------- | ------------------------------- |
-| Następny mecz w kalendarzu  | Najsilniejszy powód powrotu | Zawsze widoczny na hubie        |
-| Seria form / streak wyników | Emocja kontynuacji          | Nie karać brutalnie za zerwanie |
-| Wiadomość „pilna”           | 1 rzecz do przeczytania     | Limit, by nie spamować (§21–22) |
-| Zadanie dzienne             | Lekki bonus za wizytę       | Opcjonalne względem meczu (§20) |
-| Pozycja w tabeli            | Ambicja tygodnia            | Czytelna zmiana vs poprzednio   |
-| Odblokowanie warstwy        | Progressive disclosure      | Nagroda za czas w grze          |
-| Powiadomienie o meczu       | Soft remind                 | Opt-in, quiet hours (§22)       |
-| Historia klubu              | „Wróć do swojej historii”   | Long-term                       |
+| Hak                         | Jak działa w pętli          | Uwagi                                      |
+| --------------------------- | --------------------------- | ------------------------------------------ |
+| Następny mecz w kalendarzu  | Najsilniejszy powód powrotu | Zawsze widoczny na hubie                   |
+| Seria form / streak wyników | Emocja kontynuacji          | Nie karać brutalnie za zerwanie            |
+| Wiadomość „pilna”           | 1 rzecz do przeczytania     | Limit, by nie spamować (§21–22)            |
+| Zadanie dzienne             | Lekki bonus za wizytę       | Opcjonalne względem meczu (**SSOT → §20**) |
+| Pozycja w tabeli            | Ambicja tygodnia            | Czytelna zmiana vs poprzednio              |
+| Odblokowanie warstwy        | Progressive disclosure      | Nagroda za czas w grze                     |
+| Powiadomienie o meczu       | Soft remind                 | Opt-in, quiet hours (§22)                  |
+| Historia klubu              | „Wróć do swojej historii”   | Long-term                                  |
 
 **Przebieg typowego powrotu po 24–48 h**
 
@@ -6546,19 +6546,334 @@ Nagrody za kamienie milowe — retencja i cele długie.
 
 ## 20. Zadania dzienne
 
+**Status rozdziału:** GDD-15 — opracowany (**zadania dzienne MVP — lekki hak retencji**; opcjonalne względem meczu; bez liczb, kar, obowiązkowego loginu i pay-to-win)
+
+**Cel rozdziału**  
+Dać menedżerowi odpowiedź na: **„Co warto dziś zrobić?”** — jako lekki, uczciwy hak powrotu, który **nie** konkuruje z osią meczową i **nie** blokuje postępu sezonu.
+
+**Zasady nadrzędne (decyzje GDD-15)**
+
+1. Zadania odpowiadają na: **„Co warto dziś zrobić?”**
+2. Zadania są **opcjonalne** i **nie blokują** postępu.
+3. **Mecz pozostaje główną osią** gry (§3 / §9).
+4. Hub prezentuje **dokładnie jeden główny cel dnia** (§23 warstwa 2).
+5. W **dniu meczowym mecz zawsze ma wyższy priorytet** niż zadanie dnia.
+6. Nagrody = **wyłącznie kategorie** z odwołaniami do §14 / §19 / §26 — **bez wartości liczbowych**.
+7. **Brak kar** za opuszczenie dnia; **brak obowiązkowego logowania**.
+8. **Brak pay-to-win** / pay-to-complete (§27).
+9. Advanced streaks, wydarzenia sezonowe, personalizacja, zadania społecznościowe i pełny Quest Log = **Future**.
+10. ZERO DUPLICATE: nie redefiniować Hubu (§23), kasy (§14), prestiżu (§6) ani achievementów (§19).
+
+**Szybki kontrakt MVP (SSOT)**
+
+| Parametr            | Wartość MVP                                       |
+| ------------------- | ------------------------------------------------- |
+| Pytanie nadrzędne   | „Co warto dziś zrobić?”                           |
+| Obowiązkowość       | Opcjonalne                                        |
+| Oś gry              | Mecz > zadanie                                    |
+| Hub                 | Dokładnie **1** główny cel dnia                   |
+| Dzień meczowy       | Primary = mecz / przygotowanie; zadanie ≠ Primary |
+| Nagrody             | Kategorie → §14 / §19 / §26                       |
+| Liczby / kwoty / XP | OUT                                               |
+| Kary za skip        | Brak                                              |
+| Obowiązkowy login   | Brak                                              |
+| Pay-to-win          | Brak                                              |
+| Quest Log / social  | Future                                            |
+
+---
+
+### 20.1 Filozofia zadań
+
 **Cel**  
-Zaprojektować lekkie cele dzienne / tygodniowe.
+Ustawić ton: lekki bonus sprawczości, nie drugi tryb gry.
 
-**Opis**  
-Habit loop bez pay-to-win pressure (szkielet).
+**Przebieg**
 
-**Do opracowania**
+1. Zadanie dnia ma **zachęcać** do sensownej wizyty, nie wymuszać grindu.
+2. Ukończenie daje satysfakcję i kategorię nagrody; brak ukończenia **nie** psuje sezonu.
+3. Copy i UX mówią „warto”, nie „musisz”.
+4. System wspiera sesję 5–15 min (§3), nie elonguje ją sztucznie.
 
-- [ ] Pula zadań
-- [ ] Rotacja
-- [ ] Nagrody
-- [ ] Streaki
-- [ ] Limit czasu / FOMO policy
+**Decyzje gracza**
+
+- Czy gonić cel dnia, czy skupić się tylko na meczu / wyjść.
+
+**Zależności**
+
+- §3.10, §23, UI Guide.
+
+---
+
+### 20.2 Relacja do meczu (mecz = oś)
+
+**Cel**  
+Zamrozić priorytet w konflikcie.
+
+**Przebieg**
+
+1. Kalendarz meczowy i ścieżka §9 są nadrzędne wobec zadań.
+2. W dniu meczowym: Primary Hub = mecz / przygotowanie składu (§23.7).
+3. Cel dnia może być **zsynchronizowany** z przygotowaniem (np. „sprawdź XI”) albo zejść do Secondary — **nigdy** nie odbiera Primary meczowi.
+4. Zadanie typu „zagraj mecz” w dniu meczowym jest spójne z Primary, nie konkurencyjne.
+
+**Zależności**
+
+- §9, §10, §23.7.
+
+---
+
+### 20.3 Kontrakt dnia: jeden główny cel na Hubie
+
+**Cel**  
+Czytelność — jeden cel, nie lista questów.
+
+**Przebieg**
+
+1. Na Hubie widoczny jest **dokładnie jeden** główny cel dnia (warstwa 2 §23).
+2. Brak MVP „quest board” z wieloma równorzędnymi celami.
+3. Ukończenie zamienia slot w krótki feedback / następny sensowny stan (idle) — bez cascade nowych obowiązków.
+4. Pełny Quest Log = Future.
+
+**Zależności**
+
+- §23.3–23.5, §23.9.
+
+---
+
+### 20.4 Typy jakościowe zadań
+
+**Cel**  
+Opisać rodzaje celów bez listy ID contentu i bez progów.
+
+| Typ                       | Sens                      | Przykład jakościowy                       | Gdy naturalny           |
+| ------------------------- | ------------------------- | ----------------------------------------- | ----------------------- |
+| **Meczowy**               | Domknij oś sportową       | „Zagraj najbliższy mecz”                  | Dzień meczowy / kolejka |
+| **Skład / przygotowanie** | Lekka decyzja menedżerska | „Sprawdź XI przed kolejką”                | Przed meczem            |
+| **Hub / sprawa dnia**     | Mała sprawa poza boiskiem | „Przeczytaj 1 wiadomość / odbierz sprawę” | Idle / nowy klub        |
+| **Sezonowy lekki**        | Ambicja bez grindu        | „Utrzymaj rytm kolejki” (kategoria)       | Tydzień ligowy          |
+
+**Zasady**
+
+1. Na dany dzień wybierany jest **jeden** główny typ (jakościowo).
+2. Brak typów wymagających microtransaction.
+3. Brak typów społecznościowych w MVP (Future).
+
+---
+
+### 20.5 Rotacja / odświeżanie (bez liczb)
+
+**Cel**  
+Opisać odczucie świeżości bez cron-spec i bez kwot.
+
+**Przebieg**
+
+1. Cel dnia jest związany z **kontekstem kalendarza** (mecz / idle / onboarding), nie z losowym grindem.
+2. Odświeżenie następuje naturalnie wraz z dniem / kolejką — bez presji „straciłeś postęp sezonu”.
+3. Brak twardego countdown FOMO w MVP (patrz §20.7).
+4. Szczegóły timerów / cron → implementacja później; tu tylko zasada produktowa.
+
+**Zależności**
+
+- §10, §23.
+
+---
+
+### 20.6 Nagrody jako kategorie
+
+**Cel**  
+Nagrodzić bez arkusza liczb.
+
+**Przebieg**
+
+1. Nagrody opisujemy **kategoriami** (np. środki / prestiż lekki / odblokowanie / achievement hook).
+2. Zasoby i kasa → reguły w **§14**; kwoty → **§26**.
+3. Kamienie / achievement → **§19** (gdy wypełnione); Prestige jako pojęcie → **§6**.
+4. §20 **nie** wprowadza osobnej waluty zadań ani XP bar.
+
+**Zależności**
+
+- §14, §19, §26, §6.
+
+---
+
+### 20.7 FOMO policy (soft)
+
+**Cel**  
+Retencja bez dark patterns.
+
+**Przebieg**
+
+1. **Brak kar** za opuszczenie dnia (reputacja/sezon/skład nie cierpią „za nieobecność w zadaniu”).
+2. **Brak obowiązkowego logowania** — gra działa, gdy wracasz na mecz.
+3. Zachęta = bonus kategorii / poczucie sprawczości, nie strata.
+4. Powiadomienia o celach — tylko w ramach §22 (opt-in); §20 nie projektuje push spam.
+5. Quiet / soft landing zgodny z §3.10.
+
+**Zależności**
+
+- §3.10, §22, §27.
+
+---
+
+### 20.8 Streaki — MVP lekki vs Future
+
+**Cel**  
+Oddzielić prostą ciągłość od advanced meta.
+
+**Przebieg**
+
+1. **MVP:** najwyżej lekki sygnał ciągłości (flavor / soft), bez brutalnej kary za zerwanie (§3.10).
+2. **Future:** advanced streaks, mnożniki, eventy sezonowe zadań, personalizacja puli.
+3. Streak nie może stać się pay-to-recover (§27).
+
+---
+
+### 20.9 Integracja z Hub (§23)
+
+**Cel**  
+Spiąć cel dnia z ekranem decyzji — bez redefinicji Hubu.
+
+**Przebieg**
+
+| Stan Hub (§23)    | Rola celu dnia                                               |
+| ----------------- | ------------------------------------------------------------ |
+| **Nowy klub**     | Może być pierwszą instancją celu (spójnie z §5.11)           |
+| **Dzień meczowy** | Mecz = Primary; cel dnia ≤ Secondary lub zsynchronizowany    |
+| **Po meczu**      | Soft complete możliwy; Primary = następna sprawa / idle      |
+| **Idle**          | Cel dnia często kandydat na Primary (gdy brak pilnego meczu) |
+
+1. Hub nadal: **1 Primary / ≤5 Secondary**.
+2. §20 dostarcza treść warstwy 2; §23 dostarcza hierarchię i limity CTA.
+3. Zakaz osobnego dashboardu questów w MVP.
+
+**Zależności**
+
+- §23 (SSOT Hub).
+
+---
+
+### 20.10 Relacja z §3 / §5
+
+**Cel**  
+Spójność pętli i onboardingu.
+
+**Przebieg**
+
+1. §3.10: zadanie dzienne = lekki bonus za wizytę, opcjonalne względem meczu — ten rozdział to doprecyzowuje.
+2. §5.11: pierwsze zadanie / cel startowy może być instancją §20, nie osobnym SSOT.
+3. Progressive disclosure: D1 nie zarzuca listą questów.
+
+**Zależności**
+
+- §3, §5.10–5.11.
+
+---
+
+### 20.11 Relacja z §9
+
+**Cel**  
+Typ meczowy bez dublowania flow meczu.
+
+**Przebieg**
+
+1. „Zagraj mecz” prowadzi do istniejącej ścieżki Przedmecz → Live → Raport → Hub.
+2. §20 nie zmienia sterowania meczem ani Post Match.
+3. Po meczu cel może się domknąć automatycznie, jeśli był typu meczowego.
+
+**Zależności**
+
+- §9.12–9.15.
+
+---
+
+### 20.12 Relacja z §14 / §19 / §26
+
+**Cel**  
+Nagrody bez drugiego ekonomicznego SSOT.
+
+**Przebieg**
+
+1. Kategorie środków → §14.
+2. Achievement / kamień → §19.
+3. Liczby i balance → §26 (Future względem tego rozdziału).
+4. §20 tylko wskazuje **kategorię** i moment odczucia nagrody.
+
+---
+
+### 20.13 Fair-play / Premium (§27)
+
+**Cel**  
+Granica monetyzacji.
+
+**Przebieg**
+
+1. Premium nie sprzedaje ukończenia zadań ani wyniku meczu.
+2. Ewentualna Future wygoda (np. reminder) nie omija fair-play.
+3. Do wypełnienia §27 obowiązuje ta kotwica.
+
+---
+
+### 20.14 MVP vs Future
+
+**MVP — wchodzi**
+
+- Pytanie „co warto dziś?”
+- Opcjonalność; mecz = oś
+- Jeden główny cel dnia na Hubie
+- Priorytet meczu w dniu meczowym
+- Typy jakościowe (mecz / skład / hub / lekki sezonowy)
+- Soft FOMO; brak kar / obowiązkowego loginu / P2W
+- Nagrody = kategorie (§14 / §19 / §26)
+- Lekki sygnał ciągłości (bez advanced streaks)
+
+**MVP — nie wchodzi**
+
+- Liczby, kwoty, XP bary
+- Kary za skip
+- Pay-to-complete
+- Advanced streaks / mnożniki
+- Wydarzenia sezonowe zadań
+- Personalizacja puli
+- Zadania społecznościowe
+- Pełny Quest Log / multi-quest board
+
+**Future**
+
+1. Advanced streaks i eventy
+2. Personalizacja zadań
+3. Social / club challenges
+4. Quest Log
+5. Głębsza integracja §21–§22 po ich wypełnieniu
+6. Balance liczb (§26)
+
+---
+
+### 20.15 Kontrakty produktowe §20
+
+1. Zadania odpowiadają: **„Co warto dziś zrobić?”**
+2. Są **opcjonalne** i nie blokują postępu.
+3. **Mecz > zadanie**; w dniu meczowym mecz ma wyższy priorytet.
+4. Hub pokazuje **dokładnie jeden** główny cel dnia.
+5. Nagrody = **kategorie** (§14 / §19 / §26) — bez liczb w §20.
+6. **Brak kar**, **brak obowiązkowego loginu**, **brak pay-to-win**.
+7. Advanced streaks / eventy / personalizacja / social / Quest Log = **Future**.
+8. Hub hierarchy i limity CTA pozostają w **§23**.
+
+---
+
+### 20.16 Checklista §20
+
+- [x] Filozofia i relacja do meczu
+- [x] Jeden główny cel dnia na Hubie
+- [x] Priorytet meczu w dniu meczowym
+- [x] Typy jakościowe
+- [x] Soft FOMO / brak kar / brak obowiązkowego loginu
+- [x] Nagrody = kategorie (§14 / §19 / §26)
+- [x] Integracja §23 / §3 / §5 / §9
+- [x] MVP vs Future + kontrakty
+- [ ] Copy puli celów po playtestach
+- [ ] Sync §21–§22 po ich wypełnieniu
+- [ ] Liczby nagród (§26) — Future
 
 ---
 
@@ -6568,14 +6883,17 @@ Habit loop bez pay-to-win pressure (szkielet).
 Opisać inbox narracyjny i systemowy.
 
 **Opis**  
-Wiadomości od zarządu, mediów, agentów, systemu.
+Wiadomości od zarządu, mediów, agentów, systemu — limitowane, nie spam.
+
+> **Kotwica:** cel dnia / habit loop = **§20**. Wiadomość może wskazywać cel; nie redefiniuje systemu zadań.
 
 **Do opracowania**
 
 - [ ] Typy wiadomości
-- [ ] Priorytety
+- [ ] Priorytety / limit / rotacja
 - [ ] Archiwum
 - [ ] Akcje z wiadomości (CTA)
+- [ ] Relacja z §20 (wskazanie celu) i §22
 - [ ] Generowanie treści (szablony)
 
 ---
@@ -6587,6 +6905,8 @@ Zdefiniować alerty in-app / push (wysoki poziom).
 
 **Opis**  
 Co i kiedy powiadamiamy, by nie spamować.
+
+> **Kotwica:** zadania dzienne = **§20** (soft FOMO, brak obowiązkowego loginu). Push nie może karać za nieobecność.
 
 **Do opracowania**
 
@@ -6821,7 +7141,7 @@ Dzień bez natychmiastowego meczu nadal ma **jedną** sensowną decyzję.
 
 1. Warstwa 1: najbliższe wydarzenie w kalendarzu (nawet jeśli „jutro / w kolejce”).
 2. Primary: najbliższy sensowny cel (przygotowanie kolejki, zadanie, sprawa wiadomości) — **jeden**.
-3. Unikać FOMO wall i daily-grind jako jedynego sensu Hubu (§20 — gdy wypełnione — konsumowane, nie redefiniowane tu).
+3. Unikać FOMO wall i daily-grind jako jedynego sensu Hubu (**szczegół zadań → §20**).
 4. Secondary (≤5): liga, skład, transfery/finanse (gdy odblokowane), trening, wiadomości.
 5. Soft landing: idle nie karze gracza pustką ani spamem.
 
@@ -7004,7 +7324,8 @@ Freeze zakresu.
 - [x] Relacje §3 / §9–§15 / §24 / UI Guide
 - [x] MVP vs Future + kontrakty
 - [ ] Copy Primary per stan po playtestach UX
-- [ ] Sync z §20–§22 po ich wypełnieniu
+- [x] Sync z §20 (zadania dzienne) — GDD-15
+- [ ] Sync z §21–§22 po ich wypełnieniu
 - [ ] Decyzja detalu karty klubu vs Hub dla pełnego §6 (UI)
 
 ---
