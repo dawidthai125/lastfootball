@@ -6,8 +6,8 @@ Stan projektu dla Agenta: **gdzie jesteśmy**, bez historii czatu.
 
 ## Aktualny etap
 
-**Product platform + First Match + EARLY_CLUB Hub + fixtures Thin A** (lokalnie po LFE-LEAGUE-01).  
-Silnik LFE i match UI pipeline są dojrzałe.
+**PRODUCTION VERIFIED · GREEN** — platform + First Match + EARLY_CLUB Hub + fixtures Thin A.  
+Baseline prod: **`b5b64a3`** (LFE-LEAGUE-01 **CLOSED**).
 
 ## Ukończone (skrót)
 
@@ -20,7 +20,7 @@ Silnik LFE i match UI pipeline są dojrzałe.
 | LFE-MATCH-01    | First Match tunnel; `first_match_completed_at`; synthetic fixture `first` |
 | LFE-HUB-01      | Hub State Machine; EARLY_CLUB decision layout; shell soft-locks           |
 | LFE-DOCS-01     | AI / handoff docs consolidation                                           |
-| LFE-LEAGUE-01   | `fixtures` SSOT (3); Primary next match; Squad seed SSOT; faza EARLY_CLUB |
+| LFE-LEAGUE-01   | **CLOSED** · fixtures SSOT (3); Primary next match; Squad seed SSOT       |
 
 ### Silnik / mecz UI
 
@@ -32,11 +32,11 @@ GDD-01…15 CLOSED (§3–§15, §20, §23).
 
 ## W trakcie
 
-Owner Review LFE-LEAGUE-01 (commit/push + apply migracji `fixtures`).
+Brak otwartego EPIC implementacyjnego.
 
 ## Następne (rekomendacje — Owner wybiera)
 
-1. League table / `SEASON` phase follow-up.
+1. **LFE-LEAGUE-02** — League table + opcjonalnie `SEASON` (największa wartość MVP po Thin A).
 2. GDD-16+ (kolejny rozdział designu).
 3. Economy / transfers + `players` table.
 4. Zawężenie PUBLIC exports LFE (chore).
@@ -57,4 +57,4 @@ Owner Review LFE-LEAGUE-01 (commit/push + apply migracji `fixtures`).
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

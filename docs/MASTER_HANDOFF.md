@@ -5,21 +5,22 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · prod `b6b92dc` · LFE-LEAGUE-01 lokalnie · 2026-07-24
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `b5b64a3` · LFE-LEAGUE-01 CLOSED · 2026-07-24
 
 ---
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                 |
-| -------- | ------------------------------------------------------- |
-| Prod URL | https://lastfootball.vercel.app                         |
-| Commit   | `b6b92dce1fc9e0bf75fb48cc82a1e5ad570a327a`              |
-| Message  | feat(hub): rebuild EARLY_CLUB decision Hub (LFE-HUB-01) |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`      |
-| Supabase | `anoeimngwptucjdugjme`                                  |
-| CI       | Format · Typecheck · Lint · Test · Build                |
-| Hosting  | Vercel Production                                       |
+| Pole     | Wartość                                                                 |
+| -------- | ----------------------------------------------------------------------- |
+| Prod URL | https://lastfootball.vercel.app                                         |
+| Commit   | `b5b64a34130a472628ca8305ef9151139114588d`                              |
+| Message  | feat(league): add fixtures SSOT and next-match Hub loop (LFE-LEAGUE-01) |
+| Status   | **PRODUCTION VERIFIED · GREEN**                                         |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                      |
+| Supabase | `anoeimngwptucjdugjme` (+ `fixtures` applied)                           |
+| CI       | Format · Typecheck · Lint · Test · Build                                |
+| Hosting  | Vercel Production                                                       |
 
 ---
 
@@ -29,9 +30,9 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 Browser → Next.js apps/web
             ├─ Auth / middleware / Club DTO
             ├─ Onboarding + First Match tunnel
-            ├─ Hub EARLY_CLUB (decision screen)
+            ├─ Hub EARLY_CLUB (decision screen) + fixtures SSOT
             └─ Match UI → LiveMatchRuntime → packages/lfe
-Supabase ← Auth + clubs (+ future tables)
+Supabase ← Auth + clubs + fixtures
 ```
 
 Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)
@@ -65,7 +66,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Zakończone (kod na `main`)
 
-**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A**
+**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)**
 
 **Silnik/UI meczu:** LFE EPIC-1…7 · Gameplay · AI · Engine · Player Match Data · Canvas · Replay · Post Match · Live Bridge · Ratings · CI Prettier
 
@@ -73,11 +74,15 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Aktywne
 
-LFE-LEAGUE-01 — Owner Review (GO COMMIT / PUSH + migracja `fixtures`).
+Brak otwartego EPIC implementacyjnego.
+
+### Next Recommended EPIC
+
+**LFE-LEAGUE-02** — League table + opcjonalnie Hub `SEASON` (domknięcie GDD §10 po Thin A).
 
 ### Typowe następne
 
-League table / SEASON · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physics (FUTURE)
+LFE-LEAGUE-02 · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physics (FUTURE)
 
 ---
 
@@ -121,7 +126,7 @@ League table / SEASON · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim 
 
 - Auth email/password; callback `/auth/callback`
 - Table `clubs` (owner RLS) + `first_match_completed_at`
-- Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A
+- Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A **applied**
 - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — never commit)
 - Status: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md)
 
@@ -164,4 +169,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

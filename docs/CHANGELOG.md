@@ -7,12 +7,12 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`b6b92dc`** (LFE-HUB-01). Platform + First Match + EARLY_CLUB Hub.  
-**LFE-LEAGUE-01 Thin A** zaimplementowany lokalnie (awaiting Owner GO commit/push + migracja `fixtures`).
+Production baseline **`b5b64a3`** (LFE-LEAGUE-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
+Platform + First Match + EARLY_CLUB Hub + fixtures Thin A.
 
 ---
 
-## [2026-07-24] — LFE-LEAGUE-01 Thin A
+## [2026-07-24] — LFE-LEAGUE-01 Thin A · CLOSED
 
 ### Product
 
@@ -21,6 +21,7 @@ Production baseline **`b6b92dc`** (LFE-HUB-01). Platform + First Match + EARLY_C
 - Hub Primary → „Przygotuj mecz” / Match Pipeline reuse / `completeFixture`
 - Squad SSOT (`resolveClubSquad`) — bez `@/data/squad` na ścieżce produktowej
 - Faza Hub pozostaje `EARLY_CLUB` (bez SEASON / tabeli ligowej)
+- Prod commit `b5b64a3`; migracja applied; CI + Vercel GREEN
 
 ---
 

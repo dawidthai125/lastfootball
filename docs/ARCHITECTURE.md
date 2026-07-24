@@ -6,7 +6,7 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`b6b92dc`** (LFE-HUB-01); LFE-LEAGUE-01 Thin A lokalnie.  
+Monorepo. Production baseline **`b5b64a3`** (LFE-LEAGUE-01 CLOSED).  
 LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub EARLY_CLUB + fixtures SSOT + match pipeline.
 
 ---
@@ -126,4 +126,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

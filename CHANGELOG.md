@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added (LFE-LEAGUE-01 Thin A — awaiting Owner GO push)
+### Docs (LFE-LEAGUE-01 CLOSE — awaiting Owner GO docs commit)
+
+- Status / baseline sync: LFE-LEAGUE-01 CLOSED · prod `b5b64a3`
+
+### Added (shipped on `main` — LFE-LEAGUE-01)
 
 - Fixtures SSOT (`fixtures` table + RLS + `opponent_club_id`)
 - Next-match Hub Primary CTA + Match Pipeline reuse + `completeFixture`

@@ -84,13 +84,13 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** GDD §23 + ochrona przed mid-season FOMO (LFE-HUB-01).  
 **Zasada:** `resolveHubPhase` / `resolvePrimaryCta` SSOT; zero `dashboardMock` mid-season na EARLY_CLUB.
 
-### D15 — Fixtures DB = SSOT terminarza ligowego (Thin A)
+### D15 — Fixtures DB = SSOT terminarza ligowego (Thin A) · CLOSED
 
 **Dlaczego:** Hub po First Match potrzebuje kolejnego meczu bez mid-season mock.  
 **Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; faza Hub pozostaje `EARLY_CLUB` do pełnego slice SEASON.  
-**Źródło:** LFE-LEAGUE-01.
+**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`).
 
-### D16 — Squad seed SSOT (do czasu tabeli players)
+### D16 — Squad seed SSOT (do czasu tabeli players) · CLOSED
 
 **Dlaczego:** Primary CTA / mecze wymagają spójnego XI bez `@/data/squad`.  
 **Zasada:** `resolveClubSquad(club)` / `seedStarterSquad` — deterministyczny seed; tabela `players` dopiero przy transferach.  
@@ -106,4 +106,4 @@ Każde złamanie D1–D16 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

@@ -6,8 +6,8 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Aktualny etap
 
-**Production (ostatni push):** platforma + First Match + Hub EARLY_CLUB (`b6b92dc`).  
-**Lokalnie (Owner Review):** **LFE-LEAGUE-01 Thin A** — fixtures SSOT + kolejny mecz + Squad SSOT.
+**PRODUCTION VERIFIED · GREEN** — platforma + First Match + Hub EARLY_CLUB + fixtures Thin A.  
+Baseline: **`b5b64a3`** (LFE-LEAGUE-01) · https://lastfootball.vercel.app
 
 | Tor            | Etap                                                                       |
 | -------------- | -------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 | Web match      | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings)               |
 | Platform       | Landing · Auth · Club Wizard · First Match · Hub EARLY_CLUB + fixtures     |
 | Product design | GDD-01…15 CLOSED                                                           |
-| Infra          | Vercel + Supabase `anoeimngwptucjdugjme` + migracja `fixtures`             |
+| Infra          | Vercel + Supabase `anoeimngwptucjdugjme` + `fixtures` applied              |
 
 ## Co jest ukończone
 
@@ -26,7 +26,7 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 - **LFE-MATCH-01** — First Match Experience (`first_match_completed_at`)
 - **LFE-HUB-01** — EARLY_CLUB decision Hub + shell progressive unlock
 - **LFE-DOCS-01** — AI docs / handoff consolidation
-- **LFE-LEAGUE-01** Thin A — `fixtures` (3), Primary „Przygotuj mecz”, Squad SSOT
+- **LFE-LEAGUE-01** Thin A — **CLOSED** · `fixtures` SSOT · Primary next match · Squad SSOT · prod `b5b64a3`
 
 ### LFE / Match UI
 
@@ -39,13 +39,13 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Co jest w trakcie
 
-- Owner Review → GO COMMIT / PUSH dla LFE-LEAGUE-01 (wymaga też apply migracji `fixtures` na Supabase).
+- Brak otwartego EPIC implementacyjnego.
 
 ## Co następne (rekomendacja)
 
-1. League table + opcjonalnie `SEASON` phase (follow-up).
+1. **LFE-LEAGUE-02** — League table + opcjonalnie faza `SEASON` (domknięcie kalendarza MVP).
 2. GDD-16+ (Owner wybiera rozdział).
-3. Economy / Transfers (po soft-lockach / players DB).
+3. Economy / Transfers (`players` DB).
 4. Zawężenie LFE PUBLIC exports.
 5. Physics / Rules — FUTURE.
 
@@ -64,4 +64,4 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

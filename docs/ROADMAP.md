@@ -6,46 +6,46 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production baseline **`b6b92dc`** (LFE-HUB-01) + lokalnie LFE-LEAGUE-01 Thin A (przed Owner GO commit/push).  
-CI zielony na ostatnim pushu docs.
+Production baseline **`b5b64a3`** (LFE-LEAGUE-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
+CI zielony; migracja `fixtures` applied na Supabase.
 
 ---
 
 ## DONE ✅
 
-| Item                                                   | Notatka                                                       |
-| ------------------------------------------------------ | ------------------------------------------------------------- |
-| Monorepo + infra                                       | Next, Supabase, Vercel, CI                                    |
-| LFE EPIC-1…7                                           | Foundation → Positioning                                      |
-| LFE Architecture Freeze                                | PUBLIC API v1                                                 |
-| Gameplay · Match AI · Match Engine · Player Match Data | silnik gameplay                                               |
-| Asset Pack · UI Shell                                  | chrome                                                        |
-| Live Bridge · Canvas · Replay · Post Match · Ratings   | match UI pipeline                                             |
-| CI Prettier                                            | format gate                                                   |
-| GDD-01…15                                              | §3–§15 + §20 + §23                                            |
-| **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                       |
-| **LFE-INFRA-01**                                       | Supabase `anoeimngwptucjdugjme`                               |
-| **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`               |
-| **LFE-HUB-01**                                         | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta`          |
-| **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                                |
-| **LFE-LEAGUE-01** Thin A                               | `fixtures` SSOT · 3 mecze · Primary → next match · Squad SSOT |
+| Item                                                   | Notatka                                                     |
+| ------------------------------------------------------ | ----------------------------------------------------------- |
+| Monorepo + infra                                       | Next, Supabase, Vercel, CI                                  |
+| LFE EPIC-1…7                                           | Foundation → Positioning                                    |
+| LFE Architecture Freeze                                | PUBLIC API v1                                               |
+| Gameplay · Match AI · Match Engine · Player Match Data | silnik gameplay                                             |
+| Asset Pack · UI Shell                                  | chrome                                                      |
+| Live Bridge · Canvas · Replay · Post Match · Ratings   | match UI pipeline                                           |
+| CI Prettier                                            | format gate                                                 |
+| GDD-01…15                                              | §3–§15 + §20 + §23                                          |
+| **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                     |
+| **LFE-INFRA-01**                                       | Supabase `anoeimngwptucjdugjme`                             |
+| **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`             |
+| **LFE-HUB-01**                                         | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta`        |
+| **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                              |
+| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match · Squad SSOT · prod |
 
 ## IN PROGRESS 🔄
 
-| Item | Notatka                                               |
-| ---- | ----------------------------------------------------- |
-| —    | Brak (po LEAGUE-01 IMPLEMENT — czeka Owner GO commit) |
+| Item | Notatka |
+| ---- | ------- |
+| —    | Brak    |
 
 ## PLANNED ⬜
 
-| Item                         | Zależność                  |
-| ---------------------------- | -------------------------- |
-| League table / SEASON phase  | Follow-up po Thin A        |
-| GDD-16+                      | Owner GO (docs)            |
-| Zawężenie LFE PUBLIC exports | chore                      |
-| Transfer Market + players DB | GDD §12                    |
-| Economy                      | GDD §14                    |
-| Ratings v2                   | bogatsze Player Match Data |
+| Item                               | Zależność                                |
+| ---------------------------------- | ---------------------------------------- |
+| **LFE-LEAGUE-02** (table / SEASON) | Follow-up po Thin A — rekomendowany next |
+| GDD-16+                            | Owner GO (docs)                          |
+| Zawężenie LFE PUBLIC exports       | chore                                    |
+| Transfer Market + players DB       | GDD §12                                  |
+| Economy                            | GDD §14                                  |
+| Ratings v2                         | bogatsze Player Match Data               |
 
 ## FUTURE
 
@@ -57,6 +57,11 @@ CI zielony na ostatnim pushu docs.
 | Mobile native                 | poza scope                  |
 
 ---
+
+## Next Recommended EPIC
+
+**LFE-LEAGUE-02 — League table + SEASON phase (thin)**  
+Uzasadnienie: po Thin A gracz ma kolejne mecze, ale brak tabeli i fazy `SEASON` — to największy brak GDD §10 względem „buduję historię w lidze”. Domknięcie SSOT wyników → tabela, bez Economy/Transfers.
 
 ## Decyzje roadmapy
 
@@ -71,4 +76,4 @@ CI zielony na ostatnim pushu docs.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE

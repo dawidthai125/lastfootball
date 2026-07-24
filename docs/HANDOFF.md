@@ -5,17 +5,16 @@
 **Krótki start** (1 ekran). Pełne przekazanie: [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md).  
 Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGENTS.md).
 
-## Stan (2026-07-24)
+## Stan (2026-07-24) — PRODUCTION VERIFIED · GREEN
 
-| Tor                | Stan                                                                |
-| ------------------ | ------------------------------------------------------------------- |
-| **Prod baseline**  | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app            |
-| **Local**          | LFE-LEAGUE-01 Thin A — Owner Review (no push yet)                   |
-| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub + fixtures SSOT    |
-| **Hub**            | EARLY_CLUB · Primary next match · Squad SSOT                        |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings     |
-| **GDD**            | GDD-01…15 CLOSED                                                    |
-| **CI**             | Format → Typecheck → Lint · Test · Build — zielony (local validate) |
+| Tor                | Stan                                                               |
+| ------------------ | ------------------------------------------------------------------ |
+| **Baseline**       | `b5b64a3` · LFE-LEAGUE-01 CLOSED · https://lastfootball.vercel.app |
+| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub + fixtures SSOT   |
+| **Hub**            | EARLY_CLUB · Primary next match · Squad SSOT                       |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings    |
+| **GDD**            | GDD-01…15 CLOSED                                                   |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                 |
 
 ## Kolejność czytania
 
@@ -27,8 +26,8 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Najbliższy cel
 
-**GO COMMIT / PUSH** LFE-LEAGUE-01 + apply migracji `fixtures` na Supabase.  
-Potem: league table / SEASON follow-up lub GDD-16+.
+**Next:** **LFE-LEAGUE-02** (league table + opcjonalnie `SEASON`) — AUDIT → PLAN.  
+Alternatywy: GDD-16+, Economy/Transfers.
 
 ## Zasady twarde
 
@@ -40,4 +39,4 @@ Potem: league table / SEASON follow-up lub GDD-16+.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-24 — LFE-LEAGUE-01 CLOSE
