@@ -6,7 +6,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Replay · Post Match · Live Bridge). CI zielony.
+Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
 
 ---
 
@@ -31,6 +31,7 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 | **Live Bridge**                  | wiring Canvas/Replay/Post Match (`33618e9`)        |
 | **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)                     |
 | GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                           |
+| **GDD-13 §6 Rozwój klubu**       | Poziom · Reputacja · Prestiż (SSOT metryk)         |
 | **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF               |
 | **AI-DOCS-CONSOLIDATION-01**     | Handbook Agenta (SSOT FIRST; bez nowych plików)    |
 
@@ -44,7 +45,7 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 
 | Item                         | Zależność                  |
 | ---------------------------- | -------------------------- |
-| GDD-13 §6 Rozwój klubu       | Owner GO (docs)            |
+| GDD-14+ (kolejny szkielet)   | Owner GO (docs)            |
 | Zawężenie LFE PUBLIC exports | chore packaging            |
 | Transfer Market              | GDD §12                    |
 | Economy                      | GDD §14                    |
@@ -69,6 +70,7 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 - Design (GDD) prowadzi produkt.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
+- §6 = SSOT metryk rozwoju klubu.
 
 ## Powiązania
 
@@ -76,4 +78,4 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-RATINGS-01
+2026-07-24 — GDD-13

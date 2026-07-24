@@ -12,7 +12,7 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 | -------------- | ---------------------------------------------------------------------------------- |
 | Engine         | EPIC-1…7 + **Gameplay + AI + Engine** + **Player Match Data** · `0.9.1-match-ai01` |
 | Web match      | Pre → Live → Canvas → Replay → Post Match (+ **Ratings**)                          |
-| Product design | GDD-01…12 CLOSED · §6 skeleton                                                     |
+| Product design | GDD-01…13 CLOSED · §3–§15 wypełnione · pozostałe = szkielet                        |
 | Infra          | Vercel + Supabase + CI (format gate PASS)                                          |
 
 **HEAD (orientacyjnie):** `33618e9` Live Bridge — zawsze sprawdzaj `git log -1`.
@@ -44,24 +44,24 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego (Ratings lokalnie — COMMIT po Owner GO).
-- Dług: zawężenie PUBLIC LFE exports.
+- Brak otwartego EPIC implementacyjnego (GDD-13 docs lokalnie — COMMIT po Owner GO).
+- Dług: zawężenie PUBLIC LFE exports; drobny sync statusu Ratings (już na `main`).
 
 ## Co następne (rekomendacja)
 
-1. GDD-13 §6 (docs).
-2. Transfer / Economy / League / Multiplayer — później.
+1. GDD-14+ (kolejny szkielet — Owner wybiera rozdział).
+2. Transfer / Economy / League / Multiplayer — implementacja później.
 3. Physics / Rules — FUTURE.
 4. Ratings v2 (assists / minutes) — FUTURE.
 
 ## Otwarte decyzje
 
-| ID   | Temat                              | Status   |
-| ---- | ---------------------------------- | -------- |
-| D-01 | Zawężenie `index.ts` do freeze     | Otwarte  |
-| D-02 | Kiedy Physics vs Ratings vs GDD-13 | Owner GO |
-| D-03 | Persist Replay                     | Otwarte  |
-| D-04 | Tick-synced spatial                | Otwarte  |
+| ID   | Temat                           | Status   |
+| ---- | ------------------------------- | -------- |
+| D-01 | Zawężenie `index.ts` do freeze  | Otwarte  |
+| D-02 | Kolejny rozdział GDD vs Physics | Owner GO |
+| D-03 | Persist Replay                  | Otwarte  |
+| D-04 | Tick-synced spatial             | Otwarte  |
 
 ## Powiązania
 
@@ -69,4 +69,4 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-RATINGS-01
+2026-07-24 — GDD-13

@@ -6,7 +6,7 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…12 **CLOSED**. Wypełnione §3–§5 oraz §7–§15. **§6 i pozostałe rozdziały = szkielet**. Następny etap: **GDD-13 §6** (Owner GO).
+Faza 2: GDD-01…13 **CLOSED**. Wypełnione §3–§15. **Pozostałe rozdziały = szkielet**. Następny etap: **GDD-14+** (Owner GO).
 
 ## Opis działania
 
@@ -35,4 +35,4 @@ Faza 2: GDD-01…12 **CLOSED**. Wypełnione §3–§5 oraz §7–§15. **§6 i p
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — GDD-13

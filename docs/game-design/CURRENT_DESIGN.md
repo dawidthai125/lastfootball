@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-12 CLOSED. §6 niewypełnione. UI Guide istnieje.
+GDD-13 CLOSED. §3–§15 wypełnione. UI Guide istnieje. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -14,7 +14,7 @@ GDD-12 CLOSED. §6 niewypełnione. UI Guide istnieje.
 | -------- | ------------------- | ------------------------------ |
 | §3       | Core loop           | Wypełniony                     |
 | §4–§5    | Rejestracja / klub  | Wypełniony                     |
-| §6       | Rozwój klubu        | **Szkielet → GDD-13**          |
+| §6       | Rozwój klubu        | **Wypełniony (GDD-13)**        |
 | §7       | Rozwój graczy       | Wypełniony (DCC)               |
 | §8       | Trening             | Wypełniony (DCC)               |
 | §9       | Doświadczenie meczu | Wypełniony                     |
@@ -35,10 +35,12 @@ GDD-12 CLOSED. §6 niewypełnione. UI Guide istnieje.
 - Transfery: Accept/Reject + max 1 kontroferta; skład 18–22.
 - Finanse: 1 kasa + transfer envelope.
 - Stadion: preset statyczny MVP.
+- Rozwój klubu (§6): Poziom klubu · Reputacja · Prestiż; sport → prestiż → reputacja → atrakcyjność.
 
 ## Najważniejsze decyzje
 
-Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
+Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.  
+Metryki rozwoju klubu: **tylko §6** (ZERO DUPLICATE).
 
 ## Powiązania
 
@@ -46,4 +48,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — GDD-13

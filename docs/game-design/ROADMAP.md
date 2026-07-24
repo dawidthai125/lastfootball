@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…12 ukończone. Następny rekomendowany: **GDD-13**.
+GDD-01…13 ukończone. §3–§15 wypełnione. Następny etap szkieletu = **Owner GO** (GDD-14+).
 
 ## Completed
 
@@ -24,6 +24,7 @@ GDD-01…12 ukończone. Następny rekomendowany: **GDD-13**.
 | GDD-10 | §14 Finances              |
 | GDD-11 | §15 Sponsors              |
 | GDD-12 | §13 Stadium               |
+| GDD-13 | §6 Club development       |
 
 ## In Progress
 
@@ -35,7 +36,6 @@ GDD-01…12 ukończone. Następny rekomendowany: **GDD-13**.
 
 | Stage        | Zakres                                            |
 | ------------ | ------------------------------------------------- |
-| **GDD-13**   | §6 Rozwój klubu                                   |
 | GDD-14+      | Pozostałe rozdziały szkieletu (kolejność = Owner) |
 | Balance pass | §26 liczby (później)                              |
 
@@ -44,11 +44,13 @@ GDD-01…12 ukończone. Następny rekomendowany: **GDD-13**.
 - Pełne UI specs ekranów
 - Sezon 2+ content
 - Esport / multiplayer design (jeśli w ogóle)
+- Infrastruktura / rozbudowa stadionu (poza MVP; kotwica §6 / §13)
 
 ## Najważniejsze decyzje
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
+- §6 = SSOT metryk klubu (Poziom · Reputacja · Prestiż).
 
 ## Powiązania
 
@@ -56,4 +58,4 @@ GDD-01…12 ukończone. Następny rekomendowany: **GDD-13**.
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — GDD-13

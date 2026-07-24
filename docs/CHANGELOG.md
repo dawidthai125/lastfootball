@@ -7,7 +7,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Match pipeline + **Player Ratings** (Post Match derive). Handbook Agenta aktualny.
+GDD-13 (§6 Rozwój klubu) uzupełniony. Match pipeline + Player Ratings na `main`.
+
+---
+
+## [2026-07-24] — GDD-13
+
+### Docs (SSOT FIRST)
+
+- Wypełniony §6 Rozwój klubu: Poziom klubu · Reputacja · Prestiż
+- Łańcuch: sport → prestiż → reputacja → atrakcyjność; Poziom = rozwój organizacji
+- Soft caps, unlocki jakościowe, stadion = §13 / rozbudowa Future
+- Cross-refs w §7.17, §11.16, §12.8, §13.8, §15.8, §18, §19 (bez duplikacji definicji)
+- Sync: `CURRENT_DESIGN`, `game-design/ROADMAP`, status, handoff
 
 ---
 

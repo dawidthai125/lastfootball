@@ -12,7 +12,7 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 | **LFE**       | EPIC-1…7 + Gameplay + AI + Engine + **Player Match Data** · **`0.9.1-match-ai01`** na `main` |
 | **Web match** | Live Bridge + Canvas + Replay + Post Match + **Ratings**                                     |
 | **UI shell**  | Asset Pack + Shell polish na `main`                                                          |
-| **GDD**       | GDD-01…12 CLOSED · §6 skeleton                                                               |
+| **GDD**       | GDD-01…13 CLOSED · §3–§15 wypełnione                                                         |
 | **CI**        | Format → Typecheck → Lint → Test → Build — zielony po Prettier chore                         |
 | **Prod**      | `https://lastfootball.vercel.app`                                                            |
 
@@ -39,7 +39,7 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 
 ## Najbliższy cel (rekomendacja)
 
-1. **GDD-13 §6** (docs) — Owner GO.
+1. **GDD-14+** (kolejny rozdział szkieletu) — Owner GO.
 2. Albo Ratings v2 / Transfer / Economy — później.
 
 Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow).
@@ -50,7 +50,8 @@ Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow
 - Nie łam Engine/AI przy EPIC-ach UI.
 - Nie commit / push bez prośby Ownera.
 - Nie polegaj na historii czatu — tylko docs + kod.
+- Metryki rozwoju klubu → tylko §6 GDD.
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-RATINGS-01
+2026-07-24 — GDD-13

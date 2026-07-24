@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-12 (§3–§5, §7–§15 uzupełnione; §6 i pozostałe = szkielet)  
+**Etap:** GDD-13 (§3–§15 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -18,7 +18,7 @@
 3. [Główna pętla rozgrywki](#3-główna-pętla-rozgrywki) ← **GDD-02**
 4. [Rejestracja gracza](#4-rejestracja-gracza) ← **GDD-03**
 5. [Tworzenie klubu](#5-tworzenie-klubu) ← **GDD-03**
-6. [Rozwój klubu](#6-rozwój-klubu)
+6. [Rozwój klubu](#6-rozwój-klubu) ← **GDD-13**
 7. [Rozwój zawodników](#7-rozwój-zawodników) ← **GDD-06**
 8. [Trening](#8-trening) ← **GDD-07**
 9. [Mecze](#9-mecze) ← **GDD-04**
@@ -1169,19 +1169,488 @@ Przewidzieć awarie UX, by gracz nigdy nie utknął bez CTA i bez utraty klubu �
 
 ## 6. Rozwój klubu
 
+**Status rozdziału:** GDD-13 — opracowany (**rozwój klubu MVP — filozofia i doświadczenie gracza**; bez liczb, progów, wzorów i balansu — → §26)
+
+**Cel rozdziału**  
+Dać klubowi czytelny **łuk instytucjonalny**: organizacja rośnie przez sport, buduje tożsamość i otwiera sensowne możliwości — spójnie z §3 (pętla), §7 (kadra), §10–§11 (rozgrywki), §12 (transfery), §13 (stadion), §14–§15 (ekonomia).
+
+**Zasady nadrzędne (decyzje GDD-13)**
+
+1. **§6 = jedyny SSOT** definicji rozwoju klubu (metryki, unlocki jakościowe, caps, relacje).
+2. **Trzy metryki w tej kolejności:** Poziom klubu → Reputacja → Prestiż.
+3. **Model zależności:** Sukces sportowy → **Prestiż** → **Reputacja** → atrakcyjność klubu; **Poziom klubu** opisuje długofalowy rozwój organizacji.
+4. **MVP = filozofia i odczucie**, nie algorytmy, progi ani formuły.
+5. **Stadion** pozostaje zgodny z §13 (statyczny w MVP); rozbudowa tylko jako **Future**.
+6. **Unlocki** wyłącznie jakościowo (kategorie odczucia / otwarcia funkcji).
+7. **Preferowane soft caps**; hard caps tylko ochronnie (fair-play / anti-snowball — opis jakościowy).
+8. **Bez liczb / wzorów / balansu** w tym rozdziale — → §26.
+9. **Premium nie kupuje** poziomu, prestiżu, reputacji ani wyniku meczu (§27).
+10. **ZERO DUPLICATE:** pozostałe rozdziały odsyłają do §6 zamiast redefiniować metryki.
+
+**Szybki kontrakt MVP (SSOT)**
+
+| Parametr            | Wartość MVP                                       |
+| ------------------- | ------------------------------------------------- |
+| Cel                 | Łuk klubu odczuwalny w Sezonie 1                  |
+| Metryki             | Poziom klubu · Reputacja · Prestiż (słownik §6.2) |
+| Napęd wzrostu       | Sport (liga / puchar / sezon) jako primary        |
+| Łańcuch wpływu      | Sport → Prestiż → Reputacja → atrakcyjność        |
+| Poziom klubu        | Długofalowa dojrzałość organizacji                |
+| Caps                | Soft preferowane                                  |
+| Unlocki             | Jakościowe kategorie                              |
+| Stadion             | §13 statyczny; rozbudowa = Future                 |
+| Infrastruktura poza | Brak systemu budowy w MVP                         |
+| Liczby / balance    | OUT → §26                                         |
+
+---
+
+### 6.1 Filozofia rozwoju klubu
+
 **Cel**  
-Opisać długoterminowy progres instytucji klubu.
+Ustawić ton: klub to instytucja z historią, nie spreadsheet.
 
-**Opis**  
-Poziomy, reputacja, infrastruktura i odblokowania — szkielet bez liczb.
+**Przebieg**
 
-**Do opracowania**
+1. Gracz ma czuć, że **klub coś znaczy** po serii decyzji i wyników — nie po samym upływie dni.
+2. Rozwój klubu **wspiera** pętlę meczową (§3); nie konkuruje z CTA „zagraj mecz”.
+3. Sukces sportowy jest głównym paliwem tożsamości; ekonomia i rynek są **konsekwencją**, nie zamiennikiem.
+4. Słaby sezon boli odczuciem (prestiż / reputacja / miejsce), nie „game over” instytucji (soft landing §3 / §14).
+5. Future może dodać głębię infrastruktury — MVP tego nie wymaga.
 
-- [ ] Metryki klubu (reputacja, poziom, prestiż)
-- [ ] Infrastruktura (poza stadionem)
-- [ ] Odblokowania funkcji
-- [ ] Soft vs hard caps
-- [ ] Relacja klub ↔ zawodnicy ↔ finanse
+**Decyzje gracza**
+
+- Grać o wyniki, by budować klub pośrednio.
+- Czy czytać sygnały rozwoju klubu na Hubie / w raporcie (opcjonalne pogłębienie).
+
+**Zależności**
+
+- §3, §5 (start klubu), §10–§11, §14, §27.
+
+**Pytania otwarte**
+
+- Jak mocno Hub eksponuje metryki klubu vs ukrywa je za „statusem sezonu”?
+
+---
+
+### 6.2 Słownik metryk (Poziom klubu · Reputacja · Prestiż)
+
+**Cel**  
+Jedna, niepowtarzalna definicja trzech metryk — **SSOT**.
+
+| #   | Metryka          | Czym jest                                                                            | Czym nie jest                                       | Gracz czuje                              |
+| --- | ---------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------- | ---------------------------------------- |
+| 1   | **Poziom klubu** | Długofalowa dojrzałość / „rozmiar organizacji” — rama odczucia progresu i odblokowań | Nie wynik meczu; nie OVR zawodnika; nie ranking §18 | „Klub rośnie jako instytucja”            |
+| 2   | **Reputacja**    | Jak klub jest postrzegany na rynku i w świecie gry (wiarygodność, atrakcyjność)      | Nie tożsame z Prestiżem; nie punkty ligowe          | „Chcą z nami handlować / brać nas serio” |
+| 3   | **Prestiż**      | Kapitał sukcesów sportowych i historii (liga, puchar, kamienie sezonu)               | Nie waluta; nie kupuje wyniku LFE; nie = Reputacja  | „Mamy historię / szacunek za wyniki”     |
+
+**Model zależności (Owner)**
+
+```
+Sukces sportowy → Prestiż → Reputacja → Atrakcyjność klubu
+Poziom klubu = długofalowy rozwój organizacji (wspiera / jest wspierany przez sport i reputację)
+```
+
+**Zasady zapisu**
+
+1. Zawsze używać trzech osobnych nazw — bez synonimicznego mieszania.
+2. Inne rozdziały **odsyłają** tutaj; nie definiują metryk od nowa.
+3. Brak progów numerycznych i wzorów w §6.
+
+**Zależności**
+
+- Konsumenci: §7.17, §11.16, §12.8, §13.8, §14, §15.8, §18, §19.
+
+---
+
+### 6.3 Poziom klubu — doświadczenie gracza
+
+**Cel**  
+Opisać odczucie długofalowego wzrostu organizacji.
+
+**Przebieg**
+
+1. Poziom klubu komunikuje „jak dojrzały jest nasz projekt” w skali sezonów, nie pojedynczego meczu.
+2. W MVP może być widoczny jako status / etykieta / pasmo — bez tabeli XP.
+3. Wspiera narrację odblokowań jakościowych (§6.9), nie zastępuje tabeli ligowej.
+4. Awans/spadek ligowy (§10) wpływa na **odczucie kontekstu**, ale definicja poziomu żyje w §6.
+
+**Decyzje gracza**
+
+- Budować klub decyzjami sezonowymi (skład, cele), nie mikrogrindingiem poziomu.
+
+**Zależności**
+
+- §5.9–5.10, §10, §6.9.
+
+**Pytania otwarte**
+
+- Czy Poziom klubu jest zawsze widoczny w Hubie w MVP, czy tylko w karcie klubu?
+
+---
+
+### 6.4 Reputacja — doświadczenie gracza
+
+**Cel**  
+Opisać, jak świat gry „widzi” klub.
+
+**Przebieg**
+
+1. Reputacja jest odczuwalna przy okazjach rynkowych i partnerskich (transfery, sponsor — kategorie).
+2. Rośnie głównie w ślad za Prestiżem (§6.6), nie jako osobny grind.
+3. Spadek / słaba passa może obniżyć odczucie reputacji **miękko** (soft landing).
+4. Reputacja **nie** zmienia reguł fair-play wyniku meczu.
+
+**Decyzje gracza**
+
+- Traktować reputację jako skutek sportu i stabilności klubu.
+
+**Zależności**
+
+- §12, §15, §7.17 (sygnał lekki).
+
+---
+
+### 6.5 Prestiż — doświadczenie gracza
+
+**Cel**  
+Opisać kapitał sukcesu sportowego jako tożsamość.
+
+**Przebieg**
+
+1. Prestiż zbiera się z wyników ligi, głębokości pucharu i kamieni sezonu — **jakościowo**.
+2. Prestiż ≠ punkty ligowe; to osobna warstwa dumy i historii (§11.16 odsyła tutaj).
+3. Soft landing: wczesne odpadnięcie / słaby sezon nie niszczy tożsamości destrukcyjnie w Sezonie 1.
+4. Prestiż zasila Reputację (§6.6); nie jest walutą do wydania.
+
+**Decyzje gracza**
+
+- Celować w runy i cele sezonu także dla tożsamości klubu.
+
+**Zależności**
+
+- §10, §11, §19 (wyrażenie historii).
+
+---
+
+### 6.6 Relacja Prestiż → Reputacja (nie tożsamość)
+
+**Cel**  
+Utrzymać dwie metryki bez kolizji znaczeń.
+
+**Przebieg**
+
+1. **Prestiż** = „co osiągnęliśmy sportowo / historycznie”.
+2. **Reputacja** = „jak jesteśmy przez to postrzegani na zewnątrz”.
+3. Wzrost prestiżu **poprawia** reputację; spadek prestiżu może ją osłabiać — zawsze jako odczucie, bez wzoru.
+4. Możliwe Future: reputacja reaguje też na stabilność finansową / kulturę klubu — poza MVP.
+
+**Decyzje gracza**
+
+- Rozumieć, że trofeum buduje prestiż, a rynek „czyta” reputację.
+
+**Zależności**
+
+- §12.8, §15.8.
+
+---
+
+### 6.7 Impulsy wzrostu (liga / puchar / sezon) — jakościowo
+
+**Cel**  
+Wskazać, skąd klub „rośnie”, bez liczb.
+
+**Przebieg**
+
+1. **Liga (§10):** primary tor — kolejki, pozycja, awans/spadek jako główne impulsy prestiżu i kontekstu poziomu.
+2. **Puchar (§11):** satelita emocji i prestiżu KO; nie zamiennik tabeli.
+3. **Sezon:** podsumowanie kategorii (mistrz / awans / utrzymanie / uczestnictwo / run) zasila historię i prestiż.
+4. Brak osobnego grindu „zadań poziomu klubu” w MVP.
+5. Nagrody zasobowe pozostają w §14 / §26 — tu tylko sygnał instytucjonalny.
+
+**Decyzje gracza**
+
+- Priorytetyzować ligę; traktować puchar jako bonusową ścieżkę prestiżu.
+
+**Zależności**
+
+- §10.16, §11.14–11.16, §14.
+
+---
+
+### 6.8 Soft caps (preferowane) vs hard caps
+
+**Cel**  
+Ochronić early game i fair-play bez twardego muru frustracji.
+
+**Przebieg**
+
+1. **Soft caps (preferowane):** spowolnienie odczucia wzrostu, delikatniejsze pasma atrakcyjności, komunikaty „klub potrzebuje czasu”.
+2. **Hard caps:** tylko gdy chronią fair-play / anti-snowball / integralność rozgrywek — opisane jakościowo, bez progów tu.
+3. Sezon 1: ochrona przed ruiną reputacji i „pustym klubem”.
+4. Caps **nie** blokują możliwości zagrania meczu (§3).
+
+**Decyzje gracza**
+
+- Akceptować tempo rozwoju; nie szukać exploitów pay-to-skip (§27).
+
+**Zależności**
+
+- §3 soft landing, §14, §27.
+
+**Pytania otwarte**
+
+- Które Future hard gate’y (np. wyższe szczeble contentu) wymagają jawnego komunikatu UI?
+
+---
+
+### 6.9 Odblokowania funkcji — jakościowo
+
+**Cel**  
+Opisać kategorie otwierania się gry wraz z rozwojem klubu — bez listy ID i progów.
+
+**Przebieg — kategorie MVP (odczucie)**
+
+| Kategoria odblokowania   | Sens dla gracza                                       |
+| ------------------------ | ----------------------------------------------------- |
+| Głębsze narzędzia kadry  | Więcej sensu w zarządzaniu składem / statusami        |
+| Rynek / okna transferowe | Zgodnie z §12 — klub „dojrzewa” do handlu             |
+| Partnerstwa (sponsor)    | Zgodnie z §15 — pasma odnowienia, nie marketplace MVP |
+| Informacja / historia    | Więcej kontekstu klubu (sezon, trofea — §19)          |
+| Zapowiedzi Future        | Infrastruktura / akademia jako obietnica, nie wymóg   |
+
+1. Unlocki są **jakościowe**: „coś staje się dostępne / czytelniejsze”, nie „osiągnięto X punktów”.
+2. Niektóre funkcje startują z kreacji klubu (§5); §6 opisuje **dalsze dojrzewanie**.
+3. Brak pay-to-unlock rozwoju klubu.
+
+**Decyzje gracza**
+
+- Odkrywać nowe opcje naturalną grą, nie checklistą osobnego meta-grindu.
+
+**Zależności**
+
+- §5, §8 (trening), §12, §15, §16 Future.
+
+---
+
+### 6.10 Infrastruktura poza stadionem (MVP vs Future)
+
+**Cel**  
+Oddzielić obietnicę rozbudowy od zakresu MVP.
+
+**Przebieg**
+
+1. **MVP:** brak systemu budowy obiektów (akademia, ośrodek, medycyna itd. jako zarządzalne poziomy).
+2. Klimat „mamy zaplecze” może istnieć jako flavor / disabled preview — bez ekonomii budowy.
+3. **Future:** infrastruktura jako kamienie milowe rozwoju organizacji (powiązane z Poziomem klubu / prestiżem — bez wzoru tu).
+4. Akademia pozostaje rozdziałem §16 — §6 tylko kotwiczy relację Future.
+
+**Decyzje gracza**
+
+- W MVP nie zarządza budową; skupia się na sporcie i kadrze.
+
+**Zależności**
+
+- §13, §16, §8 (jakość ośrodka — Future).
+
+---
+
+### 6.11 Stadion a rozwój klubu (odesłanie §13; rozbudowa = Future)
+
+**Cel**  
+Zachować spójność z GDD-12 bez duplikacji.
+
+**Przebieg**
+
+1. Stadion w MVP = **obiekt statyczny** (§13) — dom tożsamości, nie city-builder.
+2. Frekwencja / bilety / utrzymanie = reguły §13 i wpływ na kasę §14 — **nie redefiniowane tutaj**.
+3. Rozbudowa pojemności / hospitality / rename = **Future** (kierunek poza MVP; może być kamieniem §6 Future).
+4. §6 mówi tylko: stadion należy do łuku klubu jako tło tożsamości.
+
+**Decyzje gracza**
+
+- Brak decyzji budowy w MVP (jak §13).
+
+**Zależności**
+
+- §13 (SSOT stadionu), §14.9.
+
+---
+
+### 6.12 Relacja klub ↔ zawodnicy (§7)
+
+**Cel**  
+Rozdzielić rozwój klubu od rozwoju zawodnika.
+
+**Przebieg**
+
+1. Zawodnik rośnie przez mecze/trening (§7 / §8); klub rośnie przez sukces instytucji (§6).
+2. Reputacja klubu może **lekko** wpływać na odczucie wartości rynkowej (§7.17) — bez wzoru.
+3. Morale / klimat (§7.9) może czerpać z atmosfery sukcesu klubu — jakościowo.
+4. Brak drugiej siatki „XP klubu na zawodnika” w MVP.
+
+**Decyzje gracza**
+
+- Selekcja składu buduje sport → prestiż → reputację; nie „poziomuje” zawodników sztucznie.
+
+**Zależności**
+
+- §7, §8, §9.14.
+
+---
+
+### 6.13 Relacja klub ↔ transfery (§12)
+
+**Cel**  
+Ustawić reputację/prestiż jako kontekst rynku.
+
+**Przebieg**
+
+1. Definicje metryk = §6; §12 opisuje **skutki rynkowe** (atrakcyjność ofert / zainteresowanie AI).
+2. Łańcuch: sport → prestiż → reputacja → łatwiejszy handel (odczucie).
+3. Prestiż/reputacja **nie** kupują wyniku meczu i nie omijają envelope (§14 / §27).
+4. Boost po runie pucharowym = szczegół timingowy w §12 (pytanie otwarte tam); tu tylko zasada wpływu.
+
+**Decyzje gracza**
+
+- Budować klub sportem, by wzmocnić rynek pośrednio.
+
+**Zależności**
+
+- §12.8, §14.5.
+
+---
+
+### 6.14 Relacja klub ↔ finanse / sponsorzy (§14 / §15)
+
+**Cel**  
+Spiąć instytucję z kasą bez drugiej ekonomii.
+
+**Przebieg**
+
+1. Jedna kasa + envelope (§14) — §6 nie dodaje waluty „prestiż do wydania”.
+2. Sukces sportowy zasila **kategorie** środków i prestiż; porażka boli prestiżem/reputacją mocniej niż ruiną.
+3. Sponsor (§15): pasma odnowienia mogą rosnąć z prestiżem/reputacją — definicje metryk w §6.
+4. Soft protection finansowa (§14) ważniejsza niż kara reputacyjna.
+
+**Decyzje gracza**
+
+- Czytać finanse i status klubu jako dwa sprzężone sygnały, nie dwa grywalne arkusze.
+
+**Zależności**
+
+- §14, §15.8–15.10.
+
+---
+
+### 6.15 Relacja klub ↔ ranking / osiągnięcia (§18 / §19)
+
+**Cel**  
+Uniknąć kolizji z przyszłymi rozdziałami rankingów i achievementów.
+
+**Przebieg**
+
+1. **§18 Ranking** będzie **konsumował** sygnały klubu (np. kontekst sezonu) — nie definiuje Poziomu / Reputacji / Prestiżu.
+2. **§19 Osiągnięcia** wyrażają kamienie i historię; Prestiż jako pojęcie = §6.
+3. Leaderboard ≠ Poziom klubu; achievement ≠ Reputacja.
+4. Do czasu wypełnienia §18–§19: obowiązuje ta kotwica.
+
+**Decyzje gracza**
+
+- (Future) przeglądać rankingi/osiągnięcia jako warstwę retencji, nie jako definicję klubu.
+
+**Zależności**
+
+- §18, §19 (szkielet), §11.16.
+
+---
+
+### 6.16 Sygnały UI (produkt; bez wireframe kodu)
+
+**Cel**  
+Wskazać, co gracz powinien móc szybko odczytać.
+
+**Przebieg**
+
+1. Hub / karta klubu: czytelny status sezonu + sygnały metryk (pasma / etykiety — bez spreadsheetu).
+2. Po meczu / po sezonie: krótki feedback instytucjonalny możliwy jako 1–2 linie (kategorie), bez breakdownu XP.
+3. Rynek / sponsor: kontekst „klub atrakcyjny dzięki reputacji” jako copy — bez osobnego mini-UI algorytmu.
+4. UI Guide: jeden cel ekranu; bez glow / pill clutter.
+
+**Decyzje gracza**
+
+- Jak głęboko czytać status klubu vs iść do następnego meczu.
+
+**Zależności**
+
+- UI Guide, §9.12–9.15, §23.
+
+---
+
+### 6.17 MVP vs Future
+
+**Cel**  
+Freeze zakresu.
+
+**MVP — wchodzi**
+
+- Słownik: Poziom klubu · Reputacja · Prestiż
+- Łańcuch: sport → prestiż → reputacja → atrakcyjność
+- Poziom klubu jako długofalowy rozwój organizacji
+- Impulsy jakościowe z ligi / pucharu / sezonu
+- Soft caps preferowane
+- Unlocki jako kategorie jakościowe
+- Odesłania z §7 / §12 / §13 / §14 / §15 / §18 / §19
+- Stadion zgodny z §13 (statyczny)
+
+**MVP — nie wchodzi**
+
+- Liczby, progi, krzywe, wzory (§26)
+- System budowy infrastruktury
+- Rozbudowa stadionu / hospitality
+- Pay-to-prestige / pay-to-level
+- Osobna waluta prestiżu
+- Redefinicje metryk poza §6
+
+**Future (kierunek poza MVP)**
+
+1. Poziomy infrastruktury (ośrodek, medycyna, akademia jako zarządzalne obiekty — spójnie z §16)
+2. Rozbudowa stadionu jako kamień §6 / §13 Future
+3. Głębsze soft/hard caps po danych z §26
+4. Reputacja z kultury klubu / finansów (poza samym sportem)
+5. Bogatsze UI historii i badge’y sezonowe
+
+---
+
+### 6.18 Kontrakty produktowe §6
+
+1. **§6 jest jedynym SSOT** rozwoju klubu.
+2. Metryki w kolejności: **Poziom klubu → Reputacja → Prestiż**.
+3. **Sport → Prestiż → Reputacja → atrakcyjność**; Poziom = rozwój organizacji.
+4. MVP opisuje **filozofię i UX**, nie algorytmy.
+5. Unlocki **tylko jakościowo**; Future oznaczony jednoznacznie.
+6. Caps: **soft preferowane**.
+7. Stadion = **§13**; rozbudowa = **Future**.
+8. Brak liczb / progów / wzorów / balansu w §6.
+9. Inne rozdziały **odsyłają** do §6 (ZERO DUPLICATE).
+10. Premium nie kupuje metryk klubu ani wyniku (§27).
+
+---
+
+### 6.19 Checklista §6
+
+- [x] Filozofia rozwoju klubu
+- [x] Słownik: Poziom klubu · Reputacja · Prestiż
+- [x] Model Prestiż → Reputacja; Poziom jako organizacja
+- [x] Impulsy liga / puchar / sezon (jakościowo)
+- [x] Soft vs hard caps
+- [x] Unlocki jakościowe
+- [x] Infrastruktura poza stadionem (MVP vs Future)
+- [x] Stadion = odesłanie §13
+- [x] Relacje §7 / §12 / §14–§15 / §18–§19
+- [x] Sygnały UI, MVP vs Future, kontrakty
+- [ ] Widoczność Poziomu klubu na Hubie vs karcie klubu (Owner UX)
+- [ ] Sync copy „prestiż” w contentcie sezonowym po playtestach
+- [ ] Balance / liczby (§26) — Future
 
 ---
 
@@ -1695,7 +2164,7 @@ Dać sygnał „ile ten piłkarz znaczy na rynku” pod przyszłe transfery — 
 
 **Przebieg**
 
-1. Wartość = **wypadkowa sygnałów**: poziom, potencjał, wiek, forma, status (kontuzja↓), szczebel ligi (§10), reputacja klubu (§6 — lekko).
+1. Wartość = **wypadkowa sygnałów**: poziom, potencjał, wiek, forma, status (kontuzja↓), szczebel ligi (§10), reputacja klubu (**definicja SSOT → §6.2 / §6.4** — lekko).
 2. UX MVP: wartość jako **pasmo lub skrót waluty** na karcie; pełna ekonomia → §14/§26.
 3. Wartość aktualizuje się w punktach sensownych (po meczu / co kolejkę / po sezonie) — nie tick co sekundę.
 4. Gracz używa wartości do: poczucia dumy, decyzji „trzymać vs (później) sprzedać”.
@@ -3929,6 +4398,8 @@ Odczuwalne domknięcie runu pucharowego.
 **Cel**  
 Puchar buduje tożsamość klubu obok tabeli.
 
+> **SSOT metryki:** definicja **Prestiżu** (oraz relacji do Reputacji) → **§6.2 / §6.5–6.6**. Ta sekcja opisuje tylko skutki pucharowe.
+
 **Przebieg**
 
 1. Zwycięstwo / finał: trwały wpis w historii klubu (§6 / §19).
@@ -4284,6 +4755,8 @@ Rynek nagradza hodowlę z meczów, nie tylko OVR „dziś”.
 
 **Cel**  
 Sukces sportowy ułatwia handel w obie strony — bez formuł.
+
+> **SSOT metryk:** Prestiż / Reputacja / łańcuch sport → atrakcyjność → **§6.2 / §6.6 / §6.13**. Tu tylko skutki rynkowe.
 
 **Przebieg**
 
@@ -4744,6 +5217,8 @@ Kibice reagują na formę — bez snowball ruinującego early game.
 
 **Cel**  
 Większa scena = większe zainteresowanie — spójnie z §11/§12/§15.
+
+> **SSOT:** definicja Prestiżu → **§6.2 / §6.5**. Rozbudowa stadionu jako kierunek rozwoju klubu → **§6.11 Future** (obiekt MVP nadal §13).
 
 **Przebieg**
 
@@ -5762,6 +6237,8 @@ Wyniki kształtują postęp celu i (lekko) przyszłe oferty.
 **Cel**  
 Prestiż zwiększa atrakcyjność sponsorską — spójnie z §12.8.
 
+> **SSOT metryk:** Prestiż / Reputacja → **§6.2 / §6.14**. Tu tylko skutki sponsorskie.
+
 **Przebieg**
 
 1. Wyższy szczebel (§10) → przy odnowieniu wyższe pasmo oferty bazowej (odczucie).
@@ -6035,6 +6512,8 @@ Zdefiniować rankingi graczy / klubów.
 **Opis**  
 Leaderboardy sezonowe i historyczne.
 
+> **Kotwica SSOT:** Poziom klubu / Reputacja / Prestiż definiuje **§6**. Ranking **konsumuje** sygnały, nie redefiniuje metryk klubu (§6.15).
+
 **Do opracowania**
 
 - [ ] Metryki rankingu
@@ -6052,6 +6531,8 @@ Zaplanować system achievementów.
 
 **Opis**  
 Nagrody za kamienie milowe — retencja i cele długie.
+
+> **Kotwica SSOT:** Prestiż i historia klubu jako pojęcia → **§6**; osiągnięcia **wyrażają** kamienie, nie zastępują słownika metryk (§6.15).
 
 **Do opracowania**
 
