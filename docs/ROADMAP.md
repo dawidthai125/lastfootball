@@ -1,85 +1,71 @@
 # Roadmap — Last Football
 
-## Cel dokumentu
+## Cel
 
 Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Match pipeline na `main` + GDD §3–§15 + §20 + §23 (GDD-15). CI zielony.
+Production baseline **`b6b92dc`** (LFE-HUB-01): First Match + EARLY_CLUB Hub. CI zielony.
 
 ---
 
 ## DONE ✅
 
-| Item                             | Notatka                                            |
-| -------------------------------- | -------------------------------------------------- |
-| Monorepo + infra                 | Next, Supabase, Vercel, CI                         |
-| LFE EPIC-1…7                     | Foundation → Positioning                           |
-| LFE Architecture Freeze          | PUBLIC API v1 kontrakt                             |
-| **Gameplay Foundation**          | tactics, events, tactical commands                 |
-| **Match AI**                     | MATCH-AI-01                                        |
-| **Match Engine**                 | MATCH-ENGINE-01                                    |
-| **Player Match Data**            | `statistics.players` + optional `playerId`         |
-| Asset Pack 01                    | herby, ikony, tekstury                             |
-| UI Shell Polish                  | nav / topbar / rail                                |
-| Live UI + LiveMatchRuntime       | broadcast + **Live Bridge**                        |
-| **Canvas Renderer**              | 2D + EventBus FX + LIVE/REPLAY (`d752d22`)         |
-| **Replay**                       | buffer + controller (`cf1d68c`)                    |
-| **Post Match**                   | summary + seek Replay (`b25f479`)                  |
-| **Player Ratings**               | Post Match XI + MVP derive (LFE-PLAYER-RATINGS-01) |
-| **Live Bridge**                  | wiring Canvas/Replay/Post Match (`33618e9`)        |
-| **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)                     |
-| GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                           |
-| **GDD-13 §6 Rozwój klubu**       | Poziom · Reputacja · Prestiż (SSOT metryk)         |
-| **GDD-14 §23 Hub**               | Ekran decyzji; 1 Primary / ≤5 Secondary            |
-| **GDD-15 §20 Zadania**           | 1 cel dnia; opcjonalne; mecz > zadanie             |
-| **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF               |
-| **AI-DOCS-CONSOLIDATION-01**     | Handbook Agenta (SSOT FIRST; bez nowych plików)    |
+| Item | Notatka |
+| --- | --- |
+| Monorepo + infra | Next, Supabase, Vercel, CI |
+| LFE EPIC-1…7 | Foundation → Positioning |
+| LFE Architecture Freeze | PUBLIC API v1 |
+| Gameplay · Match AI · Match Engine · Player Match Data | silnik gameplay |
+| Asset Pack · UI Shell | chrome |
+| Live Bridge · Canvas · Replay · Post Match · Ratings | match UI pipeline |
+| CI Prettier | format gate |
+| GDD-01…15 | §3–§15 + §20 + §23 |
+| **LFE-PLATFORM-01** P1–P3 | Landing · Auth · Club Wizard · Club DTO |
+| **LFE-INFRA-01** | Supabase `anoeimngwptucjdugjme` |
+| **LFE-MATCH-01** | First Match tunnel · `first_match_completed_at` |
+| **LFE-HUB-01** | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta` |
 
 ## IN PROGRESS 🔄
 
-| Item | Notatka                                     |
-| ---- | ------------------------------------------- |
-| —    | Brak otwartego EPIC kodu (docs lokalnie OK) |
+| Item | Notatka |
+| --- | --- |
+| LFE-DOCS-01 | Konsolidacja dokumentacji (docs-only; bez commit do momentu Owner GO) |
 
 ## PLANNED ⬜
 
-| Item                         | Zależność                  |
-| ---------------------------- | -------------------------- |
-| GDD-16+ (kolejny szkielet)   | Owner GO (docs)            |
-| Zawężenie LFE PUBLIC exports | chore packaging            |
-| Transfer Market              | GDD §12                    |
-| Economy                      | GDD §14                    |
-| League live                  | GDD §10 + backend          |
-| Multiplayer                  | późna faza                 |
-| Ratings v2 (assists/minutes) | bogatsze Player Match Data |
+| Item | Zależność |
+| --- | --- |
+| League / fixtures SSOT | Hub SEASON + next Primary |
+| GDD-16+ | Owner GO (docs) |
+| Zawężenie LFE PUBLIC exports | chore |
+| Transfer Market | GDD §12 |
+| Economy | GDD §14 |
+| Ratings v2 | bogatsze Player Match Data |
 
 ## FUTURE
 
-| Item                             | Notatka                              |
-| -------------------------------- | ------------------------------------ |
-| LFE Physics / ball kinematics    | RESERVED stub                        |
-| LFE Rules (fouls/restarts pełne) | częściowo eventy; brak pełnych rules |
-| ECS storage                      | RESERVED                             |
-| Replay persist / video export    | poza MVP                             |
-| Mobile native                    | poza scope                           |
+| Item | Notatka |
+| --- | --- |
+| LFE Physics / full Rules | RESERVED / częściowe eventy |
+| ECS storage | RESERVED |
+| Replay persist / video export | poza MVP |
+| Mobile native | poza scope |
 
 ---
 
-## Najważniejsze decyzje roadmapy
+## Decyzje roadmapy
 
-- Design (GDD) prowadzi produkt.
+- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem).
+- Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
-- §6 = SSOT metryk rozwoju klubu.
-- §20 = SSOT zadań dziennych (opcjonalne; mecz > zadanie).
-- §23 = SSOT Hub (decyzja, nie dashboard).
 
 ## Powiązania
 
-[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`lfe/CURRENT_STATUS.md`](./lfe/CURRENT_STATUS.md)
+[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`AI/PROJECT_STATE.md`](./AI/PROJECT_STATE.md)
 
 ## Last updated
 
-2026-07-24 — GDD-15
+2026-07-24 — LFE-DOCS-01

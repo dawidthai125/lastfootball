@@ -70,18 +70,19 @@ UI czyta: `getMatchState()`, `getSpatialState()`, `getEvents()`.
 | Pre    | fixture + createMatch + lineup UI |
 | Live   | LiveMatchRuntime + Canvas LIVE    |
 | Report | Post Match (+ Replay)             |
-| Hub    | dispose → powrót do app           |
+| Hub    | po First Match → EARLY_CLUB (`resolveHubPhase`); nie „dispose only” |
 
 ## Najważniejsze decyzje
 
 - UI nie omija sesji.
 - Tempo meczu = `run`/`step`.
 - Web Replay ≠ LFE world snapshot buffer (osobne warstwy).
+- First Match: `createSessionFromFirstMatch` → ten sam `createMatch`.
 
 ## Powiązania
 
-[ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md) · [GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)
+[ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md) · [GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) · [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-24 — LFE-DOCS-01

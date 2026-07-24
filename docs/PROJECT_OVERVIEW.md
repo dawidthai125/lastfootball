@@ -6,59 +6,50 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 ## Aktualny stan
 
-**Last Football** — przeglądarkowy football manager (klasa: footballteam.pl) z własnym silnikiem meczu **LFE**.
+**Last Football** — przeglądarkowy football manager z własnym silnikiem meczu **LFE**.
 
-| Warstwa               | Stan                                                               |
-| --------------------- | ------------------------------------------------------------------ |
-| Produkt (GDD)         | Faza 2 — §3–§5, §7–§15 wypełnione; §6 = szkielet                   |
-| Silnik LFE            | EPIC-1…7 + Gameplay + Match AI + Match Engine · `0.9.1-match-ai01` |
-| App web               | Shell + Live match + Canvas + Replay + Post Match                  |
-| Supabase              | Projekt podłączony, migracje/types (infra)                         |
-| Physics / pełne Rules | **Nie rozpoczęte** (stub)                                          |
+| Warstwa | Stan |
+| --- | --- |
+| Produkt (GDD) | GDD-01…15 CLOSED (§3–§15, §20, §23) |
+| Platforma | Landing · Auth · Club Wizard · First Match · Hub EARLY_CLUB |
+| Silnik LFE | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01` |
+| App web | Shell + match pipeline + platform flows |
+| Supabase | `anoeimngwptucjdugjme` · clubs + `first_match_completed_at` |
+| Physics / pełne Rules | **Nie rozpoczęte** |
 
-**Prod:** https://lastfootball.vercel.app  
+**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)  
 **Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/
 
 ## Opis działania (produkt)
 
-1. Gracz prowadzi klub w lidze (4 poziomy, start IV).
-2. Rdzeń sesji = mecz (Pre → Live → Report → Hub) — GDD §9.
-3. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
-4. Dane klubu / auth / persystencja → Supabase (kolejne feature’y).
+1. Gracz zakłada konto i klub (Wizard).
+2. Rozgrywa **First Match** (tunel) — dopiero potem Hub.
+3. Hub EARLY_CLUB = ekran decyzji (1 Primary CTA).
+4. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
+5. Tożsamość klubu / auth → Supabase `clubs`.
 
 ## Stack
 
-| Technologia             | Rola                                    |
-| ----------------------- | --------------------------------------- |
-| Next.js 15 (App Router) | Frontend / BFF shell (`apps/web`)       |
-| React                   | UI                                      |
-| TypeScript              | Cały monorepo                           |
-| Canvas 2D               | Live/Replay pitch (`apps/web` gameplay) |
-| `@lastfootball/lfe`     | Silnik meczu (headless)                 |
-| `@lastfootball/domain`  | DTO manager-facing                      |
-| Supabase                | Auth, DB, Storage, Realtime (prep)      |
-| Vercel (`fra1`)         | Hosting                                 |
-| Vitest                  | Testy LFE (+ wybrane web unit)          |
+| Technologia | Rola |
+| --- | --- |
+| Next.js 15 (App Router) | Frontend / BFF shell (`apps/web`) |
+| React | UI |
+| TypeScript | Cały monorepo |
+| Canvas 2D | Live/Replay pitch |
+| `@lastfootball/lfe` | Silnik meczu (headless) |
+| `@lastfootball/domain` | DTO manager-facing |
+| Supabase | Auth, DB |
+| Vercel (`fra1`) | Hosting |
 
-## Granice (ważne)
+## Granice obecnej fazy
 
-- LFE **nie** importuje React / Next / Supabase.
-- GDD **nie** zawiera formuł numerycznych silnika.
-- Architecture Freeze: zmiany PUBLIC bez AUDIT + Owner GO — zakazane.
-- Canvas / Replay = web, poza LFE.
-
-## Najważniejsze decyzje
-
-Zobacz [`DECISIONS.md`](./DECISIONS.md). Skrót: match-centric loop; `createMatch` jedyny entry; GDD > ad-hoc feature design.
+**Jest:** onboarding, first match, EARLY_CLUB Hub, match UI pipeline, GDD rdzeń.  
+**Nie jest jeszcze:** live liga/terminarz DB, ekonomia, transfery, Physics.
 
 ## Powiązania
 
-- Status: [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)
-- Architektura: [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-- Agent: [`AI-HANDOFF.md`](./AI-HANDOFF.md)
-- Produkt: [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md)
-- Silnik: [`lfe/ENGINE_OVERVIEW.md`](./lfe/ENGINE_OVERVIEW.md)
+[`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`platform/`](./platform/)
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-24 — LFE-DOCS-01

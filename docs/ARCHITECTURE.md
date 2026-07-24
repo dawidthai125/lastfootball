@@ -2,11 +2,12 @@
 
 ## Cel dokumentu
 
-Architektura systemu: web, LFE, Supabase, przepływ meczu Live → Canvas → Replay → Post Match.
+Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ meczu Live → Canvas → Replay → Post Match.
 
 ## Aktualny stan
 
-Monorepo z granicami pakietów. LFE = headless engine (`0.9.1-match-ai01`). Web = shell + **match pipeline** (runtime, canvas, replay, post match).
+Monorepo. Production baseline **`b6b92dc`** (LFE-HUB-01).  
+LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub EARLY_CLUB + match pipeline.
 
 ---
 
@@ -15,29 +16,37 @@ Monorepo z granicami pakietów. LFE = headless engine (`0.9.1-match-ai01`). Web 
 ### Frontend (`apps/web`)
 
 - Next.js 15 App Router.
-- Shell: Asset Pack, TopBar, LeftNav, Right rail.
-- Match: Pre Match, Live (`LiveMatchFoundation`), Post Match.
+- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub EARLY_CLUB.
+- **Shell:** TopBar / LeftNav / Right rail — progressive unlock per Hub phase.
+- **Match:** Pre Match, Live (`LiveMatchFoundation` + `LiveMatchRuntime`), Post Match.
 - `/status` → `getEngineStatus()`.
 
 ### LFE (`packages/lfe`)
 
 Headless: config, core, rng, events, scheduler, world, simulation, domain, state machine, commands, session, positioning, **gameplay**, **ai**, **match/engine**.
 
-### Canvas (web)
+### Canvas / Replay / Post Match (web)
 
-Warstwa renderu 2D. Czyta `MatchCanvasReadModel`. **Nie** mutuje MatchState. Tryby: `live` | `replay`.
-
-### Replay (web)
-
-Ring buffer `MatchCanvasReadModel` + controller. **Nie** woła Match Engine.
-
-### Post Match (web)
-
-Raport z EventBus/MatchState; seek do Replay.
+Canvas i Replay są **read-only** względem Engine. Post Match buduje raport z EventBus/MatchState.
 
 ### Supabase
 
-Auth/data — **nie** zależność LFE.
+Auth + `clubs` (identity, `first_match_completed_at`). **Nie** jest zależnością LFE.
+
+---
+
+## Przepływ gracza (platform)
+
+```
+Landing → Auth → Welcome → Club Wizard
+  → First Match Intro → Prematch/Live/Post
+  → Welcome LF → Hub EARLY_CLUB
+```
+
+SSOT unlock Hub: `clubs.first_match_completed_at`.  
+Hub phase: `resolveHubPhase` · Primary: `resolvePrimaryCta`.
+
+Szczegóły: [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`platform/HUB.md`](./platform/HUB.md).
 
 ---
 
@@ -78,7 +87,7 @@ flowchart LR
 ### Tekstowo
 
 ```
-Pre Match
+Pre Match (fixture | createSessionFromFirstMatch)
   ↓
 Gameplay Foundation
   ↓
@@ -91,11 +100,12 @@ Canvas Renderer (LIVE) + ReplayBuffer
 Replay Controller (REPLAY) → Canvas
   ↓
 Post Match → (opcjonalnie) Replay seek
+  ↓ (first match) completeFirstMatch → Welcome LF → Hub
 ```
 
 ---
 
-## Zależności modułów
+## Zależności
 
 ```mermaid
 flowchart TB
@@ -107,40 +117,12 @@ flowchart TB
   web --> dom
   web --> sb
   lfe --> dom
-  eng[Match Engine] --> ai[Match AI]
-  eng --> ms[MatchState]
-  ai --> ms
-  canvas[Canvas] -.->|read model| ms
-  canvas -.->|events| eb[EventBus]
-  replay[Replay] -.->|recorded models| canvas
 ```
-
-**Hard:** Engine → AI.  
-**Forbidden:** Canvas → Engine/AI; Replay → `session.run`.
-
----
-
-## Simulation pipeline (LFE tick)
-
-```
-Clock → Scheduler → Lifecycle → MatchEngineSystem → Event → Replay(snapshot world)
-```
-
-Szczegóły: [`lfe/ENGINE_PIPELINE.md`](./lfe/ENGINE_PIPELINE.md) · [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md)
-
----
-
-## Najważniejsze decyzje
-
-1. Session = jedyna fasada meczu.
-2. Canvas / Replay poza pakietem LFE.
-3. Domain manager ≠ match domain.
-4. PUBLIC freeze nadal obowiązuje; nowe eksporty AI/Engine są rozszerzeniem powierzchni — dokumentuj świadomie.
 
 ## Powiązania
 
-[`architecture/SYSTEM_OVERVIEW.md`](./architecture/SYSTEM_OVERVIEW.md) · [`architecture/DEPENDENCIES.md`](./architecture/DEPENDENCIES.md) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md)
+[`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md) · [`architecture/SYSTEM_OVERVIEW.md`](./architecture/SYSTEM_OVERVIEW.md) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-DOCS-01

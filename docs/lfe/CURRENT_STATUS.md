@@ -15,6 +15,8 @@ Status implementacji EPIC-ów i modułów silnika.
 | **Match Engine**        | ✅ DONE                                              |
 | **Architecture Freeze** | APPROVED (kontrakt v1; `index.ts` nadal over-export) |
 
+> Ten plik = **tylko silnik LFE**. Platforma (First Match / Hub) → [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../platform/`](../platform/).
+
 ## Status EPIC / stack
 
 | ID                       | Nazwa               | Status                         |

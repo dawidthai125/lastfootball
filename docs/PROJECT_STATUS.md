@@ -1,72 +1,65 @@
 # Project Status — Last Football
 
-## Cel dokumentu
+## Cel
 
 Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Aktualny etap
 
-**Etap:** Match pipeline na `main` — LFE (AI+Engine+Player Match Data) + Web (Live Bridge · Canvas · Replay · Post Match · **Player Ratings**). CI Prettier zielony.
+**Production:** platforma gracza + First Match + Hub EARLY_CLUB.  
+Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 
-| Tor            | Etap                                                                               |
-| -------------- | ---------------------------------------------------------------------------------- |
-| Engine         | EPIC-1…7 + **Gameplay + AI + Engine** + **Player Match Data** · `0.9.1-match-ai01` |
-| Web match      | Pre → Live → Canvas → Replay → Post Match (+ **Ratings**)                          |
-| Product design | GDD-01…15 CLOSED · §3–§15 + §20 + §23 · pozostałe = szkielet                       |
-| Infra          | Vercel + Supabase + CI (format gate PASS)                                          |
-
-**HEAD (orientacyjnie):** `33618e9` Live Bridge — zawsze sprawdzaj `git log -1`.
+| Tor | Etap |
+| --- | --- |
+| Engine | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01` |
+| Web match | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings) |
+| Platform | Landing · Auth · Club Wizard · First Match tunnel · Hub EARLY_CLUB |
+| Product design | GDD-01…15 CLOSED |
+| Infra | Vercel + Supabase `anoeimngwptucjdugjme` + CI zielony |
 
 ## Co jest ukończone
 
-### LFE
+### Platforma (2026-07)
 
-- EPIC-1…7 (Foundation → Positioning)
-- **Gameplay Foundation** (tactics, event vocab, tactical commands)
-- **Match AI-01**
-- **Match Engine-01** (+ `MatchEngineSystem`)
-- **Player Match Data-01** (`statistics.players`; `playerId` na GOAL/SHOT/FOUL)
-- Architecture Freeze (kontrakt v1; `index.ts` nadal over-export)
+- **LFE-PLATFORM-01** P1–P3 — Landing, Auth, Welcome, Club Wizard, Club DTO
+- **LFE-INFRA-01** — rebind Supabase
+- **LFE-MATCH-01** — First Match Experience (`first_match_completed_at`)
+- **LFE-HUB-01** — EARLY_CLUB decision Hub + shell progressive unlock
 
-### Web
+### LFE / Match UI
 
-- Asset Pack 01 + Shell polish
-- Live broadcast chrome + **`LiveMatchRuntime`** (Live Bridge)
-- **Canvas Renderer 2D** (LIVE/REPLAY)
-- **Replay** buffer + controller
-- **Post Match** summary + seek do Replay
-- **Player Ratings** — pure derive XI + MVP (1.0–10.0) w Post Match
+- EPIC-1…7 · Gameplay · Match AI · Match Engine · Player Match Data
+- Live Bridge · Canvas · Replay · Post Match · Player Ratings · CI Prettier
 
-### Infra
+### Design
 
-- Monorepo, `/status` → `getEngineStatus()`, Vercel prod
-- **LFE-CI-PRETTIER-01** — pełny format repo; CI Format→Build zielony
+- GDD-01…15 (§3–§15, §20, §23)
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego (GDD-15 docs lokalnie — COMMIT po Owner GO).
-- Dług: zawężenie PUBLIC LFE exports; drobne stale hash w handoff.
+- Brak otwartego EPIC implementacyjnego.
+- LFE-DOCS-01 — konsolidacja dokumentacji (ten cykl).
 
 ## Co następne (rekomendacja)
 
-1. GDD-16+ (kolejny szkielet — Owner wybiera rozdział).
-2. Transfer / Economy / League / Multiplayer — implementacja później.
-3. Physics / Rules — FUTURE.
-4. Ratings v2 (assists / minutes) — FUTURE.
+1. League / fixtures SSOT (Hub SEASON + next match CTA).
+2. GDD-16+ (Owner wybiera rozdział).
+3. Economy / Transfers (po soft-lockach).
+4. Zawężenie LFE PUBLIC exports.
+5. Physics / Rules — FUTURE.
 
 ## Otwarte decyzje
 
-| ID   | Temat                           | Status   |
-| ---- | ------------------------------- | -------- |
-| D-01 | Zawężenie `index.ts` do freeze  | Otwarte  |
-| D-02 | Kolejny rozdział GDD vs Physics | Owner GO |
-| D-03 | Persist Replay                  | Otwarte  |
-| D-04 | Tick-synced spatial             | Otwarte  |
+| ID | Temat | Status |
+| --- | --- | --- |
+| D-01 | Zawężenie `index.ts` LFE do freeze | Otwarte |
+| D-03 | Persist Replay | Otwarte |
+| D-HUB-NEXT | Next-event bez ligi DB | Owner |
 
 ## Powiązania
 
-[`ROADMAP.md`](./ROADMAP.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`lfe/CURRENT_STATUS.md`](./lfe/CURRENT_STATUS.md) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)
+[`ROADMAP.md`](./ROADMAP.md) · [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)
 
 ## Last updated
 
-2026-07-24 — GDD-15
+2026-07-24 — LFE-DOCS-01

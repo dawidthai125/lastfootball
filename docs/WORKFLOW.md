@@ -35,7 +35,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → OWNER GO
 
 - Po **AUDIT** i po **PLAN**: STOP — czekaj na Owner GO.
 - Po **COMMIT**: STOP przed PUSH — osobne GO.
-- Nie zaczynaj Physics / Ratings / GDD-13 bez GO.
+- Nie zaczynaj Physics / nowego EPIC bez GO.
 - Nie pushuj niepełnego łańcucha commitów, jeśli PLAN wymaga serii atomowej.
 
 ## Współpraca ról
@@ -73,8 +73,8 @@ Nie twórz nowych plików `docs/*REPORT*` bez potrzeby.
 
 ## Powiązania
 
-[`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`DECISIONS.md`](./DECISIONS.md)
+[`AI/START_HERE.md`](./AI/START_HERE.md) · [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md) · [`RELEASE_PROCESS.md`](./RELEASE_PROCESS.md) · [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`DECISIONS.md`](./DECISIONS.md)
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-DOCS-01

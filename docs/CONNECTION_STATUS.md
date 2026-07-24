@@ -1,44 +1,43 @@
-# Connection status — 2026-07-22 (updated)
+# Connection status — 2026-07-24
 
 ## GitHub — PASS
 
-| Check           | Result                                             |
-| --------------- | -------------------------------------------------- |
+| Check | Result |
+| --- | --- |
 | Remote `origin` | `https://github.com/dawidthai125/lastfootball.git` |
-| Branches        | `main`, `develop`                                  |
-| Protection      | CI required                                        |
-| CI / Release    | active                                             |
+| Branch baseline | `main` @ `b6b92dc` (LFE-HUB-01) |
+| CI | Format · Typecheck · Lint · Test · Build — GREEN |
 
-## Vercel — PASS (custom DNS pending)
+## Vercel — PASS
 
-| Check                        | Result                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------- |
-| Project                      | `dawidthai125s-projects/lastfootball`                                       |
-| Live                         | https://lastfootball.vercel.app                                             |
-| Env                          | telemetry, app URL, **Supabase URL + anon + service_role** (prod + preview) |
-| Domain `www.lastfootball.pl` | Verified in Vercel; **DNS still NXDOMAIN** at registrar                     |
+| Check | Result |
+| --- | --- |
+| Project | `dawidthai125s-projects/lastfootball` |
+| Live | https://lastfootball.vercel.app |
+| Aliases | lastfootball.pl · www.lastfootball.pl |
+| Env | Supabase URL + anon + service_role (Production) |
 
 ## Supabase — PASS
 
-| Check                  | Result                                                             |
-| ---------------------- | ------------------------------------------------------------------ |
-| Project                | `lastfootball` · ref `anoeimngwptucjdugjme`                        |
-| Link                   | rebind LFE-INFRA-01 — update via `supabase link` when needed       |
-| Migrations             | infra bootstrap + clubs auth prep + clubs identity                 |
-| `infra_meta` / `clubs` | verified after rebind (service_role)                               |
-| RLS                    | enabled on `infra_meta`                                            |
-| Types                  | `apps/web/src/types/database.ts`                                   |
-| Clients                | typed `Database` (browser / server / admin)                        |
-| Auth URLs              | site `https://lastfootball.vercel.app` + allowlist localhost / www |
-| Edge                   | stub `supabase/functions/health` (not deployed yet)                |
-| Storage / Realtime     | enabled in project config                                          |
+| Check | Result |
+| --- | --- |
+| Project | `lastfootball` · ref **`anoeimngwptucjdugjme`** |
+| Rebind | LFE-INFRA-01 |
+| Migrations | infra bootstrap · clubs auth/identity · **`first_match_completed_at`** |
+| RLS | clubs owner policies |
+| Types | `apps/web/src/types/database.ts` |
+| Auth URLs | prod + localhost allowlist |
 
-## CI/CD — PASS
+## Product smoke (verified)
 
-GitHub Actions + Vercel Git Preview/Production.
+Landing → Auth → Wizard → First Match → Hub EARLY_CLUB — PASS on production (2026-07-24).
 
-## Owner remaining
+## Owner remaining (ops)
 
-1. DNS for `lastfootball.pl` (A `@` → `76.76.21.21`, CNAME `www` → `cname.vercel-dns.com`)
-2. Rotate secrets exposed in chat (access token + API keys) after smoke OK
-3. Optional: `npx supabase functions deploy health`
+1. DNS polish for custom domain if still pending at registrar
+2. Rotate any secrets ever pasted in chat
+3. Optional: deploy edge `health` function
+
+## Last updated
+
+2026-07-24 — LFE-DOCS-01

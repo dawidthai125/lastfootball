@@ -7,7 +7,28 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-GDD-15 (§20 Zadania dzienne) uzupełniony. Match pipeline + Hub + §6 na `main`.
+Production baseline **`b6b92dc`** (LFE-HUB-01). Platform + First Match + EARLY_CLUB Hub. Docs: LFE-DOCS-01.
+
+---
+
+## [2026-07-24] — LFE-DOCS-01
+
+### Docs
+
+- Konsolidacja onboarding AI: `AGENTS.md`, `docs/AI/*`, `MASTER_HANDOFF.md`
+- Platform docs: onboarding / first match / hub
+- Sync status, roadmap, architecture, connection, decisions D13–D14
+- Archive: historyczny `product/overview.md`
+
+---
+
+## [2026-07-24] — LFE-HUB-01 / LFE-MATCH-01 / LFE-PLATFORM-01 (code on main)
+
+### Product
+
+- First Match tunnel + `first_match_completed_at`
+- Hub EARLY_CLUB decision screen
+- Club Wizard + Club DTO + Supabase rebind
 
 ---
 

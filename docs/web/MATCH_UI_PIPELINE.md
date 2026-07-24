@@ -8,13 +8,19 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 
 ## Aktualny stan
 
-| Moduł                          | Status            | Hash (orient.)          |
-| ------------------------------ | ----------------- | ----------------------- |
-| LiveMatchRuntime + Live Bridge | ✅ DONE na `main` | `33618e9` (+ RELEASE C) |
-| Canvas Renderer 2D             | ✅ DONE na `main` | `d752d22`               |
-| Replay Buffer + Controller     | ✅ DONE na `main` | `cf1d68c`               |
-| Post Match UI                  | ✅ DONE na `main` | `b25f479` + Ratings     |
-| Player Ratings (Post Match)    | ✅ DONE (local)   | LFE-PLAYER-RATINGS-01   |
+| Moduł | Status | Notatka |
+| --- | --- | --- |
+| LiveMatchRuntime + Live Bridge | ✅ `main` | + first-match session path |
+| Canvas Renderer 2D | ✅ `main` | |
+| Replay Buffer + Controller | ✅ `main` | |
+| Post Match UI + Ratings | ✅ `main` | |
+| First Match entry | ✅ LFE-MATCH-01 | `/match/first` · Club DTO |
+| Return to Hub | ✅ LFE-HUB-01 | EARLY_CLUB after `completeFirstMatch` |
+
+Entry points:
+
+- Mock/season fixtures: `createSessionFromFixture`
+- First Match: `createSessionFromFirstMatch(club)` → same LFE `createMatch`
 
 ---
 
@@ -22,8 +28,11 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 
 ```mermaid
 flowchart TD
-  PM[Pre Match UI] --> CSF[createSessionFromFixture]
-  CSF --> CM[createMatch LFE]
+  PM[Pre Match UI] --> CSF{first match?}
+  CSF -->|yes| CFM[createSessionFromFirstMatch]
+  CSF -->|no| FIX[createSessionFromFixture]
+  CFM --> CM[createMatch LFE]
+  FIX --> CM
   CM --> LMR[LiveMatchRuntime]
   LMR -->|session.run LIVE| ENG[Match Engine + AI]
   ENG --> MS[MatchState]
@@ -35,6 +44,7 @@ flowchart TD
   RC -->|source=replay| CV
   MS --> END{MATCH_END / FINISHED}
   END --> POST[Post Match View]
+  POST -->|first match| WEL[Welcome LF → Hub EARLY_CLUB]
   POST -->|seek event tick| RC
 ```
 
@@ -49,7 +59,8 @@ flowchart TD
 | **Odpowiedzialność** | Sesja LFE, pulse symulacji, snapshot UI, CommandBus z UI, zapis Replay, tryb LIVE/REPLAY                                                                                                                                   |
 | **Wejścia**          | `Fixture`, `LiveMatchBundle`                                                                                                                                                                                               |
 | **Wyjścia**          | `LiveMatchSnapshot`, `canvasHost.present`, replay API                                                                                                                                                                      |
-| **Pliki**            | `apps/web/src/gameplay/live-match-runtime.ts`, `use-live-match-runtime.ts`, `create-session-from-fixture.ts`                                                                                                               |
+| **Pliki**            | `apps/web/src/gameplay/live-match-runtime.ts`, `use-live-match-runtime.ts`, `create-session-from-fixture.ts`, `lib/first-match/create-session.ts` |
+
 | **API**              | `getSnapshot`, `subscribe`, `dispatchUiCommand`, `startSimulation`/`stopSimulation`, `enterReplay`/`exitReplay`, `replayPlay`/`Pause`/`Stop`/`Seek`/`SeekRatio`/`SetSpeed`, `getPlaybackSource`, `replayBuffer`, `dispose` |
 
 ### Canvas Host + Renderer
@@ -123,8 +134,8 @@ MatchCanvasReadModel = {
 
 ## Powiązania
 
-[`../ARCHITECTURE.md`](../ARCHITECTURE.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) · [`../AI-HANDOFF.md`](../AI-HANDOFF.md)
+[`../ARCHITECTURE.md`](../ARCHITECTURE.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) · [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md) · [`../AI/START_HERE.md`](../AI/START_HERE.md)
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-RATINGS-01
+2026-07-24 — LFE-DOCS-01

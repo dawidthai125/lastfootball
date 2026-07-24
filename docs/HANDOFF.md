@@ -1,59 +1,43 @@
 # HANDOFF — Last Football
 
-## Cel dokumentu
+## Cel
 
-**Krótki start** dla nowego ChatGPT / Cursor.  
-Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebujesz pipeline / API / ograniczeń.
+**Krótki start** (1 ekran). Pełne przekazanie: [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md).  
+Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGENTS.md).
 
-## Stan projektu (2026-07-24)
+## Stan (2026-07-24) — Production Verified
 
-| Tor           | Stan                                                                                         |
-| ------------- | -------------------------------------------------------------------------------------------- |
-| **LFE**       | EPIC-1…7 + Gameplay + AI + Engine + **Player Match Data** · **`0.9.1-match-ai01`** na `main` |
-| **Web match** | Live Bridge + Canvas + Replay + Post Match + **Ratings**                                     |
-| **UI shell**  | Asset Pack + Shell polish na `main`                                                          |
-| **GDD**       | GDD-01…15 CLOSED · §3–§15 + §20 + §23                                                        |
-| **CI**        | Format → Typecheck → Lint → Test → Build — zielony po Prettier chore                         |
-| **Prod**      | `https://lastfootball.vercel.app`                                                            |
-
-## Najważniejsze dokumenty
-
-| Priorytet | Dokument                                                             |
-| --------- | -------------------------------------------------------------------- |
-| 1         | [`AI-HANDOFF.md`](./AI-HANDOFF.md)                                   |
-| 2         | Ten plik                                                             |
-| 3         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                           |
-| 4         | [`ARCHITECTURE.md`](./ARCHITECTURE.md)                               |
-| 5         | [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md)       |
-| 6         | [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)             |
-| 7         | [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) |
-| 8         | [`DECISIONS.md`](./DECISIONS.md)                                     |
+| Tor | Stan |
+| --- | --- |
+| **Baseline** | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app |
+| **Platform** | Landing · Auth · Club Wizard · Club DTO · Supabase `anoeimngwptucjdugjme` |
+| **First Match** | Tunnel → Prematch/Live/Post → Welcome LF · SSOT `first_match_completed_at` |
+| **Hub** | EARLY_CLUB decision screen · `resolveHubPhase` / `resolvePrimaryCta` |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings |
+| **GDD** | GDD-01…15 CLOSED |
+| **CI** | Format → Typecheck → Lint · Test · Build — zielony |
 
 ## Kolejność czytania
 
-1. `AI-HANDOFF.md` / ten HANDOFF
-2. `PROJECT_STATUS.md` + `ROADMAP.md`
-3. Silnik → `lfe/README.md` + `GAMEPLAY_MATCH_STACK.md`
-4. UI meczu → `web/MATCH_UI_PIPELINE.md`
-5. Przed commit → `RELEASE_PROCESS.md`
+1. [`AI/START_HERE.md`](./AI/START_HERE.md) / [`AGENTS.md`](../AGENTS.md)
+2. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
+3. [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)
+4. [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`ROADMAP.md`](./ROADMAP.md)
+5. Task docs: [`platform/`](./platform/) · [`lfe/`](./lfe/) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)
 
-## Najbliższy cel (rekomendacja)
+## Najbliższy cel
 
-1. **GDD-16+** (kolejny rozdział szkieletu) — Owner GO.
-2. Albo Ratings v2 / Transfer / Economy — później.
-
-Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow).
+Owner wybiera kolejny EPIC (rekomendacje: **liga/fixtures SSOT**, GDD-16+, ekonomia).  
+Przed startem: `AI/START_HERE.md` + AUDIT.
 
 ## Zasady twarde
 
-- Canvas/Replay tylko read / nagrane dane.
-- Nie łam Engine/AI przy EPIC-ach UI.
-- Nie commit / push bez prośby Ownera.
-- Nie polegaj na historii czatu — tylko docs + kod.
-- Metryki rozwoju klubu → tylko §6 GDD.
-- Zadania dzienne → tylko §20 (opcjonalne; mecz > zadanie).
-- Hub → tylko §23 (decyzja, nie dashboard).
+- Commit / push tylko po **Owner GO**.
+- Hub = decyzja (§23), nie dashboard mid-season.
+- First Match **przed** Hubem.
+- Canvas/Replay nie wołają Engine.
+- REUSE FIRST · ZERO DUPLICATE · SSOT FIRST.
 
 ## Last updated
 
-2026-07-24 — GDD-15
+2026-07-24 — LFE-DOCS-01
