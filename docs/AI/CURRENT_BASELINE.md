@@ -6,14 +6,14 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Production
 
-| Pole | Wartość |
-| --- | --- |
-| URL | https://lastfootball.vercel.app |
-| Alias | https://lastfootball.pl |
-| Branch | `main` |
-| Baseline commit | `b6b92dce1fc9e0bf75fb48cc82a1e5ad570a327a` |
+| Pole             | Wartość                                                   |
+| ---------------- | --------------------------------------------------------- |
+| URL              | https://lastfootball.vercel.app                           |
+| Alias            | https://lastfootball.pl                                   |
+| Branch           | `main`                                                    |
+| Baseline commit  | `b6b92dce1fc9e0bf75fb48cc82a1e5ad570a327a`                |
 | Baseline message | `feat(hub): rebuild EARLY_CLUB decision Hub (LFE-HUB-01)` |
-| Verified | 2026-07-24 — CI GREEN + Vercel Ready + prod smoke PASS |
+| Verified         | 2026-07-24 — CI GREEN + Vercel Ready + prod smoke PASS    |
 
 > Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit po tym dokumencie).
 
@@ -34,14 +34,14 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
 
 ## Critical SSOT columns / modules
 
-| SSOT | Gdzie |
-| --- | --- |
-| Club identity | `clubs` → `ClubDto` |
-| Hub unlock | `clubs.first_match_completed_at` |
-| Hub phase | `resolveHubPhase(club)` |
-| Hub Primary CTA | `resolvePrimaryCta(phase, session)` |
+| SSOT                | Gdzie                               |
+| ------------------- | ----------------------------------- |
+| Club identity       | `clubs` → `ClubDto`                 |
+| Hub unlock          | `clubs.first_match_completed_at`    |
+| Hub phase           | `resolveHubPhase(club)`             |
+| Hub Primary CTA     | `resolvePrimaryCta(phase, session)` |
 | First match session | `createSessionFromFirstMatch(club)` |
-| Match engine entry | `createMatch()` → `MatchSession` |
+| Match engine entry  | `createMatch()` → `MatchSession`    |
 
 ## Done product EPICs (on `main`)
 

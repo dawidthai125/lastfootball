@@ -10,14 +10,14 @@ Jak prowadzić EPIC z Ownerem i Cursor / ChatGPT.
 AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CLOSE
 ```
 
-| Etap | Agent robi | Owner |
-| --- | --- | --- |
-| AUDIT | stan kodu/docs, luki, ryzyka | czyta raport |
-| PLAN | M1–Mn, SSOT, poza zakresem, AC | **GO → IMPLEMENT** lub poprawki |
-| IMPLEMENT | kod/docs w scope; DoD checks | **GO → COMMIT** |
-| COMMIT | jeden spójny commit; bez sekretów | **GO → PUSH** |
-| PUSH | push + CI + deploy + smoke | **GO → CLOSE** |
-| CLOSE | status docs; EPIC zamknięty | akceptacja |
+| Etap      | Agent robi                        | Owner                           |
+| --------- | --------------------------------- | ------------------------------- |
+| AUDIT     | stan kodu/docs, luki, ryzyka      | czyta raport                    |
+| PLAN      | M1–Mn, SSOT, poza zakresem, AC    | **GO → IMPLEMENT** lub poprawki |
+| IMPLEMENT | kod/docs w scope; DoD checks      | **GO → COMMIT**                 |
+| COMMIT    | jeden spójny commit; bez sekretów | **GO → PUSH**                   |
+| PUSH      | push + CI + deploy + smoke        | **GO → CLOSE**                  |
+| CLOSE     | status docs; EPIC zamknięty       | akceptacja                      |
 
 ## Zasady EPIC-u
 

@@ -65,11 +65,11 @@ UI czyta: `getMatchState()`, `getSpatialState()`, `getEvents()`.
 
 ### Mapowanie na GDD §9
 
-| GDD    | Implementacja                     |
-| ------ | --------------------------------- |
-| Pre    | fixture + createMatch + lineup UI |
-| Live   | LiveMatchRuntime + Canvas LIVE    |
-| Report | Post Match (+ Replay)             |
+| GDD    | Implementacja                                                       |
+| ------ | ------------------------------------------------------------------- |
+| Pre    | fixture + createMatch + lineup UI                                   |
+| Live   | LiveMatchRuntime + Canvas LIVE                                      |
+| Report | Post Match (+ Replay)                                               |
 | Hub    | po First Match → EARLY_CLUB (`resolveHubPhase`); nie „dispose only” |
 
 ## Najważniejsze decyzje

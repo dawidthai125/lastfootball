@@ -18,13 +18,13 @@ First Match Intro (/onboarding/first-match)
 
 ## Kluczowe moduły
 
-| Moduł | Rola |
-| --- | --- |
-| `lib/first-match/constants.ts` | `FIRST_MATCH_ID='first'`, bot, paths, tunnel helper |
-| `lib/first-match/starter-squad.ts` | Deterministic XI (seed od `clubId`) — **bez** tabeli `players` |
-| `lib/first-match/create-session.ts` | `createSessionFromFirstMatch(club)` → LFE `createMatch` |
-| `lib/first-match/bundles.ts` | Prematch/Live bundles z Club DTO |
-| `lib/first-match/actions.ts` | `completeFirstMatch` |
+| Moduł                               | Rola                                                           |
+| ----------------------------------- | -------------------------------------------------------------- |
+| `lib/first-match/constants.ts`      | `FIRST_MATCH_ID='first'`, bot, paths, tunnel helper            |
+| `lib/first-match/starter-squad.ts`  | Deterministic XI (seed od `clubId`) — **bez** tabeli `players` |
+| `lib/first-match/create-session.ts` | `createSessionFromFirstMatch(club)` → LFE `createMatch`        |
+| `lib/first-match/bundles.ts`        | Prematch/Live bundles z Club DTO                               |
+| `lib/first-match/actions.ts`        | `completeFirstMatch`                                           |
 
 ## SSOT
 

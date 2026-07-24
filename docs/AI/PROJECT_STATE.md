@@ -13,12 +13,12 @@ Silnik LFE i match UI pipeline są dojrzałe; kolejny EPIC = Owner GO (liga / ek
 
 ### Platforma gracza
 
-| EPIC | Outcome |
-| --- | --- |
-| LFE-PLATFORM-01 | Landing, Auth, Welcome, Club Wizard, Club DTO, routing by `clubs` |
-| LFE-INFRA-01 | Supabase project `anoeimngwptucjdugjme` |
-| LFE-MATCH-01 | First Match tunnel; `first_match_completed_at`; synthetic fixture `first` |
-| LFE-HUB-01 | Hub State Machine; EARLY_CLUB decision layout; shell soft-locks |
+| EPIC            | Outcome                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| LFE-PLATFORM-01 | Landing, Auth, Welcome, Club Wizard, Club DTO, routing by `clubs`         |
+| LFE-INFRA-01    | Supabase project `anoeimngwptucjdugjme`                                   |
+| LFE-MATCH-01    | First Match tunnel; `first_match_completed_at`; synthetic fixture `first` |
+| LFE-HUB-01      | Hub State Machine; EARLY_CLUB decision layout; shell soft-locks           |
 
 ### Silnik / mecz UI
 
@@ -42,11 +42,11 @@ Brak otwartego EPIC implementacyjnego (stan po LFE-HUB-01 CLOSE readiness).
 
 ## Otwarte decyzje techniczne
 
-| ID | Temat | Status |
-| --- | --- | --- |
-| D-01 | Zawężenie `packages/lfe` `index.ts` do freeze | Otwarte |
-| D-03 | Persist Replay | Otwarte |
-| D-HUB-NEXT | Soft next-event vs liga DB (M4 Hub) | Owner |
+| ID         | Temat                                         | Status  |
+| ---------- | --------------------------------------------- | ------- |
+| D-01       | Zawężenie `packages/lfe` `index.ts` do freeze | Otwarte |
+| D-03       | Persist Replay                                | Otwarte |
+| D-HUB-NEXT | Soft next-event vs liga DB (M4 Hub)           | Owner   |
 
 ## Powiązania
 

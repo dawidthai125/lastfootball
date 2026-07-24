@@ -7,15 +7,15 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Stan (2026-07-24) — Production Verified
 
-| Tor | Stan |
-| --- | --- |
-| **Baseline** | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app |
-| **Platform** | Landing · Auth · Club Wizard · Club DTO · Supabase `anoeimngwptucjdugjme` |
-| **First Match** | Tunnel → Prematch/Live/Post → Welcome LF · SSOT `first_match_completed_at` |
-| **Hub** | EARLY_CLUB decision screen · `resolveHubPhase` / `resolvePrimaryCta` |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings |
-| **GDD** | GDD-01…15 CLOSED |
-| **CI** | Format → Typecheck → Lint · Test · Build — zielony |
+| Tor                | Stan                                                                       |
+| ------------------ | -------------------------------------------------------------------------- |
+| **Baseline**       | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app                   |
+| **Platform**       | Landing · Auth · Club Wizard · Club DTO · Supabase `anoeimngwptucjdugjme`  |
+| **First Match**    | Tunnel → Prematch/Live/Post → Welcome LF · SSOT `first_match_completed_at` |
+| **Hub**            | EARLY_CLUB decision screen · `resolveHubPhase` / `resolvePrimaryCta`       |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings            |
+| **GDD**            | GDD-01…15 CLOSED                                                           |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                         |
 
 ## Kolejność czytania
 

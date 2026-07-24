@@ -8,14 +8,14 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 
 ## Aktualny stan
 
-| Moduł | Status | Notatka |
-| --- | --- | --- |
-| LiveMatchRuntime + Live Bridge | ✅ `main` | + first-match session path |
-| Canvas Renderer 2D | ✅ `main` | |
-| Replay Buffer + Controller | ✅ `main` | |
-| Post Match UI + Ratings | ✅ `main` | |
-| First Match entry | ✅ LFE-MATCH-01 | `/match/first` · Club DTO |
-| Return to Hub | ✅ LFE-HUB-01 | EARLY_CLUB after `completeFirstMatch` |
+| Moduł                          | Status          | Notatka                               |
+| ------------------------------ | --------------- | ------------------------------------- |
+| LiveMatchRuntime + Live Bridge | ✅ `main`       | + first-match session path            |
+| Canvas Renderer 2D             | ✅ `main`       |                                       |
+| Replay Buffer + Controller     | ✅ `main`       |                                       |
+| Post Match UI + Ratings        | ✅ `main`       |                                       |
+| First Match entry              | ✅ LFE-MATCH-01 | `/match/first` · Club DTO             |
+| Return to Hub                  | ✅ LFE-HUB-01   | EARLY_CLUB after `completeFirstMatch` |
 
 Entry points:
 
@@ -54,14 +54,14 @@ flowchart TD
 
 ### LiveMatchRuntime
 
-|                      |                                                                                                                                                                                                                            |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Odpowiedzialność** | Sesja LFE, pulse symulacji, snapshot UI, CommandBus z UI, zapis Replay, tryb LIVE/REPLAY                                                                                                                                   |
-| **Wejścia**          | `Fixture`, `LiveMatchBundle`                                                                                                                                                                                               |
-| **Wyjścia**          | `LiveMatchSnapshot`, `canvasHost.present`, replay API                                                                                                                                                                      |
+|                      |                                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Odpowiedzialność** | Sesja LFE, pulse symulacji, snapshot UI, CommandBus z UI, zapis Replay, tryb LIVE/REPLAY                                                          |
+| **Wejścia**          | `Fixture`, `LiveMatchBundle`                                                                                                                      |
+| **Wyjścia**          | `LiveMatchSnapshot`, `canvasHost.present`, replay API                                                                                             |
 | **Pliki**            | `apps/web/src/gameplay/live-match-runtime.ts`, `use-live-match-runtime.ts`, `create-session-from-fixture.ts`, `lib/first-match/create-session.ts` |
 
-| **API**              | `getSnapshot`, `subscribe`, `dispatchUiCommand`, `startSimulation`/`stopSimulation`, `enterReplay`/`exitReplay`, `replayPlay`/`Pause`/`Stop`/`Seek`/`SeekRatio`/`SetSpeed`, `getPlaybackSource`, `replayBuffer`, `dispose` |
+| **API** | `getSnapshot`, `subscribe`, `dispatchUiCommand`, `startSimulation`/`stopSimulation`, `enterReplay`/`exitReplay`, `replayPlay`/`Pause`/`Stop`/`Seek`/`SeekRatio`/`SetSpeed`, `getPlaybackSource`, `replayBuffer`, `dispose` |
 
 ### Canvas Host + Renderer
 

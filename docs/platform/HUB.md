@@ -6,24 +6,24 @@ Hub = **ekran decyzji** (GDD §23), nie dashboard mid-season.
 
 ## State Machine
 
-| Phase | Hub render? | Warunek |
-| --- | --- | --- |
-| `NEW_CLUB` | **Nie** — First Match tunnel | `!first_match_completed_at` |
-| `EARLY_CLUB` | **Tak (MVP)** | first match done; brak live season SSOT |
-| `SEASON` | Future | liga/terminarz live |
-| `PLAYOFF` | Future | faza playoff |
-| `OFFSEASON` | Future | międzysezonie |
+| Phase        | Hub render?                  | Warunek                                 |
+| ------------ | ---------------------------- | --------------------------------------- |
+| `NEW_CLUB`   | **Nie** — First Match tunnel | `!first_match_completed_at`             |
+| `EARLY_CLUB` | **Tak (MVP)**                | first match done; brak live season SSOT |
+| `SEASON`     | Future                       | liga/terminarz live                     |
+| `PLAYOFF`    | Future                       | faza playoff                            |
+| `OFFSEASON`  | Future                       | międzysezonie                           |
 
 **Resolver (jedyny):** `resolveHubPhase(club)` w `apps/web/src/lib/hub/`.
 
 ## EARLY_CLUB layout
 
-1. Hero — Club DTO  
-2. Last Match Strip — jakościowy (vs Orły Pustyni)  
-3. **Exactly 1** Primary CTA — `resolvePrimaryCta` → „Zobacz skład” → `/squad`  
-4. ≤5 Secondary (Terminarz soft-locked „wkrótce”)  
-5. Lekki status (IV liga, stadion, Day 1)  
-6. Jedna wiadomość zarządu  
+1. Hero — Club DTO
+2. Last Match Strip — jakościowy (vs Orły Pustyni)
+3. **Exactly 1** Primary CTA — `resolvePrimaryCta` → „Zobacz skład” → `/squad`
+4. ≤5 Secondary (Terminarz soft-locked „wkrótce”)
+5. Lekki status (IV liga, stadion, Day 1)
+6. Jedna wiadomość zarządu
 
 ## Progressive unlock (shell)
 

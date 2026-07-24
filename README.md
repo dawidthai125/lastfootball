@@ -28,13 +28,13 @@ Pełny setup: [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md)
 
 ## Architektura (skrót)
 
-| Path | Role |
-| --- | --- |
-| `apps/web` | Next.js — onboarding, Hub EARLY_CLUB, match UI |
-| `packages/lfe` | Last Football Engine (`0.9.1-match-ai01`) |
-| `packages/domain` | Shared manager DTOs |
-| `supabase/` | Auth/DB migrations |
-| `docs/` | **Documentation SSOT** |
+| Path              | Role                                           |
+| ----------------- | ---------------------------------------------- |
+| `apps/web`        | Next.js — onboarding, Hub EARLY_CLUB, match UI |
+| `packages/lfe`    | Last Football Engine (`0.9.1-match-ai01`)      |
+| `packages/domain` | Shared manager DTOs                            |
+| `supabase/`       | Auth/DB migrations                             |
+| `docs/`           | **Documentation SSOT**                         |
 
 ## Od czego zacząć?
 
@@ -45,15 +45,15 @@ Pełny setup: [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md)
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Next.js (Turbopack) |
-| `npm run build` | Production build |
+| Command             | Description           |
+| ------------------- | --------------------- |
+| `npm run dev`       | Next.js (Turbopack)   |
+| `npm run build`     | Production build      |
 | `npm run typecheck` | TypeScript workspaces |
-| `npm run lint` | ESLint (web) |
-| `npm test` | Vitest (LFE) |
-| `npm run validate` | Full local CI gate |
-| `npm run format` | Prettier |
+| `npm run lint`      | ESLint (web)          |
+| `npm test`          | Vitest (LFE)          |
+| `npm run validate`  | Full local CI gate    |
+| `npm run format`    | Prettier              |
 
 ## Ops
 

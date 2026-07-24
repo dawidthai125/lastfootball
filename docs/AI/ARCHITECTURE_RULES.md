@@ -25,12 +25,12 @@ supabase/ (Auth + Postgres migrations)
 
 ## Product SSOT (platform)
 
-| Fakt | SSOT |
-| --- | --- |
-| Tożsamość klubu | tabela `clubs` → `ClubDto` |
-| Odblokowanie Hub | `clubs.first_match_completed_at` |
-| Faza Hub | `resolveHubPhase(club)` wyłącznie |
-| Primary CTA Hub | `resolvePrimaryCta(phase, session)` wyłącznie |
+| Fakt              | SSOT                                                |
+| ----------------- | --------------------------------------------------- |
+| Tożsamość klubu   | tabela `clubs` → `ClubDto`                          |
+| Odblokowanie Hub  | `clubs.first_match_completed_at`                    |
+| Faza Hub          | `resolveHubPhase(club)` wyłącznie                   |
+| Primary CTA Hub   | `resolvePrimaryCta(phase, session)` wyłącznie       |
 | Routing post-auth | `getPostAuthPath` + middleware (club + first match) |
 
 ## Hub rules (LFE-HUB-01)

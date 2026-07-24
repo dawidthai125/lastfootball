@@ -12,15 +12,15 @@
 
 ## Szybkie linki
 
-| Temat | Dokument |
-| --- | --- |
-| Stan | [`AI/PROJECT_STATE.md`](./AI/PROJECT_STATE.md) |
-| Reguły | [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md) |
-| EPIC flow | [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md) |
-| Decyzje | [`AI/DECISIONS.md`](./AI/DECISIONS.md) |
-| Onboarding | [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) |
-| First Match | [`platform/FIRST_MATCH.md`](./platform/FIRST_MATCH.md) |
-| Hub | [`platform/HUB.md`](./platform/HUB.md) |
+| Temat       | Dokument                                                       |
+| ----------- | -------------------------------------------------------------- |
+| Stan        | [`AI/PROJECT_STATE.md`](./AI/PROJECT_STATE.md)                 |
+| Reguły      | [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)       |
+| EPIC flow   | [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md)                 |
+| Decyzje     | [`AI/DECISIONS.md`](./AI/DECISIONS.md)                         |
+| Onboarding  | [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) |
+| First Match | [`platform/FIRST_MATCH.md`](./platform/FIRST_MATCH.md)         |
+| Hub         | [`platform/HUB.md`](./platform/HUB.md)                         |
 
 ## Last updated
 

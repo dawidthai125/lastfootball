@@ -9,13 +9,13 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 **Production:** platforma gracza + First Match + Hub EARLY_CLUB.  
 Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 
-| Tor | Etap |
-| --- | --- |
-| Engine | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01` |
-| Web match | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings) |
-| Platform | Landing · Auth · Club Wizard · First Match tunnel · Hub EARLY_CLUB |
-| Product design | GDD-01…15 CLOSED |
-| Infra | Vercel + Supabase `anoeimngwptucjdugjme` + CI zielony |
+| Tor            | Etap                                                                       |
+| -------------- | -------------------------------------------------------------------------- |
+| Engine         | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01` |
+| Web match      | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings)               |
+| Platform       | Landing · Auth · Club Wizard · First Match tunnel · Hub EARLY_CLUB         |
+| Product design | GDD-01…15 CLOSED                                                           |
+| Infra          | Vercel + Supabase `anoeimngwptucjdugjme` + CI zielony                      |
 
 ## Co jest ukończone
 
@@ -50,11 +50,11 @@ Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 
 ## Otwarte decyzje
 
-| ID | Temat | Status |
-| --- | --- | --- |
-| D-01 | Zawężenie `index.ts` LFE do freeze | Otwarte |
-| D-03 | Persist Replay | Otwarte |
-| D-HUB-NEXT | Next-event bez ligi DB | Owner |
+| ID         | Temat                              | Status  |
+| ---------- | ---------------------------------- | ------- |
+| D-01       | Zawężenie `index.ts` LFE do freeze | Otwarte |
+| D-03       | Persist Replay                     | Otwarte |
+| D-HUB-NEXT | Next-event bez ligi DB             | Owner   |
 
 ## Powiązania
 

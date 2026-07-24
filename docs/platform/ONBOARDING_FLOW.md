@@ -21,12 +21,12 @@
 
 ## Gates (middleware + session)
 
-| Warunek | Destynacja |
-| --- | --- |
-| Brak sesji + protected route | `/login?next=…` |
-| Sesja, brak wiersza `clubs` | `/welcome` / onboarding |
-| `hasClub && !first_match_completed_at` | tylko First Match tunnel |
-| `first_match_completed_at` set | `/hub` (i blokada powrotu do intro/wizard) |
+| Warunek                                | Destynacja                                 |
+| -------------------------------------- | ------------------------------------------ |
+| Brak sesji + protected route           | `/login?next=…`                            |
+| Sesja, brak wiersza `clubs`            | `/welcome` / onboarding                    |
+| `hasClub && !first_match_completed_at` | tylko First Match tunnel                   |
+| `first_match_completed_at` set         | `/hub` (i blokada powrotu do intro/wizard) |
 
 Post-auth helper: `getPostAuthPath(userId)` → `/welcome` \| `/onboarding/first-match` \| `/hub`.
 
