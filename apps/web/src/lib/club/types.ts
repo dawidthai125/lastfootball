@@ -9,6 +9,8 @@ export type ClubDto = {
   createdAt: string;
   /** SSOT — set once after first match Post Match confirm. */
   firstMatchCompletedAt: string | null;
+  /** Club cash SSOT (LFE-ECONOMY-01). */
+  cashBalance: number;
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {

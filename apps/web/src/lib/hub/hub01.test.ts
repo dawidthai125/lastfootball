@@ -23,6 +23,7 @@ function club(partial?: Partial<ClubDto>): ClubDto {
     crestTemplateId: 'crest-a',
     createdAt: '2026-01-01T00:00:00.000Z',
     firstMatchCompletedAt: null,
+    cashBalance: 100_000,
     ...partial,
   };
 }
@@ -123,6 +124,13 @@ describe('hub nav unlock', () => {
   it('opens Liga on SEASON', () => {
     expect(resolveNavAccess('league', 'SEASON')).toBe('open');
     expect(resolveNavAccess('matches', 'SEASON')).toBe('open');
+    expect(resolveNavAccess('finance', 'SEASON')).toBe('open');
     expect(resolveNavAccess('training', 'SEASON')).toBe('soft_locked');
+  });
+
+  it('opens Finanse secondary on SEASON', () => {
+    const secondary = resolveSecondaryCtas('SEASON', { hasFixtures: true });
+    expect(secondary.find((c) => c.id === 'finance')?.access).toBe('open');
+    expect(secondary.length).toBeLessThanOrEqual(5);
   });
 });

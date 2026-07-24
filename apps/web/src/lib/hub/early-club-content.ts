@@ -22,6 +22,8 @@ export type HubLightStatus = {
   readonly clubLevelLabel: string;
   /** One-line position chip (LFE-LEAGUE-02); null = omit. */
   readonly leaguePositionLabel: string | null;
+  /** One-line cash chip (LFE-ECONOMY-01); null = omit. No trend. */
+  readonly cashLabel: string | null;
 };
 
 /** Qualitative / scored last-match strip from fixtures SSOT when available. */
@@ -65,6 +67,7 @@ export function buildLightStatus(
   club: ClubDto,
   nextFixture: FixtureDto | null = null,
   leaguePositionLabel: string | null = null,
+  cashLabel: string | null = null,
 ): HubLightStatus {
   const dayLabel = nextFixture ? `Kolejka ${nextFixture.matchday}` : 'Dzień 1';
   return {
@@ -74,5 +77,6 @@ export function buildLightStatus(
     seasonLabel: 'Sezon 1',
     clubLevelLabel: 'Klub startowy',
     leaguePositionLabel,
+    cashLabel,
   };
 }

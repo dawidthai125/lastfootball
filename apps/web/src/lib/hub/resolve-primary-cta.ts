@@ -36,7 +36,7 @@ export function resolveSecondaryCtas(
 ): HubCta[] {
   if (!DECISION_PHASES.has(phase)) return [];
   const fixturesOpen = Boolean(ctx.hasFixtures);
-  const leagueOpen = phase === 'SEASON';
+  const seasonOpen = phase === 'SEASON';
   return [
     {
       id: 'club',
@@ -54,7 +54,13 @@ export function resolveSecondaryCtas(
       id: 'league',
       label: 'Tabela',
       href: '/league',
-      access: leagueOpen ? 'open' : 'soft_locked',
+      access: seasonOpen ? 'open' : 'soft_locked',
+    },
+    {
+      id: 'finance',
+      label: 'Finanse',
+      href: '/finance',
+      access: seasonOpen ? 'open' : 'soft_locked',
     },
     {
       id: 'message',

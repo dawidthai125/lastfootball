@@ -24,12 +24,14 @@ export function EarlyClubHub({
   lastPlayedFixture = null,
   hasFixtures = false,
   leaguePositionLabel = null,
+  cashLabel = null,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
   lastPlayedFixture?: FixtureDto | null;
   hasFixtures?: boolean;
   leaguePositionLabel?: string | null;
+  cashLabel?: string | null;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -40,7 +42,7 @@ export function EarlyClubHub({
   });
   const secondary = resolveSecondaryCtas(phase, { hasFixtures }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
-  const status = buildLightStatus(club, nextFixture, leaguePositionLabel);
+  const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
   const message = buildWelcomeMessage(club, nextFixture);
 
   return (
@@ -270,6 +272,7 @@ function LightStatus({ status }: { status: ReturnType<typeof buildLightStatus> }
       {status.leaguePositionLabel ? (
         <StatusChip label="Pozycja" value={status.leaguePositionLabel} />
       ) : null}
+      {status.cashLabel ? <StatusChip label="Kasa" value={status.cashLabel} /> : null}
       <StatusChip label="Stadion" value={status.stadium} />
     </section>
   );

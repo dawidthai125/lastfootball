@@ -19,6 +19,7 @@ export type Database = {
           crest_template_id: string;
           created_at: string;
           first_match_completed_at: string | null;
+          cash_balance: number;
         };
         Insert: {
           id?: string;
@@ -30,6 +31,7 @@ export type Database = {
           crest_template_id?: string;
           created_at?: string;
           first_match_completed_at?: string | null;
+          cash_balance?: number;
         };
         Update: {
           id?: string;
@@ -41,8 +43,54 @@ export type Database = {
           crest_template_id?: string;
           created_at?: string;
           first_match_completed_at?: string | null;
+          cash_balance?: number;
         };
         Relationships: [];
+      };
+      finance_movements: {
+        Row: {
+          id: string;
+          club_id: string;
+          category: string;
+          label: string;
+          amount: number;
+          fixture_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          club_id: string;
+          category: string;
+          label: string;
+          amount: number;
+          fixture_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          category?: string;
+          label?: string;
+          amount?: number;
+          fixture_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'finance_movements_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: false;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'finance_movements_fixture_id_fkey';
+            columns: ['fixture_id'];
+            isOneToOne: false;
+            referencedRelation: 'fixtures';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       fixtures: {
         Row: {

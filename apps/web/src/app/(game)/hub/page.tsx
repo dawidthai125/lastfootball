@@ -4,11 +4,13 @@ import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubFixtures, getLastPlayedFixture, getNextFixture } from '@/lib/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { resolveCashChipLabel, resolveClubFinance } from '@/lib/finance';
+import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { resolveHubPhase } from '@/lib/hub';
 import { resolveLeagueTable, resolvePlayerLeaguePositionLabel } from '@/lib/league';
 
 /**
- * Hub / Panel menedżera — decision screen (EARLY_CLUB / SEASON) + fixtures SSOT.
+ * Hub / Panel menedżera — decision screen (EARLY_CLUB / SEASON) + fixtures / finance SSOT.
  */
 export default async function HubPage() {
   const club = await getManagerClub();
@@ -24,6 +26,10 @@ export default async function HubPage() {
   const table = resolveLeagueTable(club, fixtures);
   const leaguePositionLabel = hasFixtures ? resolvePlayerLeaguePositionLabel(table) : null;
 
+  const movements = await listClubFinanceMovements(club.id, 5);
+  const finance = resolveClubFinance(club, movements);
+  const cashLabel = phase === 'SEASON' ? resolveCashChipLabel(finance) : null;
+
   return (
     <EarlyClubHub
       club={club}
@@ -31,6 +37,7 @@ export default async function HubPage() {
       lastPlayedFixture={lastPlayed}
       hasFixtures={hasFixtures}
       leaguePositionLabel={leaguePositionLabel}
+      cashLabel={cashLabel}
     />
   );
 }

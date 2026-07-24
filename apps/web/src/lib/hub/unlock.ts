@@ -13,8 +13,8 @@ const EARLY_CLUB_OPEN = new Set([
   'status',
 ]);
 
-/** SEASON unlocks Liga on top of EARLY_CLUB opens. */
-const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league']);
+/** SEASON unlocks Liga + Finanse on top of EARLY_CLUB opens. */
+const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance']);
 
 /**
  * Progressive unlock for shell navigation.

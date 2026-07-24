@@ -7,6 +7,7 @@ import { CREST_TEMPLATES } from '@/lib/club/catalog';
 import type { CreateClubState } from '@/lib/club/action-types';
 import { validateClubIdentity } from '@/lib/club/validation';
 import { env } from '@/config/env';
+import { ECONOMY_THIN } from '@/lib/finance';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createClub(
@@ -51,20 +52,35 @@ export async function createClub(
   }
 
   // Database typings lag migrations in CI/local until regen — insert payload validated above.
-  const { error } = await supabase.from('clubs').insert({
-    owner_id: user.id,
-    name: parsed.value.name,
-    short_name: parsed.value.shortName,
-    primary_color: parsed.value.primaryColor,
-    secondary_color: parsed.value.secondaryColor,
-    crest_template_id: parsed.value.crestTemplateId,
-  } as never);
+  const { data: created, error } = await supabase
+    .from('clubs')
+    .insert({
+      owner_id: user.id,
+      name: parsed.value.name,
+      short_name: parsed.value.shortName,
+      primary_color: parsed.value.primaryColor,
+      secondary_color: parsed.value.secondaryColor,
+      crest_template_id: parsed.value.crestTemplateId,
+      cash_balance: ECONOMY_THIN.STARTER_CASH,
+    } as never)
+    .select('id')
+    .maybeSingle();
 
   if (error) {
     if (error.code === '23505') {
       return { error: 'Nazwa klubu jest już zajęta. Wybierz inną.' };
     }
     return { error: 'Nie udało się zapisać klubu. Spróbuj ponownie.' };
+  }
+
+  const clubId = (created as { id: string } | null)?.id;
+  if (clubId) {
+    await supabase.from('finance_movements').insert({
+      club_id: clubId,
+      category: 'starter',
+      label: 'Kapitał startowy',
+      amount: ECONOMY_THIN.STARTER_CASH,
+    } as never);
   }
 
   // Clear legacy smoke/dev metadata flag if present

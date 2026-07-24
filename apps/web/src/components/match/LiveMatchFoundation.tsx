@@ -21,6 +21,7 @@ import {
 import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstMatchButton';
 import { CompleteLeagueFixtureButton } from '@/components/match/CompleteLeagueFixtureButton';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { resolveLeagueMatchReward } from '@/lib/finance';
 
 /**
  * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
@@ -109,6 +110,14 @@ export function LiveMatchFoundation({
     awayShort,
   });
 
+  const rewardLine = leagueFixture
+    ? resolveLeagueMatchReward({
+        homeScore: snapshot.homeScore,
+        awayScore: snapshot.awayScore,
+        isHome: leagueFixture.isHome,
+      }).line
+    : null;
+
   const openReplayAt = (item?: PostMatchTimelineItem) => {
     setPostMatchOpen(false);
     if (item) {
@@ -129,6 +138,7 @@ export function LiveMatchFoundation({
         onOpenReplay={() => openReplayAt()}
         onJumpToEvent={(item) => openReplayAt(item)}
         onDismiss={() => setPostMatchOpen(false)}
+        rewardLine={rewardLine}
         continueSlot={
           firstMatch ? (
             <CompleteFirstMatchButton />

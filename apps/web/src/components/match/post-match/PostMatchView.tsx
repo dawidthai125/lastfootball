@@ -18,6 +18,8 @@ type PostMatchViewProps = {
   readonly onDismiss?: () => void;
   /** Primary continue CTA (e.g. First Match → Welcome). */
   readonly continueSlot?: ReactNode;
+  /** One-line match reward (LFE-ECONOMY-01); league only. */
+  readonly rewardLine?: string | null;
 };
 
 /**
@@ -30,6 +32,7 @@ export function PostMatchView({
   onJumpToEvent,
   onDismiss,
   continueSlot,
+  rewardLine = null,
 }: PostMatchViewProps) {
   const mvp =
     summary.mvpPlayerId == null
@@ -80,6 +83,18 @@ export function PostMatchView({
             </span>
           ) : null}
         </div>
+        {rewardLine ? (
+          <p
+            style={{
+              margin: '0 0 var(--lf-space-4)',
+              fontSize: 'var(--lf-type-body)',
+              fontWeight: 600,
+              color: 'var(--lf-color-status-ok)',
+            }}
+          >
+            {rewardLine}
+          </p>
+        ) : null}
 
         <div
           style={{
