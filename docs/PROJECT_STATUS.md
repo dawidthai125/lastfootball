@@ -6,16 +6,16 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Aktualny etap
 
-**Production:** platforma gracza + First Match + Hub EARLY_CLUB.  
-Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
+**Production (ostatni push):** platforma + First Match + Hub EARLY_CLUB (`b6b92dc`).  
+**Lokalnie (Owner Review):** **LFE-LEAGUE-01 Thin A** — fixtures SSOT + kolejny mecz + Squad SSOT.
 
 | Tor            | Etap                                                                       |
 | -------------- | -------------------------------------------------------------------------- |
 | Engine         | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01` |
 | Web match      | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings)               |
-| Platform       | Landing · Auth · Club Wizard · First Match tunnel · Hub EARLY_CLUB         |
+| Platform       | Landing · Auth · Club Wizard · First Match · Hub EARLY_CLUB + fixtures     |
 | Product design | GDD-01…15 CLOSED                                                           |
-| Infra          | Vercel + Supabase `anoeimngwptucjdugjme` + CI zielony                      |
+| Infra          | Vercel + Supabase `anoeimngwptucjdugjme` + migracja `fixtures`             |
 
 ## Co jest ukończone
 
@@ -25,6 +25,8 @@ Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 - **LFE-INFRA-01** — rebind Supabase
 - **LFE-MATCH-01** — First Match Experience (`first_match_completed_at`)
 - **LFE-HUB-01** — EARLY_CLUB decision Hub + shell progressive unlock
+- **LFE-DOCS-01** — AI docs / handoff consolidation
+- **LFE-LEAGUE-01** Thin A — `fixtures` (3), Primary „Przygotuj mecz”, Squad SSOT
 
 ### LFE / Match UI
 
@@ -37,24 +39,24 @@ Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego.
-- LFE-DOCS-01 — konsolidacja dokumentacji (ten cykl).
+- Owner Review → GO COMMIT / PUSH dla LFE-LEAGUE-01 (wymaga też apply migracji `fixtures` na Supabase).
 
 ## Co następne (rekomendacja)
 
-1. League / fixtures SSOT (Hub SEASON + next match CTA).
+1. League table + opcjonalnie `SEASON` phase (follow-up).
 2. GDD-16+ (Owner wybiera rozdział).
-3. Economy / Transfers (po soft-lockach).
+3. Economy / Transfers (po soft-lockach / players DB).
 4. Zawężenie LFE PUBLIC exports.
 5. Physics / Rules — FUTURE.
 
 ## Otwarte decyzje
 
-| ID         | Temat                              | Status  |
-| ---------- | ---------------------------------- | ------- |
-| D-01       | Zawężenie `index.ts` LFE do freeze | Otwarte |
-| D-03       | Persist Replay                     | Otwarte |
-| D-HUB-NEXT | Next-event bez ligi DB             | Owner   |
+| ID   | Temat                              | Status        |
+| ---- | ---------------------------------- | ------------- |
+| D-01 | Zawężenie `index.ts` LFE do freeze | Otwarte       |
+| D-03 | Persist Replay                     | Otwarte       |
+| D15  | Fixtures SSOT Thin A               | **Zamknięte** |
+| D16  | Squad seed SSOT                    | **Zamknięte** |
 
 ## Powiązania
 
@@ -62,4 +64,4 @@ Baseline: **`b6b92dc`** (LFE-HUB-01) · https://lastfootball.vercel.app
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

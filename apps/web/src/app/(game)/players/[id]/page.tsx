@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Grid, GridItem } from '@/components/layout/Grid';
@@ -10,7 +10,8 @@ import {
   PlayerHero,
   PlayerHistory,
 } from '@/components/squad/PlayerDetail';
-import { getPlayerById } from '@/data/squad';
+import { getManagerClub } from '@/lib/club/get-manager-club';
+import { getSquadPlayerById } from '@/lib/squad';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -18,7 +19,9 @@ type PageProps = {
 
 export default async function PlayerDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const player = getPlayerById(id);
+  const club = await getManagerClub();
+  if (!club) redirect('/welcome');
+  const player = getSquadPlayerById(club, id);
   if (!player) notFound();
 
   return (

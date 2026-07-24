@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Uwaga dla Agentów:** bieżąca chronologia match pipeline / docs jest w [`docs/CHANGELOG.md`](./docs/CHANGELOG.md).  
-> Ten plik (root) dokumentuje głównie release UI **0.1.0** i nie jest pełnym SSOT stanu `main` po Canvas/Replay/Post Match.
+### Added (LFE-LEAGUE-01 Thin A — awaiting Owner GO push)
+
+- Fixtures SSOT (`fixtures` table + RLS + `opponent_club_id`)
+- Next-match Hub Primary CTA + Match Pipeline reuse + `completeFixture`
+- Squad SSOT (`resolveClubSquad`) replacing product use of `@/data/squad`
+
+> Pełna chronologia: [`docs/CHANGELOG.md`](./docs/CHANGELOG.md).
 
 ## [0.1.0] - 2026-07-23
 

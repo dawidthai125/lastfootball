@@ -5,6 +5,7 @@ const EARLY_CLUB_OPEN = new Set([
   'panel',
   'club',
   'squad',
+  'matches',
   'messages',
   'achievements',
   'profile',
@@ -15,6 +16,7 @@ const EARLY_CLUB_OPEN = new Set([
 /**
  * Progressive unlock for shell navigation.
  * Soft-locked items stay visible with “Wkrótce” — they must not compete with Primary CTA.
+ * Terminarz (`matches`) open after First Match (fixtures SSOT); Liga remains soft-locked.
  */
 export function resolveNavAccess(itemId: string, phase: HubPhase): HubNavAccess {
   if (phase === 'EARLY_CLUB' || phase === 'NEW_CLUB') {

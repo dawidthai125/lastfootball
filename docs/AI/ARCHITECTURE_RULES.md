@@ -30,7 +30,10 @@ supabase/ (Auth + Postgres migrations)
 | Tożsamość klubu   | tabela `clubs` → `ClubDto`                          |
 | Odblokowanie Hub  | `clubs.first_match_completed_at`                    |
 | Faza Hub          | `resolveHubPhase(club)` wyłącznie                   |
-| Primary CTA Hub   | `resolvePrimaryCta(phase, session)` wyłącznie       |
+| Sesja Hub         | `resolveHubSession(phase, next, lastPlayed)`        |
+| Primary CTA Hub   | `resolvePrimaryCta(phase, session, ctx)` wyłącznie  |
+| Terminarz ligowy  | `fixtures` → `FixtureDto` / `getNextFixture`        |
+| Kadra             | `resolveClubSquad(club)`                            |
 | Routing post-auth | `getPostAuthPath` + middleware (club + first match) |
 
 ## Hub rules (LFE-HUB-01)
@@ -56,4 +59,4 @@ Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](.
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

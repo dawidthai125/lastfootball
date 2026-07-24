@@ -7,14 +7,11 @@ import { NextMatchHero } from '@/components/fixtures/NextMatchHero';
 import { ClubCrest } from '@/components/assets';
 import {
   COMPETITION_LABEL,
-  FIXTURES,
   STATUS_LABEL,
   type CompetitionFilter,
   type Fixture,
   type MatchStatus,
-  getNextFixture,
 } from '@/data/fixtures';
-import { dashboardMock } from '@/data/mock';
 
 const controlStyle: CSSProperties = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -56,44 +53,33 @@ function statusStyle(status: MatchStatus): { border: string; bg: string; text: s
   }
 }
 
-function resultStyle(result?: 'W' | 'R' | 'P') {
-  if (result === 'W') {
-    return {
-      border: 'var(--lf-color-status-ok)',
-      bg: 'var(--lf-color-status-ok-soft)',
-      text: 'var(--lf-color-status-ok)',
-    };
-  }
-  if (result === 'P') {
-    return {
-      border: 'var(--lf-color-status-danger)',
-      bg: 'var(--lf-color-status-danger-soft)',
-      text: 'var(--lf-color-status-danger)',
-    };
-  }
-  return {
-    border: 'var(--lf-color-border-subtle)',
-    bg: 'var(--lf-color-bg-inset)',
-    text: 'var(--lf-color-text-muted)',
-  };
-}
-
 function preMatchHref(f: Fixture): string | null {
   if (f.status === 'played') return null;
   if (f.status === 'live') return `/match/${f.id}/live`;
-  return `/match/${f.id}`;
+  if (f.status === 'upcoming') return `/match/${f.id}`;
+  return null;
 }
 
-export function FixturesView() {
+export function FixturesView({
+  fixtures,
+  clubName,
+  clubShortName,
+  leagueLabel,
+}: {
+  fixtures: readonly Fixture[];
+  clubName: string;
+  clubShortName: string;
+  leagueLabel: string;
+}) {
   const router = useRouter();
   const [competition, setCompetition] = useState<CompetitionFilter>('ALL');
-  const next = getNextFixture();
+  const next = fixtures.find((f) => f.status === 'upcoming') ?? null;
 
   const rows = useMemo(() => {
-    let list = [...FIXTURES];
+    let list = [...fixtures];
     if (competition !== 'ALL') list = list.filter((f) => f.competition === competition);
     return list.sort((a, b) => a.day - b.day);
-  }, [competition]);
+  }, [fixtures, competition]);
 
   const upcoming = rows.filter((f) => f.status !== 'played');
   const played = rows.filter((f) => f.status === 'played').sort((a, b) => b.day - a.day);
@@ -126,11 +112,13 @@ export function FixturesView() {
             color: 'var(--lf-color-text-muted)',
           }}
         >
-          {dashboardMock.club.division} · sezonowe spotkania
+          {leagueLabel} · {fixtures.length} spotkań (Thin A)
         </p>
       </header>
 
-      <NextMatchHero fixture={next} />
+      {next ? (
+        <NextMatchHero fixture={next} clubName={clubName} clubShortName={clubShortName} />
+      ) : null}
 
       <div
         style={{
@@ -164,8 +152,6 @@ export function FixturesView() {
           >
             <option value="ALL">Wszystkie</option>
             <option value="league">{COMPETITION_LABEL.league}</option>
-            <option value="cup">{COMPETITION_LABEL.cup}</option>
-            <option value="friendly">{COMPETITION_LABEL.friendly}</option>
           </select>
         </label>
       </div>
@@ -173,19 +159,19 @@ export function FixturesView() {
       <FixtureTable
         title="Nadchodzące"
         rows={upcoming}
-        empty="Brak nadchodzących meczów dla filtra."
+        empty="Brak nadchodzących meczów."
+        clubShortName={clubShortName}
         onOpen={(f) => {
           const href = preMatchHref(f);
           if (href) router.push(href);
         }}
       />
-
       <FixtureTable
         title="Rozegrane"
         rows={played}
-        empty="Brak rozegranych meczów dla filtra."
+        empty="Brak rozegranych meczów ligowych."
+        clubShortName={clubShortName}
         onOpen={() => undefined}
-        played
       />
     </div>
   );
@@ -195,14 +181,14 @@ function FixtureTable({
   title,
   rows,
   empty,
+  clubShortName,
   onOpen,
-  played = false,
 }: {
   title: string;
   rows: Fixture[];
   empty: string;
+  clubShortName: string;
   onOpen: (f: Fixture) => void;
-  played?: boolean;
 }) {
   return (
     <section
@@ -212,206 +198,114 @@ function FixtureTable({
         borderColor: 'var(--lf-color-border-subtle)',
         background: 'var(--lf-color-bg-panel)',
         borderRadius: 'var(--lf-radius-sm)',
-        overflow: 'auto',
+        overflow: 'hidden',
       }}
     >
-      <header
+      <h2
+        className="font-[family-name:var(--font-ui)] font-semibold"
         style={{
+          margin: 0,
+          padding: 'var(--lf-space-3) var(--lf-space-4)',
+          fontSize: 'var(--lf-type-h2)',
+          color: 'var(--lf-color-text-primary)',
           borderBottomWidth: 'var(--lf-border-width-hair)',
           borderBottomStyle: 'solid',
           borderBottomColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel-alt)',
-          padding: 'var(--lf-space-2) var(--lf-space-3)',
         }}
       >
-        <h2
-          className="font-[family-name:var(--font-ui)] font-semibold uppercase"
+        {title}
+      </h2>
+      {rows.length === 0 ? (
+        <p
           style={{
             margin: 0,
-            fontSize: 'var(--lf-type-label)',
-            letterSpacing: 'var(--lf-type-tracking-label)',
-            color: 'var(--lf-color-text-gold)',
+            padding: 'var(--lf-space-4)',
+            color: 'var(--lf-color-text-muted)',
+            fontSize: 'var(--lf-type-caption)',
           }}
         >
-          {title}
-        </h2>
-      </header>
-
-      <table
-        style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--lf-type-table)' }}
-      >
-        <thead>
-          <tr style={{ background: 'var(--lf-color-bg-inset)' }}>
-            {[
-              'Termin',
-              'Przeciwnik',
-              'Rozgrywki',
-              'Boisko',
-              played ? 'Wynik' : 'Godzina',
-              'Status',
-            ].map((h) => (
-              <th
-                key={h}
-                className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                style={{
-                  position: 'sticky',
-                  top: 0,
-                  zIndex: 'var(--lf-z-sticky)',
-                  padding: 'var(--lf-space-2)',
-                  fontSize: 'var(--lf-type-label)',
-                  letterSpacing: 'var(--lf-type-tracking-label)',
-                  color: 'var(--lf-color-text-faint)',
-                  textAlign: 'left',
-                  background: 'var(--lf-color-bg-inset)',
-                }}
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
+          {empty}
+        </p>
+      ) : (
+        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {rows.map((f) => {
             const st = statusStyle(f.status);
-            const rs = resultStyle(f.result);
-            const clickable = !played && f.status !== 'played';
+            const clickable = Boolean(preMatchHref(f));
             return (
-              <tr
+              <li
                 key={f.id}
-                tabIndex={clickable ? 0 : undefined}
-                role={clickable ? 'link' : undefined}
-                onClick={() => clickable && onOpen(f)}
-                onKeyDown={(e) => {
-                  if (!clickable) return;
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onOpen(f);
-                  }
-                }}
                 style={{
-                  borderBottomWidth: 'var(--lf-border-width-hair)',
-                  borderBottomStyle: 'solid',
-                  borderBottomColor: 'var(--lf-color-border-subtle)',
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto auto',
+                  gap: 'var(--lf-space-3)',
+                  alignItems: 'center',
+                  padding: 'var(--lf-space-3) var(--lf-space-4)',
+                  borderTopWidth: 'var(--lf-border-width-hair)',
+                  borderTopStyle: 'solid',
+                  borderTopColor: 'var(--lf-color-border-subtle)',
                   cursor: clickable ? 'pointer' : 'default',
                 }}
-                onMouseEnter={(e) => {
-                  if (clickable) e.currentTarget.style.background = 'var(--lf-color-bg-hover)';
+                onClick={() => clickable && onOpen(f)}
+                onKeyDown={(e) => {
+                  if (clickable && (e.key === 'Enter' || e.key === ' ')) onOpen(f);
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                }}
+                role={clickable ? 'link' : undefined}
+                tabIndex={clickable ? 0 : undefined}
               >
-                <td style={{ padding: 'var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
-                  {f.whenLabel}
-                </td>
-                <td
+                <ClubCrest shortName={f.opponentShort} clubName={f.opponent} size="sm" />
+                <div>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 'var(--lf-type-body)',
+                      color: 'var(--lf-color-text-primary)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {f.home
+                      ? `${clubShortName} vs ${f.opponent}`
+                      : `${f.opponent} vs ${clubShortName}`}
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 'var(--lf-type-caption)',
+                      color: 'var(--lf-color-text-muted)',
+                    }}
+                  >
+                    {f.competitionLabel} · {f.whenLabel}
+                  </p>
+                </div>
+                <span
                   style={{
-                    padding: 'var(--lf-space-2)',
-                    fontWeight: 600,
-                    color: 'var(--lf-color-text-primary)',
+                    borderWidth: 'var(--lf-border-width-hair)',
+                    borderStyle: 'solid',
+                    borderColor: st.border,
+                    background: st.bg,
+                    color: st.text,
+                    fontSize: 'var(--lf-type-label)',
+                    padding: 'var(--lf-space-1) var(--lf-space-2)',
+                    borderRadius: 'var(--lf-radius-sm)',
                   }}
                 >
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 'var(--lf-space-2)',
-                    }}
-                  >
-                    <ClubCrest shortName={f.opponentShort} clubName={f.opponent} size="sm" />
-                    {f.opponent}
-                  </span>
-                </td>
-                <td style={{ padding: 'var(--lf-space-2)' }}>{COMPETITION_LABEL[f.competition]}</td>
-                <td style={{ padding: 'var(--lf-space-2)' }}>
-                  <span
-                    className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                    style={{
-                      fontSize: 'var(--lf-type-label)',
-                      padding: '0 var(--lf-space-1)',
-                      borderWidth: 'var(--lf-border-width-hair)',
-                      borderStyle: 'solid',
-                      borderRadius: 'var(--lf-radius-xs)',
-                      borderColor: f.home
-                        ? 'var(--lf-color-status-ok)'
-                        : 'var(--lf-color-status-info)',
-                      background: f.home
-                        ? 'var(--lf-color-status-ok-soft)'
-                        : 'var(--lf-color-bg-inset)',
-                      color: f.home ? 'var(--lf-color-status-ok)' : 'var(--lf-color-status-info)',
-                    }}
-                  >
-                    {f.home ? 'Dom' : 'Wyjazd'}
-                  </span>
-                </td>
-                <td className="tabular-nums" style={{ padding: 'var(--lf-space-2)' }}>
-                  {played ? (
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 'var(--lf-space-2)',
-                      }}
-                    >
-                      {f.result ? (
-                        <span
-                          className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                          style={{
-                            fontSize: 'var(--lf-type-label)',
-                            padding: '0 var(--lf-space-1)',
-                            borderWidth: 'var(--lf-border-width-hair)',
-                            borderStyle: 'solid',
-                            borderRadius: 'var(--lf-radius-xs)',
-                            borderColor: rs.border,
-                            background: rs.bg,
-                            color: rs.text,
-                          }}
-                        >
-                          {f.result}
-                        </span>
-                      ) : null}
-                      {f.score}
-                    </span>
-                  ) : (
-                    (f.kickoff ?? '—')
-                  )}
-                </td>
-                <td style={{ padding: 'var(--lf-space-2)' }}>
-                  <span
-                    className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                    style={{
-                      fontSize: 'var(--lf-type-label)',
-                      padding: '0 var(--lf-space-1)',
-                      borderWidth: 'var(--lf-border-width-hair)',
-                      borderStyle: 'solid',
-                      borderRadius: 'var(--lf-radius-xs)',
-                      borderColor: st.border,
-                      background: st.bg,
-                      color: st.text,
-                    }}
-                  >
-                    {STATUS_LABEL[f.status]}
-                  </span>
-                </td>
-              </tr>
+                  {STATUS_LABEL[f.status]}
+                </span>
+                <span
+                  style={{
+                    fontSize: 'var(--lf-type-body)',
+                    fontWeight: 600,
+                    color: 'var(--lf-color-text-primary)',
+                    minWidth: '3rem',
+                    textAlign: 'right',
+                  }}
+                >
+                  {f.score ?? '—'}
+                </span>
+              </li>
             );
           })}
-          {rows.length === 0 ? (
-            <tr>
-              <td
-                colSpan={6}
-                style={{
-                  padding: 'var(--lf-space-5)',
-                  textAlign: 'center',
-                  color: 'var(--lf-color-text-muted)',
-                }}
-              >
-                {empty}
-              </td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
+        </ul>
+      )}
     </section>
   );
 }

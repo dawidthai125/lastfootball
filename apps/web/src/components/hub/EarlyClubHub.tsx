@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import type { ClubDto } from '@/lib/club/types';
+import type { FixtureDto } from '@/lib/fixtures/types';
 import {
   buildLastMatchStrip,
   buildLightStatus,
@@ -14,17 +15,31 @@ import {
 } from '@/lib/hub';
 
 /**
- * EARLY_CLUB decision Hub — GDD §23 / LFE-HUB-01.
- * No mid-season mock; Club DTO + hub SSOT only.
+ * EARLY_CLUB decision Hub — GDD §23 / LFE-HUB-01 + LFE-LEAGUE-01.
+ * No mid-season mock; Club DTO + hub/fixtures SSOT only.
  */
-export function EarlyClubHub({ club }: { club: ClubDto }) {
+export function EarlyClubHub({
+  club,
+  nextFixture = null,
+  lastPlayedFixture = null,
+  hasFixtures = false,
+}: {
+  club: ClubDto;
+  nextFixture?: FixtureDto | null;
+  lastPlayedFixture?: FixtureDto | null;
+  hasFixtures?: boolean;
+}) {
   const phase = resolveHubPhase(club);
-  const session = resolveHubSession(phase);
-  const primary = resolvePrimaryCta(phase, session);
-  const secondary = resolveSecondaryCtas(phase).slice(0, 5);
-  const lastMatch = buildLastMatchStrip(club);
-  const status = buildLightStatus(club);
-  const message = buildWelcomeMessage(club);
+  const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
+  const primary = resolvePrimaryCta(phase, session, {
+    nextFixture,
+    lastPlayedFixture,
+    hasFixtures,
+  });
+  const secondary = resolveSecondaryCtas(phase, { hasFixtures }).slice(0, 5);
+  const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
+  const status = buildLightStatus(club, nextFixture);
+  const message = buildWelcomeMessage(club, nextFixture);
 
   return (
     <div

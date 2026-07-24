@@ -38,12 +38,17 @@ Krótsze połowy (~20s) tylko w settings first match.
 
 ## Poza zakresem (MATCH-01)
 
-Physics, liga DB, ekonomia, transfery, editable lineup, persist pełnych wyników.
+Physics, ekonomia, transfery, editable lineup, persist pełnych wyników First Match.
+
+## Po MATCH-01 (LFE-LEAGUE-01)
+
+Po `completeFirstMatch` wywoływane jest `ensureClubFixtures` (3 mecze ligowe).  
+Wynik First Match nadal **nie** trafia do `fixtures`.
 
 ## Powiązania
 
-[`ONBOARDING_FLOW.md`](./ONBOARDING_FLOW.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)
+[`ONBOARDING_FLOW.md`](./ONBOARDING_FLOW.md) · [`HUB.md`](./HUB.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

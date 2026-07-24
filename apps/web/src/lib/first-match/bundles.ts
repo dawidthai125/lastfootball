@@ -2,7 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { seedBotSquad, seedStarterSquad } from '@/lib/first-match/starter-squad';
+import { seedBotSquad, seedStarterSquad } from '@/lib/squad';
 
 export function buildFirstFixture(club: ClubDto): Fixture {
   return {

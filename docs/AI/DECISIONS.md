@@ -16,6 +16,8 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 | P6  | `resolveHubPhase` / `resolvePrimaryCta` = SSOT fazy i Primary CTA                               | LFE-HUB-01                                    |
 | P7  | Progressive disclosure: trening/finanse/transfery/liga soft-lock na Day 1                       | LFE-HUB-01 / GDD §3                           |
 | P8  | Supabase prod/dev = project `anoeimngwptucjdugjme`                                              | LFE-INFRA-01                                  |
+| P9  | `fixtures` + `opponent_club_id` = SSOT terminarza; Thin A zostaje w `EARLY_CLUB`                | LFE-LEAGUE-01                                 |
+| P10 | `resolveClubSquad` = SSOT kadry (seed); bez `@/data/squad` na ścieżce produktowej               | LFE-LEAGUE-01                                 |
 
 ## Engine (trwałe)
 
@@ -23,4 +25,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

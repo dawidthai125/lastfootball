@@ -19,6 +19,8 @@ import {
   type PostMatchTimelineItem,
 } from '@/components/match/post-match';
 import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstMatchButton';
+import { CompleteLeagueFixtureButton } from '@/components/match/CompleteLeagueFixtureButton';
+import type { FixtureDto } from '@/lib/fixtures/types';
 
 /**
  * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
@@ -29,13 +31,20 @@ export function LiveMatchFoundation({
   bundle,
   club = null,
   firstMatch = false,
+  leagueFixture = null,
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
   firstMatch?: boolean;
+  leagueFixture?: FixtureDto | null;
 }) {
   const { fixture } = bundle;
-  const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(fixture, bundle, club);
+  const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(
+    fixture,
+    bundle,
+    club,
+    leagueFixture,
+  );
   const us = club ?? dashboardMock.club;
   const homeName = fixture.home ? us.name : fixture.opponent;
   const awayName = fixture.home ? fixture.opponent : us.name;
@@ -120,7 +129,17 @@ export function LiveMatchFoundation({
         onOpenReplay={() => openReplayAt()}
         onJumpToEvent={(item) => openReplayAt(item)}
         onDismiss={() => setPostMatchOpen(false)}
-        continueSlot={firstMatch ? <CompleteFirstMatchButton /> : undefined}
+        continueSlot={
+          firstMatch ? (
+            <CompleteFirstMatchButton />
+          ) : leagueFixture ? (
+            <CompleteLeagueFixtureButton
+              fixtureId={leagueFixture.id}
+              homeScore={snapshot.homeScore}
+              awayScore={snapshot.awayScore}
+            />
+          ) : undefined
+        }
       />
     );
   }

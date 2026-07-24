@@ -44,6 +44,56 @@ export type Database = {
         };
         Relationships: [];
       };
+      fixtures: {
+        Row: {
+          id: string;
+          club_id: string;
+          matchday: number;
+          competition: string;
+          opponent_club_id: string;
+          is_home: boolean;
+          status: string;
+          home_score: number | null;
+          away_score: number | null;
+          played_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          club_id: string;
+          matchday: number;
+          competition?: string;
+          opponent_club_id: string;
+          is_home?: boolean;
+          status?: string;
+          home_score?: number | null;
+          away_score?: number | null;
+          played_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          matchday?: number;
+          competition?: string;
+          opponent_club_id?: string;
+          is_home?: boolean;
+          status?: string;
+          home_score?: number | null;
+          away_score?: number | null;
+          played_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'fixtures_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: false;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       infra_meta: {
         Row: {
           key: string;

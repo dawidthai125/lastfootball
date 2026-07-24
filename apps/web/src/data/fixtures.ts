@@ -14,6 +14,8 @@ export type Fixture = {
   competitionLabel: string;
   opponent: string;
   opponentShort: string;
+  /** League SSOT catalog id when from fixtures table. */
+  opponentClubId?: string;
   home: boolean;
   stadium: string;
   status: MatchStatus;

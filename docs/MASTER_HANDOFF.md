@@ -5,7 +5,7 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `b6b92dc` · 2026-07-24
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · prod `b6b92dc` · LFE-LEAGUE-01 lokalnie · 2026-07-24
 
 ---
 
@@ -65,7 +65,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Zakończone (kod na `main`)
 
-**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01
+**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A**
 
 **Silnik/UI meczu:** LFE EPIC-1…7 · Gameplay · AI · Engine · Player Match Data · Canvas · Replay · Post Match · Live Bridge · Ratings · CI Prettier
 
@@ -73,11 +73,11 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Aktywne
 
-Brak otwartego EPIC implementacyjnego (po HUB-01).
+LFE-LEAGUE-01 — Owner Review (GO COMMIT / PUSH + migracja `fixtures`).
 
 ### Typowe następne
 
-League fixtures SSOT · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physics (FUTURE)
+League table / SEASON · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim · Physics (FUTURE)
 
 ---
 
@@ -90,6 +90,8 @@ League fixtures SSOT · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim �
 | Club identity       | `clubs` → `ClubDto`                          |
 | Hub unlock          | `first_match_completed_at`                   |
 | Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`      |
+| League fixtures     | `fixtures` → `FixtureDto`                    |
+| Squad               | `resolveClubSquad`                           |
 | Match state         | `MatchState` + `EventBus` via `MatchSession` |
 | Agent onboarding    | `docs/AI/START_HERE.md`                      |
 
@@ -119,6 +121,7 @@ League fixtures SSOT · GDD-16+ · Economy/Transfers · LFE PUBLIC export trim �
 
 - Auth email/password; callback `/auth/callback`
 - Table `clubs` (owner RLS) + `first_match_completed_at`
+- Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A
 - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — never commit)
 - Status: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md)
 
@@ -161,4 +164,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

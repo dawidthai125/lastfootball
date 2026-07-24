@@ -19,25 +19,27 @@
 
 ## Supabase — PASS
 
-| Check      | Result                                                                 |
-| ---------- | ---------------------------------------------------------------------- |
-| Project    | `lastfootball` · ref **`anoeimngwptucjdugjme`**                        |
-| Rebind     | LFE-INFRA-01                                                           |
-| Migrations | infra bootstrap · clubs auth/identity · **`first_match_completed_at`** |
-| RLS        | clubs owner policies                                                   |
-| Types      | `apps/web/src/types/database.ts`                                       |
-| Auth URLs  | prod + localhost allowlist                                             |
+| Check      | Result                                                                                 |
+| ---------- | -------------------------------------------------------------------------------------- |
+| Project    | `lastfootball` · ref **`anoeimngwptucjdugjme`**                                        |
+| Rebind     | LFE-INFRA-01                                                                           |
+| Migrations | infra · clubs · first_match · **`fixtures` (LFE-LEAGUE-01 — apply before prod smoke)** |
+| RLS        | clubs + fixtures owner policies                                                        |
+| Types      | `apps/web/src/types/database.ts` (includes `fixtures`)                                 |
+| Auth URLs  | prod + localhost allowlist                                                             |
 
 ## Product smoke (verified)
 
-Landing → Auth → Wizard → First Match → Hub EARLY_CLUB — PASS on production (2026-07-24).
+Landing → Auth → Wizard → First Match → Hub EARLY_CLUB — PASS on production (2026-07-24).  
+**LEAGUE-01 path** (Hub → league match → complete → Hub): wymaga migracji `fixtures` + deploy.
 
 ## Owner remaining (ops)
 
-1. DNS polish for custom domain if still pending at registrar
-2. Rotate any secrets ever pasted in chat
-3. Optional: deploy edge `health` function
+1. Apply `supabase/migrations/20260724230000_fixtures_ssot.sql` to project `anoeimngwptucjdugjme`
+2. GO COMMIT / PUSH LFE-LEAGUE-01
+3. DNS polish for custom domain if still pending at registrar
+4. Rotate any secrets ever pasted in chat
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

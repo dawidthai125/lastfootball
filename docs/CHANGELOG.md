@@ -7,7 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`b6b92dc`** (LFE-HUB-01). Platform + First Match + EARLY_CLUB Hub. Docs: LFE-DOCS-01.
+Production baseline **`b6b92dc`** (LFE-HUB-01). Platform + First Match + EARLY_CLUB Hub.  
+**LFE-LEAGUE-01 Thin A** zaimplementowany lokalnie (awaiting Owner GO commit/push + migracja `fixtures`).
+
+---
+
+## [2026-07-24] — LFE-LEAGUE-01 Thin A
+
+### Product
+
+- Tabela `fixtures` (RLS) + `opponent_club_id` katalog AI
+- Generator 3 meczów (`ensureClubFixtures`) po First Match
+- Hub Primary → „Przygotuj mecz” / Match Pipeline reuse / `completeFixture`
+- Squad SSOT (`resolveClubSquad`) — bez `@/data/squad` na ścieżce produktowej
+- Faza Hub pozostaje `EARLY_CLUB` (bez SEASON / tabeli ligowej)
 
 ---
 

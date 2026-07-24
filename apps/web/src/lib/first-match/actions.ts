@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 
 import type { CompleteFirstMatchState } from '@/lib/first-match/action-types';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { ensureClubFixtures } from '@/lib/fixtures/ensure-club-fixtures';
 import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 
@@ -54,5 +55,9 @@ export async function completeFirstMatch(
   }
 
   revalidatePath('/', 'layout');
+
+  // LFE-LEAGUE-01: seed Thin A fixtures after Hub unlock (idempotent).
+  await ensureClubFixtures(row.id);
+
   redirect(FIRST_MATCH_PATHS.welcome);
 }

@@ -5,17 +5,17 @@
 **Krótki start** (1 ekran). Pełne przekazanie: [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md).  
 Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGENTS.md).
 
-## Stan (2026-07-24) — Production Verified
+## Stan (2026-07-24)
 
-| Tor                | Stan                                                                       |
-| ------------------ | -------------------------------------------------------------------------- |
-| **Baseline**       | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app                   |
-| **Platform**       | Landing · Auth · Club Wizard · Club DTO · Supabase `anoeimngwptucjdugjme`  |
-| **First Match**    | Tunnel → Prematch/Live/Post → Welcome LF · SSOT `first_match_completed_at` |
-| **Hub**            | EARLY_CLUB decision screen · `resolveHubPhase` / `resolvePrimaryCta`       |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings            |
-| **GDD**            | GDD-01…15 CLOSED                                                           |
-| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                         |
+| Tor                | Stan                                                                |
+| ------------------ | ------------------------------------------------------------------- |
+| **Prod baseline**  | `b6b92dc` · LFE-HUB-01 · https://lastfootball.vercel.app            |
+| **Local**          | LFE-LEAGUE-01 Thin A — Owner Review (no push yet)                   |
+| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub + fixtures SSOT    |
+| **Hub**            | EARLY_CLUB · Primary next match · Squad SSOT                        |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings     |
+| **GDD**            | GDD-01…15 CLOSED                                                    |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony (local validate) |
 
 ## Kolejność czytania
 
@@ -27,8 +27,8 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Najbliższy cel
 
-Owner wybiera kolejny EPIC (rekomendacje: **liga/fixtures SSOT**, GDD-16+, ekonomia).  
-Przed startem: `AI/START_HERE.md` + AUDIT.
+**GO COMMIT / PUSH** LFE-LEAGUE-01 + apply migracji `fixtures` na Supabase.  
+Potem: league table / SEASON follow-up lub GDD-16+.
 
 ## Zasady twarde
 
@@ -40,4 +40,4 @@ Przed startem: `AI/START_HERE.md` + AUDIT.
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

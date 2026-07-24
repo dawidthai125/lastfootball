@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
-import { STATUS_LABEL, type SquadPlayer } from '@/data/squad';
+import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
 import { dashboardMock } from '@/data/mock';
+
+type SquadPlayer = SquadPlayerDto;
 
 function statusTone(status: SquadPlayer['status']): {
   border: string;

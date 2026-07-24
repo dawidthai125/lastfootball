@@ -10,7 +10,7 @@
     "build": "npm run build -w @lastfootball/web",
     "lint": "npm run lint -w @lastfootball/web",
     "typecheck": "npm run typecheck -w @lastfootball/lfe && npm run typecheck -w @lastfootball/domain && npm run typecheck -w @lastfootball/web",
-    "test": "npm run test -w @lastfootball/lfe",
+    "test": "npm run test -w @lastfootball/lfe && npm run test -w @lastfootball/web",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "validate": "npm run format:check && npm run typecheck && npm run lint && npm test && npm run build",

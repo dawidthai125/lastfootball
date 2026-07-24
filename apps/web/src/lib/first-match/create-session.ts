@@ -10,11 +10,12 @@ import type { PlayerId } from '@lastfootball/domain';
 
 import type { ClubDto } from '@/lib/club/types';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { seedBotSquad, seedStarterSquad } from '@/lib/first-match/starter-squad';
+import { seedBotSquad, seedStarterSquad } from '@/lib/squad';
+import { hashSeed } from '@/lib/match/hash-seed';
 
 /**
  * Builds MatchSession for inaugural match from Club DTO + deterministic squads.
- * Does not change LFE contracts — same createMatch entry as mock fixtures.
+ * Does not change LFE contracts — same createMatch entry as league fixtures.
  */
 export function createSessionFromFirstMatch(club: ClubDto): MatchSession {
   const homeTeamId = 'team-home';
@@ -80,13 +81,4 @@ export function createSessionFromFirstMatch(club: ClubDto): MatchSession {
   });
 
   return session;
-}
-
-function hashSeed(id: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < id.length; i += 1) {
-    h ^= id.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
 }

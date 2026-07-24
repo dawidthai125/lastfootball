@@ -12,6 +12,8 @@ import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { createSessionFromFixture } from '@/gameplay/create-session-from-fixture';
 import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
+import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
+import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
@@ -81,13 +83,15 @@ export class LiveMatchRuntime {
   private readonly ticksPerPulse = 8;
   private playbackSource: PlaybackSource = 'live';
 
-  constructor(fixture: Fixture, shell: LiveMatchBundle, club?: ClubDto | null) {
+  constructor(
+    fixture: Fixture,
+    shell: LiveMatchBundle,
+    club?: ClubDto | null,
+    leagueFixture?: FixtureDto | null,
+  ) {
     this.fixture = fixture;
     this.shell = shell;
-    this.session =
-      fixture.id === FIRST_MATCH_ID && club
-        ? createSessionFromFirstMatch(club)
-        : createSessionFromFixture(fixture);
+    this.session = resolveSession(fixture, club, leagueFixture ?? null);
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
     this.replayBuffer = createReplayBuffer({ capacity: 3600 });
@@ -471,4 +475,18 @@ function humanizeEvent(e: EngineEvent): string {
     default:
       return String(e.type);
   }
+}
+
+function resolveSession(
+  fixture: Fixture,
+  club: ClubDto | null | undefined,
+  leagueFixture: FixtureDto | null,
+): MatchSession {
+  if (fixture.id === FIRST_MATCH_ID && club) {
+    return createSessionFromFirstMatch(club);
+  }
+  if (club && leagueFixture) {
+    return createSessionFromLeagueFixture(club, leagueFixture);
+  }
+  return createSessionFromFixture(fixture);
 }

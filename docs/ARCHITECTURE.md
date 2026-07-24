@@ -6,8 +6,8 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`b6b92dc`** (LFE-HUB-01).  
-LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub EARLY_CLUB + match pipeline.
+Monorepo. Production baseline **`b6b92dc`** (LFE-HUB-01); LFE-LEAGUE-01 Thin A lokalnie.  
+LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub EARLY_CLUB + fixtures SSOT + match pipeline.
 
 ---
 
@@ -31,7 +31,7 @@ Canvas i Replay są **read-only** względem Engine. Post Match buduje raport z E
 
 ### Supabase
 
-Auth + `clubs` (identity, `first_match_completed_at`). **Nie** jest zależnością LFE.
+Auth + `clubs` (identity, `first_match_completed_at`) + **`fixtures`** (ligowy terminarz Thin A). **Nie** jest zależnością LFE.
 
 ---
 
@@ -44,7 +44,8 @@ Landing → Auth → Welcome → Club Wizard
 ```
 
 SSOT unlock Hub: `clubs.first_match_completed_at`.  
-Hub phase: `resolveHubPhase` · Primary: `resolvePrimaryCta`.
+Hub phase: `resolveHubPhase` · Session: `resolveHubSession` · Primary: `resolvePrimaryCta`.  
+Fixtures: `fixtures` / `getNextFixture` · Squad: `resolveClubSquad`.
 
 Szczegóły: [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`platform/HUB.md`](./platform/HUB.md).
 
@@ -125,4 +126,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-24 — LFE-LEAGUE-01

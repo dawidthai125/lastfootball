@@ -1,19 +1,24 @@
-import type { HubCta, HubPhase, HubSession } from '@/lib/hub/types';
+import type { FixtureDto } from '@/lib/fixtures/types';
+import type { HubCta, HubCtaContext, HubPhase, HubSession } from '@/lib/hub/types';
 
 /**
  * Exactly one Primary CTA for the Hub decision screen (GDD §23.4).
  */
-export function resolvePrimaryCta(phase: HubPhase, session: HubSession): HubCta {
-  void session;
-  if (phase === 'EARLY_CLUB') {
+export function resolvePrimaryCta(
+  phase: HubPhase,
+  session: HubSession,
+  ctx: HubCtaContext = { nextFixture: null },
+): HubCta {
+  if (phase === 'EARLY_CLUB' && session === 'matchday' && ctx.nextFixture) {
     return {
-      id: 'view-squad',
-      label: 'Zobacz skład',
-      href: '/squad',
+      id: 'play-next-match',
+      label: 'Przygotuj mecz',
+      href: `/match/${ctx.nextFixture.id}`,
       access: 'open',
     };
   }
-  // Future phases — safe fallback until SEASON SSOT exists
+
+  void session;
   return {
     id: 'view-squad',
     label: 'Zobacz skład',
@@ -23,8 +28,12 @@ export function resolvePrimaryCta(phase: HubPhase, session: HubSession): HubCta 
 }
 
 /** Secondary actions — max 5 including soft-locked teases. */
-export function resolveSecondaryCtas(phase: HubPhase): HubCta[] {
+export function resolveSecondaryCtas(
+  phase: HubPhase,
+  ctx: Pick<HubCtaContext, 'hasFixtures'> = {},
+): HubCta[] {
   if (phase !== 'EARLY_CLUB') return [];
+  const fixturesOpen = Boolean(ctx.hasFixtures);
   return [
     {
       id: 'club',
@@ -36,7 +45,7 @@ export function resolveSecondaryCtas(phase: HubPhase): HubCta[] {
       id: 'fixtures',
       label: 'Terminarz',
       href: '/matches',
-      access: 'soft_locked',
+      access: fixturesOpen ? 'open' : 'soft_locked',
     },
     {
       id: 'message',
@@ -46,3 +55,6 @@ export function resolveSecondaryCtas(phase: HubPhase): HubCta[] {
     },
   ];
 }
+
+/** @deprecated use HubCtaContext — kept for call-site clarity */
+export type { FixtureDto };

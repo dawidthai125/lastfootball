@@ -5,14 +5,15 @@ import { useRouter } from 'next/navigation';
 
 import {
   POSITION_FILTERS,
-  SQUAD_PLAYERS,
   STATUS_FILTERS,
   STATUS_LABEL,
   type PlayerStatus,
   type SortKey,
-  type SquadPlayer,
-} from '@/data/squad';
+  type SquadPlayerDto,
+} from '@/lib/squad';
 import { PlayerPortrait } from '@/components/assets';
+
+type SquadPlayer = SquadPlayerDto;
 
 const controlStyle: CSSProperties = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -81,7 +82,7 @@ function comparePlayers(
   }
 }
 
-export function SquadView() {
+export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
   const router = useRouter();
   const [position, setPosition] = useState<(typeof POSITION_FILTERS)[number]>('ALL');
   const [status, setStatus] = useState<(typeof STATUS_FILTERS)[number]>('ALL');
@@ -89,12 +90,12 @@ export function SquadView() {
   const [dir, setDir] = useState<'asc' | 'desc'>('desc');
 
   const rows = useMemo(() => {
-    let list = [...SQUAD_PLAYERS];
+    let list = [...players];
     if (position !== 'ALL') list = list.filter((p) => p.position === position);
     if (status !== 'ALL') list = list.filter((p) => p.status === status);
     list.sort((a, b) => comparePlayers(a, b, sort, dir));
     return list;
-  }, [position, status, sort, dir]);
+  }, [players, position, status, sort, dir]);
 
   function toggleSort(key: SortKey) {
     if (sort === key) setDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -138,7 +139,7 @@ export function SquadView() {
               color: 'var(--lf-color-text-muted)',
             }}
           >
-            Pierwsza drużyna · {rows.length} z {SQUAD_PLAYERS.length} zawodników
+            Pierwsza drużyna · {rows.length} z {players.length} zawodników
           </p>
         </div>
       </header>

@@ -4,12 +4,14 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import type { Fixture, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
+import type { FixtureDto } from '@/lib/fixtures/types';
 import { LiveMatchRuntime, type LiveMatchSnapshot } from '@/gameplay/live-match-runtime';
 
 export function useLiveMatchRuntime(
   fixture: Fixture,
   shell: LiveMatchBundle,
   club?: ClubDto | null,
+  leagueFixture?: FixtureDto | null,
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
@@ -18,7 +20,7 @@ export function useLiveMatchRuntime(
   const [runtime, setRuntime] = useState<LiveMatchRuntime | null>(null);
 
   useEffect(() => {
-    const rt = new LiveMatchRuntime(fixture, shell, club);
+    const rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture);
     rt.ensureSimulationRunning();
     setRuntime(rt);
     return () => {
@@ -27,7 +29,7 @@ export function useLiveMatchRuntime(
     };
     // Recreate only when match identity changes — not on parent re-renders.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fixture/shell/club by id
-  }, [fixture.id, shell.fixture.id, club?.id]);
+  }, [fixture.id, shell.fixture.id, club?.id, leagueFixture?.id]);
 
   const snapshot = useSyncExternalStore(
     (onStoreChange) => {
