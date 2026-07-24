@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-13 (§3–§15 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-14 (§3–§15 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -35,7 +35,7 @@
 20. [Zadania dzienne](#20-zadania-dzienne)
 21. [Wiadomości](#21-wiadomości)
 22. [Powiadomienia](#22-powiadomienia)
-23. [Panel główny](#23-panel-główny)
+23. [Panel główny](#23-panel-główny) ← **GDD-14**
 24. [Interfejs użytkownika](#24-interfejs-użytkownika)
 25. [Styl graficzny](#25-styl-graficzny)
 26. [System ekonomii](#26-system-ekonomii)
@@ -498,7 +498,7 @@ Zdefiniować **uczciwe** haki retencji zgodne z menedżerem piłkarskim — nie 
 
 Decyzje z §3, które **wiążą** resztę GDD (bez implementacji):
 
-1. **Hub-first** — każdy powrót ląduje na panelu z jednym głównym CTA (§23).
+1. **Hub-first** — każdy powrót ląduje na panelu z jednym głównym CTA (**szczegół ekranu → §23**).
 2. **Mecz w centrum** — inne systemy są przygotowaniem lub konsekwencją (§8–15 podporządkowane).
 3. **Progressive disclosure** — tydzień 1 ≠ pełna gra; odblokowania są nagrodą pętli.
 4. **Sesja 5–15 min jest first-class** — deep play opcjonalny.
@@ -1571,7 +1571,7 @@ Wskazać, co gracz powinien móc szybko odczytać.
 
 **Przebieg**
 
-1. Hub / karta klubu: czytelny status sezonu + sygnały metryk (pasma / etykiety — bez spreadsheetu).
+1. Hub / karta klubu: czytelny status sezonu + sygnały metryk (pasma / etykiety — bez spreadsheetu). **Hierarchia i stany Hubu → §23** (konsumpcja metryk §6, bez redefinicji).
 2. Po meczu / po sezonie: krótki feedback instytucjonalny możliwy jako 1–2 linie (kategorie), bez breakdownu XP.
 3. Rynek / sponsor: kontekst „klub atrakcyjny dzięki reputacji” jako copy — bez osobnego mini-UI algorytmu.
 4. UI Guide: jeden cel ekranu; bez glow / pill clutter.
@@ -3245,7 +3245,7 @@ Zamknąć pętlę §3: z powrotem na Hub z **jednym jasnym „co dalej”**.
 **Przebieg**
 
 1. CTA z raportu → Hub.
-2. Hub w stanie „po meczu”: krótki pasek „Ostatni wynik: …” + primary CTA kolejnej sprawy (następny mecz / zadanie / wiadomość).
+2. Hub w stanie „po meczu”: krótki pasek „Ostatni wynik: …” + primary CTA kolejnej sprawy (następny mecz / zadanie / wiadomość). **Szczegół stanu Hubu → §23.8**.
 3. Odblokowania UI (progressive disclosure) mogą tu błysnąć **jednym** toasłem — nie listą 10 systemów.
 4. Sesja 5–15 min może się naturalnie skończyć; deep dive opcjonalny.
 
@@ -6600,19 +6600,412 @@ Co i kiedy powiadamiamy, by nie spamować.
 
 ## 23. Panel główny
 
+**Status rozdziału:** GDD-14 — opracowany (**Hub MVP — ekran decyzji**; bez kodu, dashboardu analitycznego, konfigurowalnych widgetów i rozszerzonych statystyk)
+
+**Cel rozdziału**  
+Dać menedżerowi po zalogowaniu / powrocie **jeden ekran home**, który w kilka sekund odpowiada: **„Co jako menedżer powinienem zrobić teraz?”** — spójnie z hub-first (§3), meczowym centrum (§9) i tożsamością klubu (UI Guide / §6).
+
+**Zasady nadrzędne (decyzje GDD-14)**
+
+1. Hub jest ekranem **decyzji**, nie dashboardem analitycznym.
+2. Pytanie nadrzędne: **„Co jako menedżer powinienem zrobić teraz?”**
+3. **Dokładnie 1 Primary CTA**; **maksymalnie 5 Secondary CTA**.
+4. Hierarchia informacji (kolejność Ownera): mecz/wydarzenie → zadanie dnia → status klubu (§6) → skróty → pomocnicze.
+5. Stany jakościowe: **nowy klub · dzień meczowy · po meczu · idle**.
+6. §23 **wyłącznie konsumuje** Poziom klubu / Reputację / Prestiż z **§6** — bez redefinicji.
+7. Personalizacja, konfigurowalne widgety, rozszerzone statystyki i wielokolumnowe dashboardy = **Future**.
+8. Detale komponentów / tokeny / pełna IA → **UI Guide** i **§24** (odesłania; ZERO DUPLICATE).
+9. Klub first — tożsamość klubu nad meta-UI (UI Guide).
+10. Bez SaaS-clutter, glow i wall of cards (UI Guide §2.1).
+
+**Szybki kontrakt MVP (SSOT)**
+
+| Parametr          | Wartość MVP                                     |
+| ----------------- | ----------------------------------------------- |
+| Charakter         | Ekran decyzji (nie analytics dashboard)         |
+| Pytanie nadrzędne | „Co powinienem zrobić teraz?”                   |
+| Primary CTA       | **Dokładnie 1**                                 |
+| Secondary CTA     | **Maksymalnie 5**                               |
+| Hierarchia        | 5 warstw (poniżej)                              |
+| Stany             | nowy klub / dzień meczowy / po meczu / idle     |
+| Status klubu      | Sygnały z §6 (konsumpcja)                       |
+| Personalizacja UI | Future                                          |
+| Widgety konfig.   | Future                                          |
+| Extended stats    | Future                                          |
+| Kod / wireframe   | OUT tego rozdziału (produkt, nie implementacja) |
+
+---
+
+### 23.1 Filozofia Hub (decyzja, nie dashboard)
+
 **Cel**  
-Określić „home” po zalogowaniu.
+Ustawić ton: Hub = centrum sprawczości, nie centrum danych.
 
-**Opis**  
-Jeden ekran hub: co widać najpierw, co jest CTA dnia.
+**Przebieg**
 
-**Do opracowania**
+1. Gracz ma w kilka sekund wiedzieć, **gdzie jest** i **jaką jedną decyzję** może podjąć teraz.
+2. Hub nie konkuruje z raportem meczu, tabelą ligową ani ekranem finansów o „głębię spreadsheetu”.
+3. Informacje wspierają decyzję; nie są celem samym w sobie.
+4. Sesja 5–15 min (§3) startuje i często kończy się sensownie z Huba.
 
-- [ ] Hierarchia informacji
-- [ ] Widgety (kolejka, finanse, forma)
-- [ ] CTA dnia
-- [ ] Wejścia do podsystemów
-- [ ] Stan pusty / nowy gracz
+**Decyzje gracza**
+
+- Wykonać Primary CTA vs zejść w Secondary (opcjonalne pogłębienie).
+
+**Zależności**
+
+- §3.11, UI Guide §1–§2.
+
+---
+
+### 23.2 Pytanie nadrzędne
+
+**Cel**  
+Zamrozić misję ekranu.
+
+**Przebieg**
+
+1. Każdy wariant Hubu musi dać odpowiedź na: **„Co jako menedżer powinienem zrobić teraz?”**
+2. Jeśli Primary CTA tego nie komunikuje — układ jest zły (reguła produktowa).
+3. Copy i hierarchia służą temu pytaniu, nie „pokazaniu wszystkiego, co mamy”.
+
+**Zależności**
+
+- §3 hub-first.
+
+---
+
+### 23.3 Hierarchia informacji
+
+**Cel**  
+Ustalić kolejność skanowania oczu i priorytet treści.
+
+| #   | Warstwa                          | Rola                                                           |
+| --- | -------------------------------- | -------------------------------------------------------------- |
+| 1   | **Najbliższy mecz / wydarzenie** | Kontekst czasu: kiedy, z kim, liga/puchar                      |
+| 2   | **Najważniejsze zadanie dnia**   | Jedna sprawa do domknięcia (skład, odbiór, decyzja)            |
+| 3   | **Status klubu**                 | Sygnały Poziom · Reputacja · Prestiż (**definicje → §6**)      |
+| 4   | **Skróty do głównych modułów**   | Wejścia kontekstowe (nie pełne menu aplikacji)                 |
+| 5   | **Informacje pomocnicze**        | Flavor, skrót ostatniego wyniku, 1 linia wiadomości — najniżej |
+
+**Zasady**
+
+1. Primary CTA wyrasta z warstw **1–2**.
+2. Secondary CTA żyją głównie w warstwie **4** (ew. jedna akcja z warstwy 2, jeśli nie jest Primary).
+3. Warstwa 5 nigdy nie staje się Primary.
+4. Brak wielokolumnowego „command center” w MVP.
+
+---
+
+### 23.4 Primary CTA (dokładnie 1)
+
+**Cel**  
+Jedna dominująca akcja na ekranie.
+
+**Przebieg**
+
+1. Na Hubie jest **zawsze dokładnie jeden** Primary CTA.
+2. Primary zmienia się ze **stanem** (§23.6–23.9), nie z kaprysem widgetów.
+3. Primary jest wizualnie i copy’owo nadrzędny wobec Secondary.
+4. Zakaz dwóch równorzędnych „głównych” przycisków.
+
+**Przykłady jakościowe (nie lista ID)**
+
+| Stan          | Typowy Primary                                                   |
+| ------------- | ---------------------------------------------------------------- |
+| Nowy klub     | Pierwszy mecz / Ustaw skład                                      |
+| Dzień meczowy | Idź do meczu / Przygotuj skład                                   |
+| Po meczu      | Kontynuuj (następna sprawa) / Zobacz raport (jeśli niedomknięty) |
+| Idle          | Najbliższy sensowny cel (kolejka / zadanie / sprawa)             |
+
+**Zależności**
+
+- §3, §5.10–5.11, §9.15, §10.
+
+---
+
+### 23.5 Secondary CTA (maksymalnie 5)
+
+**Cel**  
+Dać szybkie wejścia bez rozmywania Primary.
+
+**Przebieg**
+
+1. Łącznie **≤ 5** Secondary na danym stanie Hubu.
+2. Secondary = skróty / sprawy wspierające, nie drugi Primary.
+3. Preferowane cele: skład, liga/terminarz, transfery (gdy odblokowane), finanse, trening / wiadomość — **wybór kontekstowy stanu**, nie zawsze te same pięć.
+4. Jeśli sprawa jest krytyczna „dziś”, może awansować do Primary zamiast dublować się jako Secondary.
+
+**Zależności**
+
+- §7–§8, §10–§15, §21.
+
+---
+
+### 23.6 Stan: nowy klub
+
+**Cel**  
+Domknąć onboarding na Hubie bez overwhelm.
+
+**Przebieg**
+
+1. Wejście po §5: wariant Hubu „nowy klub”.
+2. Warstwa 1–2: pierwszy mecz / ustawienie składu jako dominanta.
+3. Primary: **Pierwszy mecz** lub **Ustaw skład** (dokładnie jeden).
+4. Secondary (≤5): np. podgląd składu, terminarz, krótka wiadomość powitalna, (opcjonalnie) zadanie startowe — bez pełnego rynku/finansów na siłę.
+5. Status §6: startowy, czytelny, bez „pustego spreadsheetu”.
+6. Unikać: wall of unlocków, dashboardu ekonomii, multi-CTA hero.
+
+**Decyzje gracza**
+
+- Iść w pierwszy mecz vs lekko poprawić skład.
+
+**Zależności**
+
+- §5.10–5.11, §3.1–3.2.
+
+---
+
+### 23.7 Stan: dzień meczowy
+
+**Cel**  
+Skupić dzień na meczu.
+
+**Przebieg**
+
+1. Warstwa 1 dominuje: najbliższy mecz (liga/puchar) z jasnym czasem/kontekstem.
+2. Primary zwykle: **Idź do meczu** / **Przygotuj skład** (gdy skład wymaga uwagi).
+3. Zadanie dnia (warstwa 2) nie konkuruje z Primary, chyba że jest warunkiem wejścia (np. „ustaw XI”).
+4. Secondary (≤5): skład, taktyka lekka, terminarz, (ew.) wiadomość — **nie** Primary na transfer w dzień meczu bez silnego powodu produktowego.
+5. Status §6 pozostaje widoczny, ale nie odbiera hierarchii meczowi.
+
+**Decyzje gracza**
+
+- Grać / przygotować się vs odłożyć pogłębienie na po meczu.
+
+**Zależności**
+
+- §9, §10–§11, §7.
+
+---
+
+### 23.8 Stan: po meczu
+
+**Cel**  
+Domknąć emocję wyniku i wskazać **jedną** kolejną sprawę.
+
+**Przebieg**
+
+1. Krótki sygnał ostatniego wyniku (warstwa 5 lub pasek przy Primary) — bez pełnego raportu na Hubie.
+2. Primary: **Kontynuuj** (następna sprawa) / domknięcie raportu, jeśli niedokończony (§9.12–9.15).
+3. Możliwy 1 toast odblokowania — nie lista systemów.
+4. Secondary (≤5): raport (jeśli domknięty), tabela, skład, finanse skrót, wiadomość.
+5. Status §6 może pokazać lekki impuls instytucjonalny (kategorie) — bez breakdownu XP.
+
+**Decyzje gracza**
+
+- Zakończyć sesję vs iść w kolejną sprawę.
+
+**Zależności**
+
+- §9.12–9.15, §3.6, §6.16.
+
+---
+
+### 23.9 Stan: idle
+
+**Cel**  
+Dzień bez natychmiastowego meczu nadal ma **jedną** sensowną decyzję.
+
+**Przebieg**
+
+1. Warstwa 1: najbliższe wydarzenie w kalendarzu (nawet jeśli „jutro / w kolejce”).
+2. Primary: najbliższy sensowny cel (przygotowanie kolejki, zadanie, sprawa wiadomości) — **jeden**.
+3. Unikać FOMO wall i daily-grind jako jedynego sensu Hubu (§20 — gdy wypełnione — konsumowane, nie redefiniowane tu).
+4. Secondary (≤5): liga, skład, transfery/finanse (gdy odblokowane), trening, wiadomości.
+5. Soft landing: idle nie karze gracza pustką ani spamem.
+
+**Decyzje gracza**
+
+- Zrobić jedną sprawę vs wyjść i wrócić na mecz.
+
+**Zależności**
+
+- §3.6–3.7, §10, §20–§22 (szkielet / odesłania).
+
+---
+
+### 23.10 Status klubu na Hubie (konsumpcja §6)
+
+**Cel**  
+Pokazać tożsamość instytucji bez drugiego słownika metryk.
+
+**Przebieg**
+
+1. Warstwa 3 pokazuje sygnały: **Poziom klubu · Reputacja · Prestiż**.
+2. **Definicje SSOT → wyłącznie §6.2**; Hub nie tworzy synonimów ani wzorów.
+3. Forma prezentacji MVP: pasma / etykiety / krótki status — nie tabela XP.
+4. Decyzja produktowa (domknięcie open Q z §6.19): sygnały §6 są **widoczne na Hubie** w skrócie; detal może iść na kartę klubu (Future/UI).
+5. Status wspiera decyzję (kontekst), nie zastępuje Primary CTA.
+
+**Zależności**
+
+- §6.2–6.6, §6.16.
+
+---
+
+### 23.11 Skróty do modułów (§7–§15)
+
+**Cel**  
+Warstwa 4 jako wejścia, nie launcher całej gry.
+
+**Przebieg**
+
+1. Skróty odpowiadają Secondary CTA (budżet ≤5 łącznie z innymi Secondary).
+2. Typowe cele: skład (§7), trening (§8), liga (§10), puchar (§11), transfery (§12), finanse (§14), stadion (§13) — **wybór pod stan**.
+3. Nie pokazywać wszystkich modułów naraz, jeśli łamie limit Secondary lub hierarchię.
+4. Nawigacja globalna (left nav itd.) — szczegół §24 / UI Guide; Hub nie dubluje pełnego menu jako Primary content.
+
+**Zależności**
+
+- §7–§15, §24.
+
+---
+
+### 23.12 Informacje pomocnicze
+
+**Cel**  
+Warstwa 5 bez przejęcia uwagi.
+
+**Przebieg**
+
+1. Dozwolone: skrót ostatniego wyniku, 1 linia wiadomości, lekki flavor sezonu.
+2. Zakaz w MVP: wykresy, heatmapy, multi-stat tiles, feed aktywności jak social dashboard.
+3. Pomocnicze nigdy nie generują drugiego Primary.
+
+**Zależności**
+
+- §9.15, §21, UI Guide.
+
+---
+
+### 23.13 Relacja z §3 (hub-first / core loop)
+
+**Cel**  
+Zrealizować kontrakty pętli.
+
+**Przebieg**
+
+1. §3.11: każdy powrót ląduje na Hubie z **jednym** głównym CTA — ten rozdział to doprecyzowuje.
+2. Mecz w centrum: Primary w dniu meczowym prowadzi do przygotowania/meczu.
+3. Progressive disclosure: Hub odsłania sprawy wraz z pętlą, nie wall of systems w D1.
+
+**Zależności**
+
+- §3.0–3.11.
+
+---
+
+### 23.14 Relacja z §9–§15
+
+**Cel**  
+Spiąć Hub z rozgrywkami i gospodarką bez duplikacji reguł.
+
+**Przebieg**
+
+1. §9: wejście do meczu i powrót z raportu → stany dzień meczowy / po meczu.
+2. §10–§11: źródło „najbliższego wydarzenia”.
+3. §12–§15: Secondary / kontekst — reguły rynku i kasy zostają w swoich rozdziałach.
+4. Hub nie redefiniuje formatu ligi, envelope ani sponsora.
+
+**Zależności**
+
+- §9–§15.
+
+---
+
+### 23.15 Relacja z §24 / UI Guide
+
+**Cel**  
+Utrzymać granicę zakresu.
+
+**Przebieg**
+
+1. §23 = **co Hub komunikuje i jakie decyzje oferuje**.
+2. UI Guide = wygląd i zachowanie UI (SSOT wizualny).
+3. §24 = mapa ekranów / wzorce IA — Future względem pełnego wypełnienia; Hub tylko kotwiczy home.
+4. Zakaz kopiowania guide do GDD i zakaz projektowania tokenów tutaj.
+
+**Zależności**
+
+- UI Guide, §24–§25 (szkielet).
+
+---
+
+### 23.16 MVP vs Future
+
+**Cel**  
+Freeze zakresu.
+
+**MVP — wchodzi**
+
+- Pytanie nadrzędne + filozofia decyzji
+- Dokładnie 1 Primary CTA
+- Maksymalnie 5 Secondary CTA
+- Hierarchia 5 warstw
+- Stany: nowy klub / dzień meczowy / po meczu / idle
+- Status klubu jako konsumpcja §6
+- Skróty kontekstowe + informacje pomocnicze lekkie
+- Odesłania do §3 / §6 / §9–§15 / UI Guide
+
+**MVP — nie wchodzi**
+
+- Personalizacja layoutu
+- Konfigurowalne widgety
+- Rozszerzone statystyki / wykresy
+- Wielokolumnowe dashboardy
+- App-launcher zamiast decyzji
+- Redefinicje metryk §6
+- Specyfikacja implementacji React/kodu
+
+**Future (kierunek poza MVP)**
+
+1. Konfigurowalne widgety i personalizacja
+2. Bogatsze sygnały sezonowe / historia na Hubie
+3. Głębsza integracja §20–§22 (zadania, wiadomości, powiadomienia) po ich wypełnieniu
+4. Warianty Hubu po awansie / pucharze (flavor, nie cheat)
+5. Pełna mapa IA w §24 spięta z Hubem
+
+---
+
+### 23.17 Kontrakty produktowe §23
+
+1. Hub odpowiada: **„Co powinienem zrobić teraz?”**
+2. Hub = **decyzja**, nie dashboard analityczny.
+3. **Dokładnie 1** Primary CTA; **≤ 5** Secondary CTA.
+4. Hierarchia: mecz/wydarzenie → zadanie dnia → status §6 → skróty → pomocnicze.
+5. Stany MVP: nowy klub / dzień meczowy / po meczu / idle.
+6. Metryki klubu: **tylko konsumpcja §6**.
+7. Personalizacja / widgety / extended stats / multi-column dashboards = **Future**.
+8. §24 / UI Guide = wygląd i IA; §23 nie dubluje ich SSOT.
+9. Hub-first z §3 pozostaje wiążący.
+
+---
+
+### 23.18 Checklista §23
+
+- [x] Filozofia decyzji (nie dashboard)
+- [x] Pytanie nadrzędne
+- [x] Hierarchia 5 warstw
+- [x] Primary = 1; Secondary ≤ 5
+- [x] Stany: nowy klub / dzień meczowy / po meczu / idle
+- [x] Status klubu = konsumpcja §6
+- [x] Skróty i informacje pomocnicze
+- [x] Relacje §3 / §9–§15 / §24 / UI Guide
+- [x] MVP vs Future + kontrakty
+- [ ] Copy Primary per stan po playtestach UX
+- [ ] Sync z §20–§22 po ich wypełnieniu
+- [ ] Decyzja detalu karty klubu vs Hub dla pełnego §6 (UI)
 
 ---
 
@@ -6623,6 +7016,8 @@ Ustalić zasady UX całej gry.
 
 **Opis**  
 Szczegóły wizualne i komponentowe → `UI_DESIGN_GUIDE.md`. Tu: zakres ekranów i flow.
+
+> **Kotwica:** ekran home / Hub (decyzja, 1 Primary CTA, stany) = **§23**. Ten rozdział nie redefiniuje Hubu.
 
 **Do opracowania**
 

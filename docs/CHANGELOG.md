@@ -7,7 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-GDD-13 (§6 Rozwój klubu) uzupełniony. Match pipeline + Player Ratings na `main`.
+GDD-14 (§23 Hub) uzupełniony. Match pipeline + Player Ratings + §6 na `main`.
+
+---
+
+## [2026-07-24] — GDD-14
+
+### Docs (SSOT FIRST)
+
+- Wypełniony §23 Panel główny (Hub): ekran decyzji, nie dashboard
+- Dokładnie 1 Primary CTA; maksymalnie 5 Secondary CTA
+- Hierarchia: mecz → zadanie dnia → status §6 → skróty → pomocnicze
+- Stany: nowy klub / dzień meczowy / po meczu / idle
+- Cross-refs: §3.11, §6.16, §9.15, §24
+- Sync: CURRENT_DESIGN, roadmapy, status, handoff
 
 ---
 

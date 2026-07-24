@@ -12,7 +12,7 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 | -------------- | ---------------------------------------------------------------------------------- |
 | Engine         | EPIC-1…7 + **Gameplay + AI + Engine** + **Player Match Data** · `0.9.1-match-ai01` |
 | Web match      | Pre → Live → Canvas → Replay → Post Match (+ **Ratings**)                          |
-| Product design | GDD-01…13 CLOSED · §3–§15 wypełnione · pozostałe = szkielet                        |
+| Product design | GDD-01…14 CLOSED · §3–§15 + §23 Hub · pozostałe = szkielet                         |
 | Infra          | Vercel + Supabase + CI (format gate PASS)                                          |
 
 **HEAD (orientacyjnie):** `33618e9` Live Bridge — zawsze sprawdzaj `git log -1`.
@@ -44,12 +44,12 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego (GDD-13 docs lokalnie — COMMIT po Owner GO).
-- Dług: zawężenie PUBLIC LFE exports; drobny sync statusu Ratings (już na `main`).
+- Brak otwartego EPIC implementacyjnego (GDD-14 docs lokalnie — COMMIT po Owner GO).
+- Dług: zawężenie PUBLIC LFE exports; drobne stale hash/status w handoff (Ratings/GDD już na `main`).
 
 ## Co następne (rekomendacja)
 
-1. GDD-14+ (kolejny szkielet — Owner wybiera rozdział).
+1. GDD-15+ (kolejny szkielet — Owner wybiera rozdział).
 2. Transfer / Economy / League / Multiplayer — implementacja później.
 3. Physics / Rules — FUTURE.
 4. Ratings v2 (assists / minutes) — FUTURE.
@@ -69,4 +69,4 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Last updated
 
-2026-07-24 — GDD-13
+2026-07-24 — GDD-14

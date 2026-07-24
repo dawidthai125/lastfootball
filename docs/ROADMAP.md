@@ -6,7 +6,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
+Match pipeline na `main` + GDD §3–§15 + §23 Hub (GDD-14). CI zielony.
 
 ---
 
@@ -32,6 +32,7 @@ Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
 | **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)                     |
 | GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                           |
 | **GDD-13 §6 Rozwój klubu**       | Poziom · Reputacja · Prestiż (SSOT metryk)         |
+| **GDD-14 §23 Hub**               | Ekran decyzji; 1 Primary / ≤5 Secondary            |
 | **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF               |
 | **AI-DOCS-CONSOLIDATION-01**     | Handbook Agenta (SSOT FIRST; bez nowych plików)    |
 
@@ -45,7 +46,7 @@ Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
 
 | Item                         | Zależność                  |
 | ---------------------------- | -------------------------- |
-| GDD-14+ (kolejny szkielet)   | Owner GO (docs)            |
+| GDD-15+ (kolejny szkielet)   | Owner GO (docs)            |
 | Zawężenie LFE PUBLIC exports | chore packaging            |
 | Transfer Market              | GDD §12                    |
 | Economy                      | GDD §14                    |
@@ -71,6 +72,7 @@ Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
 - §6 = SSOT metryk rozwoju klubu.
+- §23 = SSOT Hub (decyzja, nie dashboard).
 
 ## Powiązania
 
@@ -78,4 +80,4 @@ Match pipeline na `main` + GDD §3–§15 (GDD-13). CI zielony.
 
 ## Last updated
 
-2026-07-24 — GDD-13
+2026-07-24 — GDD-14
