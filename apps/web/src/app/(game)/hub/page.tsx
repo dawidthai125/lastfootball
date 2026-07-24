@@ -1,37 +1,20 @@
-import { Grid, GridItem } from '@/components/layout/Grid';
-import { ClubHero } from '@/components/panel/ClubHero';
-import { FinanceSummary } from '@/components/panel/FinanceSummary';
-import { LeagueSnapshot } from '@/components/panel/LeagueSnapshot';
-import { MatchdayStrip } from '@/components/panel/MatchdayStrip';
-import { MessagesPreview } from '@/components/panel/MessagesPreview';
-import { RecentResults } from '@/components/panel/RecentResults';
-import { TrainingToday } from '@/components/panel/TrainingToday';
+import { redirect } from 'next/navigation';
+
+import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
+import { getManagerClub } from '@/lib/club/get-manager-club';
+import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { resolveHubPhase } from '@/lib/hub';
 
 /**
- * Hub / Panel menedżera — LFE-UI-IMPL-02 · route `/hub` (LFE-PLATFORM-01 P1)
- * Order: Club Hero → Matchday (+ Quick Actions) → data zones (WF-01 / GX-01)
+ * Hub / Panel menedżera — LFE-HUB-01 EARLY_CLUB decision screen.
+ * Mid-season dashboard mock removed from this path.
  */
-export default function DashboardPage() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-4)' }}>
-      <ClubHero />
-      <MatchdayStrip />
+export default async function HubPage() {
+  const club = await getManagerClub();
+  if (!club) redirect('/welcome');
 
-      <Grid>
-        <GridItem span={7}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
-            <LeagueSnapshot />
-            <RecentResults />
-            <FinanceSummary />
-          </div>
-        </GridItem>
-        <GridItem span={5}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
-            <TrainingToday />
-            <MessagesPreview />
-          </div>
-        </GridItem>
-      </Grid>
-    </div>
-  );
+  const phase = resolveHubPhase(club);
+  if (phase === 'NEW_CLUB') redirect(FIRST_MATCH_PATHS.intro);
+
+  return <EarlyClubHub club={club} />;
 }

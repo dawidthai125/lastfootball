@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { ClubCrest, NavIcon } from '@/components/assets';
-import { useClubIdentity } from '@/components/club/ClubProvider';
+import { useClub } from '@/components/club/ClubProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
-import { dashboardMock, sessionChrome } from '@/data/mock';
+import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/hub') return pathname === '/hub';
@@ -23,11 +23,9 @@ function isActive(pathname: string, href: string): boolean {
 export function LeftNavigation() {
   const pathname = usePathname();
   const { navCollapsed } = useShell();
-  const { nextMatch } = dashboardMock;
-  const club = useClubIdentity({
-    name: sessionChrome.player.club,
-    shortName: 'FCL',
-  });
+  const club = useClub();
+  const phase = resolveHubPhase(club);
+  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
 
   return (
     <aside
@@ -52,10 +50,10 @@ export function LeftNavigation() {
         {!navCollapsed ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
             <ClubCrest
-              shortName={club.shortName}
-              clubName={club.name}
-              crestTemplateId={club.crestTemplateId}
-              accentColor={club.primaryColor}
+              shortName={club?.shortName ?? 'LF'}
+              clubName={club?.name ?? 'Klub'}
+              crestTemplateId={club?.crestTemplateId}
+              accentColor={club?.primaryColor}
               size="sm"
             />
             <div style={{ minWidth: 0 }}>
@@ -77,17 +75,17 @@ export function LeftNavigation() {
                   color: 'var(--lf-color-text-primary)',
                 }}
               >
-                {club.name}
+                {club?.name ?? 'Klub'}
               </div>
             </div>
           </div>
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ClubCrest
-              shortName={club.shortName}
-              clubName={club.name}
-              crestTemplateId={club.crestTemplateId}
-              accentColor={club.primaryColor}
+              shortName={club?.shortName ?? 'LF'}
+              clubName={club?.name ?? 'Klub'}
+              crestTemplateId={club?.crestTemplateId}
+              accentColor={club?.primaryColor}
               size="sm"
             />
           </div>
@@ -117,18 +115,59 @@ export function LeftNavigation() {
             ) : null}
             {group.items.map((item) => {
               const active = isActive(pathname, item.href);
+              const access = resolveNavAccess(item.id, phase);
+              const locked = access === 'soft_locked';
+              const itemStyle = {
+                color: locked
+                  ? 'var(--lf-color-text-faint)'
+                  : active
+                    ? 'var(--lf-color-text-primary)'
+                    : 'var(--lf-color-text-muted)',
+                paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
+                fontSize: 'var(--lf-type-table)',
+                justifyContent: navCollapsed ? ('center' as const) : ('space-between' as const),
+                opacity: locked ? 0.65 : 1,
+                cursor: locked ? ('default' as const) : undefined,
+              };
+
+              if (locked) {
+                return (
+                  <span
+                    key={item.id}
+                    title={`${item.label} — odblokuje się wkrótce`}
+                    className="lf-nav-item"
+                    style={itemStyle}
+                    aria-disabled="true"
+                  >
+                    <span
+                      className="flex items-center truncate font-[family-name:var(--font-ui)]"
+                      style={{ gap: 'var(--lf-space-2)' }}
+                    >
+                      <NavIcon id={item.id} active={false} size={navCollapsed ? 18 : 16} />
+                      {navCollapsed ? null : item.label}
+                    </span>
+                    {!navCollapsed ? (
+                      <span
+                        style={{
+                          fontSize: 'var(--lf-type-label)',
+                          color: 'var(--lf-color-text-faint)',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        wkrótce
+                      </span>
+                    ) : null}
+                  </span>
+                );
+              }
+
               return (
                 <Link
                   key={item.id}
                   href={item.href}
                   title={item.label}
                   className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
-                  style={{
-                    color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',
-                    paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
-                    fontSize: 'var(--lf-type-table)',
-                    justifyContent: navCollapsed ? 'center' : 'space-between',
-                  }}
+                  style={itemStyle}
                 >
                   <span
                     className="flex items-center truncate font-[family-name:var(--font-ui)]"
@@ -137,22 +176,6 @@ export function LeftNavigation() {
                     <NavIcon id={item.id} active={active} size={navCollapsed ? 18 : 16} />
                     {navCollapsed ? null : item.label}
                   </span>
-                  {!navCollapsed && item.badge ? (
-                    <span
-                      className="font-semibold tabular-nums"
-                      style={{
-                        minWidth: '1.1rem',
-                        textAlign: 'center',
-                        background: 'var(--lf-color-status-danger)',
-                        color: 'var(--lf-color-text-primary)',
-                        fontSize: 'var(--lf-type-label)',
-                        paddingInline: 'var(--lf-space-1)',
-                        borderRadius: 'var(--lf-radius-xs)',
-                      }}
-                    >
-                      {sessionChrome.notifications}
-                    </span>
-                  ) : null}
                 </Link>
               );
             })}
@@ -160,7 +183,7 @@ export function LeftNavigation() {
         ))}
       </nav>
 
-      {!navCollapsed ? (
+      {!navCollapsed && early ? (
         <div
           className="border-t"
           style={{
@@ -177,10 +200,9 @@ export function LeftNavigation() {
               color: 'var(--lf-color-text-gold)',
             }}
           >
-            Następny mecz
+            Następny krok
           </div>
           <div
-            className="truncate"
             style={{
               marginTop: 'var(--lf-space-1)',
               fontSize: 'var(--lf-type-caption)',
@@ -188,13 +210,13 @@ export function LeftNavigation() {
               fontWeight: 600,
             }}
           >
-            vs {nextMatch.opponent}
+            Poznaj swój skład
           </div>
           <div style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-text-faint)' }}>
-            {nextMatch.when} · {nextMatch.countdown}
+            Kolejny mecz · wkrótce
           </div>
           <Link
-            href="/match/m-next"
+            href="/squad"
             className="font-[family-name:var(--font-ui)] font-semibold uppercase"
             style={{
               display: 'inline-block',
@@ -204,7 +226,7 @@ export function LeftNavigation() {
               color: 'var(--lf-color-gold-base)',
             }}
           >
-            Przygotuj →
+            Zobacz skład →
           </Link>
         </div>
       ) : null}

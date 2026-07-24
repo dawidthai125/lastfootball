@@ -1,15 +1,38 @@
+'use client';
+
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { ClubCrest } from '@/components/assets';
-import { dashboardMock } from '@/data/mock';
+import { useClub } from '@/components/club/ClubProvider';
+import { STARTER_PACKAGE } from '@/lib/club/types';
+import { FIRST_MATCH_BOT } from '@/lib/first-match/constants';
+import { resolveHubPhase } from '@/lib/hub';
 
 /**
- * Right rail — match-day context only (WF / GX / DESIGN-REVIEW-02).
- * Not a second dashboard: no energy/form/training duplicates.
+ * Right rail — EARLY_CLUB context (no mid-season matchday / injuries).
  */
 export function RightSidebar() {
-  const { nextMatch, injuries, club } = dashboardMock;
+  const club = useClub();
+  const phase = resolveHubPhase(club);
+  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
+
+  if (!early || !club) {
+    return (
+      <aside
+        className="flex h-full flex-col overflow-y-auto"
+        style={{
+          width: '100%',
+          background: 'var(--lf-color-bg-raised)',
+          padding: 'var(--lf-space-3)',
+        }}
+      >
+        <p style={{ color: 'var(--lf-color-text-faint)', fontSize: 'var(--lf-type-caption)' }}>
+          Kontekst pojawi się wraz z sezonem.
+        </p>
+      </aside>
+    );
+  }
 
   return (
     <aside
@@ -29,18 +52,18 @@ export function RightSidebar() {
           color: 'var(--lf-color-text-faint)',
         }}
       >
-        Kontekst meczu
+        Kontekst klubu
       </div>
 
       <RailBlock>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--lf-space-3)',
-          }}
-        >
-          <ClubCrest shortName={nextMatch.opponentShort} clubName={nextMatch.opponent} size="md" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-3)' }}>
+          <ClubCrest
+            shortName={club.shortName}
+            clubName={club.name}
+            crestTemplateId={club.crestTemplateId}
+            accentColor={club.primaryColor}
+            size="md"
+          />
           <div style={{ minWidth: 0 }}>
             <div
               className="font-[family-name:var(--font-ui)] font-semibold uppercase"
@@ -50,7 +73,7 @@ export function RightSidebar() {
                 color: 'var(--lf-color-text-gold)',
               }}
             >
-              Następny mecz
+              Early club
             </div>
             <div
               className="truncate font-[family-name:var(--font-ui)] font-semibold"
@@ -60,12 +83,12 @@ export function RightSidebar() {
                 color: 'var(--lf-color-text-primary)',
               }}
             >
-              vs {nextMatch.opponent}
+              {club.name}
             </div>
             <div
               style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}
             >
-              {nextMatch.competition}
+              {STARTER_PACKAGE.league} · Dzień 1
             </div>
           </div>
         </div>
@@ -73,33 +96,15 @@ export function RightSidebar() {
         <div
           style={{
             marginTop: 'var(--lf-space-3)',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 'var(--lf-space-2)',
+            fontSize: 'var(--lf-type-caption)',
+            color: 'var(--lf-color-text-muted)',
           }}
         >
-          <MetaChip label="Kiedy" value={nextMatch.when} />
-          <MetaChip label="Odliczanie" value={nextMatch.countdown} tone="gold" />
-          <MetaChip label="Miejsce" value={nextMatch.home ? 'Dom' : 'Wyjazd'} />
-          <MetaChip label="Stawka" value={nextMatch.stake} />
-        </div>
-
-        <div
-          style={{
-            marginTop: 'var(--lf-space-3)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--lf-space-2)',
-          }}
-        >
-          <ClubCrest shortName={club.shortName} clubName={club.name} size="sm" />
-          <span style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-faint)' }}>
-            {club.name}
-          </span>
+          Ostatni rywal: {FIRST_MATCH_BOT.name}. Kolejny mecz ligowy pojawi się wkrótce.
         </div>
 
         <Link
-          href="/match/m-next"
+          href="/squad"
           className="font-[family-name:var(--font-ui)] font-semibold"
           style={{
             display: 'block',
@@ -113,91 +118,25 @@ export function RightSidebar() {
             fontSize: 'var(--lf-type-caption)',
             padding: 'var(--lf-space-2) var(--lf-space-3)',
             borderRadius: 'var(--lf-radius-sm)',
+            textDecoration: 'none',
           }}
         >
-          Przygotuj mecz
+          Zobacz skład
         </Link>
       </RailBlock>
 
-      <RailBlock title="Gotowość składu">
-        <ul
+      <RailBlock title="Gotowość">
+        <p
           style={{
-            listStyle: 'none',
             margin: 0,
-            padding: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--lf-space-1)',
+            fontSize: 'var(--lf-type-caption)',
+            color: 'var(--lf-color-text-muted)',
           }}
         >
-          {injuries.map((inj) => (
-            <li
-              key={inj.name}
-              style={{
-                borderLeftWidth: 'var(--lf-border-width-thick)',
-                borderLeftStyle: 'solid',
-                borderLeftColor: 'var(--lf-color-status-danger)',
-                background: 'var(--lf-color-status-danger-soft)',
-                padding: 'var(--lf-space-2)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 'var(--lf-type-caption)',
-                  fontWeight: 600,
-                  color: 'var(--lf-color-text-primary)',
-                }}
-              >
-                {inj.name}
-              </div>
-              <div
-                style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-status-danger)' }}
-              >
-                {inj.detail}
-              </div>
-            </li>
-          ))}
-        </ul>
+          Skład startowy gotowy. Trening i głębokie systemy odblokują się wraz z kolejnymi meczami.
+        </p>
       </RailBlock>
     </aside>
-  );
-}
-
-function MetaChip({ label, value, tone }: { label: string; value: string; tone?: 'gold' }) {
-  return (
-    <div
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-inset)',
-        padding: 'var(--lf-space-2)',
-        borderRadius: 'var(--lf-radius-sm)',
-        minWidth: 0,
-      }}
-    >
-      <div
-        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-        style={{
-          fontSize: '9px',
-          letterSpacing: 'var(--lf-type-tracking-label)',
-          color: 'var(--lf-color-text-faint)',
-        }}
-      >
-        {label}
-      </div>
-      <div
-        className="truncate"
-        style={{
-          marginTop: '2px',
-          fontSize: 'var(--lf-type-caption)',
-          fontWeight: 600,
-          color: tone === 'gold' ? 'var(--lf-color-text-gold)' : 'var(--lf-color-text-secondary)',
-        }}
-      >
-        {value}
-      </div>
-    </div>
   );
 }
 

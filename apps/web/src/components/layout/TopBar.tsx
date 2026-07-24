@@ -3,11 +3,11 @@
 import Link from 'next/link';
 
 import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
-import { useClubIdentity } from '@/components/club/ClubProvider';
+import { useClub } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
-import { formatMoney, sessionChrome } from '@/data/mock';
+import { resolveHubPhase } from '@/lib/hub';
 
 function Metric({ label, value, tone }: { label: string; value: string; tone?: 'gold' | 'ok' }) {
   return (
@@ -29,13 +29,14 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: '
 }
 
 export function TopBar() {
-  const { server, season, day, money, premium, energy, notifications, player } = sessionChrome;
-  const club = useClubIdentity({
-    name: player.club,
-    shortName: 'FCL',
-  });
+  const club = useClub();
+  const phase = resolveHubPhase(club);
+  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB';
   const { toggleNotifications } = useOverlay();
   const { toggleNav, navCollapsed } = useShell();
+
+  const clubName = club?.name ?? 'Klub';
+  const shortName = club?.shortName ?? 'LF';
 
   return (
     <header
@@ -88,10 +89,10 @@ export function TopBar() {
         }}
       >
         <ClubCrest
-          shortName={club.shortName}
-          clubName={club.name}
-          crestTemplateId={club.crestTemplateId}
-          accentColor={club.primaryColor}
+          shortName={shortName}
+          clubName={clubName}
+          crestTemplateId={club?.crestTemplateId}
+          accentColor={club?.primaryColor}
           size="sm"
           style={{ lineHeight: 0 }}
         />
@@ -116,27 +117,21 @@ export function TopBar() {
               textTransform: 'uppercase',
             }}
           >
-            {club.name}
+            {clubName}
           </div>
         </div>
       </Link>
 
       <div className="hidden items-center md:flex" style={{ gap: 0 }}>
-        <Metric label="Serwer" value={server} />
-        <Metric label="Sezon" value={String(season)} />
-        <Metric label="Dzień" value={String(day)} />
+        <Metric label="Sezon" value="1" />
+        <Metric label="Dzień" value={early ? '1' : '1'} />
+        {early ? <Metric label="Faza" value="Start" tone="gold" /> : null}
       </div>
 
       <div
         className="ml-auto flex items-center overflow-x-auto"
         style={{ gap: 'var(--lf-space-2)' }}
       >
-        <div className="hidden items-center sm:flex" style={{ gap: 0 }}>
-          <Metric label="Budżet" value={formatMoney(money).replace(/\s/g, '\u00a0')} tone="ok" />
-          <Metric label="LF" value={String(premium)} tone="gold" />
-          <Metric label="Energia" value={`${energy.current}/${energy.max}`} />
-        </div>
-
         <button
           type="button"
           onClick={toggleNotifications}
@@ -151,27 +146,9 @@ export function TopBar() {
             padding: 'var(--lf-space-1) var(--lf-space-2)',
             borderRadius: 'var(--lf-radius-sm)',
           }}
-          aria-label={`Powiadomienia: ${notifications}`}
+          aria-label="Powiadomienia"
         >
           <NavIcon id="messages" size={14} />
-          {notifications > 0 ? (
-            <span
-              className="absolute flex items-center justify-center font-bold"
-              style={{
-                top: '-4px',
-                right: '-4px',
-                minWidth: '14px',
-                height: '14px',
-                paddingInline: '2px',
-                background: 'var(--lf-color-status-danger)',
-                color: 'var(--lf-color-text-primary)',
-                fontSize: '9px',
-                borderRadius: 'var(--lf-radius-xs)',
-              }}
-            >
-              {notifications}
-            </span>
-          ) : null}
         </button>
 
         <Link
@@ -191,7 +168,7 @@ export function TopBar() {
         >
           <PlayerPortrait
             playerId="manager"
-            name={player.name}
+            name="Menedżer"
             size="sm"
             style={{ width: 22, height: 22 }}
           />
@@ -200,7 +177,7 @@ export function TopBar() {
               className="font-[family-name:var(--font-ui)] font-semibold"
               style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-primary)' }}
             >
-              {player.name}
+              Menedżer
             </div>
             <div
               className="font-[family-name:var(--font-ui)] uppercase"
@@ -210,7 +187,7 @@ export function TopBar() {
                 color: 'var(--lf-color-text-gold)',
               }}
             >
-              Menedżer
+              {early ? 'Early club' : 'Klub'}
             </div>
           </div>
         </Link>
