@@ -11,16 +11,16 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                      |
-| -------- | ---------------------------------------------------------------------------- |
-| Prod URL | https://lastfootball.vercel.app                                              |
-| Commit   | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                   |
+| Pole     | Wartość                                                                    |
+| -------- | -------------------------------------------------------------------------- |
+| Prod URL | https://lastfootball.vercel.app                                            |
+| Commit   | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                 |
 | Message  | feat(league): implement league table derive and season hub (LFE-LEAGUE-02) |
-| Status   | **PRODUCTION VERIFIED · GREEN**                                              |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                           |
-| Supabase | `anoeimngwptucjdugjme` (+ `fixtures` applied)                                |
-| CI       | Format · Typecheck · Lint · Test · Build                                     |
-| Hosting  | Vercel Production                                                            |
+| Status   | **PRODUCTION VERIFIED · GREEN**                                            |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                         |
+| Supabase | `anoeimngwptucjdugjme` (+ `fixtures` applied)                              |
+| CI       | Format · Typecheck · Lint · Test · Build                                   |
+| Hosting  | Vercel Production                                                          |
 
 ---
 
@@ -88,18 +88,18 @@ GDD-16+ · Economy/Transfers · 11-fixture calendar (opt.) · LFE PUBLIC export 
 
 ## 6. SSOT map
 
-| Domain              | SSOT                                              |
-| ------------------- | ------------------------------------------------- |
-| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)       |
-| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`                  |
-| Club identity       | `clubs` → `ClubDto`                               |
-| Hub unlock          | `first_match_completed_at`                        |
-| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`           |
-| League fixtures     | `fixtures` → `FixtureDto`                         |
-| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17)     |
-| Squad               | `resolveClubSquad`                                |
-| Match state         | `MatchState` + `EventBus` via `MatchSession`      |
-| Agent onboarding    | `docs/AI/START_HERE.md`                           |
+| Domain              | SSOT                                          |
+| ------------------- | --------------------------------------------- |
+| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)   |
+| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`              |
+| Club identity       | `clubs` → `ClubDto`                           |
+| Hub unlock          | `first_match_completed_at`                    |
+| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`       |
+| League fixtures     | `fixtures` → `FixtureDto`                     |
+| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17) |
+| Squad               | `resolveClubSquad`                            |
+| Match state         | `MatchState` + `EventBus` via `MatchSession`  |
+| Agent onboarding    | `docs/AI/START_HERE.md`                       |
 
 ---
 

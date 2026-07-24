@@ -10,13 +10,13 @@
 
 ## Vercel — PASS
 
-| Check   | Result                                          |
-| ------- | ----------------------------------------------- |
-| Project | `dawidthai125s-projects/lastfootball`           |
-| Live    | https://lastfootball.vercel.app                 |
-| Aliases | lastfootball.pl · www.lastfootball.pl           |
-| Env     | Supabase URL + anon + service_role (Production) |
-| Status  | **PRODUCTION VERIFIED · GREEN**                 |
+| Check   | Result                                                     |
+| ------- | ---------------------------------------------------------- |
+| Project | `dawidthai125s-projects/lastfootball`                      |
+| Live    | https://lastfootball.vercel.app                            |
+| Aliases | lastfootball.pl · www.lastfootball.pl                      |
+| Env     | Supabase URL + anon + service_role (Production)            |
+| Status  | **PRODUCTION VERIFIED · GREEN**                            |
 | Deploy  | `dpl_4LjfkBA565U8m7EuqvjpQp7kgFpq` · sha `71ce442` · Ready |
 
 ## Supabase — PASS

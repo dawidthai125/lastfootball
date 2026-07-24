@@ -8,9 +8,9 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 **Last Football** — przeglądarkowy football manager z własnym silnikiem meczu **LFE**.
 
-| Warstwa               | Stan                                                        |
-| --------------------- | ----------------------------------------------------------- |
-| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                         |
+| Warstwa               | Stan                                                             |
+| --------------------- | ---------------------------------------------------------------- |
+| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                              |
 | Platforma             | Landing · Auth · Club Wizard · First Match · Hub SEASON · tabela |
 | Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`           |
 | App web               | Shell + match pipeline + platform flows                          |

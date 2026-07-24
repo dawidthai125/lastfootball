@@ -18,7 +18,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 | P8  | Supabase prod/dev = project `anoeimngwptucjdugjme`                                              | LFE-INFRA-01                                  |
 | P9  | `fixtures` + `opponent_club_id` = SSOT terminarza; Thin A generator = 3 fixtures                | LFE-LEAGUE-01                                 |
 | P10 | `resolveClubSquad` = SSOT kadry (seed); bez `@/data/squad` na ścieżce produktowej               | LFE-LEAGUE-01                                 |
-| P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED   | LFE-LEAGUE-02                                 |
+| P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED    | LFE-LEAGUE-02                                 |
 
 ## Engine (trwałe)
 

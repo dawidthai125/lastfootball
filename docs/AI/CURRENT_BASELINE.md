@@ -6,15 +6,15 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Production
 
-| Pole             | Wartość                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| URL              | https://lastfootball.vercel.app                                                    |
-| Alias            | https://lastfootball.pl                                                            |
-| Branch           | `main`                                                                             |
-| Baseline commit  | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                         |
-| Baseline message | `feat(league): implement league table derive and season hub (LFE-LEAGUE-02)`       |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                                    |
-| Verified         | 2026-07-25 — CI GREEN + Vercel Ready + smoke routes `/hub` `/league`               |
+| Pole             | Wartość                                                                      |
+| ---------------- | ---------------------------------------------------------------------------- |
+| URL              | https://lastfootball.vercel.app                                              |
+| Alias            | https://lastfootball.pl                                                      |
+| Branch           | `main`                                                                       |
+| Baseline commit  | `71ce442b386f00063bfe81458dbf2eeeb5d75945`                                   |
+| Baseline message | `feat(league): implement league table derive and season hub (LFE-LEAGUE-02)` |
+| Status           | **PRODUCTION VERIFIED · GREEN**                                              |
+| Verified         | 2026-07-25 — CI GREEN + Vercel Ready + smoke routes `/hub` `/league`         |
 
 > Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit docs-only po CLOSE).
 
@@ -37,19 +37,19 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
 
 ## Critical SSOT columns / modules
 
-| SSOT                 | Gdzie                                              |
-| -------------------- | -------------------------------------------------- |
-| Club identity        | `clubs` → `ClubDto`                                |
-| Hub unlock           | `clubs.first_match_completed_at`                   |
-| Hub phase            | `resolveHubPhase(club, { hasFixtures })`           |
-| Hub session          | `resolveHubSession(...)`                           |
-| Hub Primary CTA      | `resolvePrimaryCta(phase, session, ctx)`           |
-| League fixtures      | `fixtures` → `FixtureDto`                          |
+| SSOT                 | Gdzie                                                   |
+| -------------------- | ------------------------------------------------------- |
+| Club identity        | `clubs` → `ClubDto`                                     |
+| Hub unlock           | `clubs.first_match_completed_at`                        |
+| Hub phase            | `resolveHubPhase(club, { hasFixtures })`                |
+| Hub session          | `resolveHubSession(...)`                                |
+| Hub Primary CTA      | `resolvePrimaryCta(phase, session, ctx)`                |
+| League fixtures      | `fixtures` → `FixtureDto`                               |
 | League table         | `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` |
-| Squad                | `resolveClubSquad(club)`                           |
-| First match session  | `createSessionFromFirstMatch(club)`                |
-| League match session | `createSessionFromLeagueFixture`                   |
-| Match engine entry   | `createMatch()` → `MatchSession`                   |
+| Squad                | `resolveClubSquad(club)`                                |
+| First match session  | `createSessionFromFirstMatch(club)`                     |
+| League match session | `createSessionFromLeagueFixture`                        |
+| Match engine entry   | `createMatch()` → `MatchSession`                        |
 
 ## Done product EPICs (on `main`)
 
