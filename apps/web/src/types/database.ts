@@ -8,6 +8,30 @@ export type Database = {
   };
   public: {
     Tables: {
+      clubs: {
+        Row: {
+          id: string;
+          owner_id: string;
+          name: string;
+          short_name: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          owner_id: string;
+          name: string;
+          short_name: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          owner_id?: string;
+          name?: string;
+          short_name?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       infra_meta: {
         Row: {
           key: string;

@@ -8,7 +8,7 @@ import { RecentResults } from '@/components/panel/RecentResults';
 import { TrainingToday } from '@/components/panel/TrainingToday';
 
 /**
- * Panel menedżera — LFE-UI-IMPL-02
+ * Hub / Panel menedżera — LFE-UI-IMPL-02 · route `/hub` (LFE-PLATFORM-01 P1)
  * Order: Club Hero → Matchday (+ Quick Actions) → data zones (WF-01 / GX-01)
  */
 export default function DashboardPage() {

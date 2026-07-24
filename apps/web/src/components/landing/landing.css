@@ -1,0 +1,592 @@
+/* LFE-PLATFORM-01 P1 — Landing experience. Tokens only (globals.css / tokens.ts). */
+
+.lf-landing {
+  min-height: 100dvh;
+  background: var(--lf-color-bg-void);
+  color: var(--lf-color-text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+.lf-landing--auth {
+  display: flex;
+  flex-direction: column;
+}
+
+.lf-landing__auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--lf-space-6) var(--lf-space-4);
+}
+
+/* —— Header —— */
+.lf-landing__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--lf-z-chrome);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--lf-shell-topbar);
+  padding-inline: var(--lf-space-4);
+  background: color-mix(in srgb, var(--lf-color-bg-void) 92%, transparent);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-landing__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  text-decoration: none;
+  color: inherit;
+}
+
+.lf-landing__brand-mark {
+  width: var(--lf-space-3);
+  height: var(--lf-space-3);
+  background: var(--lf-color-gold-base);
+  border-radius: var(--lf-radius-xs);
+  box-shadow: 0 0 0 1px var(--lf-color-border-gold);
+}
+
+.lf-landing__brand-name {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-table);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-landing__header-login {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--lf-color-text-muted);
+  transition: color var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-landing__header-login:hover {
+  color: var(--lf-color-text-primary);
+}
+
+/* —— Hero S0 —— */
+.lf-landing__hero {
+  position: relative;
+  min-height: calc(100dvh - var(--lf-shell-topbar));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lf-color-bg-base);
+}
+
+.lf-landing__hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--lf-color-overlay-hero) 0%,
+    transparent 35%,
+    var(--lf-color-overlay-scrim) 100%
+  );
+}
+
+.lf-landing__hero-inner {
+  position: relative;
+  z-index: 2;
+  width: min(40rem, 100%);
+  margin-inline: auto;
+  padding: var(--lf-space-8) var(--lf-space-4);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lf-space-4);
+  animation: lf-landing-enter var(--lf-motion-slow) var(--lf-motion-easing) both;
+}
+
+.lf-landing__brand-hero {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h1);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-landing__headline {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, var(--lf-type-hero));
+  line-height: 1.1;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-landing__support {
+  margin: 0;
+  font-size: var(--lf-type-body);
+  line-height: 1.35;
+  color: var(--lf-color-text-secondary);
+}
+
+/* —— Wow crest —— */
+.lf-landing__crest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lf-space-2);
+  margin-block: var(--lf-space-3);
+  color: var(--lf-color-gold-base);
+}
+
+.lf-landing__crest-svg {
+  display: block;
+}
+
+.lf-landing__crest-shield {
+  animation: lf-landing-breathe 4.5s var(--lf-motion-easing) infinite;
+}
+
+.lf-landing__crest-caption {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+/* —— CTAs —— */
+.lf-landing__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-3);
+  margin-top: var(--lf-space-2);
+}
+
+.lf-landing__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--lf-space-7);
+  padding: var(--lf-space-2) var(--lf-space-5);
+  border-radius: var(--lf-radius-sm);
+  border: var(--lf-border-width-hair) solid transparent;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    border-color var(--lf-motion-fast) var(--lf-motion-easing),
+    background-color var(--lf-motion-fast) var(--lf-motion-easing),
+    color var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-landing__cta--primary {
+  border-color: var(--lf-color-border-gold);
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-gold);
+}
+
+.lf-landing__cta--primary:hover {
+  border-color: var(--lf-color-gold-base);
+  color: var(--lf-color-text-primary);
+}
+
+.lf-landing__cta--secondary {
+  border-color: var(--lf-color-border-subtle);
+  background: transparent;
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-landing__cta--secondary:hover {
+  border-color: var(--lf-color-border-strong);
+  color: var(--lf-color-text-primary);
+}
+
+/* —— Story S1–S3 —— */
+.lf-landing__story {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--lf-space-6);
+  align-items: center;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: var(--lf-space-8) var(--lf-space-4);
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--lf-motion-slow) var(--lf-motion-easing),
+    transform var(--lf-motion-slow) var(--lf-motion-easing);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-landing__story--visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 768px) {
+  .lf-landing__story {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+
+  .lf-landing__story--reverse .lf-landing__story-copy {
+    order: 2;
+  }
+
+  .lf-landing__story--reverse .lf-landing__story-visual {
+    order: 1;
+  }
+}
+
+.lf-landing__eyebrow {
+  margin: 0 0 var(--lf-space-2);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-landing__story-title {
+  margin: 0 0 var(--lf-space-3);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h1);
+  line-height: 1.2;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-landing__story-body {
+  margin: 0;
+  font-size: var(--lf-type-body);
+  line-height: 1.55;
+  color: var(--lf-color-text-secondary);
+  max-width: 36rem;
+}
+
+.lf-landing__story-body p {
+  margin: 0;
+}
+
+.lf-landing__story-visual {
+  display: flex;
+  justify-content: center;
+}
+
+/* Motifs */
+.lf-landing__motif {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-6);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  min-width: min(100%, 16rem);
+}
+
+.lf-landing__swatch {
+  width: var(--lf-space-7);
+  height: var(--lf-space-7);
+  border-radius: var(--lf-radius-sm);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-strong);
+}
+
+.lf-landing__motif-label {
+  flex-basis: 100%;
+  text-align: center;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-muted);
+}
+
+.lf-landing__beat {
+  list-style: none;
+  margin: 0;
+  padding: var(--lf-space-5) var(--lf-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  min-width: min(100%, 14rem);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-h2);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-muted);
+}
+
+.lf-landing__beat li {
+  padding-bottom: var(--lf-space-2);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-landing__beat li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.lf-landing__beat-live {
+  color: var(--lf-color-status-live);
+}
+
+.lf-landing__ladder {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-5);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h2);
+  letter-spacing: var(--lf-type-tracking-label);
+  color: var(--lf-color-text-faint);
+  min-width: 6rem;
+  align-items: center;
+}
+
+.lf-landing__ladder-focus {
+  color: var(--lf-color-text-gold);
+  font-size: var(--lf-type-h1);
+}
+
+/* —— Close S4 —— */
+.lf-landing__close {
+  text-align: center;
+  padding: var(--lf-space-8) var(--lf-space-4);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: linear-gradient(180deg, var(--lf-color-bg-base) 0%, var(--lf-color-bg-void) 100%);
+}
+
+.lf-landing__close-title {
+  margin: 0 0 var(--lf-space-3);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h1);
+  color: var(--lf-color-text-primary);
+}
+
+.lf-landing__close-support {
+  margin: 0 0 var(--lf-space-5);
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+}
+
+/* —— Footer —— */
+.lf-landing__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-5) var(--lf-space-4);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-void);
+}
+
+.lf-landing__footer-brand {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-landing__footer-links {
+  display: flex;
+  gap: var(--lf-space-4);
+}
+
+.lf-landing__footer-link {
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+  text-decoration: none;
+}
+
+.lf-landing__footer-link:hover {
+  color: var(--lf-color-text-secondary);
+}
+
+/* Auth gate stub */
+.lf-landing__gate {
+  width: min(24rem, 100%);
+  padding: var(--lf-space-6);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  text-align: center;
+}
+
+.lf-landing__gate h1 {
+  margin: 0 0 var(--lf-space-3);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-h1);
+  font-weight: 700;
+}
+
+.lf-landing__gate p {
+  margin: 0 0 var(--lf-space-5);
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+  line-height: 1.5;
+}
+
+.lf-landing__gate-lead {
+  margin-bottom: var(--lf-space-5) !important;
+}
+
+.lf-landing__gate--auth {
+  width: min(26rem, 100%);
+  text-align: left;
+}
+
+.lf-landing__gate--auth h1,
+.lf-landing__gate--auth .lf-landing__eyebrow {
+  text-align: left;
+}
+
+.lf-landing__gate--auth .lf-landing__cta-row {
+  justify-content: flex-start;
+}
+
+/* —— Auth forms (P2) —— */
+.lf-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+  margin-top: var(--lf-space-2);
+  text-align: left;
+}
+
+.lf-auth-form__error {
+  margin: 0 !important;
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: var(--lf-border-width-hair) solid var(--lf-color-status-danger);
+  background: var(--lf-color-status-danger-soft);
+  color: var(--lf-color-status-danger) !important;
+  font-size: var(--lf-type-caption) !important;
+  border-radius: var(--lf-radius-sm);
+}
+
+.lf-auth-form__info {
+  margin: 0 !important;
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-gold) !important;
+  font-size: var(--lf-type-caption) !important;
+  border-radius: var(--lf-radius-sm);
+}
+
+.lf-auth-form__submit {
+  width: 100%;
+  margin-top: var(--lf-space-1);
+  cursor: pointer;
+}
+
+.lf-auth-form__submit:disabled {
+  opacity: var(--lf-opacity-disabled);
+  cursor: not-allowed;
+}
+
+.lf-auth-form__switch {
+  margin: 0 !important;
+  text-align: center;
+  font-size: var(--lf-type-caption) !important;
+  color: var(--lf-color-text-muted) !important;
+}
+
+.lf-auth-form__link {
+  color: var(--lf-color-text-gold);
+  text-decoration: none;
+}
+
+.lf-auth-form__link:hover {
+  color: var(--lf-color-text-primary);
+}
+
+.lf-auth-form__terms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-space-2);
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-auth-form__terms-links {
+  font-size: var(--lf-type-caption);
+}
+
+.lf-auth-form__meta {
+  margin: calc(var(--lf-space-3) * -1) 0 var(--lf-space-4) !important;
+  font-size: var(--lf-type-caption) !important;
+  color: var(--lf-color-text-faint) !important;
+}
+
+.lf-auth-form__signout {
+  margin-top: var(--lf-space-4);
+}
+
+.lf-auth-form__signout .lf-landing__cta {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  font: inherit;
+}
+
+@keyframes lf-landing-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lf-landing-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-landing__hero-inner,
+  .lf-landing__crest-shield,
+  .lf-landing__story {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

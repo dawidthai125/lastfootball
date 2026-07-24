@@ -9,7 +9,7 @@ import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
 import { dashboardMock, sessionChrome } from '@/data/mock';
 
 function isActive(pathname: string, href: string): boolean {
-  if (href === '/') return pathname === '/';
+  if (href === '/hub') return pathname === '/hub';
   if (href === '/squad') {
     return pathname === '/squad' || pathname.startsWith('/players/');
   }

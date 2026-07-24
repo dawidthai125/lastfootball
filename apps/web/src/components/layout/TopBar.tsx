@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
+import { signOut } from '@/lib/auth/actions';
 import { formatMoney, sessionChrome } from '@/data/mock';
 
 function Metric({ label, value, tone }: { label: string; value: string; tone?: 'gold' | 'ok' }) {
@@ -70,7 +71,7 @@ export function TopBar() {
       </button>
 
       <Link
-        href="/"
+        href="/hub"
         className="flex items-center"
         style={{
           gap: 'var(--lf-space-2)',
@@ -201,6 +202,28 @@ export function TopBar() {
             </div>
           </div>
         </Link>
+
+        <form action={signOut}>
+          <button
+            type="submit"
+            aria-label="Wyloguj"
+            style={{
+              borderWidth: 'var(--lf-border-width-hair)',
+              borderStyle: 'solid',
+              borderColor: 'var(--lf-color-border-subtle)',
+              background: 'var(--lf-color-bg-inset)',
+              color: 'var(--lf-color-text-muted)',
+              fontSize: 'var(--lf-type-label)',
+              letterSpacing: 'var(--lf-type-tracking-label)',
+              textTransform: 'uppercase',
+              padding: 'var(--lf-space-1) var(--lf-space-2)',
+              borderRadius: 'var(--lf-radius-sm)',
+              cursor: 'pointer',
+            }}
+          >
+            Wyjdź
+          </button>
+        </form>
       </div>
     </header>
   );

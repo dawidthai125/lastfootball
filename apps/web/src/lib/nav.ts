@@ -17,7 +17,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     id: 'start',
     label: 'Start',
-    items: [{ id: 'panel', href: '/', label: 'Panel', shortLabel: 'P' }],
+    items: [{ id: 'panel', href: '/hub', label: 'Panel', shortLabel: 'P' }],
   },
   {
     id: 'club',

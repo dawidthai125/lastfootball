@@ -7,7 +7,7 @@ import { NavIcon } from '@/components/assets';
 import { FLAT_NAV } from '@/lib/nav';
 
 function isActive(pathname: string, href: string): boolean {
-  if (href === '/') return pathname === '/';
+  if (href === '/hub') return pathname === '/hub';
   if (href === '/squad') {
     return pathname === '/squad' || pathname.startsWith('/players/');
   }

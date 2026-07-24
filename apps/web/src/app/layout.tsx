@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import { Barlow_Semi_Condensed, IBM_Plex_Sans } from 'next/font/google';
 
-import { AppShell } from '@/components/layout/AppShell';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 import './globals.css';
 
@@ -26,14 +27,14 @@ export const metadata: Metadata = {
     default: 'LastFootball',
     template: '%s · LastFootball',
   },
-  description: 'Przeglądarkowy menedżer piłkarski LastFootball',
+  description: 'Załóż klub. Prowadź go przez ligę. Każdy mecz jest Twój.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pl" className={`${fontDisplay.variable} ${fontBody.variable}`}>
       <body>
-        <AppShell>{children}</AppShell>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
