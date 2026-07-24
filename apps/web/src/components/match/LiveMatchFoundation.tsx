@@ -1,18 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 
 import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
-import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
+import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gameplay/canvas';
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
+import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
+import type { ReplaySpeed } from '@/gameplay/replay';
 import { dashboardMock } from '@/data/mock';
+import {
+  buildPostMatchSummary,
+  findReplayIndexForEvent,
+  isMatchFinished,
+  PostMatchView,
+  type PostMatchTimelineItem,
+} from '@/components/match/post-match';
 
 /**
- * Live Match UI — broadcast chrome (LFE-UI-POLISH-LIVE-01).
- * Reads MatchState via LiveMatchRuntime; commands go through CommandBus.
- * Canvas host remains a visual stub for a future renderer.
+ * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
+ * Reads MatchState / EventBus via LiveMatchRuntime; commands go through CommandBus.
+ * Canvas / Replay never mutate MatchState.
  */
 export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   const { fixture } = bundle;
@@ -27,6 +36,75 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
   const [commandId, setCommandId] = useState(bundle.commands[0]?.id ?? '');
   const [feedFilter, setFeedFilter] = useState<'all' | LiveEventKind>('all');
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
+  const [postMatchOpen, setPostMatchOpen] = useState(false);
+
+  const finished = isMatchFinished(snapshot.matchState, snapshot.events);
+
+  useEffect(() => {
+    if (finished) setPostMatchOpen(true);
+  }, [finished]);
+
+  useEffect(() => {
+    if (postMatchOpen) return;
+    const renderer = createMatchCanvasRenderer({
+      viewMode,
+      playbackMode: snapshot.replay.source === 'replay' ? 'replay' : 'live',
+    });
+    runtime.canvasHost.attachRenderer(renderer);
+    if (snapshot.replay.source === 'live') {
+      runtime.canvasHost.pushFrame();
+    } else {
+      const model = runtime.replay.getCurrentModel();
+      if (model) runtime.canvasHost.present(model);
+    }
+    return () => {
+      runtime.canvasHost.attachRenderer(null);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional
+  }, [runtime, viewMode, postMatchOpen]);
+
+  useEffect(() => {
+    if (postMatchOpen) return;
+    const renderer = runtime.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
+    renderer?.setPlaybackMode?.(snapshot.replay.source === 'replay' ? 'replay' : 'live');
+  }, [runtime, snapshot.replay.source, postMatchOpen]);
+
+  const replay = snapshot.replay;
+  const isReplay = replay.source === 'replay';
+  const replayRatio = replay.length <= 1 ? 0 : clampPct((replay.index / (replay.length - 1)) * 100);
+
+  const postSummary = buildPostMatchSummary({
+    matchState: snapshot.matchState,
+    events: snapshot.events,
+    homeName,
+    awayName,
+    homeShort,
+    awayShort,
+  });
+
+  const openReplayAt = (item?: PostMatchTimelineItem) => {
+    setPostMatchOpen(false);
+    if (item) {
+      const idx = findReplayIndexForEvent(runtime.replayBuffer, item.tick, item.type);
+      runtime.enterReplay('start');
+      runtime.replaySeek(idx);
+      return;
+    }
+    runtime.enterReplay('start');
+    runtime.replayPlay();
+  };
+
+  if (postMatchOpen && finished) {
+    return (
+      <PostMatchView
+        summary={postSummary}
+        replayFrames={replay.length}
+        onOpenReplay={() => openReplayAt()}
+        onJumpToEvent={(item) => openReplayAt(item)}
+        onDismiss={() => setPostMatchOpen(false)}
+      />
+    );
+  }
 
   const events =
     feedFilter === 'all' ? snapshot.feed : snapshot.feed.filter((e) => e.kind === feedFilter);
@@ -76,9 +154,11 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
               padding: 'var(--lf-space-1) var(--lf-space-2)',
               borderWidth: 'var(--lf-border-width-hair)',
               borderStyle: 'solid',
-              borderColor: 'var(--lf-color-status-live)',
-              background: 'var(--lf-color-status-danger-soft)',
-              color: 'var(--lf-color-status-live)',
+              borderColor: isReplay ? 'var(--lf-color-border-gold)' : 'var(--lf-color-status-live)',
+              background: isReplay
+                ? 'var(--lf-color-gold-soft)'
+                : 'var(--lf-color-status-danger-soft)',
+              color: isReplay ? 'var(--lf-color-text-gold)' : 'var(--lf-color-status-live)',
               borderRadius: 'var(--lf-radius-sm)',
               gap: 'var(--lf-space-1)',
             }}
@@ -89,10 +169,10 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
                 width: 6,
                 height: 6,
                 borderRadius: 'var(--lf-radius-xs)',
-                background: 'var(--lf-color-status-live)',
+                background: isReplay ? 'var(--lf-color-gold-base)' : 'var(--lf-color-status-live)',
               }}
             />
-            Live
+            {isReplay ? 'Replay' : 'Live'}
           </span>
           <span
             className="tabular-nums"
@@ -378,69 +458,7 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
               layers={['floodlight', 'vignette', 'grain']}
               style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
             />
-
-            {/* Pitch stub — visual mount for future renderer */}
-            <div
-              aria-hidden
-              style={{
-                position: 'absolute',
-                inset: 'var(--lf-space-4)',
-                zIndex: 1,
-                borderRadius: 'var(--lf-radius-sm)',
-                background:
-                  'linear-gradient(180deg, rgba(31, 92, 56, 0.55) 0%, var(--lf-color-pitch) 45%, rgba(12, 40, 24, 0.95) 100%)',
-                borderWidth: 'var(--lf-border-width-hair)',
-                borderStyle: 'solid',
-                borderColor: 'rgba(240, 244, 250, 0.28)',
-                boxShadow: 'inset 0 0 40px rgba(3, 5, 10, 0.45)',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: 0,
-                  bottom: 0,
-                  width: 1,
-                  background: 'rgba(240, 244, 250, 0.35)',
-                  transform: 'translateX(-50%)',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  width: '18%',
-                  aspectRatio: '1',
-                  borderRadius: '50%',
-                  border: '1px solid rgba(240, 244, 250, 0.35)',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: '28%',
-                  bottom: '28%',
-                  width: '12%',
-                  border: '1px solid rgba(240, 244, 250, 0.28)',
-                  borderLeft: 'none',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '28%',
-                  bottom: '28%',
-                  width: '12%',
-                  border: '1px solid rgba(240, 244, 250, 0.28)',
-                  borderRight: 'none',
-                }}
-              />
-            </div>
+            {/* Canvas 2D renderer mounts a <canvas> into this host (z-index 1). */}
 
             <div
               style={{
@@ -483,8 +501,11 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
                   borderColor: 'var(--lf-color-border-subtle)',
                 }}
               >
-                Canvas host · {snapshot.matchState.phase} · tick {snapshot.matchState.tick} ·{' '}
-                {runtime.session.status}
+                {isReplay ? 'REPLAY' : 'LIVE'} · {snapshot.matchState.phase} · tick{' '}
+                {snapshot.matchState.tick}
+                {isReplay
+                  ? ` · ${replay.index + 1}/${replay.length}`
+                  : ` · ${runtime.session.status}`}
               </div>
             </div>
           </div>
@@ -564,6 +585,128 @@ export function LiveMatchFoundation({ bundle }: { bundle: LiveMatchBundle }) {
               <span>0′</span>
               <span>HT</span>
               <span>90′</span>
+            </div>
+          </section>
+
+          {/* Replay controls — recorded frames only, no Engine */}
+          <section
+            aria-label="Replay"
+            className="lf-section-shell"
+            style={{ padding: 'var(--lf-space-3)' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                marginBottom: 'var(--lf-space-2)',
+                gap: 'var(--lf-space-2)',
+              }}
+            >
+              <div className="lf-section-shell__title">Replay</div>
+              <div
+                style={{
+                  fontSize: 'var(--lf-type-label)',
+                  color: 'var(--lf-color-text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 'var(--lf-type-tracking-label)',
+                }}
+              >
+                {isReplay ? replay.status : 'live buffer'} · {replay.length} klatek
+              </div>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={Math.max(0, replay.length - 1)}
+              value={replay.index}
+              aria-label="Replay seek"
+              disabled={replay.length === 0}
+              onChange={(e) => runtime.replaySeek(Number(e.target.value))}
+              style={{
+                width: '100%',
+                accentColor: 'var(--lf-color-gold-base)',
+                marginBottom: 'var(--lf-space-2)',
+              }}
+            />
+            <div
+              style={{
+                height: 3,
+                background: 'var(--lf-color-bg-inset)',
+                borderRadius: 'var(--lf-radius-xs)',
+                marginBottom: 'var(--lf-space-2)',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  width: `${replayRatio}%`,
+                  height: '100%',
+                  background: 'var(--lf-color-gold-base)',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 'var(--lf-space-1)',
+                alignItems: 'center',
+              }}
+            >
+              <button
+                type="button"
+                style={chipStyle(false)}
+                onClick={() => runtime.enterReplay('start')}
+                disabled={replay.length === 0}
+              >
+                Wejdź
+              </button>
+              <button
+                type="button"
+                style={chipStyle(replay.status === 'playing')}
+                onClick={() =>
+                  replay.status === 'playing' ? runtime.replayPause() : runtime.replayPlay()
+                }
+                disabled={replay.length === 0}
+              >
+                {replay.status === 'playing' ? 'Pause' : 'Play'}
+              </button>
+              <button
+                type="button"
+                style={chipStyle(false)}
+                onClick={() => runtime.replayStop()}
+                disabled={replay.length === 0}
+              >
+                Stop
+              </button>
+              {([0.5, 1, 2, 4] as ReplaySpeed[]).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  style={chipStyle(replay.speed === s)}
+                  onClick={() => runtime.replaySetSpeed(s)}
+                >
+                  {s}×
+                </button>
+              ))}
+              <button
+                type="button"
+                style={chipStyle(!isReplay)}
+                onClick={() => runtime.exitReplay()}
+                disabled={!isReplay}
+              >
+                Wróć do Live
+              </button>
+              {finished ? (
+                <button
+                  type="button"
+                  style={chipStyle(false)}
+                  onClick={() => setPostMatchOpen(true)}
+                >
+                  Post Match
+                </button>
+              ) : null}
             </div>
           </section>
 

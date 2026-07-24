@@ -11,6 +11,16 @@ import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { createSessionFromFixture } from '@/gameplay/create-session-from-fixture';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
+import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
+import {
+  createReplayBuffer,
+  createReplayController,
+  type PlaybackSource,
+  type ReplayBuffer,
+  type ReplayController,
+  type ReplaySpeed,
+  type ReplayView,
+} from '@/gameplay/replay';
 
 export type LiveMatchSnapshot = {
   readonly matchState: MatchState;
@@ -30,6 +40,7 @@ export type LiveMatchSnapshot = {
     highlight?: boolean;
   }[];
   readonly tactics: MatchState['tactics'];
+  readonly replay: ReplayView;
 };
 
 const FEED_TYPES = new Set([
@@ -47,14 +58,17 @@ const FEED_TYPES = new Set([
 ]);
 
 /**
- * Owns MatchSession + Canvas host. UI reads MatchState / EventBus only.
- * Match Engine advances via session.step/run — no UI→Engine imports.
+ * Owns MatchSession + Canvas host + Replay buffer/controller.
+ * Match Engine advances via session.step/run only in LIVE mode.
+ * Replay presents recorded MatchCanvasReadModel — never re-runs Engine.
  */
 export class LiveMatchRuntime {
   readonly session: MatchSession;
   readonly canvasHost: MatchCanvasHost;
   readonly fixture: Fixture;
   readonly shell: LiveMatchBundle;
+  readonly replayBuffer: ReplayBuffer;
+  readonly replay: ReplayController;
 
   private version = 0;
   private listeners = new Set<() => void>();
@@ -62,6 +76,7 @@ export class LiveMatchRuntime {
   private cachedVersion = -1;
   private timer: ReturnType<typeof setInterval> | null = null;
   private readonly ticksPerPulse = 8;
+  private playbackSource: PlaybackSource = 'live';
 
   constructor(fixture: Fixture, shell: LiveMatchBundle) {
     this.fixture = fixture;
@@ -69,6 +84,16 @@ export class LiveMatchRuntime {
     this.session = createSessionFromFixture(fixture);
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
+    this.replayBuffer = createReplayBuffer({ capacity: 3600 });
+    this.replay = createReplayController(this.replayBuffer, {
+      onPresent: (model) => {
+        if (this.playbackSource === 'replay') {
+          this.canvasHost.present(model);
+        }
+      },
+      onChange: () => this.bump(),
+      baseIntervalMs: 50,
+    });
     this.bootstrapMatch();
     this.startSimulation();
   }
@@ -102,12 +127,15 @@ export class LiveMatchRuntime {
     );
     this.session.step();
     this.flushEvents();
+    this.recordAndMaybePresentLive();
     this.bump();
   }
 
   startSimulation(): void {
+    if (this.playbackSource === 'replay') return;
     if (this.timer !== null) return;
     this.timer = setInterval(() => {
+      if (this.playbackSource === 'replay') return;
       if (this.session.status === 'paused' || this.session.status === 'disposed') return;
       if (this.session.status === 'stopped') {
         this.stopSimulation();
@@ -117,6 +145,7 @@ export class LiveMatchRuntime {
       if (phase === 'FINISHED') {
         this.stopSimulation();
         this.flushEvents();
+        this.recordAndMaybePresentLive();
         this.bump();
         return;
       }
@@ -127,6 +156,7 @@ export class LiveMatchRuntime {
         return;
       }
       this.flushEvents();
+      this.recordAndMaybePresentLive();
       this.bump();
     }, 50);
   }
@@ -138,9 +168,109 @@ export class LiveMatchRuntime {
     }
   }
 
+  getPlaybackSource(): PlaybackSource {
+    return this.playbackSource;
+  }
+
+  getReplayView(): ReplayView {
+    const model = this.replay.getCurrentModel();
+    return {
+      source: this.playbackSource,
+      status: this.replay.getStatus(),
+      index: this.replay.getIndex(),
+      length: this.replay.getLength(),
+      speed: this.replay.getSpeed(),
+      sequence: this.replayBuffer.at(this.replay.getIndex())?.sequence ?? null,
+      tick: model?.tick ?? null,
+    };
+  }
+
+  /** Pause Engine simulation and drive Canvas from Replay Buffer only. */
+  enterReplay(seekTo: 'start' | 'end' = 'start'): void {
+    if (this.replayBuffer.length === 0) return;
+    this.stopSimulation();
+    this.playbackSource = 'replay';
+    this.applyRendererPlaybackMode('replay');
+    if (seekTo === 'end') {
+      this.replay.seek(this.replayBuffer.length - 1);
+    } else {
+      this.replay.stop();
+    }
+    this.bump();
+  }
+
+  /** Leave Replay and resume LIVE Engine simulation (if match not finished). */
+  exitReplay(): void {
+    this.replay.pause();
+    this.playbackSource = 'live';
+    this.applyRendererPlaybackMode('live');
+    const live = this.canvasHost.getReadModel();
+    if (live) this.canvasHost.present(live);
+    const phase = this.session.getMatchState().phase;
+    if (phase !== 'FINISHED' && this.session.status === 'running') {
+      this.startSimulation();
+    }
+    this.bump();
+  }
+
+  replayPlay(): void {
+    if (this.playbackSource !== 'replay') this.enterReplay('start');
+    this.syncReplayInterp();
+    this.replay.play();
+  }
+
+  replayPause(): void {
+    this.replay.pause();
+  }
+
+  replayStop(): void {
+    if (this.playbackSource !== 'replay') this.enterReplay('start');
+    this.replay.stop();
+  }
+
+  replaySeek(index: number): void {
+    if (this.playbackSource !== 'replay') this.enterReplay('start');
+    this.replay.seek(index);
+  }
+
+  replaySeekRatio(ratio: number): void {
+    if (this.playbackSource !== 'replay') this.enterReplay('start');
+    this.replay.seekRatio(ratio);
+  }
+
+  replaySetSpeed(speed: ReplaySpeed): void {
+    this.replay.setSpeed(speed);
+    this.syncReplayInterp();
+  }
+
+  private syncReplayInterp(): void {
+    const renderer = this.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
+    if (!renderer?.setInterpMs) return;
+    const speed = this.replay.getSpeed();
+    renderer.setInterpMs(Math.max(16, Math.round(50 / speed)));
+  }
+
+  private applyRendererPlaybackMode(mode: 'live' | 'replay'): void {
+    const renderer = this.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
+    renderer?.setPlaybackMode?.(mode);
+  }
+
+  private recordAndMaybePresentLive(): void {
+    const model = this.canvasHost.getReadModel();
+    if (!model) return;
+    this.replayBuffer.append(model);
+    if (this.playbackSource === 'live') {
+      this.canvasHost.present(model);
+    }
+  }
+
   private buildSnapshot(): LiveMatchSnapshot {
-    const matchState = this.session.getMatchState();
-    const events = [...this.session.context().events.history()];
+    const replayView = this.getReplayView();
+    const replayModel = this.playbackSource === 'replay' ? this.replay.getCurrentModel() : null;
+    const matchState = replayModel?.matchState ?? this.session.getMatchState();
+    const events = replayModel
+      ? [...replayModel.events]
+      : [...this.session.context().events.history()];
     const homePossTicks = matchState.statistics.home.possessionTicks;
     const awayPossTicks = matchState.statistics.away.possessionTicks;
     const totalPoss = homePossTicks + awayPossTicks;
@@ -204,6 +334,7 @@ export class LiveMatchRuntime {
       ],
       feed,
       tactics: matchState.tactics,
+      replay: replayView,
     };
   }
 
@@ -221,11 +352,13 @@ export class LiveMatchRuntime {
     if (!factory) return;
     this.session.dispatch(factory());
     this.flushEvents();
+    this.recordAndMaybePresentLive();
     this.bump();
   }
 
   dispose(): void {
     this.stopSimulation();
+    this.replay.dispose();
     this.canvasHost.unbind();
     this.session.dispose();
     this.listeners.clear();
