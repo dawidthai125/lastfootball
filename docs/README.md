@@ -6,45 +6,60 @@ Indeks dokumentacji projektu. **To jest punkt startowy** dla nowego Chatu / Curs
 
 ## Aktualny stan
 
-Dokumentacja produktowa (GDD Faza 2 częściowo), silnik LFE (EPIC-1…7 + Architecture Freeze), infrastruktura monorepo (Next.js + Supabase + Vercel) — **na `main`**.
+| Warstwa   | Stan                                                     |
+| --------- | -------------------------------------------------------- |
+| LFE       | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`   |
+| Web match | Live + Canvas + Replay + Post Match (sprawdź git commit) |
+| GDD       | Faza 2 częściowo (§6 skeleton)                           |
+| Infra     | Next.js + Supabase + Vercel                              |
 
 ## Jak czytać (kolejność)
 
-1. [`HANDOFF.md`](./HANDOFF.md) — szybki start kontekstu
-2. [`PROJECT_OVERVIEW.md`](./PROJECT_OVERVIEW.md) — czym jest projekt
+1. [`AI-HANDOFF.md`](./AI-HANDOFF.md) — **handbook agenta** (pełny)
+2. [`HANDOFF.md`](./HANDOFF.md) — szybki start
 3. [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) — gdzie jesteśmy
 4. [`ARCHITECTURE.md`](./ARCHITECTURE.md) — jak jest zbudowany
-5. [`lfe/README.md`](./lfe/README.md) — silnik meczu
-6. [`game-design/README.md`](./game-design/README.md) — design produktu
+5. [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md) — silnik gameplay
+6. [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) — Canvas / Replay / Post Match
+7. [`game-design/README.md`](./game-design/README.md) — design produktu
 
 ## Mapa dokumentów
 
-| Dokument                                       | Opis                                           |
-| ---------------------------------------------- | ---------------------------------------------- |
-| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)   | Wizja, stack, granice                          |
-| [PROJECT_STATUS.md](./PROJECT_STATUS.md)       | Etap, done / in progress / next                |
-| [ROADMAP.md](./ROADMAP.md)                     | Completed → Future                             |
-| [ARCHITECTURE.md](./ARCHITECTURE.md)           | System + przepływ danych                       |
-| [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) | Katalogi PUBLIC / INTERNAL                     |
-| [CODING_STANDARDS.md](./CODING_STANDARDS.md)   | Konwencje kodu                                 |
-| [WORKFLOW.md](./WORKFLOW.md)                   | AUDIT → RELEASE, role                          |
-| [RELEASE_PROCESS.md](./RELEASE_PROCESS.md)     | Commity, push, rollback                        |
-| [DECISIONS.md](./DECISIONS.md)                 | Decyzje architektoniczne (nie łamać bez AUDIT) |
-| [CHANGELOG.md](./CHANGELOG.md)                 | Historia zmian dokumentacyjna / release        |
-| [HANDOFF.md](./HANDOFF.md)                     | Przekazanie kontekstu nowemu agentowi          |
+| Dokument                                       | Opis                                  |
+| ---------------------------------------------- | ------------------------------------- |
+| [AI-HANDOFF.md](./AI-HANDOFF.md)               | Agent handbook (SSOT startowy)        |
+| [HANDOFF.md](./HANDOFF.md)                     | Krótki handoff                        |
+| [API.md](./API.md)                             | Indeks API LFE + web match            |
+| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)   | Wizja, stack, granice                 |
+| [PROJECT_STATUS.md](./PROJECT_STATUS.md)       | Etap, done / in progress / next       |
+| [ROADMAP.md](./ROADMAP.md)                     | DONE / IN PROGRESS / PLANNED / FUTURE |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)           | System + przepływ danych              |
+| [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) | Katalogi PUBLIC / INTERNAL            |
+| [CODING_STANDARDS.md](./CODING_STANDARDS.md)   | Konwencje kodu                        |
+| [WORKFLOW.md](./WORKFLOW.md)                   | AUDIT → RELEASE, role                 |
+| [RELEASE_PROCESS.md](./RELEASE_PROCESS.md)     | Commity, push, rollback               |
+| [DECISIONS.md](./DECISIONS.md)                 | Decyzje architektoniczne              |
+| [CHANGELOG.md](./CHANGELOG.md)                 | Historia docs / release               |
 
 ### LFE
 
-| Dokument                                                           | Opis                           |
-| ------------------------------------------------------------------ | ------------------------------ |
-| [lfe/README.md](./lfe/README.md)                                   | Indeks silnika                 |
-| [lfe/ENGINE_OVERVIEW.md](./lfe/ENGINE_OVERVIEW.md)                 | Warstwy i granice              |
-| [lfe/PUBLIC_API.md](./lfe/PUBLIC_API.md)                           | PUBLIC / INTERNAL / DEPRECATED |
-| [lfe/MATCH_FLOW.md](./lfe/MATCH_FLOW.md)                           | createMatch → koniec           |
-| [lfe/ENGINE_PIPELINE.md](./lfe/ENGINE_PIPELINE.md)                 | Pipeline tekstowy              |
-| [lfe/CURRENT_STATUS.md](./lfe/CURRENT_STATUS.md)                   | EPIC-1…7                       |
-| [lfe/LFE_ARCHITECTURE_FREEZE.md](./lfe/LFE_ARCHITECTURE_FREEZE.md) | **Kontrakt API v1**            |
-| [lfe/overview.md](./lfe/overview.md)                               | Layout pakietu + epic notes    |
+| Dokument                                                           | Opis                             |
+| ------------------------------------------------------------------ | -------------------------------- |
+| [lfe/README.md](./lfe/README.md)                                   | Indeks silnika                   |
+| [lfe/GAMEPLAY_MATCH_STACK.md](./lfe/GAMEPLAY_MATCH_STACK.md)       | Gameplay / AI / Engine           |
+| [lfe/ENGINE_OVERVIEW.md](./lfe/ENGINE_OVERVIEW.md)                 | Warstwy i granice                |
+| [lfe/PUBLIC_API.md](./lfe/PUBLIC_API.md)                           | PUBLIC / INTERNAL / rozszerzenia |
+| [lfe/MATCH_FLOW.md](./lfe/MATCH_FLOW.md)                           | createMatch → koniec             |
+| [lfe/ENGINE_PIPELINE.md](./lfe/ENGINE_PIPELINE.md)                 | Pipeline tekstowy                |
+| [lfe/CURRENT_STATUS.md](./lfe/CURRENT_STATUS.md)                   | Status EPIC + modułów            |
+| [lfe/LFE_ARCHITECTURE_FREEZE.md](./lfe/LFE_ARCHITECTURE_FREEZE.md) | **Kontrakt API v1**              |
+| [lfe/overview.md](./lfe/overview.md)                               | Layout pakietu + epic notes      |
+
+### Web match
+
+| Dokument                                               | Opis                                |
+| ------------------------------------------------------ | ----------------------------------- |
+| [web/MATCH_UI_PIPELINE.md](./web/MATCH_UI_PIPELINE.md) | Live / Canvas / Replay / Post Match |
 
 ### Game Design
 
@@ -71,13 +86,14 @@ Dokumentacja produktowa (GDD Faza 2 częściowo), silnik LFE (EPIC-1…7 + Archi
 
 ## Opis działania
 
-Nowy agent **nie** powinien polegać na starym czacie. Czyta `HANDOFF.md`, potem status i architekturę, potem LFE freeze / GDD w zależności od zadania.
+Nowy agent **nie** powinien polegać na starym czacie. Czyta `AI-HANDOFF.md` / `HANDOFF.md`, potem status i architekturę, potem LFE / web match / GDD w zależności od zadania.
 
 ## Najważniejsze decyzje
 
 - GDD = SSOT produktu; LFE freeze = SSOT kontraktu silnika.
 - `createMatch()` → `MatchSession` = jedyny oficjalny entry meczu.
-- Brak gameplay Physics/AI do czasu osobnego EPIC + GO Ownera.
+- Canvas / Replay tylko read / nagrane dane.
+- Physics / pełne Rules = FUTURE (Owner GO).
 
 ## Powiązania
 
@@ -85,4 +101,4 @@ Root [`README.md`](../README.md) · [`CONTRIBUTING.md`](../CONTRIBUTING.md) · r
 
 ## Last updated
 
-2026-07-23
+2026-07-23 — LFE-DOCS-SYNC-01

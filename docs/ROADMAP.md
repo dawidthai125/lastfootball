@@ -2,64 +2,76 @@
 
 ## Cel dokumentu
 
-Mapa postępu projektu w kategoriach Completed / In Progress / Planned / Future.
+Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-LFE EPIC-1…7 + Architecture Freeze na `main`. GDD do §15 (bez §6). App = shell.
+Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Replay · Post Match · Live Bridge). CI zielony.
 
-## Completed
+---
 
-| Item                    | Notatka                                  |
-| ----------------------- | ---------------------------------------- |
-| Monorepo foundation     | Next.js, domain, LFE stub → engine       |
-| Infra                   | Vercel fra1, Supabase link, CI, ops docs |
-| LFE EPIC-1…7            | Foundation → Positioning                 |
-| LFE Architecture Freeze | PUBLIC API v1 kontrakt                   |
-| Release A–G             | Kod LFE + docs LFE + GDD na `main`       |
-| GDD-01…12               | Struktura + §3–5, §7–15                  |
-| UI Design Guide         | Zasady UI                                |
-| Audyty 01–03            | Repo, Public API, Freeze                 |
+## DONE ✅
 
-## In Progress
+| Item                             | Notatka                                     |
+| -------------------------------- | ------------------------------------------- |
+| Monorepo + infra                 | Next, Supabase, Vercel, CI                  |
+| LFE EPIC-1…7                     | Foundation → Positioning                    |
+| LFE Architecture Freeze          | PUBLIC API v1 kontrakt                      |
+| **Gameplay Foundation**          | tactics, events, tactical commands          |
+| **Match AI**                     | MATCH-AI-01                                 |
+| **Match Engine**                 | MATCH-ENGINE-01                             |
+| **Player Match Data**            | `statistics.players` + optional `playerId`  |
+| Asset Pack 01                    | herby, ikony, tekstury                      |
+| UI Shell Polish                  | nav / topbar / rail                         |
+| Live UI + LiveMatchRuntime       | broadcast + **Live Bridge**                 |
+| **Canvas Renderer**              | 2D + EventBus FX + LIVE/REPLAY (`d752d22`)  |
+| **Replay**                       | buffer + controller (`cf1d68c`)             |
+| **Post Match**                   | summary + seek Replay (`b25f479`)           |
+| **Live Bridge**                  | wiring Canvas/Replay/Post Match (`33618e9`) |
+| **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)              |
+| GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                    |
+| **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF        |
 
-| Item                     | Notatka                                          |
-| ------------------------ | ------------------------------------------------ |
-| —                        | Brak aktywnego EPIC implementacyjnego po release |
-| Packaging PUBLIC surface | Dług udokumentowany (over-export `index.ts`)     |
+## IN PROGRESS 🔄
 
-## Planned
+| Item | Notatka                  |
+| ---- | ------------------------ |
+| —    | Brak otwartego EPIC kodu |
 
-| Item                                  | Zależność                        |
-| ------------------------------------- | -------------------------------- |
-| GDD-13 §6 Rozwój klubu                | Owner GO                         |
-| Kolejne rozdziały GDD (szkielet)      | Po §6 / priorytet Owner          |
-| Zawężenie exportów LFE do freeze      | Chore; opcjonalnie przed Physics |
-| `features/match` UI (Pre/Live/Report) | GDD §9 + PUBLIC session API      |
-| Supabase schema teams/players         | Po designie danych               |
+## PLANNED ⬜
 
-## Future
+| Item                         | Zależność                                          |
+| ---------------------------- | -------------------------------------------------- |
+| Player Ratings               | Post Match + dane zawodnika (`playerId` już w LFE) |
+| GDD-13 §6 Rozwój klubu       | Owner GO (docs)                                    |
+| Zawężenie LFE PUBLIC exports | chore packaging                                    |
+| Transfer Market              | GDD §12                                            |
+| Economy                      | GDD §14                                            |
+| League live                  | GDD §10 + backend                                  |
+| Multiplayer                  | późna faza                                         |
 
-| Item                        | Notatka                                    |
-| --------------------------- | ------------------------------------------ |
-| LFE Physics / ball          | RESERVED                                   |
-| LFE AI / tactics            | RESERVED                                   |
-| LFE Rules (fouls, restarts) | RESERVED                                   |
-| Canvas renderer             | Poza pakietem LFE; konsumuje spatial/state |
-| ECS storage                 | RESERVED stub                              |
-| Liga live / tick serwerowy  | Późna faza                                 |
-| Mobile native               | Poza scope MVP                             |
+## FUTURE
+
+| Item                             | Notatka                              |
+| -------------------------------- | ------------------------------------ |
+| LFE Physics / ball kinematics    | RESERVED stub                        |
+| LFE Rules (fouls/restarts pełne) | częściowo eventy; brak pełnych rules |
+| ECS storage                      | RESERVED                             |
+| Replay persist / video export    | poza MVP                             |
+| Mobile native                    | poza scope                           |
+
+---
 
 ## Najważniejsze decyzje roadmapy
 
-- Design (GDD) prowadzi gameplay.
-- Silnik rośnie EPIC-ami; PUBLIC API zmienia się tylko przez freeze policy.
-- Nie mieszać GDD i LFE w jednym „chaos commit” (release A–G = wzorzec).
+- Design (GDD) prowadzi produkt.
+- UI/Canvas nie omija `MatchSession` / CommandBus.
+- Replay nigdy nie odpala Engine.
 
 ## Powiązania
 
-[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`game-design/ROADMAP.md`](./game-design/ROADMAP.md) · [`lfe/CURRENT_STATUS.md`](./lfe/CURRENT_STATUS.md)
+[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md) · [`lfe/CURRENT_STATUS.md`](./lfe/CURRENT_STATUS.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — LFE-DOCS-SYNC-01

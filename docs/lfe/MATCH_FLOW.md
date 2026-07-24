@@ -2,78 +2,86 @@
 
 ## Cel dokumentu
 
-Opis przebiegu meczu od `createMatch()` do zakończenia sesji.
+Opis przebiegu meczu od `createMatch()` do zakończenia sesji (i mostu do web UI).
 
 ## Aktualny stan
 
-Flow sesji działa (EPIC-6). Fazy lifecycle (EPIC-3) + komendy (EPIC-5). Brak ruchu piłki / AI.
+Flow sesji + **Match Engine / AI** na ticku działa (`0.9.1-match-ai01`).  
+Web: LiveMatchRuntime → Canvas → Replay → Post Match (poza LFE).
 
 ## Opis działania
 
 ### 1. Build config
 
-Aplikacja (transitional) składa `MatchSessionConfig`:
+Aplikacja składa `MatchSessionConfig` (lub `createSessionFromFixture` w web):
 
 - seed, team IDs, names
 - `players`, `homeLineup` / `awayLineup`, benches
+- tactics (Gameplay Foundation)
 - opcjonalnie `engine` (`DeepPartial<LfeConfig>`), `logger`
 
 ### 2. Create
 
 ```ts
 const session = createMatch(config);
-// SessionStatus: created → ready (wewnętrznie wg implementacji)
 ```
 
-Buduje model meczu, simulation, command bus, spatial kickoff snapshot.
+Buduje model meczu, simulation (w tym **MatchEngineSystem**), command bus, spatial kickoff snapshot.
 
-### 3. Start
-
-```ts
-session.start(); // lub dispatch(createStartMatchCommand(...))
-```
-
-Komendy → lifecycle / world status.
-
-### 4. Kickoff / play
+### 3. Start / Kickoff
 
 ```ts
+session.start();
 session.dispatch(createKickoffCommand(...));
-session.run(n); // lub step() w pętli UI/raf
 ```
 
-Simulation tickuje; systems aktualizują clock/scheduler/lifecycle/events/replay.
+### 4. Play (Live)
+
+```ts
+session.run(n); // lub step() w pętli UI
+```
+
+Na ticku:
+
+```
+Clock → Scheduler → Lifecycle → MatchEngineSystem
+  → simulateMatchTick → Match AI decide* → Engine RNG + mutate
+→ Event → Replay(snapshot world LFE)
+```
+
+UI czyta: `getMatchState()`, `getSpatialState()`, `getEvents()`.
 
 ### 5. Live control
 
 - `pause` / `resume`
-- kolejne komendy (end, abandon, walkover, …)
-- UI czyta: `getMatchState()`, `getSpatialState()`, `getEvents()`
+- komendy taktyczne (pressing, tempo, …) przez CommandBus
+- koniec / abandon / walkover
 
-### 6. End
+### 6. End → Report (web)
 
-- komenda końca / terminal lifecycle state
-- `stop()` / `dispose()`
-- `MatchResult` / eventy pod Report (GDD §9)
+- terminal lifecycle / `MATCH_END`
+- web: **Post Match** z EventBus + MatchState
+- opcjonalnie **Replay** seek (web buffer, nie LFE `snapshots`)
 
 ### Mapowanie na GDD §9
 
-| GDD    | LFE                                      |
-| ------ | ---------------------------------------- |
-| Pre    | config + createMatch + lineup            |
-| Live   | start/run/dispatch + spatial/state reads |
-| Report | events / result / snapshots              |
-| Hub    | dispose → powrót do app                  |
+| GDD    | Implementacja                     |
+| ------ | --------------------------------- |
+| Pre    | fixture + createMatch + lineup UI |
+| Live   | LiveMatchRuntime + Canvas LIVE    |
+| Report | Post Match (+ Replay)             |
+| Hub    | dispose → powrót do app           |
 
 ## Najważniejsze decyzje
 
 - UI nie omija sesji.
-- Tempo meczu = `run`/`step`, nie osobny „god mode” mutujący stan.
+- Tempo meczu = `run`/`step`.
+- Web Replay ≠ LFE world snapshot buffer (osobne warstwy).
 
 ## Powiązania
 
-[ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md) · [PUBLIC_API.md](./PUBLIC_API.md) · [`../game-design/GAME_DESIGN_DOCUMENT.md`](../game-design/GAME_DESIGN_DOCUMENT.md) (§9)
+[ENGINE_PIPELINE.md](./ENGINE_PIPELINE.md) · [GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-23 — LFE-DOCS-SYNC-01

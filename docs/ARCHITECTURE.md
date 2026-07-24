@@ -2,105 +2,145 @@
 
 ## Cel dokumentu
 
-Opis architektury systemu: frontend, backend/BFF, Supabase, LFE, przepływ danych meczu.
+Architektura systemu: web, LFE, Supabase, przepływ meczu Live → Canvas → Replay → Post Match.
 
 ## Aktualny stan
 
-Monorepo z wyraźnymi granicami pakietów. LFE = headless engine. Web = cienki shell. Brak Canvas gameplay.
+Monorepo z granicami pakietów. LFE = headless engine (`0.9.1-match-ai01`). Web = shell + **match pipeline** (runtime, canvas, replay, post match).
 
-## Opis działania — komponenty
+---
+
+## Komponenty
 
 ### Frontend (`apps/web`)
 
-- Next.js 15 App Router + React.
-- Strony: home, `/status` (wywołuje `getEngineStatus()` z LFE).
-- `transpilePackages`: `@lastfootball/lfe`, `@lastfootball/domain`.
-- **Nie** uruchamia jeszcze Live match UI.
+- Next.js 15 App Router.
+- Shell: Asset Pack, TopBar, LeftNav, Right rail.
+- Match: Pre Match, Live (`LiveMatchFoundation`), Post Match.
+- `/status` → `getEngineStatus()`.
 
-### Backend / BFF
+### LFE (`packages/lfe`)
 
-- Na razie logika serwerowa = Next.js route handlers / przyszłe Server Actions.
-- Brak osobnego API serwisu meczu — symulacja ma być wywoływalna z klienta lub workera później (decyzja otwarta).
+Headless: config, core, rng, events, scheduler, world, simulation, domain, state machine, commands, session, positioning, **gameplay**, **ai**, **match/engine**.
+
+### Canvas (web)
+
+Warstwa renderu 2D. Czyta `MatchCanvasReadModel`. **Nie** mutuje MatchState. Tryby: `live` | `replay`.
+
+### Replay (web)
+
+Ring buffer `MatchCanvasReadModel` + controller. **Nie** woła Match Engine.
+
+### Post Match (web)
+
+Raport z EventBus/MatchState; seek do Replay.
 
 ### Supabase
 
-- Auth, Postgres, Storage, Realtime, Edge Functions (prep).
-- Typy generowane; migracje w `supabase/`.
-- **Nie** jest zależnością pakietu LFE.
+Auth/data — **nie** zależność LFE.
 
-### Canvas
+---
 
-- **Planowane** jako warstwa renderu meczu (2D).
-- **Nie** jest częścią `@lastfootball/lfe`.
-- Ma czytać `MatchSession.getMatchState()` / `getSpatialState()` / eventy — nie mutować silnika poza komendami.
+## Przepływ meczu (end-to-end)
 
-### React
-
-- UI managera + przyszły match shell.
-- Zakaz: import React wewnątrz `packages/lfe`.
-
-### LFE Engine (`packages/lfe`)
-
-Headless, deterministyczny silnik meczu. Warstwy: config, core, rng, events, scheduler, world, simulation systems, domain, state machine, commands, session, positioning. Stuby: physics, ai, rules, ecs.
-
-### Match Session
-
-- Oficjalna fasada: `createMatch(config) → MatchSession`.
-- Orkiestruje simulation + commands + lifecycle + spatial snapshot.
-
-### Replay
-
-- Bufor snapshotów per tick (`ReplaySnapshot`).
-- Dostęp: `session.snapshots()` / `latestSnapshot()`; heavy inspect = ADVANCED.
-
-### Commands
-
-- Jedyna intencjonalna ścieżka mutacji (poza internal systems).
-- UI/AI: factories komend → `session.dispatch` lub shortcuty `start`/`pause`/`resume`.
-
-### State Machine
-
-- SSOT faz meczu (`MatchLifecycleState` / `MatchState.phase`).
-- Tabele przejść = INTERNAL; app czyta fazę ze stanu.
-
-### Simulation
-
-- Tick loop (domyślnie 20 ticks/s).
-- Pipeline: update → systems (Clock → Scheduler → Lifecycle → Event → Replay) → events → snapshot.
-
-### Public API
-
-- Kontrakt: [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · skrót [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md).
-- Uwaga: obecny `index.ts` eksportuje więcej niż kontrakt (dług).
-
-## Przepływ danych (mecz)
-
-```
-App (React)
-  │  buduje MatchSessionConfig (transitional: domain factories)
-  ▼
-createMatch(config)
-  ▼
-MatchSession
-  ├─ start/pause/resume/dispatch  → CommandBus → handlers → MatchState / lifecycle
-  ├─ step/run                     → Simulation tick pipeline
-  ├─ getMatchState / getSpatialState / getEvents  → UI / Canvas (read)
-  └─ snapshots                    → Replay / debug
+```mermaid
+flowchart LR
+  subgraph Web
+    Pre[Pre Match]
+    Live[LiveMatchRuntime]
+    Canvas[Canvas Renderer]
+    Rep[Replay]
+    Post[Post Match]
+  end
+  subgraph LFE
+    GF[Gameplay Foundation]
+    AI[Match AI]
+    EN[Match Engine]
+    MS[MatchState]
+    EB[EventBus]
+  end
+  Pre --> Live
+  Live --> GF
+  GF --> AI
+  AI --> EN
+  EN --> MS
+  EN --> EB
+  MS --> Live
+  EB --> Live
+  Live --> Canvas
+  Live --> Rep
+  Rep --> Canvas
+  MS --> Post
+  EB --> Post
+  Post --> Rep
 ```
 
-Persystencja klubu (przyszłość): App ↔ Supabase; LFE pozostaje bez I/O.
+### Tekstowo
+
+```
+Pre Match
+  ↓
+Gameplay Foundation
+  ↓
+Match AI → Match Engine → MatchState + EventBus
+  ↓
+LiveMatchRuntime
+  ↓
+Canvas Renderer (LIVE) + ReplayBuffer
+  ↓
+Replay Controller (REPLAY) → Canvas
+  ↓
+Post Match → (opcjonalnie) Replay seek
+```
+
+---
+
+## Zależności modułów
+
+```mermaid
+flowchart TB
+  web[apps/web]
+  lfe["@lastfootball/lfe"]
+  dom["@lastfootball/domain"]
+  sb[Supabase]
+  web --> lfe
+  web --> dom
+  web --> sb
+  lfe --> dom
+  eng[Match Engine] --> ai[Match AI]
+  eng --> ms[MatchState]
+  ai --> ms
+  canvas[Canvas] -.->|read model| ms
+  canvas -.->|events| eb[EventBus]
+  replay[Replay] -.->|recorded models| canvas
+```
+
+**Hard:** Engine → AI.  
+**Forbidden:** Canvas → Engine/AI; Replay → `session.run`.
+
+---
+
+## Simulation pipeline (LFE tick)
+
+```
+Clock → Scheduler → Lifecycle → MatchEngineSystem → Event → Replay(snapshot world)
+```
+
+Szczegóły: [`lfe/ENGINE_PIPELINE.md`](./lfe/ENGINE_PIPELINE.md) · [`lfe/GAMEPLAY_MATCH_STACK.md`](./lfe/GAMEPLAY_MATCH_STACK.md)
+
+---
 
 ## Najważniejsze decyzje
 
-1. LFE bez frameworków UI/DB.
-2. Session = jedyna fasada meczu.
-3. Domain manager (`packages/domain`) ≠ domain meczu (`lfe/match/domain`).
-4. Canvas poza silnikiem.
+1. Session = jedyna fasada meczu.
+2. Canvas / Replay poza pakietem LFE.
+3. Domain manager ≠ match domain.
+4. PUBLIC freeze nadal obowiązuje; nowe eksporty AI/Engine są rozszerzeniem powierzchni — dokumentuj świadomie.
 
 ## Powiązania
 
-[`architecture/SYSTEM_OVERVIEW.md`](./architecture/SYSTEM_OVERVIEW.md) · [`architecture/DEPENDENCIES.md`](./architecture/DEPENDENCIES.md) · [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) · [`DECISIONS.md`](./DECISIONS.md)
+[`architecture/SYSTEM_OVERVIEW.md`](./architecture/SYSTEM_OVERVIEW.md) · [`architecture/DEPENDENCIES.md`](./architecture/DEPENDENCIES.md) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) · [`AI-HANDOFF.md`](./AI-HANDOFF.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-23 — LFE-DOCS-SYNC-01

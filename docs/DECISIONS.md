@@ -67,10 +67,11 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** wycieka world container.  
 **Zasada:** UI używa `getMatchState` + `getSpatialState`.
 
-### D12 — Physics / AI / Rules = Future EPIC
+### D12 — Physics / Rules = Future; AI/Engine shipped post-freeze
 
-**Dlaczego:** najpierw foundation + kontrakt.  
-**Zasada:** stuby RESERVED; brak udawania gotowości w status modules bez implementacji.
+**Historyczne (freeze EPIC-1…7):** Physics / AI / Rules = future, stuby RESERVED.  
+**Aktualizacja (2026-07-23):** Match AI + Match Engine + Gameplay Foundation = **DONE** (`0.9.1-match-ai01`). Physics i pełne Rules nadal FUTURE (Owner GO). Canvas/Replay = web, poza LFE.  
+**Zasada:** nie udawaj gotowości w `status` bez implementacji; nie mutuj Engine przy EPIC-ach UI.
 
 ## Najważniejsze decyzje (meta)
 
@@ -82,4 +83,4 @@ Każde złamanie D1–D12 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-23
+2026-07-23 — LFE-DOCS-SYNC-01

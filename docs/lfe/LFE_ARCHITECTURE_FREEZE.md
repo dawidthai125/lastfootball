@@ -1,9 +1,12 @@
 # LFE — Architecture Freeze
 
 **Package:** `@lastfootball/lfe`  
-**Freeze version:** `1.0.0-arch` (architectural contract; package semver may still report `0.7.0-epic7` until packaging catch-up)  
+**Freeze version:** `1.0.0-arch` (architectural contract)  
+**Package version (current):** `0.9.1-match-ai01`  
 **Based on:** EPIC-1…7 · AUDIT-01 · AUDIT-02 · AUDIT-03  
-**Mode:** Architecture only — **no gameplay · no Physics · no AI · no new EPICs**
+**Mode (original freeze):** Architecture only — no gameplay · no Physics · no AI · no new EPICs
+
+> **Post-freeze reality (2026-07-23):** Gameplay Foundation, Match AI, and Match Engine are **implemented** and shipped on `main`. This freeze remains the **base PUBLIC contract** for session/commands/spatial. AI/Engine barrel exports are **extensions** — see [`PUBLIC_API.md`](./PUBLIC_API.md) and [`GAMEPLAY_MATCH_STACK.md`](./GAMEPLAY_MATCH_STACK.md). Updating freeze categories (e.g. un-RESERVING `ai/`) requires AUDIT + Owner GO. Physics / full Rules remain out of scope.
 
 ---
 
@@ -313,14 +316,15 @@ A **breaking change** to PUBLIC API v1 includes any of:
 
 ## 13. SemVer Policy
 
-| Version channel                             | Meaning                                                                                                    |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `0.x` (current package, e.g. `0.7.0-epic7`) | Pre-façade-hardening / EPIC milestone tags — historical                                                    |
-| **Architecture freeze**                     | This document = contract `PUBLIC API v1` regardless of npm patch until packaging aligned                   |
-| `1.0.0` (target package)                    | First release that **implements** export surface matching this freeze (narrowed `index` / subpath exports) |
-| `1.x` minors                                | Additive PUBLIC / documented ADVANCED                                                                      |
-| `1.x` majors                                | PUBLIC breaking changes only                                                                               |
-| Pre-release tags                            | `1.1.0-experimental.*` for EXPERIMENTAL bundles if ever published                                          |
+| Version channel                        | Meaning                                                                                                    |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `0.x` (historical, e.g. `0.7.0-epic7`) | Pre-façade-hardening / EPIC milestone tags — historical                                                    |
+| `0.9.1-match-ai01`                     | Gameplay + Match AI + Match Engine (post-freeze package)                                                   |
+| **Architecture freeze**                | This document = contract `PUBLIC API v1` regardless of npm patch until packaging aligned                   |
+| `1.0.0` (target package)               | First release that **implements** export surface matching this freeze (narrowed `index` / subpath exports) |
+| `1.x` minors                           | Additive PUBLIC / documented ADVANCED                                                                      |
+| `1.x` majors                           | PUBLIC breaking changes only                                                                               |
+| Pre-release tags                       | `1.1.0-experimental.*` for EXPERIMENTAL bundles if ever published                                          |
 
 Until `1.0.0` packaging lands, treat **this markdown** as the source of truth for what application code is **allowed** to depend on.
 

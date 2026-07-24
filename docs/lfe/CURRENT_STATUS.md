@@ -2,46 +2,65 @@
 
 ## Cel dokumentu
 
-Status implementacji EPIC-ów silnika.
+Status implementacji EPIC-ów i modułów silnika.
 
 ## Aktualny stan
 
-Wszystkie EPIC-1…7 **ukończone i na `main`**. Freeze APPROVED. Brak aktywnego EPIC gameplay.
+|                         |                                                      |
+| ----------------------- | ---------------------------------------------------- |
+| **Package**             | `0.9.1-match-ai01`                                   |
+| **EPIC-1…7**            | ✅ DONE (na `main`)                                  |
+| **Gameplay Foundation** | ✅ DONE                                              |
+| **Match AI**            | ✅ DONE                                              |
+| **Match Engine**        | ✅ DONE                                              |
+| **Architecture Freeze** | APPROVED (kontrakt v1; `index.ts` nadal over-export) |
 
-## Status EPIC
+## Status EPIC / stack
 
-| EPIC   | Nazwa               | Status   | Notatka                                          |
-| ------ | ------------------- | -------- | ------------------------------------------------ |
-| EPIC-1 | Foundation          | **DONE** | tick, clock, rng, events, scheduler, world, loop |
-| EPIC-2 | Match Domain        | **DONE** | czyste modele danych                             |
-| EPIC-3 | Match State Machine | **DONE** | lifecycle SSOT                                   |
-| EPIC-4 | Simulation Systems  | **DONE** | builtin pipeline                                 |
-| EPIC-5 | Command System      | **DONE** | bus + match commands                             |
-| EPIC-6 | Match Session       | **DONE** | `createMatch` façade                             |
-| EPIC-7 | Positioning         | **DONE** | spatial read, bez fizyki                         |
+| ID                       | Nazwa               | Status                         |
+| ------------------------ | ------------------- | ------------------------------ |
+| EPIC-1                   | Foundation          | **DONE**                       |
+| EPIC-2                   | Match Domain        | **DONE**                       |
+| EPIC-3                   | Match State Machine | **DONE**                       |
+| EPIC-4                   | Simulation Systems  | **DONE**                       |
+| EPIC-5                   | Command System      | **DONE**                       |
+| EPIC-6                   | Match Session       | **DONE**                       |
+| EPIC-7                   | Positioning         | **DONE**                       |
+| GAMEPLAY-01              | Gameplay Foundation | **DONE**                       |
+| MATCH-AI-01              | Match AI            | **DONE**                       |
+| MATCH-ENGINE-01          | Match Engine        | **DONE**                       |
+| LFE-PLAYER-MATCH-DATA-01 | Player Match Data   | **DONE** (`4d43661` na `main`) |
 
-## Moduły (status.ts — skrót)
+## Moduły (`getEngineStatus()` — skrót)
 
-| Ready                                                                                                                                   | Stub / Future      |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| core, rng, events, scheduler, world, simulation, replay, config, match-domain, SM, systems, commands, match session, positioning, input | physics, ai, rules |
+| Ready ✅                                                                       | Stub / Future ⬜                |
+| ------------------------------------------------------------------------------ | ------------------------------- |
+| core, rng, events, scheduler, world, simulation, replay (LFE snapshot), config | **physics**, **rules**, **ecs** |
+| match-domain, SM, systems, commands, match session, positioning, input         |                                 |
+| **gameplay-foundation**, **match-engine**, **match-ai**, **ai**                |                                 |
+| **player match stats** (`statistics.players` + `playerId` na GOAL/SHOT/FOUL)   |                                 |
 
-## Następne (nie rozpoczęte)
+`EngineStatus` nadal raportuje `'foundation'` (historyczna etykieta statusu — nie mylić z „tylko EPIC-1”).
 
-- Physics / ball movement
-- AI
-- Rules
+## Następne (poza silnikiem / LFE)
+
+- Web match pipeline (Canvas / Replay / Post Match / Live Bridge) — **DONE** na `main` (patrz [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md))
+- Player Ratings (Post Match) — wymaga `playerId` ✅ już w LFE
+- Physics / pełne Rules — **FUTURE** (Owner GO)
 - Zawężenie public `index.ts` do freeze
 - Subpath exports `advanced` / `testing`
 
 ## Najważniejsze decyzje
 
-Nie startować Physics bez Owner GO i bez aktualizacji tego statusu.
+- Engine **hard-depends** on AI (`resolve.ts`).
+- Player attribution = deterministyczna (`attribute-player.ts`), **bez** dodatkowego RNG.
+- Nie startować Physics bez Owner GO.
+- Canvas / Replay / Post Match żyją w **`apps/web`**, nie w LFE.
 
 ## Powiązania
 
-[README.md](./README.md) · epic1…epic7 docs · [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)
+[GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [README.md](./README.md) · [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../AI-HANDOFF.md`](../AI-HANDOFF.md)
 
 ## Last updated
 
-2026-07-23
+2026-07-24 — LFE-DOCS-SYNC-01

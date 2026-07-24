@@ -8,7 +8,7 @@ Przeglądarkowy manager piłkarski z własnym silnikiem meczu **LFE** (`@lastfoo
 Produktowy SSOT: [`docs/game-design/GAME_DESIGN_DOCUMENT.md`](docs/game-design/GAME_DESIGN_DOCUMENT.md).  
 Kontrakt silnika: [`docs/lfe/LFE_ARCHITECTURE_FREEZE.md`](docs/lfe/LFE_ARCHITECTURE_FREEZE.md).
 
-> **Nowy ChatGPT / Cursor:** zacznij od [`docs/HANDOFF.md`](docs/HANDOFF.md) — nie potrzebujesz starego czatu.
+> **Nowy ChatGPT / Cursor:** zacznij od [`docs/AI-HANDOFF.md`](docs/AI-HANDOFF.md) (pełny) lub [`docs/HANDOFF.md`](docs/HANDOFF.md) — nie potrzebujesz starego czatu.
 
 ## Jak uruchomić?
 
@@ -27,13 +27,13 @@ Pełny setup: [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md)
 
 Monorepo:
 
-| Path              | Role                            |
-| ----------------- | ------------------------------- |
-| `apps/web`        | Next.js App Router shell        |
-| `packages/lfe`    | Last Football Engine (EPIC-1…7) |
-| `packages/domain` | Shared manager DTOs             |
-| `supabase/`       | Auth/DB prep                    |
-| `docs/`           | **Documentation SSOT**          |
+| Path              | Role                                      |
+| ----------------- | ----------------------------------------- |
+| `apps/web`        | Next.js App Router shell                  |
+| `packages/lfe`    | Last Football Engine (`0.9.1-match-ai01`) |
+| `packages/domain` | Shared manager DTOs                       |
+| `supabase/`       | Auth/DB prep                              |
+| `docs/`           | **Documentation SSOT**                    |
 
 Szczegóły: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
@@ -45,12 +45,13 @@ Szczegóły: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
 ## Jakie dokumenty przeczytać najpierw?
 
-| Cel               | Dokumenty                                               |
-| ----------------- | ------------------------------------------------------- |
-| Kontekst projektu | HANDOFF → PROJECT_OVERVIEW → PROJECT_STATUS             |
-| Silnik            | `docs/lfe/README.md` → Architecture Freeze → PUBLIC_API |
-| Produkt           | `docs/game-design/README.md` → GDD                      |
-| Praca / release   | WORKFLOW → RELEASE_PROCESS → DECISIONS                  |
+| Cel               | Dokumenty                                                |
+| ----------------- | -------------------------------------------------------- |
+| Kontekst projektu | AI-HANDOFF → HANDOFF → PROJECT_STATUS                    |
+| Silnik            | `docs/lfe/GAMEPLAY_MATCH_STACK.md` → PUBLIC_API → Freeze |
+| Match UI          | `docs/web/MATCH_UI_PIPELINE.md`                          |
+| Produkt           | `docs/game-design/README.md` → GDD                       |
+| Praca / release   | WORKFLOW → RELEASE_PROCESS → DECISIONS                   |
 
 ## Scripts
 

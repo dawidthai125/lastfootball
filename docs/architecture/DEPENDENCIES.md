@@ -2,11 +2,12 @@
 
 ## Cel dokumentu
 
-Zależności między pakietami i zewnętrznymi usługami.
+Zależności między pakietami, modułami meczu i zewnętrznymi usługami.
 
 ## Aktualny stan
 
-npm workspaces; LFE zależy od domain; web zależy od LFE + domain; LFE **nie** zależy od web/supabase.
+npm workspaces; LFE zależy od domain; web zależy od LFE + domain; LFE **nie** zależy od web/supabase.  
+Match Engine **hard-depends** on Match AI.
 
 ## Opis działania
 
@@ -24,7 +25,37 @@ apps/web
   └── (brak zależności na lfe/web)
 ```
 
-### Zakazy importu
+### Graf modułów meczu
+
+```mermaid
+flowchart TB
+  Session[MatchSession] --> Sim[Simulation]
+  Sim --> MES[MatchEngineSystem]
+  MES --> Eng[Match Engine]
+  Eng --> AI[Match AI]
+  Eng --> MS[MatchState]
+  Eng --> EB[EventBus]
+  AI --> MS
+  Cmd[CommandBus] --> MS
+  Live[LiveMatchRuntime] --> Session
+  Live --> Canvas
+  Live --> Replay
+  Replay --> Canvas
+  Post[Post Match] --> MS
+  Post --> EB
+  Post --> Replay
+```
+
+| From → To            | Dozwolone?         |
+| -------------------- | ------------------ |
+| Engine → AI          | **TAK** (wymagane) |
+| AI → Engine          | NIE (AI czyste)    |
+| Canvas → Engine/AI   | **NIE**            |
+| Replay → session.run | **NIE**            |
+| web → lfe deep paths | **NIE**            |
+| lfe → web / supabase | **NIE**            |
+
+### Zakazy importu (pakiety)
 
 | From → To             | Dozwolone?                     |
 | --------------------- | ------------------------------ |
@@ -33,7 +64,6 @@ apps/web
 | domain → lfe          | **NIE**                        |
 | web → lfe deep paths  | **NIE** (tylko package export) |
 | web → domain          | TAK                            |
-| docs → runtime        | n/a                            |
 
 ### Zewnętrzne
 
@@ -46,7 +76,7 @@ apps/web
 
 ## Najważniejsze decyzje
 
-Granice importów = część Architecture Freeze / foundation.
+Granice importów = część Architecture Freeze / foundation + reguły Canvas/Replay.
 
 ## Powiązania
 
@@ -54,4 +84,4 @@ Granice importów = część Architecture Freeze / foundation.
 
 ## Last updated
 
-2026-07-23
+2026-07-23 — LFE-DOCS-SYNC-01

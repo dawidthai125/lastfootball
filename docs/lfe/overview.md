@@ -2,83 +2,69 @@
 
 ```
 packages/lfe/src/
-  index.ts              # public API
-  status.ts             # module readiness report
+  index.ts              # public API barrel (over-export vs freeze)
+  status.ts             # module readiness · LFE_VERSION
   config/               # ticks/sec, snapshot limits, log level
   core/                 # tick engine, game clock, time controller, logger
   rng/                  # seeded Mulberry32
-  events/               # event bus
+  events/               # event bus + GAMEPLAY_MATCH_EVENTS
   scheduler/            # tick / seconds / match-minute jobs
-  world/                # single World State (slots still unbound to MatchState)
-  simulation/           # headless loop + EPIC-4 systems pipeline
-    systems/            # Clock, Scheduler, Lifecycle, Event, Replay
-  replay/               # per-tick snapshots
+  world/                # World State container
+  simulation/           # headless loop + systems pipeline
+    systems/            # Clock, Scheduler, Lifecycle, MatchEngine, Event, Replay
+  replay/               # per-tick world snapshots (≠ web Replay UI)
   math/                 # Vec2 helpers
-  ecs/                  # reserved (stub)
-  utils/                # pure helpers
+  gameplay/             # GAMEPLAY-01 facade notes
   match/
-    domain/             # EPIC-2 match domain model (data only)
+    domain/             # EPIC-2 (+ tactics on MatchState)
     state-machine/      # EPIC-3 lifecycle SSOT
-    positioning/        # EPIC-7 spatial model (no physics)
+    positioning/        # EPIC-7 spatial (no physics)
+    engine/             # MATCH-ENGINE-01 tick resolve
     session/            # EPIC-6 MatchSession + createMatch
     session.ts          # re-export createMatch
     types.ts            # MatchInput / Handle
-  commands/             # EPIC-5 command bus + match commands
-  physics/              # stub — no ball physics yet
-  ai/                   # stub
+  commands/             # EPIC-5 + tactical commands
+  ai/                   # MATCH-AI-01 decisions (Engine depends)
+  physics/              # stub
   rules/                # stub
+  ecs/                  # reserved stub
+  utils/                # pure helpers
   input/                # MatchInput re-export
 ```
 
-## Public API
+## Public API (skrót)
 
-### EPIC-1
+- Entry: `createMatch(config)` → `MatchSession`
+- Session: start/pause/resume/dispatch/step/run/stop/dispose + reads
+- Gameplay: tactics commands, `GAMEPLAY_MATCH_EVENTS`, `gameplay` namespace
+- Engine/AI (barrel): `simulateMatchTick`, `decidePossession*`, … — prefer session for app
+- Status: `getEngineStatus`, `LFE_VERSION` = `0.9.1-match-ai01`
 
-- `createSimulation({ seed, config? })`
-- `createRng`, `createEventBus`, `createScheduler`, …
-
-### EPIC-2
-
-- Match domain: `createMatchModel`, `createMatchState`, `createPlayer`, `createTeam`, `createLineup`, …
-- `MatchInput` uses `Lineup` / `Bench` / `Player`
-
-### EPIC-3
-
-- `applyLifecycleEvent`, `transitionMatchState`, `STATE_DEFINITIONS`, `TRANSITION_RULES`
-- `MatchState.phase` ∈ `MatchLifecycleState`
-
-### EPIC-4
-
-- `SimulationSystem` + `SystemPriority` + `SimulationPipeline`
-- Built-ins: Clock → Scheduler → Lifecycle → Event → Replay
-
-### EPIC-5
-
-- `Command` / `CommandBus` / `CommandHandler` / `CommandResult`
-- `sim.dispatch(...)` — wspólna ścieżka dla AI, UI, botów, testów
-
-### EPIC-6
-
-- `createMatch(config)` → `MatchSession` (jedyny publiczny entry meczu)
-- `start` / `pause` / `resume` / `dispatch` / `stop` / `dispose`
-
-### EPIC-7
-
-- `Position`, `FormationLayout`, `SpawnPoints`, `PitchGrid`, `Zones`, `distanceCalculator`
-- `session.getSpatialState()` — kickoff layout z formacji
-
-### Still stubbed
-
-- Pełna logika gry (physics / AI / ball movement) — kolejne EPIC-i
+Pełniej: [`PUBLIC_API.md`](./PUBLIC_API.md) · [`GAMEPLAY_MATCH_STACK.md`](./GAMEPLAY_MATCH_STACK.md)
 
 ## Tick pipeline
 
-`update → systems → events → snapshot → next`
+```
+Clock → Scheduler → Lifecycle → MatchEngineSystem → Event → Replay(snapshot)
+```
 
 Default rate: **20 ticks / second**.
 
+## Still stubbed
+
+- Physics (ball kinematics)
+- Full Rules
+- ECS
+
 ## Boundaries
 
-- No React / Next / Supabase imports
-- No Physics / AI / movement implementation
-- Canvas remains a future dumb renderer
+- LFE: no React / DOM / Supabase
+- Canvas / Replay UI: `apps/web/src/gameplay/*`
+
+## Powiązania
+
+[`CURRENT_STATUS.md`](./CURRENT_STATUS.md) · [`ENGINE_OVERVIEW.md`](./ENGINE_OVERVIEW.md)
+
+## Last updated
+
+2026-07-23 — LFE-DOCS-SYNC-01

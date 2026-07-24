@@ -1,4 +1,4 @@
-﻿# Changelog (docs SSOT index)
+# Changelog (docs SSOT index)
 
 ## Cel dokumentu
 
@@ -7,11 +7,28 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-**LFE-PLAYER-MATCH-DATA-01** na `main` (po tym commicie). Wcześniej: LFE Architecture Freeze + GDD Faza 2 (część).
+Match pipeline na `main` (Canvas · Replay · Post Match · Live Bridge + Player Match Data). Docs sync LFE-DOCS-SYNC-01.
 
-## Opis działania
+---
 
-Nowy wpis po każdym release / zamknięciu EPIC lub GDD stage.
+## [2026-07-24] — LFE-DOCS-SYNC-01
+
+### Docs
+
+- Synchronizacja statusu po wdrożeniu Canvas / Replay / Post Match / Live Bridge
+- `AI-HANDOFF.md`, `HANDOFF.md`, `PROJECT_STATUS.md`, `ROADMAP.md`, `lfe/CURRENT_STATUS.md`
+- Nowe: `lfe/GAMEPLAY_MATCH_STACK.md`, `web/MATCH_UI_PIPELINE.md`, `API.md`
+
+### Code on `main` (match pipeline)
+
+|     | Hash      | Opis                                                    |
+| --- | --------- | ------------------------------------------------------- |
+| —   | `4d43661` | feat(lfe): player match statistics and event playerId   |
+| —   | `fbbebea` | chore(ci): apply prettier across repository             |
+| —   | `d752d22` | feat(web): add match canvas renderer                    |
+| —   | `cf1d68c` | feat(web): add match replay buffer and controller       |
+| —   | `b25f479` | feat(web): add post-match summary and view              |
+| —   | `33618e9` | feat(web): wire live match canvas replay and post-match |
 
 ---
 
@@ -20,14 +37,22 @@ Nowy wpis po każdym release / zamknięciu EPIC lub GDD stage.
 ### LFE
 
 - `MatchState.statistics.players` inicjalizowane dla pełnego rosteru
-- Deterministyczna atrybucja `attribute-player.ts` (bez dodatkowego RNG)
+- Deterministyczna atrybucja `attribute-player.ts` (bez RNG)
 - Optional `playerId` na payloadach `GOAL` / `SHOT` / `FOUL`
 - Bump `PlayerStatistics`: `goals`, `shots`, `foulsCommitted`
 - `TeamStatistics` i drabina RNG bez zmian semantycznych
 
-### Tests
+---
 
-- `packages/lfe/src/match/engine/player-match-data01.test.ts`
+## [2026-07-23] — RELEASE A–C (gameplay + UI)
+
+### Code on `main`
+
+|     | Hash      | Opis                             |
+| --- | --------- | -------------------------------- |
+| A   | `e449400` | feat(lfe): gameplay stack 0.9.1  |
+| B   | `4493687` | feat(web): UI refresh 0.9.1      |
+| C   | `bfce09f` | feat(web): live match experience |
 
 ---
 
@@ -69,4 +94,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-MATCH-DATA-01
+2026-07-24 — LFE-DOCS-SYNC-01
