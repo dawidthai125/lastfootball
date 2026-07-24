@@ -13,7 +13,8 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 | LiveMatchRuntime + Live Bridge | ✅ DONE na `main` | `33618e9` (+ RELEASE C) |
 | Canvas Renderer 2D             | ✅ DONE na `main` | `d752d22`               |
 | Replay Buffer + Controller     | ✅ DONE na `main` | `cf1d68c`               |
-| Post Match UI                  | ✅ DONE na `main` | `b25f479`               |
+| Post Match UI                  | ✅ DONE na `main` | `b25f479` + Ratings     |
+| Player Ratings (Post Match)    | ✅ DONE (local)   | LFE-PLAYER-RATINGS-01   |
 
 ---
 
@@ -74,13 +75,13 @@ flowchart TD
 
 ### Post Match
 
-|                      |                                                                     |
-| -------------------- | ------------------------------------------------------------------- |
-| **Odpowiedzialność** | Raport po końcu: wynik, gole, timeline, stats; skok do Replay       |
-| **Wejścia**          | `MatchState` + events (+ buffer do seek)                            |
-| **Wyjścia**          | UI; wywołania istniejącego Replay API                               |
-| **Pliki**            | `apps/web/src/components/match/post-match/*`                        |
-| **API**              | `buildPostMatchSummary`, `findReplayIndexForEvent`, `PostMatchView` |
+|                      |                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| **Odpowiedzialność** | Raport po końcu: wynik, gole, timeline, stats, **oceny XI + MVP**; skok do Replay           |
+| **Wejścia**          | `MatchState` + events (+ buffer do seek)                                                    |
+| **Wyjścia**          | UI; wywołania istniejącego Replay API                                                       |
+| **Pliki**            | `apps/web/src/components/match/post-match/*`                                                |
+| **API**              | `buildPostMatchSummary`, `computePlayerRatings`, `findReplayIndexForEvent`, `PostMatchView` |
 
 ### LiveMatchFoundation
 
@@ -118,7 +119,7 @@ MatchCanvasReadModel = {
 
 - Spatial kickoff + presentation derive (nie pełna fizyka).
 - Replay tylko RAM.
-- Post Match bez ocen zawodników / backendu.
+- Player Ratings = pure derive w Post Match (skala 1.0–10.0, XI obu drużyn, MVP); bez assists/minutes w formule v1.
 
 ## Powiązania
 
@@ -126,4 +127,4 @@ MatchCanvasReadModel = {
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-PLAYER-RATINGS-01

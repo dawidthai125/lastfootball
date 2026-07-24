@@ -12,3 +12,5 @@ export type {
   PostMatchSummary,
   PostMatchTimelineItem,
 } from './build-post-match-summary';
+export { clampRating, computePlayerRatings, round1, selectMvp } from './player-ratings';
+export type { PlayerRatingsResult, PlayerRatingStatus, PlayerRatingView } from './player-ratings';

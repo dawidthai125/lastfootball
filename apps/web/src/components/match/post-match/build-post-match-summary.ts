@@ -9,6 +9,8 @@ import type { LiveEventKind } from '@/data/fixtures';
 import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
+import { computePlayerRatings, type PlayerRatingView } from './player-ratings';
+
 export type PostMatchGoal = {
   readonly tick: number;
   readonly minute: string;
@@ -44,6 +46,11 @@ export type PostMatchSummary = {
   readonly timeline: readonly PostMatchTimelineItem[];
   readonly stats: readonly PostMatchStat[];
   readonly possession: { readonly home: number; readonly away: number };
+  readonly ratings: {
+    readonly home: readonly PlayerRatingView[];
+    readonly away: readonly PlayerRatingView[];
+  };
+  readonly mvpPlayerId: string | null;
 };
 
 const TIMELINE_TYPES = new Set([
@@ -118,6 +125,8 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
           away: Math.round((awayPoss / totalPoss) * 100),
         };
 
+  const derived = computePlayerRatings(matchState);
+
   return {
     homeName,
     awayName,
@@ -156,6 +165,11 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
       },
     ],
     possession,
+    ratings: {
+      home: derived.home,
+      away: derived.away,
+    },
+    mvpPlayerId: derived.mvpPlayerId,
   };
 }
 

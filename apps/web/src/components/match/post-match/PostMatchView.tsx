@@ -8,6 +8,7 @@ import type {
   PostMatchSummary,
   PostMatchTimelineItem,
 } from '@/components/match/post-match/build-post-match-summary';
+import type { PlayerRatingView } from '@/components/match/post-match/player-ratings';
 
 type PostMatchViewProps = {
   readonly summary: PostMatchSummary;
@@ -27,6 +28,13 @@ export function PostMatchView({
   onJumpToEvent,
   onDismiss,
 }: PostMatchViewProps) {
+  const mvp =
+    summary.mvpPlayerId == null
+      ? null
+      : ([...summary.ratings.home, ...summary.ratings.away].find(
+          (p) => p.playerId === summary.mvpPlayerId,
+        ) ?? null);
+
   return (
     <div
       style={{
@@ -62,6 +70,12 @@ export function PostMatchView({
           }}
         >
           {summary.resultLabel}
+          {mvp ? (
+            <span style={{ color: 'var(--lf-color-text-gold)' }}>
+              {' '}
+              · MVP: {mvp.name} ({mvp.rating.toFixed(1)})
+            </span>
+          ) : null}
         </div>
 
         <div
@@ -217,6 +231,17 @@ export function PostMatchView({
         </section>
       </div>
 
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 'var(--lf-space-4)',
+        }}
+      >
+        <RatingsColumn title={`${summary.homeShort} · Oceny`} players={summary.ratings.home} />
+        <RatingsColumn title={`${summary.awayShort} · Oceny`} players={summary.ratings.away} />
+      </div>
+
       <section className="lf-section-shell" style={{ padding: 'var(--lf-space-3)' }}>
         <h2 className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-3)' }}>
           Oś czasu zdarzeń
@@ -267,6 +292,101 @@ export function PostMatchView({
       </section>
     </div>
   );
+}
+
+function RatingsColumn({
+  title,
+  players,
+}: {
+  title: string;
+  players: readonly PlayerRatingView[];
+}) {
+  return (
+    <section className="lf-section-shell" style={{ padding: 'var(--lf-space-3)' }}>
+      <h2 className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-3)' }}>
+        {title}
+      </h2>
+      <ul
+        style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--lf-space-1)',
+        }}
+      >
+        {players.map((p) => (
+          <li key={p.playerId} style={ratingRow(p.isMvp)}>
+            <span
+              className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
+              style={{
+                color: 'var(--lf-color-text-faint)',
+                minWidth: '1.5rem',
+                fontSize: 'var(--lf-type-label)',
+              }}
+            >
+              {p.shirtNumber || '—'}
+            </span>
+            <span
+              style={{
+                flex: 1,
+                minWidth: 0,
+                fontSize: 'var(--lf-type-caption)',
+                color: 'var(--lf-color-text-secondary)',
+              }}
+            >
+              <span className="truncate" style={{ display: 'block' }}>
+                {p.name}
+              </span>
+              <span
+                style={{
+                  fontSize: 'var(--lf-type-label)',
+                  color: 'var(--lf-color-text-faint)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 'var(--lf-type-tracking-label)',
+                }}
+              >
+                {p.role}
+                {p.isMvp ? ' · MVP' : ''}
+              </span>
+            </span>
+            <span
+              className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
+              style={{
+                color: p.isMvp ? 'var(--lf-color-text-gold)' : ratingColor(p.rating),
+                fontSize: 'var(--lf-type-h2)',
+                minWidth: '2.5rem',
+                textAlign: 'right',
+              }}
+            >
+              {p.rating.toFixed(1)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function ratingRow(isMvp: boolean): CSSProperties {
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--lf-space-2)',
+    padding: 'var(--lf-space-2) var(--lf-space-3)',
+    borderRadius: 'var(--lf-radius-sm)',
+    borderWidth: 'var(--lf-border-width-hair)',
+    borderStyle: 'solid',
+    borderColor: isMvp ? 'var(--lf-color-border-gold)' : 'var(--lf-color-border-subtle)',
+    background: isMvp ? 'var(--lf-color-gold-soft)' : 'var(--lf-color-bg-inset)',
+  };
+}
+
+function ratingColor(rating: number): string {
+  if (rating >= 7.0) return 'var(--lf-color-text-primary)';
+  if (rating >= 5.5) return 'var(--lf-color-text-secondary)';
+  return 'var(--lf-color-text-muted)';
 }
 
 function TeamBlock({

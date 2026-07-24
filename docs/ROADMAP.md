@@ -12,26 +12,27 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 
 ## DONE ✅
 
-| Item                             | Notatka                                         |
-| -------------------------------- | ----------------------------------------------- |
-| Monorepo + infra                 | Next, Supabase, Vercel, CI                      |
-| LFE EPIC-1…7                     | Foundation → Positioning                        |
-| LFE Architecture Freeze          | PUBLIC API v1 kontrakt                          |
-| **Gameplay Foundation**          | tactics, events, tactical commands              |
-| **Match AI**                     | MATCH-AI-01                                     |
-| **Match Engine**                 | MATCH-ENGINE-01                                 |
-| **Player Match Data**            | `statistics.players` + optional `playerId`      |
-| Asset Pack 01                    | herby, ikony, tekstury                          |
-| UI Shell Polish                  | nav / topbar / rail                             |
-| Live UI + LiveMatchRuntime       | broadcast + **Live Bridge**                     |
-| **Canvas Renderer**              | 2D + EventBus FX + LIVE/REPLAY (`d752d22`)      |
-| **Replay**                       | buffer + controller (`cf1d68c`)                 |
-| **Post Match**                   | summary + seek Replay (`b25f479`)               |
-| **Live Bridge**                  | wiring Canvas/Replay/Post Match (`33618e9`)     |
-| **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)                  |
-| GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                        |
-| **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF            |
-| **AI-DOCS-CONSOLIDATION-01**     | Handbook Agenta (SSOT FIRST; bez nowych plików) |
+| Item                             | Notatka                                            |
+| -------------------------------- | -------------------------------------------------- |
+| Monorepo + infra                 | Next, Supabase, Vercel, CI                         |
+| LFE EPIC-1…7                     | Foundation → Positioning                           |
+| LFE Architecture Freeze          | PUBLIC API v1 kontrakt                             |
+| **Gameplay Foundation**          | tactics, events, tactical commands                 |
+| **Match AI**                     | MATCH-AI-01                                        |
+| **Match Engine**                 | MATCH-ENGINE-01                                    |
+| **Player Match Data**            | `statistics.players` + optional `playerId`         |
+| Asset Pack 01                    | herby, ikony, tekstury                             |
+| UI Shell Polish                  | nav / topbar / rail                                |
+| Live UI + LiveMatchRuntime       | broadcast + **Live Bridge**                        |
+| **Canvas Renderer**              | 2D + EventBus FX + LIVE/REPLAY (`d752d22`)         |
+| **Replay**                       | buffer + controller (`cf1d68c`)                    |
+| **Post Match**                   | summary + seek Replay (`b25f479`)                  |
+| **Player Ratings**               | Post Match XI + MVP derive (LFE-PLAYER-RATINGS-01) |
+| **Live Bridge**                  | wiring Canvas/Replay/Post Match (`33618e9`)        |
+| **CI Prettier**                  | LFE-CI-PRETTIER-01 (`fbbebea`)                     |
+| GDD-01…12                        | §3–5, §7–15 (+ UI Guide)                           |
+| **Docs sync (LFE-DOCS-SYNC-01)** | Status / arch / roadmap / AI-HANDOFF               |
+| **AI-DOCS-CONSOLIDATION-01**     | Handbook Agenta (SSOT FIRST; bez nowych plików)    |
 
 ## IN PROGRESS 🔄
 
@@ -41,15 +42,15 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 
 ## PLANNED ⬜
 
-| Item                         | Zależność                                          |
-| ---------------------------- | -------------------------------------------------- |
-| Player Ratings               | Post Match + dane zawodnika (`playerId` już w LFE) |
-| GDD-13 §6 Rozwój klubu       | Owner GO (docs)                                    |
-| Zawężenie LFE PUBLIC exports | chore packaging                                    |
-| Transfer Market              | GDD §12                                            |
-| Economy                      | GDD §14                                            |
-| League live                  | GDD §10 + backend                                  |
-| Multiplayer                  | późna faza                                         |
+| Item                         | Zależność                  |
+| ---------------------------- | -------------------------- |
+| GDD-13 §6 Rozwój klubu       | Owner GO (docs)            |
+| Zawężenie LFE PUBLIC exports | chore packaging            |
+| Transfer Market              | GDD §12                    |
+| Economy                      | GDD §14                    |
+| League live                  | GDD §10 + backend          |
+| Multiplayer                  | późna faza                 |
+| Ratings v2 (assists/minutes) | bogatsze Player Match Data |
 
 ## FUTURE
 
@@ -75,4 +76,4 @@ Match pipeline na `main`: LFE (AI+Engine+Player Match Data) + Web (Canvas · Rep
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-PLAYER-RATINGS-01

@@ -44,17 +44,18 @@ Indeks pełny: [`docs/README.md`](./README.md). Chronologia docs: [`docs/CHANGEL
 
 ### Ukończone EPIC-i (kod na `main`)
 
-| ID                                 | Status | Hash (orient.) |
-| ---------------------------------- | ------ | -------------- |
-| LFE EPIC-1…7                       | ✅     | —              |
-| GAMEPLAY / MATCH-AI / MATCH-ENGINE | ✅     | `e449400`…     |
-| LFE-PLAYER-MATCH-DATA-01           | ✅     | `4d43661`      |
-| LFE-CI-PRETTIER-01                 | ✅     | `fbbebea`      |
-| LFE-CANVAS-RENDERER-01             | ✅     | `d752d22`      |
-| LFE-REPLAY-01                      | ✅     | `cf1d68c`      |
-| LFE-POST-MATCH-01                  | ✅     | `b25f479`      |
-| LFE-LIVE-BRIDGE-01                 | ✅     | `33618e9`      |
-| LFE-DOCS-SYNC-01                   | ✅     | `60ccc66`      |
+| ID                                 | Status | Hash (orient.)           |
+| ---------------------------------- | ------ | ------------------------ |
+| LFE EPIC-1…7                       | ✅     | —                        |
+| GAMEPLAY / MATCH-AI / MATCH-ENGINE | ✅     | `e449400`…               |
+| LFE-PLAYER-MATCH-DATA-01           | ✅     | `4d43661`                |
+| LFE-CI-PRETTIER-01                 | ✅     | `fbbebea`                |
+| LFE-CANVAS-RENDERER-01             | ✅     | `d752d22`                |
+| LFE-REPLAY-01                      | ✅     | `cf1d68c`                |
+| LFE-POST-MATCH-01                  | ✅     | `b25f479`                |
+| LFE-LIVE-BRIDGE-01                 | ✅     | `33618e9`                |
+| LFE-DOCS-SYNC-01                   | ✅     | `60ccc66`                |
+| LFE-PLAYER-RATINGS-01              | ✅     | (local / pending commit) |
 
 Szczegóły statusu: [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).
 
@@ -220,10 +221,10 @@ Env: [`ENVIRONMENT.md`](./ENVIRONMENT.md) · Setup: [`DEV_SETUP.md`](./DEV_SETUP
 
 | Priorytet | EPIC                                      | Status            |
 | --------- | ----------------------------------------- | ----------------- |
-| 1         | Player Ratings (Post Match)               | PLANNED           |
-| 2         | GDD-13 §6 Rozwój klubu                    | PLANNED (docs)    |
-| 3         | Transfer / Economy / League / Multiplayer | FUTURE            |
+| 1         | GDD-13 §6 Rozwój klubu                    | PLANNED (docs)    |
+| 2         | Transfer / Economy / League / Multiplayer | FUTURE            |
 | —         | Physics / pełne Rules                     | FUTURE / RESERVED |
+| —         | Ratings v2 (assists / minutes)            | FUTURE            |
 
 Źródło: [`ROADMAP.md`](./ROADMAP.md).
 
@@ -233,7 +234,7 @@ Env: [`ENVIRONMENT.md`](./ENVIRONMENT.md) · Setup: [`DEV_SETUP.md`](./DEV_SETUP
 
 - Spatial ≈ kickoff + presentation derive (brak Physics).
 - Replay = ring buffer w RAM (brak persist / video).
-- `playerId` na GOAL/SHOT/FOUL jest; **Ratings UI** jeszcze nie.
+- `playerId` na GOAL/SHOT/FOUL jest; **Ratings UI** (v1) w Post Match — formuła bez assists/minutes.
 - Pola `assists` / `minutesPlayed` / passes / karty w `PlayerStatistics` często 0.
 - `packages/lfe/src/index.ts` over-export vs freeze.
 
@@ -275,4 +276,4 @@ Env: [`ENVIRONMENT.md`](./ENVIRONMENT.md) · Setup: [`DEV_SETUP.md`](./DEV_SETUP
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-PLAYER-RATINGS-01

@@ -44,11 +44,11 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Następne (poza silnikiem / LFE)
 
-- Web match pipeline (Canvas / Replay / Post Match / Live Bridge) — **DONE** na `main` (patrz [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md))
-- Player Ratings (Post Match) — wymaga `playerId` ✅ już w LFE
+- Web match pipeline (Canvas / Replay / Post Match / Live Bridge / **Player Ratings**) — **DONE** (Ratings: local pending commit)
 - Physics / pełne Rules — **FUTURE** (Owner GO)
 - Zawężenie public `index.ts` do freeze
 - Subpath exports `advanced` / `testing`
+- Ratings v2 (assists / minutes) — FUTURE
 
 ## Najważniejsze decyzje
 
@@ -63,4 +63,4 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-SYNC-01
+2026-07-24 — LFE-PLAYER-RATINGS-01

@@ -6,12 +6,12 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Aktualny etap
 
-**Etap:** Match pipeline na `main` — LFE (AI+Engine+Player Match Data) + Web (Live Bridge · Canvas · Replay · Post Match). CI Prettier zielony.
+**Etap:** Match pipeline na `main` — LFE (AI+Engine+Player Match Data) + Web (Live Bridge · Canvas · Replay · Post Match · **Player Ratings**). CI Prettier zielony.
 
 | Tor            | Etap                                                                               |
 | -------------- | ---------------------------------------------------------------------------------- |
 | Engine         | EPIC-1…7 + **Gameplay + AI + Engine** + **Player Match Data** · `0.9.1-match-ai01` |
-| Web match      | Pre → Live → Canvas → Replay → Post Match (Live Bridge)                            |
+| Web match      | Pre → Live → Canvas → Replay → Post Match (+ **Ratings**)                          |
 | Product design | GDD-01…12 CLOSED · §6 skeleton                                                     |
 | Infra          | Vercel + Supabase + CI (format gate PASS)                                          |
 
@@ -35,6 +35,7 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 - **Canvas Renderer 2D** (LIVE/REPLAY)
 - **Replay** buffer + controller
 - **Post Match** summary + seek do Replay
+- **Player Ratings** — pure derive XI + MVP (1.0–10.0) w Post Match
 
 ### Infra
 
@@ -43,16 +44,15 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Co jest w trakcie
 
-- Brak otwartego EPIC implementacyjnego.
-- **AI-DOCS-CONSOLIDATION-01** — handbook Agenta uzupełniony lokalnie (commit tylko po Owner GO).
+- Brak otwartego EPIC implementacyjnego (Ratings lokalnie — COMMIT po Owner GO).
 - Dług: zawężenie PUBLIC LFE exports.
 
 ## Co następne (rekomendacja)
 
-1. **Player Ratings** na Post Match.
-2. GDD-13 §6 (docs).
-3. Transfer / Economy / League / Multiplayer — później.
-4. Physics / Rules — FUTURE.
+1. GDD-13 §6 (docs).
+2. Transfer / Economy / League / Multiplayer — później.
+3. Physics / Rules — FUTURE.
+4. Ratings v2 (assists / minutes) — FUTURE.
 
 ## Otwarte decyzje
 
@@ -69,4 +69,4 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-PLAYER-RATINGS-01

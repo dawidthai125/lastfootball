@@ -7,7 +7,21 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Match pipeline na `main`. Handbook Agenta uzupełniony (AI-DOCS-CONSOLIDATION-01).
+Match pipeline + **Player Ratings** (Post Match derive). Handbook Agenta aktualny.
+
+---
+
+## [2026-07-24] — LFE-PLAYER-RATINGS-01
+
+### Web
+
+- Pure derive ocen XI (1.0–10.0) + MVP w Post Match (`player-ratings.ts`)
+- `PostMatchSummary.ratings` / `mvpPlayerId`; UI lista ocen + badge MVP
+- Bez zmian LFE / Engine / Canvas / Replay
+
+### Docs
+
+- `MATCH_UI_PIPELINE`, status, roadmap, handoff, changelog
 
 ---
 

@@ -10,7 +10,7 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 | Tor           | Stan                                                                                         |
 | ------------- | -------------------------------------------------------------------------------------------- |
 | **LFE**       | EPIC-1…7 + Gameplay + AI + Engine + **Player Match Data** · **`0.9.1-match-ai01`** na `main` |
-| **Web match** | Live Bridge + Canvas + Replay + Post Match na `main` (`33618e9`)                             |
+| **Web match** | Live Bridge + Canvas + Replay + Post Match + **Ratings**                                     |
 | **UI shell**  | Asset Pack + Shell polish na `main`                                                          |
 | **GDD**       | GDD-01…12 CLOSED · §6 skeleton                                                               |
 | **CI**        | Format → Typecheck → Lint → Test → Build — zielony po Prettier chore                         |
@@ -39,8 +39,8 @@ Pełny handbook: **[`AI-HANDOFF.md`](./AI-HANDOFF.md)** ← czytaj gdy potrzebuj
 
 ## Najbliższy cel (rekomendacja)
 
-1. **Player Ratings** (Post Match) — Owner GO.
-2. Albo GDD-13 §6 (docs).
+1. **GDD-13 §6** (docs) — Owner GO.
+2. Albo Ratings v2 / Transfer / Economy — później.
 
 Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow).
 
@@ -53,4 +53,4 @@ Przed startem: przeczytaj [`AI-HANDOFF.md`](./AI-HANDOFF.md) (reguły + workflow
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-24 — LFE-PLAYER-RATINGS-01
