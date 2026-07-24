@@ -4,6 +4,8 @@ import { LandingCta } from '@/components/landing/LandingCta';
 import { signOut } from '@/lib/auth/actions';
 import { getAuthUser } from '@/lib/auth/session';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Witaj',
   robots: { index: false, follow: false },

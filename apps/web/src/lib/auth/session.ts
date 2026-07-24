@@ -1,8 +1,10 @@
 import type { User } from '@supabase/supabase-js';
 
+import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 
 export async function getAuthUser(): Promise<User | null> {
+  if (!env.isSupabaseConfigured) return null;
   const supabase = await createClient();
   const {
     data: { user },
@@ -11,6 +13,7 @@ export async function getAuthUser(): Promise<User | null> {
 }
 
 export async function userHasClub(userId: string): Promise<boolean> {
+  if (!env.isSupabaseConfigured) return false;
   const supabase = await createClient();
   const {
     data: { user },
