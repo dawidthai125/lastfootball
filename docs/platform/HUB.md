@@ -1,4 +1,4 @@
-# Platform — Hub (LFE-HUB-01 + LFE-LEAGUE-01/02)
+# Platform — Hub (LFE-HUB-01 + LFE-LEAGUE-01/02 + LFE-ECONOMY-01)
 
 ## Cel
 
@@ -40,6 +40,17 @@ First Match (`id=first`) **nie** jest wierszem `fixtures`.
 | Chip pozycji | `resolvePlayerLeaguePositionLabel(table)` — jedna linia               |
 | UI `/league` | konsumuje tylko resolver                                              |
 
+## Finance SSOT (LFE-ECONOMY-01)
+
+| Fakt           | SSOT                                                       |
+| -------------- | ---------------------------------------------------------- |
+| Saldo          | `clubs.cash_balance`                                       |
+| Historia       | `finance_movements`                                        |
+| UI kontrakt    | **wyłącznie** `resolveClubFinance(...)` → `ClubFinanceDto` |
+| Chip kasy      | jedna linia na Hubie (SEASON); **bez** trendu              |
+| Unlock Finanse | Nav + Secondary open na `SEASON`                           |
+| Stałe Thin     | `ECONOMY_THIN` — **tymczasowe do GDD §26**                 |
+
 ## Decision layout (EARLY_CLUB + SEASON)
 
 Jeden wspólny layout (`EarlyClubHub`) — bez osobnego SeasonHub:
@@ -47,27 +58,27 @@ Jeden wspólny layout (`EarlyClubHub`) — bez osobnego SeasonHub:
 1. Hero — Club DTO
 2. Last Match Strip — First Match copy **lub** ostatni played fixture
 3. **Exactly 1** Primary CTA — mecz (upcoming) lub „Zobacz skład”
-4. ≤5 Secondary (Terminarz open gdy fixtures; **Tabela** open na SEASON)
-5. Lekki status (IV liga, **pozycja**, stadion, kolejka)
+4. ≤5 Secondary (Terminarz; **Tabela** + **Finanse** open na SEASON)
+5. Lekki status (IV liga, pozycja, **kasa**, stadion, kolejka)
 6. Jedna wiadomość zarządu
 
 ## Progressive unlock (shell)
 
 **EARLY_CLUB open:** Panel, Klub, Kadra, Terminarz, Wiadomości, Profil, Ustawienia, Osiągnięcia, Status.  
-**SEASON dodatkowo open:** Liga.  
-Soft-lock: Trening, Akademia, Skauting, Transfery, Finanse, Sponsorzy, Zarząd, Stadion (+ Liga na EARLY_CLUB).
+**SEASON dodatkowo open:** Liga, **Finanse**.  
+Soft-lock: Trening, Akademia, Skauting, Transfery, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EARLY_CLUB).
 
 Implementacja: `resolveNavAccess(itemId, phase)` + `hasFixtures` z `ClubProvider` (game layout).
 
 ## Zakazane
 
-Kolejka 12 FOMO, Top 4 fiction, finanse € mid, trening peer-CTA, „okno transferowe”, kontuzje mid-season, `dashboardMock` / `sessionChrome` na ścieżce Hub / `/league`, standings DB.
+Kolejka 12 FOMO, Top 4 fiction, trening peer-CTA, „okno transferowe”, kontuzje mid-season, `dashboardMock` / `sessionChrome` na ścieżce Hub / `/league` / `/finance`, standings DB, UI czytające saldo bezpośrednio z DB.
 
 ## Powiązania
 
-Kod: `components/hub/EarlyClubHub.tsx` · `lib/hub/*` · `lib/fixtures/*` · `lib/league/*` · shell layout.  
-GDD: §23 (z wyjątkiem Hub-before-match → tunnel) · §10 (tabela).
+Kod: `components/hub/EarlyClubHub.tsx` · `lib/hub/*` · `lib/fixtures/*` · `lib/league/*` · `lib/finance/*` · shell layout.  
+GDD: §23 · §10 · §14 (kategorie; liczby → §26).
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

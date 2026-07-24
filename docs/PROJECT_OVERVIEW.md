@@ -17,7 +17,7 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 | Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures                        |
 | Physics / pełne Rules | **Nie rozpoczęte**                                               |
 
-**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `71ce442`  
+**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `a70cf81`  
 **Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/
 
 ## Opis działania (produkt)
@@ -53,4 +53,4 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

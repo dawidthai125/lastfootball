@@ -103,9 +103,17 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); generator nadal 3 fixtures.  
 **Źródło:** LFE-LEAGUE-02 (prod `71ce442`).
 
+### D18 — Club cash SSOT + `resolveClubFinance` (Finance Thin) · CLOSED
+
+**Dlaczego:** finanse na ścieżce produktowej nie mogą być mockiem; Hub i `/finance` potrzebują jednej kasy.  
+**Zasada:** `clubs.cash_balance` = jedyne SSOT salda; `finance_movements` = historia; **`resolveClubFinance()` → `ClubFinanceDto`** = jedyny kontrakt UI (UI nie czyta DB bezpośrednio); seed przy create club; nagroda W/D/L tylko przy pierwszym przejściu fixture → `played`; Finanse odblokowane na `SEASON`.  
+**Tymczasowe stałe Thin** (`ECONOMY_THIN`) do czasu GDD **§26**: `STARTER_CASH=100000`, `REWARD_WIN=5000`, `REWARD_DRAW=2500`, `REWARD_LOSS=1000` (waluta Thin: EUR).  
+**Poza Thin:** pensje, bilety, sponsorzy, transfer envelope, Transfers.  
+**Źródło:** LFE-ECONOMY-01 (prod `a70cf81`).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D17 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D18 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 
 ## Powiązania
 
@@ -113,4 +121,4 @@ Każde złamanie D1–D17 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

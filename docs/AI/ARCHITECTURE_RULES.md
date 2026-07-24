@@ -25,23 +25,26 @@ supabase/ (Auth + Postgres migrations)
 
 ## Product SSOT (platform)
 
-| Fakt              | SSOT                                                |
-| ----------------- | --------------------------------------------------- |
-| Tożsamość klubu   | tabela `clubs` → `ClubDto`                          |
-| Odblokowanie Hub  | `clubs.first_match_completed_at`                    |
-| Faza Hub          | `resolveHubPhase(club)` wyłącznie                   |
-| Sesja Hub         | `resolveHubSession(phase, next, lastPlayed)`        |
-| Primary CTA Hub   | `resolvePrimaryCta(phase, session, ctx)` wyłącznie  |
-| Terminarz ligowy  | `fixtures` → `FixtureDto` / `getNextFixture`        |
-| Kadra             | `resolveClubSquad(club)`                            |
-| Routing post-auth | `getPostAuthPath` + middleware (club + first match) |
+| Fakt              | SSOT                                                   |
+| ----------------- | ------------------------------------------------------ |
+| Tożsamość klubu   | tabela `clubs` → `ClubDto`                             |
+| Odblokowanie Hub  | `clubs.first_match_completed_at`                       |
+| Faza Hub          | `resolveHubPhase(club)` wyłącznie                      |
+| Sesja Hub         | `resolveHubSession(phase, next, lastPlayed)`           |
+| Primary CTA Hub   | `resolvePrimaryCta(phase, session, ctx)` wyłącznie     |
+| Terminarz ligowy  | `fixtures` → `FixtureDto` / `getNextFixture`           |
+| Saldo kasy        | `clubs.cash_balance`                                   |
+| Historia finansów | `finance_movements`                                    |
+| Finance UI        | `resolveClubFinance(...)` → `ClubFinanceDto` wyłącznie |
+| Kadra             | `resolveClubSquad(club)`                               |
+| Routing post-auth | `getPostAuthPath` + middleware (club + first match)    |
 
 ## Hub rules (LFE-HUB-01)
 
 - Hub dostępny **dopiero** po First Match.
 - Hub = **ekran decyzji**, nie dashboard analytics.
 - Dokładnie **1 Primary CTA**.
-- Progressive disclosure — głębokie moduły soft-lock („wkrótce”).
+- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse open na `SEASON`.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
 
 ## REUSE FIRST / ZERO DUPLICATE
@@ -54,9 +57,10 @@ supabase/ (Auth + Postgres migrations)
 
 - **GDD** = SSOT intencji produktu ([`GAME_DESIGN_DOCUMENT.md`](../game-design/GAME_DESIGN_DOCUMENT.md)).
 - Świadomy wyjątek onboardingu: GDD §5.10 sugeruje Hub „nowy klub” przed meczem; **produkt live** używa First Match tunnel przed Hubem (LFE-MATCH-01). Dokumentuj wyjątek, nie „naprawiaj” GDD w kodzie bez Owner GO.
+- Stałe ekonomii Thin (`ECONOMY_THIN`) są **tymczasowe** do GDD §26 (D18).
 
 Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](./DECISIONS.md).
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

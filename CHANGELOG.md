@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (LFE-LEAGUE-02 CLOSE — awaiting Owner GO docs commit)
+### Docs (LFE-ECONOMY-01 CLOSE — awaiting Owner GO docs commit)
 
-- Status / baseline sync: LFE-LEAGUE-02 CLOSED · prod `71ce442`
+- Status / baseline sync: LFE-ECONOMY-01 CLOSED · prod `a70cf81`
+
+### Added (shipped on `main` — LFE-ECONOMY-01)
+
+- Club cash SSOT (`clubs.cash_balance`) + `finance_movements` ledger
+- `resolveClubFinance()` → `ClubFinanceDto` (sole UI contract)
+- Seed on club create; match reward on first `completeFixture` → `played`
+- `/finance` without mocks; Finanse unlock + Hub cash chip on `SEASON`
+- Temporary Thin constants pending GDD §26 (`ECONOMY_THIN`)
 
 ### Added (shipped on `main` — LFE-LEAGUE-02)
 

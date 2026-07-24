@@ -6,8 +6,8 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`71ce442`** (LFE-LEAGUE-02 CLOSED).  
-LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures SSOT + league derive + match pipeline.
+Monorepo. Production baseline **`a70cf81`** (LFE-ECONOMY-01 CLOSED).  
+LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures + league derive + Finance Thin + match pipeline.
 
 ---
 
@@ -16,7 +16,7 @@ LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub
 ### Frontend (`apps/web`)
 
 - Next.js 15 App Router.
-- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub (EARLY_CLUB / SEASON), `/league`.
+- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub (EARLY_CLUB / SEASON), `/league`, `/finance`.
 - **Shell:** TopBar / LeftNav / Right rail — progressive unlock per Hub phase.
 - **Match:** Pre Match, Live (`LiveMatchFoundation` + `LiveMatchRuntime`), Post Match.
 - `/status` → `getEngineStatus()`.
@@ -31,7 +31,7 @@ Canvas i Replay są **read-only** względem Engine. Post Match buduje raport z E
 
 ### Supabase
 
-Auth + `clubs` (identity, `first_match_completed_at`) + **`fixtures`** (ligowy terminarz Thin A). **Nie** jest zależnością LFE.
+Auth + `clubs` (identity, `first_match_completed_at`, **`cash_balance`**) + **`fixtures`** + **`finance_movements`**. **Nie** jest zależnością LFE.
 
 ---
 
@@ -42,11 +42,12 @@ Landing → Auth → Welcome → Club Wizard
   → First Match Intro → Prematch/Live/Post
   → Welcome LF → Hub (EARLY_CLUB → SEASON gdy fixtures)
   → /league ← resolveLeagueTable()
+  → /finance ← resolveClubFinance()
 ```
 
 SSOT unlock Hub: `clubs.first_match_completed_at`.  
 Hub phase: `resolveHubPhase(club, { hasFixtures })` · Session: `resolveHubSession` · Primary: `resolvePrimaryCta`.  
-Fixtures: `fixtures` / `getNextFixture` · Table: `resolveLeagueTable` · Squad: `resolveClubSquad`.
+Fixtures: `fixtures` / `getNextFixture` · Table: `resolveLeagueTable` · Cash: `cash_balance` · Finance UI: `resolveClubFinance` · Squad: `resolveClubSquad`.
 
 Szczegóły: [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`platform/HUB.md`](./platform/HUB.md).
 
@@ -127,4 +128,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

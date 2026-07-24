@@ -7,14 +7,14 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Stan (2026-07-25) — PRODUCTION VERIFIED · GREEN
 
-| Tor                | Stan                                                               |
-| ------------------ | ------------------------------------------------------------------ |
-| **Baseline**       | `71ce442` · LFE-LEAGUE-02 CLOSED · https://lastfootball.vercel.app |
-| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON + tabela   |
-| **Hub**            | SEASON (S1) · Primary next match · Liga open · chip pozycji        |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings    |
-| **GDD**            | GDD-01…15 CLOSED                                                   |
-| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                 |
+| Tor                | Stan                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| **Baseline**       | `a70cf81` · LFE-ECONOMY-01 CLOSED · https://lastfootball.vercel.app   |
+| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON · liga · kasa |
+| **Hub**            | SEASON · Primary next match · Liga + Finanse open · chip pozycji/kasy |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings       |
+| **GDD**            | GDD-01…15 CLOSED                                                      |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                    |
 
 ## Kolejność czytania
 
@@ -26,8 +26,8 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Najbliższy cel
 
-**Next:** GDD-16+ **lub** Economy / Transfers — Owner wybiera.  
-Opcjonalnie: pełny kalendarz 11 fixtures.
+**Next:** GDD-16+ **lub** players DB / Transfers — Owner wybiera.  
+GDD §26 zastąpi stałe Thin ekonomii (`ECONOMY_THIN`).
 
 ## Zasady twarde
 
@@ -37,7 +37,8 @@ Opcjonalnie: pełny kalendarz 11 fixtures.
 - Canvas/Replay nie wołają Engine.
 - REUSE FIRST · ZERO DUPLICATE · SSOT FIRST.
 - Tabela ligowa = wyłącznie `resolveLeagueTable()` (D17).
+- Finanse = wyłącznie `resolveClubFinance()`; saldo = `cash_balance` (D18).
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-02 CLOSE
+2026-07-25 — LFE-ECONOMY-01 CLOSE

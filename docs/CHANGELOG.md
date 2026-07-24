@@ -7,8 +7,22 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`71ce442`** (LFE-LEAGUE-02 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
-Platform + First Match + Hub SEASON + fixtures Thin A + league table derive.
+Production baseline **`a70cf81`** (LFE-ECONOMY-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
+Platform + First Match + Hub SEASON + fixtures + league table + Finance Thin Slice.
+
+---
+
+## [2026-07-25] — LFE-ECONOMY-01 · CLOSED
+
+### Product
+
+- `clubs.cash_balance` = SSOT salda; `finance_movements` = historia
+- `resolveClubFinance()` → `ClubFinanceDto` = jedyny kontrakt UI (pole `currency`)
+- Seed `STARTER_CASH=100000` przy create club; nagroda W/D/L przy pierwszym `played`
+- `/finance` bez mocka; Nav/Secondary Finanse + Hub chip kasy na `SEASON`
+- Post Match: jedna linia nagrody (league)
+- Stałe Thin tymczasowe do GDD §26 (`ECONOMY_THIN`)
+- Prod commit `a70cf81`; migracja applied; CI + Vercel GREEN
 
 ---
 
