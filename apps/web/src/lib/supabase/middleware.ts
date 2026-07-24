@@ -50,14 +50,21 @@ export async function updateSession(request: NextRequest): Promise<{
 
   let hasClub = false;
   if (user) {
-    const metaClub = user.user_metadata?.has_club === true;
     const { data, error } = await supabase
       .from('clubs')
       .select('id')
       .eq('owner_id', user.id)
       .maybeSingle();
     const clubRow = data as { id: string } | null;
-    hasClub = metaClub || (!error && Boolean(clubRow?.id));
+    const fromTable = !error && Boolean(clubRow?.id);
+
+    // Dev-only metadata fallback — production routing uses clubs table only.
+    const metaFallback =
+      process.env.NODE_ENV === 'development' &&
+      process.env.LFE_DEV_CLUB_META_FALLBACK === '1' &&
+      user.user_metadata?.has_club === true;
+
+    hasClub = fromTable || metaFallback;
   }
 
   return { response, userId: user?.id ?? null, hasClub, configured: true };

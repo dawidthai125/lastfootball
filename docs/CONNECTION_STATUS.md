@@ -20,18 +20,18 @@
 
 ## Supabase — PASS
 
-| Check              | Result                                                             |
-| ------------------ | ------------------------------------------------------------------ |
-| Project            | `lastfootball` · ref `ewgllyswhtlkdtiqsqrt` · Stockholm            |
-| Link               | `supabase link` done                                               |
-| Migrations         | `20260722000000_infra_bootstrap.sql` pushed                        |
-| `infra_meta`       | row `bootstrap=ready` (service_role verified)                      |
-| RLS                | enabled on `infra_meta`                                            |
-| Types              | `apps/web/src/types/database.ts`                                   |
-| Clients            | typed `Database` (browser / server / admin)                        |
-| Auth URLs          | site `https://lastfootball.vercel.app` + allowlist localhost / www |
-| Edge               | stub `supabase/functions/health` (not deployed yet)                |
-| Storage / Realtime | enabled in project config                                          |
+| Check                  | Result                                                             |
+| ---------------------- | ------------------------------------------------------------------ |
+| Project                | `lastfootball` · ref `anoeimngwptucjdugjme`                        |
+| Link                   | rebind LFE-INFRA-01 — update via `supabase link` when needed       |
+| Migrations             | infra bootstrap + clubs auth prep + clubs identity                 |
+| `infra_meta` / `clubs` | verified after rebind (service_role)                               |
+| RLS                    | enabled on `infra_meta`                                            |
+| Types                  | `apps/web/src/types/database.ts`                                   |
+| Clients                | typed `Database` (browser / server / admin)                        |
+| Auth URLs              | site `https://lastfootball.vercel.app` + allowlist localhost / www |
+| Edge                   | stub `supabase/functions/health` (not deployed yet)                |
+| Storage / Realtime     | enabled in project config                                          |
 
 ## CI/CD — PASS
 

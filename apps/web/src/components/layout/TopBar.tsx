@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
+import { useClubIdentity } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
@@ -29,6 +30,10 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: '
 
 export function TopBar() {
   const { server, season, day, money, premium, energy, notifications, player } = sessionChrome;
+  const club = useClubIdentity({
+    name: player.club,
+    shortName: 'FCL',
+  });
   const { toggleNotifications } = useOverlay();
   const { toggleNav, navCollapsed } = useShell();
 
@@ -82,7 +87,14 @@ export function TopBar() {
           minWidth: 0,
         }}
       >
-        <ClubCrest shortName="FCL" clubName="FC Lastovia" size="sm" style={{ lineHeight: 0 }} />
+        <ClubCrest
+          shortName={club.shortName}
+          clubName={club.name}
+          crestTemplateId={club.crestTemplateId}
+          accentColor={club.primaryColor}
+          size="sm"
+          style={{ lineHeight: 0 }}
+        />
         <div className="hidden min-w-0 sm:block">
           <div
             className="truncate font-[family-name:var(--font-ui)] font-bold uppercase"
@@ -104,7 +116,7 @@ export function TopBar() {
               textTransform: 'uppercase',
             }}
           >
-            {player.club}
+            {club.name}
           </div>
         </div>
       </Link>

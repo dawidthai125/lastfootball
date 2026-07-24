@@ -14,6 +14,9 @@ export type Database = {
           owner_id: string;
           name: string;
           short_name: string;
+          primary_color: string;
+          secondary_color: string;
+          crest_template_id: string;
           created_at: string;
         };
         Insert: {
@@ -21,6 +24,9 @@ export type Database = {
           owner_id: string;
           name: string;
           short_name: string;
+          primary_color?: string;
+          secondary_color?: string;
+          crest_template_id?: string;
           created_at?: string;
         };
         Update: {
@@ -28,6 +34,9 @@ export type Database = {
           owner_id?: string;
           name?: string;
           short_name?: string;
+          primary_color?: string;
+          secondary_color?: string;
+          crest_template_id?: string;
           created_at?: string;
         };
         Relationships: [];

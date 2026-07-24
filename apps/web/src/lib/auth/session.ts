@@ -15,12 +15,19 @@ export async function getAuthUser(): Promise<User | null> {
 export async function userHasClub(userId: string): Promise<boolean> {
   if (!env.isSupabaseConfigured) return false;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user?.id === userId && user.user_metadata?.has_club === true) {
-    return true;
+
+  // Dev-only metadata fallback (smoke/manual unlock). Production SSOT = clubs table.
+  const allowMetaFallback =
+    process.env.NODE_ENV === 'development' && process.env.LFE_DEV_CLUB_META_FALLBACK === '1';
+  if (allowMetaFallback) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user?.id === userId && user.user_metadata?.has_club === true) {
+      return true;
+    }
   }
+
   const { data, error } = await supabase
     .from('clubs')
     .select('id')

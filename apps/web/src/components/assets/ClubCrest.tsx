@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 
-import { crestSrc } from '@/assets';
+import { crestSrc, type CrestKey } from '@/assets';
+import { crestSrcByTemplateId } from '@/lib/club/catalog';
 
 const sizeMap = {
   sm: 'var(--lf-space-6)',
@@ -14,18 +15,32 @@ export type ClubCrestSize = keyof typeof sizeMap;
 type ClubCrestProps = {
   shortName?: string | null;
   clubName?: string | null;
+  /** Explicit pack crest key from clubs.crest_template_id */
+  crestTemplateId?: string | null;
   label?: string;
   size?: ClubCrestSize;
   style?: CSSProperties;
+  /** Accent ring from club primary color */
+  accentColor?: string | null;
 };
 
 /**
  * Club crest from Asset Pack — replaces letter monograms.
  * Swap SVG under public/assets/pack-01/crests to upgrade art.
  */
-export function ClubCrest({ shortName, clubName, label, size = 'lg', style }: ClubCrestProps) {
+export function ClubCrest({
+  shortName,
+  clubName,
+  crestTemplateId,
+  label,
+  size = 'lg',
+  style,
+  accentColor,
+}: ClubCrestProps) {
   const dim = sizeMap[size];
-  const src = crestSrc(shortName, clubName);
+  const src = crestTemplateId
+    ? crestSrcByTemplateId(crestTemplateId)
+    : crestSrc(shortName, clubName);
   const alt = label ?? clubName ?? shortName ?? 'Herb klubu';
 
   return (
@@ -45,6 +60,7 @@ export function ClubCrest({ shortName, clubName, label, size = 'lg', style }: Cl
           marginInline: 'auto',
           objectFit: 'contain',
           borderRadius: 'var(--lf-radius-sm)',
+          boxShadow: accentColor ? `0 0 0 1px ${accentColor}` : undefined,
         }}
       />
       {label ? (
@@ -66,3 +82,5 @@ export function ClubCrest({ shortName, clubName, label, size = 'lg', style }: Cl
     </div>
   );
 }
+
+export type { CrestKey };

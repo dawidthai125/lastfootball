@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { ClubCrest, NavIcon } from '@/components/assets';
+import { useClubIdentity } from '@/components/club/ClubProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
 import { dashboardMock, sessionChrome } from '@/data/mock';
@@ -23,6 +24,10 @@ export function LeftNavigation() {
   const pathname = usePathname();
   const { navCollapsed } = useShell();
   const { nextMatch } = dashboardMock;
+  const club = useClubIdentity({
+    name: sessionChrome.player.club,
+    shortName: 'FCL',
+  });
 
   return (
     <aside
@@ -46,7 +51,13 @@ export function LeftNavigation() {
       >
         {!navCollapsed ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
-            <ClubCrest shortName="FCL" clubName={sessionChrome.player.club} size="sm" />
+            <ClubCrest
+              shortName={club.shortName}
+              clubName={club.name}
+              crestTemplateId={club.crestTemplateId}
+              accentColor={club.primaryColor}
+              size="sm"
+            />
             <div style={{ minWidth: 0 }}>
               <div
                 className="truncate font-[family-name:var(--font-ui)] font-semibold uppercase"
@@ -66,13 +77,19 @@ export function LeftNavigation() {
                   color: 'var(--lf-color-text-primary)',
                 }}
               >
-                {sessionChrome.player.club}
+                {club.name}
               </div>
             </div>
           </div>
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <ClubCrest shortName="FCL" clubName={sessionChrome.player.club} size="sm" />
+            <ClubCrest
+              shortName={club.shortName}
+              clubName={club.name}
+              crestTemplateId={club.crestTemplateId}
+              accentColor={club.primaryColor}
+              size="sm"
+            />
           </div>
         )}
       </div>

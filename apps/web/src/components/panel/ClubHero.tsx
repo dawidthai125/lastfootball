@@ -1,8 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
-import { sessionChrome } from '@/data/mock';
-import { dashboardMock } from '@/data/mock';
+import { useClubIdentity } from '@/components/club/ClubProvider';
+import { sessionChrome, dashboardMock } from '@/data/mock';
+import { STARTER_PACKAGE } from '@/lib/club/types';
 
 type ClubHeroProps = {
   club?: typeof dashboardMock.club;
@@ -13,6 +16,14 @@ export function ClubHero({
   club = dashboardMock.club,
   season = sessionChrome.season,
 }: ClubHeroProps) {
+  const live = useClubIdentity({
+    name: club.name,
+    shortName: club.shortName,
+  });
+
+  const stadium = live.isLive ? STARTER_PACKAGE.stadiumLabel(live.name) : club.stadium;
+  const division = live.isLive ? STARTER_PACKAGE.league : club.division;
+
   return (
     <AtmosphereLayer
       aria-label="Club Hero"
@@ -33,7 +44,13 @@ export function ClubHero({
           gap: 'var(--lf-space-4)',
         }}
       >
-        <ClubCrest shortName={club.shortName} clubName={club.name} size="xl" />
+        <ClubCrest
+          shortName={live.shortName}
+          clubName={live.name}
+          crestTemplateId={live.crestTemplateId}
+          accentColor={live.primaryColor}
+          size="xl"
+        />
 
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>
           <p
@@ -57,7 +74,7 @@ export function ClubHero({
               color: 'var(--lf-color-text-primary)',
             }}
           >
-            {club.name}
+            {live.name}
           </h1>
           <p
             style={{
@@ -67,7 +84,7 @@ export function ClubHero({
               color: 'var(--lf-color-text-muted)',
             }}
           >
-            {club.stadium} · {club.division} · Sezon {season}
+            {stadium} · {division} · Sezon {season}
           </p>
           <div
             style={{
