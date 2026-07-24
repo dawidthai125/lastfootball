@@ -48,9 +48,7 @@ export function LiveMatchFoundation({
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
   const [postMatchOpen, setPostMatchOpen] = useState(false);
 
-  const finished = snapshot
-    ? isMatchFinished(snapshot.matchState, snapshot.events)
-    : false;
+  const finished = snapshot ? isMatchFinished(snapshot.matchState, snapshot.events) : false;
 
   useEffect(() => {
     if (finished) setPostMatchOpen(true);
