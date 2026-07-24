@@ -48,12 +48,7 @@ export function RegisterForm() {
       </Field>
 
       <div className="lf-auth-form__terms">
-        <Checkbox
-          name="terms"
-          required
-          disabled={pending}
-          label="Akceptuję"
-        />
+        <Checkbox name="terms" required disabled={pending} label="Akceptuję" />
         <span className="lf-auth-form__terms-links">
           <Link href="/regulamin" className="lf-auth-form__link">
             Regulamin

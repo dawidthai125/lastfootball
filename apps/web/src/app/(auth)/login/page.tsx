@@ -14,9 +14,10 @@ type LoginPageProps = {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
-  const nextPath = params.next && params.next.startsWith('/') && !params.next.startsWith('//')
-    ? params.next
-    : undefined;
+  const nextPath =
+    params.next && params.next.startsWith('/') && !params.next.startsWith('//')
+      ? params.next
+      : undefined;
 
   let bannerError: string | null = null;
   if (params.error === 'supabase_unconfigured' || !env.isSupabaseConfigured) {

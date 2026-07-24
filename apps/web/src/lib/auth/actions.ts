@@ -11,7 +11,8 @@ import { createClient } from '@/lib/supabase/server';
 function mapAuthError(message: string): string {
   const m = message.toLowerCase();
   if (m.includes('invalid login credentials')) return 'Nieprawidłowy email lub hasło.';
-  if (m.includes('user already registered')) return 'Konto z tym emailem już istnieje. Zaloguj się.';
+  if (m.includes('user already registered'))
+    return 'Konto z tym emailem już istnieje. Zaloguj się.';
   if (m.includes('password')) return 'Hasło nie spełnia wymagań (min. 6 znaków).';
   if (m.includes('email')) return 'Podaj poprawny adres email.';
   if (m.includes('rate')) return 'Zbyt wiele prób. Spróbuj za chwilę.';

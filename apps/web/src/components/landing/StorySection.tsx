@@ -25,7 +25,8 @@ export function StorySection({ id, eyebrow, title, children, visual, reverse }: 
     if (!node) return;
 
     const reduced =
-      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
       setVisible(true);
       return;

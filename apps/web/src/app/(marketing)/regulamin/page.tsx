@@ -12,7 +12,9 @@ export default function TermsPage() {
   return (
     <div className="lf-landing__gate">
       <h1>Regulamin</h1>
-      <p>Treść prawna pojawi się przed otwarciem rejestracji (P2). Placeholder pod link z Landingu.</p>
+      <p>
+        Treść prawna pojawi się przed otwarciem rejestracji (P2). Placeholder pod link z Landingu.
+      </p>
       <LandingCta href="/" variant="primary">
         Wróć
       </LandingCta>

@@ -17,8 +17,8 @@ export default function ClubOnboardingStubPage() {
       <p className="lf-landing__eyebrow">Kreacja klubu</p>
       <h1>Wizard klubu — następny etap</h1>
       <p className="lf-landing__gate-lead">
-        Tu powstanie kreacja tożsamości (nazwa, barwy, herb) i zapis do tabeli{' '}
-        <code>clubs</code>. Po P3 ten ekran odblokuje Hub.
+        Tu powstanie kreacja tożsamości (nazwa, barwy, herb) i zapis do tabeli <code>clubs</code>.
+        Po P3 ten ekran odblokuje Hub.
       </p>
       <div className="lf-landing__cta-row">
         <LandingCta href="/welcome" variant="secondary">

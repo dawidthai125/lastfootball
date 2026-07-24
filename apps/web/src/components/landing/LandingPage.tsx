@@ -13,7 +13,11 @@ export function LandingPage() {
   return (
     <>
       {/* S0 — Hero: brand first, one CTA group, full-bleed atmosphere */}
-      <AtmosphereLayer className="lf-landing__hero" aria-label="Wejście do LastFootball" layers={['floodlight', 'vignette', 'grain']}>
+      <AtmosphereLayer
+        className="lf-landing__hero"
+        aria-label="Wejście do LastFootball"
+        layers={['floodlight', 'vignette', 'grain']}
+      >
         <div className="lf-landing__hero-scrim" />
         <div className="lf-landing__hero-inner">
           <p className="lf-landing__brand-hero">LastFootball</p>
@@ -53,8 +57,8 @@ export function LandingPage() {
         visual={<MatchBeatVisual />}
       >
         <p>
-          Serce gry to mecz — przygotujesz skład, wejdziesz w napięcie spotkania i wrócisz z wynikiem,
-          który należy do Ciebie. Nie raport w tabeli. Przeżycie.
+          Serce gry to mecz — przygotujesz skład, wejdziesz w napięcie spotkania i wrócisz z
+          wynikiem, który należy do Ciebie. Nie raport w tabeli. Przeżycie.
         </p>
       </StorySection>
 
@@ -66,8 +70,8 @@ export function LandingPage() {
         visual={<SeasonVisual />}
       >
         <p>
-          Kolejka po kolejce rośnie reputacja i prestiż klubu. Wracasz, bo masz powód: następny mecz,
-          decyzję dnia, własną drogę w lidze.
+          Kolejka po kolejce rośnie reputacja i prestiż klubu. Wracasz, bo masz powód: następny
+          mecz, decyzję dnia, własną drogę w lidze.
         </p>
       </StorySection>
 

@@ -2,14 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { updateSession } from '@/lib/supabase/middleware';
 
-const PUBLIC_PREFIXES = [
-  '/login',
-  '/register',
-  '/auth',
-  '/regulamin',
-  '/prywatnosc',
-  '/status',
-];
+const PUBLIC_PREFIXES = ['/login', '/register', '/auth', '/regulamin', '/prywatnosc', '/status'];
 
 /** In-game / onboarding — require session. */
 const PROTECTED_PREFIXES = [
