@@ -5,6 +5,8 @@ export type {
   IncomingOfferDto,
   LiveListingDto,
   LiveH2hOfferDto,
+  LiveH2hOfferPhase,
+  LiveH2hLastActor,
   TransferOfferStatus,
   TransferDealKind,
 } from '@/lib/transfers/types';

@@ -10,6 +10,7 @@ import {
   acceptLiveTransferOffer,
   buyLiveTransferPlayer,
   buyTransferPlayer,
+  counterLiveTransferOffer,
   createLiveTransferOffer,
   rejectLiveTransferOffer,
   respondIncomingOffer,
@@ -343,7 +344,21 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
     rejectLiveTransferOffer,
     TRANSFER_ACTION_INITIAL,
   );
-  const err = acceptState.error || rejectState.error;
+  const [counterState, counterAction, counterPending] = useActionState(
+    counterLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const err = acceptState.error || rejectState.error || counterState.error;
+  const pending = acceptPending || rejectPending || counterPending;
+
+  if (offer.phase === 'countered') {
+    return (
+      <p className="m-0 text-xs text-[var(--lf-color-text-muted)]">Oczekiwanie na kupującego</p>
+    );
+  }
+
+  const presets: Array<OfferPreset | 'counter'> = ['low', 'counter', 'normal', 'high'];
+
   return (
     <div className="flex flex-col items-end gap-1">
       {err ? (
@@ -354,32 +369,104 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
       <div className="flex flex-wrap justify-end gap-1">
         <form action={acceptAction} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
-          <Button type="submit" variant="primary" disabled={disabled || acceptPending}>
+          <Button type="submit" variant="primary" disabled={disabled || pending}>
             {acceptPending ? '…' : 'Akceptuj'}
           </Button>
         </form>
         <form action={rejectAction} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
-          <Button type="submit" variant="default" disabled={rejectPending}>
+          <Button type="submit" variant="default" disabled={pending}>
             Odrzuć
           </Button>
         </form>
+      </div>
+      <div className="flex flex-wrap justify-end gap-1">
+        {presets.map((preset) => (
+          <form key={preset} action={counterAction} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="preset" value={preset} />
+            <Button
+              type="submit"
+              variant="default"
+              disabled={disabled || pending}
+              title={`Kontrpropozycja ${H2H_PRESET_LABEL[preset]}`}
+            >
+              →{H2H_PRESET_LABEL[preset]}
+            </Button>
+          </form>
+        ))}
       </div>
     </div>
   );
 }
 
-function OutgoingH2hActions({ offer }: { offer: LiveH2hOfferDto }) {
-  const [state, action, pending] = useActionState(
+function OutgoingH2hActions({
+  offer,
+  disabled,
+  envelopeBalance,
+}: {
+  offer: LiveH2hOfferDto;
+  disabled: boolean;
+  envelopeBalance: number;
+}) {
+  const [withdrawState, withdrawAction, withdrawPending] = useActionState(
     withdrawLiveTransferOffer,
     TRANSFER_ACTION_INITIAL,
   );
+  const [acceptState, acceptAction, acceptPending] = useActionState(
+    acceptLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const [rejectState, rejectAction, rejectPending] = useActionState(
+    rejectLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const err = withdrawState.error || acceptState.error || rejectState.error;
+  const pending = withdrawPending || acceptPending || rejectPending;
+
+  if (offer.phase === 'countered') {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        {err ? (
+          <span className="text-xs text-[var(--lf-danger)]" role="alert">
+            {err}
+          </span>
+        ) : null}
+        <p className="m-0 text-xs text-[var(--lf-color-text-muted)]">Kontrpropozycja sprzedawcy</p>
+        <div className="flex flex-wrap justify-end gap-1">
+          <form action={acceptAction} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={disabled || pending || envelopeBalance < offer.amount}
+            >
+              {acceptPending ? '…' : 'Akceptuj'}
+            </Button>
+          </form>
+          <form action={rejectAction} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <Button type="submit" variant="default" disabled={pending}>
+              Odrzuć
+            </Button>
+          </form>
+          <form action={withdrawAction} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <Button type="submit" variant="default" disabled={pending}>
+              Wycofaj
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <form action={action} className="inline">
+    <form action={withdrawAction} className="inline">
       <input type="hidden" name="offerId" value={offer.offerId} />
-      {state.error ? (
+      {err ? (
         <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
-          {state.error}
+          {err}
         </span>
       ) : null}
       <Button type="submit" variant="default" disabled={pending}>
@@ -495,7 +582,10 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                 header: 'Oferta',
                 align: 'right',
                 render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
+                  <span className="text-[var(--lf-gold)] tabular-nums">
+                    {r.amountLabel}
+                    {r.phase === 'countered' ? ' · kontr.' : ''}
+                  </span>
                 ),
               },
               {
@@ -526,14 +616,23 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                 header: 'Oferta',
                 align: 'right',
                 render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
+                  <span className="text-[var(--lf-gold)] tabular-nums">
+                    {r.amountLabel}
+                    {r.phase === 'countered' ? ' · kontr.' : ''}
+                  </span>
                 ),
               },
               {
                 key: 'act',
                 header: '',
                 align: 'right',
-                render: (r) => <OutgoingH2hActions offer={r} />,
+                render: (r) => (
+                  <OutgoingH2hActions
+                    offer={r}
+                    disabled={!market.windowOpen || !market.canBuy}
+                    envelopeBalance={market.envelopeBalance}
+                  />
+                ),
               },
             ]}
           />

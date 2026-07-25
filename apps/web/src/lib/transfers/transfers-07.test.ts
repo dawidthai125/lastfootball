@@ -23,8 +23,11 @@ describe('live H2H pending offers Thin (LFE-TRANSFERS-07)', () => {
         player_id: 'p1',
         seller_club_id: 's1',
         buyer_club_id: 'b1',
-        amount,
+        current_amount: amount,
+        opening_amount: amount,
         ask_at_create: askAtCreate,
+        phase: 'opening',
+        last_actor: 'buyer',
         status: 'pending',
         created_at: '2026-01-01T00:00:00.000Z',
         player_name: 'P. One',
@@ -36,6 +39,7 @@ describe('live H2H pending offers Thin (LFE-TRANSFERS-07)', () => {
     const b = resolveLiveH2hOffers(rows, 'incoming');
     expect(a).toEqual(b);
     expect(a[0]!.amount).toBe(amount);
+    expect(a[0]!.openingAmount).toBe(amount);
     expect(a[0]!.askAtCreate).toBe(askAtCreate);
   });
 
@@ -74,8 +78,11 @@ describe('live H2H pending offers Thin (LFE-TRANSFERS-07)', () => {
           player_id: 'px',
           seller_club_id: clubId,
           buyer_club_id: 'bbbbbbbb-bbbb-cccc-dddd-eeeeeeeeeeee',
-          amount: 100_000,
+          current_amount: 100_000,
+          opening_amount: 100_000,
           ask_at_create: 100_000,
+          phase: 'opening',
+          last_actor: 'buyer',
           status: 'pending',
           created_at: '2026-01-01T00:00:00.000Z',
           player_name: 'X',

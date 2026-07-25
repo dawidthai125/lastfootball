@@ -1,14 +1,23 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
-import type { LiveH2hOfferDto, TransferOfferStatus } from '@/lib/transfers/types';
+import type {
+  LiveH2hLastActor,
+  LiveH2hOfferDto,
+  LiveH2hOfferPhase,
+  TransferOfferStatus,
+} from '@/lib/transfers/types';
 
 export type TransferOfferRow = {
   readonly id: string;
   readonly player_id: string;
   readonly seller_club_id: string;
   readonly buyer_club_id: string;
-  readonly amount: number;
+  /** current_amount from DB */
+  readonly current_amount: number;
+  readonly opening_amount: number;
   readonly ask_at_create: number;
+  readonly phase: string;
+  readonly last_actor: string;
   readonly status: string;
   readonly created_at: string;
   readonly player_name?: string;
@@ -21,7 +30,7 @@ function displayPos(pos: string): string {
   return pos;
 }
 
-/** Pure map of pending offer rows → DTO (snapshots immutable). */
+/** Pure map of pending offer rows → DTO. */
 export function resolveLiveH2hOffers(
   rows: readonly TransferOfferRow[],
   side: 'incoming' | 'outgoing',
@@ -33,10 +42,14 @@ export function resolveLiveH2hOffers(
     pos: displayPos(r.pos ?? ''),
     sellerClubId: r.seller_club_id,
     buyerClubId: r.buyer_club_id,
-    amount: r.amount,
-    amountLabel: formatMoney(r.amount, ECONOMY_THIN.CURRENCY),
+    amount: r.current_amount,
+    amountLabel: formatMoney(r.current_amount, ECONOMY_THIN.CURRENCY),
+    openingAmount: r.opening_amount,
+    openingAmountLabel: formatMoney(r.opening_amount, ECONOMY_THIN.CURRENCY),
     askAtCreate: r.ask_at_create,
     askAtCreateLabel: formatMoney(r.ask_at_create, ECONOMY_THIN.CURRENCY),
+    phase: r.phase as LiveH2hOfferPhase,
+    lastActor: r.last_actor as LiveH2hLastActor,
     status: r.status as TransferOfferStatus,
     counterpartLabel: r.counterpart_label ?? 'Klub',
     side,

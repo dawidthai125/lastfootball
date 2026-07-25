@@ -672,8 +672,11 @@ export async function createLiveTransferOffer(
     player_id: playerId,
     seller_club_id: sellerClubId,
     buyer_club_id: buyer.id,
-    amount,
+    opening_amount: amount,
+    current_amount: amount,
     ask_at_create: askAtCreate,
+    phase: 'opening',
+    last_actor: 'buyer',
     status: 'pending',
     idempotency_key: idempotencyKey,
     buyer_label: buyer.short_name || buyer.name,
@@ -692,8 +695,9 @@ export async function createLiveTransferOffer(
 }
 
 /**
- * Accept H2H pending offer (seller). Settlement via buy/sell live only.
- * Funds fail → offer stays pending.
+ * Accept H2H pending offer.
+ * phase=opening → seller; phase=countered → buyer.
+ * Settlement via buy/sell live only @ current_amount. Funds fail → stays pending.
  */
 export async function acceptLiveTransferOffer(
   _prev: TransferActionState,
@@ -714,16 +718,22 @@ export async function acceptLiveTransferOffer(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, transfer_window_open')
+    .select('id, transfer_window_open, cash_balance')
     .eq('owner_id', user.id)
     .maybeSingle();
 
   if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
-  const seller = club as { id: string; transfer_window_open: boolean };
+  const actor = club as {
+    id: string;
+    transfer_window_open: boolean;
+    cash_balance: number;
+  };
 
   const { data: offerRow, error: offerErr } = await supabase
     .from('transfer_offers' as never)
-    .select('id, player_id, seller_club_id, buyer_club_id, amount, ask_at_create, status')
+    .select(
+      'id, player_id, seller_club_id, buyer_club_id, current_amount, ask_at_create, phase, status',
+    )
     .eq('id', offerId)
     .maybeSingle();
 
@@ -734,16 +744,32 @@ export async function acceptLiveTransferOffer(
     player_id: string;
     seller_club_id: string;
     buyer_club_id: string;
-    amount: number;
+    current_amount: number;
     ask_at_create: number;
+    phase: string;
     status: string;
   };
 
-  if (offer.seller_club_id !== seller.id) {
-    return { error: 'Brak uprawnień sprzedawcy.' };
-  }
   if (offer.status !== 'pending') {
     return { error: 'Oferta nie jest aktywna.' };
+  }
+
+  if (offer.phase === 'opening') {
+    if (offer.seller_club_id !== actor.id) {
+      return { error: 'Brak uprawnień sprzedawcy.' };
+    }
+    if (!actor.transfer_window_open) {
+      return { error: 'Okno transferowe jest zamknięte.' };
+    }
+  } else if (offer.phase === 'countered') {
+    if (offer.buyer_club_id !== actor.id) {
+      return { error: 'Brak uprawnień kupującego.' };
+    }
+    if (!actor.transfer_window_open) {
+      return { error: 'Okno transferowe jest zamknięte.' };
+    }
+  } else {
+    return { error: 'Nieprawidłowa faza oferty.' };
   }
 
   const { data: playerRow } = await supabase
@@ -772,11 +798,13 @@ export async function acceptLiveTransferOffer(
   }
 
   const currentAsk = deriveTransferFee(player.skill, player.age);
-  if (!isAllowedAgreedAmount(currentAsk, offer.amount)) {
-    return { error: 'Kwota oferty poza aktualnym pasmem — kupujący musi złożyć nową.' };
+  if (!isAllowedAgreedAmount(currentAsk, offer.current_amount)) {
+    return { error: 'Kwota oferty poza aktualnym pasmem — złóż nową ofertę.' };
   }
 
-  // Seller auth path: RPC validates funds/roster; TS stubs only satisfy live buy length check.
+  const agreedAmount = offer.current_amount;
+
+  // RPC validates funds/roster; stubs satisfy live buy length check on TS path.
   const rosterForBuy = Array.from({ length: 18 }, (_, i) => ({
     id: `stub-${i}`,
     name: 'Stub',
@@ -790,14 +818,16 @@ export async function acceptLiveTransferOffer(
     departed_at: null as string | null,
   }));
 
+  const sellerWindowOpen = offer.phase === 'opening' ? Boolean(actor.transfer_window_open) : true;
+
   const sellResult = await completeTransferSell(supabase, {
     source: 'live',
     clubId: offer.seller_club_id,
-    transferWindowOpen: Boolean(seller.transfer_window_open),
+    transferWindowOpen: sellerWindowOpen,
     playerId: offer.player_id,
     buyerClubId: offer.buyer_club_id,
     currentAsk,
-    agreedAmount: offer.amount,
+    agreedAmount,
     playerSkill: player.skill,
     playerAge: player.age,
     acceptOfferId: offer.id,
@@ -807,12 +837,12 @@ export async function acceptLiveTransferOffer(
   const buyResult = await completeTransferBuy(supabase, {
     source: 'live',
     clubId: offer.buyer_club_id,
-    cashBalance: offer.amount,
+    cashBalance: agreedAmount,
     transferWindowOpen: true,
     playerId: offer.player_id,
     sellerClubId: offer.seller_club_id,
     currentAsk,
-    agreedAmount: offer.amount,
+    agreedAmount,
     activePlayers: rosterForBuy,
     acceptOfferId: offer.id,
   });
@@ -822,7 +852,113 @@ export async function acceptLiveTransferOffer(
   return { ok: true };
 }
 
-/** Reject one pending offer (seller) — no cash/players mutation. */
+/**
+ * Seller counter on pending H2H offer (1×). Mutates only current_amount/phase/last_actor via RPC.
+ */
+export async function counterLiveTransferOffer(
+  _prev: TransferActionState,
+  formData: FormData,
+): Promise<TransferActionState> {
+  if (!env.isSupabaseConfigured) {
+    return { error: 'Supabase nie jest skonfigurowany.' };
+  }
+
+  const offerId = String(formData.get('offerId') ?? '');
+  const preset = parseOfferPreset(String(formData.get('preset') ?? ''));
+  if (!offerId) return { error: 'Brak oferty.' };
+  if (!preset) return { error: 'Wybierz kwotę kontrpropozycji (90/95/100/110%).' };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Sesja wygasła.' };
+
+  const { data: club, error: clubErr } = await supabase
+    .from('clubs')
+    .select('id, transfer_window_open')
+    .eq('owner_id', user.id)
+    .maybeSingle();
+
+  if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
+  const seller = club as { id: string; transfer_window_open: boolean };
+
+  if (!seller.transfer_window_open) {
+    return { error: 'Okno transferowe jest zamknięte.' };
+  }
+
+  const { data: offerRow, error: offerErr } = await supabase
+    .from('transfer_offers' as never)
+    .select('id, player_id, seller_club_id, phase, status')
+    .eq('id', offerId)
+    .maybeSingle();
+
+  if (offerErr || !offerRow) return { error: 'Nie znaleziono oferty.' };
+
+  const offer = offerRow as {
+    id: string;
+    player_id: string;
+    seller_club_id: string;
+    phase: string;
+    status: string;
+  };
+
+  if (offer.seller_club_id !== seller.id) {
+    return { error: 'Brak uprawnień sprzedawcy.' };
+  }
+  if (offer.status !== 'pending') {
+    return { error: 'Oferta nie jest aktywna.' };
+  }
+  if (offer.phase !== 'opening') {
+    return { error: 'Kontrpropozycja już złożona.' };
+  }
+
+  const { data: playerRow } = await supabase
+    .from('players')
+    .select('id, club_id, transfer_listed_at, departed_at, skill, age')
+    .eq('id', offer.player_id)
+    .maybeSingle();
+
+  const player = playerRow as {
+    skill: number;
+    age: number;
+    club_id: string;
+    transfer_listed_at: string | null;
+    departed_at: string | null;
+  } | null;
+
+  if (!player || player.departed_at != null) {
+    return { error: 'Zawodnik niedostępny.' };
+  }
+  if (player.club_id !== offer.seller_club_id || player.transfer_listed_at == null) {
+    return { error: 'Zawodnik niedostępny na rynku Live.' };
+  }
+
+  const currentAsk = deriveTransferFee(player.skill, player.age);
+  const currentAmount = amountForPreset(currentAsk, preset);
+  if (!isAllowedAgreedAmount(currentAsk, currentAmount)) {
+    return { error: 'Nieprawidłowa kwota kontrpropozycji.' };
+  }
+
+  const { data, error } = await supabase.rpc(
+    'counter_live_transfer_offer' as never,
+    {
+      p_offer_id: offerId,
+      p_current_amount: currentAmount,
+    } as never,
+  );
+
+  if (error) return { error: error.message || 'Nie udało się złożyć kontrpropozycji.' };
+  const row = data as { ok?: boolean; error?: string } | null;
+  if (!row || row.ok !== true) {
+    return { error: row?.error || 'Nie udało się złożyć kontrpropozycji.' };
+  }
+
+  revalidatePath('/', 'layout');
+  return { ok: true };
+}
+
+/** Reject one pending offer — opening: seller; countered: buyer. No cash/players. */
 export async function rejectLiveTransferOffer(
   _prev: TransferActionState,
   formData: FormData,

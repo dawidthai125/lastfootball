@@ -9,8 +9,11 @@ type OfferDb = {
   player_id: string;
   seller_club_id: string;
   buyer_club_id: string;
-  amount: number;
+  opening_amount: number;
+  current_amount: number;
   ask_at_create: number;
+  phase: string;
+  last_actor: string;
   status: string;
   created_at: string;
   buyer_label: string | null;
@@ -30,7 +33,7 @@ export async function fetchLiveH2hOffers(
   const { data, error } = await supabase
     .from('transfer_offers' as never)
     .select(
-      'id, player_id, seller_club_id, buyer_club_id, amount, ask_at_create, status, created_at, buyer_label, seller_label',
+      'id, player_id, seller_club_id, buyer_club_id, opening_amount, current_amount, ask_at_create, phase, last_actor, status, created_at, buyer_label, seller_label',
     )
     .eq('status', 'pending')
     .or(`seller_club_id.eq.${clubId},buyer_club_id.eq.${clubId}`);

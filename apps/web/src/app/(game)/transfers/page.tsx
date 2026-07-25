@@ -10,7 +10,7 @@ import { fetchLiveListings } from '@/lib/transfers/fetch-live-listings';
 import { resolveTransferMarket } from '@/lib/transfers';
 
 /**
- * Transfer market — fed only by resolveTransferMarket() (LFE-TRANSFERS-01…07).
+ * Transfer market — fed only by resolveTransferMarket() (LFE-TRANSFERS-01…08).
  */
 export default async function TransfersPage() {
   const club = await getManagerClub();

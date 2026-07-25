@@ -72,7 +72,11 @@ export type LiveListingDto = {
 
 export type TransferOfferStatus = 'pending' | 'accepted' | 'rejected' | 'withdrawn' | 'superseded';
 
-/** H2H pending offer (LFE-TRANSFERS-07) — amount/askAtCreate immutable after create. */
+export type LiveH2hOfferPhase = 'opening' | 'countered';
+
+export type LiveH2hLastActor = 'buyer' | 'seller';
+
+/** H2H pending offer — opening_amount immutable; amount = current_amount (settle). */
 export type LiveH2hOfferDto = {
   readonly offerId: string;
   readonly playerId: string;
@@ -80,10 +84,15 @@ export type LiveH2hOfferDto = {
   readonly pos: string;
   readonly sellerClubId: string;
   readonly buyerClubId: string;
+  /** current_amount — sole settlement amount after Create/Counter. */
   readonly amount: number;
   readonly amountLabel: string;
+  readonly openingAmount: number;
+  readonly openingAmountLabel: string;
   readonly askAtCreate: number;
   readonly askAtCreateLabel: string;
+  readonly phase: LiveH2hOfferPhase;
+  readonly lastActor: LiveH2hLastActor;
   readonly status: TransferOfferStatus;
   readonly counterpartLabel: string;
   readonly side: 'incoming' | 'outgoing';

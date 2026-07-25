@@ -124,8 +124,11 @@ export type Database = {
           player_id: string;
           seller_club_id: string;
           buyer_club_id: string;
-          amount: number;
+          opening_amount: number;
+          current_amount: number;
           ask_at_create: number;
+          phase: string;
+          last_actor: string;
           status: string;
           idempotency_key: string;
           created_at: string;
@@ -138,8 +141,11 @@ export type Database = {
           player_id: string;
           seller_club_id: string;
           buyer_club_id: string;
-          amount: number;
+          opening_amount: number;
+          current_amount: number;
           ask_at_create: number;
+          phase?: string;
+          last_actor?: string;
           status?: string;
           idempotency_key: string;
           created_at?: string;
@@ -152,8 +158,11 @@ export type Database = {
           player_id?: string;
           seller_club_id?: string;
           buyer_club_id?: string;
-          amount?: number;
+          opening_amount?: number;
+          current_amount?: number;
           ask_at_create?: number;
+          phase?: string;
+          last_actor?: string;
           status?: string;
           idempotency_key?: string;
           created_at?: string;
@@ -361,6 +370,10 @@ export type Database = {
       };
       withdraw_transfer_offer: {
         Args: { p_offer_id: string };
+        Returns: Json;
+      };
+      counter_live_transfer_offer: {
+        Args: { p_offer_id: string; p_current_amount: number };
         Returns: Json;
       };
       unlist_transfer_player: {
