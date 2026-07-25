@@ -142,9 +142,10 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
 **Liczby fee (SSOT produktu):** GDD **§26**; kod: `deriveTransferFee` ← `ECONOMY_THIN.TRANSFER_FEE` (GDD-§26B CLOSED).  
 **Envelope (LFE-TRANSFERS-02-E1):** `ECONOMY_THIN.ENVELOPE_RATIO = 1` → envelope === cash; **jedyny** wzór w `resolveTransferEnvelope()`; brak migracji/kolumny.  
-**Negotiation (LFE-TRANSFERS-02-N1):** buy-only; **pure** `resolveNegotiationStep` (Low 90% / Normal 100% / High 110%; Counter 95%; jedna kontroferta); settlement `completeTransferBuy(agreedAmount)` z pełną rewalidacją; **stateless** — brak pending DB / timeoutów / migracji. Sell = instant @ fee.  
-**Poza Thin:** sell negotiation, AI→player offers, 2+ counters, potential, live market DB, ratio ≠ 1, stored envelope.  
-**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`); envelope E1 — LFE-TRANSFERS-02-E1; negotiation N1 — LFE-TRANSFERS-02-N1.  
+**Negotiation (LFE-TRANSFERS-02-N1):** buy-only; **pure** `resolveNegotiationStep` (Low 90% / Normal 100% / High 110%; Counter 95%; jedna kontroferta); settlement `completeTransferBuy(agreedAmount)` z pełną rewalidacją; **stateless** — brak pending DB / timeoutów / migracji. Sell instant @ fee.  
+**Incoming (LFE-TRANSFERS-03):** **pure** `resolveIncomingOffers` (derive C); oferta = **100% ask**; Accept / Reject only; Accept → `completeTransferSell` (bez `agreedAmount`); stabilne `offerId`; brak inbox/timeout/migracji.  
+**Poza Thin:** sell negotiation, 2+ counters, pending DB / timeout / inbox, potential, live market DB, ratio ≠ 1, stored envelope.  
+**Źródło:** LFE-TRANSFERS-01 (`393a43c`); E1; N1 (`8d9d772`); Incoming — LFE-TRANSFERS-03.  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
 ### D21 — Team training Thin + `resolveClubTraining` · CLOSED
@@ -171,7 +172,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.  
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
-**LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.
+**LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
+**LFE-TRANSFERS-03 (2026-07-25):** derived AI incoming offers; Accept → `completeTransferSell`; 100% ask.
 
 ## Powiązania
 
@@ -179,4 +181,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE
+2026-07-25 — LFE-TRANSFERS-03 CLOSE

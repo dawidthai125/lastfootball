@@ -6,14 +6,18 @@ import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
-import { buyTransferPlayer, sellTransferPlayer } from '@/lib/transfers/actions';
+import {
+  buyTransferPlayer,
+  respondIncomingOffer,
+  sellTransferPlayer,
+} from '@/lib/transfers/actions';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
   resolveCounterAmount,
   resolveOfferAmount,
   type OfferPreset,
 } from '@/lib/transfers/resolve-negotiation';
-import type { TransferMarketDto } from '@/lib/transfers/types';
+import type { IncomingOfferDto, TransferMarketDto } from '@/lib/transfers/types';
 
 const PRESET_LABEL: Record<OfferPreset, string> = {
   low: 'Niska',
@@ -124,6 +128,37 @@ function SellButton({ playerId, disabled }: { playerId: string; disabled: boolea
   );
 }
 
+function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; disabled: boolean }) {
+  const [state, action, pending] = useActionState(respondIncomingOffer, TRANSFER_ACTION_INITIAL);
+  return (
+    <div className="flex flex-col items-end gap-1">
+      {state.error ? (
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+      <div className="flex flex-wrap justify-end gap-1">
+        <form action={action} className="inline">
+          <input type="hidden" name="offerId" value={offer.offerId} />
+          <input type="hidden" name="playerId" value={offer.playerId} />
+          <input type="hidden" name="decision" value="accept" />
+          <Button type="submit" variant="primary" disabled={disabled || pending}>
+            {pending ? '…' : 'Akceptuj'}
+          </Button>
+        </form>
+        <form action={action} className="inline">
+          <input type="hidden" name="offerId" value={offer.offerId} />
+          <input type="hidden" name="playerId" value={offer.playerId} />
+          <input type="hidden" name="decision" value="reject" />
+          <Button type="submit" variant="default" disabled={pending}>
+            Odrzuć
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export function TransfersView({ market }: { market: TransferMarketDto }) {
   return (
     <div className="space-y-2">
@@ -163,13 +198,54 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
           </p>
         </Panel>
       ) : (
-        <Panel title="Negocjacje">
+        <Panel title="Negocjacje i oferty AI">
           <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Kupno: Niska (90% ask) → kontroferta AI (95%); Normalna / Wysoka → natychmiastowa
-            akceptacja. Jedna kontroferta — bez pending w bazie.
+            Kupno: Niska / Normalna / Wysoka (nego Thin). Oferty AI→Ty: Accept / Reject @ 100% ask —
+            derive, bez pending w bazie.
           </p>
         </Panel>
       )}
+
+      <Panel title="Oferty AI (przychodzące)" flush>
+        {market.incomingOffers.length === 0 ? (
+          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
+            Brak ofert AI (limit kadry, okno zamknięte lub brak zainteresowania w derive).
+          </p>
+        ) : (
+          <Table
+            rowKey={(r) => r.offerId}
+            rows={[...market.incomingOffers]}
+            columns={[
+              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
+              {
+                key: 'buyer',
+                header: 'Klub AI',
+                render: (r) => r.buyerLabel,
+              },
+              {
+                key: 'amount',
+                header: 'Oferta',
+                align: 'right',
+                render: (r) => (
+                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
+                ),
+              },
+              {
+                key: 'act',
+                header: '',
+                align: 'right',
+                render: (r) => (
+                  <IncomingOfferActions
+                    offer={r}
+                    disabled={!market.windowOpen || !market.canSell}
+                  />
+                ),
+              },
+            ]}
+          />
+        )}
+      </Panel>
 
       <Panel title="Rynek" flush>
         <Table

@@ -33,6 +33,19 @@ export type SellCandidateDto = {
   readonly starter: boolean;
 };
 
+/** Derived AI→player offer (LFE-TRANSFERS-03) — amount = 100% deriveTransferFee. */
+export type IncomingOfferDto = {
+  readonly offerId: string;
+  readonly playerId: string;
+  readonly playerName: string;
+  readonly pos: string;
+  readonly age: number;
+  readonly skill: number;
+  readonly amount: number;
+  readonly amountLabel: string;
+  readonly buyerLabel: string;
+};
+
 export type TransferMarketDto = {
   readonly clubId: string;
   readonly windowOpen: boolean;
@@ -49,4 +62,6 @@ export type TransferMarketDto = {
   readonly canSell: boolean;
   readonly listings: readonly MarketListingDto[];
   readonly sellCandidates: readonly SellCandidateDto[];
+  /** Derived AI incoming offers — from resolveIncomingOffers only. */
+  readonly incomingOffers: readonly IncomingOfferDto[];
 };

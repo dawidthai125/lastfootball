@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-TRANSFERS-03)
+
+- Derived AI incoming offers Thin: `resolveIncomingOffers` (pure; 100% ask; Accept/Reject)
+- Accept settles via `completeTransferSell` only; no migrations / pending / inbox
+- Stable offer ids `in-{clubTag}-{playerId}`
+
 ### Added (shipped on `main` — LFE-TRANSFERS-02-N1)
 
 - Stateless buy negotiation Thin: `resolveNegotiationStep` (pure; Low 90% / Normal 100% / High 110%; Counter 95%)

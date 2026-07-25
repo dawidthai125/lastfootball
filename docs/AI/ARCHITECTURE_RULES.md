@@ -69,11 +69,12 @@ supabase/ (Auth + Postgres migrations)
 - Cash = SSOT salda; envelope = **derive** `resolveTransferEnvelope` (ratio 1) — nie druga kasa.
 - Fee / ask = **tylko** `deriveTransferFee` — brak trwałego `market_value`.
 - Buy negotiation (N1): **pure** `resolveNegotiationStep` — Low 90% / Normal 100% / High 110%; Counter 95%; jedna kontroferta; **stateless** (bez pending DB).
+- Incoming AI (TRANSFERS-03): **pure** `resolveIncomingOffers` — derive C; oferta = 100% ask; Accept → `completeTransferSell`; Reject no-op.
 - Settlement buy: `completeTransferBuy(agreedAmount)` po rewalidacji ask / envelope / window / roster / funds.
-- Sell: instant @ fee (bez nego).
+- Sell: instant @ fee **lub** Accept oferty AI (ten sam `completeTransferSell`).
 - Buy ids = `t-{tag}-…`; katalog listingów = `seedTransferCatalogue()` (także dla AI).
 - Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
-- Poza Thin: sell nego, 2+ counters, potential, live market DB, ratio ≠ 1, stored envelope.
+- Poza Thin: sell nego, 2+ counters, pending/timeout/inbox, potential, live market DB, ratio ≠ 1, stored envelope.
 
 ## Training rules (LFE-TRAINING-01 / D21)
 
@@ -101,4 +102,4 @@ Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorc
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE
+2026-07-25 — LFE-TRANSFERS-03 CLOSE

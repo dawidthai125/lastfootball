@@ -14,22 +14,22 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline 8d9d772  # feature baseline N1 negotiation
+git log -1 --oneline          # feature baseline TRANSFERS-03 — hash w tabeli
 ```
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                                     |
-| -------------------- | --------------------------------------------------------------------------- |
-| URL                  | https://lastfootball.vercel.app                                             |
-| Alias                | https://lastfootball.pl                                                     |
-| Branch               | `main`                                                                      |
-| **Feature baseline** | `8d9d77294a500fdff70234fce0b2423eacbc5209`                                  |
-| Baseline message     | `feat(transfers): add stateless buy negotiation Thin (LFE-TRANSFERS-02-N1)` |
-| Docs CLOSE tip       | _(ten commit lub nowszy)_                                                   |
-| Status               | **LFE-TRANSFERS-02-N1 CLOSED** · E1 · LEAGUE-03 · GDD-§26A/B                |
+| Pole                 | Wartość                                                           |
+| -------------------- | ----------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                   |
+| Alias                | https://lastfootball.pl                                           |
+| Branch               | `main`                                                            |
+| **Feature baseline** | _(wypełniane po commit TRANSFERS-03)_                             |
+| Baseline message     | `feat(transfers): add AI incoming offers Thin (LFE-TRANSFERS-03)` |
+| Docs CLOSE tip       | _(po feacie)_                                                     |
+| Status               | **LFE-TRANSFERS-03 CLOSED** · N1 · E1 · LEAGUE-03 · GDD-§26A/B    |
 
 ## Stack
 
@@ -46,7 +46,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
   → /league ← resolveLeagueTable()
   → /finance ← resolveClubFinance()
   → /squad ← resolveClubSquad(players)
-  → /transfers ← resolveTransferMarket() + buy negotiation (N1) gdy transfer_window_open
+  → /transfers ← resolveTransferMarket() + buy nego + incoming offers gdy okno otwarte
   → /training ← resolveClubTraining() gdy played ≥ 2
   → fixtures Thin: LEAGUE_FIXTURE_COUNT=11 (+ top-up dla klubów z 3)
 ```
@@ -67,6 +67,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 | Transfer window   | `transfer_window_open`                              |
 | Transfer UI       | `resolveTransferMarket`                             |
 | Transfer nego     | `resolveNegotiationStep` (pure, stateless)          |
+| Incoming offers   | `resolveIncomingOffers` (pure, derive C)            |
 | Transfer deals    | `transfer_deals`                                    |
 | Training day      | `clubs.last_training_on`                            |
 | Training UI       | `resolveClubTraining` → `TrainingDto`               |
@@ -77,8 +78,8 @@ Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## Not on production
 
-Sell negotiation · 2+ counters · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
+Sell negotiation · 2+ counters · pending/timeout/inbox · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE
+2026-07-25 — LFE-TRANSFERS-03 CLOSE

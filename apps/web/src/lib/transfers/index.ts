@@ -2,12 +2,18 @@ export type {
   TransferMarketDto,
   MarketListingDto,
   SellCandidateDto,
+  IncomingOfferDto,
   TransferDealKind,
 } from '@/lib/transfers/types';
 export { TRANSFERS_THIN } from '@/lib/transfers/types';
 export { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
 export { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 export { deriveTransferFee } from '@/lib/transfers/derive-fee';
+export {
+  INCOMING_THIN,
+  resolveIncomingOffers,
+  buildIncomingOfferId,
+} from '@/lib/transfers/resolve-incoming-offers';
 export {
   NEGOTIATION_THIN,
   resolveNegotiationStep,

@@ -8,6 +8,10 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { completeTransferBuy, completeTransferSell } from '@/lib/transfers/complete-deal';
 import type { TransferActionState } from '@/lib/transfers/action-types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import {
+  buildIncomingOfferId,
+  resolveIncomingOffers,
+} from '@/lib/transfers/resolve-incoming-offers';
 import { resolveNegotiationStep, type OfferPreset } from '@/lib/transfers/resolve-negotiation';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 
@@ -154,6 +158,103 @@ export async function sellTransferPlayer(
   };
 
   const active = await listClubPlayers(clubRow.id);
+  const result = await completeTransferSell(supabase, {
+    clubId: clubRow.id,
+    cashBalance: clubRow.cash_balance,
+    transferWindowOpen: Boolean(clubRow.transfer_window_open),
+    playerId,
+    activePlayers: active.map((p) => ({
+      id: p.id,
+      name: p.name,
+      shirt_number: p.shirtNumber,
+      pos: p.pos,
+      role: p.role,
+      starter: p.starter,
+      age: p.age,
+      skill: p.skill,
+      status: p.status,
+      departed_at: p.departedAt,
+    })),
+  });
+
+  if (!result.ok) return { error: result.error };
+
+  revalidatePath('/', 'layout');
+  return { ok: true };
+}
+
+/**
+ * AI incoming offer Accept / Reject (LFE-TRANSFERS-03).
+ * Accept → completeTransferSell only; Reject → no-op.
+ * Re-derives offers + fee before settlement.
+ */
+export async function respondIncomingOffer(
+  _prev: TransferActionState,
+  formData: FormData,
+): Promise<TransferActionState> {
+  if (!env.isSupabaseConfigured) {
+    return { error: 'Supabase nie jest skonfigurowany.' };
+  }
+
+  const playerId = String(formData.get('playerId') ?? '');
+  const offerId = String(formData.get('offerId') ?? '');
+  const decision = String(formData.get('decision') ?? '');
+  if (!playerId || !offerId) return { error: 'Brak oferty.' };
+  if (decision !== 'accept' && decision !== 'reject') {
+    return { error: 'Wybierz akceptację lub odrzucenie.' };
+  }
+
+  if (decision === 'reject') {
+    return { ok: true };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Sesja wygasła.' };
+
+  const { data: club, error: clubErr } = await supabase
+    .from('clubs')
+    .select('id, cash_balance, transfer_window_open')
+    .eq('owner_id', user.id)
+    .maybeSingle();
+
+  if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
+
+  const clubRow = club as {
+    id: string;
+    cash_balance: number;
+    transfer_window_open: boolean;
+  };
+
+  const active = await listClubPlayers(clubRow.id);
+  const offers = resolveIncomingOffers({
+    clubId: clubRow.id,
+    transferWindowOpen: Boolean(clubRow.transfer_window_open),
+    activePlayers: active,
+  });
+
+  const offer = offers.find((o) => o.offerId === offerId && o.playerId === playerId);
+  if (!offer) {
+    return { error: 'Oferta nieaktualna — odśwież Transfery.' };
+  }
+
+  const expectedId = buildIncomingOfferId(clubRow.id, playerId);
+  if (offer.offerId !== expectedId) {
+    return { error: 'Nieprawidłowy identyfikator oferty.' };
+  }
+
+  const player = active.find((p) => p.id === playerId);
+  if (!player || player.departedAt != null || player.status === 'DEPARTED') {
+    return { error: 'Zawodnik niedostępny.' };
+  }
+
+  const ask = deriveTransferFee(player.skill, player.age);
+  if (offer.amount !== ask) {
+    return { error: 'Kwota oferty nieaktualna — odśwież Transfery.' };
+  }
+
   const result = await completeTransferSell(supabase, {
     clubId: clubRow.id,
     cashBalance: clubRow.cash_balance,

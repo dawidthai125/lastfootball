@@ -3,6 +3,7 @@ import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import {
   TRANSFERS_THIN,
@@ -86,5 +87,10 @@ export function resolveTransferMarket(input: {
     canSell,
     listings,
     sellCandidates,
+    incomingOffers: resolveIncomingOffers({
+      clubId: input.clubId,
+      transferWindowOpen: windowOpen,
+      activePlayers: input.activePlayers,
+    }),
   };
 }
