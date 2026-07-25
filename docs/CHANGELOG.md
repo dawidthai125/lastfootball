@@ -7,7 +7,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-03** (hash w CURRENT_BASELINE po commit).  
+Production feature baseline **`4f69b5d`** (LFE-TRANSFERS-03) — tip may be docs after feat.  
 GDD-§26A/B · LEAGUE-03 · E1 · N1 **CLOSED**.
 
 ---
@@ -20,7 +20,7 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 **CLOSED**.
 - Oferta = **100%** `deriveTransferFee`; Accept / Reject only
 - Accept → `completeTransferSell` (bez `agreedAmount`); pełna rewalidacja w settlement
 - Stabilne `offerId` = `in-{clubTag}-{playerId}`
-- Feature baseline → commit `feat(transfers): add AI incoming offers Thin (LFE-TRANSFERS-03)`
+- Feature baseline → **`4f69b5d`** (LFE-TRANSFERS-03)
 
 ---
 
