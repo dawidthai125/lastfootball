@@ -14,7 +14,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline          # feature baseline TRANSFERS-03 — hash w tabeli
+git log -1 --oneline 4f69b5d  # feature baseline TRANSFERS-03 incoming
 ```
 
 ---
@@ -26,9 +26,9 @@ git log -1 --oneline          # feature baseline TRANSFERS-03 — hash w tabeli
 | URL                  | https://lastfootball.vercel.app                                   |
 | Alias                | https://lastfootball.pl                                           |
 | Branch               | `main`                                                            |
-| **Feature baseline** | _(wypełniane po commit TRANSFERS-03)_                             |
+| **Feature baseline** | `4f69b5dccd3d100b9f912fa45b9f1aae7f0bcdb6`                       |
 | Baseline message     | `feat(transfers): add AI incoming offers Thin (LFE-TRANSFERS-03)` |
-| Docs CLOSE tip       | _(po feacie)_                                                     |
+| Docs CLOSE tip       | _(ten commit lub nowszy)_                                         |
 | Status               | **LFE-TRANSFERS-03 CLOSED** · N1 · E1 · LEAGUE-03 · GDD-§26A/B    |
 
 ## Stack
