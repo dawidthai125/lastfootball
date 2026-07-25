@@ -67,11 +67,13 @@ type LiveBuyInput = {
   transferWindowOpen: boolean;
   playerId: string;
   sellerClubId: string;
-  /** Single deriveTransferFee() snapshot for this Live op. */
-  askSnapshot: number;
-  /** Instant Live = 100% ask → must equal askSnapshot. */
+  /** Current deriveTransferFee — only for Thin allow-list validation. */
+  currentAsk: number;
+  /** Settlement amount (Instant 100% or pending offer.amount). */
   agreedAmount: number;
   activePlayers: readonly ActivePlayer[];
+  /** When set: Accept path (seller auth); marks offer accepted in same TX. */
+  acceptOfferId?: string;
 };
 
 type InstantSellInput = {
@@ -91,11 +93,11 @@ type LiveSellInput = {
   transferWindowOpen: boolean;
   playerId: string;
   buyerClubId: string;
-  askSnapshot: number;
+  currentAsk: number;
   agreedAmount: number;
-  /** Skill/age from listing — askSnapshot must match deriveTransferFee. */
   playerSkill: number;
   playerAge: number;
+  acceptOfferId?: string;
 };
 
 type LiveRpcResult = {
@@ -115,7 +117,8 @@ async function invokeLiveH2hRpc(
     buyerClubId: string;
     sellerClubId: string;
     playerId: string;
-    askSnapshot: number;
+    agreedAmount: number;
+    acceptOfferId?: string;
   },
 ): Promise<CompleteBuyResult> {
   const { data, error } = await supabase.rpc(
@@ -124,7 +127,8 @@ async function invokeLiveH2hRpc(
       p_buyer_club_id: input.buyerClubId,
       p_seller_club_id: input.sellerClubId,
       p_player_id: input.playerId,
-      p_ask_snapshot: input.askSnapshot,
+      p_agreed_amount: input.agreedAmount,
+      p_accept_offer_id: input.acceptOfferId ?? null,
     } as never,
   );
 
@@ -143,7 +147,7 @@ async function invokeLiveH2hRpc(
 /**
  * Atomic buy settlement.
  * - seed: insert t-{tag}- player from catalogue.
- * - live: Instant @ askSnapshot via shared RPC (players.id unchanged).
+ * - live: H2H Instant or Accept via shared RPC (players.id unchanged; supersedes pending).
  */
 export async function completeTransferBuy(
   supabase: AppSupabase,
@@ -159,14 +163,11 @@ export async function completeTransferBuy(
     if (input.clubId === input.sellerClubId) {
       return { ok: false, error: 'Nie możesz kupić własnego zawodnika.' };
     }
-    if (input.agreedAmount !== input.askSnapshot) {
-      return { ok: false, error: 'Live Buy wymaga 100% ask.' };
-    }
-    if (!isAllowedAgreedAmount(input.askSnapshot, input.agreedAmount)) {
+    if (!isAllowedAgreedAmount(input.currentAsk, input.agreedAmount)) {
       return { ok: false, error: 'Nieprawidłowa kwota negocjacji.' };
     }
     const envelope = resolveTransferEnvelope(input.cashBalance);
-    if (input.cashBalance < input.askSnapshot || envelope.envelopeBalance < input.askSnapshot) {
+    if (input.cashBalance < input.agreedAmount || envelope.envelopeBalance < input.agreedAmount) {
       return { ok: false, error: 'Za mało środków w budżecie transferowym / kasie.' };
     }
 
@@ -174,7 +175,8 @@ export async function completeTransferBuy(
       buyerClubId: input.clubId,
       sellerClubId: input.sellerClubId,
       playerId: input.playerId,
-      askSnapshot: input.askSnapshot,
+      agreedAmount: input.agreedAmount,
+      acceptOfferId: input.acceptOfferId,
     });
   }
 
@@ -296,7 +298,7 @@ export async function completeTransferBuy(
 /**
  * Atomic sell settlement.
  * - instant: DEPARTED + credit (legacy Instant Sell / Incoming).
- * - live: credit + clear listed via shared RPC (no DEPARTED; id unchanged).
+ * - live: H2H Instant or Accept via shared RPC (no DEPARTED; id unchanged).
  */
 export async function completeTransferSell(
   supabase: AppSupabase,
@@ -307,13 +309,10 @@ export async function completeTransferSell(
       return { ok: false, error: 'Okno transferowe jest zamknięte.' };
     }
     const fee = deriveTransferFee(input.playerSkill, input.playerAge);
-    if (fee !== input.askSnapshot) {
+    if (fee !== input.currentAsk) {
       return { ok: false, error: 'Ask nieaktualny — odśwież Transfery.' };
     }
-    if (input.agreedAmount !== input.askSnapshot) {
-      return { ok: false, error: 'Live Sell wymaga 100% ask.' };
-    }
-    if (!isAllowedAgreedAmount(input.askSnapshot, input.agreedAmount)) {
+    if (!isAllowedAgreedAmount(input.currentAsk, input.agreedAmount)) {
       return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
     }
     if (input.clubId === input.buyerClubId) {
@@ -324,7 +323,8 @@ export async function completeTransferSell(
       buyerClubId: input.buyerClubId,
       sellerClubId: input.clubId,
       playerId: input.playerId,
-      askSnapshot: input.askSnapshot,
+      agreedAmount: input.agreedAmount,
+      acceptOfferId: input.acceptOfferId,
     });
   }
 

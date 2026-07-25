@@ -118,6 +118,51 @@ export type Database = {
           },
         ];
       };
+      transfer_offers: {
+        Row: {
+          id: string;
+          player_id: string;
+          seller_club_id: string;
+          buyer_club_id: string;
+          amount: number;
+          ask_at_create: number;
+          status: string;
+          idempotency_key: string;
+          created_at: string;
+          resolved_at: string | null;
+          buyer_label: string;
+          seller_label: string;
+        };
+        Insert: {
+          id?: string;
+          player_id: string;
+          seller_club_id: string;
+          buyer_club_id: string;
+          amount: number;
+          ask_at_create: number;
+          status?: string;
+          idempotency_key: string;
+          created_at?: string;
+          resolved_at?: string | null;
+          buyer_label?: string;
+          seller_label?: string;
+        };
+        Update: {
+          id?: string;
+          player_id?: string;
+          seller_club_id?: string;
+          buyer_club_id?: string;
+          amount?: number;
+          ask_at_create?: number;
+          status?: string;
+          idempotency_key?: string;
+          created_at?: string;
+          resolved_at?: string | null;
+          buyer_label?: string;
+          seller_label?: string;
+        };
+        Relationships: [];
+      };
       transfer_deals: {
         Row: {
           id: string;
@@ -301,8 +346,25 @@ export type Database = {
           p_buyer_club_id: string;
           p_seller_club_id: string;
           p_player_id: string;
-          p_ask_snapshot: number;
+          p_agreed_amount: number;
+          p_accept_offer_id?: string | null;
         };
+        Returns: Json;
+      };
+      supersede_pending_transfer_offers: {
+        Args: { p_player_id: string };
+        Returns: number;
+      };
+      reject_transfer_offer: {
+        Args: { p_offer_id: string };
+        Returns: Json;
+      };
+      withdraw_transfer_offer: {
+        Args: { p_offer_id: string };
+        Returns: Json;
+      };
+      unlist_transfer_player: {
+        Args: { p_club_id: string; p_player_id: string };
         Returns: Json;
       };
     };

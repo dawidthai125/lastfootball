@@ -70,6 +70,26 @@ export type LiveListingDto = {
   readonly sellerWindowOpen: boolean;
 };
 
+export type TransferOfferStatus = 'pending' | 'accepted' | 'rejected' | 'withdrawn' | 'superseded';
+
+/** H2H pending offer (LFE-TRANSFERS-07) — amount/askAtCreate immutable after create. */
+export type LiveH2hOfferDto = {
+  readonly offerId: string;
+  readonly playerId: string;
+  readonly playerName: string;
+  readonly pos: string;
+  readonly sellerClubId: string;
+  readonly buyerClubId: string;
+  readonly amount: number;
+  readonly amountLabel: string;
+  readonly askAtCreate: number;
+  readonly askAtCreateLabel: string;
+  readonly status: TransferOfferStatus;
+  readonly counterpartLabel: string;
+  readonly side: 'incoming' | 'outgoing';
+  readonly createdAt: string;
+};
+
 export type TransferMarketDto = {
   readonly clubId: string;
   readonly windowOpen: boolean;
@@ -87,6 +107,10 @@ export type TransferMarketDto = {
   readonly listings: readonly MarketListingDto[];
   /** H2H live listings — Instant Buy @ 100% ask. */
   readonly liveListings: readonly LiveListingDto[];
+  /** Pending H2H offers where we are seller. */
+  readonly incomingLiveOffers: readonly LiveH2hOfferDto[];
+  /** Pending H2H offers where we are buyer. */
+  readonly outgoingLiveOffers: readonly LiveH2hOfferDto[];
   readonly sellCandidates: readonly SellCandidateDto[];
   /**
    * Active players with transfer_listed_at set — shown even when window closed (Unlist).

@@ -2,51 +2,39 @@
 
 ## Cel
 
-Rynek transferowy Thin (buy/sell + nego + incoming AI + listing + **Live H2H**) na bazie `players` + kasy + derived envelope.
+Rynek transferowy Thin (buy/sell + nego + AI incoming + listing + Live H2H Instant + **Pending Offers**) na bazie `players` + kasy.
 
 ## SSOT
 
-| Fakt           | Źródło                                                                                  |
-| -------------- | --------------------------------------------------------------------------------------- |
-| UI rynku       | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto`                        |
-| Okno           | `clubs.transfer_window_open`                                                            |
-| Listing        | `players.transfer_listed_at` (NULL = nie listed); List/Unlist; okno **nie** czyści      |
-| Live podaż     | `players WHERE transfer_listed_at IS NOT NULL` (inne kluby) — **brak** tabeli listingów |
-| Sell settle    | **`completeTransferSell`** — instant void **lub** live leg                              |
-| Buy settle     | **`completeTransferBuy`** — seed catalogue **lub** live leg                             |
-| Live atomowość | RPC `complete_live_h2h_transfer` (wywoływane tylko z buy/sell live)                     |
-| Ask / fee      | `deriveTransferFee` ← `ECONOMY_THIN.TRANSFER_FEE` (jeden snapshot na Live op)           |
-| Envelope       | `resolveTransferEnvelope(cash)`                                                         |
-| Buy nego       | `resolveNegotiationStep` (BUY only)                                                     |
-| Seller nego    | `resolveSellerNegotiationStep` (Incoming S2 only)                                       |
-| Incoming AI    | `resolveIncomingOffers` — listed + eligible                                             |
-| Środki         | `cash_balance` = SSOT salda                                                             |
+| Fakt                 | Źródło                                                |
+| -------------------- | ----------------------------------------------------- |
+| UI                   | wyłącznie `resolveTransferMarket`                     |
+| Listing / Live podaż | `players.transfer_listed_at`                          |
+| Pending H2H          | **`transfer_offers`** (jedyna tabela ofert)           |
+| Ask                  | `deriveTransferFee`                                   |
+| Kwoty pending        | `NEGOTIATION_THIN` allow-list                         |
+| Settlement           | `completeTransferBuy` / `completeTransferSell` (live) |
+| Cash                 | `cash_balance`                                        |
 
-## Live H2H Thin (LFE-TRANSFERS-06)
+## Pending H2H (LFE-TRANSFERS-07)
 
-- Human↔Human; brak AI clubs.
-- Instant Buy @ **100% ask**; brak pending / timeout.
-- `players.id` **niezmienne**; move = zmiana `club_id` + clear listed (bez DEPARTED).
-- Seed Catalogue pozostaje fallbackiem.
-- Brak `completeLiveTransfer()` — settlement tylko przez buy/sell (source `live`).
+- Instant Buy (06) równolegle.
+- Create / Reject / Withdraw — tylko `transfer_offers` (bez cash/players/deals).
+- Accept → live settle + `accepted` + **superseded** pozostałych pending (ta sama TX).
+- Instant / Unlist → supersede pending w tej samej TX.
+- Brak escrow / timeout / AI pending.
+- Snapshot `amount` + `ask_at_create` immutable po Create.
+- Accept: re-derive fee tylko do walidacji allow-list; settle @ `offer.amount`.
+- Brak środków przy Accept → oferta zostaje `pending`.
 
-## Seller negotiation Thin (LFE-TRANSFERS-05 S2)
+## Live Instant (LFE-TRANSFERS-06)
 
-- Incoming only; Instant Sell = 100% ask bez nego.
-- Reuse `NEGOTIATION_THIN`; pure `resolveSellerNegotiationStep`.
-
-## Listing Thin (LFE-TRANSFERS-04)
-
-- `transfer_listed_at`; Incoming / Live tylko listed.
+- Human↔Human Instant @ 100% ask; `players.id` stałe; RPC `complete_live_h2h_transfer`.
 
 ## Poza Thin
 
-AI clubs · pending/timeout/inbox · Live nego · custom ask · 2+ counters · envelope ratio ≠ 1 · Instant Sell nego.
-
-## Kod
-
-`lib/transfers/*` · `/transfers`
+Escrow · timeout · H2H counter rounds · AI pending · custom ask · `completeLiveTransfer()`.
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-06 CLOSE
+2026-07-26 — LFE-TRANSFERS-07 CLOSE

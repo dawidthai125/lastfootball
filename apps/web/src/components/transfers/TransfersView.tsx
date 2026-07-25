@@ -7,11 +7,15 @@ import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import {
+  acceptLiveTransferOffer,
   buyLiveTransferPlayer,
   buyTransferPlayer,
+  createLiveTransferOffer,
+  rejectLiveTransferOffer,
   respondIncomingOffer,
   sellTransferPlayer,
   setTransferListing,
+  withdrawLiveTransferOffer,
 } from '@/lib/transfers/actions';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
@@ -21,6 +25,7 @@ import {
 } from '@/lib/transfers/resolve-negotiation';
 import type {
   IncomingOfferDto,
+  LiveH2hOfferDto,
   LiveListingDto,
   SellCandidateDto,
   TransferMarketDto,
@@ -30,6 +35,13 @@ const PRESET_LABEL: Record<OfferPreset, string> = {
   low: 'Niska',
   normal: 'Normalna',
   high: 'Wysoka',
+};
+
+const H2H_PRESET_LABEL: Record<OfferPreset | 'counter', string> = {
+  low: '90%',
+  normal: '100%',
+  high: '110%',
+  counter: '95%',
 };
 
 function BuyNegotiate({
@@ -271,7 +283,107 @@ function LiveBuyButton({ listing, disabled }: { listing: LiveListingDto; disable
         </span>
       ) : null}
       <Button type="submit" variant="primary" disabled={disabled || pending}>
-        {pending ? '…' : 'Kup'}
+        {pending ? '…' : 'Kup teraz'}
+      </Button>
+    </form>
+  );
+}
+
+function LiveOfferCreate({
+  listing,
+  disabled,
+  envelopeBalance,
+}: {
+  listing: LiveListingDto;
+  disabled: boolean;
+  envelopeBalance: number;
+}) {
+  const [state, action, pending] = useActionState(createLiveTransferOffer, TRANSFER_ACTION_INITIAL);
+  const presets: Array<OfferPreset | 'counter'> = ['low', 'counter', 'normal', 'high'];
+  return (
+    <div className="flex flex-col items-end gap-1">
+      {state.error ? (
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+      <div className="flex flex-wrap justify-end gap-1">
+        {presets.map((preset) => {
+          const amount =
+            preset === 'counter'
+              ? resolveCounterAmount(listing.ask)
+              : resolveOfferAmount(listing.ask, preset);
+          return (
+            <form key={preset} action={action} className="inline">
+              <input type="hidden" name="playerId" value={listing.playerId} />
+              <input type="hidden" name="sellerClubId" value={listing.sellerClubId} />
+              <input type="hidden" name="preset" value={preset} />
+              <Button
+                type="submit"
+                variant={preset === 'normal' ? 'primary' : 'default'}
+                disabled={disabled || pending || envelopeBalance < amount}
+                title={formatMoney(amount)}
+              >
+                {H2H_PRESET_LABEL[preset]}
+              </Button>
+            </form>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disabled: boolean }) {
+  const [acceptState, acceptAction, acceptPending] = useActionState(
+    acceptLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const [rejectState, rejectAction, rejectPending] = useActionState(
+    rejectLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const err = acceptState.error || rejectState.error;
+  return (
+    <div className="flex flex-col items-end gap-1">
+      {err ? (
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
+          {err}
+        </span>
+      ) : null}
+      <div className="flex flex-wrap justify-end gap-1">
+        <form action={acceptAction} className="inline">
+          <input type="hidden" name="offerId" value={offer.offerId} />
+          <Button type="submit" variant="primary" disabled={disabled || acceptPending}>
+            {acceptPending ? '…' : 'Akceptuj'}
+          </Button>
+        </form>
+        <form action={rejectAction} className="inline">
+          <input type="hidden" name="offerId" value={offer.offerId} />
+          <Button type="submit" variant="default" disabled={rejectPending}>
+            Odrzuć
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function OutgoingH2hActions({ offer }: { offer: LiveH2hOfferDto }) {
+  const [state, action, pending] = useActionState(
+    withdrawLiveTransferOffer,
+    TRANSFER_ACTION_INITIAL,
+  );
+  return (
+    <form action={action} className="inline">
+      <input type="hidden" name="offerId" value={offer.offerId} />
+      {state.error ? (
+        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+      <Button type="submit" variant="default" disabled={pending}>
+        {pending ? '…' : 'Wycofaj'}
       </Button>
     </form>
   );
@@ -319,8 +431,8 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
       ) : (
         <Panel title="Negocjacje, lista i oferty AI">
           <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Wystaw zawodnika na listę (ask = fee). Rynek Live = Instant Kup @ 100% ask od innych
-            klubów. Seed catalogue = fallback. Oferty AI (S2) tylko dla wystawionych.
+            Wystaw zawodnika na listę (ask = fee). Live: Instant Kup @ 100% lub oferta pending
+            (90/95/100/110%). Seed = fallback. Oferty AI (S2) osobno.
           </p>
         </Panel>
       )}
@@ -366,6 +478,68 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         )}
       </Panel>
 
+      <Panel title="Oferty H2H (przychodzące)" flush>
+        {market.incomingLiveOffers.length === 0 ? (
+          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
+            Brak aktywnych ofert od klubów.
+          </p>
+        ) : (
+          <Table
+            rowKey={(r) => r.offerId}
+            rows={[...market.incomingLiveOffers]}
+            columns={[
+              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+              { key: 'buyer', header: 'Kupujący', render: (r) => r.counterpartLabel },
+              {
+                key: 'amount',
+                header: 'Oferta',
+                align: 'right',
+                render: (r) => (
+                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
+                ),
+              },
+              {
+                key: 'act',
+                header: '',
+                align: 'right',
+                render: (r) => (
+                  <IncomingH2hActions offer={r} disabled={!market.windowOpen || !market.canSell} />
+                ),
+              },
+            ]}
+          />
+        )}
+      </Panel>
+
+      <Panel title="Oferty H2H (wychodzące)" flush>
+        {market.outgoingLiveOffers.length === 0 ? (
+          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">Brak złożonych ofert pending.</p>
+        ) : (
+          <Table
+            rowKey={(r) => r.offerId}
+            rows={[...market.outgoingLiveOffers]}
+            columns={[
+              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+              { key: 'seller', header: 'Sprzedawca', render: (r) => r.counterpartLabel },
+              {
+                key: 'amount',
+                header: 'Oferta',
+                align: 'right',
+                render: (r) => (
+                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
+                ),
+              },
+              {
+                key: 'act',
+                header: '',
+                align: 'right',
+                render: (r) => <OutgoingH2hActions offer={r} />,
+              },
+            ]}
+          />
+        )}
+      </Panel>
+
       <Panel title="Rynek Live (kluby graczy)" flush>
         {market.liveListings.length === 0 ? (
           <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
@@ -394,12 +568,23 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
               },
               {
                 key: 'act',
-                header: '',
+                header: 'Instant / Oferta',
                 align: 'right',
                 render: (r) => {
-                  const canLive =
-                    market.canBuy && r.sellerWindowOpen && market.envelopeBalance >= r.ask;
-                  return <LiveBuyButton listing={r} disabled={!canLive} />;
+                  const canLive = market.canBuy && r.sellerWindowOpen;
+                  return (
+                    <div className="flex flex-col items-end gap-1">
+                      <LiveBuyButton
+                        listing={r}
+                        disabled={!canLive || market.envelopeBalance < r.ask}
+                      />
+                      <LiveOfferCreate
+                        listing={r}
+                        disabled={!canLive}
+                        envelopeBalance={market.envelopeBalance}
+                      />
+                    </div>
+                  );
                 },
               },
             ]}

@@ -4,12 +4,15 @@ export type {
   SellCandidateDto,
   IncomingOfferDto,
   LiveListingDto,
+  LiveH2hOfferDto,
+  TransferOfferStatus,
   TransferDealKind,
 } from '@/lib/transfers/types';
 export { TRANSFERS_THIN } from '@/lib/transfers/types';
 export { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
 export { resolveLiveListings } from '@/lib/transfers/resolve-live-listings';
 export type { LiveListingRow } from '@/lib/transfers/resolve-live-listings';
+export { resolveLiveH2hOffers } from '@/lib/transfers/resolve-live-h2h-offers';
 export { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 export { deriveTransferFee } from '@/lib/transfers/derive-fee';
 export {

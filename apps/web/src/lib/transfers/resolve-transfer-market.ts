@@ -8,6 +8,7 @@ import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
 import {
   TRANSFERS_THIN,
+  type LiveH2hOfferDto,
   type LiveListingDto,
   type MarketListingDto,
   type SellCandidateDto,
@@ -20,8 +21,8 @@ function displayPos(pos: string): string {
 }
 
 /**
- * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01…06).
- * Pure — never reads DB; callers pass club cash, window, roster, and live listing DTOs.
+ * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01…07).
+ * Pure — never reads DB; callers pass club cash, window, roster, live listings, H2H offers.
  */
 export function resolveTransferMarket(input: {
   readonly clubId: string;
@@ -30,6 +31,8 @@ export function resolveTransferMarket(input: {
   readonly activePlayers: readonly PlayerRowDto[];
   /** Prefetched H2H listed players (other clubs). */
   readonly liveListings?: readonly LiveListingDto[];
+  readonly incomingLiveOffers?: readonly LiveH2hOfferDto[];
+  readonly outgoingLiveOffers?: readonly LiveH2hOfferDto[];
 }): TransferMarketDto {
   const active = input.activePlayers.filter((p) => p.departedAt == null && p.status !== 'DEPARTED');
   const count = active.length;
@@ -103,6 +106,8 @@ export function resolveTransferMarket(input: {
     canSell,
     listings,
     liveListings: input.liveListings ?? [],
+    incomingLiveOffers: input.incomingLiveOffers ?? [],
+    outgoingLiveOffers: input.outgoingLiveOffers ?? [],
     sellCandidates,
     listedPlayers,
     incomingOffers: resolveIncomingOffers({
