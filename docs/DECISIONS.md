@@ -108,10 +108,11 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Dlaczego:** finanse na ścieżce produktowej nie mogą być mockiem; Hub i `/finance` potrzebują jednej kasy.  
 **Zasada:** `clubs.cash_balance` = jedyne SSOT salda; `finance_movements` = historia; **`resolveClubFinance()` → `ClubFinanceDto`** = jedyny kontrakt UI (UI nie czyta DB bezpośrednio); seed przy create club; nagroda W/D/L tylko przy pierwszym przejściu fixture → `played`; Finanse odblokowane na `SEASON`.  
-**Tymczasowe stałe Thin** (`ECONOMY_THIN`) do czasu GDD **§26**: `STARTER_CASH=100000`, `REWARD_WIN=5000`, `REWARD_DRAW=2500`, `REWARD_LOSS=1000` (waluta Thin: EUR).  
+**Liczby (SSOT produktu):** GDD **§26** (GDD-§26A CLOSED) — starter / W/D/L / waluta.  
+**Kod do syncu:** stałe `ECONOMY_THIN` nadal w runtime do **GDD-§26B** (wartości = promocja Thin = §26A).  
 **Poza Thin:** pensje, bilety, sponsorzy, transfer **envelope**, negotiation.  
 **Źródło:** LFE-ECONOMY-01 (prod `a70cf81`).  
-**Uwaga:** Transfery cash-only (bez envelope) — **D20** / LFE-TRANSFERS-01.
+**Uwaga:** Transfery cash-only (bez envelope) — **D20** / LFE-TRANSFERS-01. **§26 = SSOT liczb; D18 = SSOT implementacji finansów.**
 
 ### D19 — Players table SSOT + `resolveClubSquad` · CLOSED
 
@@ -139,9 +140,10 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`)                                          |
 
 **Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
+**Liczby fee (SSOT produktu):** GDD **§26** (formuła + floor + round) — GDD-§26A CLOSED; sync literałów w kodzie → **GDD-§26B**.  
 **Poza Thin:** negotiation, envelope, potential, live market DB.  
 **Źródło:** LFE-TRANSFERS-01 (prod `393a43c`; prettier `7c0ce7f`).  
-**Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21).
+**Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
 ### D21 — Team training Thin + `resolveClubTraining` · CLOSED
 
@@ -164,7 +166,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.  
+**GDD-§26A (2026-07-25):** GDD §26 = SSOT produktu (liczby/balans Thin); D18/D20 pozostają SSOT implementacji. Sync kodu = GDD-§26B. Feature baseline bez zmiany (`10de062`).
 
 ## Powiązania
 
@@ -172,4 +175,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-25 — GDD-§26A CLOSE

@@ -6,27 +6,28 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 ukończone. §3–§15 + §20 + §23 wypełnione. Następny etap szkieletu = **Owner GO** (GDD-16+).
+GDD-01…15 + **GDD-§26A** ukończone. §3–§15 + §20 + §23 + **§26 liczby Thin** wypełnione. Następny: **GDD-§26B** (sync kodu) po Owner GO · pozostały szkielet = GDD-16+.
 
 ## Completed
 
-| Stage  | Zakres                    |
-| ------ | ------------------------- |
-| GDD-01 | Struktura dokumentu       |
-| GDD-02 | §3 Core loop              |
-| GDD-03 | §4–§5 Registration / club |
-| GDD-04 | §9 Match experience       |
-| GDD-05 | §10 League                |
-| GDD-06 | §7 Players (+ DCC)        |
-| GDD-07 | §8 Training (+ DCC)       |
-| GDD-08 | §11 Cups                  |
-| GDD-09 | §12 Transfers (+ DCC)     |
-| GDD-10 | §14 Finances              |
-| GDD-11 | §15 Sponsors              |
-| GDD-12 | §13 Stadium               |
-| GDD-13 | §6 Club development       |
-| GDD-14 | §23 Hub / main panel      |
-| GDD-15 | §20 Daily tasks           |
+| Stage    | Zakres                                        |
+| -------- | --------------------------------------------- |
+| GDD-01   | Struktura dokumentu                           |
+| GDD-02   | §3 Core loop                                  |
+| GDD-03   | §4–§5 Registration / club                     |
+| GDD-04   | §9 Match experience                           |
+| GDD-05   | §10 League                                    |
+| GDD-06   | §7 Players (+ DCC)                            |
+| GDD-07   | §8 Training (+ DCC)                           |
+| GDD-08   | §11 Cups                                      |
+| GDD-09   | §12 Transfers (+ DCC)                         |
+| GDD-10   | §14 Finances                                  |
+| GDD-11   | §15 Sponsors                                  |
+| GDD-12   | §13 Stadium                                   |
+| GDD-13   | §6 Club development                           |
+| GDD-14   | §23 Hub / main panel                          |
+| GDD-15   | §20 Daily tasks                               |
+| GDD-§26A | §26 Economy numbers Thin (docs SSOT) · CLOSED |
 
 ## In Progress
 
@@ -36,10 +37,10 @@ GDD-01…15 ukończone. §3–§15 + §20 + §23 wypełnione. Następny etap szk
 
 ## Planned
 
-| Stage        | Zakres                                            |
-| ------------ | ------------------------------------------------- |
-| GDD-16+      | Pozostałe rozdziały szkieletu (kolejność = Owner) |
-| Balance pass | §26 liczby (później)                              |
+| Stage    | Zakres                                                          |
+| -------- | --------------------------------------------------------------- |
+| GDD-§26B | Sync kodu z §26 (`ECONOMY_THIN` / fee / CURRENCY) — po Owner GO |
+| GDD-16+  | Pozostałe rozdziały szkieletu (kolejność = Owner)               |
 
 ## Future
 
@@ -54,7 +55,8 @@ GDD-01…15 ukończone. §3–§15 + §20 + §23 wypełnione. Następny etap szk
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = metryki klubu · §20 = zadania · §23 = Hub.
+- §6 = metryki klubu · §20 = zadania · §23 = Hub · §26 = liczby / balans.
+- §26 = SSOT liczb; D18/D20 = SSOT implementacji.
 
 ## Powiązania
 
@@ -62,4 +64,4 @@ GDD-01…15 ukończone. §3–§15 + §20 + §23 wypełnione. Następny etap szk
 
 ## Last updated
 
-2026-07-24 — GDD-15
+2026-07-25 — GDD-§26A CLOSE

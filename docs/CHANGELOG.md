@@ -7,7 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`10de062`** (LFE-TRAINING-01 **FULLY CLOSED**) — tip docs may be newer.
+Production baseline **`10de062`** (LFE-TRAINING-01 **FULLY CLOSED**) — tip docs may be newer.  
+GDD-§26A **CLOSED** (docs) — feature baseline **bez zmiany**.
+
+---
+
+## [2026-07-25] — GDD-§26A · CLOSED
+
+### Docs
+
+- GDD §26 wypełniony: SSOT liczb Thin (Wariant A — promocja live)
+- Waluta EUR · starter 100 000 · W/D/L 5 000 / 2 500 / 1 000 · fee derive (skill/age + floor 25 000)
+- Jawne: §26 = SSOT produktu (liczby); D18/D20 = SSOT implementacji
+- OUT: envelope, pensje, bilety, sponsorzy, Premium, soft/hard, training cash
+- Sync kodu = **GDD-§26B** (PLANNED); feature baseline pozostaje `10de062`
 
 ---
 

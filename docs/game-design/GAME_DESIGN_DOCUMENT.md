@@ -7370,21 +7370,145 @@ Profesjonalny menedżer piłkarski — nie „AI dashboard”. Detale tokenów �
 
 ## 26. System ekonomii
 
-**Cel**  
-Zaprojektować zrównoważoną ekonomię gry.
+**Status rozdziału:** GDD-§26A — opracowany (**SSOT liczb / balansu Thin**; promocja wartości live `ECONOMY_THIN` + formuły fee; bez nowych systemów ekonomii)
 
-**Opis**  
-Źródła i ujścia walut, inflacja, sinki — bez liczb na tym etapie.
+**Cel rozdziału**  
+Ustalić **jedyny SSOT produktu dla liczb ekonomicznych** żyjącej ścieżki Thin: waluta, kasa startowa, nagrody meczowe W/D/L, formuła opłaty transferowej — spójnie z kategoriami §14 i modelem runtime D18/D20.
 
-**Do opracowania**
+**Zasady nadrzędne (decyzje GDD-§26A)**
 
-- [ ] Waluty (soft / hard)
-- [ ] Źródła i sinki
-- [ ] Sezonowe dostosowania
-- [ ] Relacja do Premium
-- [ ] Symulacje balansu (metoda)
+1. **GDD §26 = SSOT produktu (liczby i balans).** Kwoty i formuła fee żyją tutaj; inne rozdziały odesyłają, nie duplikują tabel.
+2. **D18 / D20 = SSOT implementacji.** Saldo, movements, resolvery, derive fee, cash-only, brak `market_value` — bez zmiany roli przez ten rozdział.
+3. **Wariant A (promocja Thin):** pierwsze liczby §26 = wartości już na produkcji (`ECONOMY_THIN` + live `deriveTransferFee`).
+4. **Model środków Thin:** **jedna kasa**, rozliczenia transferów **cash-only** (zgodne z D20). Envelope z §14 = Future / poza §26A.
+5. **Kategorie > nowe sinki:** §14 opisuje kategorie UX; §26 dostarcza tylko kwoty dla ścieżki już zaimplementowanej.
+6. Soft/hard currency, Premium, inflacja sezonowa, pensje, bilety, sponsorzy — **OUT** tego etapu (§27 / Future).
+
+**Szybki kontrakt MVP (SSOT liczb)**
+
+| Parametr             | Wartość §26A (Thin)                                           |
+| -------------------- | ------------------------------------------------------------- |
+| Waluta UX / kod      | **EUR**                                                       |
+| Model kasy Thin      | **1 kasa** · cash-only (bez envelope)                         |
+| Starter przy create  | **100 000**                                                   |
+| Nagroda zwycięstwo   | **5 000**                                                     |
+| Nagroda remis        | **2 500**                                                     |
+| Nagroda porażka      | **1 000**                                                     |
+| Fee transferu        | derive ze skill + age (poniżej) — brak trwałego market value  |
+| Implementacja (do B) | nadal `ECONOMY_THIN` / literały fee; sync kodu → **GDD-§26B** |
 
 ---
+
+### 26.1 Relacja SSOT: produkt vs implementacja
+
+| Warstwa                         | SSOT                   | Przykład                              |
+| ------------------------------- | ---------------------- | ------------------------------------- |
+| Liczby / balans                 | **ten rozdział (§26)** | starter, W/D/L, współczynniki fee     |
+| Saldo, ledger, UI finansów      | **D18**                | `cash_balance`, `resolveClubFinance`  |
+| Rynek, derive fee, cash deal    | **D20**                | `deriveTransferFee`, `transfer_deals` |
+| Kategorie przychodów/kosztów UX | **§14**                | bez kwot                              |
+
+Kod po GDD-§26B **odzwierciedla** tabele poniżej; nie tworzy równoległego SSOT liczb.
+
+**Zależności:** §14 · D18 · D20 · [`../platform/FINANCE.md`](../platform/FINANCE.md) · [`../platform/TRANSFERS.md`](../platform/TRANSFERS.md).
+
+---
+
+### 26.2 Waluta
+
+| Pole        | Wartość                                          |
+| ----------- | ------------------------------------------------ |
+| Kod ISO UX  | `EUR`                                            |
+| Soft / hard | **Jedna** waluta gry w Thin — brak dual currency |
+
+Nazwa brandowa waluty = Future (pytanie otwarte §14). W Thin UI używa formatu EUR.
+
+---
+
+### 26.3 Kasa startowa
+
+| Klucz          | Wartość | Kiedy                              |
+| -------------- | ------- | ---------------------------------- |
+| `STARTER_CASH` | 100 000 | Create club (+ movement `starter`) |
+
+Bufor Sezon 1 (§14 soft landing) — bez tutorialowego bankruta.
+
+---
+
+### 26.4 Nagrody meczowe (liga)
+
+Nagroda kredytowana **tylko** przy pierwszym przejściu fixture → `played` (D18). Wynik z perspektywy klubu gracza.
+
+| Wynik      | Klucz         | Kwota |
+| ---------- | ------------- | ----- |
+| Zwycięstwo | `REWARD_WIN`  | 5 000 |
+| Remis      | `REWARD_DRAW` | 2 500 |
+| Porażka    | `REWARD_LOSS` | 1 000 |
+
+Remis i porażka dają **> 0** (ochrona early — spójne z pytaniem otwartym §14.2).
+
+**Poza §26A:** nagrody pozycyjne / sezonowe (§10), pucharowe (§11), bilety, sponsorzy.
+
+---
+
+### 26.5 Opłata transferowa (fee)
+
+**Zasada (D20):** fee = **derive** w momencie listingu / dealu; **brak** trwałego `market_value` w DB.
+
+**Formuła §26A (promocja live Thin):**
+
+\[
+\text{raw} = \text{skill} \times 2000 + \max(0,\ 30 - \text{age}) \times 1500
+\]
+
+\[
+\text{fee} = \max\bigl(25000,\ \mathrm{round}_{1000}(\text{raw})\bigr)
+\]
+
+| Współczynnik | Wartość | Opis                                     |
+| ------------ | ------- | ---------------------------------------- |
+| `SKILL_MULT` | 2 000   | mnożnik skill                            |
+| `AGE_BONUS`  | 1 500   | premia za wiek poniżej referencji        |
+| `AGE_REF`    | 30      | próg wieku (powyżej → brak premii wieku) |
+| `FLOOR`      | 25 000  | minimum fee                              |
+| `ROUND`      | 1 000   | zaokrąglenie do pełnych tysięcy          |
+
+Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
+
+---
+
+### 26.6 OUT OF SCOPE / Future
+
+| Temat                         | Status                                       |
+| ----------------------------- | -------------------------------------------- |
+| Transfer envelope (§14 / §12) | Future — poza Thin; live = cash-only (D20)   |
+| Negotiation / kontroferta UI  | Poza Thin (D20)                              |
+| Pensje / utrzymanie kadry     | Future (§14.10 + liczby później)             |
+| Bilety / frekwencja           | Future (§14.9)                               |
+| Sponsorzy (kwoty)             | Future (§15)                                 |
+| Soft / hard currency          | Future                                       |
+| Premium / monetyzacja         | §27                                          |
+| Koszt cash treningu           | Poza Training Thin (D21)                     |
+| `market_value` trwałe w DB    | Zakaz Thin (D20)                             |
+| Inflacja / sinki sezonowe     | Future                                       |
+| Sync kodu ze §26              | **GDD-§26B** (osobny etap; nie ten rozdział) |
+
+---
+
+### 26.7 Checklista §26
+
+- [x] Waluta Thin (EUR)
+- [x] Starter cash
+- [x] Nagrody W/D/L
+- [x] Formuła fee + floor + round
+- [x] Relacja §26 (liczby) vs D18/D20 (implementacja)
+- [x] OUT OF SCOPE jawne
+- [ ] Soft/hard · Premium · pensje · bilety · sponsorzy — Future
+- [ ] GDD-§26B — sync kodu (`ECONOMY_THIN` / fee constants)
+
+---
+
+## 27. Premium
 
 ## 27. Premium
 
@@ -7460,23 +7584,24 @@ Plan faz dokumentacji i implementacji — żywy dokument.
 
 ## Historia dokumentu
 
-| Wersja       | Data       | Zmiana                                                       |
-| ------------ | ---------- | ------------------------------------------------------------ |
-| 0.1.0-gdd01  | 2026-07-23 | Szkielet 30 rozdziałów (GDD-01)                              |
-| 0.2.0-gdd02  | 2026-07-23 | §3 Główna pętla rozgrywki — pełne opracowanie (GDD-02)       |
-| 0.3.0-gdd03  | 2026-07-23 | §4 Rejestracja + §5 Tworzenie klubu (GDD-03)                 |
-| 0.4.0-gdd04  | 2026-07-23 | §9 Mecze — doświadczenie meczu (GDD-04)                      |
-| 0.5.0-gdd05  | 2026-07-23 | §10 Liga — rozgrywki i kalendarz (GDD-05)                    |
-| 0.6.0-gdd06  | 2026-07-23 | §7 Rozwój zawodników (GDD-06)                                |
-| 0.6.1-dcc    | 2026-07-23 | DCC: §9.2/§9.14/§10.15 spójność z GDD-06 (bez zmian decyzji) |
-| 0.7.0-gdd07  | 2026-07-23 | §8 Trening — system treningowy (GDD-07)                      |
-| 0.7.1-dcc    | 2026-07-23 | DCC: unlock treningu + §7.13 (bez zmian decyzji)             |
-| 0.8.0-gdd08  | 2026-07-23 | §11 Puchary — Puchar Krajowy MVP (GDD-08)                    |
-| 0.9.0-gdd09  | 2026-07-23 | §12 Transfery — rynek MVP (GDD-09)                           |
-| 0.9.1-dcc    | 2026-07-23 | DCC: kontroferta SSOT w §12 (bez zmian decyzji)              |
-| 0.10.0-gdd10 | 2026-07-23 | §14 Finanse — kategorie i envelope (GDD-10)                  |
-| 0.11.0-gdd11 | 2026-07-23 | §15 Sponsorzy — sponsor bazowy MVP (GDD-11)                  |
-| 0.12.0-gdd12 | 2026-07-23 | §13 Stadion — obiekt statyczny MVP (GDD-12)                  |
+| Wersja        | Data       | Zmiana                                                       |
+| ------------- | ---------- | ------------------------------------------------------------ |
+| 0.1.0-gdd01   | 2026-07-23 | Szkielet 30 rozdziałów (GDD-01)                              |
+| 0.2.0-gdd02   | 2026-07-23 | §3 Główna pętla rozgrywki — pełne opracowanie (GDD-02)       |
+| 0.3.0-gdd03   | 2026-07-23 | §4 Rejestracja + §5 Tworzenie klubu (GDD-03)                 |
+| 0.4.0-gdd04   | 2026-07-23 | §9 Mecze — doświadczenie meczu (GDD-04)                      |
+| 0.5.0-gdd05   | 2026-07-23 | §10 Liga — rozgrywki i kalendarz (GDD-05)                    |
+| 0.6.0-gdd06   | 2026-07-23 | §7 Rozwój zawodników (GDD-06)                                |
+| 0.6.1-dcc     | 2026-07-23 | DCC: §9.2/§9.14/§10.15 spójność z GDD-06 (bez zmian decyzji) |
+| 0.7.0-gdd07   | 2026-07-23 | §8 Trening — system treningowy (GDD-07)                      |
+| 0.7.1-dcc     | 2026-07-23 | DCC: unlock treningu + §7.13 (bez zmian decyzji)             |
+| 0.8.0-gdd08   | 2026-07-23 | §11 Puchary — Puchar Krajowy MVP (GDD-08)                    |
+| 0.9.0-gdd09   | 2026-07-23 | §12 Transfery — rynek MVP (GDD-09)                           |
+| 0.9.1-dcc     | 2026-07-23 | DCC: kontroferta SSOT w §12 (bez zmian decyzji)              |
+| 0.10.0-gdd10  | 2026-07-23 | §14 Finanse — kategorie i envelope (GDD-10)                  |
+| 0.11.0-gdd11  | 2026-07-23 | §15 Sponsorzy — sponsor bazowy MVP (GDD-11)                  |
+| 0.12.0-gdd12  | 2026-07-23 | §13 Stadion — obiekt statyczny MVP (GDD-12)                  |
+| 0.13.0-gdd26a | 2026-07-25 | §26 System ekonomii — SSOT liczb Thin (GDD-§26A)             |
 
 ---
 

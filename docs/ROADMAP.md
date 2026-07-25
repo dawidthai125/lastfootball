@@ -7,6 +7,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 Production baseline **`10de062`** (LFE-TRAINING-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
+GDD-§26A **CLOSED** (docs SSOT liczb Thin) — tip docs nowszy; **feature baseline bez zmiany**.  
 Vercel Production Ready; migracja `20260725100000_training_thin` applied na Supabase.
 
 ---
@@ -23,6 +24,7 @@ Vercel Production Ready; migracja `20260725100000_training_thin` applied na Supa
 | Live Bridge · Canvas · Replay · Post Match · Ratings   | match UI pipeline                                             |
 | CI Prettier                                            | format gate                                                   |
 | GDD-01…15                                              | §3–§15 + §20 + §23                                            |
+| **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs) · sync kodu → §26B    |
 | **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                       |
 | **LFE-INFRA-01**                                       | Supabase `anoeimngwptucjdugjme`                               |
 | **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`               |
@@ -43,15 +45,15 @@ Vercel Production Ready; migracja `20260725100000_training_thin` applied na Supa
 
 ## PLANNED ⬜
 
-| Item                             | Zależność                         |
-| -------------------------------- | --------------------------------- |
-| GDD-16+                          | Owner GO (docs)                   |
-| GDD §26 balance numbers          | zastąpi `ECONOMY_THIN` / fee Thin |
-| Negotiation / envelope           | po Transfers Thin (D20 poza)      |
-| Full 11-fixture calendar (opt.)  | po LEAGUE-02                      |
-| Training depth (skill / XI gate) | po TRAINING-01 (D21 poza)         |
-| Zawężenie LFE PUBLIC exports     | chore                             |
-| Ratings v2                       | bogatsze Player Match Data        |
+| Item                             | Zależność                                     |
+| -------------------------------- | --------------------------------------------- |
+| **GDD-§26B**                     | Sync kodu z §26 — po Owner GO (docs A CLOSED) |
+| GDD-16+                          | Owner GO (docs)                               |
+| Negotiation / envelope           | po Transfers Thin (D20 poza)                  |
+| Full 11-fixture calendar (opt.)  | po LEAGUE-02                                  |
+| Training depth (skill / XI gate) | po TRAINING-01 (D21 poza)                     |
+| Zawężenie LFE PUBLIC exports     | chore                                         |
+| Ratings v2                       | bogatsze Player Match Data                    |
 
 ## FUTURE
 
@@ -66,8 +68,8 @@ Vercel Production Ready; migracja `20260725100000_training_thin` applied na Supa
 
 ## Next Recommended EPIC
 
-**Owner wybiera.** Kandydaci: GDD-16+ · GDD §26 (liczby) · negotiation/envelope · full 11 fixtures · Training depth (skill / filtr XI).  
-Uzasadnienie: Training Thin + Players + Transfers są na produkcji; kolejny krok to balans (§26), głębszy rynek albo kalendarz.
+**GDD-§26B** (Code Sync) — po Owner GO: `ECONOMY_THIN` + fee coeffs + CURRENCY ↔ §26; feature baseline zostaje `10de062`.  
+Alternatywy: GDD-16+ · negotiation/envelope · full 11 fixtures · Training depth.
 
 ## Decyzje roadmapy
 
@@ -76,10 +78,11 @@ Uzasadnienie: Training Thin + Players + Transfers są na produkcji; kolejny krok
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
 - Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
-- Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); stałe Thin tymczasowe do §26.
+- Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26** (SSOT produktu); kod Thin do syncu §26B.
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; cash-only; fee = derive (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
+- **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
 
 ## Powiązania
 
@@ -87,4 +90,4 @@ Uzasadnienie: Training Thin + Players + Transfers są na produkcji; kolejny krok
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-25 — GDD-§26A CLOSE
