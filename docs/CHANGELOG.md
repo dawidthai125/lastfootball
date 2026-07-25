@@ -7,7 +7,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`PLACEHOLDER_05`** (LFE-TRANSFERS-05) — tip may be docs after feat.
+Production feature baseline **`4b58507`** (LFE-TRANSFERS-05) — tip may be docs after feat.
 
 ---
 
@@ -20,7 +20,7 @@ Production feature baseline **`PLACEHOLDER_05`** (LFE-TRANSFERS-05) — tip may 
 - Settlement: `completeTransferSell(agreedAmount)` + `isAllowedAgreedAmount`; idempotentne
 - Pełna rewalidacja przed settle (ask / allow-list / eligibility / listed / window / roster / GK)
 - Brak nowych tabel / pending / timeoutów; UI tylko `resolveTransferMarket`
-- Feature baseline → **`PLACEHOLDER_05`** (LFE-TRANSFERS-05)
+- Feature baseline → **`4b58507`** (LFE-TRANSFERS-05)
 
 ---
 

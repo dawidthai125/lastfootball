@@ -6,7 +6,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`PLACEHOLDER_05`** (LFE-TRANSFERS-05 CLOSED).  
+Production feature baseline **`4b58507`** (LFE-TRANSFERS-05 CLOSED).  
 GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 · Listing 04 · Seller nego 05 · Vercel Production.
 
 ---
