@@ -26,7 +26,7 @@ git log -1 --oneline 4f69b5d  # feature baseline TRANSFERS-03 incoming
 | URL                  | https://lastfootball.vercel.app                                   |
 | Alias                | https://lastfootball.pl                                           |
 | Branch               | `main`                                                            |
-| **Feature baseline** | `4f69b5dccd3d100b9f912fa45b9f1aae7f0bcdb6`                       |
+| **Feature baseline** | `4f69b5dccd3d100b9f912fa45b9f1aae7f0bcdb6`                        |
 | Baseline message     | `feat(transfers): add AI incoming offers Thin (LFE-TRANSFERS-03)` |
 | Docs CLOSE tip       | _(ten commit lub nowszy)_                                         |
 | Status               | **LFE-TRANSFERS-03 CLOSED** · N1 · E1 · LEAGUE-03 · GDD-§26A/B    |
