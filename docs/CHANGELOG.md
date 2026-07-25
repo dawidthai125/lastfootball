@@ -8,7 +8,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 Production baseline **`10de062`** (LFE-TRAINING-01 **FULLY CLOSED**) — tip docs may be newer.  
-GDD-§26A **CLOSED** (docs) — feature baseline **bez zmiany**.
+GDD-§26A + **GDD-§26B CLOSED** — feature baseline **bez zmiany**.
+
+---
+
+## [2026-07-25] — GDD-§26B · CLOSED
+
+### Code sync
+
+- `ECONOMY_THIN` = GDD §26 (starter / W/D/L / CURRENCY)
+- `ECONOMY_THIN.TRANSFER_FEE` — wspólne współczynniki fee; `deriveTransferFee` tylko stąd
+- Jedno `CURRENCY` (usunięte z `TRANSFERS_THIN`)
+- Testy `economy01` + `transfers01` zaktualizowane
+- D18/D20 bez zmiany architektury; feature baseline pozostaje `10de062`
 
 ---
 
@@ -20,7 +32,7 @@ GDD-§26A **CLOSED** (docs) — feature baseline **bez zmiany**.
 - Waluta EUR · starter 100 000 · W/D/L 5 000 / 2 500 / 1 000 · fee derive (skill/age + floor 25 000)
 - Jawne: §26 = SSOT produktu (liczby); D18/D20 = SSOT implementacji
 - OUT: envelope, pensje, bilety, sponsorzy, Premium, soft/hard, training cash
-- Sync kodu = **GDD-§26B** (PLANNED); feature baseline pozostaje `10de062`
+- Sync kodu = **GDD-§26B** (następny etap); feature baseline pozostaje `10de062`
 
 ---
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { ECONOMY_THIN } from '@/lib/finance/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
@@ -38,9 +39,15 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
     expect(a.length).toBeGreaterThanOrEqual(5);
   });
 
-  it('deriveTransferFee is positive and stable', () => {
-    expect(deriveTransferFee(60, 24)).toBeGreaterThan(0);
-    expect(deriveTransferFee(60, 24)).toBe(deriveTransferFee(60, 24));
+  it('deriveTransferFee uses ECONOMY_THIN.TRANSFER_FEE (GDD §26)', () => {
+    const { SKILL_MULT, AGE_BONUS, AGE_REF, FLOOR, ROUND } = ECONOMY_THIN.TRANSFER_FEE;
+    const skill = 60;
+    const age = 24;
+    const raw = skill * SKILL_MULT + Math.max(0, AGE_REF - age) * AGE_BONUS;
+    const expected = Math.max(FLOOR, Math.round(raw / ROUND) * ROUND);
+    expect(deriveTransferFee(skill, age)).toBe(expected);
+    expect(deriveTransferFee(skill, age)).toBe(deriveTransferFee(skill, age));
+    expect(deriveTransferFee(1, 99)).toBe(FLOOR);
   });
 
   it('resolveTransferMarket closes deals when window shut', () => {
@@ -59,6 +66,7 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
     expect(market.activeRosterCount).toBe(18);
     expect(market.minRoster).toBe(TRANSFERS_THIN.MIN_ROSTER);
     expect(market.maxRoster).toBe(TRANSFERS_THIN.MAX_ROSTER);
+    expect(market.currency).toBe(ECONOMY_THIN.CURRENCY);
   });
 
   it('resolveTransferMarket allows buy/sell when window open and roster mid-range', () => {

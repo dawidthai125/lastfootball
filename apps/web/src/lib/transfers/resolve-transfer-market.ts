@@ -1,4 +1,5 @@
 import { formatMoney } from '@/lib/finance/format-money';
+import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
@@ -40,7 +41,7 @@ export function resolveTransferMarket(input: {
       age: s.age,
       skill: s.skill,
       fee,
-      feeLabel: formatMoney(fee, TRANSFERS_THIN.CURRENCY),
+      feeLabel: formatMoney(fee, ECONOMY_THIN.CURRENCY),
       clubLabel: s.clubLabel,
     };
   });
@@ -63,7 +64,7 @@ export function resolveTransferMarket(input: {
         age: p.age,
         skill: p.skill,
         fee,
-        feeLabel: formatMoney(fee, TRANSFERS_THIN.CURRENCY),
+        feeLabel: formatMoney(fee, ECONOMY_THIN.CURRENCY),
         starter: p.starter,
       };
     });
@@ -72,8 +73,8 @@ export function resolveTransferMarket(input: {
     clubId: input.clubId,
     windowOpen,
     cashBalance: input.cashBalance,
-    cashLabel: formatMoney(input.cashBalance, TRANSFERS_THIN.CURRENCY),
-    currency: TRANSFERS_THIN.CURRENCY,
+    cashLabel: formatMoney(input.cashBalance, ECONOMY_THIN.CURRENCY),
+    currency: ECONOMY_THIN.CURRENCY,
     activeRosterCount: count,
     minRoster: TRANSFERS_THIN.MIN_ROSTER,
     maxRoster: TRANSFERS_THIN.MAX_ROSTER,

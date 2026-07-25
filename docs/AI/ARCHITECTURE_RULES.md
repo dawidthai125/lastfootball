@@ -89,7 +89,7 @@ supabase/ (Auth + Postgres migrations)
 
 - **GDD** = SSOT intencji produktu ([`GAME_DESIGN_DOCUMENT.md`](../game-design/GAME_DESIGN_DOCUMENT.md)).
 - Świadomy wyjątek onboardingu: GDD §5.10 sugeruje Hub „nowy klub” przed meczem; **produkt live** używa First Match tunnel przed Hubem (LFE-MATCH-01). Dokumentuj wyjątek, nie „naprawiaj” GDD w kodzie bez Owner GO.
-- Stałe ekonomii Thin (`ECONOMY_THIN`) są **tymczasowe** do GDD §26 (D18).
+- Stałe ekonomii Thin (`ECONOMY_THIN`, w tym `TRANSFER_FEE`) = GDD **§26** (D18/D20; GDD-§26B).
 - Unlock okna transferów / treningu po 2 played = Thin (D20 / D21).
 - Dzień treningu = UTC date (Thin vs GDD timezone gracza) — D21.
 

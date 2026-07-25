@@ -7,12 +7,20 @@ import { resolveLeagueMatchReward } from '@/lib/finance/resolve-match-reward';
 import type { FinanceMovementDto } from '@/lib/finance/types';
 
 describe('ECONOMY_THIN constants', () => {
-  it('matches Owner Thin amounts', () => {
+  it('matches GDD §26 amounts', () => {
     expect(ECONOMY_THIN.STARTER_CASH).toBe(100_000);
     expect(ECONOMY_THIN.REWARD_WIN).toBe(5_000);
     expect(ECONOMY_THIN.REWARD_DRAW).toBe(2_500);
     expect(ECONOMY_THIN.REWARD_LOSS).toBe(1_000);
     expect(ECONOMY_THIN.CURRENCY).toBe('EUR');
+  });
+
+  it('exposes shared TRANSFER_FEE coefficients (GDD §26)', () => {
+    expect(ECONOMY_THIN.TRANSFER_FEE.SKILL_MULT).toBe(2_000);
+    expect(ECONOMY_THIN.TRANSFER_FEE.AGE_BONUS).toBe(1_500);
+    expect(ECONOMY_THIN.TRANSFER_FEE.AGE_REF).toBe(30);
+    expect(ECONOMY_THIN.TRANSFER_FEE.FLOOR).toBe(25_000);
+    expect(ECONOMY_THIN.TRANSFER_FEE.ROUND).toBe(1_000);
   });
 });
 

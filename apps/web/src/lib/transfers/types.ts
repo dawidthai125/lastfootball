@@ -1,9 +1,11 @@
-/** Thin transfer constants — temporary until GDD §12/§26 balance (LFE-TRANSFERS-01). */
+/**
+ * Thin transfer constants (D20) — roster / unlock only.
+ * Currency + fee coefficients live in ECONOMY_THIN (GDD §26 / REUSE FIRST).
+ */
 export const TRANSFERS_THIN = {
   UNLOCK_AFTER_PLAYED: 2,
   MIN_ROSTER: 18,
   MAX_ROSTER: 22,
-  CURRENCY: 'EUR',
 } as const;
 
 export type TransferDealKind = 'buy' | 'sell';

@@ -7386,16 +7386,16 @@ Ustalić **jedyny SSOT produktu dla liczb ekonomicznych** żyjącej ścieżki Th
 
 **Szybki kontrakt MVP (SSOT liczb)**
 
-| Parametr             | Wartość §26A (Thin)                                           |
-| -------------------- | ------------------------------------------------------------- |
-| Waluta UX / kod      | **EUR**                                                       |
-| Model kasy Thin      | **1 kasa** · cash-only (bez envelope)                         |
-| Starter przy create  | **100 000**                                                   |
-| Nagroda zwycięstwo   | **5 000**                                                     |
-| Nagroda remis        | **2 500**                                                     |
-| Nagroda porażka      | **1 000**                                                     |
-| Fee transferu        | derive ze skill + age (poniżej) — brak trwałego market value  |
-| Implementacja (do B) | nadal `ECONOMY_THIN` / literały fee; sync kodu → **GDD-§26B** |
+| Parametr            | Wartość §26A (Thin)                                          |
+| ------------------- | ------------------------------------------------------------ |
+| Waluta UX / kod     | **EUR**                                                      |
+| Model kasy Thin     | **1 kasa** · cash-only (bez envelope)                        |
+| Starter przy create | **100 000**                                                  |
+| Nagroda zwycięstwo  | **5 000**                                                    |
+| Nagroda remis       | **2 500**                                                    |
+| Nagroda porażka     | **1 000**                                                    |
+| Fee transferu       | derive ze skill + age (poniżej) — brak trwałego market value |
+| Implementacja       | `ECONOMY_THIN` = §26 (GDD-§26B CLOSED); fee ← `TRANSFER_FEE` |
 
 ---
 
@@ -7479,19 +7479,19 @@ Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
 
 ### 26.6 OUT OF SCOPE / Future
 
-| Temat                         | Status                                       |
-| ----------------------------- | -------------------------------------------- |
-| Transfer envelope (§14 / §12) | Future — poza Thin; live = cash-only (D20)   |
-| Negotiation / kontroferta UI  | Poza Thin (D20)                              |
-| Pensje / utrzymanie kadry     | Future (§14.10 + liczby później)             |
-| Bilety / frekwencja           | Future (§14.9)                               |
-| Sponsorzy (kwoty)             | Future (§15)                                 |
-| Soft / hard currency          | Future                                       |
-| Premium / monetyzacja         | §27                                          |
-| Koszt cash treningu           | Poza Training Thin (D21)                     |
-| `market_value` trwałe w DB    | Zakaz Thin (D20)                             |
-| Inflacja / sinki sezonowe     | Future                                       |
-| Sync kodu ze §26              | **GDD-§26B** (osobny etap; nie ten rozdział) |
+| Temat                         | Status                                                |
+| ----------------------------- | ----------------------------------------------------- |
+| Transfer envelope (§14 / §12) | Future — poza Thin; live = cash-only (D20)            |
+| Negotiation / kontroferta UI  | Poza Thin (D20)                                       |
+| Pensje / utrzymanie kadry     | Future (§14.10 + liczby później)                      |
+| Bilety / frekwencja           | Future (§14.9)                                        |
+| Sponsorzy (kwoty)             | Future (§15)                                          |
+| Soft / hard currency          | Future                                                |
+| Premium / monetyzacja         | §27                                                   |
+| Koszt cash treningu           | Poza Training Thin (D21)                              |
+| `market_value` trwałe w DB    | Zakaz Thin (D20)                                      |
+| Inflacja / sinki sezonowe     | Future                                                |
+| Sync kodu ze §26              | **GDD-§26B CLOSED** — `ECONOMY_THIN` + `TRANSFER_FEE` |
 
 ---
 
@@ -7504,11 +7504,9 @@ Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
 - [x] Relacja §26 (liczby) vs D18/D20 (implementacja)
 - [x] OUT OF SCOPE jawne
 - [ ] Soft/hard · Premium · pensje · bilety · sponsorzy — Future
-- [ ] GDD-§26B — sync kodu (`ECONOMY_THIN` / fee constants)
+- [x] GDD-§26B — sync kodu (`ECONOMY_THIN` / fee constants)
 
 ---
-
-## 27. Premium
 
 ## 27. Premium
 
@@ -7602,6 +7600,7 @@ Plan faz dokumentacji i implementacji — żywy dokument.
 | 0.11.0-gdd11  | 2026-07-23 | §15 Sponsorzy — sponsor bazowy MVP (GDD-11)                  |
 | 0.12.0-gdd12  | 2026-07-23 | §13 Stadion — obiekt statyczny MVP (GDD-12)                  |
 | 0.13.0-gdd26a | 2026-07-25 | §26 System ekonomii — SSOT liczb Thin (GDD-§26A)             |
+| 0.13.1-gdd26b | 2026-07-25 | §26 sync checklist — kod = §26 (GDD-§26B)                    |
 
 ---
 

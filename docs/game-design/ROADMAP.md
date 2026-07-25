@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-§26A** ukończone. §3–§15 + §20 + §23 + **§26 liczby Thin** wypełnione. Następny: **GDD-§26B** (sync kodu) po Owner GO · pozostały szkielet = GDD-16+.
+GDD-01…15 + **GDD-§26A** + **GDD-§26B** ukończone. §3–§15 + §20 + §23 + **§26 liczby Thin** + sync kodu. Następny szkielet = **GDD-16+** (Owner GO).
 
 ## Completed
 
@@ -28,6 +28,7 @@ GDD-01…15 + **GDD-§26A** ukończone. §3–§15 + §20 + §23 + **§26 liczby
 | GDD-14   | §23 Hub / main panel                          |
 | GDD-15   | §20 Daily tasks                               |
 | GDD-§26A | §26 Economy numbers Thin (docs SSOT) · CLOSED |
+| GDD-§26B | §26 Code sync (`ECONOMY_THIN`) · CLOSED       |
 
 ## In Progress
 
@@ -37,10 +38,9 @@ GDD-01…15 + **GDD-§26A** ukończone. §3–§15 + §20 + §23 + **§26 liczby
 
 ## Planned
 
-| Stage    | Zakres                                                          |
-| -------- | --------------------------------------------------------------- |
-| GDD-§26B | Sync kodu z §26 (`ECONOMY_THIN` / fee / CURRENCY) — po Owner GO |
-| GDD-16+  | Pozostałe rozdziały szkieletu (kolejność = Owner)               |
+| Stage   | Zakres                                            |
+| ------- | ------------------------------------------------- |
+| GDD-16+ | Pozostałe rozdziały szkieletu (kolejność = Owner) |
 
 ## Future
 
@@ -64,4 +64,4 @@ GDD-01…15 + **GDD-§26A** ukończone. §3–§15 + §20 + §23 + **§26 liczby
 
 ## Last updated
 
-2026-07-25 — GDD-§26A CLOSE
+2026-07-25 — GDD-§26B CLOSE

@@ -1,10 +1,22 @@
-/** Thin economy constants — temporary until GDD §26 balance pass (LFE-ECONOMY-01). */
+/**
+ * Thin economy constants — numbers SSOT = GDD §26 (GDD-§26A/B).
+ * Runtime contracts remain D18 (finance) / D20 (fee = derive).
+ */
 export const ECONOMY_THIN = {
   STARTER_CASH: 100_000,
   REWARD_WIN: 5_000,
   REWARD_DRAW: 2_500,
   REWARD_LOSS: 1_000,
+  /** Sole currency for finance + transfers UI (GDD §26). */
   CURRENCY: 'EUR',
+  /** Shared transfer-fee coefficients — consumed only by deriveTransferFee (D20). */
+  TRANSFER_FEE: {
+    SKILL_MULT: 2_000,
+    AGE_BONUS: 1_500,
+    AGE_REF: 30,
+    FLOOR: 25_000,
+    ROUND: 1_000,
+  },
 } as const;
 
 export type FinanceMovementCategory = 'starter' | 'match_reward' | 'transfer_buy' | 'transfer_sell';
