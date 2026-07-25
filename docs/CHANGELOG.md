@@ -7,12 +7,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`393a43c`** (LFE-TRANSFERS-01 **FULLY CLOSED**) — tip docs/style may be newer.  
-Docs hygiene (AI-DOCS-HYGIENE-01) in progress locally until docs commit.
+Production baseline **`10de062`** (LFE-TRAINING-01 **FULLY CLOSED**) — tip docs may be newer.
 
 ---
 
-## [2026-07-25] — AI-DOCS-HYGIENE-01 · (pending docs commit)
+## [2026-07-25] — LFE-TRAINING-01 · CLOSED
+
+### Product
+
+- `resolveClubTraining()` → `TrainingDto` = jedyny kontrakt UI treningu
+- `clubs.last_training_on` = SSOT dnia ostatniej sesji (UTC date)
+- Mutacje tylko `players.status` (bez `skill`, bez zmian liczebności kadry)
+- Unlock po 2 played; shared `hasPlayedUnlock` (reuse Transfers ensure)
+- 1 sesja / dzień UTC; `already_trained_today`; `/training` bez mocków
+- **D21** CLOSED
+- Prod commit `10de062`; migracja `20260725100000` applied; CI GREEN; Production Verify PASS
+
+---
+
+## [2026-07-25] — AI-DOCS-HYGIENE-01 · CLOSED
 
 ### Docs
 

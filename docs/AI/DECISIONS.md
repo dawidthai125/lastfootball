@@ -21,6 +21,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 | P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED          | LFE-LEAGUE-02                 |
 | P12 | `cash_balance` + `finance_movements` + `resolveClubFinance` = Finance Thin; stałe do §26 · **CLOSED** | LFE-ECONOMY-01 (= D18)        |
 | P13 | `resolveTransferMarket` + `transfer_window_open` + `transfer_deals` · cash-only · **CLOSED**          | LFE-TRANSFERS-01 (= D20)      |
+| P14 | `resolveClubTraining` + `last_training_on` + status-only · shared `hasPlayedUnlock` · **CLOSED**      | LFE-TRAINING-01 (= D21)       |
 
 ## Engine (trwałe)
 
@@ -28,4 +29,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

@@ -5,22 +5,22 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · feature `393a43c` · LFE-TRANSFERS-01 FULLY CLOSED · 2026-07-25
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · feature `10de062` · LFE-TRAINING-01 FULLY CLOSED · 2026-07-25
 
 ---
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                  |
-| -------- | ------------------------------------------------------------------------ |
-| Prod URL | https://lastfootball.vercel.app                                          |
-| Commit   | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                               |
-| Message  | feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01) |
-| Status   | **PRODUCTION VERIFIED · GREEN** (prettier follow-up `7c0ce7f`)           |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                       |
-| Supabase | `anoeimngwptucjdugjme` (+ players + **transfers Thin** applied)          |
-| CI       | Format · Typecheck · Lint · Test · Build                                 |
-| Hosting  | Vercel Production                                                        |
+| Pole     | Wartość                                                                    |
+| -------- | -------------------------------------------------------------------------- |
+| Prod URL | https://lastfootball.vercel.app                                            |
+| Commit   | `10de062b3e7aa431621d3727d6b277dc2141aa1a`                                 |
+| Message  | feat(training): implement Thin Slice team training (LFE-TRAINING-01)       |
+| Status   | **PRODUCTION VERIFIED · GREEN**                                            |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                         |
+| Supabase | `anoeimngwptucjdugjme` (+ players + transfers + **training Thin** applied) |
+| CI       | Format · Typecheck · Lint · Test · Build                                   |
+| Hosting  | Vercel Production                                                          |
 
 ---
 
@@ -28,9 +28,9 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 
 ```
 Browser → Next.js apps/web
-            ├─ Auth / middleware / Club DTO (+ cash_balance, transfer_window_open)
+            ├─ Auth / middleware / Club DTO (+ cash, transfer_window, last_training_on)
             ├─ Onboarding + First Match tunnel
-            ├─ Hub decision (EARLY_CLUB / SEASON) + fixtures + league + finance + squad + transfers
+            ├─ Hub decision (EARLY_CLUB / SEASON) + league + finance + squad + transfers + training
             └─ Match UI → LiveMatchRuntime → packages/lfe
 Supabase ← Auth + clubs + fixtures + finance_movements + players + transfer_deals
 ```
@@ -68,7 +68,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 **SSOT listy EPIC:** [`ROADMAP.md`](./ROADMAP.md) (nie duplikuj tutaj).
 
-**Next:** Training (GDD §8).
+**Next:** Owner wybiera (GDD-16+ · §26 · negotiation · calendar · Training depth).
 
 ---
 
@@ -91,6 +91,9 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 | Transfer window       | `clubs.transfer_window_open` (D20)                  |
 | Transfer market UI    | `resolveTransferMarket` → `TransferMarketDto` (D20) |
 | Transfer deals        | `transfer_deals` (D20)                              |
+| Training day          | `clubs.last_training_on` (D21)                      |
+| Training UI           | `resolveClubTraining` → `TrainingDto` (D21)         |
+| Played unlock helper  | `hasPlayedUnlock` / played fixture count (D21)      |
 | Match state           | `MatchState` + `EventBus` via `MatchSession`        |
 | Agent onboarding      | `docs/AI/START_HERE.md`                             |
 | Principles / patterns | `AI/ARCHITECTURE_PRINCIPLES` · `AI/COMMON_PATTERNS` |
@@ -111,9 +114,9 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 [`platform/HUB.md`](./platform/HUB.md)
 
-### League · Finance · Players · Transfers
+### League · Finance · Players · Transfers · Training
 
-[`platform/LEAGUE.md`](./platform/LEAGUE.md) · [`FINANCE.md`](./platform/FINANCE.md) · [`PLAYERS.md`](./platform/PLAYERS.md) · [`TRANSFERS.md`](./platform/TRANSFERS.md)
+[`platform/LEAGUE.md`](./platform/LEAGUE.md) · [`FINANCE.md`](./platform/FINANCE.md) · [`PLAYERS.md`](./platform/PLAYERS.md) · [`TRANSFERS.md`](./platform/TRANSFERS.md) · [`TRAINING.md`](./platform/TRAINING.md)
 
 ### Match UI pipeline
 
@@ -124,11 +127,12 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 ## 8. Supabase
 
 - Auth email/password; callback `/auth/callback`
-- Table `clubs` (owner RLS) + `first_match_completed_at` + **`cash_balance`** + **`transfer_window_open`**
+- Table `clubs` (owner RLS) + `first_match_completed_at` + **`cash_balance`** + **`transfer_window_open`** + **`last_training_on`**
 - Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A **applied**
 - Table `finance_movements` (owner RLS via club) — LFE-ECONOMY-01 **applied** (+ transfer cats)
 - Table `players` (owner RLS via club) — LFE-PLAYERS-01 **applied** (+ `departed_at` / `DEPARTED`)
 - Table `transfer_deals` (owner RLS via club) — LFE-TRANSFERS-01 **applied**
+- Training Thin — LFE-TRAINING-01 **applied** (`last_training_on`)
 - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — never commit)
 - Status: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md)
 
@@ -138,7 +142,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 [`DECISIONS.md`](./DECISIONS.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md)
 
-Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17); club cash + `resolveClubFinance` (D18); players + `resolveClubSquad` (D19); **transfers Thin + `resolveTransferMarket` (D20)**.
+Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17); club cash + `resolveClubFinance` (D18); players + `resolveClubSquad` (D19); transfers Thin (D20); **training Thin + `resolveClubTraining` (D21)**.
 
 ---
 
@@ -170,4 +174,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

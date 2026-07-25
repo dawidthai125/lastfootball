@@ -11,13 +11,13 @@ Kontrakt silnika: [`docs/lfe/LFE_ARCHITECTURE_FREEZE.md`](docs/lfe/LFE_ARCHITECT
 > **Nowy ChatGPT / Cursor:** [`AGENTS.md`](AGENTS.md) → [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md). Nie potrzebujesz historii czatu.
 
 **Production:** https://lastfootball.vercel.app  
-**Feature baseline:** `393a43c` (LFE-TRANSFERS-01) — [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md)
+**Feature baseline:** `10de062` (LFE-TRAINING-01) — [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md)
 
 ## Stan produktu (skrót)
 
-Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin · Match Live (Canvas / Replay / Post Match).
+Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin · Training Thin · Match Live (Canvas / Replay / Post Match).
 
-**Next recommended EPIC:** Training (GDD §8) — [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**Next recommended EPIC:** Owner wybiera — [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Jak uruchomić?
 

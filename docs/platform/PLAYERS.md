@@ -28,7 +28,7 @@ D19 (D16 superseded) — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin
 
-Training, edycja XI, `potential`, pensje.
+Edycja XI, `potential`, pensje; rozwój `skill` z treningu (D21 poza).
 
 ## Kod
 
@@ -36,4 +36,4 @@ Training, edycja XI, `potential`, pensje.
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

@@ -6,14 +6,14 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ## Aktualny stan
 
-| Warstwa              | Stan                                                                           |
-| -------------------- | ------------------------------------------------------------------------------ |
-| **Feature baseline** | `393a43c` — LFE-TRANSFERS-01 FULLY CLOSED                                      |
-| Production           | https://lastfootball.vercel.app                                                |
-| Platform             | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers |
-| LFE / Match UI       | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                |
-| GDD                  | GDD-01…15 CLOSED · next product EPIC: **Training** (§8)                        |
-| Infra                | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                            |
+| Warstwa              | Stan                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| **Feature baseline** | `10de062` — LFE-TRAINING-01 FULLY CLOSED                                                  |
+| Production           | https://lastfootball.vercel.app                                                           |
+| Platform             | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers · Training |
+| LFE / Match UI       | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                           |
+| GDD                  | GDD-01…15 CLOSED · next: Owner (GDD-16+ / §26 / …)                                        |
+| Infra                | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                       |
 
 ## Jak czytać (AI)
 
@@ -60,6 +60,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | [platform/FINANCE.md](./platform/FINANCE.md)                 | Kasa                   |
 | [platform/PLAYERS.md](./platform/PLAYERS.md)                 | Kadra                  |
 | [platform/TRANSFERS.md](./platform/TRANSFERS.md)             | Rynek                  |
+| [platform/TRAINING.md](./platform/TRAINING.md)               | Trening                |
 | [platform/FIRST_MATCH.md](./platform/FIRST_MATCH.md)         | Tunel pierwszego meczu |
 | [platform/ONBOARDING_FLOW.md](./platform/ONBOARDING_FLOW.md) | Landing → klub         |
 
@@ -79,4 +80,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

@@ -35,10 +35,11 @@ Jeden layout (`EarlyClubHub`):
 | EARLY_CLUB                      | Panel, Klub, Kadra, Terminarz, Wiadomości, Profil, Ustawienia, Osiągnięcia, Status |
 | SEASON +                        | Liga, Finanse                                                                      |
 | SEASON + `transfer_window_open` | Transfery                                                                          |
+| SEASON + played ≥ 2             | Trening (`trainingUnlocked`)                                                       |
 
-Soft-lock: Trening, Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EARLY_CLUB).
+Soft-lock: Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EARLY_CLUB; Trening/Transfery do unlock).
 
-`resolveNavAccess(itemId, phase, { transferWindowOpen })`.
+`resolveNavAccess(itemId, phase, { transferWindowOpen, trainingUnlocked })`.
 
 ## Domeny (SSOT poza tym plikiem)
 
@@ -48,6 +49,7 @@ Soft-lock: Trening, Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Fina
 | Finanse         | [`FINANCE.md`](./FINANCE.md)                                 |
 | Kadra           | [`PLAYERS.md`](./PLAYERS.md)                                 |
 | Transfery       | [`TRANSFERS.md`](./TRANSFERS.md)                             |
+| Trening         | [`TRAINING.md`](./TRAINING.md)                               |
 | First Match     | [`FIRST_MATCH.md`](./FIRST_MATCH.md)                         |
 | Match Live UI   | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) |
 
@@ -61,4 +63,4 @@ FOMO kolejki 12, Top 4 fiction, peer-CTA treningu, fikcyjne okno transferowe, `d
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

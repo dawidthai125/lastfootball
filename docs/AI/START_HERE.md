@@ -23,7 +23,7 @@ Opcjonalnie głębiej: [`PROJECT_STATE.md`](./PROJECT_STATE.md) · [`../HANDOFF.
 
 | Temat                        | Czytaj                                                                                                      |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Training (next)**          | GDD §8 · [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · D19 · Principles + Patterns                   |
+| **Training**                 | GDD §8 · [`../platform/TRAINING.md`](../platform/TRAINING.md) · D21 · PLAYERS                               |
 | Onboarding / auth / klub     | [`../platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                          |
 | First Match                  | [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                  |
 | Hub                          | [`../platform/HUB.md`](../platform/HUB.md)                                                                  |
@@ -31,6 +31,7 @@ Opcjonalnie głębiej: [`PROJECT_STATE.md`](./PROJECT_STATE.md) · [`../HANDOFF.
 | Finanse                      | [`../platform/FINANCE.md`](../platform/FINANCE.md)                                                          |
 | Kadra                        | [`../platform/PLAYERS.md`](../platform/PLAYERS.md)                                                          |
 | Transfery                    | [`../platform/TRANSFERS.md`](../platform/TRANSFERS.md) · D20                                                |
+| Trening                      | [`../platform/TRAINING.md`](../platform/TRAINING.md) · D21                                                  |
 | Match Live / Canvas / Replay | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                |
 | Silnik LFE                   | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) |
 | Produkt / GDD                | [`../game-design/README.md`](../game-design/README.md)                                                      |
@@ -75,4 +76,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md).
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

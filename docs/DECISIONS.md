@@ -117,8 +117,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Dlaczego:** kadra musi być trwała przed Transfers/Training; seed runtime uniemożliwiał mutacje.  
 **Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id starter **`s-{tag}-…`**; buy **`t-{tag}-…`** (D20); **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED` | `DEPARTED`** (lokalizacja w UI; aktywna kadra bez `DEPARTED`).  
-**Poza Thin:** Training, edycja XI, `potential`, pensje z cash.  
-**Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).
+**Poza Thin:** edycja XI, `potential`, pensje z cash; rozwój `skill` z treningu → D21 poza.  
+**Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).  
+**Uwaga:** Training mutuje `status` (D21) — bez osobnej tabeli kadry.
 
 ### D20 — Transfer market Thin + `resolveTransferMarket` · CLOSED
 
@@ -138,12 +139,32 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`)                                          |
 
 **Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
-**Poza Thin:** negotiation, envelope, potential, Training, live market DB.  
-**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`; prettier `7c0ce7f`).
+**Poza Thin:** negotiation, envelope, potential, live market DB.  
+**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`; prettier `7c0ce7f`).  
+**Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21).
+
+### D21 — Team training Thin + `resolveClubTraining` · CLOSED
+
+**Dlaczego:** trening nie może być mockiem; musi mutować trwałą kadrę i mieć 1 slot / dzień bez grind backlogu.  
+**Zasada:**
+
+| Fakt          | SSOT / kontrakt                                                                 |
+| ------------- | ------------------------------------------------------------------------------- |
+| UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                        |
+| Skutki        | tylko `players.status` — **bez** `skill`, bez insert/delete                     |
+| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                           |
+| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`) |
+| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`             |
+| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high)              |
+| LFE           | **bez zmian** Match Engine / PUBLIC API                                         |
+
+**Thin wyjątek vs GDD §8.4:** dzień = **UTC date**, nie timezone gracza (brak SSOT TZ).  
+**Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), wzrost skill, filtr XI po statusie.  
+**Źródło:** LFE-TRAINING-01 (prod `10de062`).
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D20 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 
 ## Powiązania
 
@@ -151,4 +172,4 @@ Każde złamanie D1–D20 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — LFE-TRAINING-01 CLOSE

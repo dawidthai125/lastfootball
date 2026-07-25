@@ -7,13 +7,13 @@ Szybki stan dla Agenta: **gdzie jesteśmy** / **co dalej**.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN** — Transfers Thin FULLY CLOSED.  
-**Feature baseline:** `393a43c` — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).  
-**Next:** **LFE-TRAINING-01** (GDD §8) — Owner wybiera.
+**PRODUCTION VERIFIED · GREEN** — Training Thin FULLY CLOSED.  
+**Feature baseline:** `10de062` — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).  
+**Next:** Owner wybiera — patrz [`../ROADMAP.md`](../ROADMAP.md).
 
 ## W trakcie
 
-Brak otwartego EPIC implementacyjnego (docs hygiene może być w toku).
+Brak otwartego EPIC implementacyjnego.
 
 ## Otwarte decyzje techniczne
 
@@ -21,7 +21,7 @@ Brak otwartego EPIC implementacyjnego (docs hygiene może być w toku).
 | ------- | ------------------------ | ------------------------------------------------ |
 | D-01    | Zawężenie LFE `index.ts` | Otwarte                                          |
 | D-03    | Persist Replay           | Otwarte                                          |
-| D15–D20 | League → Transfers Thin  | Zamknięte — [`../DECISIONS.md`](../DECISIONS.md) |
+| D15–D21 | League → Training Thin   | Zamknięte — [`../DECISIONS.md`](../DECISIONS.md) |
 
 ## Powiązania
 
@@ -29,4 +29,4 @@ Brak otwartego EPIC implementacyjnego (docs hygiene może być w toku).
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

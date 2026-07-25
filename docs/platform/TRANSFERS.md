@@ -28,7 +28,7 @@ D20 — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin
 
-Negotiation, envelope, potential, Training, live market DB.
+Negotiation, envelope, potential, live market DB.
 
 ## Kod
 
@@ -36,4 +36,4 @@ Negotiation, envelope, potential, Training, live market DB.
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

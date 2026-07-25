@@ -41,6 +41,9 @@ supabase/ (Auth + Postgres migrations)
 | Okno transferów    | `clubs.transfer_window_open`                                 |
 | Transfer market UI | `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
 | Transfer deals     | `transfer_deals` (idempotency + audit)                       |
+| Training UI        | `resolveClubTraining(...)` → `TrainingDto` wyłącznie         |
+| Training day       | `clubs.last_training_on`                                     |
+| Played unlock      | `hasPlayedUnlock(playedCount, threshold)`                    |
 | Routing post-auth  | `getPostAuthPath` + middleware (club + first match)          |
 
 ## Hub rules (LFE-HUB-01)
@@ -48,7 +51,7 @@ supabase/ (Auth + Postgres migrations)
 - Hub dostępny **dopiero** po First Match.
 - Hub = **ekran decyzji**, nie dashboard analytics.
 - Dokładnie **1 Primary CTA**.
-- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse open na `SEASON`; **Transfery** open gdy `SEASON` **i** `transfer_window_open`.
+- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
 
 ## Players rules (LFE-PLAYERS-01 / D19)
@@ -57,6 +60,7 @@ supabase/ (Auth + Postgres migrations)
 - Seed = create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad`.
 - Pusta baza → `SquadUnavailableError` (bez fallbacku do seeda).
 - Odejście = `DEPARTED` + `departed_at` (bez DELETE) — D20.
+- Training mutuje wyłącznie `status` (D21) — bez drugiej tabeli kadry.
 
 ## Transfers rules (LFE-TRANSFERS-01 / D20)
 
@@ -65,8 +69,15 @@ supabase/ (Auth + Postgres migrations)
 - Cash-only — **bez** envelope.
 - Fee = derive (`deriveTransferFee`) — brak trwałego `market_value`.
 - Buy ids = `t-{tag}-…`; katalog listingów = `seedTransferCatalogue()` (także dla AI).
-- Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11).
-- Poza Thin: negotiation, potential, Training.
+- Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
+- Poza Thin: negotiation, potential, live market DB.
+
+## Training rules (LFE-TRAINING-01 / D21)
+
+- `/training` konsumuje **tylko** `resolveClubTraining()` — brak mocków.
+- Mutacje: `players.status` + `clubs.last_training_on` — **bez** `skill` / insert/delete.
+- 1 sesja / dzień UTC; unlock played ≥ 2; bez zmian LFE.
+- Poza Thin: indywidualny, plany, cash cost, skill growth, filtr XI.
 
 ## REUSE FIRST / ZERO DUPLICATE
 
@@ -79,11 +90,12 @@ supabase/ (Auth + Postgres migrations)
 - **GDD** = SSOT intencji produktu ([`GAME_DESIGN_DOCUMENT.md`](../game-design/GAME_DESIGN_DOCUMENT.md)).
 - Świadomy wyjątek onboardingu: GDD §5.10 sugeruje Hub „nowy klub” przed meczem; **produkt live** używa First Match tunnel przed Hubem (LFE-MATCH-01). Dokumentuj wyjątek, nie „naprawiaj” GDD w kodzie bez Owner GO.
 - Stałe ekonomii Thin (`ECONOMY_THIN`) są **tymczasowe** do GDD §26 (D18).
-- Unlock okna transferów po 2 played = Thin wyjątek vs GDD K11 (D20).
+- Unlock okna transferów / treningu po 2 played = Thin (D20 / D21).
+- Dzień treningu = UTC date (Thin vs GDD timezone gracza) — D21.
 
 Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](./DECISIONS.md).  
 Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorce: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md).
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

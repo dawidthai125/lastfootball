@@ -8,15 +8,15 @@ Jedno miejsce: **gdzie jesteśmy**.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN** · feature baseline **`393a43c`** (LFE-TRANSFERS-01).  
+**PRODUCTION VERIFIED · GREEN** · feature baseline **`10de062`** (LFE-TRAINING-01).  
 https://lastfootball.vercel.app
 
-| Tor               | Stan                                                                           |
-| ----------------- | ------------------------------------------------------------------------------ |
-| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post Match                                |
-| Design            | GDD-01…15 · next: Training §8                                                  |
-| Infra             | Vercel + Supabase `anoeimngwptucjdugjme`                                       |
+| Tor               | Stan                                                                                      |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers · Training |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post Match                                           |
+| Design            | GDD-01…15 · next: Owner (GDD-16+ / §26 / …)                                               |
+| Infra             | Vercel + Supabase `anoeimngwptucjdugjme`                                                  |
 
 ## W trakcie
 
@@ -24,12 +24,12 @@ Brak otwartego EPIC produktowego.
 
 ## Co następne
 
-Patrz [`ROADMAP.md`](./ROADMAP.md) → **Training**.
+Patrz [`ROADMAP.md`](./ROADMAP.md) — Owner wybiera.
 
 ## Decyzje
 
-Indeks: [`AI/DECISIONS.md`](./AI/DECISIONS.md) · pełne: [`DECISIONS.md`](./DECISIONS.md) (D18–D20 zamknięte).
+Indeks: [`AI/DECISIONS.md`](./AI/DECISIONS.md) · pełne: [`DECISIONS.md`](./DECISIONS.md) (D18–D21 zamknięte).
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE

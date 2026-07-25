@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (AI-DOCS-HYGIENE-01 — awaiting Owner GO docs commit)
+### Docs (LFE-TRAINING-01 CLOSE)
+
+- Status / baseline sync: LFE-TRAINING-01 CLOSED · prod `10de062` · D21 · `platform/TRAINING.md`
+
+### Added (shipped on `main` — LFE-TRAINING-01)
+
+- Team training Thin Slice: `resolveClubTraining()` sole UI contract; no training mocks
+- `clubs.last_training_on` SSOT (UTC date); 1 session / calendar day
+- Status-only effects on `players` (no skill / roster size changes); no LFE changes
+- Shared played unlock helper (`hasPlayedUnlock`) reused by Transfers ensure
+- Nav Training open on SEASON when played ≥ 2
+
+### Docs (AI-DOCS-HYGIENE-01)
 
 - Documentation hygiene: principles, patterns, engineering guide, split platform docs, unified workflow (+CI), README sync
 

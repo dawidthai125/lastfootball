@@ -19,6 +19,7 @@ Szczegóły kodu: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · filozofia:
 | Finanse         | `resolveClubFinance`                    | `ClubFinanceDto`    |
 | Kadra           | `resolveClubSquad`                      | `SquadDto`          |
 | Transfery       | `resolveTransferMarket`                 | `TransferMarketDto` |
+| Trening         | `resolveClubTraining`                   | `TrainingDto`       |
 | Hub phase / CTA | `resolveHubPhase` / `resolvePrimaryCta` | —                   |
 
 **Zakaz:** drugi „resolver” w komponencie, mock listy, bezpośrednie mapowanie tabeli w page bez shared resolve.
@@ -33,7 +34,7 @@ Szczegóły kodu: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · filozofia:
 
 - działa na produkcji (DB + UI + unlock),
 - stałe tymczasowe (`*_THIN`) do czasu GDD §26 / pełnych reguł,
-- wyjątki vs GDD **udokumentowane** (np. First Match przed Hubem; unlock transferów po 2 played vs K11),
+- wyjątki vs GDD **udokumentowane** (np. First Match przed Hubem; unlock transferów/treningu po 2 played; dzień treningu UTC),
 - poza zakresem wypisane i nietknięte (negotiation, envelope, potential, …).
 
 **Ewolucja:** kolejny EPIC rozszerza ten sam SSOT — nie zastępuje go drugim modelem.
@@ -49,6 +50,7 @@ Szczegóły kodu: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · filozofia:
 | Saldo            | `clubs.cash_balance`         |
 | Kadra            | `players`                    |
 | Okno transferów  | `clubs.transfer_window_open` |
+| Dzień treningu   | `clubs.last_training_on`     |
 | Faza Hub         | `resolveHubPhase`            |
 | Prod „co działa” | `AI/CURRENT_BASELINE.md`     |
 
@@ -103,6 +105,7 @@ Mutacje z efektem ubocznym (complete fixture, transfer deal, ensure fixtures/win
 | Finance   | `platform/FINANCE.md`      | `lib/finance`                |
 | Players   | `platform/PLAYERS.md`      | `lib/squad`                  |
 | Transfers | `platform/TRANSFERS.md`    | `lib/transfers`              |
+| Training  | `platform/TRAINING.md`     | `lib/training`               |
 | Match UI  | `web/MATCH_UI_PIPELINE.md` | gameplay / live              |
 | LFE       | `lfe/*`                    | `packages/lfe`               |
 
@@ -119,4 +122,4 @@ Nie mieszaj ownership: Canvas nie mutuje Engine; page nie definiuje fee transfer
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-25 — LFE-TRAINING-01 CLOSE
