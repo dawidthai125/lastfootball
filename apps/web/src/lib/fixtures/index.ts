@@ -8,6 +8,8 @@ export {
   pickOpponentsForClub,
 } from '@/lib/fixtures/opponent-catalog';
 export { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
+export { resolveFixtureTopUp } from '@/lib/fixtures/resolve-fixture-top-up';
+export type { FixtureInsertRow, ExistingFixtureRef } from '@/lib/fixtures/resolve-fixture-top-up';
 export {
   listClubFixtures,
   getFixtureByIdForClub,

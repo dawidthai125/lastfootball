@@ -9,7 +9,7 @@ export type OpponentClub = {
   readonly shortName: string;
 };
 
-/** Fixed IV-liga style rivals for Thin A generator (pick 3 of these). */
+/** Fixed IV-liga style rivals — full catalog = 11 AI (single RR Thin = 11 fixtures). */
 export const OPPONENT_CATALOG: readonly OpponentClub[] = [
   { id: 'opp-wilki-polnocy', name: 'Wilki Północy', shortName: 'WLP' },
   { id: 'opp-stal-brzeg', name: 'Stal Brzeg', shortName: 'STB' },
@@ -24,7 +24,8 @@ export const OPPONENT_CATALOG: readonly OpponentClub[] = [
   { id: 'opp-legia-rzeczna', name: 'Legia Rzeczna', shortName: 'LGR' },
 ] as const;
 
-export const LEAGUE_FIXTURE_COUNT = 3 as const;
+/** Thin calendar: one league match vs each catalog AI (GDD §10 full season = 22 — Future). */
+export const LEAGUE_FIXTURE_COUNT = 11 as const;
 
 export function getOpponentById(id: string): OpponentClub | null {
   return OPPONENT_CATALOG.find((o) => o.id === id) ?? null;

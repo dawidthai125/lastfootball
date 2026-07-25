@@ -12,8 +12,9 @@ export type PlannedFixture = {
 };
 
 /**
- * Pure plan for Thin A: exactly LEAGUE_FIXTURE_COUNT fixtures.
- * Matchday 1 = upcoming; rest = scheduled. Home/away alternates from club hash.
+ * Sole pure planner for league fixtures (LFE-LEAGUE-03).
+ * Exactly LEAGUE_FIXTURE_COUNT rows. Matchday 1 = upcoming; rest = scheduled.
+ * Home/away alternates from club hash. Top-up must reuse this plan — never re-plan.
  */
 export function planClubFixtures(clubId: string): readonly PlannedFixture[] {
   const opponents = pickOpponentsForClub(clubId, LEAGUE_FIXTURE_COUNT);

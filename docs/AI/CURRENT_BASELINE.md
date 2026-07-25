@@ -13,25 +13,22 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 | **Style commit**      | Wyłącznie Prettier; bez logiki                                                                |
 
 ```bash
-git log -1 --oneline          # tip (może być docs/style)
-git log -1 --oneline 10de062  # feature baseline Training
+git log -1 --oneline                          # tip
+git log -1 --oneline --grep=LFE-LEAGUE-03     # feature baseline League-03
 ```
-
-Po FULLY CLOSED LFE-TRAINING-01 tip docs może być nowszy niż `10de062` — to **nie** jest nowy feature baseline.
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                                                    |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| URL                  | https://lastfootball.vercel.app                                                            |
-| Alias                | https://lastfootball.pl                                                                    |
-| Branch               | `main`                                                                                     |
-| **Feature baseline** | `10de062b3e7aa431621d3727d6b277dc2141aa1a`                                                 |
-| Baseline message     | `feat(training): implement Thin Slice team training (LFE-TRAINING-01)`                     |
-| Docs CLOSE tip       | verify with `git log -1` after docs CLOSE commit                                           |
-| Status               | **PRODUCTION VERIFIED · GREEN** · LFE-TRAINING-01 **FULLY CLOSED** · GDD-§26A/B **CLOSED** |
+| Pole                 | Wartość                                                                             |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                                     |
+| Alias                | https://lastfootball.pl                                                             |
+| Branch               | `main`                                                                              |
+| **Feature baseline** | LFE-LEAGUE-03 — `feat(league): expand Thin calendar to 11 fixtures (LFE-LEAGUE-03)` |
+| Baseline hash        | verify `git log -1 --grep=LFE-LEAGUE-03 --format=%H` after push                     |
+| Status               | LFE-LEAGUE-03 **CLOSED** · GDD-§26A/B **CLOSED** · CI verify after push             |
 
 ## Stack
 
@@ -50,6 +47,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
   → /squad ← resolveClubSquad(players)
   → /transfers ← resolveTransferMarket() gdy transfer_window_open
   → /training ← resolveClubTraining() gdy played ≥ 2
+  → fixtures Thin: LEAGUE_FIXTURE_COUNT=11 (+ top-up dla klubów z 3)
 ```
 
 ## Critical SSOT
@@ -59,7 +57,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 | Club            | `clubs` → `ClubDto`                                 |
 | Hub unlock      | `first_match_completed_at`                          |
 | Hub phase / CTA | `resolveHubPhase` / `resolvePrimaryCta`             |
-| Fixtures        | `fixtures`                                          |
+| Fixtures        | `fixtures` + `planClubFixtures` / top-up (11)       |
 | League table    | `resolveLeagueTable` → `LeagueTableDto`             |
 | Cash            | `cash_balance` + `resolveClubFinance` (D18)         |
 | Economy numbers | GDD **§26** · kod `ECONOMY_THIN` (+ `TRANSFER_FEE`) |
@@ -72,14 +70,12 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 | Played unlock   | `hasPlayedUnlock` + fixture played count            |
 | Match entry     | `createMatch()` → `MatchSession`                    |
 
-Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md) (nie duplikuj tutaj przy każdym CLOSE — aktualizuj ROADMAP + ten feature hash).
+Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## Not on production
 
-Negotiation/envelope · potential · full 11 fixtures · Physics · individual training · skill growth from training.
-
-**GDD §26:** SSOT liczb + sync kodu **CLOSED** (GDD-§26A/B). Feature baseline **`10de062`** bez zmiany.
+Negotiation/envelope · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training.
 
 ## Last updated
 
-2026-07-25 — GDD-§26B CLOSE
+2026-07-25 — LFE-LEAGUE-03 CLOSE

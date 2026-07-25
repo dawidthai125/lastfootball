@@ -16,7 +16,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 | P6  | `resolveHubPhase` / `resolvePrimaryCta` = SSOT fazy i Primary CTA                                     | LFE-HUB-01                    |
 | P7  | Progressive disclosure: Liga + Finanse open na `SEASON`; Transfery gdy `transfer_window_open`         | LFE-HUB-01 / … / TRANSFERS-01 |
 | P8  | Supabase prod/dev = project `anoeimngwptucjdugjme`                                                    | LFE-INFRA-01                  |
-| P9  | `fixtures` + `opponent_club_id` = SSOT terminarza; Thin A generator = 3 fixtures                      | LFE-LEAGUE-01                 |
+| P9  | `fixtures` + `planClubFixtures` = SSOT terminarza; `LEAGUE_FIXTURE_COUNT=11` + top-up · **CLOSED**    | LFE-LEAGUE-01→03              |
 | P10 | `players` + `resolveClubSquad(rows)` = SSOT kadry; seed ≠ runtime · **CLOSED**                        | LFE-PLAYERS-01 (= D19)        |
 | P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED          | LFE-LEAGUE-02                 |
 | P12 | `cash_balance` + `finance_movements` + `resolveClubFinance` = Finance Thin; stałe do §26 · **CLOSED** | LFE-ECONOMY-01 (= D18)        |

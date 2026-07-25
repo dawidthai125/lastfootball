@@ -7,8 +7,22 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`10de062`** (LFE-TRAINING-01 **FULLY CLOSED**) — tip docs may be newer.  
-GDD-§26A + **GDD-§26B CLOSED** — feature baseline **bez zmiany**.
+Production feature baseline **LFE-LEAGUE-03** (11-fixture Thin) — tip may be docs after feat.  
+GDD-§26A/B **CLOSED**.
+
+---
+
+## [2026-07-25] — LFE-LEAGUE-03 · CLOSED
+
+### Product
+
+- `LEAGUE_FIXTURE_COUNT = 11` (single RR vs 11 AI catalog)
+- Sole plan: `planClubFixtures` — no second generator
+- `ensureClubFixtures` + pure `resolveFixtureTopUp` — deterministyczny top-up MD brakujących
+- Top-up identity = pełny plan 11; brak nadpisu played/upcoming; unique `(club_id, matchday)`
+- `resolveLeagueTable` / `completeFixture` / unlocki transfer+trening **bez zmian kontraktu**
+- Thin vs GDD §10: 11 ≠ 22 (Future)
+- Feature baseline → LFE-LEAGUE-03
 
 ---
 

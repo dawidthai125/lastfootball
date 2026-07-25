@@ -84,12 +84,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** GDD §23 + ochrona przed mid-season FOMO (LFE-HUB-01).  
 **Zasada:** `resolveHubPhase` / `resolvePrimaryCta` SSOT; zero `dashboardMock` mid-season na EARLY_CLUB.
 
-### D15 — Fixtures DB = SSOT terminarza ligowego (Thin A) · CLOSED
+### D15 — Fixtures DB = SSOT terminarza ligowego (Thin) · CLOSED
 
 **Dlaczego:** Hub po First Match potrzebuje kolejnego meczu bez mid-season mock.  
-**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; generator Thin A = 3 fixtures.  
-**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`).  
-**Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17.
+**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; **jedyny plan** = `planClubFixtures`; `LEAGUE_FIXTURE_COUNT = 11` (LFE-LEAGUE-03); `ensureClubFixtures` = insert / deterministyczny top-up (bez nadpisu played/upcoming).  
+**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`); kalendarz 11 — LFE-LEAGUE-03.  
+**Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17. Thin vs GDD §10: 11 ≠ 22.
 
 ### D16 — Squad seed SSOT (do czasu tabeli players) · SUPERSEDED by D19
 
@@ -101,8 +101,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D17 — League table = pure derive (`resolveLeagueTable`) · CLOSED
 
 **Dlaczego:** tabela musi być wspólna dla `/league`, Hub chip i przyszłych modułów bez drugiej SSOT.  
-**Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); generator nadal 3 fixtures.  
-**Źródło:** LFE-LEAGUE-02 (prod `71ce442`).
+**Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); kalendarz gracza = **11** fixtures (`planClubFixtures` / top-up — LFE-LEAGUE-03).  
+**Źródło:** LFE-LEAGUE-02 (prod `71ce442`); count 11 — LFE-LEAGUE-03.
 
 ### D18 — Club cash SSOT + `resolveClubFinance` (Finance Thin) · CLOSED
 
@@ -176,4 +176,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — GDD-§26B CLOSE
+2026-07-25 — LFE-LEAGUE-03 CLOSE
