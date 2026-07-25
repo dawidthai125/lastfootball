@@ -7,7 +7,7 @@
 
 1. Root [`AGENTS.md`](../AGENTS.md)
 2. [`AI/START_HERE.md`](./AI/START_HERE.md)
-3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — prod `b6b92dc`
+3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — prod `393a43c`
 4. [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)
 
 ## Szybkie linki
@@ -24,4 +24,4 @@
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01 (redirect to `docs/AI/`)
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

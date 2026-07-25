@@ -1,4 +1,4 @@
-# Platform — Hub (LFE-HUB-01 + LFE-LEAGUE-01/02 + LFE-ECONOMY-01)
+# Platform — Hub (LFE-HUB-01 + LEAGUE + ECONOMY + PLAYERS + TRANSFERS)
 
 ## Cel
 
@@ -51,6 +51,17 @@ First Match (`id=first`) **nie** jest wierszem `fixtures`.
 | Unlock Finanse | Nav + Secondary open na `SEASON`                           |
 | Stałe Thin     | `ECONOMY_THIN` — **tymczasowe do GDD §26**                 |
 
+## Transfers SSOT (LFE-TRANSFERS-01 / D20)
+
+| Fakt            | SSOT                                                             |
+| --------------- | ---------------------------------------------------------------- |
+| Okno            | `clubs.transfer_window_open` (po ≥2 played — Thin vs GDD K11)    |
+| UI rynku        | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto` |
+| Deal            | buy/sell: `players` + cash + `finance_movements` + `transfer_deals` |
+| Środki          | cash-only (bez envelope)                                         |
+| Odejście        | `DEPARTED` + `departed_at`                                       |
+| Unlock Transfery| Nav open gdy `SEASON` **i** `transferWindowOpen`                 |
+
 ## Decision layout (EARLY_CLUB + SEASON)
 
 Jeden wspólny layout (`EarlyClubHub`) — bez osobnego SeasonHub:
@@ -66,19 +77,20 @@ Jeden wspólny layout (`EarlyClubHub`) — bez osobnego SeasonHub:
 
 **EARLY_CLUB open:** Panel, Klub, Kadra, Terminarz, Wiadomości, Profil, Ustawienia, Osiągnięcia, Status.  
 **SEASON dodatkowo open:** Liga, **Finanse**.  
-Soft-lock: Trening, Akademia, Skauting, Transfery, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EARLY_CLUB).
+**Transfery:** open tylko gdy `SEASON` **i** `transfer_window_open`; inaczej soft-lock.  
+Soft-lock pozostaje: Trening, Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EARLY_CLUB; Transfery bez okna).
 
-Implementacja: `resolveNavAccess(itemId, phase)` + `hasFixtures` z `ClubProvider` (game layout).
+Implementacja: `resolveNavAccess(itemId, phase, { transferWindowOpen })` + `ClubProvider`.
 
 ## Zakazane
 
-Kolejka 12 FOMO, Top 4 fiction, trening peer-CTA, „okno transferowe”, kontuzje mid-season, `dashboardMock` / `sessionChrome` na ścieżce Hub / `/league` / `/finance`, standings DB, UI czytające saldo bezpośrednio z DB.
+Kolejka 12 FOMO, Top 4 fiction, trening peer-CTA, fikcyjne „okno transferowe” bez `transfer_window_open`, kontuzje mid-season, `dashboardMock` / `sessionChrome` na ścieżce Hub / `/league` / `/finance` / `/transfers`, standings DB, UI czytające saldo/rynek bezpośrednio z DB (omijając resolvery).
 
 ## Powiązania
 
-Kod: `components/hub/EarlyClubHub.tsx` · `lib/hub/*` · `lib/fixtures/*` · `lib/league/*` · `lib/finance/*` · shell layout.  
-GDD: §23 · §10 · §14 (kategorie; liczby → §26).
+Kod: `components/hub/EarlyClubHub.tsx` · `lib/hub/*` · `lib/fixtures/*` · `lib/league/*` · `lib/finance/*` · `lib/transfers/*` · shell layout.  
+GDD: §23 · §10 · §12 · §14 (kategorie; liczby → §26).
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

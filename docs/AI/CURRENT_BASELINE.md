@@ -6,15 +6,15 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Production
 
-| Pole             | Wartość                                                                          |
-| ---------------- | -------------------------------------------------------------------------------- |
-| URL              | https://lastfootball.vercel.app                                                  |
-| Alias            | https://lastfootball.pl                                                          |
-| Branch           | `main`                                                                           |
-| Baseline commit  | `0b960b543d6640116424560c635417a5b59de9c5`                                       |
-| Baseline message | `feat(players): persist club roster SSOT with resolveClubSquad (LFE-PLAYERS-01)` |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                                  |
-| Verified         | 2026-07-25 — CI GREEN (feat + prettier `d43fa3d`) + migracja `players` applied   |
+| Pole             | Wartość                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| URL              | https://lastfootball.vercel.app                                                      |
+| Alias            | https://lastfootball.pl                                                              |
+| Branch           | `main`                                                                               |
+| Baseline commit  | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                           |
+| Baseline message | `feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)`           |
+| Status           | **PRODUCTION VERIFIED · GREEN**                                                      |
+| Verified         | 2026-07-25 — CI GREEN (feat + prettier `7c0ce7f`) + migracja transfers Thin applied |
 
 > Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit docs-only po CLOSE).
 
@@ -35,6 +35,7 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
   → /league ← resolveLeagueTable() · chip pozycji
   → /finance ← resolveClubFinance() · chip kasy (SEASON)
   → /squad ← resolveClubSquad(rows from players) · /players/{id}
+  → /transfers ← resolveTransferMarket() gdy transfer_window_open (po 2 played)
 ```
 
 ## Critical SSOT columns / modules
@@ -51,8 +52,11 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
 | Club cash            | `clubs.cash_balance`                                              |
 | Finance history      | `finance_movements`                                               |
 | Finance UI           | `resolveClubFinance(...)` → `ClubFinanceDto` (jedyny kontrakt UI) |
-| Club roster          | `players` (ids `s-{tag}-…`, `version=1`)                          |
+| Club roster          | `players` (ids `s-{tag}-…` / buy `t-{tag}-…`, `version=1`)        |
 | Squad UI             | `resolveClubSquad(club, rows)` → `SquadDto` (jedyny kontrakt UI)  |
+| Transfer window      | `clubs.transfer_window_open`                                      |
+| Transfer market UI   | `resolveTransferMarket(...)` → `TransferMarketDto` (jedyny)       |
+| Transfer deals       | `transfer_deals` (idempotency + audit, `completed_at`)            |
 | First match session  | `createSessionFromFirstMatch(club, ourXi)`                        |
 | League match session | `createSessionFromLeagueFixture(club, fixture, ourXi)`            |
 | Match engine entry   | `createMatch()` → `MatchSession`                                  |
@@ -68,16 +72,17 @@ Landing → Register/Login → Welcome → Club Wizard → Reveal
 - **LFE-LEAGUE-02** — **CLOSED** · `resolveLeagueTable` · Hub `SEASON` (S1) · `/league` · position chip
 - **LFE-ECONOMY-01** — **CLOSED** · Finance Thin Slice · `cash_balance` · `finance_movements` · `resolveClubFinance`
 - **LFE-PLAYERS-01** — **CLOSED** · `players` SSOT · `resolveClubSquad` · D19
+- **LFE-TRANSFERS-01** — **CLOSED** · Transfer Thin · `resolveTransferMarket` · D20
 
 ## Not on production (do not assume)
 
 - Full 11-fixture calendar / standings DB
-- Pensje · bilety · sponsorzy · transfer envelope / Transfers · Training systems
-- Edycja XI · `potential` · player development formulas
-- GDD §26 balance numbers (Thin constants are temporary — see D18)
+- Pensje · bilety · sponsorzy · transfer **envelope** · negotiation
+- Edycja XI · `potential` · Training / player development formulas
+- GDD §26 balance numbers (Thin constants are temporary — see D18 / D20)
 - Mid-season Hub dashboard FOMO (decision layout retained)
 - Physics / full rules
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE · baseline `0b960b5`
+2026-07-25 — LFE-TRANSFERS-01 CLOSE · baseline `393a43c`

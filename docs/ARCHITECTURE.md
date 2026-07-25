@@ -6,8 +6,8 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`0b960b5`** (LFE-PLAYERS-01 CLOSED).  
-LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures + league + finance + **players roster** + match pipeline.
+Monorepo. Production baseline **`393a43c`** (LFE-TRANSFERS-01 CLOSED).  
+LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures + league + finance + players + **transfers Thin** + match pipeline.
 
 ---
 
@@ -16,8 +16,8 @@ LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub
 ### Frontend (`apps/web`)
 
 - Next.js 15 App Router.
-- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub (EARLY_CLUB / SEASON), `/league`, `/finance`, `/squad`.
-- **Shell:** TopBar / LeftNav / Right rail — progressive unlock per Hub phase.
+- **Platform:** Landing, Auth, Club Wizard, First Match tunnel, Hub (EARLY_CLUB / SEASON), `/league`, `/finance`, `/squad`, `/transfers`.
+- **Shell:** TopBar / LeftNav / Right rail — progressive unlock per Hub phase (+ transfer window).
 - **Match:** Pre Match, Live (`LiveMatchFoundation` + `LiveMatchRuntime`), Post Match.
 - `/status` → `getEngineStatus()`.
 
@@ -31,7 +31,7 @@ Canvas i Replay są **read-only** względem Engine. Post Match buduje raport z E
 
 ### Supabase
 
-Auth + `clubs` (identity, `first_match_completed_at`, **`cash_balance`**) + **`fixtures`** + **`finance_movements`** + **`players`**. **Nie** jest zależnością LFE.
+Auth + `clubs` (identity, `first_match_completed_at`, **`cash_balance`**, **`transfer_window_open`**) + **`fixtures`** + **`finance_movements`** + **`players`** + **`transfer_deals`**. **Nie** jest zależnością LFE.
 
 ---
 
@@ -44,11 +44,12 @@ Landing → Auth → Welcome → Club Wizard
   → /league ← resolveLeagueTable()
   → /finance ← resolveClubFinance()
   → /squad ← resolveClubSquad(rows from players)
+  → /transfers ← resolveTransferMarket() (gdy transfer_window_open)
 ```
 
 SSOT unlock Hub: `clubs.first_match_completed_at`.  
 Hub phase: `resolveHubPhase(club, { hasFixtures })` · Session: `resolveHubSession` · Primary: `resolvePrimaryCta`.  
-Fixtures: `fixtures` / `getNextFixture` · Table: `resolveLeagueTable` · Cash: `cash_balance` · Finance UI: `resolveClubFinance` · Roster: `players` · Squad UI: `resolveClubSquad`.
+Fixtures: `fixtures` / `getNextFixture` · Table: `resolveLeagueTable` · Cash: `cash_balance` · Finance UI: `resolveClubFinance` · Roster: `players` · Squad UI: `resolveClubSquad` · Transfers: `resolveTransferMarket` / `transfer_window_open`.
 
 Szczegóły: [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`platform/HUB.md`](./platform/HUB.md).
 
@@ -78,25 +79,10 @@ flowchart LR
   AI --> EN
   EN --> MS
   EN --> EB
-  MS --> Live
-  EB --> Live
-  Live --> Canvas
-  Live --> Rep
-  Rep --> Canvas
-  MS --> Post
-  EB --> Post
-  Post --> Rep
 ```
 
-### Tekstowo
+Szczegóły: [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md).
 
-```
-Pre Match (fixture | createSessionFromFirstMatch)
-  ↓
-Gameplay Foundation
-  ↓
-Match AI → Match Engine → MatchState + EventBus
-  ↓
 LiveMatchRuntime
   ↓
 Canvas Renderer (LIVE) + ReplayBuffer
@@ -105,7 +91,6 @@ Replay Controller (REPLAY) → Canvas
   ↓
 Post Match → (opcjonalnie) Replay seek
   ↓ (first match) completeFirstMatch → Welcome LF → Hub
-```
 
 ---
 
@@ -129,4 +114,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

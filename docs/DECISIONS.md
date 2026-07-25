@@ -109,19 +109,41 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** finanse na ścieżce produktowej nie mogą być mockiem; Hub i `/finance` potrzebują jednej kasy.  
 **Zasada:** `clubs.cash_balance` = jedyne SSOT salda; `finance_movements` = historia; **`resolveClubFinance()` → `ClubFinanceDto`** = jedyny kontrakt UI (UI nie czyta DB bezpośrednio); seed przy create club; nagroda W/D/L tylko przy pierwszym przejściu fixture → `played`; Finanse odblokowane na `SEASON`.  
 **Tymczasowe stałe Thin** (`ECONOMY_THIN`) do czasu GDD **§26**: `STARTER_CASH=100000`, `REWARD_WIN=5000`, `REWARD_DRAW=2500`, `REWARD_LOSS=1000` (waluta Thin: EUR).  
-**Poza Thin:** pensje, bilety, sponsorzy, transfer envelope, Transfers.  
-**Źródło:** LFE-ECONOMY-01 (prod `a70cf81`).
+**Poza Thin:** pensje, bilety, sponsorzy, transfer **envelope**, negotiation.  
+**Źródło:** LFE-ECONOMY-01 (prod `a70cf81`).  
+**Uwaga:** Transfery cash-only (bez envelope) — **D20** / LFE-TRANSFERS-01.
 
 ### D19 — Players table SSOT + `resolveClubSquad` · CLOSED
 
 **Dlaczego:** kadra musi być trwała przed Transfers/Training; seed runtime uniemożliwiał mutacje.  
-**Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id deterministyczne **`s-{tag}-…`**; **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED`** (lokalizacja w UI).  
-**Poza Thin:** Transfers, Training, edycja XI, `potential`, pensje z cash.  
+**Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id starter **`s-{tag}-…`**; buy **`t-{tag}-…`** (D20); **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED` | `DEPARTED`** (lokalizacja w UI; aktywna kadra bez `DEPARTED`).  
+**Poza Thin:** Training, edycja XI, `potential`, pensje z cash.  
 **Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).
+
+### D20 — Transfer market Thin + `resolveTransferMarket` · CLOSED
+
+**Dlaczego:** rynek nie może być mockiem; musi mutować `players` + kasę atomowo i być sterowany oknem transferowym.  
+**Zasada:**
+
+| Fakt | SSOT / kontrakt |
+| ---- | --------------- |
+| Kadra | `players` (D19) — deal buy/sell mutuje wiersze |
+| UI rynku | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto` |
+| Okno | `clubs.transfer_window_open` (ustawiane gdy played ≥ `UNLOCK_AFTER_PLAYED=2`) |
+| Środki | tylko `clubs.cash_balance` + `finance_movements` (`transfer_buy` / `transfer_sell`) — **bez envelope** |
+| Ledger deal | `transfer_deals` (idempotency_key + audit + `completed_at`) |
+| Odejście | `status=DEPARTED` + `departed_at` — **bez** fizycznego DELETE |
+| Buy ids | `t-{tag}-…` |
+| Fee | **derive** (`deriveTransferFee`) — brak trwałego `market_value` |
+| Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`) |
+
+**Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
+**Poza Thin:** negotiation, envelope, potential, Training, live market DB.  
+**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`; prettier `7c0ce7f`).
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D19 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D20 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 
 ## Powiązania
 
@@ -129,4 +151,4 @@ Każde złamanie D1–D19 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

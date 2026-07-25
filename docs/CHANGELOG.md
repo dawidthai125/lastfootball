@@ -7,8 +7,23 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`0b960b5`** (LFE-PLAYERS-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
-Platform + First Match + Hub SEASON + fixtures + league + finance + **players** roster SSOT.
+Production baseline **`393a43c`** (LFE-TRANSFERS-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
+Platform + First Match + Hub SEASON + fixtures + league + finance + players + **transfers Thin**.
+
+---
+
+## [2026-07-25] — LFE-TRANSFERS-01 · CLOSED
+
+### Product
+
+- `resolveTransferMarket()` → `TransferMarketDto` = jedyny kontrakt UI rynku
+- `clubs.transfer_window_open` = SSOT okna; unlock po 2 played (`UNLOCK_AFTER_PLAYED=2` — Thin vs GDD K11)
+- Deal buy/sell: `players` + `cash_balance` + `finance_movements` + `transfer_deals` (`completed_at`)
+- Buy ids `t-{tag}-…`; sell = `DEPARTED` + `departed_at` (bez DELETE); fee = derive (brak `market_value`)
+- Katalog: `seedTransferCatalogue()`; cash-only (bez envelope / negotiation / potential / training)
+- Nav Transfery open gdy `SEASON` + okno; `/transfers` bez mocków
+- **D20** CLOSED
+- Prod commit `393a43c`; prettier `7c0ce7f`; migracja applied; CI GREEN
 
 ---
 
@@ -233,4 +248,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

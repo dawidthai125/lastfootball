@@ -7,14 +7,14 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Stan (2026-07-25) — PRODUCTION VERIFIED · GREEN
 
-| Tor                | Stan                                                                             |
-| ------------------ | -------------------------------------------------------------------------------- |
-| **Baseline**       | `0b960b5` · LFE-PLAYERS-01 CLOSED · https://lastfootball.vercel.app              |
-| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON · liga · kasa · kadra DB |
-| **Hub**            | SEASON · Primary next match · Liga + Finanse open · chip pozycji/kasy            |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings                  |
-| **GDD**            | GDD-01…15 CLOSED                                                                 |
-| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                               |
+| Tor                | Stan                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| **Baseline**       | `393a43c` · LFE-TRANSFERS-01 CLOSED · https://lastfootball.vercel.app                 |
+| **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON · liga · kasa · kadra · transfery |
+| **Hub**            | SEASON · Primary next match · Liga + Finanse · Transfery gdy okno open                |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings                       |
+| **GDD**            | GDD-01…15 CLOSED                                                                      |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                                    |
 
 ## Kolejność czytania
 
@@ -26,8 +26,8 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Najbliższy cel
 
-**Next:** GDD-16+ **lub** Transfers / Training — Owner wybiera.  
-GDD §26 zastąpi stałe Thin ekonomii (`ECONOMY_THIN`).
+**Next:** **Training** (GDD §8). Alternatywy: GDD-16+ · GDD §26.  
+GDD §26 zastąpi stałe Thin ekonomii / fee (`ECONOMY_THIN` / `TRANSFERS_THIN`).
 
 ## Zasady twarde
 
@@ -39,7 +39,8 @@ GDD §26 zastąpi stałe Thin ekonomii (`ECONOMY_THIN`).
 - Tabela ligowa = wyłącznie `resolveLeagueTable()` (D17).
 - Finanse = wyłącznie `resolveClubFinance()`; saldo = `cash_balance` (D18).
 - Kadra = `players`; UI wyłącznie `resolveClubSquad()` (D19); seed ≠ runtime.
+- Transfery = wyłącznie `resolveTransferMarket()`; okno = `transfer_window_open` (D20).
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

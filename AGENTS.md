@@ -22,6 +22,7 @@
 - League table SSOT is `resolveLeagueTable()` only (no standings DB).
 - Finance SSOT is `clubs.cash_balance` + `resolveClubFinance()` only (no mock).
 - Squad SSOT is `players` + `resolveClubSquad(rows)` only (no runtime seed for player club).
+- Transfer market SSOT is `resolveTransferMarket()` + `transfer_window_open` only (cash-only; no mock).
 
 ## Workflow
 
@@ -31,4 +32,4 @@ Details: [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md) · [`docs/WORKFL
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

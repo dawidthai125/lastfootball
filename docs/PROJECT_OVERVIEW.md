@@ -8,16 +8,16 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 **Last Football** — przeglądarkowy football manager z własnym silnikiem meczu **LFE**.
 
-| Warstwa               | Stan                                                                      |
-| --------------------- | ------------------------------------------------------------------------- |
-| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                                       |
-| Platforma             | Landing · Auth · Club Wizard · First Match · Hub · liga · finanse · kadra |
-| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`                    |
-| App web               | Shell + match pipeline + platform flows                                   |
-| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures + finance + **players**         |
-| Physics / pełne Rules | **Nie rozpoczęte**                                                        |
+| Warstwa               | Stan                                                                              |
+| --------------------- | --------------------------------------------------------------------------------- |
+| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                                               |
+| Platforma             | Landing · Auth · Club Wizard · First Match · Hub · liga · finanse · kadra · transfery |
+| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`                            |
+| App web               | Shell + match pipeline + platform flows                                           |
+| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures + finance + players + **transfer_deals** |
+| Physics / pełne Rules | **Nie rozpoczęte**                                                                |
 
-**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `0b960b5`  
+**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `393a43c`  
 **Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/
 
 ## Opis działania (produkt)
@@ -27,8 +27,9 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 3. Hub = ekran decyzji (1 Primary CTA); po fixtures → faza `SEASON`.
 4. Tabela ligowa = `resolveLeagueTable()` (derive; bez standings DB).
 5. Kadra = `players` + `resolveClubSquad()` (D19).
-6. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
-7. Tożsamość klubu / auth → Supabase `clubs`.
+6. Transfery = `resolveTransferMarket()` gdy `transfer_window_open` (D20); cash-only.
+7. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
+8. Tożsamość klubu / auth → Supabase `clubs`.
 
 ## Stack
 
@@ -45,8 +46,8 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 ## Granice obecnej fazy
 
-**Jest:** onboarding, first match, EARLY_CLUB Hub, match UI pipeline, GDD rdzeń.  
-**Nie jest jeszcze:** live liga/terminarz DB, ekonomia, transfery, Physics.
+**Jest:** onboarding, first match, Hub SEASON, liga Thin, finance Thin, players SSOT, **transfers Thin** (buy/sell).  
+**Nie jest jeszcze:** Training, negotiation/envelope, potential, Physics, pełny kalendarz 11.
 
 ## Powiązania
 
@@ -54,4 +55,4 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

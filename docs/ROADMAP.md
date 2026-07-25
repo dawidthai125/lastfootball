@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production baseline **`0b960b5`** (LFE-PLAYERS-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
-CI zielony (feat + prettier `d43fa3d`); Vercel Production Ready; migracja `players` applied.
+Production baseline **`393a43c`** (LFE-TRANSFERS-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
+CI zielony (feat + prettier `7c0ce7f`); Vercel Production Ready; migracja transfers Thin applied.
 
 ---
 
@@ -32,6 +32,7 @@ CI zielony (feat + prettier `d43fa3d`); Vercel Production Ready; migracja `playe
 | **LFE-LEAGUE-02**                                      | **CLOSED** · table derive · Hub SEASON · `/league` · chip |
 | **LFE-ECONOMY-01**                                     | **CLOSED** · cash SSOT · movements · `/finance` · SEASON  |
 | **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19    |
+| **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20  |
 
 ## IN PROGRESS 🔄
 
@@ -41,15 +42,15 @@ CI zielony (feat + prettier `d43fa3d`); Vercel Production Ready; migracja `playe
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                    |
-| ------------------------------- | ---------------------------- |
-| GDD-16+                         | Owner GO (docs)              |
-| GDD §26 balance numbers         | zastąpi `ECONOMY_THIN` (D18) |
-| Transfer Market                 | GDD §12 · na bazie `players` |
-| Training system                 | GDD §8 · statusy kadry       |
-| Full 11-fixture calendar (opt.) | po LEAGUE-02                 |
-| Zawężenie LFE PUBLIC exports    | chore                        |
-| Ratings v2                      | bogatsze Player Match Data   |
+| Item                            | Zależność                         |
+| ------------------------------- | --------------------------------- |
+| **Training system**             | GDD §8 · statusy kadry (`players`) |
+| GDD-16+                         | Owner GO (docs)                   |
+| GDD §26 balance numbers         | zastąpi `ECONOMY_THIN` / fee Thin |
+| Negotiation / envelope          | po Transfers Thin (D20 poza)      |
+| Full 11-fixture calendar (opt.) | po LEAGUE-02                      |
+| Zawężenie LFE PUBLIC exports    | chore                             |
+| Ratings v2                      | bogatsze Player Match Data        |
 
 ## FUTURE
 
@@ -64,18 +65,19 @@ CI zielony (feat + prettier `d43fa3d`); Vercel Production Ready; migracja `playe
 
 ## Next Recommended EPIC
 
-**GDD-16+** (Owner wybiera) **lub** **Transfers** (GDD §12) / **Training** (§8).  
-Uzasadnienie: trwała kadra (`players`) jest na produkcji — rynek i trening mogą mutować SSOT; §26 dla liczb ekonomii.
+**Training** (GDD §8) — Owner wybiera.  
+Uzasadnienie: `players` + transfery Thin są na produkcji; trening mutuje statusy / rozwój na tej samej SSOT. Alternatywy: GDD-16+ · GDD §26.
 
 ## Decyzje roadmapy
 
-- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem).
+- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem; unlock okna transferów po 2 played vs GDD K11 — D20).
 - Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
 - Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); stałe Thin tymczasowe do §26.
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
+- Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; cash-only; fee = derive (D20).
 
 ## Powiązania
 
@@ -83,4 +85,4 @@ Uzasadnienie: trwała kadra (`players`) jest na produkcji — rynek i trening mo
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

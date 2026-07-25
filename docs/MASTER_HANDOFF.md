@@ -5,22 +5,22 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `0b960b5` · LFE-PLAYERS-01 CLOSED · 2026-07-25
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `393a43c` · LFE-TRANSFERS-01 CLOSED · 2026-07-25
 
 ---
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                        |
-| -------- | ------------------------------------------------------------------------------ |
-| Prod URL | https://lastfootball.vercel.app                                                |
-| Commit   | `0b960b543d6640116424560c635417a5b59de9c5`                                     |
-| Message  | feat(players): persist club roster SSOT with resolveClubSquad (LFE-PLAYERS-01) |
-| Status   | **PRODUCTION VERIFIED · GREEN** (prettier follow-up `d43fa3d`)                 |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                             |
-| Supabase | `anoeimngwptucjdugjme` (+ fixtures + cash/finance + **players** applied)       |
-| CI       | Format · Typecheck · Lint · Test · Build                                       |
-| Hosting  | Vercel Production                                                              |
+| Pole     | Wartość                                                                    |
+| -------- | -------------------------------------------------------------------------- |
+| Prod URL | https://lastfootball.vercel.app                                            |
+| Commit   | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                 |
+| Message  | feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)   |
+| Status   | **PRODUCTION VERIFIED · GREEN** (prettier follow-up `7c0ce7f`)             |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                         |
+| Supabase | `anoeimngwptucjdugjme` (+ players + **transfers Thin** applied)            |
+| CI       | Format · Typecheck · Lint · Test · Build                                   |
+| Hosting  | Vercel Production                                                          |
 
 ---
 
@@ -28,11 +28,11 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 
 ```
 Browser → Next.js apps/web
-            ├─ Auth / middleware / Club DTO (+ cash_balance)
+            ├─ Auth / middleware / Club DTO (+ cash_balance, transfer_window_open)
             ├─ Onboarding + First Match tunnel
-            ├─ Hub decision (EARLY_CLUB / SEASON) + fixtures + league + finance + squad
+            ├─ Hub decision (EARLY_CLUB / SEASON) + fixtures + league + finance + squad + transfers
             └─ Match UI → LiveMatchRuntime → packages/lfe
-Supabase ← Auth + clubs + fixtures + finance_movements + players
+Supabase ← Auth + clubs + fixtures + finance_movements + players + transfer_deals
 ```
 
 Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)
@@ -66,7 +66,7 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ### Zakończone (kod na `main`)
 
-**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)** · **LFE-LEAGUE-02 (CLOSED)** · **LFE-ECONOMY-01 (CLOSED)** · **LFE-PLAYERS-01 (CLOSED)**
+**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)** · **LFE-LEAGUE-02 (CLOSED)** · **LFE-ECONOMY-01 (CLOSED)** · **LFE-PLAYERS-01 (CLOSED)** · **LFE-TRANSFERS-01 (CLOSED)**
 
 **Silnik/UI meczu:** LFE EPIC-1…7 · Gameplay · AI · Engine · Player Match Data · Canvas · Replay · Post Match · Live Bridge · Ratings · CI Prettier
 
@@ -78,11 +78,11 @@ Brak otwartego EPIC implementacyjnego.
 
 ### Next Recommended EPIC
 
-**GDD-16+** lub **Transfers** / **Training** (Owner wybiera). GDD §26 zastąpi stałe Thin ekonomii.
+**Training** (GDD §8). Alternatywy: GDD-16+ · GDD §26.
 
 ### Typowe następne
 
-GDD-16+ · §26 balance · Transfers · Training · 11-fixture calendar (opt.) · LFE PUBLIC export trim · Physics (FUTURE)
+Training · GDD-16+ · §26 balance · negotiation/envelope · 11-fixture calendar (opt.) · LFE PUBLIC export trim · Physics (FUTURE)
 
 ---
 
@@ -102,6 +102,9 @@ GDD-16+ · §26 balance · Transfers · Training · 11-fixture calendar (opt.) �
 | Finance UI          | `resolveClubFinance` → `ClubFinanceDto` (D18)     |
 | Club roster         | `players` (D19)                                   |
 | Squad UI            | `resolveClubSquad(club, rows)` → `SquadDto` (D19) |
+| Transfer window     | `clubs.transfer_window_open` (D20)                |
+| Transfer market UI  | `resolveTransferMarket` → `TransferMarketDto` (D20) |
+| Transfer deals      | `transfer_deals` (D20)                            |
 | Match state         | `MatchState` + `EventBus` via `MatchSession`      |
 | Agent onboarding    | `docs/AI/START_HERE.md`                           |
 
@@ -130,10 +133,11 @@ GDD-16+ · §26 balance · Transfers · Training · 11-fixture calendar (opt.) �
 ## 8. Supabase
 
 - Auth email/password; callback `/auth/callback`
-- Table `clubs` (owner RLS) + `first_match_completed_at` + **`cash_balance`**
+- Table `clubs` (owner RLS) + `first_match_completed_at` + **`cash_balance`** + **`transfer_window_open`**
 - Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A **applied**
-- Table `finance_movements` (owner RLS via club) — LFE-ECONOMY-01 **applied**
-- Table `players` (owner RLS via club) — LFE-PLAYERS-01 **applied**
+- Table `finance_movements` (owner RLS via club) — LFE-ECONOMY-01 **applied** (+ transfer cats)
+- Table `players` (owner RLS via club) — LFE-PLAYERS-01 **applied** (+ `departed_at` / `DEPARTED`)
+- Table `transfer_deals` (owner RLS via club) — LFE-TRANSFERS-01 **applied**
 - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — never commit)
 - Status: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md)
 
@@ -143,7 +147,7 @@ GDD-16+ · §26 balance · Transfers · Training · 11-fixture calendar (opt.) �
 
 [`DECISIONS.md`](./DECISIONS.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md)
 
-Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17); club cash + `resolveClubFinance` (D18); **players + `resolveClubSquad` (D19)**.
+Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17); club cash + `resolveClubFinance` (D18); players + `resolveClubSquad` (D19); **transfers Thin + `resolveTransferMarket` (D20)**.
 
 ---
 
@@ -176,4 +180,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-25 — LFE-PLAYERS-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-01 CLOSE

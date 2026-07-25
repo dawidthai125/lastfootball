@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (LFE-PLAYERS-01 CLOSE — awaiting Owner GO docs commit)
+### Docs (LFE-TRANSFERS-01 CLOSE — awaiting Owner GO docs commit)
+
+- Status / baseline sync: LFE-TRANSFERS-01 CLOSED · prod `393a43c` · prettier `7c0ce7f` · D20
+
+### Added (shipped on `main` — LFE-TRANSFERS-01)
+
+- Transfer Thin Slice: `resolveTransferMarket()` sole UI contract; no market mocks
+- `clubs.transfer_window_open` SSOT; unlock after 2 played fixtures (Thin vs GDD K11)
+- Atomic buy/sell on `players` + `cash_balance` + `finance_movements` + `transfer_deals`
+- Buy ids `t-{tag}-…`; sell = `DEPARTED` + `departed_at` (no delete); fee = derive
+- Catalogue via `seedTransferCatalogue()`; cash-only (no envelope / negotiation)
+
+### Docs (LFE-PLAYERS-01 CLOSE)
 
 - Status / baseline sync: LFE-PLAYERS-01 CLOSED · prod `0b960b5` · D19
 

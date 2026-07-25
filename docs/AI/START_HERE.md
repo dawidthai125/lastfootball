@@ -24,6 +24,7 @@ Onboarding dla **ChatGPT / Cursor Agent** bez historii czatu i bez czytania cał
 | Onboarding / auth / klub     | [`../platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                          |
 | First Match                  | [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                  |
 | Hub                          | [`../platform/HUB.md`](../platform/HUB.md)                                                                  |
+| Transfery                    | [`../platform/HUB.md`](../platform/HUB.md) (Transfers SSOT) · D20                                           |
 | Match Live / Canvas / Replay | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                |
 | Silnik LFE                   | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) |
 | Produkt / GDD                | [`../game-design/README.md`](../game-design/README.md)                                                      |
@@ -72,4 +73,4 @@ Release: [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md).
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-07-25 — LFE-TRANSFERS-01 CLOSE
