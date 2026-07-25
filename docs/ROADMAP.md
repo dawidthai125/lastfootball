@@ -6,7 +6,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-02-N1** (hash po commit — patrz CURRENT_BASELINE).  
+Production feature baseline **`8d9d772`** (LFE-TRANSFERS-02-N1 CLOSED).  
 GDD-§26A/B · LFE-LEAGUE-03 · E1 envelope CLOSED · Vercel Production.
 
 ---

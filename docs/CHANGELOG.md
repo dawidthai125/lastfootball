@@ -7,7 +7,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-02-N1** (hash w CURRENT_BASELINE po commit).  
+Production feature baseline **`8d9d772`** (LFE-TRANSFERS-02-N1) — tip may be docs after feat.  
 GDD-§26A/B · LFE-LEAGUE-03 · E1 **CLOSED**.
 
 ---
@@ -21,7 +21,7 @@ GDD-§26A/B · LFE-LEAGUE-03 · E1 **CLOSED**.
 - Settlement: `completeTransferBuy(agreedAmount)` + pełna rewalidacja (ask / envelope / window / roster / funds)
 - SSOT: `cash_balance`; ask = `deriveTransferFee`; envelope = `resolveTransferEnvelope`
 - Sell bez zmian (instant @ fee)
-- Feature baseline → commit `feat(transfers): add stateless buy negotiation Thin (LFE-TRANSFERS-02-N1)`
+- Feature baseline → **`8d9d772`** (LFE-TRANSFERS-02-N1)
 
 ---
 

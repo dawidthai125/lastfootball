@@ -14,7 +14,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline          # feature baseline N1 — hash w tabeli
+git log -1 --oneline 8d9d772  # feature baseline N1 negotiation
 ```
 
 ---
@@ -26,9 +26,9 @@ git log -1 --oneline          # feature baseline N1 — hash w tabeli
 | URL                  | https://lastfootball.vercel.app                                             |
 | Alias                | https://lastfootball.pl                                                     |
 | Branch               | `main`                                                                      |
-| **Feature baseline** | _(wypełniane po commit N1 — patrz CLOSE tip)_                               |
+| **Feature baseline** | `8d9d77294a500fdff70234fce0b2423eacbc5209`                                  |
 | Baseline message     | `feat(transfers): add stateless buy negotiation Thin (LFE-TRANSFERS-02-N1)` |
-| Docs CLOSE tip       | _(po feacie)_                                                               |
+| Docs CLOSE tip       | _(ten commit lub nowszy)_                                                   |
 | Status               | **LFE-TRANSFERS-02-N1 CLOSED** · E1 · LEAGUE-03 · GDD-§26A/B                |
 
 ## Stack
