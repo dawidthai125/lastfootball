@@ -11,13 +11,13 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 | P1  | Produkcyjny routing klubu = tabela `clubs`, nie `user_metadata`                                       | LFE-PLATFORM-01                     |
 | P2  | First Match tunnel **przed** Hubem; Hub dopiero po `first_match_completed_at`                         | LFE-MATCH-01                        |
 | P3  | `first_match_completed_at` = jedyne SSOT ukończenia pierwszego meczu                                  | LFE-MATCH-01                        |
-| P4  | First Match = synthetic fixture `id=first` + deterministic starter squad (bez tabeli `players`)       | LFE-MATCH-01                        |
+| P4  | First Match = synthetic fixture `id=first`; XI z `players` (DB) + AI bot seed                         | LFE-MATCH-01 / PLAYERS-01           |
 | P5  | Hub EARLY_CLUB = ekran decyzji; mid-season mock usunięty z tej ścieżki                                | LFE-HUB-01 / GDD §23                |
 | P6  | `resolveHubPhase` / `resolvePrimaryCta` = SSOT fazy i Primary CTA                                     | LFE-HUB-01                          |
 | P7  | Progressive disclosure: Liga + Finanse open na `SEASON`; trening/transfery soft-lock                  | LFE-HUB-01 / LEAGUE-02 / ECONOMY-01 |
 | P8  | Supabase prod/dev = project `anoeimngwptucjdugjme`                                                    | LFE-INFRA-01                        |
 | P9  | `fixtures` + `opponent_club_id` = SSOT terminarza; Thin A generator = 3 fixtures                      | LFE-LEAGUE-01                       |
-| P10 | `resolveClubSquad` = SSOT kadry (seed); bez `@/data/squad` na ścieżce produktowej                     | LFE-LEAGUE-01                       |
+| P10 | `players` + `resolveClubSquad(rows)` = SSOT kadry; seed ≠ runtime · **CLOSED**                        | LFE-PLAYERS-01 (= D19)              |
 | P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED          | LFE-LEAGUE-02                       |
 | P12 | `cash_balance` + `finance_movements` + `resolveClubFinance` = Finance Thin; stałe do §26 · **CLOSED** | LFE-ECONOMY-01 (= D18)              |
 
@@ -27,4 +27,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-PLAYERS-01 CLOSE

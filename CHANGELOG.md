@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (LFE-ECONOMY-01 CLOSE — awaiting Owner GO docs commit)
+### Docs (LFE-PLAYERS-01 CLOSE — awaiting Owner GO docs commit)
 
-- Status / baseline sync: LFE-ECONOMY-01 CLOSED · prod `a70cf81`
+- Status / baseline sync: LFE-PLAYERS-01 CLOSED · prod `0b960b5` · D19
+
+### Added (shipped on `main` — LFE-PLAYERS-01)
+
+- Club roster SSOT (`players` table) + RLS + starter backfill
+- `resolveClubSquad(club, rows)` → `SquadDto` (sole UI contract; no runtime seed fallback)
+- Deterministic ids `s-{tag}-…`; `version` default `1`; status `READY|INJURED|SUSPENDED|TIRED`
+- Seed only for create/backfill/tests; AI bots via `seedBotSquad` / `seedOpponentSquad`
+- First Match + league XI from DB; `/squad` + `/players/[id]` from resolver
 
 ### Added (shipped on `main` — LFE-ECONOMY-01)
 
@@ -50,8 +58,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Foundation monorepo: Next.js 15 app, `@lastfootball/lfe`, `@lastfootball/domain`
-- Engine status page (`/status`)
-- Baseline CI (format, typecheck, lint, build)
-- Vercel region `fra1` config
-- Supabase client stubs
+- Initial monorepo scaffold

@@ -21,7 +21,7 @@ supabase/ (Auth + Postgres migrations)
 3. Mutacje tylko przez **CommandBus** / oficjalne API sesji.
 4. **Canvas / Replay** czytają `MatchCanvasReadModel` — **nigdy** nie wołają Engine i nie mutują stanu.
 5. **Live Bridge** (`LiveMatchRuntime`) spina LIVE pulse → buffer → Canvas; REPLAY odtwarza buffer.
-6. First Match używa `createSessionFromFirstMatch(club)` → ten sam `createMatch` (bez zmiany kontraktów silnika).
+6. First Match używa `createSessionFromFirstMatch(club, ourXi)` → ten sam `createMatch` (bez zmiany kontraktów silnika).
 
 ## Product SSOT (platform)
 
@@ -36,7 +36,8 @@ supabase/ (Auth + Postgres migrations)
 | Saldo kasy        | `clubs.cash_balance`                                   |
 | Historia finansów | `finance_movements`                                    |
 | Finance UI        | `resolveClubFinance(...)` → `ClubFinanceDto` wyłącznie |
-| Kadra             | `resolveClubSquad(club)`                               |
+| Kadra (wiersze)   | tabela `players`                                       |
+| Squad UI          | `resolveClubSquad(club, rows)` → `SquadDto` wyłącznie  |
 | Routing post-auth | `getPostAuthPath` + middleware (club + first match)    |
 
 ## Hub rules (LFE-HUB-01)
@@ -46,6 +47,12 @@ supabase/ (Auth + Postgres migrations)
 - Dokładnie **1 Primary CTA**.
 - Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse open na `SEASON`.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
+
+## Players rules (LFE-PLAYERS-01 / D19)
+
+- Runtime klubu gracza **nigdy** nie woła `seedClubRoster` / `seedStarterSquad`.
+- Seed = create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad`.
+- Pusta baza → `SquadUnavailableError` (bez fallbacku do seeda).
 
 ## REUSE FIRST / ZERO DUPLICATE
 
@@ -63,4 +70,4 @@ Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](.
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-PLAYERS-01 CLOSE

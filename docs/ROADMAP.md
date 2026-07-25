@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production baseline **`a70cf81`** (LFE-ECONOMY-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
-CI zielony; Vercel Production Ready; migracja cash/finance applied.
+Production baseline **`0b960b5`** (LFE-PLAYERS-01 CLOSED) — PRODUCTION VERIFIED · GREEN.  
+CI zielony (feat + prettier `d43fa3d`); Vercel Production Ready; migracja `players` applied.
 
 ---
 
@@ -28,9 +28,10 @@ CI zielony; Vercel Production Ready; migracja cash/finance applied.
 | **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`           |
 | **LFE-HUB-01**                                         | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta`      |
 | **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                            |
-| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match · Squad SSOT      |
+| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match · Squad seed      |
 | **LFE-LEAGUE-02**                                      | **CLOSED** · table derive · Hub SEASON · `/league` · chip |
 | **LFE-ECONOMY-01**                                     | **CLOSED** · cash SSOT · movements · `/finance` · SEASON  |
+| **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19    |
 
 ## IN PROGRESS 🔄
 
@@ -44,7 +45,8 @@ CI zielony; Vercel Production Ready; migracja cash/finance applied.
 | ------------------------------- | ---------------------------- |
 | GDD-16+                         | Owner GO (docs)              |
 | GDD §26 balance numbers         | zastąpi `ECONOMY_THIN` (D18) |
-| Transfer Market + players DB    | GDD §12 · po cash Thin       |
+| Transfer Market                 | GDD §12 · na bazie `players` |
+| Training system                 | GDD §8 · statusy kadry       |
 | Full 11-fixture calendar (opt.) | po LEAGUE-02                 |
 | Zawężenie LFE PUBLIC exports    | chore                        |
 | Ratings v2                      | bogatsze Player Match Data   |
@@ -62,8 +64,8 @@ CI zielony; Vercel Production Ready; migracja cash/finance applied.
 
 ## Next Recommended EPIC
 
-**GDD-16+** (Owner wybiera) **lub** **LFE-PLAYERS-01 / Transfers** (tabela `players`).  
-Uzasadnienie: liga + kasa thin są na produkcji — następna luka MVP to trwała kadra / rynek albo domknięcie szkieletu GDD; liczby ekonomiczne → §26.
+**GDD-16+** (Owner wybiera) **lub** **Transfers** (GDD §12) / **Training** (§8).  
+Uzasadnienie: trwała kadra (`players`) jest na produkcji — rynek i trening mogą mutować SSOT; §26 dla liczb ekonomii.
 
 ## Decyzje roadmapy
 
@@ -73,6 +75,7 @@ Uzasadnienie: liga + kasa thin są na produkcji — następna luka MVP to trwał
 - Replay nigdy nie odpala Engine.
 - Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); stałe Thin tymczasowe do §26.
+- Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 
 ## Powiązania
 
@@ -80,4 +83,4 @@ Uzasadnienie: liga + kasa thin są na produkcji — następna luka MVP to trwał
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-PLAYERS-01 CLOSE

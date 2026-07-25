@@ -21,14 +21,15 @@ First Match Intro (/onboarding/first-match)
 | Moduł                               | Rola                                                           |
 | ----------------------------------- | -------------------------------------------------------------- |
 | `lib/first-match/constants.ts`      | `FIRST_MATCH_ID='first'`, bot, paths, tunnel helper            |
-| `lib/first-match/starter-squad.ts`  | Deterministic XI (seed od `clubId`) — **bez** tabeli `players` |
-| `lib/first-match/create-session.ts` | `createSessionFromFirstMatch(club)` → LFE `createMatch`        |
-| `lib/first-match/bundles.ts`        | Prematch/Live bundles z Club DTO                               |
+| `lib/squad/load-starting-xi.ts`     | DB XI via `listClubPlayers` + `resolveStartingXi` (D19)        |
+| `lib/first-match/create-session.ts` | `createSessionFromFirstMatch(club, ourXi)` → LFE `createMatch` |
+| `lib/first-match/bundles.ts`        | Prematch/Live bundles; lineup z DB XI + AI bot seed            |
 | `lib/first-match/actions.ts`        | `completeFirstMatch`                                           |
 
 ## SSOT
 
 - Ukończenie: **`clubs.first_match_completed_at`** (jedyny).
+- Skład gracza: **`players`** → `resolveClubSquad` / `resolveStartingXi` (D19); **bez** runtime seed.
 - Wynik meczu: **nie** persistowany w MVP (pasek „Ostatni mecz” na Hubie = copy jakościowy).
 
 ## Kontrakt silnika
@@ -51,4 +52,4 @@ Wynik First Match nadal **nie** trafia do `fixtures`.
 
 ## Last updated
 
-2026-07-24 — LFE-LEAGUE-01
+2026-07-25 — LFE-PLAYERS-01 CLOSE

@@ -21,6 +21,7 @@
 - First Hub unlock requires `clubs.first_match_completed_at` (First Match tunnel).
 - League table SSOT is `resolveLeagueTable()` only (no standings DB).
 - Finance SSOT is `clubs.cash_balance` + `resolveClubFinance()` only (no mock).
+- Squad SSOT is `players` + `resolveClubSquad(rows)` only (no runtime seed for player club).
 
 ## Workflow
 
@@ -30,4 +31,4 @@ Details: [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md) · [`docs/WORKFL
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-PLAYERS-01 CLOSE

@@ -7,8 +7,22 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`a70cf81`** (LFE-ECONOMY-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
-Platform + First Match + Hub SEASON + fixtures + league table + Finance Thin Slice.
+Production baseline **`0b960b5`** (LFE-PLAYERS-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
+Platform + First Match + Hub SEASON + fixtures + league + finance + **players** roster SSOT.
+
+---
+
+## [2026-07-25] — LFE-PLAYERS-01 · CLOSED
+
+### Product
+
+- Tabela `players` = SSOT kadry klubu gracza (RLS); ids `s-{tag}-…`; `version` default `1`
+- Status domenowy: `READY` | `INJURED` | `SUSPENDED` | `TIRED` (lokalizacja w UI)
+- `resolveClubSquad(club, rows)` → `SquadDto` = jedyny kontrakt UI; brak fallbacku do seeda
+- Seed (`seedClubRoster`) tylko create/backfill/testy; AI = `seedBotSquad` / `seedOpponentSquad`
+- First Match + liga: nasz XI z DB; `/squad` + `/players/[id]` z resolvera
+- D16 superseded by **D19**
+- Prod commit `0b960b5`; prettier `d43fa3d`; migracja applied; CI GREEN
 
 ---
 
@@ -219,4 +233,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-SYNC-01
+2026-07-25 — LFE-PLAYERS-01 CLOSE

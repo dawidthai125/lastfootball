@@ -91,11 +91,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`).  
 **Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17.
 
-### D16 — Squad seed SSOT (do czasu tabeli players) · CLOSED
+### D16 — Squad seed SSOT (do czasu tabeli players) · SUPERSEDED by D19
 
-**Dlaczego:** Primary CTA / mecze wymagają spójnego XI bez `@/data/squad`.  
-**Zasada:** `resolveClubSquad(club)` / `seedStarterSquad` — deterministyczny seed; tabela `players` dopiero przy transferach.  
-**Źródło:** LFE-LEAGUE-01.
+**Dlaczego:** Primary CTA / mecze wymagały spójnego XI bez `@/data/squad`.  
+**Zasada (historyczna):** `resolveClubSquad(club)` / `seedStarterSquad` — deterministyczny seed.  
+**Źródło:** LFE-LEAGUE-01.  
+**Status:** **SUPERSEDED** przez **D19** (LFE-PLAYERS-01) — seed nie jest już runtime SSOT.
 
 ### D17 — League table = pure derive (`resolveLeagueTable`) · CLOSED
 
@@ -111,9 +112,16 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Poza Thin:** pensje, bilety, sponsorzy, transfer envelope, Transfers.  
 **Źródło:** LFE-ECONOMY-01 (prod `a70cf81`).
 
+### D19 — Players table SSOT + `resolveClubSquad` · CLOSED
+
+**Dlaczego:** kadra musi być trwała przed Transfers/Training; seed runtime uniemożliwiał mutacje.  
+**Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id deterministyczne **`s-{tag}-…`**; **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED`** (lokalizacja w UI).  
+**Poza Thin:** Transfers, Training, edycja XI, `potential`, pensje z cash.  
+**Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D18 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D19 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 
 ## Powiązania
 
@@ -121,4 +129,4 @@ Każde złamanie D1–D18 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-ECONOMY-01 CLOSE
+2026-07-25 — LFE-PLAYERS-01 CLOSE
