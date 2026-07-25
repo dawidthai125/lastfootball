@@ -11,11 +11,7 @@ import {
   PlayerHistory,
 } from '@/components/squad/PlayerDetail';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import {
-  getSquadPlayerById,
-  resolveClubSquad,
-  SquadUnavailableError,
-} from '@/lib/squad';
+import { getSquadPlayerById, resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
 
 type PageProps = {

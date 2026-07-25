@@ -63,10 +63,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
       clause: 200_000 + shirt * 10_000,
       role: roleLabel(row.pos, row.captain),
     },
-    history: [
-      `Skład startowy ${row.clubId.slice(0, 8)}`,
-      row.starter ? 'XI' : 'Ławka',
-    ],
+    history: [`Skład startowy ${row.clubId.slice(0, 8)}`, row.starter ? 'XI' : 'Ławka'],
     starter: row.starter,
     captain: row.captain,
     version: row.version,
@@ -95,17 +92,15 @@ export function resolveClubSquad(
 export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
   const xi = rows
     .filter((r) => r.starter)
-    .map(
-      (r): RosterPlayerSeed => ({
-        id: r.id,
-        name: r.name,
-        number: r.shirtNumber,
-        pos: r.pos,
-        role: r.role as PitchRole,
-        starter: true,
-        captain: r.captain || undefined,
-      }),
-    );
+    .map((r): RosterPlayerSeed => ({
+      id: r.id,
+      name: r.name,
+      number: r.shirtNumber,
+      pos: r.pos,
+      role: r.role as PitchRole,
+      starter: true,
+      captain: r.captain || undefined,
+    }));
   if (xi.length !== 11) {
     const clubId = rows[0]?.clubId ?? 'unknown';
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
@@ -113,9 +108,6 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
   return xi;
 }
 
-export function getSquadPlayerById(
-  squad: SquadDto,
-  playerId: string,
-): SquadPlayerDto | null {
+export function getSquadPlayerById(squad: SquadDto, playerId: string): SquadPlayerDto | null {
   return squad.players.find((p) => p.id === playerId) ?? null;
 }
