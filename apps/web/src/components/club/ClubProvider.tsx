@@ -8,20 +8,32 @@ type ClubContextValue = {
   readonly club: ClubDto | null;
   /** S1: fixtures slate exists → Hub SEASON (LFE-LEAGUE-02). */
   readonly hasFixtures: boolean;
+  /** Derived: played fixtures >= training unlock (LFE-TRAINING-01). */
+  readonly trainingUnlocked: boolean;
 };
 
-const ClubContext = createContext<ClubContextValue>({ club: null, hasFixtures: false });
+const ClubContext = createContext<ClubContextValue>({
+  club: null,
+  hasFixtures: false,
+  trainingUnlocked: false,
+});
 
 export function ClubProvider({
   club,
   hasFixtures = false,
+  trainingUnlocked = false,
   children,
 }: {
   club: ClubDto | null;
   hasFixtures?: boolean;
+  trainingUnlocked?: boolean;
   children: ReactNode;
 }) {
-  return <ClubContext.Provider value={{ club, hasFixtures }}>{children}</ClubContext.Provider>;
+  return (
+    <ClubContext.Provider value={{ club, hasFixtures, trainingUnlocked }}>
+      {children}
+    </ClubContext.Provider>
+  );
 }
 
 export function useClub(): ClubDto | null {
@@ -30,6 +42,10 @@ export function useClub(): ClubDto | null {
 
 export function useHasFixtures(): boolean {
   return useContext(ClubContext).hasFixtures;
+}
+
+export function useTrainingUnlocked(): boolean {
+  return useContext(ClubContext).trainingUnlocked;
 }
 
 /** Prefer live club; fall back to mock identity only when DTO missing. */

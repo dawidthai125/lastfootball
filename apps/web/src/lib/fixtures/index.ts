@@ -16,6 +16,8 @@ export {
 } from '@/lib/fixtures/get-fixture';
 export { ensureClubFixtures } from '@/lib/fixtures/ensure-club-fixtures';
 export { completeFixture } from '@/lib/fixtures/complete-fixture';
+export { hasPlayedUnlock, countPlayedInList, utcDateString } from '@/lib/fixtures/played-unlock';
+export { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
 export { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
 export type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 export {

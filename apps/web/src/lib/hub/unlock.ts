@@ -18,6 +18,8 @@ const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance']);
 
 export type NavAccessContext = {
   readonly transferWindowOpen?: boolean;
+  /** Derived: played fixtures >= training unlock threshold. */
+  readonly trainingUnlocked?: boolean;
 };
 
 /**
@@ -38,6 +40,9 @@ export function resolveNavAccess(
   if (phase === 'SEASON') {
     if (itemId === 'transfers') {
       return ctx.transferWindowOpen ? 'open' : 'soft_locked';
+    }
+    if (itemId === 'training') {
+      return ctx.trainingUnlocked ? 'open' : 'soft_locked';
     }
     return SEASON_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }

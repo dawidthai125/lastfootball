@@ -13,6 +13,11 @@ export type ClubDto = {
   cashBalance: number;
   /** Transfer window SSOT (LFE-TRANSFERS-01). */
   transferWindowOpen: boolean;
+  /**
+   * UTC calendar date (`YYYY-MM-DD`) of last team training session,
+   * or null if never trained (LFE-TRAINING-01).
+   */
+  lastTrainingOn: string | null;
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {

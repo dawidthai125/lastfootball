@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavIcon } from '@/components/assets';
-import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
+import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
 import { FLAT_NAV } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
@@ -23,8 +23,12 @@ export function MobileNav() {
   const pathname = usePathname();
   const club = useClub();
   const hasFixtures = useHasFixtures();
+  const trainingUnlocked = useTrainingUnlocked();
   const phase = resolveHubPhase(club, { hasFixtures });
-  const navCtx = { transferWindowOpen: club?.transferWindowOpen };
+  const navCtx = {
+    transferWindowOpen: club?.transferWindowOpen,
+    trainingUnlocked,
+  };
 
   return (
     <nav

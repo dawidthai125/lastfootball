@@ -21,6 +21,7 @@ export type Database = {
           first_match_completed_at: string | null;
           cash_balance: number;
           transfer_window_open: boolean;
+          last_training_on: string | null;
         };
         Insert: {
           id?: string;
@@ -34,6 +35,7 @@ export type Database = {
           first_match_completed_at?: string | null;
           cash_balance?: number;
           transfer_window_open?: boolean;
+          last_training_on?: string | null;
         };
         Update: {
           id?: string;
@@ -47,6 +49,7 @@ export type Database = {
           first_match_completed_at?: string | null;
           cash_balance?: number;
           transfer_window_open?: boolean;
+          last_training_on?: string | null;
         };
         Relationships: [];
       };

@@ -36,11 +36,6 @@ export const dashboardMock = {
     home: true,
     stake: 'Walka o Top 4',
   },
-  nextTraining: {
-    focus: 'Wytrzymałość',
-    when: 'Dziś 20:00',
-    intensity: 'Średnia',
-  },
   form: 74,
   injuries: [
     { name: 'M. Nowak', detail: 'Uraz mięśniowy · 3 dni' },
