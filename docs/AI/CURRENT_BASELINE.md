@@ -14,7 +14,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline --grep=LFE-TRANSFERS-02-E1  # feature baseline E1
+git log -1 --oneline 0fad4a9  # feature baseline E1 envelope
 ```
 
 ---
@@ -26,8 +26,9 @@ git log -1 --oneline --grep=LFE-TRANSFERS-02-E1  # feature baseline E1
 | URL                  | https://lastfootball.vercel.app                                             |
 | Alias                | https://lastfootball.pl                                                     |
 | Branch               | `main`                                                                      |
-| **Feature baseline** | LFE-TRANSFERS-02-E1 — verify hash after `feat(transfers): … E1` push        |
+| **Feature baseline** | `0fad4a9d87c30da401c6bf1f0ef3388127da9681`                                  |
 | Baseline message     | `feat(transfers): add derived transfer envelope Thin (LFE-TRANSFERS-02-E1)` |
+| Docs CLOSE tip       | `5ab1624` (or newer)                                                        |
 | Status               | **LFE-TRANSFERS-02-E1 CLOSED** · LEAGUE-03 · GDD-§26A/B                     |
 
 ## Stack
