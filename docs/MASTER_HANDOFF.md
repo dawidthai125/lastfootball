@@ -11,16 +11,16 @@ Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                    |
-| -------- | -------------------------------------------------------------------------- |
-| Prod URL | https://lastfootball.vercel.app                                            |
-| Commit   | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                 |
-| Message  | feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)   |
-| Status   | **PRODUCTION VERIFIED · GREEN** (prettier follow-up `7c0ce7f`)             |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                         |
-| Supabase | `anoeimngwptucjdugjme` (+ players + **transfers Thin** applied)            |
-| CI       | Format · Typecheck · Lint · Test · Build                                   |
-| Hosting  | Vercel Production                                                          |
+| Pole     | Wartość                                                                  |
+| -------- | ------------------------------------------------------------------------ |
+| Prod URL | https://lastfootball.vercel.app                                          |
+| Commit   | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                               |
+| Message  | feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01) |
+| Status   | **PRODUCTION VERIFIED · GREEN** (prettier follow-up `7c0ce7f`)           |
+| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                       |
+| Supabase | `anoeimngwptucjdugjme` (+ players + **transfers Thin** applied)          |
+| CI       | Format · Typecheck · Lint · Test · Build                                 |
+| Hosting  | Vercel Production                                                        |
 
 ---
 
@@ -88,25 +88,25 @@ Training · GDD-16+ · §26 balance · negotiation/envelope · 11-fixture calend
 
 ## 6. SSOT map
 
-| Domain              | SSOT                                              |
-| ------------------- | ------------------------------------------------- |
-| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)       |
-| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`                  |
-| Club identity       | `clubs` → `ClubDto`                               |
-| Hub unlock          | `first_match_completed_at`                        |
-| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`           |
-| League fixtures     | `fixtures` → `FixtureDto`                         |
-| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17)     |
-| Club cash           | `clubs.cash_balance` (D18)                        |
-| Finance history     | `finance_movements` (D18)                         |
-| Finance UI          | `resolveClubFinance` → `ClubFinanceDto` (D18)     |
-| Club roster         | `players` (D19)                                   |
-| Squad UI            | `resolveClubSquad(club, rows)` → `SquadDto` (D19) |
-| Transfer window     | `clubs.transfer_window_open` (D20)                |
+| Domain              | SSOT                                                |
+| ------------------- | --------------------------------------------------- |
+| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)         |
+| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`                    |
+| Club identity       | `clubs` → `ClubDto`                                 |
+| Hub unlock          | `first_match_completed_at`                          |
+| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`             |
+| League fixtures     | `fixtures` → `FixtureDto`                           |
+| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17)       |
+| Club cash           | `clubs.cash_balance` (D18)                          |
+| Finance history     | `finance_movements` (D18)                           |
+| Finance UI          | `resolveClubFinance` → `ClubFinanceDto` (D18)       |
+| Club roster         | `players` (D19)                                     |
+| Squad UI            | `resolveClubSquad(club, rows)` → `SquadDto` (D19)   |
+| Transfer window     | `clubs.transfer_window_open` (D20)                  |
 | Transfer market UI  | `resolveTransferMarket` → `TransferMarketDto` (D20) |
-| Transfer deals      | `transfer_deals` (D20)                            |
-| Match state         | `MatchState` + `EventBus` via `MatchSession`      |
-| Agent onboarding    | `docs/AI/START_HERE.md`                           |
+| Transfer deals      | `transfer_deals` (D20)                              |
+| Match state         | `MatchState` + `EventBus` via `MatchSession`        |
+| Agent onboarding    | `docs/AI/START_HERE.md`                             |
 
 ---
 

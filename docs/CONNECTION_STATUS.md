@@ -2,11 +2,11 @@
 
 ## GitHub — PASS
 
-| Check           | Result                                                               |
-| --------------- | -------------------------------------------------------------------- |
-| Remote `origin` | `https://github.com/dawidthai125/lastfootball.git`                   |
-| Branch baseline | `main` @ **`393a43c`** (LFE-TRANSFERS-01 CLOSED; tip may be newer)   |
-| CI              | Format · Typecheck · Lint · Test · Build — GREEN (run 30148581783)   |
+| Check           | Result                                                             |
+| --------------- | ------------------------------------------------------------------ |
+| Remote `origin` | `https://github.com/dawidthai125/lastfootball.git`                 |
+| Branch baseline | `main` @ **`393a43c`** (LFE-TRANSFERS-01 CLOSED; tip may be newer) |
+| CI              | Format · Typecheck · Lint · Test · Build — GREEN (run 30148581783) |
 
 ## Vercel — PASS
 
@@ -21,14 +21,14 @@
 
 ## Supabase — PASS
 
-| Check      | Result                                                                                          |
-| ---------- | ----------------------------------------------------------------------------------------------- |
-| Project    | `lastfootball` · ref **`anoeimngwptucjdugjme`**                                                 |
-| Rebind     | LFE-INFRA-01                                                                                    |
-| Migrations | … · players · **`20260725040000_transfers_thin` applied**                                       |
-| RLS        | clubs + fixtures + finance_movements + players + **transfer_deals** owner policies              |
-| Types      | `apps/web/src/types/database.ts` includes players / transfer_deals / `transfer_window_open`     |
-| Auth URLs  | prod + localhost allowlist                                                                      |
+| Check      | Result                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| Project    | `lastfootball` · ref **`anoeimngwptucjdugjme`**                                             |
+| Rebind     | LFE-INFRA-01                                                                                |
+| Migrations | … · players · **`20260725040000_transfers_thin` applied**                                   |
+| RLS        | clubs + fixtures + finance_movements + players + **transfer_deals** owner policies          |
+| Types      | `apps/web/src/types/database.ts` includes players / transfer_deals / `transfer_window_open` |
+| Auth URLs  | prod + localhost allowlist                                                                  |
 
 ## Product smoke (verified)
 

@@ -6,14 +6,14 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Production
 
-| Pole             | Wartość                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------ |
-| URL              | https://lastfootball.vercel.app                                                      |
-| Alias            | https://lastfootball.pl                                                              |
-| Branch           | `main`                                                                               |
-| Baseline commit  | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                           |
-| Baseline message | `feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)`           |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                                      |
+| Pole             | Wartość                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| URL              | https://lastfootball.vercel.app                                                     |
+| Alias            | https://lastfootball.pl                                                             |
+| Branch           | `main`                                                                              |
+| Baseline commit  | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                          |
+| Baseline message | `feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)`          |
+| Status           | **PRODUCTION VERIFIED · GREEN**                                                     |
 | Verified         | 2026-07-25 — CI GREEN (feat + prettier `7c0ce7f`) + migracja transfers Thin applied |
 
 > Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit docs-only po CLOSE).

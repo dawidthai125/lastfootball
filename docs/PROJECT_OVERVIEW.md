@@ -8,14 +8,14 @@ Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
 
 **Last Football** — przeglądarkowy football manager z własnym silnikiem meczu **LFE**.
 
-| Warstwa               | Stan                                                                              |
-| --------------------- | --------------------------------------------------------------------------------- |
-| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                                               |
+| Warstwa               | Stan                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                                                   |
 | Platforma             | Landing · Auth · Club Wizard · First Match · Hub · liga · finanse · kadra · transfery |
-| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`                            |
-| App web               | Shell + match pipeline + platform flows                                           |
-| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures + finance + players + **transfer_deals** |
-| Physics / pełne Rules | **Nie rozpoczęte**                                                                |
+| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`                                |
+| App web               | Shell + match pipeline + platform flows                                               |
+| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures + finance + players + **transfer_deals**    |
+| Physics / pełne Rules | **Nie rozpoczęte**                                                                    |
 
 **Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `393a43c`  
 **Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/

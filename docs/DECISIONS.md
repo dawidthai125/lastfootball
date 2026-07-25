@@ -125,17 +125,17 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** rynek nie może być mockiem; musi mutować `players` + kasę atomowo i być sterowany oknem transferowym.  
 **Zasada:**
 
-| Fakt | SSOT / kontrakt |
-| ---- | --------------- |
-| Kadra | `players` (D19) — deal buy/sell mutuje wiersze |
-| UI rynku | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto` |
-| Okno | `clubs.transfer_window_open` (ustawiane gdy played ≥ `UNLOCK_AFTER_PLAYED=2`) |
-| Środki | tylko `clubs.cash_balance` + `finance_movements` (`transfer_buy` / `transfer_sell`) — **bez envelope** |
-| Ledger deal | `transfer_deals` (idempotency_key + audit + `completed_at`) |
-| Odejście | `status=DEPARTED` + `departed_at` — **bez** fizycznego DELETE |
-| Buy ids | `t-{tag}-…` |
-| Fee | **derive** (`deriveTransferFee`) — brak trwałego `market_value` |
-| Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`) |
+| Fakt                  | SSOT / kontrakt                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Kadra                 | `players` (D19) — deal buy/sell mutuje wiersze                                                         |
+| UI rynku              | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto`                                       |
+| Okno                  | `clubs.transfer_window_open` (ustawiane gdy played ≥ `UNLOCK_AFTER_PLAYED=2`)                          |
+| Środki                | tylko `clubs.cash_balance` + `finance_movements` (`transfer_buy` / `transfer_sell`) — **bez envelope** |
+| Ledger deal           | `transfer_deals` (idempotency_key + audit + `completed_at`)                                            |
+| Odejście              | `status=DEPARTED` + `departed_at` — **bez** fizycznego DELETE                                          |
+| Buy ids               | `t-{tag}-…`                                                                                            |
+| Fee                   | **derive** (`deriveTransferFee`) — brak trwałego `market_value`                                        |
+| Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`)                                          |
 
 **Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
 **Poza Thin:** negotiation, envelope, potential, Training, live market DB.  

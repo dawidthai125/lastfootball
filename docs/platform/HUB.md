@@ -53,14 +53,14 @@ First Match (`id=first`) **nie** jest wierszem `fixtures`.
 
 ## Transfers SSOT (LFE-TRANSFERS-01 / D20)
 
-| Fakt            | SSOT                                                             |
-| --------------- | ---------------------------------------------------------------- |
-| Okno            | `clubs.transfer_window_open` (po ≥2 played — Thin vs GDD K11)    |
-| UI rynku        | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto` |
-| Deal            | buy/sell: `players` + cash + `finance_movements` + `transfer_deals` |
-| Środki          | cash-only (bez envelope)                                         |
-| Odejście        | `DEPARTED` + `departed_at`                                       |
-| Unlock Transfery| Nav open gdy `SEASON` **i** `transferWindowOpen`                 |
+| Fakt             | SSOT                                                                |
+| ---------------- | ------------------------------------------------------------------- |
+| Okno             | `clubs.transfer_window_open` (po ≥2 played — Thin vs GDD K11)       |
+| UI rynku         | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto`    |
+| Deal             | buy/sell: `players` + cash + `finance_movements` + `transfer_deals` |
+| Środki           | cash-only (bez envelope)                                            |
+| Odejście         | `DEPARTED` + `departed_at`                                          |
+| Unlock Transfery | Nav open gdy `SEASON` **i** `transferWindowOpen`                    |
 
 ## Decision layout (EARLY_CLUB + SEASON)
 

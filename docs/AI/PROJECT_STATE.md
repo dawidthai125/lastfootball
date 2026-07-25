@@ -56,7 +56,7 @@ Brak otwartego EPIC implementacyjnego.
 | D17  | League table pure derive + SEASON S1          | Zamknięte         |
 | D18  | Club cash + resolveClubFinance Thin           | Zamknięte         |
 | D19  | Players table + resolveClubSquad              | Zamknięte         |
-| D20  | Transfer market Thin + resolveTransferMarket   | Zamknięte         |
+| D20  | Transfer market Thin + resolveTransferMarket  | Zamknięte         |
 
 ## Powiązania
 

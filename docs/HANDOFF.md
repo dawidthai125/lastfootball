@@ -7,14 +7,14 @@ Agent AI: [`AI/START_HERE.md`](./AI/START_HERE.md) · root [`AGENTS.md`](../AGEN
 
 ## Stan (2026-07-25) — PRODUCTION VERIFIED · GREEN
 
-| Tor                | Stan                                                                                  |
-| ------------------ | ------------------------------------------------------------------------------------- |
-| **Baseline**       | `393a43c` · LFE-TRANSFERS-01 CLOSED · https://lastfootball.vercel.app                 |
+| Tor                | Stan                                                                                      |
+| ------------------ | ----------------------------------------------------------------------------------------- |
+| **Baseline**       | `393a43c` · LFE-TRANSFERS-01 CLOSED · https://lastfootball.vercel.app                     |
 | **Platform**       | Landing · Auth · Club Wizard · First Match · Hub SEASON · liga · kasa · kadra · transfery |
-| **Hub**            | SEASON · Primary next match · Liga + Finanse · Transfery gdy okno open                |
-| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings                       |
-| **GDD**            | GDD-01…15 CLOSED                                                                      |
-| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                                    |
+| **Hub**            | SEASON · Primary next match · Liga + Finanse · Transfery gdy okno open                    |
+| **LFE / Match UI** | EPIC-1…7 + Live Bridge · Canvas · Replay · Post Match · Ratings                           |
+| **GDD**            | GDD-01…15 CLOSED                                                                          |
+| **CI**             | Format → Typecheck → Lint · Test · Build — zielony                                        |
 
 ## Kolejność czytania
 

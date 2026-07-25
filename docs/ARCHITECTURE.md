@@ -84,13 +84,13 @@ flowchart LR
 Szczegóły: [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md).
 
 LiveMatchRuntime
-  ↓
+↓
 Canvas Renderer (LIVE) + ReplayBuffer
-  ↓
+↓
 Replay Controller (REPLAY) → Canvas
-  ↓
+↓
 Post Match → (opcjonalnie) Replay seek
-  ↓ (first match) completeFirstMatch → Welcome LF → Hub
+↓ (first match) completeFirstMatch → Welcome LF → Hub
 
 ---
 

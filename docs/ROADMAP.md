@@ -42,15 +42,15 @@ CI zielony (feat + prettier `7c0ce7f`); Vercel Production Ready; migracja transf
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                         |
-| ------------------------------- | --------------------------------- |
+| Item                            | Zależność                          |
+| ------------------------------- | ---------------------------------- |
 | **Training system**             | GDD §8 · statusy kadry (`players`) |
-| GDD-16+                         | Owner GO (docs)                   |
-| GDD §26 balance numbers         | zastąpi `ECONOMY_THIN` / fee Thin |
-| Negotiation / envelope          | po Transfers Thin (D20 poza)      |
-| Full 11-fixture calendar (opt.) | po LEAGUE-02                      |
-| Zawężenie LFE PUBLIC exports    | chore                             |
-| Ratings v2                      | bogatsze Player Match Data        |
+| GDD-16+                         | Owner GO (docs)                    |
+| GDD §26 balance numbers         | zastąpi `ECONOMY_THIN` / fee Thin  |
+| Negotiation / envelope          | po Transfers Thin (D20 poza)       |
+| Full 11-fixture calendar (opt.) | po LEAGUE-02                       |
+| Zawężenie LFE PUBLIC exports    | chore                              |
+| Ratings v2                      | bogatsze Player Match Data         |
 
 ## FUTURE
 

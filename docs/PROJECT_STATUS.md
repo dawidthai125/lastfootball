@@ -9,13 +9,13 @@ Jedno miejsce: **gdzie jesteśmy**, co zrobione, co dalej.
 **PRODUCTION VERIFIED · GREEN** — platforma + First Match + Hub SEASON + liga + finanse + kadra + **Transfers Thin**.  
 Baseline: **`393a43c`** (LFE-TRANSFERS-01) · tip prettier `7c0ce7f` · https://lastfootball.vercel.app
 
-| Tor            | Etap                                                                                |
-| -------------- | ----------------------------------------------------------------------------------- |
-| Engine         | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01`          |
-| Web match      | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings)                        |
+| Tor            | Etap                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------- |
+| Engine         | EPIC-1…7 + Gameplay + AI + Engine + Player Match Data · `0.9.1-match-ai01`            |
+| Web match      | Pre → Live Bridge → Canvas → Replay → Post Match (+ Ratings)                          |
 | Platform       | Landing · Auth · Club Wizard · First Match · Hub · liga · finanse · kadra · transfery |
-| Product design | GDD-01…15 CLOSED                                                                    |
-| Infra          | Vercel + Supabase · fixtures · cash · players · **transfer_deals / window**         |
+| Product design | GDD-01…15 CLOSED                                                                      |
+| Infra          | Vercel + Supabase · fixtures · cash · players · **transfer_deals / window**           |
 
 ## Co jest ukończone
 
@@ -64,7 +64,7 @@ Baseline: **`393a43c`** (LFE-TRANSFERS-01) · tip prettier `7c0ce7f` · https://
 | D17  | League table derive + SEASON S1    | **Zamknięte**         |
 | D18  | Club cash + finance resolve Thin   | **Zamknięte**         |
 | D19  | Players table + resolveClubSquad   | **Zamknięte**         |
-| D20  | Transfer market Thin                | **Zamknięte**         |
+| D20  | Transfer market Thin               | **Zamknięte**         |
 
 ## Powiązania
 

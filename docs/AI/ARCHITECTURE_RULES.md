@@ -25,23 +25,23 @@ supabase/ (Auth + Postgres migrations)
 
 ## Product SSOT (platform)
 
-| Fakt              | SSOT                                                         |
-| ----------------- | ------------------------------------------------------------ |
-| Tożsamość klubu   | tabela `clubs` → `ClubDto`                                   |
-| Odblokowanie Hub  | `clubs.first_match_completed_at`                             |
-| Faza Hub          | `resolveHubPhase(club)` wyłącznie                            |
-| Sesja Hub         | `resolveHubSession(phase, next, lastPlayed)`                 |
-| Primary CTA Hub   | `resolvePrimaryCta(phase, session, ctx)` wyłącznie           |
-| Terminarz ligowy  | `fixtures` → `FixtureDto` / `getNextFixture`                 |
-| Saldo kasy        | `clubs.cash_balance`                                         |
-| Historia finansów | `finance_movements`                                          |
-| Finance UI        | `resolveClubFinance(...)` → `ClubFinanceDto` wyłącznie       |
-| Kadra (wiersze)   | tabela `players`                                             |
-| Squad UI          | `resolveClubSquad(club, rows)` → `SquadDto` wyłącznie        |
-| Okno transferów   | `clubs.transfer_window_open`                                 |
-| Transfer market UI| `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
-| Transfer deals    | `transfer_deals` (idempotency + audit)                       |
-| Routing post-auth | `getPostAuthPath` + middleware (club + first match)          |
+| Fakt               | SSOT                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| Tożsamość klubu    | tabela `clubs` → `ClubDto`                                   |
+| Odblokowanie Hub   | `clubs.first_match_completed_at`                             |
+| Faza Hub           | `resolveHubPhase(club)` wyłącznie                            |
+| Sesja Hub          | `resolveHubSession(phase, next, lastPlayed)`                 |
+| Primary CTA Hub    | `resolvePrimaryCta(phase, session, ctx)` wyłącznie           |
+| Terminarz ligowy   | `fixtures` → `FixtureDto` / `getNextFixture`                 |
+| Saldo kasy         | `clubs.cash_balance`                                         |
+| Historia finansów  | `finance_movements`                                          |
+| Finance UI         | `resolveClubFinance(...)` → `ClubFinanceDto` wyłącznie       |
+| Kadra (wiersze)    | tabela `players`                                             |
+| Squad UI           | `resolveClubSquad(club, rows)` → `SquadDto` wyłącznie        |
+| Okno transferów    | `clubs.transfer_window_open`                                 |
+| Transfer market UI | `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
+| Transfer deals     | `transfer_deals` (idempotency + audit)                       |
+| Routing post-auth  | `getPostAuthPath` + middleware (club + first match)          |
 
 ## Hub rules (LFE-HUB-01)
 
