@@ -14,9 +14,16 @@ export type PlayerDbRow = {
   status: string;
   nationality: string;
   version: number;
+  departed_at: string | null;
 };
 
-const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED'];
+const STATUSES: readonly PlayerStatus[] = [
+  'READY',
+  'INJURED',
+  'SUSPENDED',
+  'TIRED',
+  'DEPARTED',
+];
 
 function mapStatus(raw: string): PlayerStatus {
   if ((STATUSES as readonly string[]).includes(raw)) return raw as PlayerStatus;
@@ -38,5 +45,6 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     status: mapStatus(row.status),
     nationality: row.nationality,
     version: row.version,
+    departedAt: row.departed_at,
   };
 }

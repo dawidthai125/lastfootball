@@ -34,6 +34,7 @@ function statusTone(status: SquadPlayer['status']): {
         text: 'var(--lf-color-status-warn)',
       };
     case 'SUSPENDED':
+    case 'DEPARTED':
       return {
         border: 'var(--lf-color-border-strong)',
         bg: 'var(--lf-color-bg-inset)',
@@ -249,13 +250,12 @@ export function PlayerHistory({ player }: { player: SquadPlayer }) {
 export function PlayerActions({ player }: { player: SquadPlayer }) {
   const actions = [
     { href: '/training', label: 'Trening', primary: false },
-    { href: `/transfers?list=${player.id}`, label: 'Wystaw', primary: false },
-    { href: `/transfers?offer=${player.id}`, label: 'Oferta', primary: true },
+    { href: `/transfers`, label: 'Transfery', primary: true },
   ];
 
   return (
     <div
-      aria-label="Akcje zawodnika"
+      aria-label={`Akcje: ${player.name}`}
       style={{
         display: 'flex',
         flexWrap: 'wrap',

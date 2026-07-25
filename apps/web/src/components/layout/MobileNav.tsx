@@ -24,6 +24,7 @@ export function MobileNav() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const phase = resolveHubPhase(club, { hasFixtures });
+  const navCtx = { transferWindowOpen: club?.transferWindowOpen };
 
   return (
     <nav
@@ -40,7 +41,7 @@ export function MobileNav() {
     >
       {FLAT_NAV.map((item) => {
         const active = isActive(pathname, item.href);
-        const locked = resolveNavAccess(item.id, phase) === 'soft_locked';
+        const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
         const style = {
           borderBottomWidth: 'var(--lf-border-width-thick)',
           borderBottomStyle: 'solid' as const,

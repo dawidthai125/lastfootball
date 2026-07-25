@@ -20,6 +20,7 @@ export type Database = {
           created_at: string;
           first_match_completed_at: string | null;
           cash_balance: number;
+          transfer_window_open: boolean;
         };
         Insert: {
           id?: string;
@@ -32,6 +33,7 @@ export type Database = {
           created_at?: string;
           first_match_completed_at?: string | null;
           cash_balance?: number;
+          transfer_window_open?: boolean;
         };
         Update: {
           id?: string;
@@ -44,8 +46,115 @@ export type Database = {
           created_at?: string;
           first_match_completed_at?: string | null;
           cash_balance?: number;
+          transfer_window_open?: boolean;
         };
         Relationships: [];
+      };
+      players: {
+        Row: {
+          id: string;
+          club_id: string;
+          name: string;
+          shirt_number: number;
+          pos: string;
+          role: string;
+          starter: boolean;
+          captain: boolean;
+          age: number;
+          skill: number;
+          status: string;
+          nationality: string;
+          version: number;
+          created_at: string;
+          departed_at: string | null;
+        };
+        Insert: {
+          id: string;
+          club_id: string;
+          name: string;
+          shirt_number: number;
+          pos: string;
+          role: string;
+          starter?: boolean;
+          captain?: boolean;
+          age: number;
+          skill: number;
+          status?: string;
+          nationality?: string;
+          version?: number;
+          created_at?: string;
+          departed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          name?: string;
+          shirt_number?: number;
+          pos?: string;
+          role?: string;
+          starter?: boolean;
+          captain?: boolean;
+          age?: number;
+          skill?: number;
+          status?: string;
+          nationality?: string;
+          version?: number;
+          created_at?: string;
+          departed_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'players_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: false;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      transfer_deals: {
+        Row: {
+          id: string;
+          club_id: string;
+          kind: string;
+          player_id: string;
+          market_id: string | null;
+          amount: number;
+          idempotency_key: string;
+          completed_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          club_id: string;
+          kind: string;
+          player_id: string;
+          market_id?: string | null;
+          amount: number;
+          idempotency_key: string;
+          completed_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          kind?: string;
+          player_id?: string;
+          market_id?: string | null;
+          amount?: number;
+          idempotency_key?: string;
+          completed_at?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'transfer_deals_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: false;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       finance_movements: {
         Row: {

@@ -7,7 +7,12 @@ export const ECONOMY_THIN = {
   CURRENCY: 'EUR',
 } as const;
 
-export type FinanceMovementCategory = 'starter' | 'match_reward';
+export type FinanceMovementCategory =
+  | 'starter'
+  | 'match_reward'
+  | 'transfer_buy'
+  | 'transfer_sell';
+
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

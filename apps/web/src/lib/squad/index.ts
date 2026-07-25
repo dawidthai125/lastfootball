@@ -10,6 +10,7 @@ export {
   STATUS_FILTERS,
   STATUS_LABEL,
   SquadUnavailableError,
+  isActivePlayer,
 } from '@/lib/squad/types';
 export {
   resolveClubSquad,

@@ -78,20 +78,21 @@ export function resolveClubSquad(
   club: Pick<ClubDto, 'id'>,
   rows: readonly PlayerRowDto[],
 ): SquadDto {
-  if (rows.length === 0) {
+  const active = rows.filter((r) => r.departedAt == null && r.status !== 'DEPARTED');
+  if (active.length === 0) {
     throw new SquadUnavailableError(club.id);
   }
-  const players = rows.map(toDto);
+  const players = active.map(toDto);
   return { clubId: club.id, players };
 }
 
 /**
  * Starting XI for LFE sessions — from DB rows only (no seed).
- * Throws if fewer than 11 starters.
+ * Throws if fewer than 11 starters among active players.
  */
 export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
   const xi = rows
-    .filter((r) => r.starter)
+    .filter((r) => r.departedAt == null && r.status !== 'DEPARTED' && r.starter)
     .map((r): RosterPlayerSeed => ({
       id: r.id,
       name: r.name,

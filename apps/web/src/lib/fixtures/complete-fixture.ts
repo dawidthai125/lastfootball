@@ -7,6 +7,7 @@ import { env } from '@/config/env';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { createClient } from '@/lib/supabase/server';
+import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
 
 /**
  * Idempotent: mark fixture played with score, promote next scheduled → upcoming,
@@ -135,8 +136,13 @@ export async function completeFixture(
           .eq('club_id', clubId)
           .eq('status', 'scheduled');
       }
+
+      await ensureTransferWindow(supabase, clubId);
     }
   }
+
+  // Also open window if already played earlier and threshold now met (idempotent).
+  await ensureTransferWindow(supabase, clubId);
 
   revalidatePath('/', 'layout');
   redirect('/hub');

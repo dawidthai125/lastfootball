@@ -13,6 +13,7 @@ type ClubRow = {
   created_at: string;
   first_match_completed_at: string | null;
   cash_balance: number;
+  transfer_window_open: boolean | null;
 };
 
 function mapClub(row: ClubRow): ClubDto {
@@ -27,6 +28,7 @@ function mapClub(row: ClubRow): ClubDto {
     createdAt: row.created_at,
     firstMatchCompletedAt: row.first_match_completed_at,
     cashBalance: row.cash_balance ?? 0,
+    transferWindowOpen: Boolean(row.transfer_window_open),
   };
 }
 
@@ -42,7 +44,7 @@ export async function getManagerClub(): Promise<ClubDto | null> {
   const { data, error } = await supabase
     .from('clubs')
     .select(
-      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance',
+      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance, transfer_window_open',
     )
     .eq('owner_id', user.id)
     .maybeSingle();

@@ -1,5 +1,5 @@
 /** Domain player readiness — stored in DB; localized in STATUS_LABEL / UI. */
-export type PlayerStatus = 'READY' | 'INJURED' | 'SUSPENDED' | 'TIRED';
+export type PlayerStatus = 'READY' | 'INJURED' | 'SUSPENDED' | 'TIRED' | 'DEPARTED';
 
 export type SquadPlayerDto = {
   readonly id: string;
@@ -45,6 +45,7 @@ export type PlayerRowDto = {
   readonly status: PlayerStatus;
   readonly nationality: string;
   readonly version: number;
+  readonly departedAt: string | null;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;
@@ -54,6 +55,7 @@ export const STATUS_LABEL: Record<PlayerStatus, string> = {
   INJURED: 'Kontuzja',
   TIRED: 'Zmęczony',
   SUSPENDED: 'Zawieszony',
+  DEPARTED: 'Odszedł',
 };
 export type SortKey = 'name' | 'position' | 'age' | 'form' | 'energy' | 'skill' | 'status';
 
@@ -65,4 +67,8 @@ export class SquadUnavailableError extends Error {
     this.name = 'SquadUnavailableError';
     this.clubId = clubId;
   }
+}
+
+export function isActivePlayer(row: PlayerRowDto): boolean {
+  return row.departedAt == null && row.status !== 'DEPARTED';
 }

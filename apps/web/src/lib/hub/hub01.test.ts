@@ -24,6 +24,7 @@ function club(partial?: Partial<ClubDto>): ClubDto {
     createdAt: '2026-01-01T00:00:00.000Z',
     firstMatchCompletedAt: null,
     cashBalance: 100_000,
+    transferWindowOpen: false,
     ...partial,
   };
 }
@@ -121,11 +122,11 @@ describe('hub nav unlock', () => {
     expect(resolveNavAccess('league', 'EARLY_CLUB')).toBe('soft_locked');
   });
 
-  it('opens Liga on SEASON', () => {
-    expect(resolveNavAccess('league', 'SEASON')).toBe('open');
-    expect(resolveNavAccess('matches', 'SEASON')).toBe('open');
+  it('opens Finanse on SEASON; Transfery need window flag', () => {
     expect(resolveNavAccess('finance', 'SEASON')).toBe('open');
     expect(resolveNavAccess('training', 'SEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('transfers', 'SEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('transfers', 'SEASON', { transferWindowOpen: true })).toBe('open');
   });
 
   it('opens Finanse secondary on SEASON', () => {

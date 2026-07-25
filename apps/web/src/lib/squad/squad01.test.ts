@@ -27,6 +27,7 @@ function rowsFromSeed(clubId: string) {
       status: r.status,
       nationality: r.nationality,
       version: r.version,
+      departed_at: null,
     } satisfies PlayerDbRow),
   );
 }

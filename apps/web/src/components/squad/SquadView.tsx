@@ -47,6 +47,7 @@ function statusColor(status: PlayerStatus): { border: string; bg: string; text: 
         text: 'var(--lf-color-status-warn)',
       };
     case 'SUSPENDED':
+    case 'DEPARTED':
       return {
         border: 'var(--lf-color-border-strong)',
         bg: 'var(--lf-color-bg-inset)',

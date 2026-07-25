@@ -11,6 +11,8 @@ export type ClubDto = {
   firstMatchCompletedAt: string | null;
   /** Club cash SSOT (LFE-ECONOMY-01). */
   cashBalance: number;
+  /** Transfer window SSOT (LFE-TRANSFERS-01). */
+  transferWindowOpen: boolean;
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {

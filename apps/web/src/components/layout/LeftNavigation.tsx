@@ -27,7 +27,7 @@ export function LeftNavigation() {
   const hasFixtures = useHasFixtures();
   const phase = resolveHubPhase(club, { hasFixtures });
   const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
-
+  const navCtx = { transferWindowOpen: club?.transferWindowOpen };
   return (
     <aside
       className="lf-app-shell__nav hidden flex-col border-r md:flex"
@@ -116,7 +116,7 @@ export function LeftNavigation() {
             ) : null}
             {group.items.map((item) => {
               const active = isActive(pathname, item.href);
-              const access = resolveNavAccess(item.id, phase);
+              const access = resolveNavAccess(item.id, phase, navCtx);
               const locked = access === 'soft_locked';
               const itemStyle = {
                 color: locked

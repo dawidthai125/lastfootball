@@ -13,14 +13,22 @@ const EARLY_CLUB_OPEN = new Set([
   'status',
 ]);
 
-/** SEASON unlocks Liga + Finanse on top of EARLY_CLUB opens. */
+/** SEASON unlocks Liga + Finanse on top of EARLY_CLUB opens. Transfers need window flag. */
 const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance']);
+
+export type NavAccessContext = {
+  readonly transferWindowOpen?: boolean;
+};
 
 /**
  * Progressive unlock for shell navigation.
  * Soft-locked items stay visible with “Wkrótce” — they must not compete with Primary CTA.
  */
-export function resolveNavAccess(itemId: string, phase: HubPhase): HubNavAccess {
+export function resolveNavAccess(
+  itemId: string,
+  phase: HubPhase,
+  ctx: NavAccessContext = {},
+): HubNavAccess {
   if (phase === 'NEW_CLUB') {
     return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
@@ -28,11 +36,18 @@ export function resolveNavAccess(itemId: string, phase: HubPhase): HubNavAccess 
     return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
   if (phase === 'SEASON') {
+    if (itemId === 'transfers') {
+      return ctx.transferWindowOpen ? 'open' : 'soft_locked';
+    }
     return SEASON_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
   return 'open';
 }
 
-export function isModuleSoftLocked(itemId: string, phase: HubPhase): boolean {
-  return resolveNavAccess(itemId, phase) === 'soft_locked';
+export function isModuleSoftLocked(
+  itemId: string,
+  phase: HubPhase,
+  ctx: NavAccessContext = {},
+): boolean {
+  return resolveNavAccess(itemId, phase, ctx) === 'soft_locked';
 }
