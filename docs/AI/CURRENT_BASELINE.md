@@ -21,14 +21,15 @@ git log -1 --oneline 617d3c2  # feature baseline League-03
 
 ## Production
 
-| Pole                 | Wartość                                                                             |
-| -------------------- | ----------------------------------------------------------------------------------- |
-| URL                  | https://lastfootball.vercel.app                                                     |
-| Alias                | https://lastfootball.pl                                                             |
-| Branch               | `main`                                                                              |
-| **Feature baseline** | LFE-LEAGUE-03 — `feat(league): expand Thin calendar to 11 fixtures (LFE-LEAGUE-03)` |
-| Baseline hash        | verify `git log -1 --grep=LFE-LEAGUE-03 --format=%H` after push                     |
-| Status               | LFE-LEAGUE-03 **CLOSED** · GDD-§26A/B **CLOSED** · CI verify after push             |
+| Pole                 | Wartość                                                             |
+| -------------------- | ------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                     |
+| Alias                | https://lastfootball.pl                                             |
+| Branch               | `main`                                                              |
+| **Feature baseline** | `617d3c20a2a53bdeca5ca314efa3f5126d571fae`                          |
+| Baseline message     | `feat(league): expand Thin calendar to 11 fixtures (LFE-LEAGUE-03)` |
+| Docs CLOSE tip       | `6816ff1` (or newer)                                                |
+| Status               | **LFE-LEAGUE-03 CLOSED** · GDD-§26A/B **CLOSED**                    |
 
 ## Stack
 
