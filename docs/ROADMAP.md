@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`4b58507`** (LFE-TRANSFERS-05 CLOSED).  
-GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 · Listing 04 · Seller nego 05 · Vercel Production.
+Production feature baseline **`PLACEHOLDER_06`** (LFE-TRANSFERS-06 CLOSED).  
+GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Live H2H · Vercel Production.
 
 ---
 
@@ -41,6 +41,7 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 · Listing 04 · Seller nego
 | **LFE-TRANSFERS-03**                                   | **CLOSED** · derived AI incoming offers                            |
 | **LFE-TRANSFERS-04**                                   | **CLOSED** · player listing (`transfer_listed_at`)                 |
 | **LFE-TRANSFERS-05**                                   | **CLOSED** · seller negotiation Thin (Incoming S2)                 |
+| **LFE-TRANSFERS-06**                                   | **CLOSED** · Live H2H Instant Buy Thin                             |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21      |
 
 ## IN PROGRESS 🔄
@@ -89,6 +90,7 @@ Uzasadnienie: rynek Thin (envelope + buy nego + incoming AI) na produkcji.
 - Incoming AI = `resolveIncomingOffers` derive C; seller nego S2 (TRANSFERS-05).
 - Listing = `transfer_listed_at`; Incoming tylko listed; shared sell eligibility (TRANSFERS-04).
 - Seller nego = `resolveSellerNegotiationStep` pure; Instant Sell @ 100% ask; settle `completeTransferSell(agreedAmount)`.
+- Live H2H = listed `players` innych klubów; Instant @ 100% ask; atomowy RPC; `players.id` stałe (TRANSFERS-06).
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
@@ -100,4 +102,4 @@ Uzasadnienie: rynek Thin (envelope + buy nego + incoming AI) na produkcji.
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-05 CLOSE
+2026-07-26 — LFE-TRANSFERS-06 CLOSE

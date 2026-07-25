@@ -14,22 +14,22 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline 4b58507  # feature baseline TRANSFERS-05 seller nego
+git log -1 --oneline PLACEHOLDER_06  # feature baseline TRANSFERS-06 Live H2H
 ```
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                                  |
-| -------------------- | ------------------------------------------------------------------------ |
-| URL                  | https://lastfootball.vercel.app                                          |
-| Alias                | https://lastfootball.pl                                                  |
-| Branch               | `main`                                                                   |
-| **Feature baseline** | `4b5850715ed96f123a6259a5e3d83fd286c6776a`                               |
-| Baseline message     | `feat(transfers): add seller negotiation Thin (LFE-TRANSFERS-05)`        |
-| Docs CLOSE tip       | _(ten commit lub nowszy)_                                                |
-| Status               | **LFE-TRANSFERS-05 CLOSED** · 04 · 03 · N1 · E1 · LEAGUE-03 · GDD-§26A/B |
+| Pole                 | Wartość                                                             |
+| -------------------- | ------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                     |
+| Alias                | https://lastfootball.pl                                             |
+| Branch               | `main`                                                              |
+| **Feature baseline** | `PLACEHOLDER_06`                                                    |
+| Baseline message     | `feat(transfers): add live H2H Instant Buy Thin (LFE-TRANSFERS-06)` |
+| Docs CLOSE tip       | _(ten commit lub nowszy)_                                           |
+| Status               | **LFE-TRANSFERS-06 CLOSED** · 05 · 04 · 03 · N1 · E1 · GDD-§26A/B   |
 
 ## Stack
 
@@ -43,28 +43,26 @@ git log -1 --oneline 4b58507  # feature baseline TRANSFERS-05 seller nego
 ```
 Landing → Auth → Welcome → Club Wizard · Reveal
   → First Match → Live → Post → Welcome LF → Hub (EARLY_CLUB → SEASON)
-  → /transfers ← resolveTransferMarket() + listing + buy/seller nego + incoming (listed)
+  → /transfers ← resolveTransferMarket() + Live H2H + listing + buy/seller nego + seed fallback
 ```
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                 |
-| ----------------- | ------------------------------------- |
-| Cash              | `cash_balance`                        |
-| Transfer envelope | `resolveTransferEnvelope`             |
-| Transfer listing  | `players.transfer_listed_at`          |
-| Transfer UI       | `resolveTransferMarket`               |
-| Sell eligibility  | `isTransferSellEligible`              |
-| Incoming offers   | `resolveIncomingOffers` (listed only) |
-| Buy nego          | `resolveNegotiationStep`              |
-| Seller nego       | `resolveSellerNegotiationStep`        |
-| Ask               | `deriveTransferFee`                   |
-| Settlement sell   | `completeTransferSell(agreedAmount)`  |
+| SSOT              | Gdzie                                       |
+| ----------------- | ------------------------------------------- |
+| Cash              | `cash_balance`                              |
+| Transfer envelope | `resolveTransferEnvelope`                   |
+| Transfer listing  | `players.transfer_listed_at`                |
+| Transfer UI       | `resolveTransferMarket`                     |
+| Live listings     | listed `players` (other clubs)              |
+| Ask               | `deriveTransferFee` (one snapshot per Live) |
+| Settlement buy    | `completeTransferBuy` (seed \| live)        |
+| Settlement sell   | `completeTransferSell` (instant \| live)    |
 
 ## Not on production
 
-Instant Sell nego · custom ask · 2+ counters · pending/timeout/inbox · potential · full **22** fixtures · Physics · individual training · skill growth · envelope ratio ≠ 1.
+AI clubs · Live nego · Instant Sell nego · custom ask · 2+ counters · pending/timeout/inbox · potential · full **22** fixtures · Physics · individual training · skill growth · envelope ratio ≠ 1.
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-05 CLOSE
+2026-07-26 — LFE-TRANSFERS-06 CLOSE

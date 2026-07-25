@@ -7,7 +7,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`4b58507`** (LFE-TRANSFERS-05) — tip may be docs after feat.
+Production feature baseline **`PLACEHOLDER_06`** (LFE-TRANSFERS-06) — tip may be docs after feat.
+
+---
+
+## [2026-07-26] — LFE-TRANSFERS-06 · CLOSED
+
+### Product
+
+- Live H2H Instant Buy @ 100% ask — Human↔Human; brak AI clubs / pending / timeout
+- Podaż = `players.transfer_listed_at`; brak tabeli listingów; `players.id` niezmienne
+- Atomowy RPC `complete_live_h2h_transfer`; settlement tylko `completeTransferBuy`/`Sell` (source live)
+- Seed Catalogue = fallback; UI tylko `resolveTransferMarket` (`liveListings`)
+- Feature baseline → **`PLACEHOLDER_06`** (LFE-TRANSFERS-06)
 
 ---
 

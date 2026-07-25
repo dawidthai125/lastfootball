@@ -54,6 +54,22 @@ export type IncomingOfferDto = {
   readonly canCounter: boolean;
 };
 
+/** Live H2H listing (LFE-TRANSFERS-06) — from listed players of other clubs. */
+export type LiveListingDto = {
+  readonly playerId: string;
+  readonly playerName: string;
+  readonly pos: string;
+  readonly role: string;
+  readonly age: number;
+  readonly skill: number;
+  /** Ask from deriveTransferFee. */
+  readonly ask: number;
+  readonly askLabel: string;
+  readonly sellerClubId: string;
+  readonly sellerClubLabel: string;
+  readonly sellerWindowOpen: boolean;
+};
+
 export type TransferMarketDto = {
   readonly clubId: string;
   readonly windowOpen: boolean;
@@ -69,6 +85,8 @@ export type TransferMarketDto = {
   readonly canBuy: boolean;
   readonly canSell: boolean;
   readonly listings: readonly MarketListingDto[];
+  /** H2H live listings — Instant Buy @ 100% ask. */
+  readonly liveListings: readonly LiveListingDto[];
   readonly sellCandidates: readonly SellCandidateDto[];
   /**
    * Active players with transfer_listed_at set — shown even when window closed (Unlist).

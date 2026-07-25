@@ -280,7 +280,31 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      list_live_transfer_listings: {
+        Args: { p_exclude_club_id: string };
+        Returns: {
+          player_id: string;
+          player_name: string;
+          pos: string;
+          role: string;
+          age: number;
+          skill: number;
+          shirt_number: number;
+          seller_club_id: string;
+          seller_club_name: string;
+          seller_short_name: string;
+          seller_window_open: boolean;
+        }[];
+      };
+      complete_live_h2h_transfer: {
+        Args: {
+          p_buyer_club_id: string;
+          p_seller_club_id: string;
+          p_player_id: string;
+          p_ask_snapshot: number;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       [_ in never]: never;

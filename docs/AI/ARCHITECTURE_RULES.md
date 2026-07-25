@@ -71,12 +71,13 @@ supabase/ (Auth + Postgres migrations)
 - Buy negotiation (N1): **pure** `resolveNegotiationStep` — Low 90% / Normal 100% / High 110%; Counter 95%; jedna kontroferta; **stateless** (bez pending DB).
 - Incoming AI (TRANSFERS-03…05): **pure** `resolveIncomingOffers` — derive C; opening = NEGOTIATION_THIN % ask; listed + eligible only.
 - Seller negotiation (TRANSFERS-05 S2): **pure** `resolveSellerNegotiationStep` — Counter tylko vs AI Low; Instant Sell @ 100% ask bez nego; **nie** rozszerza buy step.
-- Listing (TRANSFERS-04): `players.transfer_listed_at`; List/Unlist; Incoming tylko listed; shared `isTransferSellEligible`; sell clears listed.
-- Settlement buy: `completeTransferBuy(agreedAmount)` po rewalidacji ask / envelope / window / roster / funds.
-- Settlement sell: **wyłącznie** `completeTransferSell(agreedAmount)` + `isAllowedAgreedAmount`; idempotentne `sell:{playerId}`.
-- Buy ids = `t-{tag}-…`; katalog listingów = `seedTransferCatalogue()` (także dla AI).
+- Listing (TRANSFERS-04): `players.transfer_listed_at`; List/Unlist; Incoming / Live tylko listed; shared `isTransferSellEligible`; sell clears listed.
+- Live H2H (TRANSFERS-06): Instant Buy @ 100% ask; `players.id` niezmienne; atomowy `complete_live_h2h_transfer` tylko z `completeTransferBuy`/`Sell` (source live); seed catalogue = fallback; brak `completeLiveTransfer()`.
+- Settlement buy: `completeTransferBuy` (seed **lub** live) po rewalidacji.
+- Settlement sell: `completeTransferSell` (instant void **lub** live) + `isAllowedAgreedAmount`.
+- Buy ids seed = `t-{tag}-…`; katalog = `seedTransferCatalogue()` (fallback).
 - Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
-- Poza Thin: Instant Sell nego, custom ask, 2+ counters, pending/timeout/inbox, potential, live market DB, ratio ≠ 1, stored envelope.
+- Poza Thin: AI clubs, Instant Sell nego, custom ask, 2+ counters, pending/timeout/inbox, Live nego, potential, ratio ≠ 1, stored envelope.
 
 ## Training rules (LFE-TRAINING-01 / D21)
 
@@ -104,4 +105,4 @@ Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorc
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-05 CLOSE
+2026-07-26 — LFE-TRANSFERS-06 CLOSE

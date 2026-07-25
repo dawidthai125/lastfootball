@@ -3,10 +3,13 @@ export type {
   MarketListingDto,
   SellCandidateDto,
   IncomingOfferDto,
+  LiveListingDto,
   TransferDealKind,
 } from '@/lib/transfers/types';
 export { TRANSFERS_THIN } from '@/lib/transfers/types';
 export { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
+export { resolveLiveListings } from '@/lib/transfers/resolve-live-listings';
+export type { LiveListingRow } from '@/lib/transfers/resolve-live-listings';
 export { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 export { deriveTransferFee } from '@/lib/transfers/derive-fee';
 export {

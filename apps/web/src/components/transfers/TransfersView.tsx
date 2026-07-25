@@ -7,6 +7,7 @@ import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import {
+  buyLiveTransferPlayer,
   buyTransferPlayer,
   respondIncomingOffer,
   sellTransferPlayer,
@@ -18,7 +19,12 @@ import {
   resolveOfferAmount,
   type OfferPreset,
 } from '@/lib/transfers/resolve-negotiation';
-import type { IncomingOfferDto, SellCandidateDto, TransferMarketDto } from '@/lib/transfers/types';
+import type {
+  IncomingOfferDto,
+  LiveListingDto,
+  SellCandidateDto,
+  TransferMarketDto,
+} from '@/lib/transfers/types';
 
 const PRESET_LABEL: Record<OfferPreset, string> = {
   low: 'Niska',
@@ -253,6 +259,24 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
   );
 }
 
+function LiveBuyButton({ listing, disabled }: { listing: LiveListingDto; disabled: boolean }) {
+  const [state, action, pending] = useActionState(buyLiveTransferPlayer, TRANSFER_ACTION_INITIAL);
+  return (
+    <form action={action} className="inline">
+      <input type="hidden" name="playerId" value={listing.playerId} />
+      <input type="hidden" name="sellerClubId" value={listing.sellerClubId} />
+      {state.error ? (
+        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+      <Button type="submit" variant="primary" disabled={disabled || pending}>
+        {pending ? '…' : 'Kup'}
+      </Button>
+    </form>
+  );
+}
+
 export function TransfersView({ market }: { market: TransferMarketDto }) {
   return (
     <div className="space-y-2">
@@ -295,8 +319,8 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
       ) : (
         <Panel title="Negocjacje, lista i oferty AI">
           <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Wystaw zawodnika na listę (ask = fee). Oferty AI (S2) tylko dla wystawionych — Accept /
-            Reject / Kontroferta vs Low. Instant Sell = 100% ask, bez nego.
+            Wystaw zawodnika na listę (ask = fee). Rynek Live = Instant Kup @ 100% ask od innych
+            klubów. Seed catalogue = fallback. Oferty AI (S2) tylko dla wystawionych.
           </p>
         </Panel>
       )}
@@ -342,7 +366,48 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         )}
       </Panel>
 
-      <Panel title="Rynek" flush>
+      <Panel title="Rynek Live (kluby graczy)" flush>
+        {market.liveListings.length === 0 ? (
+          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
+            Brak wystawionych zawodników innych klubów. Seed catalogue poniżej pozostaje
+            fallbackiem.
+          </p>
+        ) : (
+          <Table
+            rowKey={(r) => r.playerId}
+            rows={[...market.liveListings]}
+            columns={[
+              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
+              {
+                key: 'club',
+                header: 'Klub',
+                render: (r) => r.sellerClubLabel,
+              },
+              {
+                key: 'ask',
+                header: 'Ask',
+                align: 'right',
+                render: (r) => (
+                  <span className="text-[var(--lf-gold)] tabular-nums">{r.askLabel}</span>
+                ),
+              },
+              {
+                key: 'act',
+                header: '',
+                align: 'right',
+                render: (r) => {
+                  const canLive =
+                    market.canBuy && r.sellerWindowOpen && market.envelopeBalance >= r.ask;
+                  return <LiveBuyButton listing={r} disabled={!canLive} />;
+                },
+              },
+            ]}
+          />
+        )}
+      </Panel>
+
+      <Panel title="Rynek (katalog AI — fallback)" flush>
         <Table
           rowKey={(r) => r.marketId}
           rows={[...market.listings]}

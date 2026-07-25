@@ -146,8 +146,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Incoming (LFE-TRANSFERS-03):** **pure** `resolveIncomingOffers` (derive C); Accept / Reject; Accept → sell settlement.  
 **Listing (LFE-TRANSFERS-04):** `players.transfer_listed_at`; List/Unlist idempotentne; ask = fee; Incoming **tylko listed**; shared `isTransferSellEligible`; sell clears listed; okno nie czyści listy; UI tylko `resolveTransferMarket`.  
 **Seller nego (LFE-TRANSFERS-05 S2):** Incoming only; **pure** `resolveSellerNegotiationStep` (reuse NEGOTIATION_THIN); Instant Sell @ 100% ask bez nego; settlement `completeTransferSell(agreedAmount)` + `isAllowedAgreedAmount`; pełna rewalidacja przed settle; idempotentne.  
-**Poza Thin:** Instant Sell nego, custom ask, 2+ counters, pending DB / timeout / inbox, potential, live market DB, ratio ≠ 1, stored envelope.  
-**Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego — LFE-TRANSFERS-05.  
+**Live H2H (LFE-TRANSFERS-06):** Human↔Human; podaż = listed `players`; Instant Buy @ 100% ask; `players.id` stałe; atomowy RPC z buy/sell live; brak pending/AI clubs/tabeli listingów; seed catalogue = fallback; brak `completeLiveTransfer()`.  
+**Poza Thin:** AI clubs, Instant Sell nego, custom ask, 2+ counters, pending DB / timeout / inbox, potential, live nego, ratio ≠ 1, stored envelope.  
+**Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego (`4b58507`); Live — LFE-TRANSFERS-06.  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
 ### D21 — Team training Thin + `resolveClubTraining` · CLOSED
@@ -177,7 +178,8 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
 **LFE-TRANSFERS-03 (2026-07-25):** derived AI incoming offers; Accept → `completeTransferSell`; 100% ask.  
 **LFE-TRANSFERS-04 (2026-07-26):** `transfer_listed_at`; List/Unlist; Incoming tylko listed.  
-**LFE-TRANSFERS-05 (2026-07-26):** seller nego S2 na Incoming; `resolveSellerNegotiationStep`; `completeTransferSell(agreedAmount)`.
+**LFE-TRANSFERS-05 (2026-07-26):** seller nego S2 na Incoming; `resolveSellerNegotiationStep`; `completeTransferSell(agreedAmount)`.  
+**LFE-TRANSFERS-06 (2026-07-26):** Live H2H Instant @ 100% ask; atomic RPC; `players.id` stałe.
 
 ## Powiązania
 
@@ -185,4 +187,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-05 CLOSE
+2026-07-26 — LFE-TRANSFERS-06 CLOSE

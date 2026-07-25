@@ -49,22 +49,135 @@ type ActivePlayer = {
   departed_at: string | null;
 };
 
+type SeedBuyInput = {
+  readonly source?: 'seed';
+  clubId: string;
+  cashBalance: number;
+  transferWindowOpen: boolean;
+  marketId: string;
+  agreedAmount: number;
+  activePlayers: readonly ActivePlayer[];
+};
+
+type LiveBuyInput = {
+  readonly source: 'live';
+  /** Buyer club. */
+  clubId: string;
+  cashBalance: number;
+  transferWindowOpen: boolean;
+  playerId: string;
+  sellerClubId: string;
+  /** Single deriveTransferFee() snapshot for this Live op. */
+  askSnapshot: number;
+  /** Instant Live = 100% ask → must equal askSnapshot. */
+  agreedAmount: number;
+  activePlayers: readonly ActivePlayer[];
+};
+
+type InstantSellInput = {
+  readonly source?: 'instant';
+  clubId: string;
+  cashBalance: number;
+  transferWindowOpen: boolean;
+  playerId: string;
+  agreedAmount: number;
+  activePlayers: readonly ActivePlayer[];
+};
+
+type LiveSellInput = {
+  readonly source: 'live';
+  /** Seller club. */
+  clubId: string;
+  transferWindowOpen: boolean;
+  playerId: string;
+  buyerClubId: string;
+  askSnapshot: number;
+  agreedAmount: number;
+  /** Skill/age from listing — askSnapshot must match deriveTransferFee. */
+  playerSkill: number;
+  playerAge: number;
+};
+
+type LiveRpcResult = {
+  ok?: boolean;
+  error?: string;
+  player_id?: string;
+  amount?: number;
+};
+
 /**
- * Atomic buy: insert t-{tag}- player + debit cash + finance_movements + transfer_deals.
- * Settles only `agreedAmount` after full revalidation (ask / envelope / window / roster / funds).
+ * Invokes atomic DB Live H2H settlement (security definer RPC).
+ * Not exported — buy/sell remain the only settlement entry points.
+ */
+async function invokeLiveH2hRpc(
+  supabase: AppSupabase,
+  input: {
+    buyerClubId: string;
+    sellerClubId: string;
+    playerId: string;
+    askSnapshot: number;
+  },
+): Promise<CompleteBuyResult> {
+  const { data, error } = await supabase.rpc(
+    'complete_live_h2h_transfer' as never,
+    {
+      p_buyer_club_id: input.buyerClubId,
+      p_seller_club_id: input.sellerClubId,
+      p_player_id: input.playerId,
+      p_ask_snapshot: input.askSnapshot,
+    } as never,
+  );
+
+  if (error) {
+    return { ok: false, error: error.message || 'Transfer Live nieudany.' };
+  }
+
+  const row = data as LiveRpcResult | null;
+  if (!row || row.ok !== true || !row.player_id || typeof row.amount !== 'number') {
+    return { ok: false, error: row?.error || 'Transfer Live nieudany.' };
+  }
+
+  return { ok: true, playerId: row.player_id, amount: row.amount };
+}
+
+/**
+ * Atomic buy settlement.
+ * - seed: insert t-{tag}- player from catalogue.
+ * - live: Instant @ askSnapshot via shared RPC (players.id unchanged).
  */
 export async function completeTransferBuy(
   supabase: AppSupabase,
-  input: {
-    clubId: string;
-    cashBalance: number;
-    transferWindowOpen: boolean;
-    marketId: string;
-    /** Negotiated settlement amount — must be in allowed set vs ask. */
-    agreedAmount: number;
-    activePlayers: readonly ActivePlayer[];
-  },
+  input: SeedBuyInput | LiveBuyInput,
 ): Promise<CompleteBuyResult> {
+  if (input.source === 'live') {
+    if (!input.transferWindowOpen) {
+      return { ok: false, error: 'Okno transferowe jest zamknięte.' };
+    }
+    if (input.activePlayers.length >= TRANSFERS_THIN.MAX_ROSTER) {
+      return { ok: false, error: 'Kadra jest pełna (max 22).' };
+    }
+    if (input.clubId === input.sellerClubId) {
+      return { ok: false, error: 'Nie możesz kupić własnego zawodnika.' };
+    }
+    if (input.agreedAmount !== input.askSnapshot) {
+      return { ok: false, error: 'Live Buy wymaga 100% ask.' };
+    }
+    if (!isAllowedAgreedAmount(input.askSnapshot, input.agreedAmount)) {
+      return { ok: false, error: 'Nieprawidłowa kwota negocjacji.' };
+    }
+    const envelope = resolveTransferEnvelope(input.cashBalance);
+    if (input.cashBalance < input.askSnapshot || envelope.envelopeBalance < input.askSnapshot) {
+      return { ok: false, error: 'Za mało środków w budżecie transferowym / kasie.' };
+    }
+
+    return invokeLiveH2hRpc(supabase, {
+      buyerClubId: input.clubId,
+      sellerClubId: input.sellerClubId,
+      playerId: input.playerId,
+      askSnapshot: input.askSnapshot,
+    });
+  }
+
   if (!input.transferWindowOpen) {
     return { ok: false, error: 'Okno transferowe jest zamknięte.' };
   }
@@ -181,22 +294,40 @@ export async function completeTransferBuy(
 }
 
 /**
- * Atomic sell: mark DEPARTED + credit cash + finance_movements + transfer_deals.
- * Settles only `agreedAmount` after allow-list check vs ask (LFE-TRANSFERS-05).
- * Idempotent via sell:{playerId} — no double credit / deal / listed clear.
+ * Atomic sell settlement.
+ * - instant: DEPARTED + credit (legacy Instant Sell / Incoming).
+ * - live: credit + clear listed via shared RPC (no DEPARTED; id unchanged).
  */
 export async function completeTransferSell(
   supabase: AppSupabase,
-  input: {
-    clubId: string;
-    cashBalance: number;
-    transferWindowOpen: boolean;
-    playerId: string;
-    /** Negotiated or Instant Sell amount — must be allowed vs ask. */
-    agreedAmount: number;
-    activePlayers: readonly ActivePlayer[];
-  },
+  input: InstantSellInput | LiveSellInput,
 ): Promise<CompleteSellResult> {
+  if (input.source === 'live') {
+    if (!input.transferWindowOpen) {
+      return { ok: false, error: 'Okno transferowe jest zamknięte.' };
+    }
+    const fee = deriveTransferFee(input.playerSkill, input.playerAge);
+    if (fee !== input.askSnapshot) {
+      return { ok: false, error: 'Ask nieaktualny — odśwież Transfery.' };
+    }
+    if (input.agreedAmount !== input.askSnapshot) {
+      return { ok: false, error: 'Live Sell wymaga 100% ask.' };
+    }
+    if (!isAllowedAgreedAmount(input.askSnapshot, input.agreedAmount)) {
+      return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
+    }
+    if (input.clubId === input.buyerClubId) {
+      return { ok: false, error: 'Nie możesz kupić własnego zawodnika.' };
+    }
+
+    return invokeLiveH2hRpc(supabase, {
+      buyerClubId: input.buyerClubId,
+      sellerClubId: input.clubId,
+      playerId: input.playerId,
+      askSnapshot: input.askSnapshot,
+    });
+  }
+
   if (!input.transferWindowOpen) {
     return { ok: false, error: 'Okno transferowe jest zamknięte.' };
   }
