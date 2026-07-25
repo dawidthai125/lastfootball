@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-TRANSFERS-04)
+
+- Player transfer listing: `players.transfer_listed_at`; List/Unlist idempotent
+- Incoming offers only for listed players; shared `isTransferSellEligible`
+- `completeTransferSell` clears listing; ask = deriveTransferFee only
+
 ### Added (shipped on `main` — LFE-TRANSFERS-03)
 
 - Derived AI incoming offers Thin: `resolveIncomingOffers` (pure; 100% ask; Accept/Reject)

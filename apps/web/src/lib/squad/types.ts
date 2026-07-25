@@ -46,6 +46,8 @@ export type PlayerRowDto = {
   readonly nationality: string;
   readonly version: number;
   readonly departedAt: string | null;
+  /** When set — on club transfer list (LFE-TRANSFERS-04). */
+  readonly transferListedAt: string | null;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

@@ -4,7 +4,7 @@ import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import type { PlayerRowDto } from '@/lib/squad/types';
 
 const PLAYER_SELECT =
-  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, status, nationality, version, departed_at';
+  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, status, nationality, version, departed_at, transfer_listed_at';
 
 /**
  * Active club roster from DB (SSOT). Excludes DEPARTED / departed_at.

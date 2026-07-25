@@ -8,7 +8,6 @@ import {
   INCOMING_THIN,
   resolveIncomingOffers,
 } from '@/lib/transfers/resolve-incoming-offers';
-import { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
 
 function activeRows(clubId: string) {
   return buildStarterPlayerInserts(clubId).map((r) =>
@@ -71,6 +70,7 @@ describe('incoming offers Thin (LFE-TRANSFERS-03)', () => {
         nationality: 'POL',
         version: 1,
         departed_at: null,
+        transfer_listed_at: '2026-01-01T00:00:00.000Z',
       }),
     ];
 
@@ -125,38 +125,33 @@ describe('incoming offers Thin (LFE-TRANSFERS-03)', () => {
     expect(resolveIncomingOffers(input)).toEqual(resolveIncomingOffers({ ...input }));
   });
 
-  it('resolveTransferMarket exposes incomingOffers', () => {
+  it('returns empty when eligible but not listed (TRANSFERS-04 gate)', () => {
     const rows = [
       ...activeRows(clubId),
       mapPlayerRow({
-        id: 't-extra-2',
+        id: 't-extra-unlisted',
         club_id: clubId,
-        name: 'Z. Sub',
-        shirt_number: 21,
-        pos: 'PN',
-        role: 'RW',
+        name: 'U. Free',
+        shirt_number: 22,
+        pos: 'ŚP',
+        role: 'CM',
         starter: false,
         captain: false,
-        age: 21,
-        skill: 55,
+        age: 23,
+        skill: 57,
         status: 'READY',
         nationality: 'POL',
         version: 1,
         departed_at: null,
+        transfer_listed_at: null,
       }),
     ];
-    const market = resolveTransferMarket({
-      clubId,
-      cashBalance: 200_000,
-      transferWindowOpen: true,
-      activePlayers: rows,
-    });
-    expect(market.incomingOffers).toEqual(
+    expect(
       resolveIncomingOffers({
         clubId,
         transferWindowOpen: true,
         activePlayers: rows,
       }),
-    );
+    ).toEqual([]);
   });
 });

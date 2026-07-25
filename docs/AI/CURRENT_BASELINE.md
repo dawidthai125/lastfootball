@@ -14,22 +14,22 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline 4f69b5d  # feature baseline TRANSFERS-03 incoming
+git log -1 --oneline          # feature baseline TRANSFERS-04 — hash po commit
 ```
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                           |
-| -------------------- | ----------------------------------------------------------------- |
-| URL                  | https://lastfootball.vercel.app                                   |
-| Alias                | https://lastfootball.pl                                           |
-| Branch               | `main`                                                            |
-| **Feature baseline** | `4f69b5dccd3d100b9f912fa45b9f1aae7f0bcdb6`                        |
-| Baseline message     | `feat(transfers): add AI incoming offers Thin (LFE-TRANSFERS-03)` |
-| Docs CLOSE tip       | _(ten commit lub nowszy)_                                         |
-| Status               | **LFE-TRANSFERS-03 CLOSED** · N1 · E1 · LEAGUE-03 · GDD-§26A/B    |
+| Pole                 | Wartość                                                                |
+| -------------------- | ---------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                        |
+| Alias                | https://lastfootball.pl                                                |
+| Branch               | `main`                                                                 |
+| **Feature baseline** | _(wypełniane po commit TRANSFERS-04)_                                  |
+| Baseline message     | `feat(transfers): add player transfer listing Thin (LFE-TRANSFERS-04)` |
+| Docs CLOSE tip       | _(po feacie)_                                                          |
+| Status               | **LFE-TRANSFERS-04 CLOSED** · 03 · N1 · E1 · LEAGUE-03 · GDD-§26A/B    |
 
 ## Stack
 
@@ -43,43 +43,25 @@ git log -1 --oneline 4f69b5d  # feature baseline TRANSFERS-03 incoming
 ```
 Landing → Auth → Welcome → Club Wizard · Reveal
   → First Match → Live → Post → Welcome LF → Hub (EARLY_CLUB → SEASON)
-  → /league ← resolveLeagueTable()
-  → /finance ← resolveClubFinance()
-  → /squad ← resolveClubSquad(players)
-  → /transfers ← resolveTransferMarket() + buy nego + incoming offers gdy okno otwarte
-  → /training ← resolveClubTraining() gdy played ≥ 2
-  → fixtures Thin: LEAGUE_FIXTURE_COUNT=11 (+ top-up dla klubów z 3)
+  → /transfers ← resolveTransferMarket() + listing + buy nego + incoming (listed only)
 ```
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                               |
-| ----------------- | --------------------------------------------------- |
-| Club              | `clubs` → `ClubDto`                                 |
-| Hub unlock        | `first_match_completed_at`                          |
-| Hub phase / CTA   | `resolveHubPhase` / `resolvePrimaryCta`             |
-| Fixtures          | `fixtures` + `planClubFixtures` / top-up (11)       |
-| League table      | `resolveLeagueTable` → `LeagueTableDto`             |
-| Cash              | `cash_balance` + `resolveClubFinance` (D18)         |
-| Transfer envelope | `resolveTransferEnvelope` (derive, ratio 1)         |
-| Economy numbers   | GDD **§26** · kod `ECONOMY_THIN` (+ `TRANSFER_FEE`) |
-| Roster            | `players` + `resolveClubSquad`                      |
-| Transfer window   | `transfer_window_open`                              |
-| Transfer UI       | `resolveTransferMarket`                             |
-| Transfer nego     | `resolveNegotiationStep` (pure, stateless)          |
-| Incoming offers   | `resolveIncomingOffers` (pure, derive C)            |
-| Transfer deals    | `transfer_deals`                                    |
-| Training day      | `clubs.last_training_on`                            |
-| Training UI       | `resolveClubTraining` → `TrainingDto`               |
-| Played unlock     | `hasPlayedUnlock` + fixture played count            |
-| Match entry       | `createMatch()` → `MatchSession`                    |
-
-Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md).
+| SSOT              | Gdzie                                 |
+| ----------------- | ------------------------------------- |
+| Cash              | `cash_balance`                        |
+| Transfer envelope | `resolveTransferEnvelope`             |
+| Transfer listing  | `players.transfer_listed_at`          |
+| Transfer UI       | `resolveTransferMarket`               |
+| Sell eligibility  | `isTransferSellEligible`              |
+| Incoming offers   | `resolveIncomingOffers` (listed only) |
+| Settlement sell   | `completeTransferSell`                |
 
 ## Not on production
 
-Sell negotiation · 2+ counters · pending/timeout/inbox · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
+Sell negotiation · custom ask · 2+ counters · pending/timeout/inbox · potential · full **22** fixtures · Physics · individual training · skill growth · envelope ratio ≠ 1.
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-03 CLOSE
+2026-07-26 — LFE-TRANSFERS-04 CLOSE

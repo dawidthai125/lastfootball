@@ -5,6 +5,7 @@ import type { PlayerRowDto } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
+import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
 import {
   TRANSFERS_THIN,
   type MarketListingDto,
@@ -18,7 +19,7 @@ function displayPos(pos: string): string {
 }
 
 /**
- * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01 / E1 envelope).
+ * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01…04).
  * Pure — never reads DB; callers pass club cash, window flag, and active roster rows.
  */
 export function resolveTransferMarket(input: {
@@ -49,15 +50,26 @@ export function resolveTransferMarket(input: {
     };
   });
 
-  const gkCount = active.filter((p) => p.pos === 'BR' || p.role === 'GK').length;
+  const sellCandidates: SellCandidateDto[] = listTransferSellEligiblePlayers({
+    transferWindowOpen: windowOpen,
+    activePlayers: input.activePlayers,
+  }).map((p) => {
+    const fee = deriveTransferFee(p.skill, p.age);
+    return {
+      playerId: p.id,
+      name: p.name,
+      pos: displayPos(p.pos),
+      age: p.age,
+      skill: p.skill,
+      fee,
+      feeLabel: formatMoney(fee, ECONOMY_THIN.CURRENCY),
+      starter: p.starter,
+      listed: p.transferListedAt != null,
+    };
+  });
 
-  const sellCandidates: SellCandidateDto[] = active
-    .filter((p) => {
-      if (!canSell) return false;
-      const isGk = p.pos === 'BR' || p.role === 'GK';
-      if (isGk && gkCount <= 1) return false;
-      return true;
-    })
+  const listedPlayers: SellCandidateDto[] = active
+    .filter((p) => p.transferListedAt != null)
     .map((p) => {
       const fee = deriveTransferFee(p.skill, p.age);
       return {
@@ -69,6 +81,7 @@ export function resolveTransferMarket(input: {
         fee,
         feeLabel: formatMoney(fee, ECONOMY_THIN.CURRENCY),
         starter: p.starter,
+        listed: true,
       };
     });
 
@@ -87,6 +100,7 @@ export function resolveTransferMarket(input: {
     canSell,
     listings,
     sellCandidates,
+    listedPlayers,
     incomingOffers: resolveIncomingOffers({
       clubId: input.clubId,
       transferWindowOpen: windowOpen,

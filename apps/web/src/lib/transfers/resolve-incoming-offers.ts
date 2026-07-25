@@ -2,7 +2,8 @@ import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
-import { TRANSFERS_THIN, type IncomingOfferDto } from '@/lib/transfers/types';
+import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
+import type { IncomingOfferDto } from '@/lib/transfers/types';
 
 /** Thin cap — derived inbox size (no DB). */
 export const INCOMING_THIN = {
@@ -45,26 +46,12 @@ export function buildIncomingOfferId(clubId: string, playerId: string): string {
   return `in-${tag}-${playerId}`;
 }
 
-export function isIncomingSellEligible(input: {
-  readonly transferWindowOpen: boolean;
-  readonly activePlayers: readonly PlayerRowDto[];
-  readonly playerId: string;
-}): boolean {
-  if (!input.transferWindowOpen) return false;
-  const active = input.activePlayers.filter((p) => p.departedAt == null && p.status !== 'DEPARTED');
-  if (active.length <= TRANSFERS_THIN.MIN_ROSTER) return false;
-
-  const player = active.find((p) => p.id === input.playerId);
-  if (!player) return false;
-
-  const isGk = player.pos === 'BR' || player.role === 'GK';
-  const gkCount = active.filter((p) => p.pos === 'BR' || p.role === 'GK').length;
-  if (isGk && gkCount <= 1) return false;
-  return true;
-}
+/** @deprecated Prefer isTransferSellEligible — kept as alias for TRANSFERS-03 callers. */
+export { isTransferSellEligible as isIncomingSellEligible } from '@/lib/transfers/sell-eligibility';
 
 /**
- * Pure derived AI→player offers (LFE-TRANSFERS-03).
+ * Pure derived AI→player offers (LFE-TRANSFERS-03 / 04).
+ * Only players with transferListedAt set + shared sell eligibility.
  * Amount = 100% deriveTransferFee. Identical input → identical output.
  */
 export function resolveIncomingOffers(input: {
@@ -72,25 +59,16 @@ export function resolveIncomingOffers(input: {
   readonly transferWindowOpen: boolean;
   readonly activePlayers: readonly PlayerRowDto[];
 }): readonly IncomingOfferDto[] {
-  if (!input.transferWindowOpen) return [];
+  const eligible = listTransferSellEligiblePlayers({
+    transferWindowOpen: input.transferWindowOpen,
+    activePlayers: input.activePlayers,
+  }).filter((p) => p.transferListedAt != null);
 
-  const active = input.activePlayers.filter((p) => p.departedAt == null && p.status !== 'DEPARTED');
-  if (active.length <= TRANSFERS_THIN.MIN_ROSTER) return [];
-
-  const gkCount = active.filter((p) => p.pos === 'BR' || p.role === 'GK').length;
-
-  const eligible = active
-    .filter((p) => {
-      const isGk = p.pos === 'BR' || p.role === 'GK';
-      if (isGk && gkCount <= 1) return false;
-      return true;
-    })
-    .slice()
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const sorted = eligible.slice().sort((a, b) => a.id.localeCompare(b.id));
 
   /** Prefer players with stableHash % 3 === 0; fill up to MAX from sorted list. */
-  const preferred = eligible.filter((p) => stableHash([input.clubId, p.id]) % 3 === 0);
-  const pool = preferred.length > 0 ? preferred : eligible;
+  const preferred = sorted.filter((p) => stableHash([input.clubId, p.id]) % 3 === 0);
+  const pool = preferred.length > 0 ? preferred : sorted;
   const selected = pool.slice(0, INCOMING_THIN.MAX_OFFERS);
 
   return selected.map((p) => {

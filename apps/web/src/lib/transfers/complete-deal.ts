@@ -234,6 +234,7 @@ export async function completeTransferSell(
       departed_at: departedAt,
       starter: false,
       captain: false,
+      transfer_listed_at: null,
     } as never)
     .eq('id', input.playerId)
     .eq('club_id', input.clubId)

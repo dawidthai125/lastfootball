@@ -31,6 +31,8 @@ export type SellCandidateDto = {
   readonly fee: number;
   readonly feeLabel: string;
   readonly starter: boolean;
+  /** True when players.transfer_listed_at is set. */
+  readonly listed: boolean;
 };
 
 /** Derived AI→player offer (LFE-TRANSFERS-03) — amount = 100% deriveTransferFee. */
@@ -62,6 +64,11 @@ export type TransferMarketDto = {
   readonly canSell: boolean;
   readonly listings: readonly MarketListingDto[];
   readonly sellCandidates: readonly SellCandidateDto[];
+  /**
+   * Active players with transfer_listed_at set — shown even when window closed (Unlist).
+   * Derived inside resolveTransferMarket only (no separate resolver).
+   */
+  readonly listedPlayers: readonly SellCandidateDto[];
   /** Derived AI incoming offers — from resolveIncomingOffers only. */
   readonly incomingOffers: readonly IncomingOfferDto[];
 };

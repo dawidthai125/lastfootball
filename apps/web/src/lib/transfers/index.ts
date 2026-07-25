@@ -15,6 +15,10 @@ export {
   buildIncomingOfferId,
 } from '@/lib/transfers/resolve-incoming-offers';
 export {
+  isTransferSellEligible,
+  listTransferSellEligiblePlayers,
+} from '@/lib/transfers/sell-eligibility';
+export {
   NEGOTIATION_THIN,
   resolveNegotiationStep,
   resolveOfferAmount,

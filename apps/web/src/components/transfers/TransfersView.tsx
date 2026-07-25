@@ -10,6 +10,7 @@ import {
   buyTransferPlayer,
   respondIncomingOffer,
   sellTransferPlayer,
+  setTransferListing,
 } from '@/lib/transfers/actions';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
@@ -17,7 +18,7 @@ import {
   resolveOfferAmount,
   type OfferPreset,
 } from '@/lib/transfers/resolve-negotiation';
-import type { IncomingOfferDto, TransferMarketDto } from '@/lib/transfers/types';
+import type { IncomingOfferDto, SellCandidateDto, TransferMarketDto } from '@/lib/transfers/types';
 
 const PRESET_LABEL: Record<OfferPreset, string> = {
   low: 'Niska',
@@ -128,6 +129,45 @@ function SellButton({ playerId, disabled }: { playerId: string; disabled: boolea
   );
 }
 
+function ListingButton({
+  playerId,
+  listed,
+  disabled,
+}: {
+  playerId: string;
+  listed: boolean;
+  disabled?: boolean;
+}) {
+  const [state, action, pending] = useActionState(setTransferListing, TRANSFER_ACTION_INITIAL);
+  return (
+    <form action={action} className="inline">
+      <input type="hidden" name="playerId" value={playerId} />
+      <input type="hidden" name="intent" value={listed ? 'unlist' : 'list'} />
+      {state.error ? (
+        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+      <Button type="submit" variant="default" disabled={Boolean(disabled) || pending}>
+        {pending ? '…' : listed ? 'Z listy' : 'Wystaw'}
+      </Button>
+    </form>
+  );
+}
+
+function SellActions({ row, canSell }: { row: SellCandidateDto; canSell: boolean }) {
+  return (
+    <div className="flex flex-wrap justify-end gap-1">
+      <ListingButton
+        playerId={row.playerId}
+        listed={row.listed}
+        disabled={!canSell && !row.listed}
+      />
+      <SellButton playerId={row.playerId} disabled={!canSell} />
+    </div>
+  );
+}
+
 function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; disabled: boolean }) {
   const [state, action, pending] = useActionState(respondIncomingOffer, TRANSFER_ACTION_INITIAL);
   return (
@@ -194,14 +234,15 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         <Panel title="Informacja">
           <p className="m-0 text-[var(--lf-color-text-muted)]">
             Okno transferowe otworzy się po rozegraniu {2} kolejek ligowych (Thin). Możesz
-            przeglądać rynek, ale finalizacja jest zablokowana.
+            przeglądać rynek, ale finalizacja jest zablokowana. Lista wystawionych nie jest
+            czyszczona przy zamknięciu okna.
           </p>
         </Panel>
       ) : (
-        <Panel title="Negocjacje i oferty AI">
+        <Panel title="Negocjacje, lista i oferty AI">
           <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Kupno: Niska / Normalna / Wysoka (nego Thin). Oferty AI→Ty: Accept / Reject @ 100% ask —
-            derive, bez pending w bazie.
+            Wystaw zawodnika na listę (ask = fee). Oferty AI tylko dla wystawionych. Instant Sell i
+            buy nego bez zmian.
           </p>
         </Panel>
       )}
@@ -209,7 +250,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
       <Panel title="Oferty AI (przychodzące)" flush>
         {market.incomingOffers.length === 0 ? (
           <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
-            Brak ofert AI (limit kadry, okno zamknięte lub brak zainteresowania w derive).
+            Brak ofert AI (brak wystawionych, okno zamknięte lub limit kadry).
           </p>
         ) : (
           <Table
@@ -286,6 +327,33 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         />
       </Panel>
 
+      {!market.windowOpen && market.listedPlayers.length > 0 ? (
+        <Panel title="Na liście transferowej" flush>
+          <Table
+            rowKey={(r) => r.playerId}
+            rows={[...market.listedPlayers]}
+            columns={[
+              { key: 'name', header: 'Zawodnik', render: (r) => r.name },
+              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
+              {
+                key: 'fee',
+                header: 'Ask',
+                align: 'right',
+                render: (r) => (
+                  <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
+                ),
+              },
+              {
+                key: 'act',
+                header: '',
+                align: 'right',
+                render: (r) => <ListingButton playerId={r.playerId} listed disabled={false} />,
+              },
+            ]}
+          />
+        </Panel>
+      ) : null}
+
       <Panel title="Twoja kadra — sprzedaż" flush>
         {market.sellCandidates.length === 0 ? (
           <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
@@ -296,7 +364,18 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
             rowKey={(r) => r.playerId}
             rows={[...market.sellCandidates]}
             columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.name },
+              {
+                key: 'name',
+                header: 'Zawodnik',
+                render: (r) => (
+                  <span>
+                    {r.name}
+                    {r.listed ? (
+                      <span className="ml-1 text-xs text-[var(--lf-gold)]">· lista</span>
+                    ) : null}
+                  </span>
+                ),
+              },
               { key: 'pos', header: 'Poz.', render: (r) => r.pos },
               {
                 key: 'age',
@@ -316,7 +395,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                 key: 'act',
                 header: '',
                 align: 'right',
-                render: (r) => <SellButton playerId={r.playerId} disabled={!market.canSell} />,
+                render: (r) => <SellActions row={r} canSell={market.canSell} />,
               },
             ]}
           />

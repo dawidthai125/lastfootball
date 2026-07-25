@@ -15,6 +15,8 @@ export type PlayerDbRow = {
   nationality: string;
   version: number;
   departed_at: string | null;
+  /** Optional for older fixtures/tests — defaults to null. */
+  transfer_listed_at?: string | null;
 };
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -40,5 +42,6 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     nationality: row.nationality,
     version: row.version,
     departedAt: row.departed_at,
+    transferListedAt: row.transfer_listed_at ?? null,
   };
 }

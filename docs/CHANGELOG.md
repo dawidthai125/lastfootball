@@ -7,8 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`4f69b5d`** (LFE-TRANSFERS-03) — tip may be docs after feat.  
-GDD-§26A/B · LEAGUE-03 · E1 · N1 **CLOSED**.
+Production feature baseline **LFE-TRANSFERS-04** (hash w CURRENT_BASELINE po commit).
+
+---
+
+## [2026-07-26] — LFE-TRANSFERS-04 · CLOSED
+
+### Product
+
+- `players.transfer_listed_at` — List/Unlist (idempotent); brak nowych tabel
+- Ask listingu = `deriveTransferFee`; Instant Sell zostaje
+- Incoming tylko dla listed; shared `isTransferSellEligible`
+- `completeTransferSell` czyści `transfer_listed_at`; okno nie czyści listy
+- UI tylko `resolveTransferMarket` (`listedPlayers` + flag `listed`)
+- Feature baseline → commit `feat(transfers): add player transfer listing Thin (LFE-TRANSFERS-04)`
 
 ---
 
