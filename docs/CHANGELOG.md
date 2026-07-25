@@ -7,7 +7,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-04** (hash w CURRENT_BASELINE po commit).
+Production feature baseline **`de23db6`** (LFE-TRANSFERS-04) — tip may be docs after feat.
 
 ---
 
@@ -20,7 +20,7 @@ Production feature baseline **LFE-TRANSFERS-04** (hash w CURRENT_BASELINE po com
 - Incoming tylko dla listed; shared `isTransferSellEligible`
 - `completeTransferSell` czyści `transfer_listed_at`; okno nie czyści listy
 - UI tylko `resolveTransferMarket` (`listedPlayers` + flag `listed`)
-- Feature baseline → commit `feat(transfers): add player transfer listing Thin (LFE-TRANSFERS-04)`
+- Feature baseline → **`de23db6`** (LFE-TRANSFERS-04)
 
 ---
 
