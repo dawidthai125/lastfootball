@@ -17,13 +17,7 @@ export type PlayerDbRow = {
   departed_at: string | null;
 };
 
-const STATUSES: readonly PlayerStatus[] = [
-  'READY',
-  'INJURED',
-  'SUSPENDED',
-  'TIRED',
-  'DEPARTED',
-];
+const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
 
 function mapStatus(raw: string): PlayerStatus {
   if ((STATUSES as readonly string[]).includes(raw)) return raw as PlayerStatus;

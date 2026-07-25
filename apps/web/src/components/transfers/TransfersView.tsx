@@ -5,10 +5,7 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
-import {
-  buyTransferPlayer,
-  sellTransferPlayer,
-} from '@/lib/transfers/actions';
+import { buyTransferPlayer, sellTransferPlayer } from '@/lib/transfers/actions';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import type { TransferMarketDto } from '@/lib/transfers/types';
 
@@ -18,7 +15,7 @@ function BuyButton({ marketId, disabled }: { marketId: string; disabled: boolean
     <form action={action} className="inline">
       <input type="hidden" name="marketId" value={marketId} />
       {state.error ? (
-        <span className="mr-1 text-[var(--lf-danger)] text-xs" role="alert">
+        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
@@ -35,7 +32,7 @@ function SellButton({ playerId, disabled }: { playerId: string; disabled: boolea
     <form action={action} className="inline">
       <input type="hidden" name="playerId" value={playerId} />
       {state.error ? (
-        <span className="mr-1 text-[var(--lf-danger)] text-xs" role="alert">
+        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
@@ -148,9 +145,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                 key: 'act',
                 header: '',
                 align: 'right',
-                render: (r) => (
-                  <SellButton playerId={r.playerId} disabled={!market.canSell} />
-                ),
+                render: (r) => <SellButton playerId={r.playerId} disabled={!market.canSell} />,
               },
             ]}
           />

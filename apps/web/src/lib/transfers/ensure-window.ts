@@ -7,10 +7,7 @@ type AppSupabase = Awaited<ReturnType<typeof createClient>>;
  * Opens transfer window when played fixtures >= UNLOCK_AFTER_PLAYED (idempotent).
  * Thin exception vs GDD K11.
  */
-export async function ensureTransferWindow(
-  supabase: AppSupabase,
-  clubId: string,
-): Promise<void> {
+export async function ensureTransferWindow(supabase: AppSupabase, clubId: string): Promise<void> {
   const { count, error } = await supabase
     .from('fixtures')
     .select('id', { count: 'exact', head: true })

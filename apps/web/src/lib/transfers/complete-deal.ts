@@ -29,12 +29,10 @@ function nextShirt(used: readonly number[]): number {
 }
 
 export type CompleteBuyResult =
-  | { ok: true; playerId: string; amount: number }
-  | { ok: false; error: string };
+  { ok: true; playerId: string; amount: number } | { ok: false; error: string };
 
 export type CompleteSellResult =
-  | { ok: true; playerId: string; amount: number }
-  | { ok: false; error: string };
+  { ok: true; playerId: string; amount: number } | { ok: false; error: string };
 
 type ActivePlayer = {
   id: string;
@@ -132,7 +130,11 @@ export async function completeTransferBuy(
   if (cashErr) {
     await supabase
       .from('players')
-      .update({ status: 'DEPARTED', departed_at: new Date().toISOString(), starter: false } as never)
+      .update({
+        status: 'DEPARTED',
+        departed_at: new Date().toISOString(),
+        starter: false,
+      } as never)
       .eq('id', playerId)
       .eq('club_id', input.clubId);
     return { ok: false, error: 'Nie udało się zaktualizować kasy.' };

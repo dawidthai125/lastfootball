@@ -5,10 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
-import {
-  completeTransferBuy,
-  completeTransferSell,
-} from '@/lib/transfers/complete-deal';
+import { completeTransferBuy, completeTransferSell } from '@/lib/transfers/complete-deal';
 import type { TransferActionState } from '@/lib/transfers/action-types';
 
 export async function buyTransferPlayer(
