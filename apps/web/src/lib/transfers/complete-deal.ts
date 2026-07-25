@@ -182,6 +182,8 @@ export async function completeTransferBuy(
 
 /**
  * Atomic sell: mark DEPARTED + credit cash + finance_movements + transfer_deals.
+ * Settles only `agreedAmount` after allow-list check vs ask (LFE-TRANSFERS-05).
+ * Idempotent via sell:{playerId} — no double credit / deal / listed clear.
  */
 export async function completeTransferSell(
   supabase: AppSupabase,
@@ -190,6 +192,8 @@ export async function completeTransferSell(
     cashBalance: number;
     transferWindowOpen: boolean;
     playerId: string;
+    /** Negotiated or Instant Sell amount — must be allowed vs ask. */
+    agreedAmount: number;
     activePlayers: readonly ActivePlayer[];
   },
 ): Promise<CompleteSellResult> {
@@ -211,7 +215,12 @@ export async function completeTransferSell(
     return { ok: false, error: 'Nie możesz sprzedać ostatniego bramkarza.' };
   }
 
-  const fee = deriveTransferFee(player.skill, player.age);
+  const ask = deriveTransferFee(player.skill, player.age);
+  if (!isAllowedAgreedAmount(ask, input.agreedAmount)) {
+    return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
+  }
+
+  const agreedAmount = input.agreedAmount;
   const idempotencyKey = `sell:${input.playerId}`;
 
   const { data: existing } = await supabase
@@ -244,7 +253,7 @@ export async function completeTransferSell(
     return { ok: false, error: 'Nie udało się oznaczyć odejścia zawodnika.' };
   }
 
-  const nextCash = input.cashBalance + fee;
+  const nextCash = input.cashBalance + agreedAmount;
   const { error: cashErr } = await supabase
     .from('clubs')
     .update({ cash_balance: nextCash } as never)
@@ -258,7 +267,7 @@ export async function completeTransferSell(
     club_id: input.clubId,
     category: 'transfer_sell',
     label: `Sprzedaż: ${player.name}`,
-    amount: fee,
+    amount: agreedAmount,
     fixture_id: null,
   } as never);
 
@@ -267,7 +276,7 @@ export async function completeTransferSell(
     kind: 'sell',
     player_id: input.playerId,
     market_id: null,
-    amount: fee,
+    amount: agreedAmount,
     idempotency_key: idempotencyKey,
     completed_at: departedAt,
   } as never);
@@ -276,5 +285,5 @@ export async function completeTransferSell(
     return { ok: false, error: 'Sprzedaż częściowa — sprawdź kadrę i finanse.' };
   }
 
-  return { ok: true, playerId: input.playerId, amount: fee };
+  return { ok: true, playerId: input.playerId, amount: agreedAmount };
 }

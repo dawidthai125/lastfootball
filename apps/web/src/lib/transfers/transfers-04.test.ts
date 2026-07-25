@@ -4,6 +4,7 @@ import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
+import { resolveOfferAmount } from '@/lib/transfers/resolve-negotiation';
 import { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
 import {
   isTransferSellEligible,
@@ -169,6 +170,7 @@ describe('transfer listing Thin (LFE-TRANSFERS-04)', () => {
       activePlayers: rows,
     });
     expect(offers.every((o) => o.playerId === 't-list-2')).toBe(true);
-    expect(offers.every((o) => o.amount === deriveTransferFee(60, 22))).toBe(true);
+    expect(offers.every((o) => o.ask === deriveTransferFee(60, 22))).toBe(true);
+    expect(offers.every((o) => o.amount === resolveOfferAmount(o.ask, o.aiPreset))).toBe(true);
   });
 });

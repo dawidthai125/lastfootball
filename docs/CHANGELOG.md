@@ -7,7 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`de23db6`** (LFE-TRANSFERS-04) — tip may be docs after feat.
+Production feature baseline **`PLACEHOLDER_05`** (LFE-TRANSFERS-05) — tip may be docs after feat.
+
+---
+
+## [2026-07-26] — LFE-TRANSFERS-05 · CLOSED
+
+### Product
+
+- Seller negotiation Thin (Incoming S2): `resolveSellerNegotiationStep` pure; reuse NEGOTIATION_THIN
+- Instant Sell @ 100% ask — bez nego; `resolveNegotiationStep` pozostaje BUY-only
+- Settlement: `completeTransferSell(agreedAmount)` + `isAllowedAgreedAmount`; idempotentne
+- Pełna rewalidacja przed settle (ask / allow-list / eligibility / listed / window / roster / GK)
+- Brak nowych tabel / pending / timeoutów; UI tylko `resolveTransferMarket`
+- Feature baseline → **`PLACEHOLDER_05`** (LFE-TRANSFERS-05)
 
 ---
 

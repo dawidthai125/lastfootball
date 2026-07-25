@@ -8,6 +8,7 @@ import {
   INCOMING_THIN,
   resolveIncomingOffers,
 } from '@/lib/transfers/resolve-incoming-offers';
+import { resolveOfferAmount } from '@/lib/transfers/resolve-negotiation';
 
 function activeRows(clubId: string) {
   return buildStarterPlayerInserts(clubId).map((r) =>
@@ -52,7 +53,7 @@ describe('incoming offers Thin (LFE-TRANSFERS-03)', () => {
     ).toEqual([]);
   });
 
-  it('offer amount is 100% deriveTransferFee; offerId stable', () => {
+  it('opening amount = NEGOTIATION_THIN % of ask; ask = deriveTransferFee; offerId stable', () => {
     const rows = [
       ...activeRows(clubId),
       mapPlayerRow({
@@ -91,7 +92,10 @@ describe('incoming offers Thin (LFE-TRANSFERS-03)', () => {
 
     for (const offer of a) {
       const player = rows.find((p) => p.id === offer.playerId)!;
-      expect(offer.amount).toBe(deriveTransferFee(player.skill, player.age));
+      const ask = deriveTransferFee(player.skill, player.age);
+      expect(offer.ask).toBe(ask);
+      expect(offer.amount).toBe(resolveOfferAmount(ask, offer.aiPreset));
+      expect(offer.canCounter).toBe(offer.aiPreset === 'low');
       expect(offer.offerId).toBe(buildIncomingOfferId(clubId, offer.playerId));
       expect(offer.offerId.startsWith('in-')).toBe(true);
     }

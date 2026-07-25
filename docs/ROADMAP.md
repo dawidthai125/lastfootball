@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`de23db6`** (LFE-TRANSFERS-04 CLOSED).  
-GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 CLOSED · Vercel Production.
+Production feature baseline **`PLACEHOLDER_05`** (LFE-TRANSFERS-05 CLOSED).  
+GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 · Listing 04 · Seller nego 05 · Vercel Production.
 
 ---
 
@@ -38,8 +38,9 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming 03 CLOSED · Vercel Production.
 | **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20           |
 | **LFE-TRANSFERS-02-E1**                                | **CLOSED** · derived envelope (`resolveTransferEnvelope`, ratio 1) |
 | **LFE-TRANSFERS-02-N1**                                | **CLOSED** · stateless buy negotiation Thin                        |
-| **LFE-TRANSFERS-03**                                   | **CLOSED** · derived AI incoming offers (Accept/Reject @ 100% ask) |
+| **LFE-TRANSFERS-03**                                   | **CLOSED** · derived AI incoming offers                            |
 | **LFE-TRANSFERS-04**                                   | **CLOSED** · player listing (`transfer_listed_at`)                 |
+| **LFE-TRANSFERS-05**                                   | **CLOSED** · seller negotiation Thin (Incoming S2)                 |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21      |
 
 ## IN PROGRESS 🔄
@@ -85,8 +86,9 @@ Uzasadnienie: rynek Thin (envelope + buy nego + incoming AI) na produkcji.
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26**; kod = `ECONOMY_THIN` (§26B).
 - Envelope = `resolveTransferEnvelope` (ratio 1 Thin) — nie kolumna DB (E1).
 - Buy nego = `resolveNegotiationStep` pure / stateless (N1); settlement `agreedAmount`.
-- Incoming AI = `resolveIncomingOffers` derive C; Accept → `completeTransferSell` (TRANSFERS-03).
+- Incoming AI = `resolveIncomingOffers` derive C; seller nego S2 (TRANSFERS-05).
 - Listing = `transfer_listed_at`; Incoming tylko listed; shared sell eligibility (TRANSFERS-04).
+- Seller nego = `resolveSellerNegotiationStep` pure; Instant Sell @ 100% ask; settle `completeTransferSell(agreedAmount)`.
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
@@ -98,4 +100,4 @@ Uzasadnienie: rynek Thin (envelope + buy nego + incoming AI) na produkcji.
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-04 CLOSE
+2026-07-26 — LFE-TRANSFERS-05 CLOSE

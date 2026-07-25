@@ -170,6 +170,47 @@ function SellActions({ row, canSell }: { row: SellCandidateDto; canSell: boolean
 
 function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; disabled: boolean }) {
   const [state, action, pending] = useActionState(respondIncomingOffer, TRANSFER_ACTION_INITIAL);
+  const counter =
+    state.sellerNegotiation?.offerId === offer.offerId ? state.sellerNegotiation : null;
+
+  if (counter) {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        <p className="m-0 max-w-[14rem] text-right text-xs text-[var(--lf-color-text-muted)]">
+          Twoja kontroferta:{' '}
+          <span className="text-[var(--lf-gold)] tabular-nums">
+            {formatMoney(counter.counterAmount)}
+          </span>
+        </p>
+        {state.error ? (
+          <span className="text-xs text-[var(--lf-danger)]" role="alert">
+            {state.error}
+          </span>
+        ) : null}
+        <div className="flex flex-wrap justify-end gap-1">
+          <form action={action} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="playerId" value={offer.playerId} />
+            <input type="hidden" name="phase" value="counter" />
+            <input type="hidden" name="decision" value="accept" />
+            <Button type="submit" variant="primary" disabled={disabled || pending}>
+              {pending ? '…' : 'Akceptuj'}
+            </Button>
+          </form>
+          <form action={action} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="playerId" value={offer.playerId} />
+            <input type="hidden" name="phase" value="counter" />
+            <input type="hidden" name="decision" value="reject" />
+            <Button type="submit" variant="default" disabled={pending}>
+              Odrzuć
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-end gap-1">
       {state.error ? (
@@ -181,14 +222,27 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         <form action={action} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
           <input type="hidden" name="playerId" value={offer.playerId} />
+          <input type="hidden" name="phase" value="opening" />
           <input type="hidden" name="decision" value="accept" />
           <Button type="submit" variant="primary" disabled={disabled || pending}>
             {pending ? '…' : 'Akceptuj'}
           </Button>
         </form>
+        {offer.canCounter ? (
+          <form action={action} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="playerId" value={offer.playerId} />
+            <input type="hidden" name="phase" value="opening" />
+            <input type="hidden" name="decision" value="counter" />
+            <Button type="submit" variant="default" disabled={disabled || pending}>
+              Kontroferta
+            </Button>
+          </form>
+        ) : null}
         <form action={action} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
           <input type="hidden" name="playerId" value={offer.playerId} />
+          <input type="hidden" name="phase" value="opening" />
           <input type="hidden" name="decision" value="reject" />
           <Button type="submit" variant="default" disabled={pending}>
             Odrzuć
@@ -241,8 +295,8 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
       ) : (
         <Panel title="Negocjacje, lista i oferty AI">
           <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Wystaw zawodnika na listę (ask = fee). Oferty AI tylko dla wystawionych. Instant Sell i
-            buy nego bez zmian.
+            Wystaw zawodnika na listę (ask = fee). Oferty AI (S2) tylko dla wystawionych — Accept /
+            Reject / Kontroferta vs Low. Instant Sell = 100% ask, bez nego.
           </p>
         </Panel>
       )}

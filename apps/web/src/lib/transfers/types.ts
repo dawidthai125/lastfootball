@@ -35,7 +35,7 @@ export type SellCandidateDto = {
   readonly listed: boolean;
 };
 
-/** Derived AI→player offer (LFE-TRANSFERS-03) — amount = 100% deriveTransferFee. */
+/** Derived AI→player offer (LFE-TRANSFERS-03…05) — opening = % ask via NEGOTIATION_THIN. */
 export type IncomingOfferDto = {
   readonly offerId: string;
   readonly playerId: string;
@@ -43,9 +43,15 @@ export type IncomingOfferDto = {
   readonly pos: string;
   readonly age: number;
   readonly skill: number;
+  /** Ask from deriveTransferFee. */
+  readonly ask: number;
+  readonly aiPreset: 'low' | 'normal' | 'high';
+  /** Opening offer amount (= resolveOfferAmount(ask, aiPreset)). */
   readonly amount: number;
   readonly amountLabel: string;
   readonly buyerLabel: string;
+  /** True when AI opened Low — player may counter to 95% ask. */
+  readonly canCounter: boolean;
 };
 
 export type TransferMarketDto = {
