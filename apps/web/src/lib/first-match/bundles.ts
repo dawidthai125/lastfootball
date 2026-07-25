@@ -2,7 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { seedBotSquad, seedStarterSquad } from '@/lib/squad';
+import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 export function buildFirstFixture(club: ClubDto): Fixture {
   return {
@@ -21,9 +21,12 @@ export function buildFirstFixture(club: ClubDto): Fixture {
   };
 }
 
-export function buildFirstPreMatchBundle(club: ClubDto): PreMatchBundle {
+export function buildFirstPreMatchBundle(
+  club: ClubDto,
+  ourXi: readonly RosterPlayerSeed[],
+): PreMatchBundle {
   const fixture = buildFirstFixture(club);
-  const our = seedStarterSquad(club.id);
+  const our = ourXi;
   const their = seedBotSquad();
 
   return {

@@ -11,13 +11,17 @@ import type { PlayerId } from '@lastfootball/domain';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
-import { resolveStartingXi, seedOpponentSquad } from '@/lib/squad';
+import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 /**
- * League fixture → MatchSession. Reuses createMatch; lineup from Squad SSOT.
+ * League fixture → MatchSession. Our XI from DB rows; opponent from AI seed.
  */
-export function createSessionFromLeagueFixture(club: ClubDto, fixture: FixtureDto): MatchSession {
-  const our = resolveStartingXi(club.id);
+export function createSessionFromLeagueFixture(
+  club: ClubDto,
+  fixture: FixtureDto,
+  ourXi: readonly RosterPlayerSeed[],
+): MatchSession {
+  const our = ourXi;
   const their = seedOpponentSquad(fixture.opponentClubId);
   const formationCode: FormationCode = '4-4-2';
 

@@ -15,6 +15,7 @@ import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
+import type { RosterPlayerSeed } from '@/lib/squad';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
 import {
@@ -88,10 +89,11 @@ export class LiveMatchRuntime {
     shell: LiveMatchBundle,
     club?: ClubDto | null,
     leagueFixture?: FixtureDto | null,
+    ourXi?: readonly RosterPlayerSeed[] | null,
   ) {
     this.fixture = fixture;
     this.shell = shell;
-    this.session = resolveSession(fixture, club, leagueFixture ?? null);
+    this.session = resolveSession(fixture, club, leagueFixture ?? null, ourXi ?? null);
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
     this.replayBuffer = createReplayBuffer({ capacity: 3600 });
@@ -481,12 +483,13 @@ function resolveSession(
   fixture: Fixture,
   club: ClubDto | null | undefined,
   leagueFixture: FixtureDto | null,
+  ourXi: readonly RosterPlayerSeed[] | null,
 ): MatchSession {
-  if (fixture.id === FIRST_MATCH_ID && club) {
-    return createSessionFromFirstMatch(club);
+  if (fixture.id === FIRST_MATCH_ID && club && ourXi) {
+    return createSessionFromFirstMatch(club, ourXi);
   }
-  if (club && leagueFixture) {
-    return createSessionFromLeagueFixture(club, leagueFixture);
+  if (club && leagueFixture && ourXi) {
+    return createSessionFromLeagueFixture(club, leagueFixture, ourXi);
   }
   return createSessionFromFixture(fixture);
 }

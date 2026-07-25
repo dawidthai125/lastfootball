@@ -1,15 +1,14 @@
+import type { PitchRole } from '@lastfootball/lfe';
+
 import type { ClubDto } from '@/lib/club/types';
-import { seedClubRoster, seedStarterSquad, type RosterPlayerSeed } from '@/lib/squad/seed-roster';
-import type { SquadDto, SquadPlayerDto } from '@/lib/squad/types';
+import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
+import type { PlayerRowDto, SquadDto, SquadPlayerDto } from '@/lib/squad/types';
+import { SquadUnavailableError } from '@/lib/squad/types';
 
 /** Display/filter position — group CBs/LB into OB for squad filters. */
 function displayPosition(pos: string): string {
   if (pos === 'ŚO' || pos === 'LO') return 'OB';
   return pos;
-}
-
-function toShortName(name: string): string {
-  return name;
 }
 
 function roleLabel(pos: string, captain: boolean): string {
@@ -34,19 +33,20 @@ function roleLabel(pos: string, captain: boolean): string {
   }
 }
 
-function toDto(seed: RosterPlayerSeed, clubId: string): SquadPlayerDto {
-  const skill = 55 + (seed.number % 20);
+function toDto(row: PlayerRowDto): SquadPlayerDto {
+  const skill = row.skill;
+  const shirt = row.shirtNumber;
   return {
-    id: seed.id,
-    name: seed.name,
-    shortName: toShortName(seed.name),
-    position: displayPosition(seed.pos),
-    age: 22 + (seed.number % 12),
-    form: 60 + (seed.number % 25),
-    energy: 70 + (seed.number % 20),
+    id: row.id,
+    name: row.name,
+    shortName: row.name,
+    position: displayPosition(row.pos),
+    age: row.age,
+    form: 60 + (shirt % 25),
+    energy: 70 + (shirt % 20),
     skill,
-    status: 'ready',
-    nationality: 'POL',
+    status: row.status,
+    nationality: row.nationality,
     attributes: [
       { label: 'Tempo', value: skill - 4 },
       { label: 'Siła', value: skill - 2 },
@@ -58,33 +58,64 @@ function toDto(seed: RosterPlayerSeed, clubId: string): SquadPlayerDto {
       { label: 'Głowa', value: skill - 5 },
     ],
     contract: {
-      wage: 2000 + seed.number * 100,
+      wage: 2000 + shirt * 100,
       until: '30.06.2028',
-      clause: 200_000 + seed.number * 10_000,
-      role: roleLabel(seed.pos, Boolean(seed.captain)),
+      clause: 200_000 + shirt * 10_000,
+      role: roleLabel(row.pos, row.captain),
     },
-    history: [`Skład startowy ${clubId.slice(0, 8)}`, seed.starter ? 'XI' : 'Ławka'],
-    starter: seed.starter,
-    captain: Boolean(seed.captain),
+    history: [
+      `Skład startowy ${row.clubId.slice(0, 8)}`,
+      row.starter ? 'XI' : 'Ławka',
+    ],
+    starter: row.starter,
+    captain: row.captain,
+    version: row.version,
   };
 }
 
 /**
- * Sole squad SSOT for product path (Hub /squad / match lineups).
- * Deterministic seed — no @/data/squad.
+ * Sole squad SSOT for product UI (LFE-PLAYERS-01).
+ * Pure: requires DB rows — never seeds. Empty roster → SquadUnavailableError.
  */
-export function resolveClubSquad(club: Pick<ClubDto, 'id'>): SquadDto {
-  const players = seedClubRoster(club.id).map((p) => toDto(p, club.id));
+export function resolveClubSquad(
+  club: Pick<ClubDto, 'id'>,
+  rows: readonly PlayerRowDto[],
+): SquadDto {
+  if (rows.length === 0) {
+    throw new SquadUnavailableError(club.id);
+  }
+  const players = rows.map(toDto);
   return { clubId: club.id, players };
 }
 
-export function resolveStartingXi(clubId: string): readonly RosterPlayerSeed[] {
-  return seedStarterSquad(clubId);
+/**
+ * Starting XI for LFE sessions — from DB rows only (no seed).
+ * Throws if fewer than 11 starters.
+ */
+export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
+  const xi = rows
+    .filter((r) => r.starter)
+    .map(
+      (r): RosterPlayerSeed => ({
+        id: r.id,
+        name: r.name,
+        number: r.shirtNumber,
+        pos: r.pos,
+        role: r.role as PitchRole,
+        starter: true,
+        captain: r.captain || undefined,
+      }),
+    );
+  if (xi.length !== 11) {
+    const clubId = rows[0]?.clubId ?? 'unknown';
+    throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
+  }
+  return xi;
 }
 
 export function getSquadPlayerById(
-  club: Pick<ClubDto, 'id'>,
+  squad: SquadDto,
   playerId: string,
 ): SquadPlayerDto | null {
-  return resolveClubSquad(club).players.find((p) => p.id === playerId) ?? null;
+  return squad.players.find((p) => p.id === playerId) ?? null;
 }

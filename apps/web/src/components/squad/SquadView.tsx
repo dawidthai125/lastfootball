@@ -28,25 +28,25 @@ const controlStyle: CSSProperties = {
 
 function statusColor(status: PlayerStatus): { border: string; bg: string; text: string } {
   switch (status) {
-    case 'ready':
+    case 'READY':
       return {
         border: 'var(--lf-color-status-ok)',
         bg: 'var(--lf-color-status-ok-soft)',
         text: 'var(--lf-color-status-ok)',
       };
-    case 'injured':
+    case 'INJURED':
       return {
         border: 'var(--lf-color-status-danger)',
         bg: 'var(--lf-color-status-danger-soft)',
         text: 'var(--lf-color-status-danger)',
       };
-    case 'tired':
+    case 'TIRED':
       return {
         border: 'var(--lf-color-status-warn)',
         bg: 'var(--lf-color-status-warn-soft)',
         text: 'var(--lf-color-status-warn)',
       };
-    case 'suspended':
+    case 'SUSPENDED':
       return {
         border: 'var(--lf-color-border-strong)',
         bg: 'var(--lf-color-bg-inset)',

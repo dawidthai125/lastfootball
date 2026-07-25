@@ -22,6 +22,7 @@ import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstM
 import { CompleteLeagueFixtureButton } from '@/components/match/CompleteLeagueFixtureButton';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveLeagueMatchReward } from '@/lib/finance';
+import type { RosterPlayerSeed } from '@/lib/squad';
 
 /**
  * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
@@ -33,11 +34,13 @@ export function LiveMatchFoundation({
   club = null,
   firstMatch = false,
   leagueFixture = null,
+  ourXi = null,
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
   firstMatch?: boolean;
   leagueFixture?: FixtureDto | null;
+  ourXi?: readonly RosterPlayerSeed[] | null;
 }) {
   const { fixture } = bundle;
   const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(
@@ -45,6 +48,7 @@ export function LiveMatchFoundation({
     bundle,
     club,
     leagueFixture,
+    ourXi,
   );
   const us = club ?? dashboardMock.club;
   const homeName = fixture.home ? us.name : fixture.opponent;

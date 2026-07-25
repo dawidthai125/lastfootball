@@ -10,17 +10,20 @@ import type { PlayerId } from '@lastfootball/domain';
 
 import type { ClubDto } from '@/lib/club/types';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { seedBotSquad, seedStarterSquad } from '@/lib/squad';
+import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 import { hashSeed } from '@/lib/match/hash-seed';
 
 /**
- * Builds MatchSession for inaugural match from Club DTO + deterministic squads.
+ * Builds MatchSession for inaugural match from Club DTO + DB XI + AI bot seed.
  * Does not change LFE contracts — same createMatch entry as league fixtures.
  */
-export function createSessionFromFirstMatch(club: ClubDto): MatchSession {
+export function createSessionFromFirstMatch(
+  club: ClubDto,
+  ourXi: readonly RosterPlayerSeed[],
+): MatchSession {
   const homeTeamId = 'team-home';
   const awayTeamId = 'team-away';
-  const our = seedStarterSquad(club.id);
+  const our = ourXi;
   const their = seedBotSquad();
   const formationCode: FormationCode = '4-4-2';
 

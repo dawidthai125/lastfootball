@@ -8,6 +8,7 @@ import type { CreateClubState } from '@/lib/club/action-types';
 import { validateClubIdentity } from '@/lib/club/validation';
 import { env } from '@/config/env';
 import { ECONOMY_THIN } from '@/lib/finance';
+import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createClub(
@@ -81,6 +82,7 @@ export async function createClub(
       label: 'Kapitał startowy',
       amount: ECONOMY_THIN.STARTER_CASH,
     } as never);
+    await supabase.from('players').insert(buildStarterPlayerInserts(clubId) as never);
   }
 
   // Clear legacy smoke/dev metadata flag if present

@@ -1,8 +1,5 @@
 /**
- * @deprecated Import from `@/lib/squad` — re-export for First Match compatibility.
+ * AI bot seed re-export for First Match compatibility.
+ * Player-club XI comes from DB via resolveStartingXi — not from seedStarterSquad.
  */
-export {
-  seedStarterSquad,
-  seedBotSquad,
-  type RosterPlayerSeed as StarterPlayerSeed,
-} from '@/lib/squad';
+export { seedBotSquad, type RosterPlayerSeed as StarterPlayerSeed } from '@/lib/squad';

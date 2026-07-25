@@ -11,7 +11,12 @@ import {
   PlayerHistory,
 } from '@/components/squad/PlayerDetail';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { getSquadPlayerById } from '@/lib/squad';
+import {
+  getSquadPlayerById,
+  resolveClubSquad,
+  SquadUnavailableError,
+} from '@/lib/squad';
+import { listClubPlayers } from '@/lib/squad/get-players';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -21,7 +26,16 @@ export default async function PlayerDetailPage({ params }: PageProps) {
   const { id } = await params;
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
-  const player = getSquadPlayerById(club, id);
+
+  const rows = await listClubPlayers(club.id);
+  let player;
+  try {
+    const squad = resolveClubSquad(club, rows);
+    player = getSquadPlayerById(squad, id);
+  } catch (e) {
+    if (e instanceof SquadUnavailableError) notFound();
+    throw e;
+  }
   if (!player) notFound();
 
   return (

@@ -2,15 +2,31 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 
 import { PreMatchView } from '@/components/match/PreMatchView';
+import { Panel } from '@/components/ui/Panel';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
+import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+function SquadError() {
+  return (
+    <Panel title="Kadra niedostępna">
+      <p style={{ margin: 0, color: 'var(--lf-color-text-muted)' }}>
+        Nie można przygotować meczu — brak składu w bazie. Wróć do{' '}
+        <Link href="/squad" style={{ color: 'var(--lf-color-text-gold)' }}>
+          kadry
+        </Link>
+        .
+      </p>
+    </Panel>
+  );
+}
 
 export default async function PreMatchPage({ params }: PageProps) {
   const { id } = await params;
@@ -19,7 +35,13 @@ export default async function PreMatchPage({ params }: PageProps) {
     const club = await getManagerClub();
     if (!club) redirect('/welcome');
     if (isFirstMatchCompleted(club)) redirect('/hub');
-    return <PreMatchView bundle={buildFirstPreMatchBundle(club)} firstMatch />;
+    try {
+      const ourXi = await loadClubStartingXi(club);
+      return <PreMatchView bundle={buildFirstPreMatchBundle(club, ourXi)} firstMatch />;
+    } catch (e) {
+      if (e instanceof SquadUnavailableError) return <SquadError />;
+      throw e;
+    }
   }
 
   const club = await getManagerClub();
@@ -67,5 +89,11 @@ export default async function PreMatchPage({ params }: PageProps) {
     redirect('/hub');
   }
 
-  return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto)} />;
+  try {
+    const ourXi = await loadClubStartingXi(club);
+    return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto, ourXi)} />;
+  } catch (e) {
+    if (e instanceof SquadUnavailableError) return <SquadError />;
+    throw e;
+  }
 }

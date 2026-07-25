@@ -2,8 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
-import { seedOpponentSquad } from '@/lib/squad/seed-roster';
-import { resolveStartingXi } from '@/lib/squad/resolve-club-squad';
+import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
 export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
@@ -45,9 +44,13 @@ const PITCH_SLOTS = [
   { number: 9, x: 50, y: 16 },
 ] as const;
 
-export function buildLeaguePreMatchBundle(club: ClubDto, dto: FixtureDto): PreMatchBundle {
+export function buildLeaguePreMatchBundle(
+  club: ClubDto,
+  dto: FixtureDto,
+  ourXi: readonly RosterPlayerSeed[],
+): PreMatchBundle {
   const fixture = toUiFixture(dto, club);
-  const our = resolveStartingXi(club.id);
+  const our = ourXi;
   const their = seedOpponentSquad(dto.opponentClubId);
 
   return {

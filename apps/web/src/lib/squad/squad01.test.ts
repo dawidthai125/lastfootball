@@ -1,26 +1,74 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveClubSquad, resolveStartingXi, seedStarterSquad } from '@/lib/squad';
+import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
+import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
+import {
+  getSquadPlayerById,
+  resolveClubSquad,
+  resolveStartingXi,
+  seedClubRoster,
+  seedStarterSquad,
+  SquadUnavailableError,
+} from '@/lib/squad';
 
-describe('squad SSOT', () => {
-  it('XI matches seedStarterSquad ids', () => {
+function rowsFromSeed(clubId: string) {
+  return buildStarterPlayerInserts(clubId).map((r) =>
+    mapPlayerRow({
+      id: r.id,
+      club_id: r.club_id,
+      name: r.name,
+      shirt_number: r.shirt_number,
+      pos: r.pos,
+      role: r.role,
+      starter: r.starter,
+      captain: r.captain,
+      age: r.age,
+      skill: r.skill,
+      status: r.status,
+      nationality: r.nationality,
+      version: r.version,
+    } satisfies PlayerDbRow),
+  );
+}
+
+describe('squad SSOT (LFE-PLAYERS-01)', () => {
+  it('seed generator builds 18 with deterministic s-{tag} ids', () => {
     const clubId = '11111111-2222-3333-4444-555555555555';
-    const xi = resolveStartingXi(clubId);
-    const seed = seedStarterSquad(clubId);
-    expect(xi.map((p) => p.id)).toEqual(seed.map((p) => p.id));
+    const inserts = buildStarterPlayerInserts(clubId);
+    expect(inserts).toHaveLength(18);
+    expect(inserts.filter((p) => p.starter)).toHaveLength(11);
+    expect(inserts.every((p) => p.id.startsWith('s-'))).toBe(true);
+    expect(inserts.every((p) => p.version === 1)).toBe(true);
+    expect(inserts.every((p) => p.status === 'READY')).toBe(true);
+    expect(inserts.map((p) => p.id)).toEqual(seedClubRoster(clubId).map((p) => p.id));
+  });
+
+  it('resolveClubSquad maps DB rows — never empty without error', () => {
+    const clubId = 'club-1';
+    const rows = rowsFromSeed(clubId);
+    const squad = resolveClubSquad({ id: clubId }, rows);
+    expect(squad.players.length).toBeGreaterThanOrEqual(18);
+    expect(squad.players.filter((p) => p.starter)).toHaveLength(11);
+    expect(squad.players.every((p) => p.status === 'READY')).toBe(true);
+    expect(squad.players.every((p) => p.version === 1)).toBe(true);
+  });
+
+  it('resolveClubSquad throws on empty rows (no seed fallback)', () => {
+    expect(() => resolveClubSquad({ id: 'x' }, [])).toThrow(SquadUnavailableError);
+  });
+
+  it('resolveStartingXi matches seedStarterSquad ids when fed generator rows', () => {
+    const clubId = '11111111-2222-3333-4444-555555555555';
+    const xi = resolveStartingXi(rowsFromSeed(clubId));
+    expect(xi.map((p) => p.id)).toEqual(seedStarterSquad(clubId).map((p) => p.id));
     expect(xi).toHaveLength(11);
   });
 
-  it('roster includes XI + bench and all ready', () => {
-    const squad = resolveClubSquad({ id: 'club-1' });
-    expect(squad.players.length).toBeGreaterThanOrEqual(18);
-    expect(squad.players.filter((p) => p.starter)).toHaveLength(11);
-    expect(squad.players.every((p) => p.status === 'ready')).toBe(true);
-  });
-
-  it('is deterministic', () => {
-    expect(resolveClubSquad({ id: 'x' }).players.map((p) => p.id)).toEqual(
-      resolveClubSquad({ id: 'x' }).players.map((p) => p.id),
-    );
+  it('getSquadPlayerById reads from resolved squad', () => {
+    const clubId = 'abc';
+    const squad = resolveClubSquad({ id: clubId }, rowsFromSeed(clubId));
+    const first = squad.players[0]!;
+    expect(getSquadPlayerById(squad, first.id)?.name).toBe(first.name);
+    expect(getSquadPlayerById(squad, 'missing')).toBeNull();
   });
 });
