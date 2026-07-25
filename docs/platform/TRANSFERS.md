@@ -6,17 +6,17 @@ Rynek transferowy Thin (buy/sell + nego + AI incoming + listing + Live H2H Insta
 
 ## SSOT
 
-| Fakt                 | Źródło                                                |
-| -------------------- | ----------------------------------------------------- |
-| UI                   | wyłącznie `resolveTransferMarket`                     |
-| Listing / Live podaż | `players.transfer_listed_at`                          |
-| Pending / Counter H2H | **`transfer_offers`** (jedyna tabela ofert)          |
-| Ask                  | `deriveTransferFee`                                   |
-| Kwoty                | `NEGOTIATION_THIN` allow-list (90/95/100/110%)         |
-| Opening snapshot     | `opening_amount` (immutable)                          |
-| Settlement amount    | `current_amount`                                      |
-| Settlement           | `completeTransferBuy` / `completeTransferSell` (live) |
-| Cash                 | `cash_balance`                                        |
+| Fakt                  | Źródło                                                |
+| --------------------- | ----------------------------------------------------- |
+| UI                    | wyłącznie `resolveTransferMarket`                     |
+| Listing / Live podaż  | `players.transfer_listed_at`                          |
+| Pending / Counter H2H | **`transfer_offers`** (jedyna tabela ofert)           |
+| Ask                   | `deriveTransferFee`                                   |
+| Kwoty                 | `NEGOTIATION_THIN` allow-list (90/95/100/110%)        |
+| Opening snapshot      | `opening_amount` (immutable)                          |
+| Settlement amount     | `current_amount`                                      |
+| Settlement            | `completeTransferBuy` / `completeTransferSell` (live) |
+| Cash                  | `cash_balance`                                        |
 
 ## Counter H2H (LFE-TRANSFERS-08)
 
