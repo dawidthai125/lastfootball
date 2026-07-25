@@ -26,7 +26,7 @@ git log -1 --oneline 4b58507  # feature baseline TRANSFERS-05 seller nego
 | URL                  | https://lastfootball.vercel.app                                          |
 | Alias                | https://lastfootball.pl                                                  |
 | Branch               | `main`                                                                   |
-| **Feature baseline** | `4b5850715ed96f123a6259a5e3d83fd286c6776a`                             |
+| **Feature baseline** | `4b5850715ed96f123a6259a5e3d83fd286c6776a`                               |
 | Baseline message     | `feat(transfers): add seller negotiation Thin (LFE-TRANSFERS-05)`        |
 | Docs CLOSE tip       | _(ten commit lub nowszy)_                                                |
 | Status               | **LFE-TRANSFERS-05 CLOSED** · 04 · 03 · N1 · E1 · LEAGUE-03 · GDD-§26A/B |
