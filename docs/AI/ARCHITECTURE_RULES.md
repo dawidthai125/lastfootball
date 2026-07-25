@@ -62,15 +62,18 @@ supabase/ (Auth + Postgres migrations)
 - Odejście = `DEPARTED` + `departed_at` (bez DELETE) — D20.
 - Training mutuje wyłącznie `status` (D21) — bez drugiej tabeli kadry.
 
-## Transfers rules (LFE-TRANSFERS-01 / D20)
+## Transfers rules (LFE-TRANSFERS-01 / D20 + E1/N1)
 
 - `/transfers` konsumuje **tylko** `resolveTransferMarket()` — brak mocków rynku.
 - Deal buy/sell: atomowa sekwencja na `players` + `cash_balance` + `finance_movements` + `transfer_deals`.
-- Cash-only — **bez** envelope.
-- Fee = derive (`deriveTransferFee`) — brak trwałego `market_value`.
+- Cash = SSOT salda; envelope = **derive** `resolveTransferEnvelope` (ratio 1) — nie druga kasa.
+- Fee / ask = **tylko** `deriveTransferFee` — brak trwałego `market_value`.
+- Buy negotiation (N1): **pure** `resolveNegotiationStep` — Low 90% / Normal 100% / High 110%; Counter 95%; jedna kontroferta; **stateless** (bez pending DB).
+- Settlement buy: `completeTransferBuy(agreedAmount)` po rewalidacji ask / envelope / window / roster / funds.
+- Sell: instant @ fee (bez nego).
 - Buy ids = `t-{tag}-…`; katalog listingów = `seedTransferCatalogue()` (także dla AI).
 - Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
-- Poza Thin: negotiation, potential, live market DB.
+- Poza Thin: sell nego, 2+ counters, potential, live market DB, ratio ≠ 1, stored envelope.
 
 ## Training rules (LFE-TRAINING-01 / D21)
 
@@ -98,4 +101,4 @@ Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorc
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE

@@ -14,7 +14,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline 0fad4a9  # feature baseline E1 envelope
+git log -1 --oneline          # feature baseline N1 — hash w tabeli
 ```
 
 ---
@@ -26,10 +26,10 @@ git log -1 --oneline 0fad4a9  # feature baseline E1 envelope
 | URL                  | https://lastfootball.vercel.app                                             |
 | Alias                | https://lastfootball.pl                                                     |
 | Branch               | `main`                                                                      |
-| **Feature baseline** | `0fad4a9d87c30da401c6bf1f0ef3388127da9681`                                  |
-| Baseline message     | `feat(transfers): add derived transfer envelope Thin (LFE-TRANSFERS-02-E1)` |
-| Docs CLOSE tip       | `5ab1624` (or newer)                                                        |
-| Status               | **LFE-TRANSFERS-02-E1 CLOSED** · LEAGUE-03 · GDD-§26A/B                     |
+| **Feature baseline** | _(wypełniane po commit N1 — patrz CLOSE tip)_                               |
+| Baseline message     | `feat(transfers): add stateless buy negotiation Thin (LFE-TRANSFERS-02-N1)` |
+| Docs CLOSE tip       | _(po feacie)_                                                               |
+| Status               | **LFE-TRANSFERS-02-N1 CLOSED** · E1 · LEAGUE-03 · GDD-§26A/B                |
 
 ## Stack
 
@@ -46,7 +46,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
   → /league ← resolveLeagueTable()
   → /finance ← resolveClubFinance()
   → /squad ← resolveClubSquad(players)
-  → /transfers ← resolveTransferMarket() gdy transfer_window_open
+  → /transfers ← resolveTransferMarket() + buy negotiation (N1) gdy transfer_window_open
   → /training ← resolveClubTraining() gdy played ≥ 2
   → fixtures Thin: LEAGUE_FIXTURE_COUNT=11 (+ top-up dla klubów z 3)
 ```
@@ -66,6 +66,7 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 | Roster            | `players` + `resolveClubSquad`                      |
 | Transfer window   | `transfer_window_open`                              |
 | Transfer UI       | `resolveTransferMarket`                             |
+| Transfer nego     | `resolveNegotiationStep` (pure, stateless)          |
 | Transfer deals    | `transfer_deals`                                    |
 | Training day      | `clubs.last_training_on`                            |
 | Training UI       | `resolveClubTraining` → `TrainingDto`               |
@@ -76,8 +77,8 @@ Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## Not on production
 
-Negotiation · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
+Sell negotiation · 2+ counters · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-E1 CLOSE
+2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-TRANSFERS-02-N1)
+
+- Stateless buy negotiation Thin: `resolveNegotiationStep` (pure; Low 90% / Normal 100% / High 110%; Counter 95%)
+- One counter only; no pending DB / timeouts / migrations
+- `completeTransferBuy(agreedAmount)` with full revalidation vs ask + envelope
+- Sell remains instant at fee
+
 ### Docs (LFE-TRAINING-01 CLOSE)
 
 - Status / baseline sync: LFE-TRAINING-01 CLOSED · prod `10de062` · D21 · `platform/TRAINING.md`

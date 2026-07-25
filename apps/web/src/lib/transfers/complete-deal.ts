@@ -1,6 +1,7 @@
 import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
@@ -50,6 +51,7 @@ type ActivePlayer = {
 
 /**
  * Atomic buy: insert t-{tag}- player + debit cash + finance_movements + transfer_deals.
+ * Settles only `agreedAmount` after full revalidation (ask / envelope / window / roster / funds).
  */
 export async function completeTransferBuy(
   supabase: AppSupabase,
@@ -58,6 +60,8 @@ export async function completeTransferBuy(
     cashBalance: number;
     transferWindowOpen: boolean;
     marketId: string;
+    /** Negotiated settlement amount — must be in allowed set vs ask. */
+    agreedAmount: number;
     activePlayers: readonly ActivePlayer[];
   },
 ): Promise<CompleteBuyResult> {
@@ -73,9 +77,14 @@ export async function completeTransferBuy(
     return { ok: false, error: 'Nie znaleziono oferty rynkowej.' };
   }
 
-  const fee = deriveTransferFee(listing.skill, listing.age);
+  const ask = deriveTransferFee(listing.skill, listing.age);
+  if (!isAllowedAgreedAmount(ask, input.agreedAmount)) {
+    return { ok: false, error: 'Nieprawidłowa kwota negocjacji.' };
+  }
+
+  const agreedAmount = input.agreedAmount;
   const envelope = resolveTransferEnvelope(input.cashBalance);
-  if (input.cashBalance < fee || envelope.envelopeBalance < fee) {
+  if (input.cashBalance < agreedAmount || envelope.envelopeBalance < agreedAmount) {
     return { ok: false, error: 'Za mało środków w budżecie transferowym / kasie.' };
   }
 
@@ -101,7 +110,7 @@ export async function completeTransferBuy(
   const departedIds = ((departedRows as { id: string }[] | null) ?? []).map((r) => r.id);
   const playerId = nextBoughtId(input.clubId, [...allIds, ...departedIds]);
   const shirt = nextShirt(input.activePlayers.map((p) => p.shirt_number));
-  const nextCash = input.cashBalance - fee;
+  const nextCash = input.cashBalance - agreedAmount;
 
   const { error: playerErr } = await supabase.from('players').insert({
     id: playerId,
@@ -146,7 +155,7 @@ export async function completeTransferBuy(
     club_id: input.clubId,
     category: 'transfer_buy',
     label: `Transfer: ${listing.name}`,
-    amount: -fee,
+    amount: -agreedAmount,
     fixture_id: null,
   } as never);
 
@@ -159,7 +168,7 @@ export async function completeTransferBuy(
     kind: 'buy',
     player_id: playerId,
     market_id: input.marketId,
-    amount: fee,
+    amount: agreedAmount,
     idempotency_key: idempotencyKey,
     completed_at: new Date().toISOString(),
   } as never);
@@ -168,7 +177,7 @@ export async function completeTransferBuy(
     return { ok: false, error: 'Transfer zapisany częściowo — sprawdź kadrę i finanse.' };
   }
 
-  return { ok: true, playerId, amount: fee };
+  return { ok: true, playerId, amount: agreedAmount };
 }
 
 /**

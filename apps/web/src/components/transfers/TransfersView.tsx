@@ -5,24 +5,105 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
+import { formatMoney } from '@/lib/finance/format-money';
 import { buyTransferPlayer, sellTransferPlayer } from '@/lib/transfers/actions';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
+import {
+  resolveCounterAmount,
+  resolveOfferAmount,
+  type OfferPreset,
+} from '@/lib/transfers/resolve-negotiation';
 import type { TransferMarketDto } from '@/lib/transfers/types';
 
-function BuyButton({ marketId, disabled }: { marketId: string; disabled: boolean }) {
+const PRESET_LABEL: Record<OfferPreset, string> = {
+  low: 'Niska',
+  normal: 'Normalna',
+  high: 'Wysoka',
+};
+
+function BuyNegotiate({
+  marketId,
+  ask,
+  canBuy,
+  envelopeBalance,
+}: {
+  marketId: string;
+  ask: number;
+  canBuy: boolean;
+  envelopeBalance: number;
+}) {
   const [state, action, pending] = useActionState(buyTransferPlayer, TRANSFER_ACTION_INITIAL);
+  const counter = state.negotiation?.marketId === marketId ? state.negotiation : null;
+
+  if (counter) {
+    const canAccept = canBuy && envelopeBalance >= counter.counterAmount;
+    return (
+      <div className="flex flex-col items-end gap-1">
+        <p className="m-0 max-w-[14rem] text-right text-xs text-[var(--lf-color-text-muted)]">
+          Kontroferta:{' '}
+          <span className="text-[var(--lf-gold)] tabular-nums">
+            {formatMoney(counter.counterAmount)}
+          </span>
+        </p>
+        {state.error ? (
+          <span className="text-xs text-[var(--lf-danger)]" role="alert">
+            {state.error}
+          </span>
+        ) : null}
+        <div className="flex flex-wrap justify-end gap-1">
+          <form action={action} className="inline">
+            <input type="hidden" name="marketId" value={marketId} />
+            <input type="hidden" name="phase" value="counter" />
+            <input type="hidden" name="playerAction" value="accept" />
+            <Button type="submit" variant="primary" disabled={!canAccept || pending}>
+              {pending ? '…' : 'Akceptuj'}
+            </Button>
+          </form>
+          <form action={action} className="inline">
+            <input type="hidden" name="marketId" value={marketId} />
+            <input type="hidden" name="phase" value="counter" />
+            <input type="hidden" name="playerAction" value="reject" />
+            <Button type="submit" variant="default" disabled={pending}>
+              Odrzuć
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  const presets: OfferPreset[] = ['low', 'normal', 'high'];
+
   return (
-    <form action={action} className="inline">
-      <input type="hidden" name="marketId" value={marketId} />
+    <div className="flex flex-col items-end gap-1">
       {state.error ? (
-        <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
-      <Button type="submit" variant="primary" disabled={disabled || pending}>
-        {pending ? '…' : 'Kup'}
-      </Button>
-    </form>
+      <div className="flex flex-wrap justify-end gap-1">
+        {presets.map((preset) => {
+          const offer =
+            preset === 'low' ? resolveCounterAmount(ask) : resolveOfferAmount(ask, preset);
+          const disabled = !canBuy || envelopeBalance < offer || pending;
+          return (
+            <form key={preset} action={action} className="inline">
+              <input type="hidden" name="marketId" value={marketId} />
+              <input type="hidden" name="phase" value="opening" />
+              <input type="hidden" name="preset" value={preset} />
+              <Button
+                type="submit"
+                variant={preset === 'normal' ? 'primary' : 'default'}
+                disabled={disabled}
+                title={formatMoney(resolveOfferAmount(ask, preset))}
+              >
+                {PRESET_LABEL[preset]}
+              </Button>
+            </form>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -81,7 +162,14 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
             przeglądać rynek, ale finalizacja jest zablokowana.
           </p>
         </Panel>
-      ) : null}
+      ) : (
+        <Panel title="Negocjacje">
+          <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
+            Kupno: Niska (90% ask) → kontroferta AI (95%); Normalna / Wysoka → natychmiastowa
+            akceptacja. Jedna kontroferta — bez pending w bazie.
+          </p>
+        </Panel>
+      )}
 
       <Panel title="Rynek" flush>
         <Table
@@ -99,7 +187,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
             { key: 'club', header: 'Klub', render: (r) => r.clubLabel },
             {
               key: 'fee',
-              header: 'Cena',
+              header: 'Ask',
               align: 'right',
               render: (r) => (
                 <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
@@ -107,12 +195,14 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
             },
             {
               key: 'act',
-              header: '',
+              header: 'Oferta',
               align: 'right',
               render: (r) => (
-                <BuyButton
+                <BuyNegotiate
                   marketId={r.marketId}
-                  disabled={!market.canBuy || market.envelopeBalance < r.fee}
+                  ask={r.fee}
+                  canBuy={market.canBuy}
+                  envelopeBalance={market.envelopeBalance}
                 />
               ),
             },

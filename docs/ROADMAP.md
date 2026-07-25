@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`0fad4a9`** (LFE-TRANSFERS-02-E1 CLOSED).  
-GDD-§26A/B · LFE-LEAGUE-03 CLOSED · Vercel Production.
+Production feature baseline **LFE-TRANSFERS-02-N1** (hash po commit — patrz CURRENT_BASELINE).  
+GDD-§26A/B · LFE-LEAGUE-03 · E1 envelope CLOSED · Vercel Production.
 
 ---
 
@@ -37,6 +37,7 @@ GDD-§26A/B · LFE-LEAGUE-03 CLOSED · Vercel Production.
 | **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19             |
 | **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20           |
 | **LFE-TRANSFERS-02-E1**                                | **CLOSED** · derived envelope (`resolveTransferEnvelope`, ratio 1) |
+| **LFE-TRANSFERS-02-N1**                                | **CLOSED** · stateless buy negotiation Thin                        |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21      |
 
 ## IN PROGRESS 🔄
@@ -49,7 +50,6 @@ GDD-§26A/B · LFE-LEAGUE-03 CLOSED · Vercel Production.
 
 | Item                             | Zależność                        |
 | -------------------------------- | -------------------------------- |
-| Negotiation Thin (N1)            | po E1 envelope                   |
 | GDD-16+                          | Owner GO (docs)                  |
 | Training depth (skill / XI gate) | po TRAINING-01 (D21 poza)        |
 | Full 22-fixture season (opt.)    | po LEAGUE-03 · GDD §10 home+away |
@@ -69,8 +69,8 @@ GDD-§26A/B · LFE-LEAGUE-03 CLOSED · Vercel Production.
 
 ## Next Recommended EPIC
 
-**Owner wybiera.** Kandydaci: Negotiation Thin (N1) · GDD-16+ · Training depth · full 22 fixtures.  
-Uzasadnienie: envelope derive na produkcji; negotiation to kolejny krok rynku.
+**Owner wybiera.** Kandydaci: GDD-16+ · Training depth · full 22 fixtures.  
+Uzasadnienie: envelope + buy negotiation Thin na produkcji.
 
 ## Decyzje roadmapy
 
@@ -82,6 +82,7 @@ Uzasadnienie: envelope derive na produkcji; negotiation to kolejny krok rynku.
 - Terminarz = `fixtures` + `planClubFixtures` + top-up (D15 / LFE-LEAGUE-03).
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26**; kod = `ECONOMY_THIN` (§26B).
 - Envelope = `resolveTransferEnvelope` (ratio 1 Thin) — nie kolumna DB (E1).
+- Buy nego = `resolveNegotiationStep` pure / stateless (N1); settlement `agreedAmount`.
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
@@ -93,4 +94,4 @@ Uzasadnienie: envelope derive na produkcji; negotiation to kolejny krok rynku.
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-E1 CLOSE
+2026-07-25 — LFE-TRANSFERS-02-N1 CLOSE
