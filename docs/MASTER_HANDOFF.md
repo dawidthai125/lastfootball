@@ -5,7 +5,7 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · commit `393a43c` · LFE-TRANSFERS-01 CLOSED · 2026-07-25
+**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · feature `393a43c` · LFE-TRANSFERS-01 FULLY CLOSED · 2026-07-25
 
 ---
 
@@ -64,49 +64,36 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ## 5. EPICs
 
-### Zakończone (kod na `main`)
+### Zakończone / planned
 
-**Platforma:** LFE-PLATFORM-01 P1–P3 · LFE-INFRA-01 · LFE-MATCH-01 · LFE-HUB-01 · LFE-DOCS-01 · **LFE-LEAGUE-01 Thin A (CLOSED)** · **LFE-LEAGUE-02 (CLOSED)** · **LFE-ECONOMY-01 (CLOSED)** · **LFE-PLAYERS-01 (CLOSED)** · **LFE-TRANSFERS-01 (CLOSED)**
+**SSOT listy EPIC:** [`ROADMAP.md`](./ROADMAP.md) (nie duplikuj tutaj).
 
-**Silnik/UI meczu:** LFE EPIC-1…7 · Gameplay · AI · Engine · Player Match Data · Canvas · Replay · Post Match · Live Bridge · Ratings · CI Prettier
-
-**Design docs:** GDD-01…15
-
-### Aktywne
-
-Brak otwartego EPIC implementacyjnego.
-
-### Next Recommended EPIC
-
-**Training** (GDD §8). Alternatywy: GDD-16+ · GDD §26.
-
-### Typowe następne
-
-Training · GDD-16+ · §26 balance · negotiation/envelope · 11-fixture calendar (opt.) · LFE PUBLIC export trim · Physics (FUTURE)
+**Next:** Training (GDD §8).
 
 ---
 
 ## 6. SSOT map
 
-| Domain              | SSOT                                                |
-| ------------------- | --------------------------------------------------- |
-| Product intent      | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)         |
-| LFE PUBLIC API      | `lfe/LFE_ARCHITECTURE_FREEZE.md`                    |
-| Club identity       | `clubs` → `ClubDto`                                 |
-| Hub unlock          | `first_match_completed_at`                          |
-| Hub phase / Primary | `resolveHubPhase` / `resolvePrimaryCta`             |
-| League fixtures     | `fixtures` → `FixtureDto`                           |
-| League table        | `resolveLeagueTable` → `LeagueTableDto` (D17)       |
-| Club cash           | `clubs.cash_balance` (D18)                          |
-| Finance history     | `finance_movements` (D18)                           |
-| Finance UI          | `resolveClubFinance` → `ClubFinanceDto` (D18)       |
-| Club roster         | `players` (D19)                                     |
-| Squad UI            | `resolveClubSquad(club, rows)` → `SquadDto` (D19)   |
-| Transfer window     | `clubs.transfer_window_open` (D20)                  |
-| Transfer market UI  | `resolveTransferMarket` → `TransferMarketDto` (D20) |
-| Transfer deals      | `transfer_deals` (D20)                              |
-| Match state         | `MatchState` + `EventBus` via `MatchSession`        |
-| Agent onboarding    | `docs/AI/START_HERE.md`                             |
+| Domain                | SSOT                                                |
+| --------------------- | --------------------------------------------------- |
+| Product intent        | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)         |
+| LFE PUBLIC API        | `lfe/LFE_ARCHITECTURE_FREEZE.md`                    |
+| Club identity         | `clubs` → `ClubDto`                                 |
+| Hub unlock            | `first_match_completed_at`                          |
+| Hub phase / Primary   | `resolveHubPhase` / `resolvePrimaryCta`             |
+| League fixtures       | `fixtures` → `FixtureDto`                           |
+| League table          | `resolveLeagueTable` → `LeagueTableDto` (D17)       |
+| Club cash             | `clubs.cash_balance` (D18)                          |
+| Finance history       | `finance_movements` (D18)                           |
+| Finance UI            | `resolveClubFinance` → `ClubFinanceDto` (D18)       |
+| Club roster           | `players` (D19)                                     |
+| Squad UI              | `resolveClubSquad(club, rows)` → `SquadDto` (D19)   |
+| Transfer window       | `clubs.transfer_window_open` (D20)                  |
+| Transfer market UI    | `resolveTransferMarket` → `TransferMarketDto` (D20) |
+| Transfer deals        | `transfer_deals` (D20)                              |
+| Match state           | `MatchState` + `EventBus` via `MatchSession`        |
+| Agent onboarding      | `docs/AI/START_HERE.md`                             |
+| Principles / patterns | `AI/ARCHITECTURE_PRINCIPLES` · `AI/COMMON_PATTERNS` |
 
 ---
 
@@ -120,9 +107,13 @@ Training · GDD-16+ · §26 balance · negotiation/envelope · 11-fixture calend
 
 [`platform/FIRST_MATCH.md`](./platform/FIRST_MATCH.md)
 
-### Hub State Machine
+### Hub
 
 [`platform/HUB.md`](./platform/HUB.md)
+
+### League · Finance · Players · Transfers
+
+[`platform/LEAGUE.md`](./platform/LEAGUE.md) · [`FINANCE.md`](./platform/FINANCE.md) · [`PLAYERS.md`](./platform/PLAYERS.md) · [`TRANSFERS.md`](./platform/TRANSFERS.md)
 
 ### Match UI pipeline
 
@@ -162,22 +153,21 @@ REUSE FIRST · ZERO DUPLICATE · SSOT FIRST · Owner GO na commit/push · Canvas
 [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md) · [`WORKFLOW.md`](./WORKFLOW.md)
 
 ```
-AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CLOSE
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
 ```
 
 ---
 
 ## 12. Jak prowadzić kolejny EPIC
 
-1. Przeczytaj `AI/START_HERE.md` + baseline.
-2. AUDIT zakresu w kodzie (nie zgaduj z czatu).
-3. PLAN z M1–Mn + poza zakresem + AC.
-4. Czekaj na Owner GO.
-5. IMPLEMENT → raport → GO COMMIT → GO PUSH → smoke → CLOSE.
-6. Zaktualizuj status docs (STATUS / ROADMAP / BASELINE / CHANGELOG).
+1. `AI/START_HERE.md` → baseline → principles → patterns → workflow.
+2. AUDIT w kodzie (nie czat).
+3. PLAN M1–Mn + poza zakresem + AC.
+4. Owner GO → IMPLEMENT → VALIDATION → GO COMMIT → GO PUSH → **CI GREEN** → CLOSE.
+5. CLOSE: aktualizuj **ROADMAP** + **CURRENT_BASELINE** feature hash (+ CHANGELOG).
 
 ---
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

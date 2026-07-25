@@ -85,4 +85,4 @@ Uzasadnienie: `players` + transfery Thin są na produkcji; trening mutuje status
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

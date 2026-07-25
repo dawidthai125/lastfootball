@@ -6,7 +6,13 @@ Jak wykonywać release: commity, push, CI, rollback. Wzorzec = LFE release + mat
 
 ## Aktualny stan
 
-Proces sprawdzony: lokalne VALIDATION → COMMIT (Owner GO) → PUSH (Owner GO) → CI Format→Build PASS.
+Proces: lokalne VALIDATION → COMMIT (Owner GO) → PUSH (Owner GO) → **CI** Format→Build PASS → CLOSE.
+
+## Pipeline (jedyny)
+
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+```
 
 ## Opis działania
 

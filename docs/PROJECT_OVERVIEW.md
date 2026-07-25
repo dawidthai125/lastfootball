@@ -1,58 +1,39 @@
 # Project Overview — Last Football
 
-## Cel dokumentu
+## Cel
 
-Opisuje czym jest Last Football, jaki ma stack i jakie ma granice fazy obecnej.
+Czym jest Last Football, stack i granice fazy.
 
 ## Aktualny stan
 
-**Last Football** — przeglądarkowy football manager z własnym silnikiem meczu **LFE**.
+**Last Football** — przeglądarkowy football manager z silnikiem **LFE**.
 
-| Warstwa               | Stan                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| Produkt (GDD)         | GDD-01…15 CLOSED (§3–§15, §20, §23)                                                   |
-| Platforma             | Landing · Auth · Club Wizard · First Match · Hub · liga · finanse · kadra · transfery |
-| Silnik LFE            | EPIC-1…7 + Gameplay + AI + Engine · `0.9.1-match-ai01`                                |
-| App web               | Shell + match pipeline + platform flows                                               |
-| Supabase              | `anoeimngwptucjdugjme` · clubs + fixtures + finance + players + **transfer_deals**    |
-| Physics / pełne Rules | **Nie rozpoczęte**                                                                    |
+| Warstwa           | Stan                                                                           |
+| ----------------- | ------------------------------------------------------------------------------ |
+| Produkt           | GDD-01…15 · next: Training §8                                                  |
+| Platforma         | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers |
+| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post Match                          |
+| Supabase          | clubs · fixtures · finance · players · transfer_deals                          |
 
-**Prod:** https://lastfootball.vercel.app · baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `393a43c`  
-**Prototyp referencyjny (historyczny):** https://lastfootball.onhercules.app/
+**Prod:** https://lastfootball.vercel.app · feature baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `393a43c`
 
-## Opis działania (produkt)
+## Opis działania
 
-1. Gracz zakłada konto i klub (Wizard).
-2. Rozgrywa **First Match** (tunel) — dopiero potem Hub.
-3. Hub = ekran decyzji (1 Primary CTA); po fixtures → faza `SEASON`.
-4. Tabela ligowa = `resolveLeagueTable()` (derive; bez standings DB).
-5. Kadra = `players` + `resolveClubSquad()` (D19).
-6. Transfery = `resolveTransferMarket()` gdy `transfer_window_open` (D20); cash-only.
-7. Silnik LFE symuluje mecz headless; UI konsumuje `MatchSession` przez `LiveMatchRuntime`.
-8. Tożsamość klubu / auth → Supabase `clubs`.
+1. Konto + klub (Wizard).
+2. First Match → Hub.
+3. SEASON: liga, finanse, kadra; transfery gdy okno open.
+4. Mecze przez `MatchSession` / Live pipeline.
+5. Resolvery = kontrakty UI (patrz [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md)).
 
-## Stack
+## Granice
 
-| Technologia             | Rola                              |
-| ----------------------- | --------------------------------- |
-| Next.js 15 (App Router) | Frontend / BFF shell (`apps/web`) |
-| React                   | UI                                |
-| TypeScript              | Cały monorepo                     |
-| Canvas 2D               | Live/Replay pitch                 |
-| `@lastfootball/lfe`     | Silnik meczu (headless)           |
-| `@lastfootball/domain`  | DTO manager-facing                |
-| Supabase                | Auth, DB                          |
-| Vercel (`fra1`)         | Hosting                           |
-
-## Granice obecnej fazy
-
-**Jest:** onboarding, first match, Hub SEASON, liga Thin, finance Thin, players SSOT, **transfers Thin** (buy/sell).  
-**Nie jest jeszcze:** Training, negotiation/envelope, potential, Physics, pełny kalendarz 11.
+**Jest:** Transfers Thin i wcześniejsze Thin.  
+**Nie jest:** Training, negotiation/envelope, potential, Physics, pełny kalendarz 11.
 
 ## Powiązania
 
-[`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`platform/`](./platform/)
+[`ROADMAP.md`](./ROADMAP.md) · [`platform/`](./platform/) · [`AI/START_HERE.md`](./AI/START_HERE.md)
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

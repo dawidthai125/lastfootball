@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Docs (LFE-TRANSFERS-01 CLOSE — awaiting Owner GO docs commit)
+### Docs (AI-DOCS-HYGIENE-01 — awaiting Owner GO docs commit)
 
-- Status / baseline sync: LFE-TRANSFERS-01 CLOSED · prod `393a43c` · prettier `7c0ce7f` · D20
+- Documentation hygiene: principles, patterns, engineering guide, split platform docs, unified workflow (+CI), README sync
 
 ### Added (shipped on `main` — LFE-TRANSFERS-01)
 

@@ -6,8 +6,11 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Production baseline **`393a43c`** (LFE-TRANSFERS-01 CLOSED).  
-LFE = headless engine (`0.9.1-match-ai01`). Web = onboarding + First Match + Hub SEASON + fixtures + league + finance + players + **transfers Thin** + match pipeline.
+Monorepo. Feature baseline **`393a43c`** (LFE-TRANSFERS-01). Tip docs/style may be newer — [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md).  
+LFE = headless engine. Web = platform Thin domains + match pipeline.
+
+Filozofia / wzorce: [`AI/ARCHITECTURE_PRINCIPLES.md`](./AI/ARCHITECTURE_PRINCIPLES.md) · [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md).
+Platforma: [`platform/HUB.md`](./platform/HUB.md) · [`LEAGUE`](./platform/LEAGUE.md) · [`FINANCE`](./platform/FINANCE.md) · [`PLAYERS`](./platform/PLAYERS.md) · [`TRANSFERS`](./platform/TRANSFERS.md).
 
 ---
 
@@ -114,4 +117,4 @@ flowchart TB
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

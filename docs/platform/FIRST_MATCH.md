@@ -29,7 +29,7 @@ First Match Intro (/onboarding/first-match)
 ## SSOT
 
 - Ukończenie: **`clubs.first_match_completed_at`** (jedyny).
-- Skład gracza: **`players`** → `resolveClubSquad` / `resolveStartingXi` (D19); **bez** runtime seed.
+- Skład gracza: **`players`** → [`PLAYERS.md`](./PLAYERS.md) / D19; **bez** runtime seed.
 - Wynik meczu: **nie** persistowany w MVP (pasek „Ostatni mecz” na Hubie = copy jakościowy).
 
 ## Kontrakt silnika

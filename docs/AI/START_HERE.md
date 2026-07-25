@@ -6,71 +6,73 @@ Onboarding dla **ChatGPT / Cursor Agent** bez historii czatu i bez czytania cał
 
 ## Kolejność czytania (obowiązkowa)
 
-| #   | Dokument                                           | Po co                           |
-| --- | -------------------------------------------------- | ------------------------------- |
-| 1   | **Ten plik**                                       | reguły + mapa                   |
-| 2   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)     | co jest na produkcji            |
-| 3   | [`PROJECT_STATE.md`](./PROJECT_STATE.md)           | done / next                     |
-| 4   | [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md) | granice warstw + SSOT           |
-| 5   | [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md)           | jak prowadzić EPIC              |
-| 6   | [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md)     | pełne przekazanie               |
-| 7   | [`../HANDOFF.md`](../HANDOFF.md)                   | skrót 1 ekranu                  |
-| 8   | Task-specific (poniżej)                            | tylko to, czego dotyczy zadanie |
+| #   | Dokument                                                     | Po co                                          |
+| --- | ------------------------------------------------------------ | ---------------------------------------------- |
+| 1   | **Ten plik**                                                 | mapa + zakazy                                  |
+| 2   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               | co jest na produkcji (feature baseline vs tip) |
+| 3   | [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)           | granice warstw + SSOT map                      |
+| 4   | [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) | filozofia (SSOT / Thin / Resolver…)            |
+| 5   | [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md)                 | wzorce (resolver, seed, pure vs IO)            |
+| 6   | [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md)                     | AUDIT→…→CI→CLOSE                               |
+| 7   | [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md)             | praktyka commit/CI/prettier                    |
+| 8   | Task-specific (poniżej)                                      | tylko zakres EPIC-u                            |
+
+Opcjonalnie głębiej: [`PROJECT_STATE.md`](./PROJECT_STATE.md) · [`../HANDOFF.md`](../HANDOFF.md) · [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md).
 
 ### Gdy zadanie dotyczy…
 
 | Temat                        | Czytaj                                                                                                      |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Training (next)**          | GDD §8 · [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · D19 · Principles + Patterns                   |
 | Onboarding / auth / klub     | [`../platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                          |
 | First Match                  | [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                  |
 | Hub                          | [`../platform/HUB.md`](../platform/HUB.md)                                                                  |
-| Transfery                    | [`../platform/HUB.md`](../platform/HUB.md) (Transfers SSOT) · D20                                           |
+| Liga                         | [`../platform/LEAGUE.md`](../platform/LEAGUE.md)                                                            |
+| Finanse                      | [`../platform/FINANCE.md`](../platform/FINANCE.md)                                                          |
+| Kadra                        | [`../platform/PLAYERS.md`](../platform/PLAYERS.md)                                                          |
+| Transfery                    | [`../platform/TRANSFERS.md`](../platform/TRANSFERS.md) · D20                                                |
 | Match Live / Canvas / Replay | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                |
 | Silnik LFE                   | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) |
 | Produkt / GDD                | [`../game-design/README.md`](../game-design/README.md)                                                      |
 | Release                      | [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md)                                                            |
 
-Indeks docs: [`../README.md`](../README.md).
+Indeks: [`../README.md`](../README.md).
+
+---
+
+## Pipeline (jedyny)
+
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+```
 
 ---
 
 ## Czego NIE robić
 
-| Zakaz                                           | Dlaczego             |
-| ----------------------------------------------- | -------------------- |
-| Commit / push bez **Owner GO**                  | polityka projektu    |
-| Force-push / rewrite `main`                     | historia produkcyjna |
-| Zmiana kodu w EPIC-u docs-only                  | scope                |
-| Import Engine/AI w Canvas / Replay / Post Match | granica warstw       |
-| Mutacja `MatchState` z React UI                 | CommandBus only      |
-| Duplikacja logiki LFE w `apps/web`              | ZERO DUPLICATE       |
-| Mid-season mock na Hub EARLY_CLUB               | LFE-HUB-01           |
-| Nowy docs gdy treść już istnieje                | SSOT FIRST           |
-| Commit `.env` / sekretów                        | bezpieczeństwo       |
+| Zakaz                                     | Dlaczego             |
+| ----------------------------------------- | -------------------- |
+| Commit / push bez **Owner GO**            | polityka projektu    |
+| Force-push / rewrite `main`               | historia produkcyjna |
+| Kod w EPIC-u docs-only                    | scope                |
+| Engine w Canvas / Replay / Post Match     | granica warstw       |
+| Mutacja `MatchState` z React UI           | CommandBus only      |
+| Duplikacja logiki LFE w `apps/web`        | ZERO DUPLICATE       |
+| Runtime mock (rynek/kasa/tabela/Hub FOMO) | NO RUNTIME MOCKS     |
+| Nowy docs gdy treść już istnieje          | SSOT FIRST           |
+| Commit `.env` / sekretów                  | bezpieczeństwo       |
 
 ---
 
-## Zasady twarde
+## Zasady twarde (skrót)
 
-1. **REUSE FIRST** — najpierw istniejący moduł / API.
-2. **ZERO DUPLICATE LOGIC** — jedna implementacja w LFE; web konsumuje.
-3. **SSOT FIRST** — jeden dokument prawdy na temat; aktualizuj, nie kopiuj.
-4. **`createMatch()` → `MatchSession`** — jedyny oficjalny entry meczu LFE.
-5. **Hub = ekran decyzji** — `resolveHubPhase` + dokładnie 1 Primary CTA.
-6. **First Match przed Hubem** — gate: `clubs.first_match_completed_at`.
+Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md).
 
----
-
-## Definition of Done (skrót)
-
-- Scope EPIC-u domknięty; poza zakresem nietknięte.
-- typecheck / lint / build PASS (gdy kod).
-- E2E / smoke gdy dotyczy ścieżki gracza.
-- Docs status zaktualizowane przy zamykaniu EPIC-u.
-- Commit / push **tylko** po Owner GO.
-
-Release: [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md).
+1. SSOT FIRST · REUSE FIRST · ZERO DUPLICATE
+2. RESOLVER FIRST · PURE BEFORE IO · THIN SLICE
+3. SEED != RUNTIME · NO RUNTIME MOCKS
+4. Hub = decyzja · First Match przed Hubem · `createMatch()` entry LFE
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

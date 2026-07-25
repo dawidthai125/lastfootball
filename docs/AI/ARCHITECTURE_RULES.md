@@ -81,8 +81,9 @@ supabase/ (Auth + Postgres migrations)
 - Stałe ekonomii Thin (`ECONOMY_THIN`) są **tymczasowe** do GDD §26 (D18).
 - Unlock okna transferów po 2 played = Thin wyjątek vs GDD K11 (D20).
 
-Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](./DECISIONS.md).
+Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](./DECISIONS.md).  
+Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorce: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md).
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

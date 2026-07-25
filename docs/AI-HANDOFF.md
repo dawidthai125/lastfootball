@@ -1,27 +1,12 @@
-# AI Handoff / Agent Handbook — Last Football
+# AI Handoff — alias
 
-> **SSOT agenta przeniesiony do [`AI/START_HERE.md`](./AI/START_HERE.md).**  
-> Ten plik pozostaje jako alias zgodności wstecznej.
+> **SSOT onboarding:** [`AI/START_HERE.md`](./AI/START_HERE.md).  
+> Ten plik **nie** jest handbookiem — tylko zgodność wsteczna.
 
-## Start
-
-1. Root [`AGENTS.md`](../AGENTS.md)
+1. [`AGENTS.md`](../AGENTS.md)
 2. [`AI/START_HERE.md`](./AI/START_HERE.md)
-3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — prod `393a43c`
-4. [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)
-
-## Szybkie linki
-
-| Temat       | Dokument                                                       |
-| ----------- | -------------------------------------------------------------- |
-| Stan        | [`AI/PROJECT_STATE.md`](./AI/PROJECT_STATE.md)                 |
-| Reguły      | [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)       |
-| EPIC flow   | [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md)                 |
-| Decyzje     | [`AI/DECISIONS.md`](./AI/DECISIONS.md)                         |
-| Onboarding  | [`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) |
-| First Match | [`platform/FIRST_MATCH.md`](./platform/FIRST_MATCH.md)         |
-| Hub         | [`platform/HUB.md`](./platform/HUB.md)                         |
+3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

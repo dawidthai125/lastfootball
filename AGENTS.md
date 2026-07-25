@@ -4,32 +4,33 @@
 
 ## Read first (in order)
 
-1. [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md) — reading order, hard rules, DoD
-2. [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — production baseline
-3. [`docs/AI/PROJECT_STATE.md`](docs/AI/PROJECT_STATE.md) — what is done / next
-4. [`docs/MASTER_HANDOFF.md`](docs/MASTER_HANDOFF.md) — full project transfer
-5. Task-specific docs (platform / LFE / GDD) as linked from START_HERE
+1. [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md) — onboarding map
+2. [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — feature baseline vs tip
+3. [`docs/AI/ARCHITECTURE_RULES.md`](docs/AI/ARCHITECTURE_RULES.md)
+4. [`docs/AI/ARCHITECTURE_PRINCIPLES.md`](docs/AI/ARCHITECTURE_PRINCIPLES.md)
+5. [`docs/AI/COMMON_PATTERNS.md`](docs/AI/COMMON_PATTERNS.md)
+6. [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md)
+7. [`docs/AI/ENGINEERING_GUIDE.md`](docs/AI/ENGINEERING_GUIDE.md)
+8. Task-specific platform / LFE / GDD docs (from START_HERE)
 
 ## Hard rules (never violate)
 
 - **Do not** commit or push without explicit **Owner GO**.
 - **Do not** rely on chat history — only `docs/` + code.
-- **REUSE FIRST** · **ZERO DUPLICATE LOGIC** · **SSOT FIRST**.
+- **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**.
+- **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED != RUNTIME**.
 - Match mutations only via LFE `CommandBus` / session API.
 - Canvas / Replay never call Engine or mutate `MatchState`.
-- Hub is a **decision screen** (`EARLY_CLUB` / `SEASON`), not a mid-season dashboard.
-- First Hub unlock requires `clubs.first_match_completed_at` (First Match tunnel).
-- League table SSOT is `resolveLeagueTable()` only (no standings DB).
-- Finance SSOT is `clubs.cash_balance` + `resolveClubFinance()` only (no mock).
-- Squad SSOT is `players` + `resolveClubSquad(rows)` only (no runtime seed for player club).
-- Transfer market SSOT is `resolveTransferMarket()` + `transfer_window_open` only (cash-only; no mock).
+- Hub is a **decision screen**, not a mid-season dashboard.
+- First Hub unlock: `clubs.first_match_completed_at`.
+- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSquad`, `resolveTransferMarket`, …).
 
-## Workflow
+## Pipeline (jedyny)
 
-`AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CLOSE`
-
-Details: [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md) · [`docs/WORKFLOW.md`](docs/WORKFLOW.md)
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+```
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

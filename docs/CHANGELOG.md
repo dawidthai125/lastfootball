@@ -7,8 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production baseline **`393a43c`** (LFE-TRANSFERS-01 **CLOSED**) — PRODUCTION VERIFIED · GREEN.  
-Platform + First Match + Hub SEASON + fixtures + league + finance + players + **transfers Thin**.
+Production baseline **`393a43c`** (LFE-TRANSFERS-01 **FULLY CLOSED**) — tip docs/style may be newer.  
+Docs hygiene (AI-DOCS-HYGIENE-01) in progress locally until docs commit.
+
+---
+
+## [2026-07-25] — AI-DOCS-HYGIENE-01 · (pending docs commit)
+
+### Docs
+
+- Unified pipeline: AUDIT→…→PUSH→**CI**→CLOSE
+- `ARCHITECTURE_PRINCIPLES` · `COMMON_PATTERNS` · `ENGINEERING_GUIDE`
+- Platform split: LEAGUE · FINANCE · PLAYERS · TRANSFERS; slim HUB
+- Feature baseline vs documentation tip policy
+- README + docs/README synced; status mirrors reduced (ROADMAP = EPIC list SSOT)
 
 ---
 
@@ -248,4 +260,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE
+2026-07-25 — AI-DOCS-HYGIENE-01

@@ -4,85 +4,76 @@
 
 Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
+## Feature baseline vs documentation tip
+
+| Pojęcie               | Znaczenie                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------- |
+| **Feature baseline**  | Ostatni commit **produktowy** zamkniętego EPIC (`feat(…)`) — hash w tabeli poniżej            |
+| **Documentation tip** | Nowszy commit na `main` typu `docs:` / `style:` po feature — **nie zmienia** feature baseline |
+| **Style commit**      | Wyłącznie Prettier; bez logiki                                                                |
+
+```bash
+git log -1 --oneline          # tip (może być docs/style)
+git log -1 --oneline 393a43c  # feature baseline Transfers
+```
+
+Po FULLY CLOSED LFE-TRANSFERS-01 tip docs/style może być np. `3161903` — to **nie** jest nowy feature baseline.
+
+---
+
 ## Production
 
-| Pole             | Wartość                                                                             |
-| ---------------- | ----------------------------------------------------------------------------------- |
-| URL              | https://lastfootball.vercel.app                                                     |
-| Alias            | https://lastfootball.pl                                                             |
-| Branch           | `main`                                                                              |
-| Baseline commit  | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                          |
-| Baseline message | `feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)`          |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                                     |
-| Verified         | 2026-07-25 — CI GREEN (feat + prettier `7c0ce7f`) + migracja transfers Thin applied |
-
-> Zawsze potwierdź lokalnie: `git log -1 --oneline` (może być nowszy commit docs-only po CLOSE).
+| Pole                   | Wartość                                                                    |
+| ---------------------- | -------------------------------------------------------------------------- |
+| URL                    | https://lastfootball.vercel.app                                            |
+| Alias                  | https://lastfootball.pl                                                    |
+| Branch                 | `main`                                                                     |
+| **Feature baseline**   | `393a43c3ce884fbfa123891802841f4b7d60ffbc`                                 |
+| Baseline message       | `feat(transfers): implement Thin Slice transfer market (LFE-TRANSFERS-01)` |
+| Related style (code)   | `7c0ce7f`                                                                  |
+| Docs CLOSE + style tip | `21813ea` · `3161903` (tip — verify with `git log -1`)                     |
+| Status                 | **PRODUCTION VERIFIED · GREEN** · LFE-TRANSFERS-01 **FULLY CLOSED**        |
 
 ## Stack
 
 - Next.js 15 (App Router) · TypeScript · Turbopack/dev
-- Supabase Auth + Postgres (project ref `anoeimngwptucjdugjme`)
+- Supabase Auth + Postgres (`anoeimngwptucjdugjme`)
 - Vercel Production
 - LFE `@lastfootball/lfe` · `0.9.1-match-ai01`
 
 ## Player path (verified)
 
 ```
-Landing → Register/Login → Welcome → Club Wizard → Reveal
-  → First Match Intro → Prematch (/match/first) → Live → Post Match
-  → Welcome LF → Hub (EARLY_CLUB → SEASON gdy fixtures)
-  → Primary „Przygotuj mecz” → /match/{fixtureId} → Live → Post (+ linia nagrody) → completeFixture → Hub
-  → /league ← resolveLeagueTable() · chip pozycji
-  → /finance ← resolveClubFinance() · chip kasy (SEASON)
-  → /squad ← resolveClubSquad(rows from players) · /players/{id}
-  → /transfers ← resolveTransferMarket() gdy transfer_window_open (po 2 played)
+Landing → Auth → Welcome → Club Wizard → Reveal
+  → First Match → Live → Post → Welcome LF → Hub (EARLY_CLUB → SEASON)
+  → /league ← resolveLeagueTable()
+  → /finance ← resolveClubFinance()
+  → /squad ← resolveClubSquad(players)
+  → /transfers ← resolveTransferMarket() gdy transfer_window_open
 ```
 
-## Critical SSOT columns / modules
+## Critical SSOT
 
-| SSOT                 | Gdzie                                                             |
-| -------------------- | ----------------------------------------------------------------- |
-| Club identity        | `clubs` → `ClubDto`                                               |
-| Hub unlock           | `clubs.first_match_completed_at`                                  |
-| Hub phase            | `resolveHubPhase(club, { hasFixtures })`                          |
-| Hub session          | `resolveHubSession(...)`                                          |
-| Hub Primary CTA      | `resolvePrimaryCta(phase, session, ctx)`                          |
-| League fixtures      | `fixtures` → `FixtureDto`                                         |
-| League table         | `resolveLeagueTable(club, fixtures)` → `LeagueTableDto`           |
-| Club cash            | `clubs.cash_balance`                                              |
-| Finance history      | `finance_movements`                                               |
-| Finance UI           | `resolveClubFinance(...)` → `ClubFinanceDto` (jedyny kontrakt UI) |
-| Club roster          | `players` (ids `s-{tag}-…` / buy `t-{tag}-…`, `version=1`)        |
-| Squad UI             | `resolveClubSquad(club, rows)` → `SquadDto` (jedyny kontrakt UI)  |
-| Transfer window      | `clubs.transfer_window_open`                                      |
-| Transfer market UI   | `resolveTransferMarket(...)` → `TransferMarketDto` (jedyny)       |
-| Transfer deals       | `transfer_deals` (idempotency + audit, `completed_at`)            |
-| First match session  | `createSessionFromFirstMatch(club, ourXi)`                        |
-| League match session | `createSessionFromLeagueFixture(club, fixture, ourXi)`            |
-| Match engine entry   | `createMatch()` → `MatchSession`                                  |
+| SSOT            | Gdzie                                   |
+| --------------- | --------------------------------------- |
+| Club            | `clubs` → `ClubDto`                     |
+| Hub unlock      | `first_match_completed_at`              |
+| Hub phase / CTA | `resolveHubPhase` / `resolvePrimaryCta` |
+| Fixtures        | `fixtures`                              |
+| League table    | `resolveLeagueTable` → `LeagueTableDto` |
+| Cash            | `cash_balance` + `resolveClubFinance`   |
+| Roster          | `players` + `resolveClubSquad`          |
+| Transfer window | `transfer_window_open`                  |
+| Transfer UI     | `resolveTransferMarket`                 |
+| Transfer deals  | `transfer_deals`                        |
+| Match entry     | `createMatch()` → `MatchSession`        |
 
-## Done product EPICs (on `main`)
+Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md) (nie duplikuj tutaj przy każdym CLOSE — aktualizuj ROADMAP + ten feature hash).
 
-- **LFE-PLATFORM-01** P1–P3 — Landing, Auth, Club Wizard, Club DTO
-- **LFE-INFRA-01** — Supabase rebind `anoeimngwptucjdugjme`
-- **LFE-MATCH-01** — First Match Experience tunnel
-- **LFE-HUB-01** — EARLY_CLUB decision Hub + shell unlocks
-- **LFE-DOCS-01** — docs consolidation
-- **LFE-LEAGUE-01** Thin A — **CLOSED** · fixtures + next match CTA
-- **LFE-LEAGUE-02** — **CLOSED** · `resolveLeagueTable` · Hub `SEASON` (S1) · `/league` · position chip
-- **LFE-ECONOMY-01** — **CLOSED** · Finance Thin Slice · `cash_balance` · `finance_movements` · `resolveClubFinance`
-- **LFE-PLAYERS-01** — **CLOSED** · `players` SSOT · `resolveClubSquad` · D19
-- **LFE-TRANSFERS-01** — **CLOSED** · Transfer Thin · `resolveTransferMarket` · D20
+## Not on production
 
-## Not on production (do not assume)
-
-- Full 11-fixture calendar / standings DB
-- Pensje · bilety · sponsorzy · transfer **envelope** · negotiation
-- Edycja XI · `potential` · Training / player development formulas
-- GDD §26 balance numbers (Thin constants are temporary — see D18 / D20)
-- Mid-season Hub dashboard FOMO (decision layout retained)
-- Physics / full rules
+Training · negotiation/envelope · potential · full 11 fixtures · Physics · GDD §26 numbers (Thin constants temporary).
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-01 CLOSE · baseline `393a43c`
+2026-07-25 — AI-DOCS-HYGIENE-01
