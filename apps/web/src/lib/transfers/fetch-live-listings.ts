@@ -12,9 +12,12 @@ export async function fetchLiveListings(
   supabase: AppSupabase,
   excludeClubId: string,
 ): Promise<readonly LiveListingDto[]> {
-  const { data, error } = await supabase.rpc('list_live_transfer_listings' as never, {
-    p_exclude_club_id: excludeClubId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    'list_live_transfer_listings' as never,
+    {
+      p_exclude_club_id: excludeClubId,
+    } as never,
+  );
 
   if (error || !data) {
     return [];
