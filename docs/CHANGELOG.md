@@ -7,7 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`8824793`** (LFE-TRANSFERS-06) — tip may be docs after feat.
+Production feature baseline **`be95006`** (LFE-TRANSFERS-07) — tip may be docs after feat.
+
+---
+
+## [2026-07-26] — LFE-TRANSFERS-07 · CLOSED
+
+### Product
+
+- Live H2H Pending Offers — `transfer_offers`; Instant Buy (06) równolegle
+- Create / Reject / Withdraw — tylko oferty (bez cash / players / deals)
+- Accept → settle @ snapshot `amount` + `accepted` + superseded pozostałych (ta sama TX)
+- Instant Buy / Unlist → supersede wszystkich pending gracza (ta sama TX)
+- Kwoty = NEGOTIATION_THIN allow-list; brak escrow / timeout / AI pending / `completeLiveTransfer()`
+- Feature baseline → **`be95006`** (LFE-TRANSFERS-07)
 
 ---
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-TRANSFERS-07)
+
+- Live H2H Pending Offers: `transfer_offers`; Create / Accept / Reject / Withdraw
+- Instant Buy (06) parallel; Accept/Instant/Unlist supersede pending in same TX
+- Settlement only via `completeTransferBuy` / `completeTransferSell`; no escrow / timeout / AI pending
+
 ### Added (shipped on `main` — LFE-TRANSFERS-04)
 
 - Player transfer listing: `players.transfer_listed_at`; List/Unlist idempotent
