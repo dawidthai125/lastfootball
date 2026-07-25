@@ -22,7 +22,7 @@ GDD-§26A/B **CLOSED**.
 - Top-up identity = pełny plan 11; brak nadpisu played/upcoming; unique `(club_id, matchday)`
 - `resolveLeagueTable` / `completeFixture` / unlocki transfer+trening **bez zmian kontraktu**
 - Thin vs GDD §10: 11 ≠ 22 (Future)
-- Feature baseline → LFE-LEAGUE-03
+- Feature baseline → **`617d3c2`** (LFE-LEAGUE-03)
 
 ---
 

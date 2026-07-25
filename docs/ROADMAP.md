@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **LFE-LEAGUE-03** (11-fixture Thin calendar) — verify hash with `git log -1 --grep=LFE-LEAGUE-03`.  
-GDD-§26A/B CLOSED · CI GREEN · Vercel Production.
+Production feature baseline **`617d3c2`** (LFE-LEAGUE-03 CLOSED) — PRODUCTION / CI verify.  
+GDD-§26A/B CLOSED · Vercel Production.
 
 ---
 

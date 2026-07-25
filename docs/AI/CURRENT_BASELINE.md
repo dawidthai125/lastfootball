@@ -13,8 +13,8 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 | **Style commit**      | Wyłącznie Prettier; bez logiki                                                                |
 
 ```bash
-git log -1 --oneline                          # tip
-git log -1 --oneline --grep=LFE-LEAGUE-03     # feature baseline League-03
+git log -1 --oneline          # tip
+git log -1 --oneline 617d3c2  # feature baseline League-03
 ```
 
 ---
