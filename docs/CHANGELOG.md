@@ -7,7 +7,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-02-E1** — tip may be docs after feat.  
+Production feature baseline **`0fad4a9`** (LFE-TRANSFERS-02-E1) — tip may be docs after feat.  
 GDD-§26A/B · LFE-LEAGUE-03 **CLOSED**.
 
 ---
@@ -20,7 +20,7 @@ GDD-§26A/B · LFE-LEAGUE-03 **CLOSED**.
 - **Jedyny** wzór: `resolveTransferEnvelope(cashBalance)` — brak lokalnego `cash × ratio`
 - `/finance`, `resolveTransferMarket`, `completeTransferBuy` konsumują wyłącznie ten helper
 - Brak migracji / kolumny / tabeli; cash = SSOT salda; Negotiation poza scope
-- Feature baseline → LFE-TRANSFERS-02-E1
+- Feature baseline → **`0fad4a9`** (LFE-TRANSFERS-02-E1)
 
 ---
 

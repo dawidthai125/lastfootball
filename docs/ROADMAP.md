@@ -6,7 +6,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **LFE-TRANSFERS-02-E1** (derived envelope) — verify hash after feat push.  
+Production feature baseline **`0fad4a9`** (LFE-TRANSFERS-02-E1 CLOSED).  
 GDD-§26A/B · LFE-LEAGUE-03 CLOSED · Vercel Production.
 
 ---
