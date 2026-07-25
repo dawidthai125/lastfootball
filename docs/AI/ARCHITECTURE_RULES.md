@@ -41,7 +41,7 @@ supabase/ (Auth + Postgres migrations)
 | Okno transferów    | `clubs.transfer_window_open`                                 |
 | Transfer market UI | `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
 | Transfer deals     | `transfer_deals` (idempotency + audit)                       |
-| Pending H2H        | `transfer_offers` (Live only; Thin presets)                  |
+| Pending H2H        | `transfer_offers` (Live; Thin presets + 1× Counter)          |
 | Training UI        | `resolveClubTraining(...)` → `TrainingDto` wyłącznie         |
 | Training day       | `clubs.last_training_on`                                     |
 | Played unlock      | `hasPlayedUnlock(playedCount, threshold)`                    |
@@ -75,11 +75,12 @@ supabase/ (Auth + Postgres migrations)
 - Listing (TRANSFERS-04): `players.transfer_listed_at`; List/Unlist; Incoming / Live tylko listed; shared `isTransferSellEligible`; sell clears listed.
 - Live H2H (TRANSFERS-06): Instant Buy @ 100% ask; `players.id` niezmienne; atomowy `complete_live_h2h_transfer` tylko z `completeTransferBuy`/`Sell` (source live); seed catalogue = fallback; brak `completeLiveTransfer()`.
 - Pending H2H (TRANSFERS-07): jedyna tabela `transfer_offers`; Instant równolegle; kwoty NEGOTIATION_THIN; Create/Reject/Withdraw bez cash/players/deals; Accept/Instant/Unlist supersede pending w tej samej TX; brak escrow/timeout/AI pending.
+- Counter H2H (TRANSFERS-08): 1× Counter wyłącznie Seller; po Counter Accept = Buyer; `opening_amount` immutable; settle @ `current_amount`; Counter RPC `FOR UPDATE` mutuje tylko `current_amount`/`phase`/`last_actor`; Reject: opening→seller, countered→buyer.
 - Settlement buy: `completeTransferBuy` (seed **lub** live) po rewalidacji.
 - Settlement sell: `completeTransferSell` (instant void **lub** live) + `isAllowedAgreedAmount`.
 - Buy ids seed = `t-{tag}-…`; katalog = `seedTransferCatalogue()` (fallback).
 - Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
-- Poza Thin: AI clubs, Instant Sell nego, custom ask, 2+ counters, timeout / AI pending inbox, Live counter rounds, escrow, potential, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.
+- Poza Thin: AI clubs, Instant Sell nego, custom ask, 2+ counters, buyer Counter, timeout / AI pending inbox, escrow, potential, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.
 
 ## Training rules (LFE-TRAINING-01 / D21)
 
@@ -107,4 +108,4 @@ Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorc
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-07 CLOSE
+2026-07-26 — LFE-TRANSFERS-08 CLOSE

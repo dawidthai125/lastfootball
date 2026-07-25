@@ -6,8 +6,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`be95006`** (LFE-TRANSFERS-07 CLOSED).  
-GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Live H2H · Pending Offers · Vercel Production.
+Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08 CLOSED).  
+GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Live H2H · Pending · Counter · Vercel Production.
 
 ---
 
@@ -43,6 +43,7 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Li
 | **LFE-TRANSFERS-05**                                   | **CLOSED** · seller negotiation Thin (Incoming S2)                 |
 | **LFE-TRANSFERS-06**                                   | **CLOSED** · Live H2H Instant Buy Thin                             |
 | **LFE-TRANSFERS-07**                                   | **CLOSED** · Live H2H Pending Offers Thin                          |
+| **LFE-TRANSFERS-08**                                   | **CLOSED** · Live H2H Counter Offers Thin (1× seller→buyer)        |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21      |
 
 ## IN PROGRESS 🔄
@@ -75,7 +76,7 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Li
 ## Next Recommended EPIC
 
 **Owner wybiera.** Kandydaci: GDD-16+ · Training depth · full 22 fixtures.  
-Uzasadnienie: rynek Thin (Live Instant + Pending H2H + listing + nego) na produkcji.
+Uzasadnienie: rynek Thin (Live Instant + Pending + 1× Counter + listing + nego) na produkcji.
 
 ## Decyzje roadmapy
 
@@ -93,6 +94,7 @@ Uzasadnienie: rynek Thin (Live Instant + Pending H2H + listing + nego) na produk
 - Seller nego = `resolveSellerNegotiationStep` pure; Instant Sell @ 100% ask; settle `completeTransferSell(agreedAmount)`.
 - Live H2H = listed `players` innych klubów; Instant @ 100% ask; atomowy RPC; `players.id` stałe (TRANSFERS-06).
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
+- Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
@@ -104,4 +106,4 @@ Uzasadnienie: rynek Thin (Live Instant + Pending H2H + listing + nego) na produk
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-07 CLOSE
+2026-07-26 — LFE-TRANSFERS-08 CLOSE

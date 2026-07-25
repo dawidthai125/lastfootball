@@ -14,22 +14,22 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline be95006  # feature baseline TRANSFERS-07 Pending Offers
+git log -1 --oneline 9b1c575  # feature baseline TRANSFERS-08 Counter Offers
 ```
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                                |
-| -------------------- | ---------------------------------------------------------------------- |
-| URL                  | https://lastfootball.vercel.app                                        |
-| Alias                | https://lastfootball.pl                                                |
-| Branch               | `main`                                                                 |
-| **Feature baseline** | `be9500655178f259ec4e3aebb519aa3c3133d2b6`                             |
-| Baseline message     | `feat(transfers): add live H2H pending offers Thin (LFE-TRANSFERS-07)` |
-| Docs CLOSE tip       | _(ten commit lub nowszy)_                                              |
-| Status               | **LFE-TRANSFERS-07 CLOSED** · 06 · 05 · 04 · 03 · N1 · E1 · GDD-§26A/B |
+| Pole                 | Wartość                                                                     |
+| -------------------- | --------------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                             |
+| Alias                | https://lastfootball.pl                                                     |
+| Branch               | `main`                                                                      |
+| **Feature baseline** | `9b1c57578042d16e962d8026ed01abae587c294d`                                  |
+| Baseline message     | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`      |
+| Docs CLOSE tip       | _(ten commit lub nowszy)_                                                   |
+| Status               | **LFE-TRANSFERS-08 CLOSED** · 07 · 06 · 05 · 04 · 03 · N1 · E1 · GDD-§26A/B |
 
 ## Stack
 
@@ -43,7 +43,7 @@ git log -1 --oneline be95006  # feature baseline TRANSFERS-07 Pending Offers
 ```
 Landing → Auth → Welcome → Club Wizard · Reveal
   → First Match → Live → Post → Welcome LF → Hub (EARLY_CLUB → SEASON)
-  → /transfers ← resolveTransferMarket() + Live Instant + Pending H2H + listing + buy/seller nego + seed fallback
+  → /transfers ← resolveTransferMarket() + Live Instant + Pending + 1× Counter + listing + buy/seller nego + seed fallback
 ```
 
 ## Critical SSOT
@@ -55,15 +55,17 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 | Transfer listing  | `players.transfer_listed_at`             |
 | Transfer UI       | `resolveTransferMarket`                  |
 | Live listings     | listed `players` (other clubs)           |
-| Pending H2H       | `transfer_offers`                        |
+| Pending / Counter | `transfer_offers`                        |
+| Opening snapshot  | `opening_amount`                         |
+| Settle amount     | `current_amount`                         |
 | Ask               | `deriveTransferFee`                      |
 | Settlement buy    | `completeTransferBuy` (seed \| live)     |
 | Settlement sell   | `completeTransferSell` (instant \| live) |
 
 ## Not on production
 
-AI clubs · Live counter rounds · Instant Sell nego · custom ask · 2+ counters · timeout / AI pending · escrow · `completeLiveTransfer()` · potential · full **22** fixtures · Physics · individual training · skill growth · envelope ratio ≠ 1.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · potential · full **22** fixtures · Physics · individual training · skill growth · envelope ratio ≠ 1.
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-07 CLOSE
+2026-07-26 — LFE-TRANSFERS-08 CLOSE

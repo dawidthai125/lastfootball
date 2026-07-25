@@ -7,7 +7,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`be95006`** (LFE-TRANSFERS-07) — tip may be docs after feat.
+Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08) — tip may be docs after feat.
+
+---
+
+## [2026-07-26] — LFE-TRANSFERS-08 · CLOSED
+
+### Product
+
+- Live H2H Counter Offers — 1× seller→buyer; Accept po Counter = buyer
+- `opening_amount` immutable; settle wyłącznie @ `current_amount`
+- Counter RPC `FOR UPDATE` mutuje tylko `current_amount` / `phase` / `last_actor`
+- Settlement tylko `completeTransferBuy`/`Sell`; brak escrow / timeout / AI H2H / `completeLiveTransfer()`
+- Feature baseline → **`9b1c575`** (LFE-TRANSFERS-08)
 
 ---
 

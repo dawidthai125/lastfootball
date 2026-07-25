@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-TRANSFERS-08)
+
+- Live H2H Counter Offers: 1× seller→buyer; Accept after Counter = buyer
+- `opening_amount` immutable; settle @ `current_amount` only; Counter RPC FOR UPDATE
+- No escrow / timeout / AI H2H / completeLiveTransfer()
+
 ### Added (shipped on `main` — LFE-TRANSFERS-07)
 
 - Live H2H Pending Offers: `transfer_offers`; Create / Accept / Reject / Withdraw
