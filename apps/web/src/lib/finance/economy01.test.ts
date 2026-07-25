@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveClubFinance, resolveCashChipLabel } from '@/lib/finance/resolve-club-finance';
+import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { resolveLeagueMatchReward } from '@/lib/finance/resolve-match-reward';
 import type { FinanceMovementDto } from '@/lib/finance/types';
 
@@ -13,6 +14,7 @@ describe('ECONOMY_THIN constants', () => {
     expect(ECONOMY_THIN.REWARD_DRAW).toBe(2_500);
     expect(ECONOMY_THIN.REWARD_LOSS).toBe(1_000);
     expect(ECONOMY_THIN.CURRENCY).toBe('EUR');
+    expect(ECONOMY_THIN.ENVELOPE_RATIO).toBe(1);
   });
 
   it('exposes shared TRANSFER_FEE coefficients (GDD §26)', () => {
@@ -21,6 +23,19 @@ describe('ECONOMY_THIN constants', () => {
     expect(ECONOMY_THIN.TRANSFER_FEE.AGE_REF).toBe(30);
     expect(ECONOMY_THIN.TRANSFER_FEE.FLOOR).toBe(25_000);
     expect(ECONOMY_THIN.TRANSFER_FEE.ROUND).toBe(1_000);
+  });
+});
+
+describe('resolveTransferEnvelope', () => {
+  it('is the sole Thin derive: envelope === cash when ratio is 1', () => {
+    const e = resolveTransferEnvelope(105_000);
+    expect(e.ratio).toBe(1);
+    expect(e.envelopeBalance).toBe(105_000);
+    expect(e.envelopeLabel).toBe(formatMoney(105_000));
+  });
+
+  it('clamps non-positive cash to zero envelope', () => {
+    expect(resolveTransferEnvelope(0).envelopeBalance).toBe(0);
   });
 });
 
@@ -71,6 +86,8 @@ describe('resolveClubFinance', () => {
     expect(dto.currency).toBe('EUR');
     expect(dto.cashBalance).toBe(105_000);
     expect(dto.cashLabel).toBe(formatMoney(105_000));
+    expect(dto.envelopeBalance).toBe(resolveTransferEnvelope(105_000).envelopeBalance);
+    expect(dto.envelopeLabel).toBe(resolveTransferEnvelope(105_000).envelopeLabel);
     expect(dto.lastMovement?.id).toBe('m2');
     expect(dto.recentMovements).toHaveLength(2);
     expect(resolveCashChipLabel(dto)).toBe(dto.cashLabel);

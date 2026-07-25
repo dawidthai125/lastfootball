@@ -1,6 +1,6 @@
 /**
  * Thin economy constants — numbers SSOT = GDD §26 (GDD-§26A/B).
- * Runtime contracts remain D18 (finance) / D20 (fee = derive).
+ * Runtime contracts remain D18 (finance) / D20 (fee = derive; envelope = derive).
  */
 export const ECONOMY_THIN = {
   STARTER_CASH: 100_000,
@@ -9,6 +9,11 @@ export const ECONOMY_THIN = {
   REWARD_LOSS: 1_000,
   /** Sole currency for finance + transfers UI (GDD §26). */
   CURRENCY: 'EUR',
+  /**
+   * Transfer envelope allocation ratio (GDD §14.5 / LFE-TRANSFERS-02-E1).
+   * Thin: 1.0 → envelope === cash. Sole consumer: resolveTransferEnvelope().
+   */
+  ENVELOPE_RATIO: 1,
   /** Shared transfer-fee coefficients — consumed only by deriveTransferFee (D20). */
   TRANSFER_FEE: {
     SKILL_MULT: 2_000,
@@ -36,6 +41,9 @@ export type ClubFinanceDto = {
   readonly cashBalance: number;
   readonly cashLabel: string;
   readonly currency: string;
+  /** Derived transfer budget (allocation from cash — not a second wallet). */
+  readonly envelopeBalance: number;
+  readonly envelopeLabel: string;
   readonly lastMovement: FinanceMovementDto | null;
   readonly recentMovements: readonly FinanceMovementDto[];
 };

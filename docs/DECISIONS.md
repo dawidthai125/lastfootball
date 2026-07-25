@@ -127,22 +127,23 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** rynek nie może być mockiem; musi mutować `players` + kasę atomowo i być sterowany oknem transferowym.  
 **Zasada:**
 
-| Fakt                  | SSOT / kontrakt                                                                                        |
-| --------------------- | ------------------------------------------------------------------------------------------------------ |
-| Kadra                 | `players` (D19) — deal buy/sell mutuje wiersze                                                         |
-| UI rynku              | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto`                                       |
-| Okno                  | `clubs.transfer_window_open` (ustawiane gdy played ≥ `UNLOCK_AFTER_PLAYED=2`)                          |
-| Środki                | tylko `clubs.cash_balance` + `finance_movements` (`transfer_buy` / `transfer_sell`) — **bez envelope** |
-| Ledger deal           | `transfer_deals` (idempotency_key + audit + `completed_at`)                                            |
-| Odejście              | `status=DEPARTED` + `departed_at` — **bez** fizycznego DELETE                                          |
-| Buy ids               | `t-{tag}-…`                                                                                            |
-| Fee                   | **derive** (`deriveTransferFee`) — brak trwałego `market_value`                                        |
-| Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`)                                          |
+| Fakt                  | SSOT / kontrakt                                                                                                                                 |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kadra                 | `players` (D19) — deal buy/sell mutuje wiersze                                                                                                  |
+| UI rynku              | **wyłącznie** `resolveTransferMarket(...)` → `TransferMarketDto`                                                                                |
+| Okno                  | `clubs.transfer_window_open` (ustawiane gdy played ≥ `UNLOCK_AFTER_PLAYED=2`)                                                                   |
+| Środki                | `clubs.cash_balance` + `finance_movements` — **SSOT salda**; envelope = **derive** (`resolveTransferEnvelope`, Thin ratio 1) — nie druga waluta |
+| Ledger deal           | `transfer_deals` (idempotency_key + audit + `completed_at`)                                                                                     |
+| Odejście              | `status=DEPARTED` + `departed_at` — **bez** fizycznego DELETE                                                                                   |
+| Buy ids               | `t-{tag}-…`                                                                                                                                     |
+| Fee                   | **derive** (`deriveTransferFee`) — brak trwałego `market_value`                                                                                 |
+| Katalog AI / listingi | `seedTransferCatalogue()` (deterministyczny; ids `m-{tag}-…`)                                                                                   |
 
 **Thin wyjątek vs GDD K11:** unlock po **2** rozegranych meczach ligowych (`TRANSFERS_THIN.UNLOCK_AFTER_PLAYED`), nie pełne reguły okna z GDD.  
 **Liczby fee (SSOT produktu):** GDD **§26**; kod: `deriveTransferFee` ← `ECONOMY_THIN.TRANSFER_FEE` (GDD-§26B CLOSED).  
-**Poza Thin:** negotiation, envelope, potential, live market DB.  
-**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`; prettier `7c0ce7f`); sync liczb GDD-§26B.  
+**Envelope (LFE-TRANSFERS-02-E1):** `ECONOMY_THIN.ENVELOPE_RATIO = 1` → envelope === cash; **jedyny** wzór w `resolveTransferEnvelope()`; brak migracji/kolumny.  
+**Poza Thin:** negotiation, potential, live market DB, ratio ≠ 1, stored envelope.  
+**Źródło:** LFE-TRANSFERS-01 (prod `393a43c`); envelope E1 — LFE-TRANSFERS-02-E1.  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
 ### D21 — Team training Thin + `resolveClubTraining` · CLOSED
@@ -167,8 +168,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ## Najważniejsze decyzje (meta)
 
 Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.  
-**GDD-§26A (2026-07-25):** GDD §26 = SSOT produktu (liczby/balans Thin); D18/D20 pozostają SSOT implementacji.  
-**GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY). Feature baseline bez zmiany (`10de062`).
+**GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
+**LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT; bez negotiation.
 
 ## Powiązania
 
@@ -176,4 +177,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-03 CLOSE
+2026-07-25 — LFE-TRANSFERS-02-E1 CLOSE

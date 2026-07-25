@@ -20,9 +20,13 @@ export default async function FinancePage() {
 
   return (
     <div>
-      <SectionHeader title="Finanse" subtitle={`Jedna kasa · ${finance.currency}`} />
-      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-2">
+      <SectionHeader
+        title="Finanse"
+        subtitle={`Jedna kasa · budżet transferowy (przydział) · ${finance.currency}`}
+      />
+      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-3">
         <StatBlock label="Saldo" value={finance.cashLabel} tone="ok" />
+        <StatBlock label="Budżet transferowy" value={finance.envelopeLabel} tone="ok" />
         <StatBlock
           label="Ostatnia operacja"
           value={

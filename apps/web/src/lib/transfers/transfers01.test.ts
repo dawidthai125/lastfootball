@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ECONOMY_THIN } from '@/lib/finance/types';
+import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
@@ -67,6 +68,8 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
     expect(market.minRoster).toBe(TRANSFERS_THIN.MIN_ROSTER);
     expect(market.maxRoster).toBe(TRANSFERS_THIN.MAX_ROSTER);
     expect(market.currency).toBe(ECONOMY_THIN.CURRENCY);
+    expect(market.envelopeBalance).toBe(resolveTransferEnvelope(100_000).envelopeBalance);
+    expect(market.envelopeLabel).toBe(resolveTransferEnvelope(100_000).envelopeLabel);
   });
 
   it('resolveTransferMarket allows buy/sell when window open and roster mid-range', () => {
@@ -79,6 +82,7 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
     });
     expect(market.canBuy).toBe(true);
     expect(market.canSell).toBe(false); // exactly MIN_ROSTER 18
+    expect(market.envelopeBalance).toBe(500_000);
     expect(market.listings.every((l) => l.fee > 0 && l.feeLabel.length > 0)).toBe(true);
   });
 

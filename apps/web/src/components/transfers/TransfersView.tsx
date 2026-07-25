@@ -46,7 +46,7 @@ function SellButton({ playerId, disabled }: { playerId: string; disabled: boolea
 export function TransfersView({ market }: { market: TransferMarketDto }) {
   return (
     <div className="space-y-2">
-      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-5">
         <Panel title="Okno">
           <p className="m-0 text-sm">
             {market.windowOpen ? (
@@ -58,6 +58,11 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         </Panel>
         <Panel title="Kasa">
           <p className="m-0 font-medium tabular-nums">{market.cashLabel}</p>
+        </Panel>
+        <Panel title="Budżet transferowy">
+          <p className="m-0 font-medium text-[var(--lf-gold)] tabular-nums">
+            {market.envelopeLabel}
+          </p>
         </Panel>
         <Panel title="Kadra">
           <p className="m-0 tabular-nums">
@@ -107,7 +112,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
               render: (r) => (
                 <BuyButton
                   marketId={r.marketId}
-                  disabled={!market.canBuy || market.cashBalance < r.fee}
+                  disabled={!market.canBuy || market.envelopeBalance < r.fee}
                 />
               ),
             },

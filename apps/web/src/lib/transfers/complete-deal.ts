@@ -1,4 +1,5 @@
 import type { createClient } from '@/lib/supabase/server';
+import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
@@ -73,8 +74,9 @@ export async function completeTransferBuy(
   }
 
   const fee = deriveTransferFee(listing.skill, listing.age);
-  if (input.cashBalance < fee) {
-    return { ok: false, error: 'Za mało środków w kasie.' };
+  const envelope = resolveTransferEnvelope(input.cashBalance);
+  if (input.cashBalance < fee || envelope.envelopeBalance < fee) {
+    return { ok: false, error: 'Za mało środków w budżecie transferowym / kasie.' };
   }
 
   const idempotencyKey = `buy:${input.marketId}`;

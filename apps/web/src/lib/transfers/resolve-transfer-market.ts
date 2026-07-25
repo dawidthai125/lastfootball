@@ -1,4 +1,5 @@
 import { formatMoney } from '@/lib/finance/format-money';
+import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
@@ -16,7 +17,7 @@ function displayPos(pos: string): string {
 }
 
 /**
- * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01).
+ * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01 / E1 envelope).
  * Pure — never reads DB; callers pass club cash, window flag, and active roster rows.
  */
 export function resolveTransferMarket(input: {
@@ -28,6 +29,7 @@ export function resolveTransferMarket(input: {
   const active = input.activePlayers.filter((p) => p.departedAt == null && p.status !== 'DEPARTED');
   const count = active.length;
   const windowOpen = input.transferWindowOpen;
+  const envelope = resolveTransferEnvelope(input.cashBalance);
   const canBuy = windowOpen && count < TRANSFERS_THIN.MAX_ROSTER;
   const canSell = windowOpen && count > TRANSFERS_THIN.MIN_ROSTER;
 
@@ -74,6 +76,8 @@ export function resolveTransferMarket(input: {
     windowOpen,
     cashBalance: input.cashBalance,
     cashLabel: formatMoney(input.cashBalance, ECONOMY_THIN.CURRENCY),
+    envelopeBalance: envelope.envelopeBalance,
+    envelopeLabel: envelope.envelopeLabel,
     currency: ECONOMY_THIN.CURRENCY,
     activeRosterCount: count,
     minRoster: TRANSFERS_THIN.MIN_ROSTER,

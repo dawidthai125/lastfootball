@@ -14,22 +14,21 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline          # tip
-git log -1 --oneline 617d3c2  # feature baseline League-03
+git log -1 --oneline --grep=LFE-TRANSFERS-02-E1  # feature baseline E1
 ```
 
 ---
 
 ## Production
 
-| Pole                 | Wartość                                                             |
-| -------------------- | ------------------------------------------------------------------- |
-| URL                  | https://lastfootball.vercel.app                                     |
-| Alias                | https://lastfootball.pl                                             |
-| Branch               | `main`                                                              |
-| **Feature baseline** | `617d3c20a2a53bdeca5ca314efa3f5126d571fae`                          |
-| Baseline message     | `feat(league): expand Thin calendar to 11 fixtures (LFE-LEAGUE-03)` |
-| Docs CLOSE tip       | `6816ff1` (or newer)                                                |
-| Status               | **LFE-LEAGUE-03 CLOSED** · GDD-§26A/B **CLOSED**                    |
+| Pole                 | Wartość                                                                     |
+| -------------------- | --------------------------------------------------------------------------- |
+| URL                  | https://lastfootball.vercel.app                                             |
+| Alias                | https://lastfootball.pl                                                     |
+| Branch               | `main`                                                                      |
+| **Feature baseline** | LFE-TRANSFERS-02-E1 — verify hash after `feat(transfers): … E1` push        |
+| Baseline message     | `feat(transfers): add derived transfer envelope Thin (LFE-TRANSFERS-02-E1)` |
+| Status               | **LFE-TRANSFERS-02-E1 CLOSED** · LEAGUE-03 · GDD-§26A/B                     |
 
 ## Stack
 
@@ -53,30 +52,31 @@ Landing → Auth → Welcome → Club Wizard · Reveal
 
 ## Critical SSOT
 
-| SSOT            | Gdzie                                               |
-| --------------- | --------------------------------------------------- |
-| Club            | `clubs` → `ClubDto`                                 |
-| Hub unlock      | `first_match_completed_at`                          |
-| Hub phase / CTA | `resolveHubPhase` / `resolvePrimaryCta`             |
-| Fixtures        | `fixtures` + `planClubFixtures` / top-up (11)       |
-| League table    | `resolveLeagueTable` → `LeagueTableDto`             |
-| Cash            | `cash_balance` + `resolveClubFinance` (D18)         |
-| Economy numbers | GDD **§26** · kod `ECONOMY_THIN` (+ `TRANSFER_FEE`) |
-| Roster          | `players` + `resolveClubSquad`                      |
-| Transfer window | `transfer_window_open`                              |
-| Transfer UI     | `resolveTransferMarket`                             |
-| Transfer deals  | `transfer_deals`                                    |
-| Training day    | `clubs.last_training_on`                            |
-| Training UI     | `resolveClubTraining` → `TrainingDto`               |
-| Played unlock   | `hasPlayedUnlock` + fixture played count            |
-| Match entry     | `createMatch()` → `MatchSession`                    |
+| SSOT              | Gdzie                                               |
+| ----------------- | --------------------------------------------------- |
+| Club              | `clubs` → `ClubDto`                                 |
+| Hub unlock        | `first_match_completed_at`                          |
+| Hub phase / CTA   | `resolveHubPhase` / `resolvePrimaryCta`             |
+| Fixtures          | `fixtures` + `planClubFixtures` / top-up (11)       |
+| League table      | `resolveLeagueTable` → `LeagueTableDto`             |
+| Cash              | `cash_balance` + `resolveClubFinance` (D18)         |
+| Transfer envelope | `resolveTransferEnvelope` (derive, ratio 1)         |
+| Economy numbers   | GDD **§26** · kod `ECONOMY_THIN` (+ `TRANSFER_FEE`) |
+| Roster            | `players` + `resolveClubSquad`                      |
+| Transfer window   | `transfer_window_open`                              |
+| Transfer UI       | `resolveTransferMarket`                             |
+| Transfer deals    | `transfer_deals`                                    |
+| Training day      | `clubs.last_training_on`                            |
+| Training UI       | `resolveClubTraining` → `TrainingDto`               |
+| Played unlock     | `hasPlayedUnlock` + fixture played count            |
+| Match entry       | `createMatch()` → `MatchSession`                    |
 
 Pełna lista zamkniętych EPIC: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## Not on production
 
-Negotiation/envelope · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training.
+Negotiation · potential · full **22** fixtures (GDD §10) · Physics · individual training · skill growth from training · envelope ratio ≠ 1 / stored envelope.
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-03 CLOSE
+2026-07-25 — LFE-TRANSFERS-02-E1 CLOSE

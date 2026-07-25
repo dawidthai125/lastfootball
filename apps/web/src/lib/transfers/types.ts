@@ -38,6 +38,9 @@ export type TransferMarketDto = {
   readonly windowOpen: boolean;
   readonly cashBalance: number;
   readonly cashLabel: string;
+  /** Derived transfer budget — from resolveTransferEnvelope only. */
+  readonly envelopeBalance: number;
+  readonly envelopeLabel: string;
   readonly currency: string;
   readonly activeRosterCount: number;
   readonly minRoster: number;

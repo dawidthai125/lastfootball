@@ -7,8 +7,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **LFE-LEAGUE-03** (11-fixture Thin) — tip may be docs after feat.  
-GDD-§26A/B **CLOSED**.
+Production feature baseline **LFE-TRANSFERS-02-E1** — tip may be docs after feat.  
+GDD-§26A/B · LFE-LEAGUE-03 **CLOSED**.
+
+---
+
+## [2026-07-25] — LFE-TRANSFERS-02-E1 · CLOSED
+
+### Product
+
+- `ECONOMY_THIN.ENVELOPE_RATIO = 1` → envelope === cash (Thin)
+- **Jedyny** wzór: `resolveTransferEnvelope(cashBalance)` — brak lokalnego `cash × ratio`
+- `/finance`, `resolveTransferMarket`, `completeTransferBuy` konsumują wyłącznie ten helper
+- Brak migracji / kolumny / tabeli; cash = SSOT salda; Negotiation poza scope
+- Feature baseline → LFE-TRANSFERS-02-E1
 
 ---
 
