@@ -40,6 +40,18 @@ LFE EPIC-1…7 · Architecture Freeze · Gameplay · Match AI · Match Engine ·
 
 GDD-01…15 · §20 · §23 · §26 (liczby Thin)
 
+## UI / Docs UX DONE
+
+| ID | Temat |
+| -- | ----- |
+| LFE-UI-EVOLUTION-01 (A–H) | Decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance |
+| LFE-UI-EVOLUTION-02 | Daily manager loop · Kadra SSOT · Mobile Variant A |
+| LFE-UX-POSTMORTEM-01 | Historia (**REFERENCE**) — [`../game-design/LFE-UX-POSTMORTEM-01.md`](../game-design/LFE-UX-POSTMORTEM-01.md) |
+| LFE-DOCS-UX-03 | Presentation Contract w Guide §16 · Patterns · HUB sync |
+
+**SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
+Przy rozbieżności z postmortemem **wygrywa Guide**.
+
 ## PLANNED (Owner wybiera)
 
 Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth, full 22 fixtures, LFE PUBLIC trim.
@@ -49,9 +61,9 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth
 ## Naming
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`
-- Docs: `AI-DOCS-*`, `GDD-§26A`
+- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-UI-EVOLUTION-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-26 — AI-DOCS-CONSOLIDATION-02
+**ACTIVE** · 2026-07-26 — LFE-DOCS-UX-03

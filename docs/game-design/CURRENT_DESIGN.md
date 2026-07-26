@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)** wypełnione. UI Guide istnieje. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)** wypełnione. UI Guide + **Presentation Contract (§16)**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -26,7 +26,7 @@ GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (G
 | §15      | Sponsorzy           | Wypełniony                                                |
 | §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                   |
 | §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                       |
-| §24–§25  | UI (w Guide + GDD)  | Guide gotowy; §24 szkielet                                |
+| §24–§25  | UI (w Guide + GDD)  | Guide + **§16 Presentation Contract**; §24 szkielet       |
 | §26      | Liczby / balance    | **Wypełniony Thin (GDD-§26A)** · kod sync **§26B CLOSED** |
 | §27+     | Premium / …         | Future / szkielet                                         |
 
@@ -36,6 +36,7 @@ GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (G
 - Hub = ekran decyzji: 1 Primary CTA, max 5 Secondary; stany sesyjne: dzień meczowy / po meczu / idle (GDD §23).
 - **Implementacja live (LFE-MATCH-01):** First Match tunnel **przed** Hubem; Hub unlock = `first_match_completed_at`. Wariant GDD „nowy klub na Hubie przed meczem” jest pokryty tunelem, nie `/hub`.
 - **Hub EARLY_CLUB (LFE-HUB-01):** decision layout; bez mid-season dashboard mock.
+- **UI Evolution 01–02:** decision-first (Hero → Decision → Context); Hub Secondary = daily loop (Trening · Kadra · Transfery · Finanse · Terminarz); **Kadra** = `/squad` („Skład” = XI); Mobile Variant A. Szczegóły → [`UI_DESIGN_GUIDE.md`](./UI_DESIGN_GUIDE.md) §16; historia → [`LFE-UX-POSTMORTEM-01.md`](./LFE-UX-POSTMORTEM-01.md) (REFERENCE).
 - Zadania (§20): opcjonalne; 1 cel dnia na Hubie; w dniu meczowym mecz > zadanie; soft FOMO; nagrody = kategorie.
 - Liga: 12 klubów, 22 kolejki, awans/spadek bez playoffów MVP (design; live fixtures SSOT = planned).
 - Trening: odblokowanie po 2 zagranych meczach; 1 sesja/dzień (soft-lock na Day 1).
@@ -52,8 +53,8 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Powiązania
 
-[GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md) · [ROADMAP.md](./ROADMAP.md) · [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md) · [`../platform/HUB.md`](../platform/HUB.md)
+[GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md) · [ROADMAP.md](./ROADMAP.md) · [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md) (§16) · [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) · [`../platform/HUB.md`](../platform/HUB.md)
 
 ## Last updated
 
-2026-07-25 — GDD-§26B CLOSE
+2026-07-26 — LFE-DOCS-UX-03

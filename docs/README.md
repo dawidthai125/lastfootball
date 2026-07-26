@@ -13,6 +13,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | Platform             | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training |
 | LFE / Match UI       | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                          |
 | GDD                  | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                           |
+| UI Presentation      | Guide §16 Contract · UI Evolution 01/02 · postmortem REFERENCE                           |
 | Infra                | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                      |
 
 ## Jak czytać (AI)
@@ -76,7 +77,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ### LFE / Match UI / GDD / Ops
 
-[`lfe/`](./lfe/) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) · [`game-design/`](./game-design/) · [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md) · [`DEV_SETUP.md`](./DEV_SETUP.md)
+[`lfe/`](./lfe/) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md) · [`game-design/`](./game-design/) · [`game-design/UI_DESIGN_GUIDE.md`](./game-design/UI_DESIGN_GUIDE.md) (§16 Contract) · [`game-design/LFE-UX-POSTMORTEM-01.md`](./game-design/LFE-UX-POSTMORTEM-01.md) (REFERENCE) · [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md) · [`DEV_SETUP.md`](./DEV_SETUP.md)
 
 ## Pipeline (jedyny)
 
@@ -86,4 +87,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — LFE-DOCS-UX-03

@@ -4,11 +4,12 @@
 **Dokument:** UI_DESIGN_GUIDE  
 **Faza:** 2 — Game Design Foundation  
 **Etap:** GDD-01  
-**Status:** Zasady bazowe (do rozwinięcia o tokeny i ekrany)
+**Status:** Zasady bazowe + **Presentation Contract** (po LFE-UI-EVOLUTION-01/02)
 
 > Ten przewodnik jest SSOT dla **wyglądu i zachowania UI**.  
 > Mechaniki gry → [GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md).  
-> Implementacja React/Next — dopiero po doprecyzowaniu ekranów w GDD.
+> Historia serii UI Evolution → [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) (**REFERENCE**).  
+> **W przypadku rozbieżności obowiązuje `UI_DESIGN_GUIDE`, a postmortem ma charakter referencyjny.**
 
 ---
 
@@ -42,7 +43,7 @@ Gracz ma w kilka sekund wiedzieć:
 
 - Pierwszeństwo: skanowanie oczu (F-pattern / jasny CTA).
 - Gęstość informacji kontrolowana — listy i tabele czytelne, nie „wall of cards”.
-- Akcje krytyczne (skład, mecz, transfer) zawsze w zasięgu 1–2 kliknięć z hubu.
+- Akcje krytyczne (kadra, mecz, transfer) zawsze w zasięgu 1–2 kliknięć z Hubu.
 
 ### 2.4 Jeden cel na ekran
 
@@ -83,17 +84,22 @@ Na landingach / promo: brand first. W grze zalogowanej: **klub gracza** jest boh
 Szkielet oczekiwany:
 
 - Hub (panel główny)
-- Drużyna (skład, taktyka, trening)
+- Drużyna (**Kadra** `/squad`, taktyka, trening)
 - Rozgrywki (liga, puchar, mecz)
 - Transfery / skauting
 - Klub (stadion, finanse, sponsorzy, akademia)
 - Wiadomości / zadania
 
+**Mobile daily (Variant A, po LFE-UI-EVOLUTION-02):** Hub · Trening · Kadra · Transfery · Więcej  
+(Terminarz / Mecz w „Więcej”; matchday nadal przez Hub Primary.)
+
 ### 4.2 Zasady
 
 - Stały chrome nawigacji (desktop + adaptacja mobile).
+- Chrome **wspiera** ekran domenowy, nie konkuruje (bez KPI w TopBar).
 - Aktywna sekcja zawsze widoczna.
 - Breadcrumbs tylko gdy głębokość > 2.
+- Szczegóły kontraktu prezentacji → §16.
 
 ---
 
@@ -102,12 +108,16 @@ Szkielet oczekiwany:
 | Wzorzec           | Kiedy                  | Unikać                            |
 | ----------------- | ---------------------- | --------------------------------- |
 | Hub               | Start sesji, CTA dnia  | Mini-dashboard z 12 kartami       |
+| Decision-first    | Ekrany domenowe        | KPI wall na first viewport        |
+| Kick-Off          | PreMatch               | Briefing / triptych bez dominant CTA |
+| Question-day      | Trening, Kadra, Finanse | Dashboard metryk bez pytania     |
 | Lista + detal     | Zawodnicy, oferty      | Karty zamiast tabeli bez potrzeby |
 | Formularz decyzji | Transfer, trening      | Wielostronicowe wizardy bez sensu |
 | Match view        | Przed / w trakcie / po | Overlaye zasłaniające boisko      |
 | Raport            | Post-match, finanse    | Infografiki bez akcji             |
 
-**Karty:** tylko gdy niosą interakcję lub czytelność. Domyślnie — lista / sekcja bez „card for card’s sake”.
+**Karty:** tylko gdy niosą interakcję lub czytelność. Domyślnie — lista / sekcja bez „card for card’s sake”.  
+**Pełny kontrakt:** §16 Presentation Contract.
 
 ---
 
@@ -150,8 +160,8 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 
 ## 10. Responsive
 
-- Desktop: priorytet gęstości menedżerskiej (tabele, składy).
-- Mobile: priorytet CTA i skróconych list; pełne tabele → progressive disclosure.
+- Desktop: priorytet gęstości menedżerskiej (tabele, przegląd kadry).
+- Mobile: priorytet CTA i skróconych list / kart; pełne tabele → progressive disclosure.
 - Touch targets wystarczające; bez hover-only krytycznych akcji.
 
 ---
@@ -167,9 +177,10 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 
 ## 12. Copy UI
 
-- Krótko, po polsku (produkt PL), bez żargonu inżynierskiego.
-- Czasowniki w CTA: „Ustaw skład”, „Zagraj mecz”, „Złóż ofertę”.
+- Krótko, po polsku (produkt PL), bez żargonu inżynierskiego (Thin, Seed, Fallback…).
+- Czasowniki w CTA: „Zobacz kadrę” (→ `/squad`), „Ustaw skład” (XI przedmeczowy), „Zagraj mecz”, „Złóż ofertę”.
 - Błędy: co poszło nie tak + jak naprawić.
+- Glosariusz **Kadra** vs **Skład** → §16.6.
 
 ---
 
@@ -186,9 +197,11 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 ## 14. Proces projektowy
 
 1. Rozdział GDD definiuje **cel ekranu**.
-2. Ten guide definiuje **jak** to wygląda i zachowuje się.
-3. Dopiero potem implementacja w `apps/web`.
-4. Zmiany wizualne globalne → aktualizacja tego dokumentu.
+2. Ten guide (w tym §16) definiuje **jak** to wygląda i zachowuje się.
+3. EPIC UI prezentacji musi spełniać **Presentation Contract (§16)**.
+4. Dopiero potem implementacja w `apps/web` (bez zmiany resolverów/DTO bez Owner GO domenowego).
+5. Zmiany wizualne globalne → aktualizacja tego dokumentu.
+6. Historia decyzji UI Evolution → [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) (REFERENCE).
 
 ---
 
@@ -196,14 +209,131 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 
 - [ ] Design tokens (kolor, typo, spacing, radius)
 - [ ] Biblioteka komponentów (nazwy + stany)
-- [ ] Wireframes: Hub, Skład, Mecz, Transfery
+- [ ] Wireframes: Hub, Kadra (`/squad`), Mecz, Transfery
 - [ ] Icon set policy
 - [ ] Match view layout (Canvas LFE = dumb renderer)
 
 ---
 
+## 16. Presentation Contract (obowiązujący)
+
+SSOT reguł prezentacji po LFE-UI-EVOLUTION-01/02.  
+Skrót dla AI: [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md) → *UI Presentation Pattern*.  
+Historia: [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) (**REFERENCE**).
+
+> **W przypadku rozbieżności obowiązuje `UI_DESIGN_GUIDE`, a postmortem ma charakter referencyjny.**
+
+### 16.1 Cel i granica
+
+- Zakres: prezentacja, nawigacja, copy UI, hierarchia first viewport.
+- **Zakaz** w EPIC-u UI: zmiana DTO, resolverów biznesowych, reguł unlock, settlement, API, Supabase, silników.
+- UI domenowe wyłącznie przez istniejące `resolve*` (RESOLVER FIRST).
+- Soft-lock / access: konsumuj `resolveNavAccess` — **bez** nowych reguł unlock.
+
+### 16.2 Hierarchia ekranu
+
+1. **Hero** — kontekst decyzji (wydarzenie, pytanie dnia, VS, saldo…).
+2. **Decision** — jedno Primary CTA / jedna ścieżka.
+3. **Context** — browse, tabele, historia **pod** decyzją.
+
+First viewport = **jedna sprawa** lub **jedno pytanie**. Bez KPI wall; max **jedna** linia kontekstu (np. Okno · Kasa · Budżet).
+
+### 16.3 Primary CTA / Secondary / Soft-links
+
+- Dokładnie **jedno** wizualnie dominujące Primary CTA (gold).
+- Secondary wyraźnie niższe; na Hubie **≤ 5**.
+- Soft-links = muted (underline / text) — **nigdy** drugi gold primary.
+- Semantyka CTA z resolvera / istniejącego `href` / istniejącej akcji — UI tylko wyraża.
+
+### 16.4 Dialekty first viewport
+
+| Dialekt | Ekrany (przykłady) | Forma |
+| ------- | ------------------ | ----- |
+| Event / inbox | Hub, Transfery, Kick-Off | Najbliższe wydarzenie / sprawa / VS |
+| Question-day | Trening, Kadra, Finanse | Nagłówek-pytanie + jedna ścieżka |
+
+Nie unifikować dialektów na siłę (jeden szablon CSS ≠ jeden język decyzji).
+
+### 16.5 Daily Manager Loop
+
+Oś prezentacyjna dnia:
+
+```
+Hub → Trening → Kadra → Transfery → Finanse → Match path → Hub
+```
+
+- Hub = **router dnia**: Primary = event/mecz lub fallback Kadra; Secondary = pętla.
+- Hub Secondary (kolejność): **Trening · Kadra · Transfery · Finanse · Terminarz** (unlock-aware).
+- Mobile Variant A: **Hub · Trening · Kadra · Transfery · Więcej**.
+- Soft-linki łączą sąsiadów pętli (np. Squad→Trening, Transfers→Finanse/Kadra, Finance→Transfery).
+- Semantyka Hub (phase / session / CTA resolvers): [`../platform/HUB.md`](../platform/HUB.md).
+
+### 16.6 Glosariusz: Kadra vs Skład
+
+| Termin | Znaczenie | Przykłady UI |
+| ------ | --------- | ------------ |
+| **Kadra** | Ekran / nawigacja `/squad` | „Kadra”, „Zobacz kadrę” |
+| **Skład** | XI / gotowość meczowa | Kick-Off summary, „Ustaw skład”, „Skład gotowy” |
+| **Zakaz** | „Zobacz skład” jako link do `/squad` | — |
+
+### 16.7 Must (EPIC UI prezentacji)
+
+1. Jedno pytanie / jedna sprawa na first viewport.
+2. Jedno Primary CTA; Secondary i soft-linki wizualnie niższe.
+3. Hero → Decision → Context.
+4. Brak KPI wall na first viewport.
+5. Mobile-first: karty/lista na wąskim; Primary full-width; touch ≥ 44px.
+6. Chrome wspiera treść — bez drugiego dashboardu w TopBar.
+7. Copy gracza — bez żargonu silnika.
+8. SSOT nazewnictwa: Kadra vs Skład (§16.6).
+9. Unlock / trasy / akcje — tylko istniejące.
+10. Zachowaj dialekt ekranu (event vs question).
+11. Soft-linki łączą pętlę; nie dodają dominant akcji.
+12. Tokeny `--lf-*` / system Guide — bez defaultów „AI UI” (purple glow, cream+terracotta broadsheet…).
+
+### 16.8 Must-not (anti-patterns)
+
+- Dashboard SaaS: równe karty KPI, wall of `Panel`, sekcje bez hierarchii.
+- Drugi gold CTA / floating badges na Hero.
+- Przebudowa całej IA nawigacji „przy okazji” jednego ekranu.
+- Zmiana resolvera / unlock „żeby UI było prościej”.
+- Unifikacja wszystkich ekranów do jednego dialektu kosztem czytelności decyzji.
+- Runtime mocki na Hub / rynku / kasie / tabeli.
+
+### 16.9 Świadomie odrzucone kierunki (UI Evolution)
+
+| Odrzucone | Dlaczego |
+| --------- | -------- |
+| Mobile Variant B (Mecz w primary, Trening w Więcej) | Zamrożono Variant A w 02 |
+| Jeden szablon CSS / jeden dialekt na wszystkie ekrany | Zachować event vs question-day |
+| Finance jako narzędzie budżetowania | Tylko status + deep-link `/transfers` |
+| Nowe reguły unlock pod UI | SSOT unlock bez zmian |
+| KPI cards jako „kontekst” / drugi gold CTA | Anti-dashboard |
+| League / Live depth / Messaging w scope UI Evolution | Poza thin slice |
+| „Zobacz skład” → `/squad` | Zastąpione „Zobacz kadrę” |
+
+### 16.10 Definition of Done (EPIC UI prezentacji)
+
+- Zamrożone D\* z PLAN + AC prezentacyjne.
+- format · typecheck · lint · test · build GREEN (gdy EPIC kodowy).
+- Potwierdzenie: presentation only; lista obszarów nietkniętych.
+- Zgodność z tym kontraktem (§16).
+- Pipeline: [`../AI/EPIC_WORKFLOW.md`](../AI/EPIC_WORKFLOW.md).
+
+### 16.11 Powiązane dokumenty
+
+| Dokument | Rola |
+| -------- | ---- |
+| [`../platform/HUB.md`](../platform/HUB.md) | Semantyka phase / CTA / unlock |
+| [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) | Historia (REFERENCE) |
+| [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md) | Skrót AI |
+| [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) | Live / Canvas / Replay |
+
+---
+
 ## Historia
 
-| Wersja      | Data       | Zmiana                    |
-| ----------- | ---------- | ------------------------- |
-| 0.1.0-gdd01 | 2026-07-23 | Zasady bazowe UI (GDD-01) |
+| Wersja      | Data       | Zmiana                                              |
+| ----------- | ---------- | --------------------------------------------------- |
+| 0.1.0-gdd01 | 2026-07-23 | Zasady bazowe UI (GDD-01)                           |
+| 0.2.0       | 2026-07-26 | Presentation Contract §16 (LFE-DOCS-UX-03)           |

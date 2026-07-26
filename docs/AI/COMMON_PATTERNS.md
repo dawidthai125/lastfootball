@@ -81,6 +81,25 @@ Pusta baza kadry → błąd domenowy (`SquadUnavailableError`), nie ciche odtwor
 
 ---
 
+## UI Presentation Pattern
+
+**Zasada:** ekran domenowy = **decyzja menedżera**, nie dashboard SaaS. EPIC UI zmienia prezentację / nawigację / copy — nie DTO, resolvery biznesowe, unlock rules, settlement ani silniki.
+
+**Skrót operacyjny:**
+
+1. Hierarchia: **Hero → Decision → Context** (browse pod decyzją).
+2. Dokładnie **1** Primary CTA; Hub Secondary ≤ 5; soft-links muted (nie drugi gold).
+3. Dialekty: **event/inbox** (Hub, Transfery, Kick-Off) vs **question-day** (Trening, Kadra, Finanse) — nie unifikować na siłę.
+4. Daily loop: Hub → Trening → Kadra → Transfery → Finanse → Match → Hub. Mobile A: Hub · Trening · Kadra · Transfery · Więcej.
+5. **Kadra** = `/squad`; **Skład** = XI meczowy. Zakaz: „Zobacz skład” → `/squad`.
+6. UI tylko przez `resolve*`; access nav przez `resolveNavAccess`.
+
+**SSOT szczegółów:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16 Presentation Contract.  
+**Hub (phase / CTA / unlock):** [`../platform/HUB.md`](../platform/HUB.md).  
+**Historia (REFERENCE):** [`../game-design/LFE-UX-POSTMORTEM-01.md`](../game-design/LFE-UX-POSTMORTEM-01.md) — przy rozbieżności wygrywa Guide.
+
+---
+
 ## Feature Evolution
 
 1. Thin Slice na SSOT.
@@ -100,13 +119,14 @@ Mutacje z efektem ubocznym (complete fixture, transfer deal, ensure fixtures/win
 
 | Domen     | Owner docs                 | Owner kod (orientacja)       |
 | --------- | -------------------------- | ---------------------------- |
-| Hub       | `platform/HUB.md`          | `lib/hub`                    |
+| Hub       | `platform/HUB.md` + Guide §16 | `lib/hub`                    |
 | League    | `platform/LEAGUE.md`       | `lib/fixtures`, `lib/league` |
 | Finance   | `platform/FINANCE.md`      | `lib/finance`                |
 | Players   | `platform/PLAYERS.md`      | `lib/squad`                  |
 | Transfers | `platform/TRANSFERS.md`    | `lib/transfers`              |
 | Training  | `platform/TRAINING.md`     | `lib/training`               |
 | Match UI  | `web/MATCH_UI_PIPELINE.md` | gameplay / live              |
+| UI look   | `game-design/UI_DESIGN_GUIDE.md` §16 | `apps/web` components   |
 | LFE       | `lfe/*`                    | `packages/lfe`               |
 
 Nie mieszaj ownership: Canvas nie mutuje Engine; page nie definiuje fee transferu lokalnie.
@@ -122,4 +142,4 @@ Nie mieszaj ownership: Canvas nie mutuje Engine; page nie definiuje fee transfer
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — LFE-DOCS-UX-03

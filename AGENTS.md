@@ -26,6 +26,7 @@
 - Hub is a **decision screen**, not a mid-season dashboard.
 - First Hub unlock: `clubs.first_match_completed_at`.
 - Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSquad`, `resolveTransferMarket`, `resolveClubTraining`, …).
+- UI presentation EPICs: follow [`docs/game-design/UI_DESIGN_GUIDE.md`](docs/game-design/UI_DESIGN_GUIDE.md) §16 (Presentation Contract); do not change resolvers/DTO/unlock without a domain Owner GO.
 
 ## Pipeline (jedyny)
 
@@ -39,4 +40,4 @@ Patrz **wyłącznie** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.m
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — LFE-DOCS-UX-03

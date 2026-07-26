@@ -34,10 +34,15 @@ D21 — [`../DECISIONS.md`](../DECISIONS.md).
 
 Trening indywidualny, plany tygodnia, buff taktyczny 1 mecz, morale/kondycja jako osobne SSOT liczbowe, koszt §26, timezone gracza, filtr XI po statusie, pay-to-train.
 
+## UI (presentation)
+
+Ekran `/training` = decision-first (question-day); secondary / soft-link **Kadra** → `/squad`.  
+Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
+
 ## Kod
 
 `lib/training/*` · `lib/fixtures/played-unlock.ts` · `/training`
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — LFE-DOCS-UX-03

@@ -33,10 +33,15 @@ Envelope: LFE-TRANSFERS-02-E1 / D20.
 
 Pensje, bilety, sponsorzy, ratio ≠ 1, negotiation, suwak alokacji.
 
+## UI (presentation)
+
+Ekran `/finance` = decision-first (question-day); Primary deep-link do `/transfers` — bez budżetowania w UI.  
+Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
+
 ## Kod
 
 `lib/finance/*` · `/finance`
 
 ## Last updated
 
-2026-07-25 — LFE-TRANSFERS-02-E1 CLOSE
+2026-07-26 — LFE-DOCS-UX-03

@@ -4,6 +4,9 @@
 
 Trwała kadra klubu gracza (Players Thin).
 
+**UI naming:** ekran `/squad` w produkcie = **Kadra**; **Skład** = XI meczowy (nie label nav `/squad`).  
+Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.6.
+
 ## SSOT
 
 | Fakt        | Źródło                                                       |
@@ -30,10 +33,15 @@ D19 (D16 superseded) — [`../DECISIONS.md`](../DECISIONS.md).
 
 Edycja XI, `potential`, pensje; rozwój `skill` z treningu (D21 poza).
 
+## UI (presentation)
+
+Ekran `/squad` = decision-first (question-day); soft-link Trening.  
+Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
+
 ## Kod
 
 `lib/squad/*` · `/squad` · `/players/[id]`
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — LFE-DOCS-UX-03

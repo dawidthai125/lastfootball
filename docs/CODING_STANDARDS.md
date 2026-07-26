@@ -38,7 +38,7 @@ TypeScript monorepo; Vitest w LFE (+ testy web replay/post-match); Prettier + ES
 
 - App Router.
 - Import LFE tylko z `@lastfootball/lfe` (kontrakt PUBLIC).
-- UI design: [`game-design/UI_DESIGN_GUIDE.md`](./game-design/UI_DESIGN_GUIDE.md).
+- UI design: [`game-design/UI_DESIGN_GUIDE.md`](./game-design/UI_DESIGN_GUIDE.md) — EPIC UI prezentacji musi spełniać **§16 Presentation Contract**.
 - **Canvas** (`gameplay/canvas/*`, `canvas-host.ts`): tylko read `MatchCanvasReadModel`; **zakaz** Engine/AI/CommandBus.
 - **Replay** (`gameplay/replay/*`): tylko nagrane modele; **zakaz** `session.run` / Engine.
 - **Post Match**: buduje summary z state/events; seek przez publiczne API Replay.
@@ -73,4 +73,4 @@ TypeScript monorepo; Vitest w LFE (+ testy web replay/post-match); Prettier + ES
 
 ## Last updated
 
-2026-07-24 — AI-DOCS-CONSOLIDATION-01
+2026-07-26 — LFE-DOCS-UX-03

@@ -44,6 +44,11 @@ Escrow · timeout · 2+ counters · buyer Counter · AI H2H · custom ask · `co
 
 Settlement path, RPC, dług P1: [`TRANSFER_ARCHITECTURE.md`](./TRANSFER_ARCHITECTURE.md).
 
+## UI (presentation)
+
+Ekran `/transfers` = decision-first (inbox / event); soft-linki do Finanse / Kadra.  
+Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16. Semantyka settle bez zmian.
+
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — LFE-DOCS-UX-03
