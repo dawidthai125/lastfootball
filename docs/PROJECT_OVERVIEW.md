@@ -1,39 +1,49 @@
 # Project Overview — Last Football
 
+**Status:** REFERENCE — wysokopoziomowy opis produktu.  
+**Nie** kopiuj stąd hashy ani listy EPIC.
+
+| Potrzebujesz                | Czytaj                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------ |
+| **Gdzie jesteśmy (status)** | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) — **SSOT statusu**                  |
+| Feature baseline / docs tip | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                           |
+| Lista EPIC DONE/PLANNED     | [`ROADMAP.md`](./ROADMAP.md)                                                   |
+| Onboarding AI               | [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) |
+
 ## Cel
 
-Czym jest Last Football, stack i granice fazy.
+Czym jest Last Football, stack i granice fazy (orientacja).
 
-## Aktualny stan
+## Skrót produktu
 
 **Last Football** — przeglądarkowy football manager z silnikiem **LFE**.
 
-| Warstwa           | Stan                                                                                      |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| Produkt           | GDD-01…15 · next: Owner (GDD-16+ / §26 / …)                                               |
-| Platforma         | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers · Training |
-| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post Match                                     |
-| Supabase          | clubs · fixtures · finance · players · transfer_deals · last_training_on                  |
+| Warstwa           | Stan (orientacja)                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| Produkt           | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                     |
+| Platforma         | Onboarding · First Match · Hub · League · Finance · Players · Transfers · Training |
+| UX                | Decision-first (UI Evolution 01–02) · Presentation Contract Guide §16              |
+| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post Match                              |
+| Prod              | https://lastfootball.vercel.app                                                    |
 
-**Prod:** https://lastfootball.vercel.app · feature baseline [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · `10de062`
+## Opis działania (orientacja)
 
-## Opis działania
+1. Konto + klub (Wizard) → First Match → Hub.
+2. SEASON: liga, finanse, kadra; transfery gdy okno open; trening gdy played ≥ 2.
+3. Mecze przez `MatchSession` / Live pipeline.
+4. UI domenowe przez resolvery (`resolve*`).
 
-1. Konto + klub (Wizard).
-2. First Match → Hub.
-3. SEASON: liga, finanse, kadra; transfery gdy okno open; trening gdy played ≥ 2.
-4. Mecze przez `MatchSession` / Live pipeline.
-5. Resolvery = kontrakty UI (patrz [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md)).
+## Granice Thin (orientacja)
 
-## Granice
+**Jest:** Transfers Thin (Instant + Pending + 1× Counter + listing + nego) · Training Thin · Players/Finance/League Thin.  
+**Nie jest (przykłady):** escrow / 2+ counters · Physics · pełne 22 fixtures · skill growth z treningu · envelope ratio ≠ 1.
 
-**Jest:** Training Thin i wcześniejsze Thin (Transfers, Players, Finance, League…).  
-**Nie jest:** negotiation/envelope, potential, Physics, pełny kalendarz 11, skill growth z treningu.
+Szczegóły „Not on production”: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md).
 
 ## Powiązania
 
-[`ROADMAP.md`](./ROADMAP.md) · [`platform/`](./platform/) · [`AI/START_HERE.md`](./AI/START_HERE.md)
+[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) · [`ROADMAP.md`](./ROADMAP.md) · [`AI/START_HERE.md`](./AI/START_HERE.md) · [`platform/`](./platform/)
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — AI-DOCS-SYNC-01 (REFERENCE; usunięty stale hash)

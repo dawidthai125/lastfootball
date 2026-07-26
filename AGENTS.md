@@ -2,6 +2,10 @@
 
 **Start here** if you are a Cursor Agent, ChatGPT, or any AI working on this repo.
 
+## Project philosophy (short)
+
+Last Football is built so a new agent session can work from **`docs/` + code alone** — never from chat history. Every product fact has **one SSOT**; UI and pages **reuse** existing resolvers and helpers (**REUSE FIRST** · **RESOLVER FIRST**) instead of inventing parallel logic. Work ships as **small, closed EPICs** (AUDIT → PLAN → Owner GO → IMPLEMENT → … → CLOSE) with a clear out-of-scope list. Documentation must stay current enough that cold start does not require reconstructing prior conversations. Prefer updating an existing SSOT over adding a new doc.
+
 ## Read first (in order)
 
 1. [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) — 1-ekran cold start
@@ -12,7 +16,7 @@
 6. [`docs/AI/COMMON_PATTERNS.md`](docs/AI/COMMON_PATTERNS.md)
 7. [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md)
 8. [`docs/AI/ENGINEERING_GUIDE.md`](docs/AI/ENGINEERING_GUIDE.md)
-9. Task-specific: [`docs/AI/MODULE_MAP.md`](docs/AI/MODULE_MAP.md) · platform / LFE / GDD
+9. Task-specific: [`docs/AI/MODULE_MAP.md`](docs/AI/MODULE_MAP.md) · platform / LFE / GDD · status [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)
 
 ## Hard rules (never violate)
 
@@ -40,4 +44,4 @@ Patrz **wyłącznie** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.m
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-26 — AI-DOCS-SYNC-01

@@ -1,22 +1,10 @@
 # AI — Project State
 
-## Cel
+**Alias statusu:** pełny status projektu → [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) (**SSOT**).  
+**Hash / tip:** wyłącznie [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).  
+**Lista EPIC:** wyłącznie [`../ROADMAP.md`](../ROADMAP.md).
 
-Szybki stan dla Agenta: **gdzie jesteśmy** / **co dalej**.  
-**Lista EPIC DONE/PLANNED:** wyłącznie [`../ROADMAP.md`](../ROADMAP.md) — nie kopiuj tutaj.  
-**Hash produkcji:** wyłącznie [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).
-
-## Aktualny etap
-
-**PRODUCTION VERIFIED · GREEN** — LFE-TRANSFERS-08 CLOSED (Live H2H Counter Thin).  
-**Feature baseline:** patrz [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) (`9b1c575`).  
-**Next:** Owner wybiera — [`../ROADMAP.md`](../ROADMAP.md) · indeks [`EPIC_INDEX.md`](./EPIC_INDEX.md).
-
-## W trakcie
-
-Brak otwartego EPIC implementacyjnego.
-
-## Otwarte decyzje techniczne
+## Otwarte decyzje techniczne (AI)
 
 | ID       | Temat                                     | Status                                                                                   |
 | -------- | ----------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -27,8 +15,8 @@ Brak otwartego EPIC implementacyjnego.
 
 ## Powiązania
 
-[`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · [`../ROADMAP.md`](../ROADMAP.md) · [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)
+[`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`../ROADMAP.md`](../ROADMAP.md)
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — AI-DOCS-SYNC-01 (alias → PROJECT_STATUS)

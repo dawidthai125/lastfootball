@@ -6,15 +6,17 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ## Aktualny stan
 
-| Warstwa              | Stan                                                                                     |
-| -------------------- | ---------------------------------------------------------------------------------------- |
-| **Feature baseline** | patrz [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) (LFE-TRANSFERS-08)            |
-| Production           | https://lastfootball.vercel.app                                                          |
-| Platform             | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training |
-| LFE / Match UI       | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                          |
-| GDD                  | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                           |
-| UI Presentation      | Guide §16 Contract · UI Evolution 01/02 · postmortem REFERENCE                           |
-| Infra                | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                      |
+| Warstwa               | Stan                                                                                     |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| **Feature baseline**  | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `9b1c575` (LFE-TRANSFERS-08)      |
+| **Documentation tip** | `4a0b3ee` — LFE-DOCS-UX-03 (nie zmienia feature baseline)                                |
+| **Status projektu**   | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                        |
+| Production            | https://lastfootball.vercel.app                                                          |
+| Platform              | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training |
+| LFE / Match UI        | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                          |
+| GDD                   | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                           |
+| UI Presentation       | Guide §16 Contract · UI Evolution 01/02 · postmortem REFERENCE                           |
+| Infra                 | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                      |
 
 ## Jak czytać (AI)
 
@@ -54,8 +56,9 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | Dokument                                                              | Opis                        |
 | --------------------------------------------------------------------- | --------------------------- |
 | [ROADMAP.md](./ROADMAP.md)                                            | **SSOT** listy DONE/PLANNED |
-| [PROJECT_STATUS.md](./PROJECT_STATUS.md)                              | Skrót „gdzie jesteśmy”      |
-| [HANDOFF.md](./HANDOFF.md) / [MASTER_HANDOFF.md](./MASTER_HANDOFF.md) | Przekazanie                 |
+| [PROJECT_STATUS.md](./PROJECT_STATUS.md)                              | **SSOT** statusu projektu   |
+| [HANDOFF.md](./HANDOFF.md) / [MASTER_HANDOFF.md](./MASTER_HANDOFF.md) | Alias / mapa handoff        |
+| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)                          | REFERENCE — opis produktu   |
 
 ### Platform
 
@@ -87,4 +90,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-26 — AI-DOCS-SYNC-01

@@ -2,24 +2,22 @@
 
 ## Cel
 
-**Krótki start** (1 ekran). Pełne: [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md).  
-AI: [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) · [`AI/START_HERE.md`](./AI/START_HERE.md) · [`AGENTS.md`](../AGENTS.md).
+**Krótki start** (1 ekran). Nie duplikuje statusu projektu.
 
-## Stan
-
-|                      |                                                                               |
-| -------------------- | ----------------------------------------------------------------------------- |
-| **Feature baseline** | patrz [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) (LFE-TRANSFERS-08) |
-| **Prod**             | https://lastfootball.vercel.app                                               |
-| **Next**             | Owner wybiera — [`ROADMAP.md`](./ROADMAP.md)                                  |
-| **CI**               | Format → Typecheck → Lint → Test → Build → Secret scan                        |
+|                            |                                                                                                                           |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Status projektu (SSOT)** | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                                                                                |
+| **Baseline / tip**         | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                                                                      |
+| **Pełne handoff (mapa)**   | [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)                                                                                |
+| **AI cold start**          | [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) → [`AI/START_HERE.md`](./AI/START_HERE.md) |
 
 ## Czytaj
 
 1. [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md)
 2. [`AI/START_HERE.md`](./AI/START_HERE.md)
-3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
-4. [`AI/MODULE_MAP.md`](./AI/MODULE_MAP.md) · platform wg zadania
+3. [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)
+4. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
+5. Task: [`AI/MODULE_MAP.md`](./AI/MODULE_MAP.md) · platform wg zadania
 
 ## Pipeline
 
@@ -27,10 +25,10 @@ AI: [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) · [`AI/START_HERE.md`](./A
 AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
 ```
 
-## Twarde
+## Twarde (skrót)
 
-Owner GO na commit/push · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only.
+Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16.
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — AI-DOCS-SYNC-01 (alias → PROJECT_STATUS)

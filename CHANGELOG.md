@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (AI-DOCS-SYNC-01)
+
+- ROADMAP / CHANGELOG sync: UI Evolution 01–02 · DOCS-UX-03
+- CURRENT_BASELINE documentation tip `4a0b3ee` (feature hash unchanged)
+- PROJECT_STATUS = canonical project status; handoff aliases
+
+### Docs (LFE-DOCS-UX-03)
+
+- UI Presentation Contract in `UI_DESIGN_GUIDE` §16; postmortem REFERENCE
+- HUB daily-loop docs sync; AI Presentation Pattern
+
+### Docs (LFE-UI-EVOLUTION-01 / 02)
+
+- Decision-first Hub → Finance screens; daily manager loop (presentation only)
+
 ### Docs (AI-DOCS-CONSOLIDATION-02)
 
 - AI Quick Start · Module Map · EPIC Index · Transfer Architecture

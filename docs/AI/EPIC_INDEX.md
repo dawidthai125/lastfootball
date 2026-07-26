@@ -66,4 +66,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth
 
 ## Status
 
-**ACTIVE** · 2026-07-26 — LFE-DOCS-UX-03
+**ACTIVE** · 2026-07-26 — AI-DOCS-SYNC-01 (ROADMAP zsynchronizowany)

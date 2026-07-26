@@ -11,6 +11,34 @@ Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08) — tip may be docs
 
 ---
 
+## [2026-07-26] — LFE-UI-EVOLUTION-01 · CLOSED
+
+### Docs / UX
+
+- Decision-first presentation: Hub, Shell, Transfers, Kick-Off, Training, Squad, Finance
+- Presentation only — bez zmian DTO / resolverów / unlock / settlement
+
+---
+
+## [2026-07-26] — LFE-UI-EVOLUTION-02 · CLOSED
+
+### Docs / UX
+
+- Daily manager loop: Hub secondary · soft-links · Mobile Variant A · SSOT „Kadra”
+- Tip feature UI: `a2aff01` (nie zmienia feature baseline TRANSFERS-08)
+
+---
+
+## [2026-07-26] — LFE-DOCS-UX-03 · CLOSED
+
+### Docs
+
+- UI Presentation Contract = SSOT w `UI_DESIGN_GUIDE` §16
+- AI Patterns skrót · HUB sync · postmortem REFERENCE
+- Documentation tip: `4a0b3ee` (feature baseline bez zmian)
+
+---
+
 ## [2026-07-26] — AI-DOCS-CONSOLIDATION-02 · CLOSED
 
 ### Docs

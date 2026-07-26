@@ -2,24 +2,22 @@
 
 ## Cel
 
-Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
-**Nie wymagana** historia czatu ani analiza całej historii commitów.
+Mapa przekazania projektu (architektura, SSOT domen, flows).  
+**Status „gdzie jesteśmy”:** wyłącznie [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).  
+**Feature baseline / docs tip:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — **nie kopiuj hashy tutaj**.
 
-**Baseline:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) (feature **LFE-TRANSFERS-08** · `9b1c575`) — nie kopiuj hashy tutaj przy kolejnych CLOSE.
+**Cold start AI:** [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) → [`AI/START_HERE.md`](./AI/START_HERE.md).
 
 ---
 
-## 1. Production Baseline
+## 1. Production (pointery)
 
-| Pole             | Wartość                                                                        |
-| ---------------- | ------------------------------------------------------------------------------ |
-| Prod URL         | https://lastfootball.vercel.app                                                |
-| Feature baseline | **patrz** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                 |
-| Status           | **PRODUCTION VERIFIED · GREEN**                                                |
-| App              | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                             |
-| Supabase         | `anoeimngwptucjdugjme` (players · transfers · transfer_offers · training Thin) |
-| CI               | Format · Typecheck · Lint · Test · Build · Secret scan                         |
-| Hosting          | Vercel Production                                                              |
+| Pole                        | Gdzie                                                                         |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| Status projektu             | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                                    |
+| Feature baseline + docs tip | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                          |
+| Lista EPIC                  | [`ROADMAP.md`](./ROADMAP.md) · skrót [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) |
+| Prod URL                    | https://lastfootball.vercel.app                                               |
 
 ---
 
@@ -63,77 +61,47 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 ## 5. EPICs
 
-### Zakończone / planned
-
-**SSOT listy EPIC:** [`ROADMAP.md`](./ROADMAP.md) (nie duplikuj tutaj).
-
-**Next:** Owner wybiera (GDD-16+ · §26 · negotiation · calendar · Training depth).
+**SSOT listy:** [`ROADMAP.md`](./ROADMAP.md).  
+**Next:** Owner wybiera — pointer w [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).
 
 ---
 
 ## 6. SSOT map
 
-| Domain                | SSOT                                                |
-| --------------------- | --------------------------------------------------- |
-| Product intent        | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)         |
-| LFE PUBLIC API        | `lfe/LFE_ARCHITECTURE_FREEZE.md`                    |
-| Club identity         | `clubs` → `ClubDto`                                 |
-| Hub unlock            | `first_match_completed_at`                          |
-| Hub phase / Primary   | `resolveHubPhase` / `resolvePrimaryCta`             |
-| League fixtures       | `fixtures` → `FixtureDto`                           |
-| League table          | `resolveLeagueTable` → `LeagueTableDto` (D17)       |
-| Club cash             | `clubs.cash_balance` (D18)                          |
-| Finance history       | `finance_movements` (D18)                           |
-| Finance UI            | `resolveClubFinance` → `ClubFinanceDto` (D18)       |
-| Club roster           | `players` (D19)                                     |
-| Squad UI              | `resolveClubSquad(club, rows)` → `SquadDto` (D19)   |
-| Transfer window       | `clubs.transfer_window_open` (D20)                  |
-| Transfer market UI    | `resolveTransferMarket` → `TransferMarketDto` (D20) |
-| Transfer deals        | `transfer_deals` (D20)                              |
-| Training day          | `clubs.last_training_on` (D21)                      |
-| Training UI           | `resolveClubTraining` → `TrainingDto` (D21)         |
-| Played unlock helper  | `hasPlayedUnlock` / played fixture count (D21)      |
-| Match state           | `MatchState` + `EventBus` via `MatchSession`        |
-| Agent onboarding      | `docs/AI/START_HERE.md`                             |
-| Principles / patterns | `AI/ARCHITECTURE_PRINCIPLES` · `AI/COMMON_PATTERNS` |
+| Domain                | SSOT                                                             |
+| --------------------- | ---------------------------------------------------------------- |
+| Product intent        | GDD (`game-design/GAME_DESIGN_DOCUMENT.md`)                      |
+| UI presentation       | `game-design/UI_DESIGN_GUIDE.md` §16                             |
+| LFE PUBLIC API        | `lfe/LFE_ARCHITECTURE_FREEZE.md`                                 |
+| Club identity         | `clubs` → `ClubDto`                                              |
+| Hub unlock            | `first_match_completed_at`                                       |
+| Hub phase / CTA       | `resolveHubPhase` / `resolvePrimaryCta` / `resolveSecondaryCtas` |
+| League fixtures       | `fixtures` → `FixtureDto`                                        |
+| League table          | `resolveLeagueTable` → `LeagueTableDto` (D17)                    |
+| Club cash             | `clubs.cash_balance` (D18)                                       |
+| Finance UI            | `resolveClubFinance` → `ClubFinanceDto` (D18)                    |
+| Club roster           | `players` (D19)                                                  |
+| Squad UI              | `resolveClubSquad` → `SquadDto` (D19)                            |
+| Transfer market UI    | `resolveTransferMarket` → `TransferMarketDto` (D20)              |
+| Training UI           | `resolveClubTraining` → `TrainingDto` (D21)                      |
+| Match state           | `MatchState` + `EventBus` via `MatchSession`                     |
+| Agent onboarding      | `docs/AI/START_HERE.md`                                          |
+| Project status        | `docs/PROJECT_STATUS.md`                                         |
+| Principles / patterns | `AI/ARCHITECTURE_PRINCIPLES` · `AI/COMMON_PATTERNS`              |
 
 ---
 
 ## 7. Flows
 
-### Onboarding
-
-[`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md)
-
-### First Match
-
-[`platform/FIRST_MATCH.md`](./platform/FIRST_MATCH.md)
-
-### Hub
-
-[`platform/HUB.md`](./platform/HUB.md)
-
-### League · Finance · Players · Transfers · Training
-
-[`platform/LEAGUE.md`](./platform/LEAGUE.md) · [`FINANCE.md`](./platform/FINANCE.md) · [`PLAYERS.md`](./platform/PLAYERS.md) · [`TRANSFERS.md`](./platform/TRANSFERS.md) · [`TRAINING.md`](./platform/TRAINING.md)
-
-### Match UI pipeline
-
-[`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)
+[`platform/ONBOARDING_FLOW.md`](./platform/ONBOARDING_FLOW.md) · [`FIRST_MATCH.md`](./platform/FIRST_MATCH.md) · [`HUB.md`](./platform/HUB.md) · [`LEAGUE.md`](./platform/LEAGUE.md) · [`FINANCE.md`](./platform/FINANCE.md) · [`PLAYERS.md`](./platform/PLAYERS.md) · [`TRANSFERS.md`](./platform/TRANSFERS.md) · [`TRAINING.md`](./platform/TRAINING.md) · [`web/MATCH_UI_PIPELINE.md`](./web/MATCH_UI_PIPELINE.md)
 
 ---
 
-## 8. Supabase
+## 8. Supabase (orientacja)
 
-- Auth email/password; callback `/auth/callback`
-- Table `clubs` (owner RLS) + `first_match_completed_at` + **`cash_balance`** + **`transfer_window_open`** + **`last_training_on`**
-- Table `fixtures` (owner RLS via club) — LFE-LEAGUE-01 Thin A **applied**
-- Table `finance_movements` (owner RLS via club) — LFE-ECONOMY-01 **applied** (+ transfer cats)
-- Table `players` (owner RLS via club) — LFE-PLAYERS-01 **applied** (+ `departed_at` / `DEPARTED`)
-- Table `transfer_deals` (owner RLS via club) — LFE-TRANSFERS-01 **applied**
-- Training Thin — LFE-TRAINING-01 **applied** (`last_training_on`)
-- Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — never commit)
-- Status: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md)
+Auth + `clubs` (+ cash / window / training day) · `fixtures` · `finance_movements` · `players` · `transfer_deals` · `transfer_offers`.  
+Status połączeń: [`CONNECTION_STATUS.md`](./CONNECTION_STATUS.md).  
+Nigdy nie commituj sekretów `.env`.
 
 ---
 
@@ -141,17 +109,15 @@ Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.m
 
 [`DECISIONS.md`](./DECISIONS.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md)
 
-Kluczowe: LFE izolowany; CommandBus; First Match przed Hubem; Hub = decision screen; clubs table SSOT; league table = pure derive (D17); club cash + `resolveClubFinance` (D18); players + `resolveClubSquad` (D19); transfers Thin (D20); **training Thin + `resolveClubTraining` (D21)**.
-
 ---
 
 ## 10. Zasady implementacji
 
-REUSE FIRST · ZERO DUPLICATE · SSOT FIRST · Owner GO na commit/push · Canvas/Replay read-only · nie łamać Freeze bez AUDIT.
+REUSE FIRST · ZERO DUPLICATE · SSOT FIRST · RESOLVER FIRST · Owner GO · Canvas/Replay read-only · UI EPIC → Guide §16.
 
 ---
 
-## 11. Workflow Owner → Cursor
+## 11. Workflow
 
 [`AI/EPIC_WORKFLOW.md`](./AI/EPIC_WORKFLOW.md) · [`WORKFLOW.md`](./WORKFLOW.md)
 
@@ -159,18 +125,10 @@ REUSE FIRST · ZERO DUPLICATE · SSOT FIRST · Owner GO na commit/push · Canvas
 AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
 ```
 
----
-
-## 12. Jak prowadzić kolejny EPIC
-
-1. `AI/AI_QUICK_START.md` → `AI/START_HERE.md` → baseline → principles → patterns → workflow.
-2. AUDIT w kodzie (nie czat).
-3. PLAN M1–Mn + poza zakresem + AC.
-4. Owner GO → IMPLEMENT → VALIDATION → GO COMMIT → GO PUSH → **CI GREEN** → CLOSE.
-5. CLOSE: aktualizuj **ROADMAP** + **CURRENT_BASELINE** feature hash (+ CHANGELOG).
+CLOSE: aktualizuj **ROADMAP** · **PROJECT_STATUS** · **CURRENT_BASELINE** (feature hash **lub** docs tip) · CHANGELOG.
 
 ---
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-26 — AI-DOCS-SYNC-01 (status → PROJECT_STATUS; bez kopiowania hashy)

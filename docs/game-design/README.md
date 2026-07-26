@@ -6,7 +6,7 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23 Hub**. **Pozostałe rozdziały = szkielet**. Następny etap: **GDD-16+** (Owner GO).
+Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide §16) po UI Evolution 01–02 / DOCS-UX-03. **Pozostałe rozdziały = szkielet**. Następny etap: **GDD-16+** (Owner GO).
 
 ## Opis działania
 
@@ -36,4 +36,4 @@ Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-26 — AI-DOCS-SYNC-01

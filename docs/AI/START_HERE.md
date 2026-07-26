@@ -27,7 +27,7 @@ Onboarding dla **ChatGPT / Cursor Agent / developera** bez historii czatu i bez 
 | 8   | [`MODULE_MAP.md`](./MODULE_MAP.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) | gdzie kod / co zamknięte   |
 | 9   | Task-specific (poniżej)                                                 | tylko zakres EPIC-u        |
 
-Opcjonalnie: [`PROJECT_STATE.md`](./PROJECT_STATE.md) · [`../HANDOFF.md`](../HANDOFF.md) · [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md).
+Opcjonalnie: [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) (status SSOT) · [`PROJECT_STATE.md`](./PROJECT_STATE.md) (alias + otwarte decyzje) · [`../HANDOFF.md`](../HANDOFF.md) · [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md).
 
 ### Gdy zadanie dotyczy…
 
@@ -91,4 +91,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md).
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-26 — AI-DOCS-SYNC-01

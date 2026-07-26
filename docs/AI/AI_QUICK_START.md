@@ -6,16 +6,17 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Kiedy czytać
 
-**Pierwszy dokument** w nowej sesji — przed jakimkolwiek kodem. Potem: [`START_HERE.md`](./START_HERE.md).
+**Pierwszy dokument** w nowej sesji — przed jakimkolwiek kodem. Potem: [`START_HERE.md`](./START_HERE.md) (pełna kolejność + mapa zadań).
 
 ## Stan produkcji (skrót)
 
-|                  |                                                   |
-| ---------------- | ------------------------------------------------- |
-| Feature baseline | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED           |
-| Tip              | `git log -1` (może być `docs:` / `style:` nowszy) |
-| Prod             | https://lastfootball.vercel.app                   |
-| SSOT hash        | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)    |
+|                   |                                                               |
+| ----------------- | ------------------------------------------------------------- |
+| Feature baseline  | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED                       |
+| Documentation tip | **`4a0b3ee`** — LFE-DOCS-UX-03 (nie zmienia feature baseline) |
+| Prod              | https://lastfootball.vercel.app                               |
+| SSOT hash / tip   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)                |
+| Status projektu   | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
 
 ## Pipeline (jedyny)
 
@@ -32,18 +33,17 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, …)
 4. Match mutacje tylko LFE `CommandBus` / session
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
+6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
 
-## Czytaj dalej (kolejność)
+## Czytaj dalej
 
-1. [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
-2. [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
-3. [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md)
-4. Task: [`MODULE_MAP.md`](./MODULE_MAP.md) · platform / LFE / GDD z [`START_HERE.md`](./START_HERE.md)
+Pełna kolejność obowiązkowa: [`START_HERE.md`](./START_HERE.md).  
+Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE.
 
 ## Powiązane
 
-[`../AGENTS.md`](../../AGENTS.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md)
+[`../../AGENTS.md`](../../AGENTS.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-26 — AI-DOCS-CONSOLIDATION-02
+**ACTIVE** · 2026-07-26 — AI-DOCS-SYNC-01
