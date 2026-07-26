@@ -3,12 +3,11 @@
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/Button';
-import { Panel } from '@/components/ui/Panel';
-import { Badge } from '@/components/ui/Badge';
 import { runTrainingSession } from '@/lib/training/actions';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
+
+import './training-decision.css';
 
 function lockCopy(dto: TrainingDto): string {
   switch (dto.lockReason) {
@@ -23,6 +22,10 @@ function lockCopy(dto: TrainingDto): string {
   }
 }
 
+/**
+ * Training Experience — LFE-UI-EVOLUTION-01F.
+ * Decision-first presentation; training action/DTO unchanged.
+ */
 export function TrainingView({ training }: { training: TrainingDto }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -32,134 +35,127 @@ export function TrainingView({ training }: { training: TrainingDto }) {
 
   const r = training.readiness;
   const isRegen = focusId === 'regeneration';
+  const lockMessage = !training.canTrain ? lockCopy(training) : '';
+  const statusLabel = training.canTrain ? 'Sesja dostępna' : 'Sesja niedostępna';
+
+  const hasFeedback =
+    (state.ok && !state.skipped) || (state.ok && state.skipped) || Boolean(state.error);
 
   return (
-    <div className="space-y-2">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        {training.unlocked ? (
-          <Badge tone="ok">Odblokowany</Badge>
-        ) : (
-          <Badge tone="warn">Zablokowany</Badge>
-        )}
-        {training.canTrain ? (
-          <Badge tone="ok">Sesja dostępna</Badge>
-        ) : (
-          <Badge tone="default">Sesja niedostępna</Badge>
-        )}
-        <span className="text-[12px] text-[var(--lf-muted)]">
+    <div className="lf-tr">
+      {/* M2 — Training Hero (D2 / D7: stays primary after submit) */}
+      <header className="lf-tr__hero">
+        <p className={`lf-tr__status${training.canTrain ? '' : ' lf-tr__status--locked'}`}>
+          {statusLabel}
+        </p>
+        <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
+        <p className="lf-tr__meta">
           Rozegrane: {training.playedCount}/{training.playedRequired} · Dziś (UTC): {training.today}
-        </span>
-      </div>
+        </p>
+        {lockMessage ? <p className="lf-tr__lock-note">{lockMessage}</p> : null}
+      </header>
 
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-        <Panel title="Gotowi">
-          <p className="m-0 text-lg font-medium tabular-nums">{r.ready}</p>
-        </Panel>
-        <Panel title="Zmęczeni">
-          <p className="m-0 text-lg font-medium tabular-nums">{r.tired}</p>
-        </Panel>
-        <Panel title="Kontuzje">
-          <p className="m-0 text-lg font-medium tabular-nums">{r.injured}</p>
-        </Panel>
-        <Panel title="Zawieszeni">
-          <p className="m-0 text-lg font-medium tabular-nums">{r.suspended}</p>
-        </Panel>
-        <Panel title="Aktywni">
-          <p className="m-0 text-lg font-medium tabular-nums">{r.active}</p>
-        </Panel>
-      </div>
-
-      {!training.canTrain ? (
-        <Panel title="Informacja">
-          <p className="m-0 text-[var(--lf-color-text-muted)]">{lockCopy(training)}</p>
-        </Panel>
-      ) : null}
-
-      {state.ok && !state.skipped ? (
-        <Panel title="Trening zakończony">
-          <p className="m-0 text-[var(--lf-ok)]">
-            Sesja zapisana. Statusy kadry zaktualizowane — sprawdź{' '}
-            <Link href="/squad" className="underline">
-              Skład
-            </Link>
-            .
-          </p>
-        </Panel>
-      ) : null}
-      {state.ok && state.skipped ? (
-        <Panel title="Informacja">
-          <p className="m-0 text-[var(--lf-color-text-muted)]">Sesja na dziś była już zapisana.</p>
-        </Panel>
-      ) : null}
-      {state.error ? (
-        <Panel title="Błąd">
-          <p className="m-0 text-[var(--lf-danger)]" role="alert">
-            {state.error}
-          </p>
-        </Panel>
-      ) : null}
-
-      <Panel title="Fokus zespołowy">
-        <div className="grid gap-2 sm:grid-cols-2">
+      {/* M3 — Focus (primary decision) */}
+      <section className="lf-tr__block" aria-labelledby="lf-tr-focus-title">
+        <h3 id="lf-tr-focus-title" className="lf-tr__block-title">
+          Fokus
+        </h3>
+        <div className="lf-tr__focus-grid" role="group" aria-label="Fokus zespołowy">
           {training.focuses.map((f) => (
             <button
               key={f.id}
               type="button"
               onClick={() => setFocusId(f.id)}
-              className="border px-3 py-2 text-left text-[13px] transition-colors"
-              style={{
-                borderColor: focusId === f.id ? 'var(--lf-color-border-gold)' : 'var(--lf-border)',
-                background: focusId === f.id ? 'var(--lf-color-gold-soft)' : 'var(--lf-inset)',
-              }}
+              className={`lf-tr__choice${focusId === f.id ? ' lf-tr__choice--active' : ''}`}
+              aria-pressed={focusId === f.id}
             >
-              <div className="font-medium text-[var(--lf-text-strong)]">{f.label}</div>
-              <div className="mt-0.5 text-[12px] text-[var(--lf-muted)]">{f.description}</div>
+              <span className="lf-tr__choice-label">{f.label}</span>
+              <span className="lf-tr__choice-desc">{f.description}</span>
             </button>
           ))}
         </div>
-      </Panel>
+      </section>
 
-      <Panel title="Intensywność">
+      {/* M3 — Intensity (supporting) */}
+      <section className="lf-tr__block" aria-labelledby="lf-tr-intensity-title">
+        <h3 id="lf-tr-intensity-title" className="lf-tr__block-title lf-tr__block-title--support">
+          Intensywność
+        </h3>
         {isRegen ? (
-          <p className="m-0 text-[13px] text-[var(--lf-muted)]">
+          <p className="lf-tr__regen-note">
             Przy regeneracji intensywność nie zmienia efektu — kadra odpoczywa.
           </p>
         ) : (
-          <div className="flex flex-wrap gap-2">
+          <div className="lf-tr__intensity-row" role="group" aria-label="Intensywność">
             {training.intensities.map((i) => (
               <button
                 key={i.id}
                 type="button"
                 onClick={() => setIntensityId(i.id)}
-                className="border px-3 py-2 text-left text-[13px]"
-                style={{
-                  borderColor:
-                    intensityId === i.id ? 'var(--lf-color-border-gold)' : 'var(--lf-border)',
-                  background:
-                    intensityId === i.id ? 'var(--lf-color-gold-soft)' : 'var(--lf-inset)',
-                }}
+                className={`lf-tr__choice lf-tr__choice--intensity${
+                  intensityId === i.id ? ' lf-tr__choice--active' : ''
+                }`}
+                aria-pressed={intensityId === i.id}
               >
-                <div className="font-medium">{i.label}</div>
-                <div className="text-[12px] text-[var(--lf-muted)]">{i.description}</div>
+                <span className="lf-tr__choice-label">{i.label}</span>
+                <span className="lf-tr__choice-desc">{i.description}</span>
               </button>
             ))}
           </div>
         )}
-      </Panel>
+      </section>
 
-      <form action={action} className="flex flex-wrap items-center gap-2">
+      {/* M3 — Primary CTA (D1); D5: same action / hidden / disabled */}
+      <form action={action} className="lf-tr__cta-wrap">
         <input type="hidden" name="focusId" value={focusId} />
         <input type="hidden" name="intensityId" value={intensityId} />
-        <Button type="submit" variant="primary" size="md" disabled={!training.canTrain || pending}>
+        <button type="submit" className="lf-tr__primary" disabled={!training.canTrain || pending}>
           {pending ? 'Trening…' : 'Przeprowadź trening'}
-        </Button>
-        <Link
-          href="/squad"
-          className="text-[13px] text-[var(--lf-muted)] underline-offset-2 hover:underline"
-        >
+        </button>
+        <Link href="/squad" className="lf-tr__secondary">
           Skład
         </Link>
       </form>
+
+      {/* M4 — Readiness under CTA (D4 / D6) */}
+      <section className="lf-tr__readiness" aria-labelledby="lf-tr-readiness-label">
+        <p id="lf-tr-readiness-label" className="lf-tr__readiness-label">
+          Gotowość kadry
+        </p>
+        <p className="lf-tr__readiness-line">
+          Gotowi <strong>{r.ready}</strong>
+          {' · '}
+          Zmęczeni <strong>{r.tired}</strong>
+          {' · '}
+          Kontuzje <strong>{r.injured}</strong>
+          {' · '}
+          Zawieszeni <strong>{r.suspended}</strong>
+          {' · '}
+          Aktywni <strong>{r.active}</strong>
+        </p>
+      </section>
+
+      {/* M4 — Feedback below readiness (D7: never replaces Hero) */}
+      {hasFeedback ? (
+        <div className="lf-tr__feedback" aria-live="polite">
+          {state.ok && !state.skipped ? (
+            <p className="lf-tr__feedback-msg lf-tr__feedback-msg--ok">
+              Sesja zapisana. Statusy kadry zaktualizowane — sprawdź{' '}
+              <Link href="/squad">Skład</Link>.
+            </p>
+          ) : null}
+          {state.ok && state.skipped ? (
+            <p className="lf-tr__feedback-msg lf-tr__feedback-msg--muted">
+              Sesja na dziś była już zapisana.
+            </p>
+          ) : null}
+          {state.error ? (
+            <p className="lf-tr__feedback-msg lf-tr__feedback-msg--error" role="alert">
+              {state.error}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

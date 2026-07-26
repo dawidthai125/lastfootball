@@ -27,14 +27,7 @@ export default async function TrainingPage() {
 
   return (
     <div>
-      <SectionHeader
-        title="Trening"
-        subtitle={
-          training.canTrain
-            ? 'Ustaw fokus i intensywność na dziś'
-            : 'Przygotowanie kadry między meczami'
-        }
-      />
+      <SectionHeader title="Trening" subtitle="Decyzja dnia — fokus i intensywność" />
       <TrainingView training={training} />
     </div>
   );
