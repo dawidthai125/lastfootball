@@ -31,21 +31,21 @@ Opcjonalnie: [`PROJECT_STATE.md`](./PROJECT_STATE.md) · [`../HANDOFF.md`](../HA
 
 ### Gdy zadanie dotyczy…
 
-| Temat                        | Czytaj                                                                                                                                        |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Transfery**                | [`../platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) · D20 |
-| Trening                      | GDD §8 · [`../platform/TRAINING.md`](../platform/TRAINING.md) · D21 · PLAYERS                                                                 |
-| Onboarding / auth / klub     | [`../platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                                            |
-| First Match                  | [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                                    |
-| Hub                          | [`../platform/HUB.md`](../platform/HUB.md) · Guide §16                                                                                        |
-| Liga                         | [`../platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                                              |
-| Finanse                      | [`../platform/FINANCE.md`](../platform/FINANCE.md)                                                                                            |
-| Kadra                        | [`../platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                                            |
-| **UI / prezentacja / chrome** | [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16 · Patterns *UI Presentation* · opcjonalnie [postmortem](../game-design/LFE-UX-POSTMORTEM-01.md) (REFERENCE) |
-| Match Live / Canvas / Replay | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                                  |
-| Silnik LFE                   | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md)                                   |
-| Produkt / GDD                | [`../game-design/README.md`](../game-design/README.md)                                                                                        |
-| Release                      | [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md)                                                                                              |
+| Temat                         | Czytaj                                                                                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Transfery**                 | [`../platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) · D20                                            |
+| Trening                       | GDD §8 · [`../platform/TRAINING.md`](../platform/TRAINING.md) · D21 · PLAYERS                                                                                                            |
+| Onboarding / auth / klub      | [`../platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                                                                                       |
+| First Match                   | [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                                                                               |
+| Hub                           | [`../platform/HUB.md`](../platform/HUB.md) · Guide §16                                                                                                                                   |
+| Liga                          | [`../platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                                                                                         |
+| Finanse                       | [`../platform/FINANCE.md`](../platform/FINANCE.md)                                                                                                                                       |
+| Kadra                         | [`../platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                                                                                       |
+| **UI / prezentacja / chrome** | [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16 · Patterns _UI Presentation_ · opcjonalnie [postmortem](../game-design/LFE-UX-POSTMORTEM-01.md) (REFERENCE) |
+| Match Live / Canvas / Replay  | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                                                                             |
+| Silnik LFE                    | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md)                                                                              |
+| Produkt / GDD                 | [`../game-design/README.md`](../game-design/README.md)                                                                                                                                   |
+| Release                       | [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md)                                                                                                                                         |
 
 Indeks: [`../README.md`](../README.md).
 

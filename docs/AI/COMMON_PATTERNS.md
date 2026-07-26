@@ -117,17 +117,17 @@ Mutacje z efektem ubocznym (complete fixture, transfer deal, ensure fixtures/win
 
 ## Domain Ownership
 
-| Domen     | Owner docs                 | Owner kod (orientacja)       |
-| --------- | -------------------------- | ---------------------------- |
-| Hub       | `platform/HUB.md` + Guide §16 | `lib/hub`                    |
-| League    | `platform/LEAGUE.md`       | `lib/fixtures`, `lib/league` |
-| Finance   | `platform/FINANCE.md`      | `lib/finance`                |
-| Players   | `platform/PLAYERS.md`      | `lib/squad`                  |
-| Transfers | `platform/TRANSFERS.md`    | `lib/transfers`              |
-| Training  | `platform/TRAINING.md`     | `lib/training`               |
-| Match UI  | `web/MATCH_UI_PIPELINE.md` | gameplay / live              |
-| UI look   | `game-design/UI_DESIGN_GUIDE.md` §16 | `apps/web` components   |
-| LFE       | `lfe/*`                    | `packages/lfe`               |
+| Domen     | Owner docs                           | Owner kod (orientacja)       |
+| --------- | ------------------------------------ | ---------------------------- |
+| Hub       | `platform/HUB.md` + Guide §16        | `lib/hub`                    |
+| League    | `platform/LEAGUE.md`                 | `lib/fixtures`, `lib/league` |
+| Finance   | `platform/FINANCE.md`                | `lib/finance`                |
+| Players   | `platform/PLAYERS.md`                | `lib/squad`                  |
+| Transfers | `platform/TRANSFERS.md`              | `lib/transfers`              |
+| Training  | `platform/TRAINING.md`               | `lib/training`               |
+| Match UI  | `web/MATCH_UI_PIPELINE.md`           | gameplay / live              |
+| UI look   | `game-design/UI_DESIGN_GUIDE.md` §16 | `apps/web` components        |
+| LFE       | `lfe/*`                              | `packages/lfe`               |
 
 Nie mieszaj ownership: Canvas nie mutuje Engine; page nie definiuje fee transferu lokalnie.
 

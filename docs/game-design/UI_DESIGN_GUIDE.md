@@ -105,16 +105,16 @@ Szkielet oczekiwany:
 
 ## 5. Wzorce ekranów
 
-| Wzorzec           | Kiedy                  | Unikać                            |
-| ----------------- | ---------------------- | --------------------------------- |
-| Hub               | Start sesji, CTA dnia  | Mini-dashboard z 12 kartami       |
-| Decision-first    | Ekrany domenowe        | KPI wall na first viewport        |
-| Kick-Off          | PreMatch               | Briefing / triptych bez dominant CTA |
-| Question-day      | Trening, Kadra, Finanse | Dashboard metryk bez pytania     |
-| Lista + detal     | Zawodnicy, oferty      | Karty zamiast tabeli bez potrzeby |
-| Formularz decyzji | Transfer, trening      | Wielostronicowe wizardy bez sensu |
-| Match view        | Przed / w trakcie / po | Overlaye zasłaniające boisko      |
-| Raport            | Post-match, finanse    | Infografiki bez akcji             |
+| Wzorzec           | Kiedy                   | Unikać                               |
+| ----------------- | ----------------------- | ------------------------------------ |
+| Hub               | Start sesji, CTA dnia   | Mini-dashboard z 12 kartami          |
+| Decision-first    | Ekrany domenowe         | KPI wall na first viewport           |
+| Kick-Off          | PreMatch                | Briefing / triptych bez dominant CTA |
+| Question-day      | Trening, Kadra, Finanse | Dashboard metryk bez pytania         |
+| Lista + detal     | Zawodnicy, oferty       | Karty zamiast tabeli bez potrzeby    |
+| Formularz decyzji | Transfer, trening       | Wielostronicowe wizardy bez sensu    |
+| Match view        | Przed / w trakcie / po  | Overlaye zasłaniające boisko         |
+| Raport            | Post-match, finanse     | Infografiki bez akcji                |
 
 **Karty:** tylko gdy niosą interakcję lub czytelność. Domyślnie — lista / sekcja bez „card for card’s sake”.  
 **Pełny kontrakt:** §16 Presentation Contract.
@@ -218,7 +218,7 @@ Empty states: konkretna wskazówka „co zrobić dalej”, nie pusty ilustracyjn
 ## 16. Presentation Contract (obowiązujący)
 
 SSOT reguł prezentacji po LFE-UI-EVOLUTION-01/02.  
-Skrót dla AI: [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md) → *UI Presentation Pattern*.  
+Skrót dla AI: [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md) → _UI Presentation Pattern_.  
 Historia: [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) (**REFERENCE**).
 
 > **W przypadku rozbieżności obowiązuje `UI_DESIGN_GUIDE`, a postmortem ma charakter referencyjny.**
@@ -247,10 +247,10 @@ First viewport = **jedna sprawa** lub **jedno pytanie**. Bez KPI wall; max **jed
 
 ### 16.4 Dialekty first viewport
 
-| Dialekt | Ekrany (przykłady) | Forma |
-| ------- | ------------------ | ----- |
+| Dialekt       | Ekrany (przykłady)       | Forma                               |
+| ------------- | ------------------------ | ----------------------------------- |
 | Event / inbox | Hub, Transfery, Kick-Off | Najbliższe wydarzenie / sprawa / VS |
-| Question-day | Trening, Kadra, Finanse | Nagłówek-pytanie + jedna ścieżka |
+| Question-day  | Trening, Kadra, Finanse  | Nagłówek-pytanie + jedna ścieżka    |
 
 Nie unifikować dialektów na siłę (jeden szablon CSS ≠ jeden język decyzji).
 
@@ -270,11 +270,11 @@ Hub → Trening → Kadra → Transfery → Finanse → Match path → Hub
 
 ### 16.6 Glosariusz: Kadra vs Skład
 
-| Termin | Znaczenie | Przykłady UI |
-| ------ | --------- | ------------ |
-| **Kadra** | Ekran / nawigacja `/squad` | „Kadra”, „Zobacz kadrę” |
-| **Skład** | XI / gotowość meczowa | Kick-Off summary, „Ustaw skład”, „Skład gotowy” |
-| **Zakaz** | „Zobacz skład” jako link do `/squad` | — |
+| Termin    | Znaczenie                            | Przykłady UI                                    |
+| --------- | ------------------------------------ | ----------------------------------------------- |
+| **Kadra** | Ekran / nawigacja `/squad`           | „Kadra”, „Zobacz kadrę”                         |
+| **Skład** | XI / gotowość meczowa                | Kick-Off summary, „Ustaw skład”, „Skład gotowy” |
+| **Zakaz** | „Zobacz skład” jako link do `/squad` | —                                               |
 
 ### 16.7 Must (EPIC UI prezentacji)
 
@@ -302,15 +302,15 @@ Hub → Trening → Kadra → Transfery → Finanse → Match path → Hub
 
 ### 16.9 Świadomie odrzucone kierunki (UI Evolution)
 
-| Odrzucone | Dlaczego |
-| --------- | -------- |
-| Mobile Variant B (Mecz w primary, Trening w Więcej) | Zamrożono Variant A w 02 |
-| Jeden szablon CSS / jeden dialekt na wszystkie ekrany | Zachować event vs question-day |
-| Finance jako narzędzie budżetowania | Tylko status + deep-link `/transfers` |
-| Nowe reguły unlock pod UI | SSOT unlock bez zmian |
-| KPI cards jako „kontekst” / drugi gold CTA | Anti-dashboard |
-| League / Live depth / Messaging w scope UI Evolution | Poza thin slice |
-| „Zobacz skład” → `/squad` | Zastąpione „Zobacz kadrę” |
+| Odrzucone                                             | Dlaczego                              |
+| ----------------------------------------------------- | ------------------------------------- |
+| Mobile Variant B (Mecz w primary, Trening w Więcej)   | Zamrożono Variant A w 02              |
+| Jeden szablon CSS / jeden dialekt na wszystkie ekrany | Zachować event vs question-day        |
+| Finance jako narzędzie budżetowania                   | Tylko status + deep-link `/transfers` |
+| Nowe reguły unlock pod UI                             | SSOT unlock bez zmian                 |
+| KPI cards jako „kontekst” / drugi gold CTA            | Anti-dashboard                        |
+| League / Live depth / Messaging w scope UI Evolution  | Poza thin slice                       |
+| „Zobacz skład” → `/squad`                             | Zastąpione „Zobacz kadrę”             |
 
 ### 16.10 Definition of Done (EPIC UI prezentacji)
 
@@ -322,18 +322,18 @@ Hub → Trening → Kadra → Transfery → Finanse → Match path → Hub
 
 ### 16.11 Powiązane dokumenty
 
-| Dokument | Rola |
-| -------- | ---- |
-| [`../platform/HUB.md`](../platform/HUB.md) | Semantyka phase / CTA / unlock |
-| [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) | Historia (REFERENCE) |
-| [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md) | Skrót AI |
-| [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) | Live / Canvas / Replay |
+| Dokument                                                     | Rola                           |
+| ------------------------------------------------------------ | ------------------------------ |
+| [`../platform/HUB.md`](../platform/HUB.md)                   | Semantyka phase / CTA / unlock |
+| [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md)         | Historia (REFERENCE)           |
+| [`../AI/COMMON_PATTERNS.md`](../AI/COMMON_PATTERNS.md)       | Skrót AI                       |
+| [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) | Live / Canvas / Replay         |
 
 ---
 
 ## Historia
 
-| Wersja      | Data       | Zmiana                                              |
-| ----------- | ---------- | --------------------------------------------------- |
-| 0.1.0-gdd01 | 2026-07-23 | Zasady bazowe UI (GDD-01)                           |
-| 0.2.0       | 2026-07-26 | Presentation Contract §16 (LFE-DOCS-UX-03)           |
+| Wersja      | Data       | Zmiana                                     |
+| ----------- | ---------- | ------------------------------------------ |
+| 0.1.0-gdd01 | 2026-07-23 | Zasady bazowe UI (GDD-01)                  |
+| 0.2.0       | 2026-07-26 | Presentation Contract §16 (LFE-DOCS-UX-03) |

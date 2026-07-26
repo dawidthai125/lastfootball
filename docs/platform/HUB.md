@@ -32,22 +32,22 @@ Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02):
 
 ### Primary CTA
 
-| Warunek | Label | href |
-| ------- | ----- | ---- |
-| `matchday` + `nextFixture` | Przygotuj mecz | `/match/{id}` |
-| Fallback (idle / brak upcoming) | **Zobacz kadrę** | `/squad` |
+| Warunek                         | Label            | href          |
+| ------------------------------- | ---------------- | ------------- |
+| `matchday` + `nextFixture`      | Przygotuj mecz   | `/match/{id}` |
+| Fallback (idle / brak upcoming) | **Zobacz kadrę** | `/squad`      |
 
 ### Secondary CTA — daily loop (max 5)
 
 Kolejność (unlock-aware; soft-lock przez istniejące `resolveNavAccess`):
 
-| # | Label | href |
-| - | ----- | ---- |
-| 1 | Trening | `/training` |
-| 2 | Kadra | `/squad` |
-| 3 | Transfery | `/transfers` |
-| 4 | Finanse | `/finance` |
-| 5 | Terminarz | `/matches` |
+| #   | Label     | href         |
+| --- | --------- | ------------ |
+| 1   | Trening   | `/training`  |
+| 2   | Kadra     | `/squad`     |
+| 3   | Transfery | `/transfers` |
+| 4   | Finanse   | `/finance`   |
+| 5   | Terminarz | `/matches`   |
 
 Demote z Hub daily (pozostają w left nav / Więcej): klub, wiadomość zarządu, tabela jako osobny secondary top-5 — nie w daily strip.
 
@@ -68,15 +68,15 @@ Soft-lock: Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EA
 
 ## Domeny (SSOT poza tym plikiem)
 
-| Domen           | Dokument                                                     |
-| --------------- | ------------------------------------------------------------ |
-| Liga / fixtures | [`LEAGUE.md`](./LEAGUE.md)                                   |
-| Finanse         | [`FINANCE.md`](./FINANCE.md)                                 |
-| Kadra           | [`PLAYERS.md`](./PLAYERS.md)                                 |
-| Transfery       | [`TRANSFERS.md`](./TRANSFERS.md)                             |
-| Trening         | [`TRAINING.md`](./TRAINING.md)                               |
-| First Match     | [`FIRST_MATCH.md`](./FIRST_MATCH.md)                         |
-| Match Live UI   | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) |
+| Domen           | Dokument                                                                     |
+| --------------- | ---------------------------------------------------------------------------- |
+| Liga / fixtures | [`LEAGUE.md`](./LEAGUE.md)                                                   |
+| Finanse         | [`FINANCE.md`](./FINANCE.md)                                                 |
+| Kadra           | [`PLAYERS.md`](./PLAYERS.md)                                                 |
+| Transfery       | [`TRANSFERS.md`](./TRANSFERS.md)                                             |
+| Trening         | [`TRAINING.md`](./TRAINING.md)                                               |
+| First Match     | [`FIRST_MATCH.md`](./FIRST_MATCH.md)                                         |
+| Match Live UI   | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                 |
 | UI Contract     | [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16 |
 
 ## Zakazane

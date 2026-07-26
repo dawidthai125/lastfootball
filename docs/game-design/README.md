@@ -16,13 +16,13 @@ Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23
 
 ## Dokumenty
 
-| Dokument                                                 | Opis                       |
-| -------------------------------------------------------- | -------------------------- |
-| [GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md)     | Pełny GDD (SSOT)           |
-| [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md)               | Zasady UI/UX · **§16 Presentation Contract (SSOT)** |
-| [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md)     | Historia UI Evolution (**REFERENCE**) |
-| [CURRENT_DESIGN.md](./CURRENT_DESIGN.md)                 | Co jest wypełnione (skrót) |
-| [ROADMAP.md](./ROADMAP.md)                               | Kolejne etapy GDD          |
+| Dokument                                             | Opis                                                |
+| ---------------------------------------------------- | --------------------------------------------------- |
+| [GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md) | Pełny GDD (SSOT)                                    |
+| [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md)           | Zasady UI/UX · **§16 Presentation Contract (SSOT)** |
+| [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) | Historia UI Evolution (**REFERENCE**)               |
+| [CURRENT_DESIGN.md](./CURRENT_DESIGN.md)             | Co jest wypełnione (skrót)                          |
+| [ROADMAP.md](./ROADMAP.md)                           | Kolejne etapy GDD                                   |
 
 ## Najważniejsze decyzje
 

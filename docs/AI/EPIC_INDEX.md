@@ -42,12 +42,12 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin)
 
 ## UI / Docs UX DONE
 
-| ID | Temat |
-| -- | ----- |
-| LFE-UI-EVOLUTION-01 (A–H) | Decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance |
-| LFE-UI-EVOLUTION-02 | Daily manager loop · Kadra SSOT · Mobile Variant A |
-| LFE-UX-POSTMORTEM-01 | Historia (**REFERENCE**) — [`../game-design/LFE-UX-POSTMORTEM-01.md`](../game-design/LFE-UX-POSTMORTEM-01.md) |
-| LFE-DOCS-UX-03 | Presentation Contract w Guide §16 · Patterns · HUB sync |
+| ID                        | Temat                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| LFE-UI-EVOLUTION-01 (A–H) | Decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance                                |
+| LFE-UI-EVOLUTION-02       | Daily manager loop · Kadra SSOT · Mobile Variant A                                                            |
+| LFE-UX-POSTMORTEM-01      | Historia (**REFERENCE**) — [`../game-design/LFE-UX-POSTMORTEM-01.md`](../game-design/LFE-UX-POSTMORTEM-01.md) |
+| LFE-DOCS-UX-03            | Presentation Contract w Guide §16 · Patterns · HUB sync                                                       |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
 Przy rozbieżności z postmortemem **wygrywa Guide**.
