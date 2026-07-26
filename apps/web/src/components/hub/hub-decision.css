@@ -1,0 +1,215 @@
+/* LFE-UI-EVOLUTION-01A — Hub decision presentation (tokens only). */
+
+.lf-hub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+  max-width: 40rem;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* —— Decision Banner (match / event) —— */
+.lf-hub__decision {
+  position: relative;
+  padding: var(--lf-space-5) var(--lf-space-4);
+  background: var(--lf-color-bg-panel);
+  border-bottom: var(--lf-border-width-thick) solid var(--lf-color-border-gold);
+}
+
+.lf-hub__decision-eyebrow {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-hub__decision-title {
+  margin: var(--lf-space-2) 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 5vw, var(--lf-type-hero));
+  line-height: 1.15;
+  color: var(--lf-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.lf-hub__decision-meta {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-body);
+  font-weight: 600;
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-hub__decision-detail {
+  margin: var(--lf-space-1) 0 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+/* —— Primary CTA —— */
+.lf-hub__primary-wrap {
+  display: flex;
+  width: 100%;
+}
+
+.lf-hub__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--lf-space-3) var(--lf-space-5);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: var(--lf-color-gold-base);
+  color: var(--lf-color-bg-void);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h2);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--lf-radius-sm);
+  transition: filter var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-hub__primary:hover {
+  filter: brightness(1.06);
+}
+
+.lf-hub__primary:focus-visible {
+  outline: 2px solid var(--lf-color-border-gold);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .lf-hub__primary {
+    width: auto;
+    min-width: 16rem;
+    padding-inline: var(--lf-space-6);
+  }
+}
+
+/* —— Club identity —— */
+.lf-hub__club {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-3);
+  min-width: 0;
+}
+
+.lf-hub__club-text {
+  min-width: 0;
+}
+
+.lf-hub__club-label {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-hub__club-name {
+  margin: 2px 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h2);
+  line-height: 1.2;
+  color: var(--lf-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.lf-hub__club-meta {
+  margin: var(--lf-space-1) 0 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+/* —— Secondary (lower priority) —— */
+.lf-hub__secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-2) var(--lf-space-3);
+  min-width: 0;
+}
+
+.lf-hub__secondary-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--lf-color-border-subtle);
+  text-underline-offset: 3px;
+}
+
+.lf-hub__secondary-item:hover {
+  color: var(--lf-color-text-secondary);
+  text-decoration-color: var(--lf-color-text-muted);
+}
+
+.lf-hub__secondary-item--locked {
+  text-decoration: none;
+  color: var(--lf-color-text-faint);
+  cursor: default;
+}
+
+/* —— Light status (one line, not KPI grid) —— */
+.lf-hub__status {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  line-height: 1.45;
+  color: var(--lf-color-text-faint);
+  overflow-wrap: anywhere;
+}
+
+/* —— Board message —— */
+.lf-hub__message {
+  padding-top: var(--lf-space-3);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  max-width: 36rem;
+}
+
+.lf-hub__message-from {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-hub__message-subject {
+  margin: var(--lf-space-1) 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-hub__message-body {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-caption);
+  line-height: 1.45;
+  color: var(--lf-color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-hub__primary {
+    transition: none;
+  }
+}

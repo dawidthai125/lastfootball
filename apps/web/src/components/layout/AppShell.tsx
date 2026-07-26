@@ -16,7 +16,9 @@ function ShellFrame({ children }: { children: ReactNode }) {
   const { navCollapsed, showRail } = useShell();
   const pathname = usePathname();
   const isLiveMatch = /^\/match\/[^/]+\/live\/?$/.test(pathname);
-  const railVisible = showRail && !isLiveMatch;
+  const isHub = pathname === '/hub' || pathname === '/hub/';
+  /** LFE-UI-EVOLUTION-01A: hide rail on Hub only; Live unchanged. */
+  const railVisible = showRail && !isLiveMatch && !isHub;
 
   const bodyClass = [
     'lf-app-shell__body',

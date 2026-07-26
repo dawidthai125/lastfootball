@@ -12,11 +12,14 @@ import {
   resolvePrimaryCta,
   resolveSecondaryCtas,
   type HubCta,
+  type HubSession,
 } from '@/lib/hub';
 
+import './hub-decision.css';
+
 /**
- * Decision Hub — GDD §23 / LFE-HUB-01 + LFE-LEAGUE-02 (EARLY_CLUB / SEASON, one layout).
- * No mid-season mock; Club DTO + hub/fixtures/league SSOT only.
+ * Decision Hub — GDD §23 / LFE-UI-EVOLUTION-01A (presentation only).
+ * Resolvers / DTO / SSOT unchanged.
  */
 export function EarlyClubHub({
   club,
@@ -46,14 +49,17 @@ export function EarlyClubHub({
   const message = buildWelcomeMessage(club, nextFixture);
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-4)' }}
-      data-hub-phase={phase}
-      data-hub-session={session}
-    >
-      <EarlyHero club={club} status={status} />
-      <LastMatchStrip title={lastMatch.title} detail={lastMatch.detail} />
+    <div className="lf-hub" data-hub-phase={phase} data-hub-session={session}>
+      <DecisionBanner
+        club={club}
+        session={session}
+        nextFixture={nextFixture}
+        lastMatch={lastMatch}
+        dayLabel={status.dayLabel}
+        league={status.league}
+      />
       <PrimaryCta cta={primary} />
+      <ClubIdentity club={club} status={status} />
       <SecondaryRow actions={secondary} />
       <LightStatus status={status} />
       <WelcomeMessage message={message} />
@@ -61,7 +67,99 @@ export function EarlyClubHub({
   );
 }
 
-function EarlyHero({
+type DecisionBannerProps = {
+  club: ClubDto;
+  session: HubSession;
+  nextFixture: FixtureDto | null;
+  lastMatch: ReturnType<typeof buildLastMatchStrip>;
+  dayLabel: string;
+  league: string;
+};
+
+/** Domain entity: nearest match / session event — not a KPI strip. */
+function DecisionBanner({
+  club,
+  session,
+  nextFixture,
+  lastMatch,
+  dayLabel,
+  league,
+}: DecisionBannerProps) {
+  const event = resolveDecisionEvent({
+    club,
+    session,
+    nextFixture,
+    lastMatch,
+    dayLabel,
+    league,
+  });
+
+  return (
+    <AtmosphereLayer
+      className="lf-hub__decision"
+      aria-label={event.eyebrow}
+      layers={['vignette', 'grain']}
+    >
+      <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
+      <h1 className="lf-hub__decision-title">{event.title}</h1>
+      <p className="lf-hub__decision-meta">{event.meta}</p>
+      {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
+    </AtmosphereLayer>
+  );
+}
+
+function resolveDecisionEvent({
+  club,
+  session,
+  nextFixture,
+  lastMatch,
+  dayLabel,
+  league,
+}: DecisionBannerProps): {
+  eyebrow: string;
+  title: string;
+  meta: string;
+  detail: string | null;
+} {
+  if (session === 'matchday' && nextFixture) {
+    const venue = nextFixture.isHome ? 'U siebie' : 'Wyjazd';
+    return {
+      eyebrow: 'Najbliższy mecz',
+      title: `${club.shortName} vs ${nextFixture.opponent.shortName}`,
+      meta: `Kolejka ${nextFixture.matchday} · ${league} · ${venue}`,
+      detail: nextFixture.opponent.name,
+    };
+  }
+
+  if (session === 'post_match') {
+    return {
+      eyebrow: lastMatch.title,
+      title: lastMatch.detail,
+      meta: `${league} · ${dayLabel}`,
+      detail: null,
+    };
+  }
+
+  if (nextFixture) {
+    const venue = nextFixture.isHome ? 'U siebie' : 'Wyjazd';
+    return {
+      eyebrow: 'Nadchodzące wydarzenie',
+      title: `vs ${nextFixture.opponent.name}`,
+      meta: `Kolejka ${nextFixture.matchday} · ${league} · ${venue}`,
+      detail: null,
+    };
+  }
+
+  return {
+    eyebrow: lastMatch.title,
+    title: lastMatch.detail,
+    meta: `${league} · ${dayLabel}`,
+    detail: null,
+  };
+}
+
+/** Domain entity: club — compact identity, not a dashboard hero card. */
+function ClubIdentity({
   club,
   status,
 }: {
@@ -69,136 +167,29 @@ function EarlyHero({
   status: ReturnType<typeof buildLightStatus>;
 }) {
   return (
-    <AtmosphereLayer
-      aria-label="Club Hero"
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-panel)',
-        borderRadius: 'var(--lf-radius-sm)',
-        padding: 'var(--lf-space-5)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: 'var(--lf-space-4)',
-        }}
-      >
-        <ClubCrest
-          shortName={club.shortName}
-          clubName={club.name}
-          crestTemplateId={club.crestTemplateId}
-          accentColor={club.primaryColor}
-          size="xl"
-        />
-        <div style={{ flex: '1 1 220px', minWidth: 0 }}>
-          <p
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              margin: 0,
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-gold)',
-            }}
-          >
-            Twój klub
-          </p>
-          <h1
-            className="font-[family-name:var(--font-ui)] font-bold"
-            style={{
-              margin: 0,
-              marginTop: 'var(--lf-space-1)',
-              fontSize: 'var(--lf-type-hero)',
-              lineHeight: 1.1,
-              color: 'var(--lf-color-text-primary)',
-            }}
-          >
-            {club.name}
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              marginTop: 'var(--lf-space-2)',
-              fontSize: 'var(--lf-type-caption)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            {status.stadium} · {status.league} · {status.seasonLabel} · {status.dayLabel}
-          </p>
-        </div>
+    <div className="lf-hub__club" aria-label="Twój klub">
+      <ClubCrest
+        shortName={club.shortName}
+        clubName={club.name}
+        crestTemplateId={club.crestTemplateId}
+        accentColor={club.primaryColor}
+        size="md"
+      />
+      <div className="lf-hub__club-text">
+        <p className="lf-hub__club-label">Twój klub</p>
+        <p className="lf-hub__club-name">{club.name}</p>
+        <p className="lf-hub__club-meta">
+          {status.league} · {status.dayLabel} · {status.seasonLabel}
+        </p>
       </div>
-    </AtmosphereLayer>
-  );
-}
-
-function LastMatchStrip({ title, detail }: { title: string; detail: string }) {
-  return (
-    <section
-      aria-label={title}
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        borderLeftWidth: 'var(--lf-border-width-thick)',
-        borderLeftColor: 'var(--lf-color-border-gold)',
-        background: 'var(--lf-color-bg-panel-alt)',
-        borderRadius: 'var(--lf-radius-sm)',
-        padding: 'var(--lf-space-3) var(--lf-space-4)',
-      }}
-    >
-      <p
-        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-        style={{
-          margin: 0,
-          fontSize: 'var(--lf-type-label)',
-          letterSpacing: 'var(--lf-type-tracking-label)',
-          color: 'var(--lf-color-text-gold)',
-        }}
-      >
-        {title}
-      </p>
-      <p
-        style={{
-          margin: 0,
-          marginTop: 'var(--lf-space-1)',
-          fontSize: 'var(--lf-type-body)',
-          color: 'var(--lf-color-text-primary)',
-          fontWeight: 600,
-        }}
-      >
-        {detail}
-      </p>
-    </section>
+    </div>
   );
 }
 
 function PrimaryCta({ cta }: { cta: HubCta }) {
   return (
-    <div>
-      <Link
-        href={cta.href}
-        data-hub-primary-cta={cta.id}
-        className="font-[family-name:var(--font-ui)] font-semibold"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minWidth: '12rem',
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-gold)',
-          background: 'var(--lf-color-gold-soft)',
-          color: 'var(--lf-color-gold-base)',
-          fontSize: 'var(--lf-type-body)',
-          padding: 'var(--lf-space-3) var(--lf-space-5)',
-          borderRadius: 'var(--lf-radius-sm)',
-          textDecoration: 'none',
-        }}
-      >
+    <div className="lf-hub__primary-wrap">
+      <Link href={cta.href} data-hub-primary-cta={cta.id} className="lf-hub__primary">
         {cta.label}
       </Link>
     </div>
@@ -208,131 +199,49 @@ function PrimaryCta({ cta }: { cta: HubCta }) {
 function SecondaryRow({ actions }: { actions: HubCta[] }) {
   if (actions.length === 0) return null;
   return (
-    <div
-      aria-label="Akcje dodatkowe"
-      style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--lf-space-2)' }}
-    >
+    <nav className="lf-hub__secondary" aria-label="Akcje dodatkowe">
       {actions.map((cta) =>
         cta.access === 'soft_locked' ? (
           <span
             key={cta.id}
+            className="lf-hub__secondary-item lf-hub__secondary-item--locked"
             title="Odblokuje się wkrótce"
-            style={{
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-subtle)',
-              background: 'var(--lf-color-bg-inset)',
-              color: 'var(--lf-color-text-faint)',
-              fontSize: 'var(--lf-type-caption)',
-              padding: 'var(--lf-space-2) var(--lf-space-3)',
-              borderRadius: 'var(--lf-radius-sm)',
-              cursor: 'default',
-            }}
           >
             {cta.label} · wkrótce
           </span>
         ) : (
-          <Link
-            key={cta.id}
-            href={cta.href}
-            style={{
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-strong)',
-              background: 'var(--lf-color-bg-panel-alt)',
-              color: 'var(--lf-color-text-secondary)',
-              fontSize: 'var(--lf-type-caption)',
-              padding: 'var(--lf-space-2) var(--lf-space-3)',
-              borderRadius: 'var(--lf-radius-sm)',
-              textDecoration: 'none',
-            }}
-          >
+          <Link key={cta.id} href={cta.href} className="lf-hub__secondary-item">
             {cta.label}
           </Link>
         ),
       )}
-    </div>
+    </nav>
   );
 }
 
 function LightStatus({ status }: { status: ReturnType<typeof buildLightStatus> }) {
+  const parts = [
+    status.clubLevelLabel,
+    status.league,
+    status.leaguePositionLabel,
+    status.cashLabel,
+    status.stadium,
+  ].filter((v): v is string => Boolean(v));
+
   return (
-    <section
-      aria-label="Status klubu"
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--lf-space-4)',
-        fontSize: 'var(--lf-type-caption)',
-        color: 'var(--lf-color-text-muted)',
-      }}
-    >
-      <StatusChip label="Poziom" value={status.clubLevelLabel} />
-      <StatusChip label="Liga" value={status.league} />
-      {status.leaguePositionLabel ? (
-        <StatusChip label="Pozycja" value={status.leaguePositionLabel} />
-      ) : null}
-      {status.cashLabel ? <StatusChip label="Kasa" value={status.cashLabel} /> : null}
-      <StatusChip label="Stadion" value={status.stadium} />
-    </section>
+    <p className="lf-hub__status" aria-label="Status klubu">
+      {parts.join(' · ')}
+    </p>
   );
 }
 
-function StatusChip({ label, value }: { label: string; value: string }) {
-  return (
-    <span>
-      <span style={{ color: 'var(--lf-color-text-faint)' }}>{label} </span>
-      <strong style={{ color: 'var(--lf-color-text-primary)', fontWeight: 600 }}>{value}</strong>
-    </span>
-  );
-}
-
+/** Domain entity: board message — typographic, not a KPI card. */
 function WelcomeMessage({ message }: { message: ReturnType<typeof buildWelcomeMessage> }) {
   return (
-    <section
-      aria-label="Wiadomość"
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-panel)',
-        borderRadius: 'var(--lf-radius-sm)',
-        padding: 'var(--lf-space-4)',
-      }}
-    >
-      <p
-        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-        style={{
-          margin: 0,
-          fontSize: 'var(--lf-type-label)',
-          letterSpacing: 'var(--lf-type-tracking-label)',
-          color: 'var(--lf-color-text-faint)',
-        }}
-      >
-        Wiadomość · {message.from}
-      </p>
-      <h2
-        className="font-[family-name:var(--font-ui)] font-semibold"
-        style={{
-          margin: 0,
-          marginTop: 'var(--lf-space-1)',
-          fontSize: 'var(--lf-type-h2)',
-          color: 'var(--lf-color-text-primary)',
-        }}
-      >
-        {message.subject}
-      </h2>
-      <p
-        style={{
-          margin: 0,
-          marginTop: 'var(--lf-space-2)',
-          fontSize: 'var(--lf-type-body)',
-          color: 'var(--lf-color-text-muted)',
-          maxWidth: '40rem',
-        }}
-      >
-        {message.body}
-      </p>
+    <section className="lf-hub__message" aria-label="Wiadomość">
+      <p className="lf-hub__message-from">Wiadomość · {message.from}</p>
+      <h2 className="lf-hub__message-subject">{message.subject}</h2>
+      <p className="lf-hub__message-body">{message.body}</p>
     </section>
   );
 }
