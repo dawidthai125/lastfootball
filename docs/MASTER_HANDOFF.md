@@ -5,22 +5,21 @@
 Kompletne przekazanie projektu dla nowego ChatGPT / Cursor / developera.  
 **Nie wymagana** historia czatu ani analiza całej historii commitów.
 
-**Baseline:** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · feature `10de062` · LFE-TRAINING-01 FULLY CLOSED · 2026-07-25
+**Baseline:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) (feature **LFE-TRANSFERS-08** · `9b1c575`) — nie kopiuj hashy tutaj przy kolejnych CLOSE.
 
 ---
 
 ## 1. Production Baseline
 
-| Pole     | Wartość                                                                    |
-| -------- | -------------------------------------------------------------------------- |
-| Prod URL | https://lastfootball.vercel.app                                            |
-| Commit   | `10de062b3e7aa431621d3727d6b277dc2141aa1a`                                 |
-| Message  | feat(training): implement Thin Slice team training (LFE-TRAINING-01)       |
-| Status   | **PRODUCTION VERIFIED · GREEN**                                            |
-| App      | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                         |
-| Supabase | `anoeimngwptucjdugjme` (+ players + transfers + **training Thin** applied) |
-| CI       | Format · Typecheck · Lint · Test · Build                                   |
-| Hosting  | Vercel Production                                                          |
+| Pole             | Wartość                                                                        |
+| ---------------- | ------------------------------------------------------------------------------ |
+| Prod URL         | https://lastfootball.vercel.app                                                |
+| Feature baseline | **patrz** [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                 |
+| Status           | **PRODUCTION VERIFIED · GREEN**                                                |
+| App              | `@lastfootball/web` 0.1.0 · LFE `0.9.1-match-ai01`                             |
+| Supabase         | `anoeimngwptucjdugjme` (players · transfers · transfer_offers · training Thin) |
+| CI               | Format · Typecheck · Lint · Test · Build · Secret scan                         |
+| Hosting          | Vercel Production                                                              |
 
 ---
 
@@ -32,10 +31,10 @@ Browser → Next.js apps/web
             ├─ Onboarding + First Match tunnel
             ├─ Hub decision (EARLY_CLUB / SEASON) + league + finance + squad + transfers + training
             └─ Match UI → LiveMatchRuntime → packages/lfe
-Supabase ← Auth + clubs + fixtures + finance_movements + players + transfer_deals
+Supabase ← Auth + clubs + fixtures + finance_movements + players + transfer_deals + transfer_offers
 ```
 
-Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)
+Szczegóły: [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md) · [`AI/MODULE_MAP.md`](./AI/MODULE_MAP.md)
 
 ---
 
@@ -164,7 +163,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## 12. Jak prowadzić kolejny EPIC
 
-1. `AI/START_HERE.md` → baseline → principles → patterns → workflow.
+1. `AI/AI_QUICK_START.md` → `AI/START_HERE.md` → baseline → principles → patterns → workflow.
 2. AUDIT w kodzie (nie czat).
 3. PLAN M1–Mn + poza zakresem + AC.
 4. Owner GO → IMPLEMENT → VALIDATION → GO COMMIT → GO PUSH → **CI GREEN** → CLOSE.
@@ -174,4 +173,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

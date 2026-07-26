@@ -51,7 +51,15 @@ Wzorcę operacyjne: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md). Reguły warstw
 
 **Opis:** Mały, prawdziwy przepływ na SSOT > pełny GDD od razu.  
 **Uzasadnienie:** Szybka walidacja produktu; wyjątki świadome i udokumentowane.  
-**Przykład:** Transfers Thin: buy/sell + okno + cash; bez negotiation/envelope.
+**Przykład:** Transfers Thin: Instant + Pending + **1× Counter** H2H + listing + nego presets; **bez** escrow / timeout / AI H2H / 2+ counters (Poza Thin w D20).
+
+---
+
+## SINGLE SETTLEMENT PATH
+
+**Opis:** Jedna rodzina funkcji kończy deal transferowy — brak równoległego „live complete”.  
+**Uzasadnienie:** Drugi settle = drift cash/players/deals.  
+**Przykład:** Tylko `completeTransferBuy` / `completeTransferSell` (seed \| live); zakaz `completeLiveTransfer()`. Szczegóły: [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ---
 
@@ -87,4 +95,4 @@ Wzorcę operacyjne: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md). Reguły warstw
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

@@ -1,22 +1,28 @@
-# Connection status — 2026-07-25
+# Connection status
 
-## GitHub — PASS
+## Cel
 
-| Check            | Result                                                        |
-| ---------------- | ------------------------------------------------------------- |
-| Remote           | `https://github.com/dawidthai125/lastfootball.git`            |
-| Feature baseline | `393a43c` (LFE-TRANSFERS-01)                                  |
-| Tip              | verify `git log -1` (docs/style may be newer, e.g. `3161903`) |
-| CI               | GREEN on Transfers FULLY CLOSED (run 30149180138)             |
+Szybki health check połączeń (GitHub / Vercel / Supabase).  
+**Feature baseline:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — nie utrzymuj tu osobnego hasha.
+
+## GitHub
+
+| Check            | Result                                                 |
+| ---------------- | ------------------------------------------------------ |
+| Remote           | `https://github.com/dawidthai125/lastfootball.git`     |
+| Branch           | `main`                                                 |
+| Tip              | `git log -1`                                           |
+| Feature baseline | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)   |
+| CI               | Format · Typecheck · Lint · Test · Build · Secret scan |
 
 ## Vercel / Supabase
 
-|            |                                    |
-| ---------- | ---------------------------------- |
-| Live       | https://lastfootball.vercel.app    |
-| Project    | `anoeimngwptucjdugjme`             |
-| Migrations | through transfers Thin **applied** |
+|            |                                                                 |
+| ---------- | --------------------------------------------------------------- |
+| Live       | https://lastfootball.vercel.app                                 |
+| Project    | `anoeimngwptucjdugjme`                                          |
+| Migrations | through `20260726040000_transfer_offers_counter` (TRANSFERS-08) |
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

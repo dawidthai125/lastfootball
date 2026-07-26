@@ -3,13 +3,14 @@
 ## Cel
 
 Szybki stan dla Agenta: **gdzie jesteśmy** / **co dalej**.  
-**Lista EPIC DONE/PLANNED:** wyłącznie [`../ROADMAP.md`](../ROADMAP.md) — nie kopiuj tutaj.
+**Lista EPIC DONE/PLANNED:** wyłącznie [`../ROADMAP.md`](../ROADMAP.md) — nie kopiuj tutaj.  
+**Hash produkcji:** wyłącznie [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN** — Training Thin FULLY CLOSED.  
-**Feature baseline:** `10de062` — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md).  
-**Next:** Owner wybiera — patrz [`../ROADMAP.md`](../ROADMAP.md).
+**PRODUCTION VERIFIED · GREEN** — LFE-TRANSFERS-08 CLOSED (Live H2H Counter Thin).  
+**Feature baseline:** patrz [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) (`9b1c575`).  
+**Next:** Owner wybiera — [`../ROADMAP.md`](../ROADMAP.md) · indeks [`EPIC_INDEX.md`](./EPIC_INDEX.md).
 
 ## W trakcie
 
@@ -17,11 +18,12 @@ Brak otwartego EPIC implementacyjnego.
 
 ## Otwarte decyzje techniczne
 
-| ID      | Temat                    | Status                                           |
-| ------- | ------------------------ | ------------------------------------------------ |
-| D-01    | Zawężenie LFE `index.ts` | Otwarte                                          |
-| D-03    | Persist Replay           | Otwarte                                          |
-| D15–D21 | League → Training Thin   | Zamknięte — [`../DECISIONS.md`](../DECISIONS.md) |
+| ID       | Temat                                     | Status                                                                                   |
+| -------- | ----------------------------------------- | ---------------------------------------------------------------------------------------- |
+| D-01     | Zawężenie LFE `index.ts`                  | Otwarte                                                                                  |
+| D-03     | Persist Replay                            | Otwarte                                                                                  |
+| D15–D21  | League → Training Thin                    | Zamknięte — [`../DECISIONS.md`](../DECISIONS.md)                                         |
+| TD-01/02 | Transfers fee SQL↔TS · double live invoke | Dług P1 — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
 
 ## Powiązania
 
@@ -29,4 +31,4 @@ Brak otwartego EPIC implementacyjnego.
 
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

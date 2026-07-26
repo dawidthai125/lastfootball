@@ -6,11 +6,11 @@ Architektura systemu: web platform (auth/club/hub), LFE, Supabase, przepływ mec
 
 ## Aktualny stan
 
-Monorepo. Feature baseline **`393a43c`** (LFE-TRANSFERS-01). Tip docs/style may be newer — [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md).  
+Monorepo. Feature baseline — [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) (LFE-TRANSFERS-08). Tip docs/style może być nowszy.  
 LFE = headless engine. Web = platform Thin domains + match pipeline.
 
-Filozofia / wzorce: [`AI/ARCHITECTURE_PRINCIPLES.md`](./AI/ARCHITECTURE_PRINCIPLES.md) · [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md).
-Platforma: [`platform/HUB.md`](./platform/HUB.md) · [`LEAGUE`](./platform/LEAGUE.md) · [`FINANCE`](./platform/FINANCE.md) · [`PLAYERS`](./platform/PLAYERS.md) · [`TRANSFERS`](./platform/TRANSFERS.md).
+Filozofia / wzorce: [`AI/ARCHITECTURE_PRINCIPLES.md`](./AI/ARCHITECTURE_PRINCIPLES.md) · [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md) · mapa: [`AI/MODULE_MAP.md`](./AI/MODULE_MAP.md).  
+Platforma: [`platform/HUB.md`](./platform/HUB.md) · [`LEAGUE`](./platform/LEAGUE.md) · [`FINANCE`](./platform/FINANCE.md) · [`PLAYERS`](./platform/PLAYERS.md) · [`TRANSFERS`](./platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE`](./platform/TRANSFER_ARCHITECTURE.md) · [`TRAINING`](./platform/TRAINING.md).
 
 ---
 

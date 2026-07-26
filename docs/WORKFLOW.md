@@ -56,4 +56,4 @@ Nie twórz `docs/*REPORT*` bez potrzeby.
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

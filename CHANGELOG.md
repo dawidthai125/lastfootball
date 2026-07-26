@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (AI-DOCS-CONSOLIDATION-02)
+
+- AI Quick Start · Module Map · EPIC Index · Transfer Architecture
+- Stale baseline pointers synced to CURRENT_BASELINE (feature hash unchanged: 9b1c575)
+
 ### Added (shipped on `main` — LFE-TRANSFERS-08)
 
 - Live H2H Counter Offers: 1× seller→buyer; Accept after Counter = buyer

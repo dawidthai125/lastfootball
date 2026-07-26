@@ -120,10 +120,15 @@ Zawsze: `git log -1 --oneline` lokalnie. Patrz [`CURRENT_BASELINE.md`](./CURRENT
 - SSOT nietknięty poza scope
 - po CLOSE: baseline / ROADMAP / DECISIONS zsynchronizowane (docs EPIC)
 
+## Transfers (hard rule)
+
+Settle wyłącznie przez `completeTransferBuy` / `completeTransferSell`.  
+Architektura: [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
+
 ## Release process
 
 Patrz [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md): push → CI GREEN → Vercel → smoke → CLOSE.
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

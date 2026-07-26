@@ -11,6 +11,17 @@ Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08) — tip may be docs
 
 ---
 
+## [2026-07-26] — AI-DOCS-CONSOLIDATION-02 · CLOSED
+
+### Docs
+
+- Cold start: `AI_QUICK_START` · `MODULE_MAP` · `EPIC_INDEX` · `TRANSFER_ARCHITECTURE`
+- Sync stale baseline pointers (HANDOFF / STATUS / README) → `CURRENT_BASELINE`
+- Principles: **Single Settlement Path**; Thin Slice example = Transfers 01…08
+- Feature baseline **bez zmiany** (`9b1c575`)
+
+---
+
 ## [2026-07-26] — LFE-TRANSFERS-08 · CLOSED
 
 ### Product

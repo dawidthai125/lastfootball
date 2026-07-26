@@ -44,8 +44,8 @@ Praktyka: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · [`../RELEASE_PROCE
 - Product: `LFE-PLATFORM-01`, `LFE-TRAINING-01`, …
 - Engine: EPIC-1…7, `LFE-*-01` (Canvas, Replay, …)
 - Design: `GDD-NN`
-- Docs hygiene: `AI-DOCS-HYGIENE-01`
+- Docs hygiene / consolidation: `AI-DOCS-HYGIENE-01`, `AI-DOCS-CONSOLIDATION-02`
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

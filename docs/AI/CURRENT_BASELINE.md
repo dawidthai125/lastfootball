@@ -28,7 +28,7 @@ git log -1 --oneline 9b1c575  # feature baseline TRANSFERS-08 Counter Offers
 | Branch               | `main`                                                                      |
 | **Feature baseline** | `9b1c57578042d16e962d8026ed01abae587c294d`                                  |
 | Baseline message     | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`      |
-| Docs CLOSE tip       | _(ten commit lub nowszy)_                                                   |
+| Docs CLOSE tip       | tip docs może być nowszy (np. AI-DOCS-CONSOLIDATION-02)                     |
 | Status               | **LFE-TRANSFERS-08 CLOSED** · 07 · 06 · 05 · 04 · 03 · N1 · E1 · GDD-§26A/B |
 
 ## Stack
@@ -68,4 +68,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-08 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02 (feature baseline = LFE-TRANSFERS-08)

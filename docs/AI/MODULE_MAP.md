@@ -1,0 +1,69 @@
+# AI — Module Map
+
+## Cel
+
+Mapa katalogów i relacji modułów — „gdzie szukać kodu”.
+
+## Kiedy czytać
+
+Przed IMPLEMENT / AUDIT nowego obszaru; onboarding developera.
+
+## Powiązane
+
+[`AI_QUICK_START.md`](./AI_QUICK_START.md) · [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md) · [`../PROJECT_STRUCTURE.md`](../PROJECT_STRUCTURE.md) · [`../architecture/DEPENDENCIES.md`](../architecture/DEPENDENCIES.md)
+
+## Monorepo
+
+```
+lastfootball/
+├── apps/web/          # Next.js 15 — platform UI + match pipeline
+├── packages/lfe/      # Headless match engine (PUBLIC API frozen)
+├── packages/domain/   # Shared domain (thin)
+├── supabase/          # Migrations + Edge Functions
+└── docs/              # SSOT dokumentacji
+```
+
+## `apps/web` — domeny platformy
+
+| Domenа        | Resolver UI (SSOT)                      | Kod (głównie)                    | Docs                                                                                                                     |
+| ------------- | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Hub           | `resolveHubPhase` / `resolvePrimaryCta` | `lib/hub/`                       | [`platform/HUB.md`](../platform/HUB.md)                                                                                  |
+| Liga          | `resolveLeagueTable`                    | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
+| Finanse       | `resolveClubFinance`                    | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
+| Kadra         | `resolveClubSquad`                      | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
+| Transfery     | `resolveTransferMarket`                 | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
+| Trening       | `resolveClubTraining`                   | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
+| Auth / klub   | session + club DTO                      | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
+| First Match   | tunnel + `first_match_completed_at`     | `lib/first-match/`               | [`platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                  |
+| Match Live UI | session bind — nie Engine               | `gameplay/`, `components/match/` | [`web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                |
+
+## Relacje (skrót)
+
+```
+Hub CTA ──► /matches | /transfers | /training | /league | /finance
+complete-fixture ──► cash reward + ensureTransferWindow
+transfers settle ──► players + cash_balance + finance_movements + transfer_deals
+training ──► players.status + clubs.last_training_on
+Live match ──► LFE MatchSession / CommandBus (nie z Canvas)
+```
+
+## LFE (`packages/lfe`)
+
+Entry: `createMatch` / session / CommandBus.  
+Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md) · API: [`../lfe/PUBLIC_API.md`](../lfe/PUBLIC_API.md).
+
+**Zakaz:** Canvas / Replay / Post Match nie wołają Engine i nie mutują `MatchState`.
+
+## Supabase
+
+| Obszar    | Tabele / RPC (skrót)                                                    |
+| --------- | ----------------------------------------------------------------------- |
+| Klub      | `clubs` (`cash_balance`, `transfer_window_open`, `last_training_on`, …) |
+| Kadra     | `players` (`transfer_listed_at`, `departed_at`, status)                 |
+| Liga      | `fixtures`                                                              |
+| Finanse   | `finance_movements`                                                     |
+| Transfery | `transfer_deals`, `transfer_offers`, RPC live H2H                       |
+
+## Status
+
+**ACTIVE** · 2026-07-26 — AI-DOCS-CONSOLIDATION-02

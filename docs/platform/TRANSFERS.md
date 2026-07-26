@@ -40,6 +40,10 @@ Rynek transferowy Thin (buy/sell + nego + AI incoming + listing + Live H2H Insta
 
 Escrow · timeout · 2+ counters · buyer Counter · AI H2H · custom ask · `completeLiveTransfer()`.
 
+## Architektura (głębiej)
+
+Settlement path, RPC, dług P1: [`TRANSFER_ARCHITECTURE.md`](./TRANSFER_ARCHITECTURE.md).
+
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-08 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

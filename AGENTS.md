@@ -4,14 +4,15 @@
 
 ## Read first (in order)
 
-1. [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md) — onboarding map
-2. [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — feature baseline vs tip
-3. [`docs/AI/ARCHITECTURE_RULES.md`](docs/AI/ARCHITECTURE_RULES.md)
-4. [`docs/AI/ARCHITECTURE_PRINCIPLES.md`](docs/AI/ARCHITECTURE_PRINCIPLES.md)
-5. [`docs/AI/COMMON_PATTERNS.md`](docs/AI/COMMON_PATTERNS.md)
-6. [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md)
-7. [`docs/AI/ENGINEERING_GUIDE.md`](docs/AI/ENGINEERING_GUIDE.md)
-8. Task-specific platform / LFE / GDD docs (from START_HERE)
+1. [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) — 1-ekran cold start
+2. [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md) — full onboarding map
+3. [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — feature baseline vs tip
+4. [`docs/AI/ARCHITECTURE_RULES.md`](docs/AI/ARCHITECTURE_RULES.md)
+5. [`docs/AI/ARCHITECTURE_PRINCIPLES.md`](docs/AI/ARCHITECTURE_PRINCIPLES.md)
+6. [`docs/AI/COMMON_PATTERNS.md`](docs/AI/COMMON_PATTERNS.md)
+7. [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md)
+8. [`docs/AI/ENGINEERING_GUIDE.md`](docs/AI/ENGINEERING_GUIDE.md)
+9. Task-specific: [`docs/AI/MODULE_MAP.md`](docs/AI/MODULE_MAP.md) · platform / LFE / GDD
 
 ## Hard rules (never violate)
 
@@ -19,6 +20,7 @@
 - **Do not** rely on chat history — only `docs/` + code.
 - **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**.
 - **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED != RUNTIME**.
+- **Single Settlement Path** (transfers): only `completeTransferBuy` / `completeTransferSell`.
 - Match mutations only via LFE `CommandBus` / session API.
 - Canvas / Replay never call Engine or mutate `MatchState`.
 - Hub is a **decision screen**, not a mid-season dashboard.
@@ -31,6 +33,10 @@
 AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
 ```
 
+## Feature baseline (skrót)
+
+Patrz **wyłącznie** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — nie kopiuj hashy tutaj na sztywno.
+
 ## Last updated
 
-2026-07-25 — LFE-TRAINING-01 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

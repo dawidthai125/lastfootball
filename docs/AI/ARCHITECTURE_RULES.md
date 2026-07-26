@@ -104,8 +104,9 @@ supabase/ (Auth + Postgres migrations)
 - Dzień treningu = UTC date (Thin vs GDD timezone gracza) — D21.
 
 Pełna lista decyzji: [`../DECISIONS.md`](../DECISIONS.md) · [`DECISIONS.md`](./DECISIONS.md).  
-Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorce: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md).
+Filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) · wzorce: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md).  
+Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-08 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02

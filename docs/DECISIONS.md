@@ -191,4 +191,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-26 — LFE-TRANSFERS-08 CLOSE
+2026-07-26 — AI-DOCS-CONSOLIDATION-02 · LFE-TRANSFERS-08

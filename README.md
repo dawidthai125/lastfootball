@@ -8,14 +8,14 @@ Przeglądarkowy manager piłkarski z własnym silnikiem meczu **LFE** (`@lastfoo
 Produktowy SSOT: [`docs/game-design/GAME_DESIGN_DOCUMENT.md`](docs/game-design/GAME_DESIGN_DOCUMENT.md).  
 Kontrakt silnika: [`docs/lfe/LFE_ARCHITECTURE_FREEZE.md`](docs/lfe/LFE_ARCHITECTURE_FREEZE.md).
 
-> **Nowy ChatGPT / Cursor:** [`AGENTS.md`](AGENTS.md) → [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md). Nie potrzebujesz historii czatu.
+> **Nowy ChatGPT / Cursor:** [`AGENTS.md`](AGENTS.md) → [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md). Nie potrzebujesz historii czatu.
 
 **Production:** https://lastfootball.vercel.app  
-**Feature baseline:** `10de062` (LFE-TRAINING-01) — [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md)
+**Feature baseline:** patrz [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) (LFE-TRANSFERS-08)
 
 ## Stan produktu (skrót)
 
-Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin · Training Thin · Match Live (Canvas / Replay / Post Match).
+Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin (Instant + Pending + 1× Counter) · Training Thin · Match Live (Canvas / Replay / Post Match).
 
 **Next recommended EPIC:** Owner wybiera — [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
