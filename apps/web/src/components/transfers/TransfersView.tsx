@@ -3,7 +3,6 @@
 import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
-import { Panel } from '@/components/ui/Panel';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import {
@@ -32,17 +31,20 @@ import type {
   TransferMarketDto,
 } from '@/lib/transfers/types';
 
+import './transfers-decision.css';
+
 const PRESET_LABEL: Record<OfferPreset, string> = {
   low: 'Niska',
   normal: 'Normalna',
   high: 'Wysoka',
 };
 
-const H2H_PRESET_LABEL: Record<OfferPreset | 'counter', string> = {
-  low: '90%',
-  normal: '100%',
-  high: '110%',
-  counter: '95%',
+/** Player-facing labels (amounts remain in title / formatMoney). */
+const OFFER_PRESET_LABEL: Record<OfferPreset | 'counter', string> = {
+  low: 'Niska',
+  normal: 'Normalna',
+  high: 'Wysoka',
+  counter: 'Kontrpropozycja',
 };
 
 function BuyNegotiate({
@@ -62,8 +64,8 @@ function BuyNegotiate({
   if (counter) {
     const canAccept = canBuy && envelopeBalance >= counter.counterAmount;
     return (
-      <div className="flex flex-col items-end gap-1">
-        <p className="m-0 max-w-[14rem] text-right text-xs text-[var(--lf-color-text-muted)]">
+      <div className="lf-tx-actions">
+        <p className="lf-tx-actions__hint">
           Kontroferta:{' '}
           <span className="text-[var(--lf-gold)] tabular-nums">
             {formatMoney(counter.counterAmount)}
@@ -74,7 +76,7 @@ function BuyNegotiate({
             {state.error}
           </span>
         ) : null}
-        <div className="flex flex-wrap justify-end gap-1">
+        <div className="lf-tx-actions__row">
           <form action={action} className="inline">
             <input type="hidden" name="marketId" value={marketId} />
             <input type="hidden" name="phase" value="counter" />
@@ -99,13 +101,13 @@ function BuyNegotiate({
   const presets: OfferPreset[] = ['low', 'normal', 'high'];
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="lf-tx-actions">
       {state.error ? (
         <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
-      <div className="flex flex-wrap justify-end gap-1">
+      <div className="lf-tx-actions__row">
         {presets.map((preset) => {
           const offer =
             preset === 'low' ? resolveCounterAmount(ask) : resolveOfferAmount(ask, preset);
@@ -176,7 +178,7 @@ function ListingButton({
 
 function SellActions({ row, canSell }: { row: SellCandidateDto; canSell: boolean }) {
   return (
-    <div className="flex flex-wrap justify-end gap-1">
+    <div className="lf-tx-actions__row">
       <ListingButton
         playerId={row.playerId}
         listed={row.listed}
@@ -194,8 +196,8 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
 
   if (counter) {
     return (
-      <div className="flex flex-col items-end gap-1">
-        <p className="m-0 max-w-[14rem] text-right text-xs text-[var(--lf-color-text-muted)]">
+      <div className="lf-tx-actions">
+        <p className="lf-tx-actions__hint">
           Twoja kontroferta:{' '}
           <span className="text-[var(--lf-gold)] tabular-nums">
             {formatMoney(counter.counterAmount)}
@@ -206,7 +208,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
             {state.error}
           </span>
         ) : null}
-        <div className="flex flex-wrap justify-end gap-1">
+        <div className="lf-tx-actions__row">
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
             <input type="hidden" name="playerId" value={offer.playerId} />
@@ -231,13 +233,13 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="lf-tx-actions">
       {state.error ? (
         <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
-      <div className="flex flex-wrap justify-end gap-1">
+      <div className="lf-tx-actions__row">
         <form action={action} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
           <input type="hidden" name="playerId" value={offer.playerId} />
@@ -284,7 +286,7 @@ function LiveBuyButton({ listing, disabled }: { listing: LiveListingDto; disable
         </span>
       ) : null}
       <Button type="submit" variant="primary" disabled={disabled || pending}>
-        {pending ? '…' : 'Kup teraz'}
+        {pending ? '…' : 'Kup od razu'}
       </Button>
     </form>
   );
@@ -302,13 +304,13 @@ function LiveOfferCreate({
   const [state, action, pending] = useActionState(createLiveTransferOffer, TRANSFER_ACTION_INITIAL);
   const presets: Array<OfferPreset | 'counter'> = ['low', 'counter', 'normal', 'high'];
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="lf-tx-actions">
       {state.error ? (
         <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
         </span>
       ) : null}
-      <div className="flex flex-wrap justify-end gap-1">
+      <div className="lf-tx-actions__row">
         {presets.map((preset) => {
           const amount =
             preset === 'counter'
@@ -325,7 +327,7 @@ function LiveOfferCreate({
                 disabled={disabled || pending || envelopeBalance < amount}
                 title={formatMoney(amount)}
               >
-                {H2H_PRESET_LABEL[preset]}
+                {OFFER_PRESET_LABEL[preset]}
               </Button>
             </form>
           );
@@ -352,21 +354,19 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
   const pending = acceptPending || rejectPending || counterPending;
 
   if (offer.phase === 'countered') {
-    return (
-      <p className="m-0 text-xs text-[var(--lf-color-text-muted)]">Oczekiwanie na kupującego</p>
-    );
+    return <p className="lf-tx-actions__hint">Oczekiwanie na kupującego</p>;
   }
 
   const presets: Array<OfferPreset | 'counter'> = ['low', 'counter', 'normal', 'high'];
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="lf-tx-actions">
       {err ? (
         <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {err}
         </span>
       ) : null}
-      <div className="flex flex-wrap justify-end gap-1">
+      <div className="lf-tx-actions__row">
         <form action={acceptAction} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
           <Button type="submit" variant="primary" disabled={disabled || pending}>
@@ -380,7 +380,7 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
           </Button>
         </form>
       </div>
-      <div className="flex flex-wrap justify-end gap-1">
+      <div className="lf-tx-actions__row">
         {presets.map((preset) => (
           <form key={preset} action={counterAction} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
@@ -389,9 +389,9 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
               type="submit"
               variant="default"
               disabled={disabled || pending}
-              title={`Kontrpropozycja ${H2H_PRESET_LABEL[preset]}`}
+              title={`Kontroferta: ${OFFER_PRESET_LABEL[preset]}`}
             >
-              →{H2H_PRESET_LABEL[preset]}
+              {OFFER_PRESET_LABEL[preset]}
             </Button>
           </form>
         ))}
@@ -426,14 +426,14 @@ function OutgoingH2hActions({
 
   if (offer.phase === 'countered') {
     return (
-      <div className="flex flex-col items-end gap-1">
+      <div className="lf-tx-actions">
         {err ? (
           <span className="text-xs text-[var(--lf-danger)]" role="alert">
             {err}
           </span>
         ) : null}
-        <p className="m-0 text-xs text-[var(--lf-color-text-muted)]">Kontrpropozycja sprzedawcy</p>
-        <div className="flex flex-wrap justify-end gap-1">
+        <p className="lf-tx-actions__hint">Kontrpropozycja sprzedawcy</p>
+        <div className="lf-tx-actions__row">
           <form action={acceptAction} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
             <Button
@@ -476,203 +476,183 @@ function OutgoingH2hActions({
   );
 }
 
+type DecisionCase =
+  | { kind: 'ai'; offer: IncomingOfferDto }
+  | { kind: 'h2h-in'; offer: LiveH2hOfferDto }
+  | { kind: 'h2h-out-countered'; offer: LiveH2hOfferDto };
+
+/**
+ * Transfer Command Center — LFE-UI-EVOLUTION-01D (presentation only).
+ * Actions / DTO / resolvers unchanged.
+ */
 export function TransfersView({ market }: { market: TransferMarketDto }) {
+  const outgoingOpening = market.outgoingLiveOffers.filter((o) => o.phase === 'opening');
+  const outgoingCountered = market.outgoingLiveOffers.filter((o) => o.phase === 'countered');
+
+  const inbox: DecisionCase[] = [
+    ...market.incomingOffers.map((offer) => ({ kind: 'ai' as const, offer })),
+    ...market.incomingLiveOffers.map((offer) => ({ kind: 'h2h-in' as const, offer })),
+    ...outgoingCountered.map((offer) => ({ kind: 'h2h-out-countered' as const, offer })),
+  ];
+
+  const windowLabel = market.windowOpen ? 'Okno otwarte' : 'Okno zamknięte';
+
   return (
-    <div className="space-y-2">
-      <div className="mb-2 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-5">
-        <Panel title="Okno">
-          <p className="m-0 text-sm">
-            {market.windowOpen ? (
-              <span className="text-[var(--lf-ok)]">Otwarte</span>
-            ) : (
-              <span className="text-[var(--lf-faint)]">Zamknięte</span>
-            )}
-          </p>
-        </Panel>
-        <Panel title="Kasa">
-          <p className="m-0 font-medium tabular-nums">{market.cashLabel}</p>
-        </Panel>
-        <Panel title="Budżet transferowy">
-          <p className="m-0 font-medium text-[var(--lf-gold)] tabular-nums">
-            {market.envelopeLabel}
-          </p>
-        </Panel>
-        <Panel title="Kadra">
-          <p className="m-0 tabular-nums">
-            {market.activeRosterCount} / {market.maxRoster}
-          </p>
-        </Panel>
-        <Panel title="Limit min.">
-          <p className="m-0 tabular-nums">{market.minRoster}</p>
-        </Panel>
-      </div>
+    <div className="lf-tx">
+      {/* A — context line (no KPI wall) */}
+      <p className="lf-tx__context" aria-label="Kontekst transferów">
+        {windowLabel}
+        <span className="lf-tx__dot" aria-hidden>
+          ·
+        </span>
+        Kasa {market.cashLabel}
+        <span className="lf-tx__dot" aria-hidden>
+          ·
+        </span>
+        Budżet {market.envelopeLabel}
+      </p>
 
       {!market.windowOpen ? (
-        <Panel title="Informacja">
-          <p className="m-0 text-[var(--lf-color-text-muted)]">
-            Okno transferowe otworzy się po rozegraniu {2} kolejek ligowych (Thin). Możesz
-            przeglądać rynek, ale finalizacja jest zablokowana. Lista wystawionych nie jest
-            czyszczona przy zamknięciu okna.
-          </p>
-        </Panel>
-      ) : (
-        <Panel title="Negocjacje, lista i oferty AI">
-          <p className="m-0 text-sm text-[var(--lf-color-text-muted)]">
-            Wystaw zawodnika na listę (ask = fee). Live: Instant Kup @ 100% lub oferta pending
-            (90/95/100/110%). Seed = fallback. Oferty AI (S2) osobno.
-          </p>
-        </Panel>
-      )}
+        <p className="lf-tx__note">
+          Okno transferowe jest zamknięte. Możesz przeglądać oferty i rynek, ale finalizacja
+          transakcji jest niedostępna. Wróć po kolejnych meczach ligowych.
+        </p>
+      ) : null}
 
-      <Panel title="Oferty AI (przychodzące)" flush>
-        {market.incomingOffers.length === 0 ? (
-          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
-            Brak ofert AI (brak wystawionych, okno zamknięte lub limit kadry).
-          </p>
-        ) : (
-          <Table
-            rowKey={(r) => r.offerId}
-            rows={[...market.incomingOffers]}
-            columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
-              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
-              {
-                key: 'buyer',
-                header: 'Klub AI',
-                render: (r) => r.buyerLabel,
-              },
-              {
-                key: 'amount',
-                header: 'Oferta',
-                align: 'right',
-                render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">{r.amountLabel}</span>
-                ),
-              },
-              {
-                key: 'act',
-                header: '',
-                align: 'right',
-                render: (r) => (
-                  <IncomingOfferActions
-                    offer={r}
-                    disabled={!market.windowOpen || !market.canSell}
-                  />
-                ),
-              },
-            ]}
-          />
-        )}
-      </Panel>
+      {/* B — Inbox */}
+      <section className="lf-tx__section" aria-labelledby="tx-inbox-title">
+        <h2 id="tx-inbox-title" className="lf-tx__section-title">
+          Sprawy wymagające decyzji
+        </h2>
 
-      <Panel title="Oferty H2H (przychodzące)" flush>
-        {market.incomingLiveOffers.length === 0 ? (
-          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
-            Brak aktywnych ofert od klubów.
-          </p>
+        {inbox.length === 0 ? (
+          <div className="lf-tx__empty">
+            <p className="lf-tx__empty-title">Brak spraw do zamknięcia</p>
+            <p className="lf-tx__empty-body">
+              Nie czekają na Ciebie żadne oferty. Możesz przejść do rynku i poszukać wzmocnienia.
+            </p>
+            {/* D7: jedyne dominant CTA gdy Inbox pusty */}
+            <a href="#transfer-market" className="lf-tx__primary-cta">
+              Przejrzyj rynek
+            </a>
+          </div>
         ) : (
-          <Table
-            rowKey={(r) => r.offerId}
-            rows={[...market.incomingLiveOffers]}
-            columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
-              { key: 'buyer', header: 'Kupujący', render: (r) => r.counterpartLabel },
-              {
-                key: 'amount',
-                header: 'Oferta',
-                align: 'right',
-                render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">
-                    {r.amountLabel}
-                    {r.phase === 'countered' ? ' · kontr.' : ''}
-                  </span>
-                ),
-              },
-              {
-                key: 'act',
-                header: '',
-                align: 'right',
-                render: (r) => (
-                  <IncomingH2hActions offer={r} disabled={!market.windowOpen || !market.canSell} />
-                ),
-              },
-            ]}
-          />
-        )}
-      </Panel>
-
-      <Panel title="Oferty H2H (wychodzące)" flush>
-        {market.outgoingLiveOffers.length === 0 ? (
-          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">Brak złożonych ofert pending.</p>
-        ) : (
-          <Table
-            rowKey={(r) => r.offerId}
-            rows={[...market.outgoingLiveOffers]}
-            columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
-              { key: 'seller', header: 'Sprzedawca', render: (r) => r.counterpartLabel },
-              {
-                key: 'amount',
-                header: 'Oferta',
-                align: 'right',
-                render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">
-                    {r.amountLabel}
-                    {r.phase === 'countered' ? ' · kontr.' : ''}
-                  </span>
-                ),
-              },
-              {
-                key: 'act',
-                header: '',
-                align: 'right',
-                render: (r) => (
+          <ul className="lf-tx__inbox">
+            {inbox.map((item) => {
+              if (item.kind === 'ai') {
+                const o = item.offer;
+                return (
+                  <li key={`ai-${o.offerId}`} className="lf-tx__case">
+                    <div className="lf-tx__case-main">
+                      <p className="lf-tx__case-label">Oferta za Twojego zawodnika</p>
+                      <p className="lf-tx__case-title">{o.playerName}</p>
+                      <p className="lf-tx__case-meta">
+                        {o.pos} · {o.buyerLabel} ·{' '}
+                        <span className="text-[var(--lf-gold)] tabular-nums">{o.amountLabel}</span>
+                      </p>
+                    </div>
+                    <IncomingOfferActions
+                      offer={o}
+                      disabled={!market.windowOpen || !market.canSell}
+                    />
+                  </li>
+                );
+              }
+              if (item.kind === 'h2h-in') {
+                const o = item.offer;
+                return (
+                  <li key={`in-${o.offerId}`} className="lf-tx__case">
+                    <div className="lf-tx__case-main">
+                      <p className="lf-tx__case-label">Oferta od klubu</p>
+                      <p className="lf-tx__case-title">{o.playerName}</p>
+                      <p className="lf-tx__case-meta">
+                        {o.counterpartLabel} ·{' '}
+                        <span className="text-[var(--lf-gold)] tabular-nums">{o.amountLabel}</span>
+                        {o.phase === 'countered' ? ' · kontrpropozycja wysłana' : ''}
+                      </p>
+                    </div>
+                    <IncomingH2hActions
+                      offer={o}
+                      disabled={!market.windowOpen || !market.canSell}
+                    />
+                  </li>
+                );
+              }
+              const o = item.offer;
+              return (
+                <li key={`out-c-${o.offerId}`} className="lf-tx__case">
+                  <div className="lf-tx__case-main">
+                    <p className="lf-tx__case-label">Kontrpropozycja — Twoja oferta</p>
+                    <p className="lf-tx__case-title">{o.playerName}</p>
+                    <p className="lf-tx__case-meta">
+                      {o.counterpartLabel} ·{' '}
+                      <span className="text-[var(--lf-gold)] tabular-nums">{o.amountLabel}</span>
+                    </p>
+                  </div>
                   <OutgoingH2hActions
-                    offer={r}
+                    offer={o}
                     disabled={!market.windowOpen || !market.canBuy}
                     envelopeBalance={market.envelopeBalance}
                   />
-                ),
-              },
-            ]}
-          />
+                </li>
+              );
+            })}
+          </ul>
         )}
-      </Panel>
+      </section>
 
-      <Panel title="Rynek Live (kluby graczy)" flush>
+      {/* C — Active negotiations (opening outgoing only) */}
+      {outgoingOpening.length > 0 ? (
+        <section className="lf-tx__section" aria-labelledby="tx-nego-title">
+          <h2 id="tx-nego-title" className="lf-tx__section-title lf-tx__section-title--muted">
+            Twoje oferty w toku
+          </h2>
+          <ul className="lf-tx__inbox lf-tx__inbox--muted">
+            {outgoingOpening.map((o) => (
+              <li key={o.offerId} className="lf-tx__case lf-tx__case--muted">
+                <div className="lf-tx__case-main">
+                  <p className="lf-tx__case-label">Oferta złożona — oczekujesz odpowiedzi</p>
+                  <p className="lf-tx__case-title">{o.playerName}</p>
+                  <p className="lf-tx__case-meta">
+                    {o.counterpartLabel} ·{' '}
+                    <span className="text-[var(--lf-gold)] tabular-nums">{o.amountLabel}</span>
+                  </p>
+                </div>
+                <OutgoingH2hActions
+                  offer={o}
+                  disabled={!market.windowOpen || !market.canBuy}
+                  envelopeBalance={market.envelopeBalance}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* D — Market */}
+      <section id="transfer-market" className="lf-tx__section" aria-labelledby="tx-market-title">
+        <h2 id="tx-market-title" className="lf-tx__section-title lf-tx__section-title--muted">
+          Rynek
+        </h2>
+
+        <h3 className="lf-tx__subhead">Zawodnicy wystawieni przez kluby</h3>
         {market.liveListings.length === 0 ? (
-          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
-            Brak wystawionych zawodników innych klubów. Seed catalogue poniżej pozostaje
-            fallbackiem.
+          <p className="lf-tx__soft">
+            Brak wystawionych zawodników innych klubów. Poniżej znajdziesz więcej zawodników.
           </p>
         ) : (
-          <Table
-            rowKey={(r) => r.playerId}
-            rows={[...market.liveListings]}
-            columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
-              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
-              {
-                key: 'club',
-                header: 'Klub',
-                render: (r) => r.sellerClubLabel,
-              },
-              {
-                key: 'ask',
-                header: 'Ask',
-                align: 'right',
-                render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">{r.askLabel}</span>
-                ),
-              },
-              {
-                key: 'act',
-                header: 'Instant / Oferta',
-                align: 'right',
-                render: (r) => {
-                  const canLive = market.canBuy && r.sellerWindowOpen;
-                  return (
-                    <div className="flex flex-col items-end gap-1">
+          <>
+            <div className="lf-tx__cards md:hidden">
+              {market.liveListings.map((r) => {
+                const canLive = market.canBuy && r.sellerWindowOpen;
+                return (
+                  <article key={r.playerId} className="lf-tx__card">
+                    <p className="lf-tx__case-title">{r.playerName}</p>
+                    <p className="lf-tx__case-meta">
+                      {r.pos} · {r.sellerClubLabel} ·{' '}
+                      <span className="text-[var(--lf-gold)] tabular-nums">{r.askLabel}</span>
+                    </p>
+                    <div className="lf-tx-actions">
                       <LiveBuyButton
                         listing={r}
                         disabled={!canLive || market.envelopeBalance < r.ask}
@@ -683,102 +663,77 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                         envelopeBalance={market.envelopeBalance}
                       />
                     </div>
-                  );
-                },
-              },
-            ]}
-          />
+                  </article>
+                );
+              })}
+            </div>
+            <div className="lf-tx__table-wrap hidden md:block">
+              <Table
+                rowKey={(r) => r.playerId}
+                rows={[...market.liveListings]}
+                columns={[
+                  { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+                  { key: 'pos', header: 'Poz.', render: (r) => r.pos },
+                  { key: 'club', header: 'Klub', render: (r) => r.sellerClubLabel },
+                  {
+                    key: 'ask',
+                    header: 'Cena',
+                    align: 'right',
+                    render: (r) => (
+                      <span className="text-[var(--lf-gold)] tabular-nums">{r.askLabel}</span>
+                    ),
+                  },
+                  {
+                    key: 'act',
+                    header: '',
+                    align: 'right',
+                    render: (r) => {
+                      const canLive = market.canBuy && r.sellerWindowOpen;
+                      return (
+                        <div className="lf-tx-actions">
+                          <LiveBuyButton
+                            listing={r}
+                            disabled={!canLive || market.envelopeBalance < r.ask}
+                          />
+                          <LiveOfferCreate
+                            listing={r}
+                            disabled={!canLive}
+                            envelopeBalance={market.envelopeBalance}
+                          />
+                        </div>
+                      );
+                    },
+                  },
+                ]}
+              />
+            </div>
+          </>
         )}
-      </Panel>
 
-      <Panel title="Rynek (katalog AI — fallback)" flush>
-        <Table
-          rowKey={(r) => r.marketId}
-          rows={[...market.listings]}
-          columns={[
-            { key: 'name', header: 'Zawodnik', render: (r) => r.name },
-            { key: 'pos', header: 'Poz.', render: (r) => r.pos },
-            {
-              key: 'age',
-              header: 'Wiek',
-              align: 'right',
-              render: (r) => <span className="tabular-nums">{r.age}</span>,
-            },
-            { key: 'club', header: 'Klub', render: (r) => r.clubLabel },
-            {
-              key: 'fee',
-              header: 'Ask',
-              align: 'right',
-              render: (r) => (
+        <h3 className="lf-tx__subhead">Więcej zawodników</h3>
+        <div className="lf-tx__cards md:hidden">
+          {market.listings.map((r) => (
+            <article key={r.marketId} className="lf-tx__card">
+              <p className="lf-tx__case-title">{r.name}</p>
+              <p className="lf-tx__case-meta">
+                {r.pos} · {r.age} lat · {r.clubLabel} ·{' '}
                 <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
-              ),
-            },
-            {
-              key: 'act',
-              header: 'Oferta',
-              align: 'right',
-              render: (r) => (
-                <BuyNegotiate
-                  marketId={r.marketId}
-                  ask={r.fee}
-                  canBuy={market.canBuy}
-                  envelopeBalance={market.envelopeBalance}
-                />
-              ),
-            },
-          ]}
-        />
-      </Panel>
-
-      {!market.windowOpen && market.listedPlayers.length > 0 ? (
-        <Panel title="Na liście transferowej" flush>
+              </p>
+              <BuyNegotiate
+                marketId={r.marketId}
+                ask={r.fee}
+                canBuy={market.canBuy}
+                envelopeBalance={market.envelopeBalance}
+              />
+            </article>
+          ))}
+        </div>
+        <div className="lf-tx__table-wrap hidden md:block">
           <Table
-            rowKey={(r) => r.playerId}
-            rows={[...market.listedPlayers]}
+            rowKey={(r) => r.marketId}
+            rows={[...market.listings]}
             columns={[
               { key: 'name', header: 'Zawodnik', render: (r) => r.name },
-              { key: 'pos', header: 'Poz.', render: (r) => r.pos },
-              {
-                key: 'fee',
-                header: 'Ask',
-                align: 'right',
-                render: (r) => (
-                  <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
-                ),
-              },
-              {
-                key: 'act',
-                header: '',
-                align: 'right',
-                render: (r) => <ListingButton playerId={r.playerId} listed disabled={false} />,
-              },
-            ]}
-          />
-        </Panel>
-      ) : null}
-
-      <Panel title="Twoja kadra — sprzedaż" flush>
-        {market.sellCandidates.length === 0 ? (
-          <p className="m-0 p-2 text-[var(--lf-color-text-muted)]">
-            Brak kandydatów do sprzedaży (limit kadry lub okno zamknięte).
-          </p>
-        ) : (
-          <Table
-            rowKey={(r) => r.playerId}
-            rows={[...market.sellCandidates]}
-            columns={[
-              {
-                key: 'name',
-                header: 'Zawodnik',
-                render: (r) => (
-                  <span>
-                    {r.name}
-                    {r.listed ? (
-                      <span className="ml-1 text-xs text-[var(--lf-gold)]">· lista</span>
-                    ) : null}
-                  </span>
-                ),
-              },
               { key: 'pos', header: 'Poz.', render: (r) => r.pos },
               {
                 key: 'age',
@@ -786,9 +741,10 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                 align: 'right',
                 render: (r) => <span className="tabular-nums">{r.age}</span>,
               },
+              { key: 'club', header: 'Klub', render: (r) => r.clubLabel },
               {
                 key: 'fee',
-                header: 'Wartość',
+                header: 'Cena',
                 align: 'right',
                 render: (r) => (
                   <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
@@ -796,14 +752,113 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
               },
               {
                 key: 'act',
-                header: '',
+                header: 'Oferta',
                 align: 'right',
-                render: (r) => <SellActions row={r} canSell={market.canSell} />,
+                render: (r) => (
+                  <BuyNegotiate
+                    marketId={r.marketId}
+                    ask={r.fee}
+                    canBuy={market.canBuy}
+                    envelopeBalance={market.envelopeBalance}
+                  />
+                ),
               },
             ]}
           />
+        </div>
+      </section>
+
+      {/* Listed when window closed */}
+      {!market.windowOpen && market.listedPlayers.length > 0 ? (
+        <section className="lf-tx__section" aria-labelledby="tx-listed-title">
+          <h2 id="tx-listed-title" className="lf-tx__section-title lf-tx__section-title--muted">
+            Na Twojej liście
+          </h2>
+          <ul className="lf-tx__inbox lf-tx__inbox--muted">
+            {market.listedPlayers.map((r) => (
+              <li key={r.playerId} className="lf-tx__case lf-tx__case--muted">
+                <div className="lf-tx__case-main">
+                  <p className="lf-tx__case-title">{r.name}</p>
+                  <p className="lf-tx__case-meta">
+                    {r.pos} ·{' '}
+                    <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
+                  </p>
+                </div>
+                <ListingButton playerId={r.playerId} listed disabled={false} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* E — Sell */}
+      <section className="lf-tx__section" aria-labelledby="tx-sell-title">
+        <h2 id="tx-sell-title" className="lf-tx__section-title lf-tx__section-title--muted">
+          Sprzedaż
+        </h2>
+        {market.sellCandidates.length === 0 ? (
+          <p className="lf-tx__soft">Brak zawodników gotowych do sprzedaży w tej chwili.</p>
+        ) : (
+          <>
+            <div className="lf-tx__cards md:hidden">
+              {market.sellCandidates.map((r) => (
+                <article key={r.playerId} className="lf-tx__card">
+                  <p className="lf-tx__case-title">
+                    {r.name}
+                    {r.listed ? <span className="lf-tx__tag"> · na liście</span> : null}
+                  </p>
+                  <p className="lf-tx__case-meta">
+                    {r.pos} · {r.age} lat ·{' '}
+                    <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
+                  </p>
+                  <SellActions row={r} canSell={market.canSell} />
+                </article>
+              ))}
+            </div>
+            <div className="lf-tx__table-wrap hidden md:block">
+              <Table
+                rowKey={(r) => r.playerId}
+                rows={[...market.sellCandidates]}
+                columns={[
+                  {
+                    key: 'name',
+                    header: 'Zawodnik',
+                    render: (r) => (
+                      <span>
+                        {r.name}
+                        {r.listed ? (
+                          <span className="ml-1 text-xs text-[var(--lf-gold)]">· na liście</span>
+                        ) : null}
+                      </span>
+                    ),
+                  },
+                  { key: 'pos', header: 'Poz.', render: (r) => r.pos },
+                  {
+                    key: 'age',
+                    header: 'Wiek',
+                    align: 'right',
+                    render: (r) => <span className="tabular-nums">{r.age}</span>,
+                  },
+                  {
+                    key: 'fee',
+                    header: 'Wycena',
+                    align: 'right',
+                    render: (r) => (
+                      <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
+                    ),
+                  },
+                  {
+                    key: 'act',
+                    header: '',
+                    align: 'right',
+                    render: (r) => <SellActions row={r} canSell={market.canSell} />,
+                  },
+                ]}
+              />
+            </div>
+          </>
         )}
-      </Panel>
+      </section>
     </div>
   );
 }

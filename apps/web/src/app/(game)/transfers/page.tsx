@@ -10,7 +10,8 @@ import { fetchLiveListings } from '@/lib/transfers/fetch-live-listings';
 import { resolveTransferMarket } from '@/lib/transfers';
 
 /**
- * Transfer market — fed only by resolveTransferMarket() (LFE-TRANSFERS-01…08).
+ * Transfer market — decision surface (LFE-UI-EVOLUTION-01D).
+ * Data: resolveTransferMarket() only.
  */
 export default async function TransfersPage() {
   const club = await getManagerClub();
@@ -37,11 +38,7 @@ export default async function TransfersPage() {
     <div>
       <SectionHeader
         title="Transfery"
-        subtitle={
-          market.windowOpen
-            ? `Okno otwarte · ${market.cashLabel}`
-            : `Okno zamknięte · ${market.cashLabel}`
-        }
+        subtitle={market.windowOpen ? 'Centrum decyzji transferowych' : 'Okno zamknięte'}
       />
       <TransfersView market={market} />
     </div>
