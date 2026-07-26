@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/Button';
 import { Table } from '@/components/ui/Table';
@@ -518,6 +519,15 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
           transakcji jest niedostępna. Wróć po kolejnych meczach ligowych.
         </p>
       ) : null}
+
+      <nav className="lf-tx__soft-nav" aria-label="Powiązane ekrany">
+        <Link href="/finance" className="lf-tx__soft-link">
+          Finanse
+        </Link>
+        <Link href="/squad" className="lf-tx__soft-link">
+          Kadra
+        </Link>
+      </nav>
 
       {/* B — Inbox */}
       <section className="lf-tx__section" aria-labelledby="tx-inbox-title">

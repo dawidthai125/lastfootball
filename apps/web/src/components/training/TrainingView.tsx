@@ -115,7 +115,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
           {pending ? 'Trening…' : 'Przeprowadź trening'}
         </button>
         <Link href="/squad" className="lf-tr__secondary">
-          Skład
+          Kadra
         </Link>
       </form>
 
@@ -143,7 +143,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
           {state.ok && !state.skipped ? (
             <p className="lf-tr__feedback-msg lf-tr__feedback-msg--ok">
               Sesja zapisana. Statusy kadry zaktualizowane — sprawdź{' '}
-              <Link href="/squad">Skład</Link>.
+              <Link href="/squad">Kadra</Link>.
             </p>
           ) : null}
           {state.ok && state.skipped ? (

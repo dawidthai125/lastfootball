@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { PlayerPortrait } from '@/components/assets';
@@ -212,6 +213,9 @@ export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
               })}
             </ul>
           )}
+          <Link href="/training" className="lf-sq__soft-link">
+            Trening
+          </Link>
         </section>
       </div>
 

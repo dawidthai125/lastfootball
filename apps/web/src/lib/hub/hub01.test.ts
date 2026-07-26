@@ -79,12 +79,13 @@ describe('hub session + primary CTA', () => {
     expect(primary.href).toBe(`/match/${next.id}`);
   });
 
-  it('idle without upcoming → Zobacz skład', () => {
+  it('idle without upcoming → Zobacz kadrę', () => {
     const phase = 'EARLY_CLUB' as const;
     const session = resolveHubSession(phase, null, null);
     expect(session).toBe('idle');
     const primary = resolvePrimaryCta(phase, session, { nextFixture: null });
     expect(primary.href).toBe('/squad');
+    expect(primary.label).toBe('Zobacz kadrę');
   });
 
   it('post_match when played and no upcoming', () => {
@@ -100,16 +101,29 @@ describe('hub session + primary CTA', () => {
     expect(secondary.length).toBeLessThanOrEqual(5);
   });
 
-  it('opens Tabela secondary on SEASON', () => {
-    const secondary = resolveSecondaryCtas('SEASON', { hasFixtures: true });
-    const league = secondary.find((c) => c.id === 'league');
-    expect(league?.access).toBe('open');
-    expect(league?.href).toBe('/league');
+  it('daily loop secondary: Trening · Kadra · Transfery · Finanse · Terminarz', () => {
+    const secondary = resolveSecondaryCtas('SEASON', {
+      hasFixtures: true,
+      trainingUnlocked: true,
+      transferWindowOpen: true,
+    });
+    expect(secondary.map((c) => c.id)).toEqual([
+      'training',
+      'squad',
+      'transfers',
+      'finance',
+      'fixtures',
+    ]);
+    expect(secondary.every((c) => c.access === 'open')).toBe(true);
   });
 
-  it('soft-locks Tabela on EARLY_CLUB', () => {
+  it('soft-locks Trening / Transfery / Finanse on EARLY_CLUB daily secondary', () => {
     const secondary = resolveSecondaryCtas('EARLY_CLUB', { hasFixtures: false });
-    expect(secondary.find((c) => c.id === 'league')?.access).toBe('soft_locked');
+    expect(secondary.find((c) => c.id === 'training')?.access).toBe('soft_locked');
+    expect(secondary.find((c) => c.id === 'transfers')?.access).toBe('soft_locked');
+    expect(secondary.find((c) => c.id === 'finance')?.access).toBe('soft_locked');
+    expect(secondary.find((c) => c.id === 'squad')?.access).toBe('open');
+    expect(secondary.find((c) => c.id === 'fixtures')?.access).toBe('soft_locked');
   });
 });
 

@@ -89,6 +89,25 @@
   color: var(--lf-color-text-muted);
 }
 
+.lf-sq__soft-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  margin-top: var(--lf-space-1);
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--lf-color-border-subtle);
+  text-underline-offset: 3px;
+}
+
+.lf-sq__soft-link:hover {
+  color: var(--lf-color-text-secondary);
+  text-decoration-color: var(--lf-color-text-muted);
+}
+
 .lf-sq__attention-list {
   list-style: none;
   margin: 0;

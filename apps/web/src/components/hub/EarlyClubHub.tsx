@@ -18,8 +18,8 @@ import {
 import './hub-decision.css';
 
 /**
- * Decision Hub — GDD §23 / LFE-UI-EVOLUTION-01A (presentation only).
- * Resolvers / DTO / SSOT unchanged.
+ * Decision Hub — GDD §23 / LFE-UI-EVOLUTION-01A + daily loop 02 (presentation).
+ * Unlock via existing resolveNavAccess — no new domain rules.
  */
 export function EarlyClubHub({
   club,
@@ -28,6 +28,7 @@ export function EarlyClubHub({
   hasFixtures = false,
   leaguePositionLabel = null,
   cashLabel = null,
+  trainingUnlocked = false,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -35,6 +36,8 @@ export function EarlyClubHub({
   hasFixtures?: boolean;
   leaguePositionLabel?: string | null;
   cashLabel?: string | null;
+  /** Existing unlock flag — presentation only (resolveNavAccess). */
+  trainingUnlocked?: boolean;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -43,7 +46,11 @@ export function EarlyClubHub({
     lastPlayedFixture,
     hasFixtures,
   });
-  const secondary = resolveSecondaryCtas(phase, { hasFixtures }).slice(0, 5);
+  const secondary = resolveSecondaryCtas(phase, {
+    hasFixtures,
+    trainingUnlocked,
+    transferWindowOpen: club.transferWindowOpen,
+  }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
   const message = buildWelcomeMessage(club, nextFixture);

@@ -24,6 +24,9 @@ function lastMovementSummary(m: FinanceMovementDto | null): string {
 export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
   const movements = finance.recentMovements;
   const hasMovements = movements.length > 0;
+  /** Presentation-only calm heuristic (D8) — no domain change. */
+  const needsReaction = Boolean(finance.lastMovement && finance.lastMovement.amount < 0);
+  const primaryLabel = needsReaction ? 'Przejdź do transferów' : 'Zobacz rynek transferowy';
 
   return (
     <div className="lf-fi">
@@ -38,7 +41,7 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
       {/* M2 — Primary CTA deep-link Transfers (D1 / D8) */}
       <div className="lf-fi__cta-wrap">
         <Link href="/transfers" className="lf-fi__primary">
-          Przejdź do transferów
+          {primaryLabel}
         </Link>
         <Link href="/hub" className="lf-fi__secondary">
           Wróć do Hub

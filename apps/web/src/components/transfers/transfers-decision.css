@@ -167,6 +167,31 @@
   color: var(--lf-color-text-muted);
 }
 
+.lf-tx__soft-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-2) var(--lf-space-3);
+  min-width: 0;
+}
+
+.lf-tx__soft-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--lf-color-border-subtle);
+  text-underline-offset: 3px;
+}
+
+.lf-tx__soft-link:hover {
+  color: var(--lf-color-text-secondary);
+  text-decoration-color: var(--lf-color-text-muted);
+}
+
 .lf-tx__cards {
   display: flex;
   flex-direction: column;

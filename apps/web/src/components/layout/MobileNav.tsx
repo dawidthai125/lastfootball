@@ -11,12 +11,12 @@ import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
 import './mobile-nav.css';
 
-const PRIMARY_IDS = ['panel', 'matches', 'squad', 'transfers'] as const;
+const PRIMARY_IDS = ['panel', 'training', 'squad', 'transfers'] as const;
 
-/** Display labels for primary slots (href/id unchanged). */
+/** Display labels for primary slots (href/id unchanged). Variant A: Trening in bar. */
 const PRIMARY_LABEL: Record<(typeof PRIMARY_IDS)[number], string> = {
   panel: 'Hub',
-  matches: 'Mecz',
+  training: 'Trening',
   squad: 'Kadra',
   transfers: 'Transfery',
 };
@@ -28,6 +28,9 @@ function isActive(pathname: string, href: string): boolean {
   }
   if (href === '/matches') {
     return pathname === '/matches' || pathname.startsWith('/match/');
+  }
+  if (href === '/training') {
+    return pathname === '/training' || pathname.startsWith('/training/');
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -41,7 +44,8 @@ function findNavItem(id: string): NavItem | undefined {
 }
 
 /**
- * Mobile nav — LFE-UI-EVOLUTION-01B: 5 primary slots + Więcej sheet.
+ * Mobile nav — LFE-UI-EVOLUTION-02 variant A:
+ * Hub · Trening · Kadra · Transfery · Więcej (Terminarz/Mecz w Więcej).
  */
 export function MobileNav() {
   const pathname = usePathname();
