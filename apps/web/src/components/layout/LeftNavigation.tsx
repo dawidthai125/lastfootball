@@ -20,6 +20,9 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/**
+ * Left nav — LFE-UI-EVOLUTION-01B: dyskretny chrome, bez konkurencyjnego CTA, Dev tylko w development.
+ */
 export function LeftNavigation() {
   const pathname = usePathname();
   const { navCollapsed } = useShell();
@@ -27,11 +30,12 @@ export function LeftNavigation() {
   const hasFixtures = useHasFixtures();
   const trainingUnlocked = useTrainingUnlocked();
   const phase = resolveHubPhase(club, { hasFixtures });
-  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
   const navCtx = {
     transferWindowOpen: club?.transferWindowOpen,
     trainingUnlocked,
   };
+  const showDev = process.env.NODE_ENV === 'development';
+
   return (
     <aside
       className="lf-app-shell__nav hidden flex-col border-r md:flex"
@@ -63,19 +67,8 @@ export function LeftNavigation() {
             />
             <div style={{ minWidth: 0 }}>
               <div
-                className="truncate font-[family-name:var(--font-ui)] font-semibold uppercase"
-                style={{
-                  fontSize: 'var(--lf-type-label)',
-                  letterSpacing: 'var(--lf-type-tracking-label)',
-                  color: 'var(--lf-color-text-faint)',
-                }}
-              >
-                Twój klub
-              </div>
-              <div
                 className="truncate font-[family-name:var(--font-ui)] font-semibold"
                 style={{
-                  marginTop: '2px',
                   fontSize: 'var(--lf-type-table)',
                   color: 'var(--lf-color-text-primary)',
                 }}
@@ -103,16 +96,17 @@ export function LeftNavigation() {
         style={{ paddingBlock: 'var(--lf-space-2)' }}
       >
         {NAV_GROUPS.map((group) => (
-          <div key={group.id} style={{ marginBottom: 'var(--lf-space-3)' }}>
+          <div key={group.id} style={{ marginBottom: 'var(--lf-space-2)' }}>
             {!navCollapsed ? (
               <div
                 className="font-[family-name:var(--font-ui)] font-semibold uppercase"
                 style={{
                   paddingInline: 'var(--lf-space-3)',
-                  paddingBottom: 'var(--lf-space-1)',
-                  fontSize: 'var(--lf-type-label)',
+                  paddingBottom: '2px',
+                  fontSize: '9px',
                   letterSpacing: 'var(--lf-type-tracking-label)',
                   color: 'var(--lf-color-text-faint)',
+                  opacity: 0.75,
                 }}
               >
                 {group.label}
@@ -129,9 +123,9 @@ export function LeftNavigation() {
                     ? 'var(--lf-color-text-primary)'
                     : 'var(--lf-color-text-muted)',
                 paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
-                fontSize: 'var(--lf-type-table)',
+                fontSize: 'var(--lf-type-caption)',
                 justifyContent: navCollapsed ? ('center' as const) : ('space-between' as const),
-                opacity: locked ? 0.65 : 1,
+                opacity: locked ? 0.55 : 1,
                 cursor: locked ? ('default' as const) : undefined,
               };
 
@@ -154,7 +148,7 @@ export function LeftNavigation() {
                     {!navCollapsed ? (
                       <span
                         style={{
-                          fontSize: 'var(--lf-type-label)',
+                          fontSize: '9px',
                           color: 'var(--lf-color-text-faint)',
                           textTransform: 'uppercase',
                         }}
@@ -188,99 +182,57 @@ export function LeftNavigation() {
         ))}
       </nav>
 
-      {!navCollapsed && early ? (
+      {showDev ? (
         <div
           className="border-t"
           style={{
             borderColor: 'var(--lf-color-border-subtle)',
-            padding: 'var(--lf-space-3)',
-            background: 'var(--lf-color-bg-inset)',
+            paddingBlock: 'var(--lf-space-1)',
           }}
         >
-          <div
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-gold)',
-            }}
-          >
-            Następny krok
-          </div>
-          <div
-            style={{
-              marginTop: 'var(--lf-space-1)',
-              fontSize: 'var(--lf-type-caption)',
-              color: 'var(--lf-color-text-primary)',
-              fontWeight: 600,
-            }}
-          >
-            Poznaj swój skład
-          </div>
-          <div style={{ fontSize: 'var(--lf-type-label)', color: 'var(--lf-color-text-faint)' }}>
-            Kolejny mecz · wkrótce
-          </div>
-          <Link
-            href="/squad"
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              display: 'inline-block',
-              marginTop: 'var(--lf-space-2)',
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-gold-base)',
-            }}
-          >
-            Zobacz skład →
-          </Link>
-        </div>
-      ) : null}
-
-      <div
-        className="border-t"
-        style={{ borderColor: 'var(--lf-color-border-subtle)', paddingBlock: 'var(--lf-space-1)' }}
-      >
-        {!navCollapsed ? (
-          <div
-            style={{
-              paddingInline: 'var(--lf-space-3)',
-              paddingBottom: 'var(--lf-space-1)',
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-faint)',
-              textTransform: 'uppercase',
-            }}
-          >
-            Dev
-          </div>
-        ) : null}
-        {DEV_NAV.map((item) => {
-          const active = isActive(pathname, item.href);
-          return (
-            <Link
-              key={item.id}
-              href={item.href}
-              title={item.label}
-              className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
+          {!navCollapsed ? (
+            <div
               style={{
-                color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',
-                paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
-                fontSize: 'var(--lf-type-table)',
-                justifyContent: navCollapsed ? 'center' : 'flex-start',
+                paddingInline: 'var(--lf-space-3)',
+                paddingBottom: 'var(--lf-space-1)',
+                fontSize: '9px',
+                letterSpacing: 'var(--lf-type-tracking-label)',
+                color: 'var(--lf-color-text-faint)',
+                textTransform: 'uppercase',
+                opacity: 0.75,
               }}
             >
-              {navCollapsed ? (
-                <NavIcon id={item.id} active={active} size={18} />
-              ) : (
-                <span className="flex items-center" style={{ gap: 'var(--lf-space-2)' }}>
-                  <NavIcon id={item.id} active={active} size={16} />
-                  {item.label}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </div>
+              Dev
+            </div>
+          ) : null}
+          {DEV_NAV.map((item) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                title={item.label}
+                className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
+                style={{
+                  color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',
+                  paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
+                  fontSize: 'var(--lf-type-caption)',
+                  justifyContent: navCollapsed ? 'center' : 'flex-start',
+                }}
+              >
+                {navCollapsed ? (
+                  <NavIcon id={item.id} active={active} size={18} />
+                ) : (
+                  <span className="flex items-center" style={{ gap: 'var(--lf-space-2)' }}>
+                    <NavIcon id={item.id} active={active} size={16} />
+                    {item.label}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      ) : null}
     </aside>
   );
 }

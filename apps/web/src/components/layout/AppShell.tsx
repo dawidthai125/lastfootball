@@ -15,10 +15,10 @@ import { ThemeProvider } from '@/components/theme/ThemeProvider';
 function ShellFrame({ children }: { children: ReactNode }) {
   const { navCollapsed, showRail } = useShell();
   const pathname = usePathname();
-  const isLiveMatch = /^\/match\/[^/]+\/live\/?$/.test(pathname);
   const isHub = pathname === '/hub' || pathname === '/hub/';
-  /** LFE-UI-EVOLUTION-01A: hide rail on Hub only; Live unchanged. */
-  const railVisible = showRail && !isLiveMatch && !isHub;
+  const isMatchRoute = pathname === '/match' || pathname.startsWith('/match/');
+  // LFE-UI-EVOLUTION-01B: hide rail on Hub and all /match routes (incl. live).
+  const railVisible = showRail && !isHub && !isMatchRoute;
 
   const bodyClass = [
     'lf-app-shell__body',
@@ -28,6 +28,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
     .filter(Boolean)
     .join(' ');
 
+  const isLiveMatch = /^\/match\/[^/]+\/live\/?$/.test(pathname);
   const mainClass = ['lf-app-shell__main', isLiveMatch ? 'lf-app-shell__main--live' : '']
     .filter(Boolean)
     .join(' ');

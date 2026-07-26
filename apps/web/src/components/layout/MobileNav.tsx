@@ -1,12 +1,25 @@
 'use client';
 
+import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavIcon } from '@/components/assets';
 import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
-import { FLAT_NAV } from '@/lib/nav';
+import { NAV_GROUPS, type NavItem } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
+
+import './mobile-nav.css';
+
+const PRIMARY_IDS = ['panel', 'matches', 'squad', 'transfers'] as const;
+
+/** Display labels for primary slots (href/id unchanged). */
+const PRIMARY_LABEL: Record<(typeof PRIMARY_IDS)[number], string> = {
+  panel: 'Hub',
+  matches: 'Mecz',
+  squad: 'Kadra',
+  transfers: 'Transfery',
+};
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/hub') return pathname === '/hub';
@@ -19,6 +32,17 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function findNavItem(id: string): NavItem | undefined {
+  for (const group of NAV_GROUPS) {
+    const hit = group.items.find((i) => i.id === id);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+/**
+ * Mobile nav — LFE-UI-EVOLUTION-01B: 5 primary slots + Więcej sheet.
+ */
 export function MobileNav() {
   const pathname = usePathname();
   const club = useClub();
@@ -29,63 +53,152 @@ export function MobileNav() {
     transferWindowOpen: club?.transferWindowOpen,
     trainingUnlocked,
   };
+  const [moreOpen, setMoreOpen] = useState(false);
+  const titleId = useId();
+
+  useEffect(() => {
+    setMoreOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMoreOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [moreOpen]);
+
+  const primaryItems = PRIMARY_IDS.map((id) => findNavItem(id)).filter((item): item is NavItem =>
+    Boolean(item),
+  );
+
+  const moreGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !(PRIMARY_IDS as readonly string[]).includes(item.id)),
+  })).filter((group) => group.items.length > 0);
 
   return (
-    <nav
-      className="flex shrink-0 overflow-x-auto border-b md:hidden"
-      aria-label="Menu mobilne"
-      style={{
-        background: 'var(--lf-color-bg-raised)',
-        borderColor: 'var(--lf-color-border-subtle)',
-        boxShadow: 'inset 0 -1px 0 var(--lf-color-border-gold)',
-        padding: 'var(--lf-space-1) var(--lf-space-2)',
-        gap: 'var(--lf-space-1)',
-        zIndex: 'var(--lf-z-chrome)',
-      }}
-    >
-      {FLAT_NAV.map((item) => {
-        const active = isActive(pathname, item.href);
-        const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
-        const style = {
-          borderBottomWidth: 'var(--lf-border-width-thick)',
-          borderBottomStyle: 'solid' as const,
-          borderBottomColor: active && !locked ? 'var(--lf-color-gold-base)' : 'transparent',
-          background: active && !locked ? 'var(--lf-color-gold-soft)' : 'transparent',
-          color: locked
-            ? 'var(--lf-color-text-faint)'
-            : active
-              ? 'var(--lf-color-gold-base)'
-              : 'var(--lf-color-text-muted)',
-          fontSize: 'var(--lf-type-caption)',
-          padding: 'var(--lf-space-2)',
-          display: 'inline-flex' as const,
-          alignItems: 'center',
-          gap: 'var(--lf-space-1)',
-          opacity: locked ? 0.6 : 1,
-        };
+    <>
+      <nav className="lf-mobile-nav md:hidden" aria-label="Menu mobilne">
+        {primaryItems.map((item) => {
+          const active = isActive(pathname, item.href);
+          const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
+          const label = PRIMARY_LABEL[item.id as (typeof PRIMARY_IDS)[number]] ?? item.label;
+          const className = [
+            'lf-mobile-nav__slot',
+            active && !locked ? 'lf-mobile-nav__slot--active' : '',
+            locked ? 'lf-mobile-nav__slot--locked' : '',
+          ]
+            .filter(Boolean)
+            .join(' ');
 
-        if (locked) {
+          if (locked) {
+            return (
+              <span
+                key={item.id}
+                className={className}
+                title={`${item.label} — wkrótce`}
+                aria-disabled="true"
+              >
+                <NavIcon id={item.id} active={false} size={14} />
+                <span className="font-[family-name:var(--font-ui)]">{label}</span>
+              </span>
+            );
+          }
+
           return (
-            <span
-              key={item.id}
-              className="shrink-0 whitespace-nowrap"
-              style={style}
-              title={`${item.label} — wkrótce`}
-              aria-disabled="true"
-            >
-              <NavIcon id={item.id} active={false} size={14} />
-              <span className="font-[family-name:var(--font-ui)]">{item.shortLabel}</span>
-            </span>
+            <Link key={item.id} href={item.href} className={className}>
+              <NavIcon id={item.id} active={active} size={14} />
+              <span className="font-[family-name:var(--font-ui)]">{label}</span>
+            </Link>
           );
-        }
+        })}
 
-        return (
-          <Link key={item.id} href={item.href} className="shrink-0 whitespace-nowrap" style={style}>
-            <NavIcon id={item.id} active={active} size={14} />
-            <span className="font-[family-name:var(--font-ui)]">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+        <button
+          type="button"
+          className={`lf-mobile-nav__slot ${moreOpen ? 'lf-mobile-nav__slot--active' : ''}`}
+          aria-expanded={moreOpen}
+          aria-controls={moreOpen ? titleId : undefined}
+          onClick={() => setMoreOpen((v) => !v)}
+        >
+          <span className="font-[family-name:var(--font-ui)] font-semibold">Więcej</span>
+        </button>
+      </nav>
+
+      {moreOpen ? (
+        <div className="lf-mobile-more md:hidden" role="presentation">
+          <button
+            type="button"
+            className="lf-mobile-more__backdrop"
+            aria-label="Zamknij menu"
+            onClick={() => setMoreOpen(false)}
+          />
+          <div
+            className="lf-mobile-more__panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+          >
+            <header className="lf-mobile-more__header">
+              <h2 id={titleId} className="lf-mobile-more__title">
+                Więcej
+              </h2>
+              <button
+                type="button"
+                className="lf-mobile-more__close"
+                onClick={() => setMoreOpen(false)}
+              >
+                Zamknij
+              </button>
+            </header>
+            <div className="lf-mobile-more__body">
+              {moreGroups.map((group) => (
+                <div key={group.id} className="lf-mobile-more__group">
+                  <p className="lf-mobile-more__group-label">{group.label}</p>
+                  <ul className="lf-mobile-more__list">
+                    {group.items.map((item) => {
+                      const active = isActive(pathname, item.href);
+                      const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
+                      if (locked) {
+                        return (
+                          <li key={item.id}>
+                            <span
+                              className="lf-mobile-more__item lf-mobile-more__item--locked"
+                              title={`${item.label} — wkrótce`}
+                            >
+                              <NavIcon id={item.id} active={false} size={14} />
+                              {item.label}
+                              <span className="lf-mobile-more__soon">wkrótce</span>
+                            </span>
+                          </li>
+                        );
+                      }
+                      return (
+                        <li key={item.id}>
+                          <Link
+                            href={item.href}
+                            className={`lf-mobile-more__item ${active ? 'lf-mobile-more__item--active' : ''}`}
+                            onClick={() => setMoreOpen(false)}
+                          >
+                            <NavIcon id={item.id} active={active} size={14} />
+                            {item.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

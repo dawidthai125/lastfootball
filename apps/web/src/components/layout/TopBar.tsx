@@ -9,30 +9,19 @@ import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
 import { resolveHubPhase } from '@/lib/hub';
 
-function Metric({ label, value, tone }: { label: string; value: string; tone?: 'gold' | 'ok' }) {
-  return (
-    <div className="lf-chrome-metric">
-      <span className="lf-chrome-metric__label">{label}</span>
-      <span
-        className={
-          tone === 'gold'
-            ? 'lf-chrome-metric__value lf-chrome-metric__value--gold'
-            : tone === 'ok'
-              ? 'lf-chrome-metric__value lf-chrome-metric__value--ok'
-              : 'lf-chrome-metric__value'
-        }
-      >
-        {value}
-      </span>
-    </div>
-  );
+function phaseLabel(phase: ReturnType<typeof resolveHubPhase>): string {
+  if (phase === 'SEASON') return 'Sezon';
+  if (phase === 'EARLY_CLUB' || phase === 'NEW_CLUB') return 'Start';
+  return 'Klub';
 }
 
+/**
+ * Shell TopBar — LFE-UI-EVOLUTION-01B: klub first, bez KPI metrics.
+ */
 export function TopBar() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const phase = resolveHubPhase(club, { hasFixtures });
-  const early = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
   const { toggleNotifications } = useOverlay();
   const { toggleNav, navCollapsed } = useShell();
 
@@ -79,14 +68,13 @@ export function TopBar() {
 
       <Link
         href="/hub"
-        className="flex items-center"
+        className="flex min-w-0 items-center"
         style={{
           gap: 'var(--lf-space-2)',
           paddingRight: 'var(--lf-space-3)',
           borderRightWidth: 'var(--lf-border-width-hair)',
           borderRightStyle: 'solid',
           borderRightColor: 'var(--lf-color-border-subtle)',
-          minWidth: 0,
         }}
       >
         <ClubCrest
@@ -99,57 +87,42 @@ export function TopBar() {
         />
         <div className="hidden min-w-0 sm:block">
           <div
-            className="truncate font-[family-name:var(--font-ui)] font-bold uppercase"
+            className="truncate font-[family-name:var(--font-ui)] font-bold"
             style={{
               fontSize: 'var(--lf-type-table)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
               color: 'var(--lf-color-text-primary)',
               lineHeight: 1.1,
             }}
           >
-            LastFootball
+            {clubName}
           </div>
           <div
-            className="truncate"
+            className="truncate font-[family-name:var(--font-ui)] uppercase"
             style={{
               fontSize: 'var(--lf-type-label)',
               letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-gold)',
-              textTransform: 'uppercase',
+              color: 'var(--lf-color-text-faint)',
             }}
           >
-            {clubName}
+            LastFootball · {phaseLabel(phase)}
           </div>
         </div>
       </Link>
 
-      <div className="hidden items-center md:flex" style={{ gap: 0 }}>
-        <Metric label="Sezon" value="1" />
-        <Metric label="Dzień" value={early ? '1' : '1'} />
-        {phase === 'SEASON' ? (
-          <Metric label="Faza" value="Sezon" tone="gold" />
-        ) : early ? (
-          <Metric label="Faza" value="Start" tone="gold" />
-        ) : null}
-      </div>
-
-      <div
-        className="ml-auto flex items-center overflow-x-auto"
-        style={{ gap: 'var(--lf-space-2)' }}
-      >
+      <div className="ml-auto flex items-center" style={{ gap: 'var(--lf-space-1)' }}>
         <button
           type="button"
           onClick={toggleNotifications}
-          className="relative inline-flex items-center"
+          className="inline-flex items-center"
           style={{
             borderWidth: 'var(--lf-border-width-hair)',
             borderStyle: 'solid',
             borderColor: 'var(--lf-color-border-subtle)',
-            background: 'var(--lf-color-bg-inset)',
+            background: 'transparent',
             color: 'var(--lf-color-text-muted)',
-            gap: 'var(--lf-space-1)',
             padding: 'var(--lf-space-1) var(--lf-space-2)',
             borderRadius: 'var(--lf-radius-sm)',
+            minHeight: 32,
           }}
           aria-label="Powiadomienia"
         >
@@ -158,17 +131,18 @@ export function TopBar() {
 
         <Link
           href="/profile"
-          className="flex items-center"
+          className="inline-flex items-center"
+          aria-label="Profil menedżera"
           style={{
             borderWidth: 'var(--lf-border-width-hair)',
             borderStyle: 'solid',
-            borderColor: 'var(--lf-color-border-gold)',
-            background: 'var(--lf-color-gold-soft)',
+            borderColor: 'var(--lf-color-border-subtle)',
+            background: 'transparent',
             gap: 'var(--lf-space-2)',
-            paddingBlock: 'var(--lf-space-1)',
-            paddingRight: 'var(--lf-space-2)',
-            paddingLeft: 'var(--lf-space-1)',
+            padding: 'var(--lf-space-1)',
             borderRadius: 'var(--lf-radius-sm)',
+            minHeight: 32,
+            textDecoration: 'none',
           }}
         >
           <PlayerPortrait
@@ -177,24 +151,16 @@ export function TopBar() {
             size="sm"
             style={{ width: 22, height: 22 }}
           />
-          <div className="hidden leading-tight sm:block">
-            <div
-              className="font-[family-name:var(--font-ui)] font-semibold"
-              style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-primary)' }}
-            >
-              Menedżer
-            </div>
-            <div
-              className="font-[family-name:var(--font-ui)] uppercase"
-              style={{
-                fontSize: '9px',
-                letterSpacing: 'var(--lf-type-tracking-label)',
-                color: 'var(--lf-color-text-gold)',
-              }}
-            >
-              {phase === 'SEASON' ? 'Sezon' : early ? 'Early club' : 'Klub'}
-            </div>
-          </div>
+          <span
+            className="hidden font-[family-name:var(--font-ui)] sm:inline"
+            style={{
+              fontSize: 'var(--lf-type-caption)',
+              color: 'var(--lf-color-text-muted)',
+              paddingRight: 'var(--lf-space-1)',
+            }}
+          >
+            Profil
+          </span>
         </Link>
 
         <form action={signOut}>
@@ -205,7 +171,7 @@ export function TopBar() {
               borderWidth: 'var(--lf-border-width-hair)',
               borderStyle: 'solid',
               borderColor: 'var(--lf-color-border-subtle)',
-              background: 'var(--lf-color-bg-inset)',
+              background: 'transparent',
               color: 'var(--lf-color-text-muted)',
               fontSize: 'var(--lf-type-label)',
               letterSpacing: 'var(--lf-type-tracking-label)',
@@ -213,6 +179,7 @@ export function TopBar() {
               padding: 'var(--lf-space-1) var(--lf-space-2)',
               borderRadius: 'var(--lf-radius-sm)',
               cursor: 'pointer',
+              minHeight: 32,
             }}
           >
             Wyjdź
