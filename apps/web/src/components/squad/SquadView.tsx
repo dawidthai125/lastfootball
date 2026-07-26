@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { PlayerPortrait } from '@/components/assets';
 import {
   POSITION_FILTERS,
   STATUS_FILTERS,
@@ -11,20 +12,15 @@ import {
   type SortKey,
   type SquadPlayerDto,
 } from '@/lib/squad';
-import { PlayerPortrait } from '@/components/assets';
+
+import './squad-decision.css';
 
 type SquadPlayer = SquadPlayerDto;
 
-const controlStyle: CSSProperties = {
-  borderWidth: 'var(--lf-border-width-hair)',
-  borderStyle: 'solid',
-  borderColor: 'var(--lf-color-border-subtle)',
-  background: 'var(--lf-color-bg-inset)',
-  color: 'var(--lf-color-text-secondary)',
-  fontSize: 'var(--lf-type-table)',
-  padding: 'var(--lf-space-1) var(--lf-space-2)',
-  borderRadius: 'var(--lf-radius-sm)',
-};
+/** UI-only attention thresholds (presentation — not domain). */
+const ENERGY_ATTENTION = 45;
+const FORM_ATTENTION = 50;
+const ATTENTION_LIMIT = 5;
 
 function statusColor(status: PlayerStatus): { border: string; bg: string; text: string } {
   switch (status) {
@@ -56,6 +52,25 @@ function statusColor(status: PlayerStatus): { border: string; bg: string; text: 
   }
 }
 
+function attentionRank(p: SquadPlayer): number {
+  if (p.status === 'DEPARTED') return 999;
+  if (p.status === 'INJURED') return 0;
+  if (p.status === 'SUSPENDED') return 1;
+  if (p.status === 'TIRED') return 2;
+  if (p.energy < ENERGY_ATTENTION) return 3;
+  if (p.form < FORM_ATTENTION) return 4;
+  return 999;
+}
+
+function attentionReason(p: SquadPlayer): string {
+  if (p.status === 'INJURED' || p.status === 'SUSPENDED' || p.status === 'TIRED') {
+    return STATUS_LABEL[p.status];
+  }
+  if (p.energy < ENERGY_ATTENTION) return `Energia ${p.energy}`;
+  if (p.form < FORM_ATTENTION) return `Forma ${p.form}`;
+  return STATUS_LABEL[p.status];
+}
+
 function comparePlayers(
   a: SquadPlayer,
   b: SquadPlayer,
@@ -83,12 +98,37 @@ function comparePlayers(
   }
 }
 
+/**
+ * Squad Experience — LFE-UI-EVOLUTION-01G.
+ * Decision-first presentation; squad DTO / domain unchanged.
+ */
 export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
   const router = useRouter();
   const [position, setPosition] = useState<(typeof POSITION_FILTERS)[number]>('ALL');
   const [status, setStatus] = useState<(typeof STATUS_FILTERS)[number]>('ALL');
   const [sort, setSort] = useState<SortKey>('skill');
   const [dir, setDir] = useState<'asc' | 'desc'>('desc');
+
+  const squadCounts = useMemo(() => {
+    let ready = 0;
+    let injured = 0;
+    let tired = 0;
+    for (const p of players) {
+      if (p.status === 'READY') ready += 1;
+      else if (p.status === 'INJURED') injured += 1;
+      else if (p.status === 'TIRED') tired += 1;
+    }
+    return { ready, injured, tired, total: players.length };
+  }, [players]);
+
+  const attention = useMemo(() => {
+    return [...players]
+      .map((p) => ({ player: p, rank: attentionRank(p) }))
+      .filter((x) => x.rank < 999)
+      .sort((a, b) => a.rank - b.rank || a.player.name.localeCompare(b.player.name, 'pl'))
+      .slice(0, ATTENTION_LIMIT)
+      .map((x) => x.player);
+  }, [players]);
 
   const rows = useMemo(() => {
     let list = [...players];
@@ -97,6 +137,10 @@ export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
     list.sort((a, b) => comparePlayers(a, b, sort, dir));
     return list;
   }, [players, position, status, sort, dir]);
+
+  function openPlayer(id: string) {
+    router.push(`/players/${id}`);
+  }
 
   function toggleSort(key: SortKey) {
     if (sort === key) setDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -107,319 +151,268 @@ export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
-      <header
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: 'var(--lf-space-3)',
-          borderBottomWidth: 'var(--lf-border-width-hair)',
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'var(--lf-color-border-subtle)',
-          paddingBottom: 'var(--lf-space-2)',
-        }}
-      >
-        <div>
-          <h1
-            className="font-[family-name:var(--font-ui)] font-semibold"
-            style={{
-              margin: 0,
-              fontSize: 'var(--lf-type-h1)',
-              color: 'var(--lf-color-text-primary)',
-            }}
-          >
-            Kadra
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              marginTop: 'var(--lf-space-1)',
-              fontSize: 'var(--lf-type-caption)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            Pierwsza drużyna · {rows.length} z {players.length} zawodników
+    <div className="lf-sq">
+      <div className="lf-sq__axis">
+        {/* M1 — Squad Hero (D2) */}
+        <header className="lf-sq__hero">
+          <p className="lf-sq__eyebrow">Kadra</p>
+          <h1 className="lf-sq__question">Który zawodnik wymaga dziś mojej uwagi?</h1>
+          <p className="lf-sq__status-line">
+            Gotowi <strong>{squadCounts.ready}</strong>
+            {' · '}
+            Kontuzje <strong>{squadCounts.injured}</strong>
+            {' · '}
+            Zmęczeni <strong>{squadCounts.tired}</strong>
+            {' · '}
+            Razem <strong>{squadCounts.total}</strong>
           </p>
-        </div>
-      </header>
+        </header>
 
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 'var(--lf-space-3)',
-          alignItems: 'flex-end',
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel)',
-          padding: 'var(--lf-space-3)',
-          borderRadius: 'var(--lf-radius-sm)',
-        }}
-      >
-        <label style={{ display: 'grid', gap: 'var(--lf-space-1)' }}>
-          <span
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            Pozycja
-          </span>
-          <select
-            value={position}
-            onChange={(e) => setPosition(e.target.value as (typeof POSITION_FILTERS)[number])}
-            style={controlStyle}
-          >
-            {POSITION_FILTERS.map((p) => (
-              <option key={p} value={p}>
-                {p === 'ALL' ? 'Wszystkie' : p}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label style={{ display: 'grid', gap: 'var(--lf-space-1)' }}>
-          <span
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            Status
-          </span>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as (typeof STATUS_FILTERS)[number])}
-            style={controlStyle}
-          >
-            {STATUS_FILTERS.map((s) => (
-              <option key={s} value={s}>
-                {s === 'ALL' ? 'Wszystkie' : STATUS_LABEL[s]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label style={{ display: 'grid', gap: 'var(--lf-space-1)' }}>
-          <span
-            className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-            style={{
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            Sortuj
-          </span>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            style={controlStyle}
-          >
-            <option value="skill">Umiejętność</option>
-            <option value="form">Forma</option>
-            <option value="energy">Energia</option>
-            <option value="name">Nazwisko</option>
-            <option value="position">Pozycja</option>
-            <option value="age">Wiek</option>
-            <option value="status">Status</option>
-          </select>
-        </label>
-
-        <button
-          type="button"
-          onClick={() => setDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
-          style={{
-            ...controlStyle,
-            borderColor: 'var(--lf-color-border-strong)',
-            background: 'var(--lf-color-bg-panel-alt)',
-            cursor: 'pointer',
-          }}
-        >
-          Kierunek: {dir === 'asc' ? 'rosnąco' : 'malejąco'}
-        </button>
-      </div>
-
-      <div
-        style={{
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel)',
-          borderRadius: 'var(--lf-radius-sm)',
-          overflow: 'auto',
-          maxHeight:
-            'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-8) - var(--lf-space-8))',
-        }}
-      >
-        <table
-          style={{
-            width: '100%',
-            borderCollapse: 'collapse',
-            fontSize: 'var(--lf-type-table)',
-            textAlign: 'left',
-          }}
-        >
-          <thead>
-            <tr>
-              {(
-                [
-                  ['name', 'Zawodnik', 'left'],
-                  ['position', 'Poz.', 'left'],
-                  ['age', 'Wiek', 'right'],
-                  ['form', 'Forma', 'right'],
-                  ['energy', 'Energia', 'right'],
-                  ['skill', 'Umiej.', 'right'],
-                  ['status', 'Status', 'left'],
-                ] as const
-              ).map(([key, label, align]) => (
-                <th
-                  key={key}
-                  className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                  style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 'var(--lf-z-sticky)',
-                    background: 'var(--lf-color-bg-inset)',
-                    padding: 'var(--lf-space-2)',
-                    fontSize: 'var(--lf-type-label)',
-                    letterSpacing: 'var(--lf-type-tracking-label)',
-                    color: 'var(--lf-color-text-faint)',
-                    textAlign: align,
-                    borderBottomWidth: 'var(--lf-border-width-hair)',
-                    borderBottomStyle: 'solid',
-                    borderBottomColor: 'var(--lf-color-border-subtle)',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => toggleSort(key)}
-                >
-                  {label}
-                  {sort === key ? (dir === 'asc' ? ' ↑' : ' ↓') : ''}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => {
-              const sc = statusColor(p.status);
-              return (
-                <tr
-                  key={p.id}
-                  tabIndex={0}
-                  role="link"
-                  aria-label={`Otwórz profil: ${p.name}`}
-                  onClick={() => router.push(`/players/${p.id}`)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      router.push(`/players/${p.id}`);
-                    }
-                  }}
-                  style={{
-                    borderBottomWidth: 'var(--lf-border-width-hair)',
-                    borderBottomStyle: 'solid',
-                    borderBottomColor: 'var(--lf-color-border-subtle)',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--lf-color-bg-hover)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <td
-                    style={{
-                      padding: 'var(--lf-space-2)',
-                      fontWeight: 600,
-                      color: 'var(--lf-color-text-primary)',
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 'var(--lf-space-2)',
-                      }}
+        {/* M1 — Attention Summary (D3) */}
+        <section className="lf-sq__attention" aria-labelledby="lf-sq-attention-title">
+          <h2 id="lf-sq-attention-title" className="lf-sq__section-title">
+            Wymagają uwagi
+          </h2>
+          {attention.length === 0 ? (
+            <p className="lf-sq__empty">
+              Dziś nikt nie wymaga pilnej uwagi — przejrzyj kadrę poniżej.
+            </p>
+          ) : (
+            <ul className="lf-sq__attention-list">
+              {attention.map((p) => {
+                const sc = statusColor(p.status);
+                return (
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      className="lf-sq__attention-item"
+                      onClick={() => openPlayer(p.id)}
+                      aria-label={`Otwórz profil: ${p.name}`}
                     >
                       <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
-                      {p.name}
+                      <span className="lf-sq__attention-body">
+                        <span className="lf-sq__attention-name">{p.name}</span>
+                        <span className="lf-sq__attention-meta">
+                          {p.position} · {attentionReason(p)}
+                        </span>
+                      </span>
+                      <span
+                        className="lf-sq__chip"
+                        style={{
+                          borderColor: sc.border,
+                          background: sc.bg,
+                          color: sc.text,
+                        }}
+                      >
+                        {STATUS_LABEL[p.status]}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </div>
+
+      {/* M2/M3 — Browse under decision (D4); cards mobile / table desktop (D6) */}
+      <section className="lf-sq__browse" aria-labelledby="lf-sq-browse-title">
+        <h2 id="lf-sq-browse-title" className="lf-sq__section-title lf-sq__section-title--muted">
+          Pełna kadra
+        </h2>
+        <p className="lf-sq__empty">
+          {rows.length} z {players.length} zawodników
+        </p>
+
+        <div className="lf-sq__filters">
+          <label className="lf-sq__filter">
+            <span className="lf-sq__filter-label">Pozycja</span>
+            <select
+              className="lf-sq__control"
+              value={position}
+              onChange={(e) => setPosition(e.target.value as (typeof POSITION_FILTERS)[number])}
+            >
+              {POSITION_FILTERS.map((p) => (
+                <option key={p} value={p}>
+                  {p === 'ALL' ? 'Wszystkie' : p}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="lf-sq__filter">
+            <span className="lf-sq__filter-label">Status</span>
+            <select
+              className="lf-sq__control"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as (typeof STATUS_FILTERS)[number])}
+            >
+              {STATUS_FILTERS.map((s) => (
+                <option key={s} value={s}>
+                  {s === 'ALL' ? 'Wszystkie' : STATUS_LABEL[s]}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="lf-sq__filter">
+            <span className="lf-sq__filter-label">Sortuj</span>
+            <select
+              className="lf-sq__control"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+            >
+              <option value="skill">Umiejętność</option>
+              <option value="form">Forma</option>
+              <option value="energy">Energia</option>
+              <option value="name">Nazwisko</option>
+              <option value="position">Pozycja</option>
+              <option value="age">Wiek</option>
+              <option value="status">Status</option>
+            </select>
+          </label>
+
+          <button
+            type="button"
+            className="lf-sq__control lf-sq__dir"
+            onClick={() => setDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
+          >
+            Kierunek: {dir === 'asc' ? 'rosnąco' : 'malejąco'}
+          </button>
+        </div>
+
+        {/* Mobile cards */}
+        <ul className="lf-sq__cards">
+          {rows.map((p) => {
+            const sc = statusColor(p.status);
+            return (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  className="lf-sq__card"
+                  onClick={() => openPlayer(p.id)}
+                  aria-label={`Otwórz profil: ${p.name}`}
+                >
+                  <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
+                  <span className="lf-sq__card-body">
+                    <span className="lf-sq__card-name">{p.name}</span>
+                    <span className="lf-sq__card-meta">
+                      {p.position} · Forma {p.form} · Energia {p.energy} ·{' '}
+                      <span className="lf-sq__skill">{p.skill}</span>
                     </span>
-                  </td>
-                  <td style={{ padding: 'var(--lf-space-2)' }}>{p.position}</td>
-                  <td
-                    className="tabular-nums"
-                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
-                  >
-                    {p.age}
-                  </td>
-                  <td
-                    className="tabular-nums"
-                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
-                  >
-                    {p.form}
-                  </td>
-                  <td
-                    className="tabular-nums"
-                    style={{ padding: 'var(--lf-space-2)', textAlign: 'right' }}
-                  >
-                    {p.energy}
-                  </td>
-                  <td
-                    className="font-semibold tabular-nums"
+                  </span>
+                  <span
+                    className="lf-sq__chip"
                     style={{
-                      padding: 'var(--lf-space-2)',
-                      textAlign: 'right',
-                      color: 'var(--lf-color-text-gold)',
+                      borderColor: sc.border,
+                      background: sc.bg,
+                      color: sc.text,
                     }}
                   >
-                    {p.skill}
-                  </td>
-                  <td style={{ padding: 'var(--lf-space-2)' }}>
-                    <span
-                      className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                      style={{
-                        fontSize: 'var(--lf-type-label)',
-                        padding: '0 var(--lf-space-1)',
-                        borderWidth: 'var(--lf-border-width-hair)',
-                        borderStyle: 'solid',
-                        borderRadius: 'var(--lf-radius-xs)',
-                        borderColor: sc.border,
-                        background: sc.bg,
-                        color: sc.text,
-                      }}
-                    >
-                      {STATUS_LABEL[p.status]}
-                    </span>
+                    {STATUS_LABEL[p.status]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+          {rows.length === 0 ? (
+            <li className="lf-sq__empty">
+              Brak zawodników dla wybranych filtrów. Zmień filtry lub wróć do pełnej listy.
+            </li>
+          ) : null}
+        </ul>
+
+        {/* Desktop table */}
+        <div className="lf-sq__table-wrap">
+          <table className="lf-sq__table">
+            <thead>
+              <tr>
+                {(
+                  [
+                    ['name', 'Zawodnik', 'left'],
+                    ['position', 'Poz.', 'left'],
+                    ['age', 'Wiek', 'right'],
+                    ['form', 'Forma', 'right'],
+                    ['energy', 'Energia', 'right'],
+                    ['skill', 'Umiej.', 'right'],
+                    ['status', 'Status', 'left'],
+                  ] as const
+                ).map(([key, label, align]) => (
+                  <th key={key} style={{ textAlign: align }} onClick={() => toggleSort(key)}>
+                    {label}
+                    {sort === key ? (dir === 'asc' ? ' ↑' : ' ↓') : ''}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((p) => {
+                const sc = statusColor(p.status);
+                return (
+                  <tr
+                    key={p.id}
+                    tabIndex={0}
+                    role="link"
+                    aria-label={`Otwórz profil: ${p.name}`}
+                    onClick={() => openPlayer(p.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openPlayer(p.id);
+                      }
+                    }}
+                  >
+                    <td style={{ fontWeight: 600, color: 'var(--lf-color-text-primary)' }}>
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 'var(--lf-space-2)',
+                        }}
+                      >
+                        <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
+                        {p.name}
+                      </span>
+                    </td>
+                    <td>{p.position}</td>
+                    <td className="tabular-nums" style={{ textAlign: 'right' }}>
+                      {p.age}
+                    </td>
+                    <td className="tabular-nums" style={{ textAlign: 'right' }}>
+                      {p.form}
+                    </td>
+                    <td className="tabular-nums" style={{ textAlign: 'right' }}>
+                      {p.energy}
+                    </td>
+                    <td className="lf-sq__skill" style={{ textAlign: 'right' }}>
+                      {p.skill}
+                    </td>
+                    <td>
+                      <span
+                        className="lf-sq__chip"
+                        style={{
+                          borderColor: sc.border,
+                          background: sc.bg,
+                          color: sc.text,
+                        }}
+                      >
+                        {STATUS_LABEL[p.status]}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="lf-sq__table-empty">
+                    Brak zawodników dla wybranych filtrów. Zmień filtry lub wróć do pełnej listy.
                   </td>
                 </tr>
-              );
-            })}
-            {rows.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  style={{
-                    padding: 'var(--lf-space-5)',
-                    textAlign: 'center',
-                    color: 'var(--lf-color-text-muted)',
-                    fontSize: 'var(--lf-type-body)',
-                  }}
-                >
-                  Brak zawodników dla wybranych filtrów. Zmień filtry lub wróć do pełnej listy.
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

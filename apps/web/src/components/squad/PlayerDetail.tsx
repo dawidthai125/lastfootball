@@ -7,6 +7,8 @@ import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
 import { dashboardMock } from '@/data/mock';
 
+import './squad-decision.css';
+
 type SquadPlayer = SquadPlayerDto;
 
 function statusTone(status: SquadPlayer['status']): {
@@ -43,27 +45,19 @@ function statusTone(status: SquadPlayer['status']): {
   }
 }
 
+/** Hero — identity only (status chip kept as identity signal). */
 export function PlayerHero({ player }: { player: SquadPlayer }) {
   const tone = statusTone(player.status);
 
   return (
-    <AtmosphereLayer
-      aria-label="Player Hero"
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-panel)',
-        borderRadius: 'var(--lf-radius-sm)',
-        padding: 'var(--lf-space-5)',
-      }}
-    >
+    <AtmosphereLayer aria-label="Player Hero" className="lf-sq-detail__hero">
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           gap: 'var(--lf-space-4)',
+          padding: 'var(--lf-space-5)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--lf-space-2)' }}>
@@ -99,45 +93,22 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
           >
             {player.name}
           </h1>
-          <div
+          <p
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 'var(--lf-space-3)',
-              marginTop: 'var(--lf-space-3)',
+              margin: 0,
+              marginTop: 'var(--lf-space-2)',
               fontSize: 'var(--lf-type-caption)',
               color: 'var(--lf-color-text-muted)',
             }}
           >
-            <span>
-              Poz.{' '}
-              <strong style={{ color: 'var(--lf-color-text-primary)' }}>{player.position}</strong>
-            </span>
-            <span>
-              Wiek{' '}
-              <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
-                {player.age}
-              </strong>
-            </span>
-            <span>
-              Forma{' '}
-              <strong className="tabular-nums" style={{ color: 'var(--lf-color-status-ok)' }}>
-                {player.form}
-              </strong>
-            </span>
-            <span>
-              Energia{' '}
-              <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
-                {player.energy}
-              </strong>
-            </span>
-            <span>
-              Umiejętność{' '}
-              <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-gold)' }}>
-                {player.skill}
-              </strong>
-            </span>
-          </div>
+            Poz.{' '}
+            <strong style={{ color: 'var(--lf-color-text-primary)' }}>{player.position}</strong>
+            {' · '}
+            Wiek{' '}
+            <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
+              {player.age}
+            </strong>
+          </p>
         </div>
 
         <span
@@ -159,6 +130,43 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
         </span>
       </div>
     </AtmosphereLayer>
+  );
+}
+
+/** Decision row — equal weight paths; back to squad highlighted (not Transfers-first). */
+export function PlayerActions({ player }: { player: SquadPlayer }) {
+  return (
+    <nav className="lf-sq-detail__decisions" aria-label={`Decyzje: ${player.name}`}>
+      <Link href="/squad" className="lf-sq-detail__decision lf-sq-detail__decision--back">
+        Wróć do kadry
+      </Link>
+      <Link href="/training" className="lf-sq-detail__decision">
+        Trening
+      </Link>
+      <Link href="/transfers" className="lf-sq-detail__decision">
+        Transfery
+      </Link>
+    </nav>
+  );
+}
+
+/** Status strip — form / energy / skill (after decision). */
+export function PlayerStatus({ player }: { player: SquadPlayer }) {
+  return (
+    <div className="lf-sq-detail__status" aria-label="Status zawodnika">
+      <span>
+        Forma <strong>{player.form}</strong>
+      </span>
+      <span>
+        Energia <strong>{player.energy}</strong>
+      </span>
+      <span>
+        Umiejętność <strong style={{ color: 'var(--lf-color-text-gold)' }}>{player.skill}</strong>
+      </span>
+      <span>
+        Status <strong>{STATUS_LABEL[player.status]}</strong>
+      </span>
+    </div>
   );
 }
 
@@ -244,51 +252,5 @@ export function PlayerHistory({ player }: { player: SquadPlayer }) {
         ))}
       </ul>
     </SectionShell>
-  );
-}
-
-export function PlayerActions({ player }: { player: SquadPlayer }) {
-  const actions = [
-    { href: '/training', label: 'Trening', primary: false },
-    { href: `/transfers`, label: 'Transfery', primary: true },
-  ];
-
-  return (
-    <div
-      aria-label={`Akcje: ${player.name}`}
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--lf-space-2)',
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-panel)',
-        padding: 'var(--lf-space-3)',
-        borderRadius: 'var(--lf-radius-sm)',
-      }}
-    >
-      {actions.map((a) => (
-        <Link
-          key={a.label}
-          href={a.href}
-          style={{
-            borderWidth: 'var(--lf-border-width-hair)',
-            borderStyle: 'solid',
-            borderColor: a.primary
-              ? 'var(--lf-color-border-gold)'
-              : 'var(--lf-color-border-strong)',
-            background: a.primary ? 'var(--lf-color-gold-soft)' : 'var(--lf-color-bg-panel-alt)',
-            color: a.primary ? 'var(--lf-color-gold-base)' : 'var(--lf-color-text-secondary)',
-            fontSize: 'var(--lf-type-caption)',
-            fontWeight: a.primary ? 600 : 400,
-            padding: 'var(--lf-space-2) var(--lf-space-3)',
-            borderRadius: 'var(--lf-radius-sm)',
-          }}
-        >
-          {a.label}
-        </Link>
-      ))}
-    </div>
   );
 }
