@@ -1,0 +1,300 @@
+/* LFE-UI-EVOLUTION-01H — Finances decision surface (presentation, tokens). */
+
+.lf-fi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-5);
+  max-width: 42rem;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* —— Finance Hero (D2 / D7) —— */
+.lf-fi__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-5) var(--lf-space-4);
+  background: var(--lf-color-bg-panel);
+  border-bottom: var(--lf-border-width-thick) solid var(--lf-color-border-gold);
+}
+
+.lf-fi__eyebrow {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-fi__cash {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 6vw, var(--lf-type-hero));
+  line-height: 1.1;
+  color: var(--lf-color-status-ok);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.lf-fi__question {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 4vw, var(--lf-type-h2));
+  line-height: 1.2;
+  color: var(--lf-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.lf-fi__currency {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-faint);
+}
+
+/* —— Primary CTA (D1 / D8) —— */
+.lf-fi__cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--lf-space-3);
+  width: 100%;
+}
+
+.lf-fi__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--lf-space-3) var(--lf-space-5);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: var(--lf-color-gold-base);
+  color: var(--lf-color-bg-void);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-h2);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--lf-radius-sm);
+  transition: filter var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-fi__primary:hover {
+  filter: brightness(1.06);
+}
+
+.lf-fi__primary:focus-visible {
+  outline: 2px solid var(--lf-color-border-gold);
+  outline-offset: 2px;
+}
+
+.lf-fi__secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--lf-color-border-subtle);
+  text-underline-offset: 3px;
+}
+
+.lf-fi__secondary:hover {
+  color: var(--lf-color-text-secondary);
+  text-decoration-color: var(--lf-color-text-muted);
+}
+
+/* —— Status Summary (D3) —— */
+.lf-fi__status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+  padding-top: var(--lf-space-1);
+  min-width: 0;
+}
+
+.lf-fi__status-label {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-fi__status-line {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  line-height: 1.5;
+  color: var(--lf-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.lf-fi__status-line strong {
+  font-weight: 600;
+  color: var(--lf-color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* —— History browse (D4 / D6) —— */
+.lf-fi__browse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+  padding-top: var(--lf-space-2);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  min-width: 0;
+}
+
+.lf-fi__browse-title {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-body);
+  font-weight: 600;
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-fi__empty {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  line-height: 1.45;
+  color: var(--lf-color-text-muted);
+  max-width: 28rem;
+}
+
+.lf-fi__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+}
+
+.lf-fi__card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-3);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-panel);
+  min-width: 0;
+}
+
+.lf-fi__card-when {
+  font-size: var(--lf-type-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--lf-color-text-faint);
+  width: 100%;
+}
+
+.lf-fi__card-desc {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.lf-fi__card-amount {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--lf-type-caption);
+}
+
+.lf-fi__amount--in {
+  color: var(--lf-color-status-ok);
+}
+
+.lf-fi__amount--out {
+  color: var(--lf-color-status-danger);
+}
+
+.lf-fi__table-wrap {
+  display: none;
+  min-width: 0;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-panel);
+  overflow: hidden;
+}
+
+.lf-fi__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--lf-type-table);
+  text-align: left;
+}
+
+.lf-fi__table th {
+  padding: var(--lf-space-2);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+  background: var(--lf-color-bg-inset);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+}
+
+.lf-fi__table td {
+  padding: var(--lf-space-2);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-fi__table td:last-child {
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .lf-fi {
+    max-width: 48rem;
+  }
+
+  .lf-fi__hero {
+    padding: var(--lf-space-6) var(--lf-space-5);
+  }
+
+  .lf-fi__cta-wrap {
+    align-items: center;
+  }
+
+  .lf-fi__primary {
+    width: auto;
+    min-width: 18rem;
+    padding-inline: var(--lf-space-6);
+  }
+
+  .lf-fi__cards {
+    display: none;
+  }
+
+  .lf-fi__table-wrap {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-fi__primary {
+    transition: none;
+  }
+}
