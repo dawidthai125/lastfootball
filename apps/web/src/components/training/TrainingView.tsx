@@ -45,7 +45,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
     <div className="lf-tr">
       {/* M2 — Training Hero (D2 / D7: stays primary after submit) */}
       <header className="lf-tr__hero">
-        <p className={`lf-tr__status${training.canTrain ? '' : ' lf-tr__status--locked'}`}>
+        <p className={training.canTrain ? 'lf-tr__status' : 'lf-tr__status lf-tr__status--locked'}>
           {statusLabel}
         </p>
         <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
@@ -66,7 +66,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
               key={f.id}
               type="button"
               onClick={() => setFocusId(f.id)}
-              className={`lf-tr__choice${focusId === f.id ? ' lf-tr__choice--active' : ''}`}
+              className={focusId === f.id ? 'lf-tr__choice lf-tr__choice--active' : 'lf-tr__choice'}
               aria-pressed={focusId === f.id}
             >
               <span className="lf-tr__choice-label">{f.label}</span>
@@ -92,9 +92,11 @@ export function TrainingView({ training }: { training: TrainingDto }) {
                 key={i.id}
                 type="button"
                 onClick={() => setIntensityId(i.id)}
-                className={`lf-tr__choice lf-tr__choice--intensity${
-                  intensityId === i.id ? ' lf-tr__choice--active' : ''
-                }`}
+                className={
+                  intensityId === i.id
+                    ? 'lf-tr__choice lf-tr__choice--intensity lf-tr__choice--active'
+                    : 'lf-tr__choice lf-tr__choice--intensity'
+                }
                 aria-pressed={intensityId === i.id}
               >
                 <span className="lf-tr__choice-label">{i.label}</span>
