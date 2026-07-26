@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { AtmosphereLayer } from '@/components/assets';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
-import { SectionShell } from '@/components/panel/SectionShell';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 
+import './prematch-kickoff.css';
+
 /**
- * Pre Match — layout aligned to LFE-UI-01 mockup-16.
- * Lineup / tactics are read-only; decision panel stays placeholder.
+ * Kick-Off Experience — LFE-UI-EVOLUTION-01E.
+ * Decision-first presentation only; lineup/tactics remain read-only.
  */
 export function PreMatchView({
   bundle,
@@ -21,9 +22,16 @@ export function PreMatchView({
   const { fixture } = bundle;
   const home = fixture.home ? bundle.ourTeam : bundle.theirTeam;
   const away = fixture.home ? bundle.theirTeam : bundle.ourTeam;
+  const whenLabel = [
+    fixture.dateLabel ?? fixture.whenLabel,
+    fixture.kickoff ? fixture.kickoff : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+  const tacticPreview = bundle.tactics.slice(0, 3);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-4)' }}>
+    <div className="lf-ko">
       <Breadcrumbs
         items={
           firstMatch
@@ -39,654 +47,159 @@ export function PreMatchView({
         }
       />
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(14rem, 18rem) minmax(0, 1fr) minmax(14rem, 18rem)',
-          gap: 'var(--lf-space-3)',
-          alignItems: 'start',
-        }}
-      >
-        {/* Left — lineup preview (no edit) */}
-        <SectionShell
-          title="Wybór składu"
-          action={<span style={{ color: 'var(--lf-color-text-faint)' }}>{bundle.formation}</span>}
-        >
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--lf-space-1)',
-              marginBottom: 'var(--lf-space-3)',
-              flexWrap: 'wrap',
-            }}
-          >
-            {[
-              { id: 'xi', label: 'Wyjściowa 11', active: true },
-              { id: 'bench', label: 'Rezerwowi', active: false },
-              { id: 'tactics', label: 'Taktyka', active: false },
-            ].map((tab) => (
-              <span
-                key={tab.id}
-                className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                style={{
-                  fontSize: 'var(--lf-type-label)',
-                  letterSpacing: 'var(--lf-type-tracking-label)',
-                  padding: 'var(--lf-space-1) var(--lf-space-2)',
-                  borderWidth: 'var(--lf-border-width-hair)',
-                  borderStyle: 'solid',
-                  borderRadius: 'var(--lf-radius-sm)',
-                  borderColor: tab.active
-                    ? 'var(--lf-color-border-gold)'
-                    : 'var(--lf-color-border-subtle)',
-                  background: tab.active ? 'var(--lf-color-gold-soft)' : 'var(--lf-color-bg-inset)',
-                  color: tab.active ? 'var(--lf-color-gold-base)' : 'var(--lf-color-text-faint)',
-                }}
-              >
-                {tab.label}
-              </span>
-            ))}
+      {/* M2 — Kick-Off Hero + dominant CTA */}
+      <AtmosphereLayer aria-label="Kick-Off" className="lf-ko__hero">
+        <div className="lf-ko__hero-inner">
+          <p className="lf-ko__eyebrow">{fixture.competitionLabel}</p>
+
+          <div className="lf-ko__matchup">
+            <div className="lf-ko__side">
+              <CrestMonogram initials={home.shortName} label={home.name} />
+              <FormPills form={home.form} />
+            </div>
+
+            <div className="lf-ko__vs-block">
+              <p className="lf-ko__vs">VS</p>
+              <p className="lf-ko__countdown tabular-nums">{bundle.countdown}</p>
+            </div>
+
+            <div className="lf-ko__side">
+              <CrestMonogram initials={away.shortName} label={away.name} />
+              <FormPills form={away.form} />
+            </div>
           </div>
 
-          <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {/* D6: termin tylko tutaj — nie w Additional Context */}
+          <p className="lf-ko__when">{whenLabel}</p>
+
+          <div className="lf-ko__cta-wrap">
+            <Link href={`/match/${fixture.id}/live`} className="lf-ko__primary">
+              {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Rozpocznij mecz'}
+            </Link>
+            {firstMatch ? (
+              <Link href={FIRST_MATCH_PATHS.intro} className="lf-ko__secondary">
+                Wstecz
+              </Link>
+            ) : (
+              <Link href="/matches" className="lf-ko__secondary">
+                Wróć do terminarza
+              </Link>
+            )}
+          </div>
+        </div>
+      </AtmosphereLayer>
+
+      {/* M3 — summaries under CTA */}
+      <div className="lf-ko__summaries">
+        <section className="lf-ko__section" aria-labelledby="lf-ko-xi-title">
+          <h2 id="lf-ko-xi-title" className="lf-ko__section-title">
+            Wyjściowa 11
+          </h2>
+          {/* D6: formacja tylko tutaj */}
+          <p className="lf-ko__section-meta">{bundle.formation}</p>
+
+          <ul className="lf-ko__xi">
             {bundle.ourLineup.map((r) => (
-              <li
-                key={`${r.number}-${r.name}`}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'var(--lf-space-5) var(--lf-space-6) minmax(0, 1fr) auto auto',
-                  gap: 'var(--lf-space-2)',
-                  alignItems: 'center',
-                  borderBottomWidth: 'var(--lf-border-width-hair)',
-                  borderBottomStyle: 'solid',
-                  borderBottomColor: 'var(--lf-color-border-subtle)',
-                  padding: 'var(--lf-space-2) 0',
-                  fontSize: 'var(--lf-type-table)',
-                }}
-              >
-                <span className="tabular-nums" style={{ color: 'var(--lf-color-text-faint)' }}>
-                  {r.number}
+              <li key={`${r.number}-${r.name}`} className="lf-ko__xi-row">
+                <span className="lf-ko__xi-num">{r.number}</span>
+                <span className="lf-ko__xi-pos">{r.pos}</span>
+                <span className="lf-ko__xi-name">
+                  {r.id ? <Link href={`/players/${r.id}`}>{r.name}</Link> : r.name}
+                  {r.captain ? <span className="lf-ko__xi-cap">C</span> : null}
                 </span>
-                <span
-                  className="font-[family-name:var(--font-ui)] font-semibold"
-                  style={{ color: 'var(--lf-color-text-gold)' }}
-                >
-                  {r.pos}
-                </span>
-                <span style={{ color: 'var(--lf-color-text-primary)', minWidth: 0 }}>
-                  {r.id ? (
-                    <Link href={`/players/${r.id}`} style={{ color: 'inherit' }}>
-                      {r.name}
-                    </Link>
-                  ) : (
-                    r.name
-                  )}
-                  {r.captain ? (
-                    <span
-                      style={{
-                        marginLeft: 'var(--lf-space-1)',
-                        color: 'var(--lf-color-gold-base)',
-                        fontSize: 'var(--lf-type-label)',
-                      }}
-                    >
-                      C
-                    </span>
-                  ) : null}
-                </span>
-                <ConditionBars value={r.condition} />
-                <span className="tabular-nums" style={{ color: 'var(--lf-color-text-muted)' }}>
-                  {r.rating}
-                </span>
+                <span className="lf-ko__xi-rating">{r.rating}</span>
               </li>
             ))}
           </ul>
 
-          <div
-            style={{
-              marginTop: 'var(--lf-space-3)',
-              borderTopWidth: 'var(--lf-border-width-hair)',
-              borderTopStyle: 'solid',
-              borderTopColor: 'var(--lf-color-border-subtle)',
-              paddingTop: 'var(--lf-space-3)',
-            }}
-          >
-            <div
-              className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-              style={{
-                fontSize: 'var(--lf-type-label)',
-                letterSpacing: 'var(--lf-type-tracking-label)',
-                color: 'var(--lf-color-text-faint)',
-              }}
-            >
-              Kondycja zespołu
-            </div>
-            <div
-              style={{
-                marginTop: 'var(--lf-space-1)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: 'var(--lf-type-caption)',
-                color: 'var(--lf-color-text-secondary)',
-              }}
-            >
-              <span>{bundle.teamCondition.label}</span>
-              <span className="tabular-nums">{bundle.teamCondition.value}</span>
-            </div>
-            <div
-              style={{
-                marginTop: 'var(--lf-space-2)',
-                height: 'var(--lf-space-1)',
-                background: 'var(--lf-color-bg-inset)',
-                borderRadius: 'var(--lf-radius-xs)',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  width: `${bundle.teamCondition.value}%`,
-                  height: '100%',
-                  background: 'var(--lf-color-status-ok)',
-                }}
-              />
-            </div>
-            <p
-              style={{
-                margin: 0,
-                marginTop: 'var(--lf-space-2)',
-                fontSize: 'var(--lf-type-label)',
-                color: 'var(--lf-color-text-faint)',
-              }}
-            >
-              Edycja składu — poza zakresem IMPL-05
-            </p>
-          </div>
-        </SectionShell>
+          <p className="lf-ko__condition">
+            Kondycja zespołu: {bundle.teamCondition.label} · {bundle.teamCondition.value}%
+          </p>
+        </section>
 
-        {/* Center — hero + stakes + CTA */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
-          <AtmosphereLayer
-            aria-label="Hero meczu"
-            style={{
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-subtle)',
-              background: 'var(--lf-color-bg-panel)',
-              borderRadius: 'var(--lf-radius-sm)',
-              padding: 'var(--lf-space-5)',
-              textAlign: 'center',
-            }}
-          >
-            <p
-              className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-              style={{
-                margin: 0,
-                fontSize: 'var(--lf-type-label)',
-                letterSpacing: 'var(--lf-type-tracking-label)',
-                color: 'var(--lf-color-text-gold)',
-              }}
-            >
-              {fixture.competitionLabel}
-            </p>
-
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--lf-space-5)',
-                marginTop: 'var(--lf-space-4)',
-              }}
-            >
-              <div>
-                <CrestMonogram initials={home.shortName} label={home.name} />
-                <div style={{ marginTop: 'var(--lf-space-2)' }}>
-                  <FormPills form={home.form} />
-                </div>
-              </div>
-              <div style={{ minWidth: 'calc(var(--lf-space-8) * 2)' }}>
-                <div
-                  className="font-[family-name:var(--font-ui)] font-bold"
-                  style={{
-                    fontSize: 'var(--lf-type-hero)',
-                    color: 'var(--lf-color-text-gold)',
-                    lineHeight: 1,
-                  }}
-                >
-                  VS
-                </div>
-                <div
-                  className="tabular-nums"
-                  style={{
-                    marginTop: 'var(--lf-space-2)',
-                    fontSize: 'var(--lf-type-h2)',
-                    color: 'var(--lf-color-text-primary)',
-                  }}
-                >
-                  {bundle.countdown}
-                </div>
-                <div
-                  style={{
-                    marginTop: 'var(--lf-space-1)',
-                    fontSize: 'var(--lf-type-caption)',
-                    color: 'var(--lf-color-status-warn)',
-                  }}
-                >
-                  {fixture.dateLabel ?? fixture.whenLabel}
-                  {fixture.kickoff ? ` · ${fixture.kickoff}` : ''}
-                </div>
-              </div>
-              <div>
-                <CrestMonogram initials={away.shortName} label={away.name} />
-                <div style={{ marginTop: 'var(--lf-space-2)' }}>
-                  <FormPills form={away.form} />
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                gap: 'var(--lf-space-3)',
-                marginTop: 'var(--lf-space-5)',
-              }}
-            >
-              {bundle.stakes.map((s) => (
-                <div
-                  key={s.id}
-                  style={{
-                    borderWidth: 'var(--lf-border-width-hair)',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--lf-color-border-subtle)',
-                    background: 'var(--lf-color-bg-inset)',
-                    borderRadius: 'var(--lf-radius-sm)',
-                    padding: 'var(--lf-space-3)',
-                  }}
-                >
-                  <div
-                    className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-                    style={{
-                      fontSize: 'var(--lf-type-label)',
-                      letterSpacing: 'var(--lf-type-tracking-label)',
-                      color: 'var(--lf-color-text-faint)',
-                    }}
-                  >
-                    {s.label}
-                  </div>
-                  <div
-                    style={{
-                      marginTop: 'var(--lf-space-1)',
-                      fontSize: 'var(--lf-type-caption)',
-                      color: 'var(--lf-color-text-primary)',
-                    }}
-                  >
-                    {s.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                gap: 'var(--lf-space-3)',
-                marginTop: 'var(--lf-space-3)',
-              }}
-            >
-              <MetaCell label="Stadion" value={fixture.stadium} />
-              <MetaCell
-                label="Termin"
-                value={`${fixture.dateLabel ?? fixture.whenLabel}${fixture.kickoff ? ` · ${fixture.kickoff}` : ''}`}
-              />
-              <MetaCell label="Pogoda" value={`${bundle.temperature} · ${bundle.weatherDetail}`} />
-            </div>
-
-            <p
-              style={{
-                margin: 0,
-                marginTop: 'var(--lf-space-2)',
-                fontSize: 'var(--lf-type-label)',
-                color: 'var(--lf-color-text-faint)',
-              }}
-            >
-              {bundle.weatherNote}
-            </p>
-
-            <div
-              style={{
-                marginTop: 'var(--lf-space-5)',
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 'var(--lf-space-2)',
-                justifyContent: 'center',
-              }}
-            >
-              {firstMatch ? (
-                <Link
-                  href={FIRST_MATCH_PATHS.intro}
-                  style={{
-                    borderWidth: 'var(--lf-border-width-hair)',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--lf-color-border-strong)',
-                    background: 'var(--lf-color-bg-panel-alt)',
-                    color: 'var(--lf-color-text-secondary)',
-                    fontSize: 'var(--lf-type-body)',
-                    padding: 'var(--lf-space-2) var(--lf-space-4)',
-                    borderRadius: 'var(--lf-radius-sm)',
-                  }}
-                >
-                  Wstecz
-                </Link>
-              ) : (
-                <Link
-                  href="/matches"
-                  style={{
-                    borderWidth: 'var(--lf-border-width-hair)',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--lf-color-border-strong)',
-                    background: 'var(--lf-color-bg-panel-alt)',
-                    color: 'var(--lf-color-text-secondary)',
-                    fontSize: 'var(--lf-type-body)',
-                    padding: 'var(--lf-space-2) var(--lf-space-4)',
-                    borderRadius: 'var(--lf-radius-sm)',
-                  }}
-                >
-                  Wróć do terminarza
-                </Link>
-              )}
-              <Link
-                href={`/match/${fixture.id}/live`}
-                style={{
-                  borderWidth: 'var(--lf-border-width-hair)',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--lf-color-border-gold)',
-                  background: 'var(--lf-color-gold-soft)',
-                  color: 'var(--lf-color-gold-base)',
-                  fontSize: 'var(--lf-type-body)',
-                  fontWeight: 600,
-                  padding: 'var(--lf-space-2) var(--lf-space-5)',
-                  borderRadius: 'var(--lf-radius-sm)',
-                }}
-              >
-                {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Rozpocznij mecz'}
-              </Link>
-            </div>
-          </AtmosphereLayer>
-
-          <SectionShell title="Ostatnie spotkania (H2H)">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--lf-space-3)' }}>
-              {bundle.h2h.map((h) => (
-                <div key={`${h.score}-${h.when}`} style={{ fontSize: 'var(--lf-type-caption)' }}>
-                  <span
-                    className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
-                    style={{ color: 'var(--lf-color-text-primary)' }}
-                  >
-                    {h.score}
-                  </span>
-                  <span
-                    style={{ marginLeft: 'var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}
-                  >
-                    {h.when}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </SectionShell>
-
-          <SectionShell title="Panel decyzji">
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--lf-space-2)',
-              }}
-            >
-              {bundle.decisions.map((d) => (
-                <li
-                  key={d.id}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 'var(--lf-space-3)',
-                    borderWidth: 'var(--lf-border-width-hair)',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--lf-color-border-subtle)',
-                    background: 'var(--lf-color-bg-inset)',
-                    padding: 'var(--lf-space-2) var(--lf-space-3)',
-                    borderRadius: 'var(--lf-radius-sm)',
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: 600,
-                        color: 'var(--lf-color-text-primary)',
-                        fontSize: 'var(--lf-type-table)',
-                      }}
-                    >
-                      {d.label}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 'var(--lf-type-caption)',
-                        color: 'var(--lf-color-text-muted)',
-                      }}
-                    >
-                      {d.hint}
-                    </div>
-                  </div>
-                  <span
-                    style={{
-                      alignSelf: 'center',
-                      fontSize: 'var(--lf-type-label)',
-                      color: 'var(--lf-color-text-faint)',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    Placeholder
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </SectionShell>
-        </div>
-
-        {/* Right — tactics read-only */}
-        <SectionShell title="Taktyka" action={<span>{bundle.formation}</span>}>
-          <p
-            style={{
-              margin: 0,
-              marginBottom: 'var(--lf-space-3)',
-              fontSize: 'var(--lf-type-caption)',
-              color: 'var(--lf-color-text-muted)',
-            }}
-          >
-            Styl gry:{' '}
-            <strong style={{ color: 'var(--lf-color-text-secondary)' }}>{bundle.styleLabel}</strong>
+        <section className="lf-ko__section" aria-labelledby="lf-ko-tactics-title">
+          <h2 id="lf-ko-tactics-title" className="lf-ko__section-title">
+            Taktyka
+          </h2>
+          <p className="lf-ko__tactics-line">
+            Styl gry: <strong>{bundle.styleLabel}</strong>
           </p>
 
-          <div style={{ display: 'grid', gap: 'var(--lf-space-3)' }}>
-            {bundle.tactics.map((t) => (
-              <div key={t.id}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontSize: 'var(--lf-type-caption)',
-                    color: 'var(--lf-color-text-muted)',
-                  }}
-                >
-                  <span>{t.label}</span>
-                  <span className="tabular-nums">{t.value}</span>
-                </div>
-                <div
-                  style={{
-                    marginTop: 'var(--lf-space-1)',
-                    height: 'var(--lf-space-1)',
-                    background: 'var(--lf-color-bg-inset)',
-                    borderRadius: 'var(--lf-radius-xs)',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${t.value}%`,
-                      height: '100%',
-                      background: 'var(--lf-color-gold-dim)',
-                    }}
-                  />
-                </div>
-              </div>
+          <ul className="lf-ko__tactics-list">
+            {tacticPreview.map((t) => (
+              <li key={t.id} className="lf-ko__tactic">
+                <span>{t.label}</span>
+                <span className="lf-ko__tactic-value">{t.value}</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          <div
-            aria-label="Podgląd ustawienia (bez Canvas)"
-            style={{
-              marginTop: 'var(--lf-space-4)',
-              position: 'relative',
-              aspectRatio: '2 / 3',
-              background: 'var(--lf-color-pitch)',
-              borderRadius: 'var(--lf-radius-sm)',
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-subtle)',
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              aria-hidden
-              style={{
-                position: 'absolute',
-                inset: 'var(--lf-space-2)',
-                borderWidth: 'var(--lf-border-width-hair)',
-                borderStyle: 'solid',
-                borderColor: 'var(--lf-color-border-gold)',
-                opacity: 'var(--lf-opacity-muted)',
-              }}
-            />
+          <div className="lf-ko__pitch" aria-label="Podgląd ustawienia">
+            <div className="lf-ko__pitch-frame" aria-hidden />
             {bundle.pitchSlots.map((s) => (
               <span
                 key={s.number}
-                className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
-                style={{
-                  position: 'absolute',
-                  left: `${s.x}%`,
-                  top: `${s.y}%`,
-                  transform: 'translate(-50%, -50%)',
-                  width: 'var(--lf-space-5)',
-                  height: 'var(--lf-space-5)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 'var(--lf-radius-md)',
-                  background: 'var(--lf-color-bg-panel)',
-                  borderWidth: 'var(--lf-border-width-hair)',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--lf-color-border-gold)',
-                  color: 'var(--lf-color-text-gold)',
-                  fontSize: 'var(--lf-type-label)',
-                }}
+                className="lf-ko__pitch-slot"
+                style={{ left: `${s.x}%`, top: `${s.y}%` }}
               >
                 {s.number}
               </span>
             ))}
           </div>
+        </section>
+      </div>
 
-          <p
-            style={{
-              margin: 0,
-              marginTop: 'var(--lf-space-2)',
-              fontSize: 'var(--lf-type-label)',
-              color: 'var(--lf-color-text-faint)',
-            }}
-          >
-            Edycja taktyki — poza zakresem IMPL-05
+      {/* M4 — Additional Context below fold (D4: no placeholders) */}
+      <section className="lf-ko__context" aria-labelledby="lf-ko-context-title">
+        <h2 id="lf-ko-context-title" className="lf-ko__context-title">
+          Kontekst meczu
+        </h2>
+
+        <div className="lf-ko__context-block">
+          <p className="lf-ko__context-label">Stadion</p>
+          <p className="lf-ko__context-value">{fixture.stadium}</p>
+        </div>
+
+        <div className="lf-ko__context-block">
+          <p className="lf-ko__context-label">Pogoda</p>
+          <p className="lf-ko__context-value">
+            {bundle.temperature} · {bundle.weatherDetail}
+            {bundle.weatherNote ? ` — ${bundle.weatherNote}` : ''}
           </p>
-        </SectionShell>
-      </div>
+        </div>
 
-      <div
-        role="status"
-        style={{
-          borderWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-subtle)',
-          background: 'var(--lf-color-bg-panel-alt)',
-          borderRadius: 'var(--lf-radius-sm)',
-          padding: 'var(--lf-space-2) var(--lf-space-3)',
-          fontSize: 'var(--lf-type-caption)',
-          color: 'var(--lf-color-text-muted)',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          gap: 'var(--lf-space-2)',
-        }}
-      >
-        <span>{bundle.ticker}</span>
-        <span style={{ color: 'var(--lf-color-text-faint)' }}>Analiza przeciwnika — wkrótce</span>
-      </div>
+        {bundle.stakes.length > 0 ? (
+          <div className="lf-ko__context-block">
+            <p className="lf-ko__context-label">Stawka</p>
+            <ul className="lf-ko__stakes">
+              {bundle.stakes.map((s) => (
+                <li key={s.id} className="lf-ko__stake">
+                  <strong>{s.label}</strong>
+                  {' · '}
+                  {s.value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {bundle.h2h.length > 0 ? (
+          <div className="lf-ko__context-block">
+            <p className="lf-ko__context-label">Ostatnie spotkania</p>
+            <ul className="lf-ko__h2h">
+              {bundle.h2h.map((h) => (
+                <li key={`${h.score}-${h.when}`} className="lf-ko__h2h-item">
+                  <span className="lf-ko__h2h-score">{h.score}</span>
+                  {' · '}
+                  {h.when}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {bundle.ticker ? <p className="lf-ko__ticker">{bundle.ticker}</p> : null}
+      </section>
     </div>
-  );
-}
-
-function MetaCell({ label, value }: { label: string; value: string }) {
-  return (
-    <div
-      style={{
-        borderWidth: 'var(--lf-border-width-hair)',
-        borderStyle: 'solid',
-        borderColor: 'var(--lf-color-border-subtle)',
-        background: 'var(--lf-color-bg-inset)',
-        borderRadius: 'var(--lf-radius-sm)',
-        padding: 'var(--lf-space-3)',
-      }}
-    >
-      <div
-        className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-        style={{
-          fontSize: 'var(--lf-type-label)',
-          letterSpacing: 'var(--lf-type-tracking-label)',
-          color: 'var(--lf-color-text-faint)',
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          marginTop: 'var(--lf-space-1)',
-          fontSize: 'var(--lf-type-caption)',
-          color: 'var(--lf-color-text-secondary)',
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}
-
-function ConditionBars({ value }: { value: number }) {
-  return (
-    <span
-      style={{ display: 'inline-flex', gap: 'var(--lf-border-width-hair)' }}
-      aria-label={`Kondycja ${value}/4`}
-    >
-      {[1, 2, 3, 4].map((n) => (
-        <span
-          key={n}
-          style={{
-            width: 'var(--lf-space-1)',
-            height: 'var(--lf-space-3)',
-            background: n <= value ? 'var(--lf-color-status-ok)' : 'var(--lf-color-bg-inset)',
-            borderRadius: 'var(--lf-radius-xs)',
-          }}
-        />
-      ))}
-    </span>
   );
 }
