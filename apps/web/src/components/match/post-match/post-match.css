@@ -1,0 +1,150 @@
+/* LFE-UI-IMPL-06 — Post Match fidelity (HF-MCH-08). */
+
+.lf-post {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+  min-height: 100dvh;
+  min-width: 0;
+  max-width: 68rem;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.lf-post__hero.lf-dh {
+  min-height: 120px;
+  max-height: 180px;
+}
+
+@media (min-width: 768px) {
+  .lf-post__hero.lf-dh {
+    min-height: 140px;
+    max-height: 220px;
+  }
+}
+
+.lf-post__decision {
+  padding: var(--lf-space-5) var(--lf-space-4);
+  text-align: center;
+  background: var(--lf-color-bg-panel);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  border-radius: var(--lf-radius-md);
+}
+
+.lf-post__eyebrow {
+  margin: 0 0 var(--lf-space-2);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-post__insight {
+  margin: 0 0 var(--lf-space-4);
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-post__reward {
+  margin: 0 0 var(--lf-space-4);
+  font-size: var(--lf-type-body);
+  font-weight: 600;
+  color: var(--lf-color-status-ok);
+}
+
+.lf-post__scoreline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--lf-space-4);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.lf-post__score {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 6vw, var(--lf-type-hero));
+  color: var(--lf-color-text-primary);
+  letter-spacing: 0.04em;
+}
+
+.lf-post__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--lf-space-2);
+  margin-top: var(--lf-space-5);
+}
+
+.lf-post__primary-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.lf-post__primary-slot :is(a, button) {
+  min-height: 48px;
+  padding: var(--lf-space-3) var(--lf-space-5);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-color-gold-base) !important;
+  color: var(--lf-color-text-on-gold, var(--lf-color-bg-void)) !important;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-h2);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.lf-post__soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-sm);
+  background: transparent;
+  color: var(--lf-color-text-muted);
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--lf-type-tracking-label);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.lf-post__soft:disabled {
+  opacity: var(--lf-opacity-disabled);
+  cursor: not-allowed;
+}
+
+.lf-post__meta {
+  margin-top: var(--lf-space-2);
+  font-size: var(--lf-type-label);
+  color: var(--lf-color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: var(--lf-type-tracking-label);
+}
+
+.lf-post__context {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--lf-space-4);
+}
+
+@media (min-width: 768px) {
+  .lf-post__context {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .lf-post__decision {
+    padding: var(--lf-space-6) var(--lf-space-5);
+  }
+}

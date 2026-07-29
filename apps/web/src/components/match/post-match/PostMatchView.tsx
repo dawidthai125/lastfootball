@@ -9,6 +9,10 @@ import type {
   PostMatchTimelineItem,
 } from '@/components/match/post-match/build-post-match-summary';
 import type { PlayerRatingView } from '@/components/match/post-match/player-ratings';
+import { LocationHero } from '@/components/ui';
+import { UI_COPY } from '@/lib/ui/copy';
+
+import './post-match.css';
 
 type PostMatchViewProps = {
   readonly summary: PostMatchSummary;
@@ -23,7 +27,8 @@ type PostMatchViewProps = {
 };
 
 /**
- * Post Match report — recorded MatchState / EventBus / Replay Buffer only.
+ * Post Match — HF-MCH-08 fidelity (LFE-UI-IMPL-06).
+ * Recorded MatchState / EventBus / Replay Buffer only.
  */
 export function PostMatchView({
   summary,
@@ -41,80 +46,27 @@ export function PostMatchView({
           (p) => p.playerId === summary.mvpPlayerId,
         ) ?? null);
 
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--lf-space-4)',
-        minHeight: 'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-6))',
-      }}
-    >
-      <header
-        className="lf-section-shell"
-        style={{
-          padding: 'var(--lf-space-5) var(--lf-space-4)',
-          textAlign: 'center',
-        }}
-      >
-        <div
-          className="font-[family-name:var(--font-ui)] font-semibold uppercase"
-          style={{
-            fontSize: 'var(--lf-type-label)',
-            letterSpacing: 'var(--lf-type-tracking-label)',
-            color: 'var(--lf-color-text-gold)',
-            marginBottom: 'var(--lf-space-2)',
-          }}
-        >
-          Post Match
-        </div>
-        <div
-          style={{
-            fontSize: 'var(--lf-type-caption)',
-            color: 'var(--lf-color-text-muted)',
-            marginBottom: 'var(--lf-space-4)',
-          }}
-        >
-          {summary.resultLabel}
-          {mvp ? (
-            <span style={{ color: 'var(--lf-color-text-gold)' }}>
-              {' '}
-              · MVP: {mvp.name} ({mvp.rating.toFixed(1)})
-            </span>
-          ) : null}
-        </div>
-        {rewardLine ? (
-          <p
-            style={{
-              margin: '0 0 var(--lf-space-4)',
-              fontSize: 'var(--lf-type-body)',
-              fontWeight: 600,
-              color: 'var(--lf-color-status-ok)',
-            }}
-          >
-            {rewardLine}
-          </p>
-        ) : null}
+  const insight = [summary.resultLabel, mvp ? `MVP: ${mvp.name} (${mvp.rating.toFixed(1)})` : null]
+    .filter(Boolean)
+    .join(' · ');
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            alignItems: 'center',
-            gap: 'var(--lf-space-4)',
-            maxWidth: 720,
-            marginInline: 'auto',
-          }}
-        >
+  return (
+    <div className="lf-post" data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-08">
+      <LocationHero
+        className="lf-post__hero"
+        waId="HERO-003"
+        src="/assets/world-art/hero-003-pitch-night.png"
+        priority
+      />
+
+      <header className="lf-post__decision">
+        <p className="lf-post__eyebrow">Po meczu</p>
+        <p className="lf-post__insight">{insight}</p>
+        {rewardLine ? <p className="lf-post__reward">{rewardLine}</p> : null}
+
+        <div className="lf-post__scoreline">
           <TeamBlock name={summary.homeName} shortName={summary.homeShort} align="end" />
-          <div
-            className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
-            style={{
-              fontSize: 'var(--lf-type-hero)',
-              color: 'var(--lf-color-text-primary)',
-              letterSpacing: '0.04em',
-            }}
-          >
+          <div className="lf-post__score">
             {summary.homeScore}
             <span style={{ color: 'var(--lf-color-text-faint)', margin: '0 0.2em' }}>:</span>
             {summary.awayScore}
@@ -122,54 +74,32 @@ export function PostMatchView({
           <TeamBlock name={summary.awayName} shortName={summary.awayShort} align="start" />
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: 'var(--lf-space-2)',
-            marginTop: 'var(--lf-space-5)',
-          }}
-        >
+        <div className="lf-post__actions">
+          <div className="lf-post__primary-slot">
+            {continueSlot ?? (
+              <Link href="/hub" className="lf-post__soft">
+                {UI_COPY.hubExit}
+              </Link>
+            )}
+          </div>
           <button
             type="button"
-            style={primaryBtn}
+            className="lf-post__soft"
             onClick={onOpenReplay}
             disabled={replayFrames === 0}
           >
             Otwórz Replay
           </button>
           {onDismiss ? (
-            <button type="button" style={ghostBtn} onClick={onDismiss}>
+            <button type="button" className="lf-post__soft" onClick={onDismiss}>
               Pokaż boisko
             </button>
           ) : null}
-          {continueSlot ?? (
-            <Link href="/matches" style={{ ...ghostBtn, textDecoration: 'none' }}>
-              Terminarz
-            </Link>
-          )}
         </div>
-        <div
-          style={{
-            marginTop: 'var(--lf-space-2)',
-            fontSize: 'var(--lf-type-label)',
-            color: 'var(--lf-color-text-faint)',
-            textTransform: 'uppercase',
-            letterSpacing: 'var(--lf-type-tracking-label)',
-          }}
-        >
-          Bufor Replay · {replayFrames} klatek
-        </div>
+        <p className="lf-post__meta">Bufor Replay · {replayFrames} klatek</p>
       </header>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 'var(--lf-space-4)',
-        }}
-      >
+      <div className="lf-post__context">
         <section className="lf-section-shell" style={{ padding: 'var(--lf-space-3)' }}>
           <h2 className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-3)' }}>
             Gole
@@ -251,13 +181,7 @@ export function PostMatchView({
         </section>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 'var(--lf-space-4)',
-        }}
-      >
+      <div className="lf-post__context">
         <RatingsColumn title={`${summary.homeShort} · Oceny`} players={summary.ratings.home} />
         <RatingsColumn title={`${summary.awayShort} · Oceny`} players={summary.ratings.away} />
       </div>
@@ -542,25 +466,3 @@ function eventRow(highlight: boolean): CSSProperties {
     textAlign: 'left',
   };
 }
-
-const primaryBtn: CSSProperties = {
-  padding: 'var(--lf-space-2) var(--lf-space-4)',
-  borderRadius: 'var(--lf-radius-sm)',
-  borderWidth: 'var(--lf-border-width-hair)',
-  borderStyle: 'solid',
-  borderColor: 'var(--lf-color-border-gold)',
-  background: 'var(--lf-color-gold-soft)',
-  color: 'var(--lf-color-text-gold)',
-  fontSize: 'var(--lf-type-caption)',
-  fontWeight: 600,
-  textTransform: 'uppercase',
-  letterSpacing: 'var(--lf-type-tracking-label)',
-  cursor: 'pointer',
-};
-
-const ghostBtn: CSSProperties = {
-  ...primaryBtn,
-  background: 'transparent',
-  borderColor: 'var(--lf-color-border-subtle)',
-  color: 'var(--lf-color-text-muted)',
-};

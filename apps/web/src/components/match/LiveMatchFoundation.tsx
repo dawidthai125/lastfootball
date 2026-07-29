@@ -21,12 +21,15 @@ import {
 } from '@/components/match/post-match';
 import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstMatchButton';
 import { CompleteLeagueFixtureButton } from '@/components/match/CompleteLeagueFixtureButton';
+import { LoadingFrame } from '@/components/ui';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { RosterPlayerSeed } from '@/lib/squad';
 
+import './live-match.css';
+
 /**
- * Live Match UI — LFE-UI-IMPL-02: Live + Goal overlay + Final whistle + Post.
+ * Live Match UI — LFE-UI-IMPL-02 path · LFE-UI-IMPL-06 Live/Post fidelity.
  */
 export function LiveMatchFoundation({
   bundle,
@@ -116,9 +119,9 @@ export function LiveMatchFoundation({
 
   if (!runtime || !snapshot) {
     return (
-      <p style={{ color: 'var(--lf-color-text-muted)', padding: 'var(--lf-space-5)' }}>
-        Ładowanie meczu…
-      </p>
+      <div data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04">
+        <LoadingFrame waId="LOD-004" label="Ładowanie meczu…" />
+      </div>
     );
   }
 
@@ -181,7 +184,7 @@ export function LiveMatchFoundation({
 
   if (finalOpen && finished) {
     return (
-      <div data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-07">
+      <div data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-07">
         <MatchMomentOverlay
           variant="final"
           title="Koniec meczu"
@@ -201,18 +204,10 @@ export function LiveMatchFoundation({
 
   const playheadPct = clampPct((snapshot.matchState.clock.displayMinute / 90) * 100);
   const goalMarkers = snapshot.feed.filter((e) => e.kind === 'goal' || e.highlight);
+  const isHalfTime = snapshot.periodLabel === 'Przerwa';
 
   return (
-    <div
-      data-lf-impl="LFE-UI-IMPL-02"
-      data-mch="SCR-MCH-04"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--lf-space-3)',
-        minHeight: '100dvh',
-      }}
-    >
+    <div className="lf-live" data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04">
       {goalOverlay ? (
         <MatchMomentOverlay
           variant="goal"
@@ -221,57 +216,15 @@ export function LiveMatchFoundation({
           onDismiss={() => setGoalOverlay(null)}
         />
       ) : null}
-      {/* Broadcast scorebug */}
+      {/* Broadcast scorebug — HF-MCH-04 Status strip */}
       <header
         role="status"
         aria-label="Scorebug"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(7rem, 11rem) minmax(0, 1fr) minmax(8rem, 12rem)',
-          gap: 'var(--lf-space-3)',
-          alignItems: 'center',
-          borderTopWidth: 'var(--lf-border-width-hair)',
-          borderBottomWidth: 'var(--lf-border-width-hair)',
-          borderLeftWidth: 'var(--lf-border-width-thick)',
-          borderRightWidth: 'var(--lf-border-width-hair)',
-          borderStyle: 'solid',
-          borderColor: 'var(--lf-color-border-subtle)',
-          borderLeftColor: 'var(--lf-color-status-live)',
-          background:
-            'linear-gradient(180deg, var(--lf-color-bg-panel-alt) 0%, var(--lf-color-bg-void) 100%)',
-          padding: 'var(--lf-space-2) var(--lf-space-4)',
-          borderRadius: 'var(--lf-radius-sm)',
-          boxShadow: 'inset 0 -1px 0 var(--lf-color-border-gold)',
-        }}
+        className={isReplay ? 'lf-live__scorebug lf-live__scorebug--replay' : 'lf-live__scorebug'}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-1)' }}>
-          <span
-            className="inline-flex items-center font-[family-name:var(--font-ui)] font-bold uppercase"
-            style={{
-              alignSelf: 'flex-start',
-              fontSize: 'var(--lf-type-label)',
-              letterSpacing: 'var(--lf-type-tracking-label)',
-              padding: 'var(--lf-space-1) var(--lf-space-2)',
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: isReplay ? 'var(--lf-color-border-gold)' : 'var(--lf-color-status-live)',
-              background: isReplay
-                ? 'var(--lf-color-gold-soft)'
-                : 'var(--lf-color-status-danger-soft)',
-              color: isReplay ? 'var(--lf-color-text-gold)' : 'var(--lf-color-status-live)',
-              borderRadius: 'var(--lf-radius-sm)',
-              gap: 'var(--lf-space-1)',
-            }}
-          >
-            <span
-              aria-hidden
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: 'var(--lf-radius-xs)',
-                background: isReplay ? 'var(--lf-color-gold-base)' : 'var(--lf-color-status-live)',
-              }}
-            />
+          <span className={isReplay ? 'lf-live__chip lf-live__chip--replay' : 'lf-live__chip'}>
+            <span className="lf-live__chip-dot" aria-hidden />
             {isReplay ? 'Replay' : 'Live'}
           </span>
           <span
@@ -407,25 +360,22 @@ export function LiveMatchFoundation({
         </div>
       </header>
 
-      {/* Main 3-column stage */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(13rem, 17rem) minmax(0, 1fr) minmax(13rem, 17rem)',
-          gap: 'var(--lf-space-3)',
-          flex: 1,
-          minHeight: 0,
-        }}
-      >
+      {isHalfTime ? (
+        <div className="lf-live__ht" role="status" aria-live="polite">
+          Przerwa · {snapshot.homeScore}–{snapshot.awayScore}
+        </div>
+      ) : null}
+
+      {/* Main stage — desktop 3-col · mobile pitch-first stack */}
+      <div className="lf-live__stage">
         {/* Event feed */}
         <section
-          aria-label="Commentary feed"
-          className="lf-section-shell"
+          aria-label="Komentarz meczu"
+          className="lf-live__feed lf-section-shell"
           style={{
             display: 'flex',
             flexDirection: 'column',
             minHeight: 0,
-            maxHeight: 'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-8) * 3)',
             borderLeftColor: 'var(--lf-color-status-live)',
           }}
         >
@@ -433,11 +383,11 @@ export function LiveMatchFoundation({
             className="lf-section-shell__header"
             style={{ flexWrap: 'wrap', gap: 'var(--lf-space-2)' }}
           >
-            <h2 className="lf-section-shell__title">Event feed</h2>
+            <h2 className="lf-section-shell__title">Przebieg</h2>
             <div style={{ display: 'flex', gap: 'var(--lf-space-1)', flexWrap: 'wrap' }}>
               {(
                 [
-                  ['all', 'All'],
+                  ['all', 'Wszystkie'],
                   ['goal', 'Gole'],
                   ['card', 'Kartki'],
                 ] as const
@@ -468,24 +418,13 @@ export function LiveMatchFoundation({
             {events.map((e) => (
               <li
                 key={e.id}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '2.6rem 1.25rem minmax(0, 1fr)',
-                  gap: 'var(--lf-space-2)',
-                  alignItems: 'start',
-                  padding: 'var(--lf-space-2)',
-                  borderLeftWidth: 'var(--lf-border-width-thick)',
-                  borderLeftStyle: 'solid',
-                  borderLeftColor: e.highlight
-                    ? 'var(--lf-color-status-live)'
-                    : e.kind === 'goal'
-                      ? 'var(--lf-color-gold-base)'
-                      : 'var(--lf-color-border-subtle)',
-                  background: e.highlight
-                    ? 'var(--lf-color-status-danger-soft)'
-                    : 'var(--lf-color-bg-inset)',
-                  fontSize: 'var(--lf-type-caption)',
-                }}
+                className={[
+                  'lf-live__feed-row',
+                  e.kind === 'goal' ? 'lf-live__feed-row--goal' : '',
+                  e.highlight ? 'lf-live__feed-row--highlight' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
               >
                 <span
                   className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
@@ -527,6 +466,7 @@ export function LiveMatchFoundation({
 
         {/* Canvas + timeline + momentum */}
         <div
+          className="lf-live__pitch"
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -804,7 +744,7 @@ export function LiveMatchFoundation({
                   style={chipStyle(false)}
                   onClick={() => setPostMatchOpen(true)}
                 >
-                  Post Match
+                  Po meczu
                 </button>
               ) : null}
             </div>
@@ -843,12 +783,11 @@ export function LiveMatchFoundation({
         {/* Right column */}
         <aside
           aria-label="Panel komend i kontekst"
-          className="lf-section-shell"
+          className="lf-live__panel lf-section-shell"
           style={{
             display: 'flex',
             flexDirection: 'column',
             minHeight: 0,
-            maxHeight: 'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-8) * 3)',
           }}
         >
           <div

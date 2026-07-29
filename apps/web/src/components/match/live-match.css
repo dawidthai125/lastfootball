@@ -1,0 +1,161 @@
+/* LFE-UI-IMPL-06 — Live Match fidelity (HF-MCH-04) · presentation only. */
+
+.lf-live {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+  min-height: 100dvh;
+  min-width: 0;
+}
+
+.lf-live__scorebug {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, 11rem) minmax(0, 1fr) minmax(6rem, 12rem);
+  gap: var(--lf-space-3);
+  align-items: center;
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-right: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-left: var(--lf-border-width-thick) solid var(--lf-color-status-live);
+  background: linear-gradient(
+    180deg,
+    var(--lf-color-bg-panel-alt) 0%,
+    var(--lf-color-bg-void) 100%
+  );
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border-radius: var(--lf-radius-sm);
+  box-shadow: inset 0 -1px 0 var(--lf-color-border-gold);
+}
+
+.lf-live__scorebug--replay {
+  border-left-color: var(--lf-color-border-gold);
+}
+
+.lf-live__chip {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--lf-space-1);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  padding: var(--lf-space-1) var(--lf-space-2);
+  border: var(--lf-border-width-hair) solid var(--lf-color-status-live);
+  background: var(--lf-color-status-danger-soft);
+  color: var(--lf-color-status-live);
+  border-radius: var(--lf-radius-sm);
+}
+
+.lf-live__chip--replay {
+  border-color: var(--lf-color-border-gold);
+  background: var(--lf-color-gold-soft);
+  color: var(--lf-color-text-gold);
+}
+
+.lf-live__chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--lf-radius-xs);
+  background: var(--lf-color-status-live);
+}
+
+.lf-live__chip--replay .lf-live__chip-dot {
+  background: var(--lf-color-gold-base);
+}
+
+.lf-live__ht {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-3);
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  border-radius: var(--lf-radius-sm);
+  background: color-mix(in srgb, var(--lf-color-gold-soft) 55%, var(--lf-color-bg-panel));
+  color: var(--lf-color-text-gold);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-body);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.lf-live__stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--lf-space-3);
+  flex: 1;
+  min-height: 0;
+}
+
+.lf-live__feed,
+.lf-live__pitch,
+.lf-live__panel {
+  min-width: 0;
+  min-height: 0;
+}
+
+.lf-live__feed {
+  order: 2;
+}
+
+.lf-live__pitch {
+  order: 1;
+}
+
+.lf-live__panel {
+  order: 3;
+}
+
+.lf-live__feed-row {
+  display: grid;
+  grid-template-columns: 2.6rem 1.25rem minmax(0, 1fr);
+  gap: var(--lf-space-2);
+  align-items: start;
+  padding: var(--lf-space-2);
+  border-left: var(--lf-border-width-thick) solid var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-panel-alt);
+  font-size: var(--lf-type-caption);
+}
+
+.lf-live__feed-row--goal {
+  border-left-color: var(--lf-color-gold-base);
+}
+
+.lf-live__feed-row--highlight {
+  border-left-color: var(--lf-color-status-live);
+  background: var(--lf-color-status-danger-soft);
+}
+
+@media (min-width: 1024px) {
+  .lf-live__stage {
+    grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr) minmax(13rem, 17rem);
+  }
+
+  .lf-live__feed,
+  .lf-live__pitch,
+  .lf-live__panel {
+    order: 0;
+  }
+
+  .lf-live__feed,
+  .lf-live__panel {
+    max-height: calc(100dvh - var(--lf-space-8) * 4);
+  }
+}
+
+@media (max-width: 767px) {
+  .lf-live__scorebug {
+    grid-template-columns: 1fr;
+    gap: var(--lf-space-2);
+    text-align: center;
+  }
+
+  .lf-live__scorebug > :last-child {
+    text-align: center;
+  }
+}
