@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                             |
-| ----------------------- | ------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
-| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                   |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
-| **Documentation tip**   | **`4805f7e`** — GDD-16 Akademia Thin A CLOSED           |
+| Warstwa                 | Hash / EPIC                                               |
+| ----------------------- | --------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED             |
+| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                     |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)   |
+| **Documentation tip**   | **`2595cc9`** — GDD-17 Skauting Information Thin B CLOSED |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -45,7 +45,7 @@ LFE EPIC-1…7 · Architecture Freeze · Gameplay · Match AI · Match Engine ·
 
 ## Design DONE
 
-GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto · Playtest
+GDD-01…17 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto · Playtest
 
 ## UI / Docs UX DONE
 
@@ -66,6 +66,7 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **LFE-TRAINING-02**       | Training Depth · skill + XI Gate · RPC · `5e6c2ad`                                                            |
 | **LFE-PLAYERS-02**        | Player Development Thin · potential + match growth · D22 · `cd222ba`                                          |
 | **GDD-16**                | Akademia Thin A (Intake + Promote) · docs `4805f7e`                                                           |
+| **GDD-17**                | Skauting Information Thin B · docs `2595cc9`                                                                  |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
@@ -74,17 +75,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** GDD-17 Skauting · LFE-UI-MOTION-01 · full 22 fixtures.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** LFE-UI-MOTION-01 · GDD-17+ (§18) · full 22 fixtures.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Naming
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`
-- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`
+- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`
 - UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — GDD-16
+**ACTIVE** · 2026-07-29 — GDD-17

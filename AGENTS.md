@@ -46,4 +46,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-07-29 — GDD-16
+2026-07-29 — GDD-17

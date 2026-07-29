@@ -16,14 +16,14 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN · GDD-16 CLOSED** (Domain: LFE-PLAYERS-02)
+**PRODUCTION VERIFIED · GREEN · GDD-17 CLOSED** (Domain: LFE-PLAYERS-02)
 
 |                         |                                                              |
 | ----------------------- | ------------------------------------------------------------ |
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)    |
 | **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin) |
 | **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                               |
-| **Documentation tip**   | **`4805f7e`** — GDD-16 Akademia Thin A                       |
+| **Documentation tip**   | **`2595cc9`** — GDD-17 Skauting Information Thin B           |
 | **Prod**                | https://lastfootball.vercel.app                              |
 
 | Tor               | Stan                                                                                                                      |
@@ -31,12 +31,12 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | Platform          | Onboarding · First Match · Hub SEASON · League · Finance · **Players Dev (02)** · Transfers (01…08) · Training Depth (02) |
 | UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide Presentation Contract                        |
 | Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                       |
-| Design            | GDD-01…**16** (Thin A) · §26 CLOSED · World Art CLOSED · next: Owner (**GDD-17** / motion / 22 fixtures)                  |
+| Design            | GDD-01…**17** (Thin) · §26 CLOSED · World Art CLOSED · next: Owner (**LFE-UI-MOTION-01** / GDD-17+ / 22 fixtures)         |
 | Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                                       |
 
 ## W trakcie
 
-Brak otwartego EPIC. **GDD-16** CLOSED (docs `4805f7e`) · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
+Brak otwartego EPIC. **GDD-17** CLOSED (docs `2595cc9`) · **GDD-16** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
 
 ## Operacyjne
 
@@ -45,12 +45,12 @@ Brak otwartego EPIC. **GDD-16** CLOSED (docs `4805f7e`) · **LFE-PLAYERS-02** Do
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-**Rekomendacja:** **GDD-17 Skauting** (docs) · LFE-UI-MOTION-01 · full 22 fixtures · transfers hardening · LFE-ACADEMY-01 (kod).
+**Rekomendacja:** **LFE-UI-MOTION-01** · GDD-17+ (§18 Ranking) · full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 (kod).
 
 ## Decyzje
 
-[`DECISIONS.md`](./DECISIONS.md) · D19 · D21 · **D22**.
+[`DECISIONS.md`](./DECISIONS.md) · D19 · D20 · D21 · **D22**.
 
 ## Last updated
 
-2026-07-29 — GDD-16 FIX CLOSE
+2026-07-29 — GDD-17 CLOSE

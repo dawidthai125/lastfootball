@@ -10,8 +10,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
 **Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
-**Documentation tip:** **`4805f7e`** (GDD-16).  
+**Documentation tip:** **`2595cc9`** (GDD-17).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-29] — GDD-17 · CLOSED
+
+### Docs
+
+- §17 Skauting Information Thin B w `GAME_DESIGN_DOCUMENT.md` (system informacji; shortlista prywatna; D19/D20/D22 bez zmian)
+- Sync CURRENT_DESIGN · game-design ROADMAP/README · handoff / baseline / PROJECT_STATUS
+- Documentation tip → **`2595cc9`**
+- CI GREEN · PRODUCTION VERIFIED · brak zmian kodu aplikacji
 
 ---
 

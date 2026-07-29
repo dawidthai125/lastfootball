@@ -36,11 +36,11 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`           |
 | **Presentation tip**        | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)  |
 | Presentation message        | `feat(auth-ux): redesign login/register experience with Landing modal` |
-| **Documentation tip**       | `4805f7e` — **GDD-16** Akademia Thin A (docs)                          |
+| **Documentation tip**       | `2595cc9` — **GDD-17** Skauting Information Thin B (docs)              |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                        |
 
 Prior domain TRAINING-02 (`5e6c2ad`) pozostaje w historii; tip domenowy = PLAYERS-02.  
-Documentation tip = GDD-16 (`4805f7e`).
+Documentation tip = GDD-17 (`2595cc9`).
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -95,8 +95,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Akademii** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full).
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Akademii** · **kod Skautingu** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full).
 
 ## Last updated
 
-2026-07-29 — GDD-16 (Domain `cd222ba` · Docs tip `4805f7e` · UI P0 `54d0724` · Presentation AUTH-UX `9dc834a`)
+2026-07-29 — GDD-17 (Domain `cd222ba` · Docs tip `2595cc9` · UI P0 `54d0724` · Presentation AUTH-UX `9dc834a`)

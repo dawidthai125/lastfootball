@@ -11,13 +11,13 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)        |
 | **Domain feature baseline** | `cd222ba` — LFE-PLAYERS-02 (Player Development Thin)                                             |
 | **Presentation tip**        | `9dc834a` — LFE-AUTH-UX-01 (Landing · Branding · Auth)                                           |
-| **Documentation tip**       | `4805f7e` — GDD-16 Akademia Thin A                                                               |
+| **Documentation tip**       | `2595cc9` — GDD-17 Skauting Information Thin B                                                   |
 | **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                               |
 | **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                |
 | Production                  | https://lastfootball.vercel.app                                                                  |
 | Platform                    | Onboarding · First Match · Hub · League · Finance · **Players Dev** · Transfers · Training Depth |
 | LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                  |
-| GDD                         | GDD-01…**16** Thin A · §26 CLOSED · next: Owner (**GDD-17** / motion)                            |
+| GDD                         | GDD-01…**17** Thin · §26 CLOSED · next: Owner (**LFE-UI-MOTION-01** / GDD-17+)                   |
 | UI Presentation             | Guide §16 · **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office                 |
 | Impl notes                  | [`implementation/`](./implementation/)                                                           |
 | Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                              |
@@ -95,4 +95,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-29 — GDD-16
+2026-07-29 — GDD-17
