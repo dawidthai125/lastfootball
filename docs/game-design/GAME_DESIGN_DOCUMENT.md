@@ -7197,24 +7197,24 @@ Dać menedżerowi opcjonalną warstwę **rywalizacji sezonowej między klubami**
 
 **Szybki kontrakt Thin (SSOT)**
 
-| Parametr                         | Wartość Thin                                              |
-| -------------------------------- | --------------------------------------------------------- |
-| Przedmiot                        | **Kluby**                                                 |
-| Horyzont                         | **Sezonowy** only                                         |
-| Rola systemu                     | Rywalizacja / porównywanie klubów w sezonie (retencja)    |
-| Obowiązkowość                    | Opcjonalna względem meczu / Hub Primary                   |
-| Poziom · Reputacja · Prestiż     | Wyłącznie **§6** — ranking tylko konsumuje sygnały        |
-| Tabela ligowa (§10)              | Osobna; ranking jej nie zastępuje i nie dubluje           |
-| Shortlista (§17)                 | Nie jest rankingiem                                       |
-| Osiągnięcia (§19)                | OUT                                                       |
-| All-time / historyczne           | OUT Thin → Future                                         |
-| Ranking graczy / zawodników      | OUT Thin → Future                                         |
-| Global / multi-serwer / MP       | OUT Thin → Future (§29)                                   |
-| Liczby · ELO · wzory · algorytmy | **Zakaz**                                                 |
-| Fair reset / anti-abuse          | Zasady jakościowe only                                    |
-| Widoczność Thin                  | Lokalny kontekst sezonu / ligi (jakościowo)               |
-| Placeholder `/rankings`          | Nie-SSOT · nie podstawa implementacji                     |
-| Kod / UI / DB / LFE              | OUT (osobny EPIC po Owner GO)                             |
+| Parametr                         | Wartość Thin                                           |
+| -------------------------------- | ------------------------------------------------------ |
+| Przedmiot                        | **Kluby**                                              |
+| Horyzont                         | **Sezonowy** only                                      |
+| Rola systemu                     | Rywalizacja / porównywanie klubów w sezonie (retencja) |
+| Obowiązkowość                    | Opcjonalna względem meczu / Hub Primary                |
+| Poziom · Reputacja · Prestiż     | Wyłącznie **§6** — ranking tylko konsumuje sygnały     |
+| Tabela ligowa (§10)              | Osobna; ranking jej nie zastępuje i nie dubluje        |
+| Shortlista (§17)                 | Nie jest rankingiem                                    |
+| Osiągnięcia (§19)                | OUT                                                    |
+| All-time / historyczne           | OUT Thin → Future                                      |
+| Ranking graczy / zawodników      | OUT Thin → Future                                      |
+| Global / multi-serwer / MP       | OUT Thin → Future (§29)                                |
+| Liczby · ELO · wzory · algorytmy | **Zakaz**                                              |
+| Fair reset / anti-abuse          | Zasady jakościowe only                                 |
+| Widoczność Thin                  | Lokalny kontekst sezonu / ligi (jakościowo)            |
+| Placeholder `/rankings`          | Nie-SSOT · nie podstawa implementacji                  |
+| Kod / UI / DB / LFE              | OUT (osobny EPIC po Owner GO)                          |
 
 ---
 
@@ -7244,15 +7244,15 @@ Ustawić ton: ranking sezonowy klubów wspiera ambicję i porównywanie — nie 
 
 ### 18.2 Słownik
 
-| Pojęcie                      | Znaczenie Thin                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------------ |
-| **Ranking sezonowy klubów**  | Opcjonalna warstwa porównywania **klubów** w ramach **jednego sezonu**         |
-| **Pozycja rankingowa**       | Odczucie miejsca klubu w tej warstwie (jakościowo) — **nie** definicja §6      |
-| **Sygnał (konsumowany)**     | Kontekst sezonu / sportu / metryk §6, z którego ranking **korzysta**, nie tworzy |
-| **Tabela ligowa**            | Standings ligi (§10) — wynik sportowy rozgrywek; **≠** ranking                 |
-| **Poziom / Reputacja / Prestiż** | Metryki klubu — **wyłącznie §6**                                           |
-| **Shortlista**               | Prywatne zainteresowanie menedżera (§17) — **≠** ranking                       |
-| **All-time**                 | Historyczny / międzysezonowy leaderboard — **Future**                          |
+| Pojęcie                          | Znaczenie Thin                                                                   |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| **Ranking sezonowy klubów**      | Opcjonalna warstwa porównywania **klubów** w ramach **jednego sezonu**           |
+| **Pozycja rankingowa**           | Odczucie miejsca klubu w tej warstwie (jakościowo) — **nie** definicja §6        |
+| **Sygnał (konsumowany)**         | Kontekst sezonu / sportu / metryk §6, z którego ranking **korzysta**, nie tworzy |
+| **Tabela ligowa**                | Standings ligi (§10) — wynik sportowy rozgrywek; **≠** ranking                   |
+| **Poziom / Reputacja / Prestiż** | Metryki klubu — **wyłącznie §6**                                                 |
+| **Shortlista**                   | Prywatne zainteresowanie menedżera (§17) — **≠** ranking                         |
+| **All-time**                     | Historyczny / międzysezonowy leaderboard — **Future**                            |
 
 ---
 
@@ -7452,20 +7452,20 @@ Odciąć mocki od designu.
 
 ### 18.14 MVP Thin vs Future (tabela)
 
-| Element                            | Thin | Future                    |
-| ---------------------------------- | ---- | ------------------------- |
-| Sezonowy ranking klubów            | TAK  | pogłębiony                |
-| All-time / historyczny             | NIE  | TAK                       |
-| Ranking graczy / zawodników        | NIE  | opcjonalnie               |
-| Global / multi-serwer / MP         | NIE  | §29 / Owner GO            |
-| Redefinicja §6                     | NIE  | NIE (zakaz)               |
-| Zastąpienie tabeli §10             | NIE  | NIE (zakaz)               |
-| Shortlista jako ranking (§17)      | NIE  | NIE (zakaz)               |
-| §19 Osiągnięcia                    | NIE  | osobny EPIC docs          |
-| Liczby · ELO · wzory · algorytmy   | NIE  | osobny EPIC / ew. §26     |
-| Fair reset (zasada jakościowa)     | TAK  | + reguły tech             |
-| Anti-abuse (zasada jakościowa)     | TAK  | + implementacja           |
-| Implementacja UI / DB / resolver   | NIE* | osobny EPIC               |
+| Element                          | Thin | Future                |
+| -------------------------------- | ---- | --------------------- |
+| Sezonowy ranking klubów          | TAK  | pogłębiony            |
+| All-time / historyczny           | NIE  | TAK                   |
+| Ranking graczy / zawodników      | NIE  | opcjonalnie           |
+| Global / multi-serwer / MP       | NIE  | §29 / Owner GO        |
+| Redefinicja §6                   | NIE  | NIE (zakaz)           |
+| Zastąpienie tabeli §10           | NIE  | NIE (zakaz)           |
+| Shortlista jako ranking (§17)    | NIE  | NIE (zakaz)           |
+| §19 Osiągnięcia                  | NIE  | osobny EPIC docs      |
+| Liczby · ELO · wzory · algorytmy | NIE  | osobny EPIC / ew. §26 |
+| Fair reset (zasada jakościowa)   | TAK  | + reguły tech         |
+| Anti-abuse (zasada jakościowa)   | TAK  | + implementacja       |
+| Implementacja UI / DB / resolver | NIE* | osobny EPIC           |
 
 \*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
 
@@ -7495,19 +7495,19 @@ Zamrozić kierunek bez zobowiązań Thin.
 
 ### 18.17 Zależności i ZERO DUPLICATE
 
-| System        | Relacja                                                      |
-| ------------- | ------------------------------------------------------------ |
-| §3 / §9       | Mecz = oś; ranking ≠ obowiązek                               |
-| **§6**        | Jedyny SSOT Poziomu / Reputacji / Prestiżu — ranking konsumuje |
-| **§10**       | Tabela ligowa ≠ ranking                                      |
-| §11.16        | Prestiż pucharowy → §6; ranking nie definiuje Prestiżu       |
-| **§17**       | Shortlista ≠ ranking                                         |
-| **§19**       | OUT — osobny szkielet / EPIC                                 |
-| §23           | Hub Primary nienaruszony                                     |
-| §26           | Brak liczb w tym rozdziale                                   |
-| §29           | MP / global = Future                                         |
-| Guide (UI)    | Presentation Contract — przyszły UI                          |
-| Placeholder   | `/rankings` ≠ SSOT                                           |
+| System      | Relacja                                                        |
+| ----------- | -------------------------------------------------------------- |
+| §3 / §9     | Mecz = oś; ranking ≠ obowiązek                                 |
+| **§6**      | Jedyny SSOT Poziomu / Reputacji / Prestiżu — ranking konsumuje |
+| **§10**     | Tabela ligowa ≠ ranking                                        |
+| §11.16      | Prestiż pucharowy → §6; ranking nie definiuje Prestiżu         |
+| **§17**     | Shortlista ≠ ranking                                           |
+| **§19**     | OUT — osobny szkielet / EPIC                                   |
+| §23         | Hub Primary nienaruszony                                       |
+| §26         | Brak liczb w tym rozdziale                                     |
+| §29         | MP / global = Future                                           |
+| Guide (UI)  | Presentation Contract — przyszły UI                            |
+| Placeholder | `/rankings` ≠ SSOT                                             |
 
 ---
 

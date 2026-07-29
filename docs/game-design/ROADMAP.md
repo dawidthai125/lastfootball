@@ -10,28 +10,28 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Completed
 
-| Stage      | Zakres                                                           |
-| ---------- | ---------------------------------------------------------------- |
-| GDD-01     | Struktura dokumentu                                              |
-| GDD-02     | §3 Core loop                                                     |
-| GDD-03     | §4–§5 Registration / club                                        |
-| GDD-04     | §9 Match experience                                              |
-| GDD-05     | §10 League                                                       |
-| GDD-06     | §7 Players (+ DCC)                                               |
-| GDD-07     | §8 Training (+ DCC)                                              |
-| GDD-08     | §11 Cups                                                         |
-| GDD-09     | §12 Transfers (+ DCC)                                            |
-| GDD-10     | §14 Finances                                                     |
-| GDD-11     | §15 Sponsors                                                     |
-| GDD-12     | §13 Stadium                                                      |
-| GDD-13     | §6 Club development                                              |
-| GDD-14     | §23 Hub / main panel                                             |
-| GDD-15     | §20 Daily tasks                                                  |
-| GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED                  |
-| GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED     |
-| **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · docs filled     |
-| GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                    |
-| GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                          |
+| Stage      | Zakres                                                       |
+| ---------- | ------------------------------------------------------------ |
+| GDD-01     | Struktura dokumentu                                          |
+| GDD-02     | §3 Core loop                                                 |
+| GDD-03     | §4–§5 Registration / club                                    |
+| GDD-04     | §9 Match experience                                          |
+| GDD-05     | §10 League                                                   |
+| GDD-06     | §7 Players (+ DCC)                                           |
+| GDD-07     | §8 Training (+ DCC)                                          |
+| GDD-08     | §11 Cups                                                     |
+| GDD-09     | §12 Transfers (+ DCC)                                        |
+| GDD-10     | §14 Finances                                                 |
+| GDD-11     | §15 Sponsors                                                 |
+| GDD-12     | §13 Stadium                                                  |
+| GDD-13     | §6 Club development                                          |
+| GDD-14     | §23 Hub / main panel                                         |
+| GDD-15     | §20 Daily tasks                                              |
+| GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED              |
+| GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED |
+| **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · docs filled |
+| GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                |
+| GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                      |
 
 ## In Progress
 
