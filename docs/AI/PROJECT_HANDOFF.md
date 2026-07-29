@@ -19,13 +19,13 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                           |
 | **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                 |
 | **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)           |
-| **Documentation tip**           | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                                      |
+| **Documentation tip**           | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                                       |
 | **Branch**                      | `main`                                                                          |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · LFE-PLAYERS-02 FULLY CLOSED · brak otwartego EPIC |
 
-| **Production URL**              | https://lastfootball.vercel.app                                                 |
-| **Alias**                       | https://lastfootball.pl                                                         |
-| **CI Status**                   | GREEN na tip `main` (Format · Typecheck · Lint · Test · Build) · run PLAYERS-02 |
+| **Production URL** | https://lastfootball.vercel.app |
+| **Alias** | https://lastfootball.pl |
+| **CI Status** | GREEN na tip `main` (Format · Typecheck · Lint · Test · Build) · run PLAYERS-02 |
 
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
@@ -44,15 +44,15 @@ git log -1 --oneline 9dc834a            # Auth UX feat (presentation tip)
 
 ### Platforma / gameplay Thin
 
-| EPIC                                           | Skrót                                                             |
-| ---------------------------------------------- | ----------------------------------------------------------------- |
-| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                 |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela derive · 11 meczów Thin                         |
-| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                      |
+| EPIC                                           | Skrót                                                                |
+| ---------------------------------------------- | -------------------------------------------------------------------- |
+| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                    |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela derive · 11 meczów Thin                            |
+| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                         |
 | LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22) |
-| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20) |
-| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                |
-| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                  |
+| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)    |
+| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                   |
+| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                     |
 
 ### Silnik / Match UI
 
@@ -107,17 +107,17 @@ Pełny indeks: [`DECISIONS.md`](./DECISIONS.md) · [`../DECISIONS.md`](../DECISI
 
 ### SSOT (krytyczne)
 
-| Domen           | SSOT                                                                    |
-| --------------- | ----------------------------------------------------------------------- |
-| Cash            | `cash_balance` + `resolveClubFinance`                                   |
-| Transfery       | `resolveTransferMarket` · envelope · listing · offers · settle buy/sell |
-| Liga            | `fixtures` · `resolveLeagueTable`                                       |
+| Domen           | SSOT                                                                          |
+| --------------- | ----------------------------------------------------------------------------- |
+| Cash            | `cash_balance` + `resolveClubFinance`                                         |
+| Transfery       | `resolveTransferMarket` · envelope · listing · offers · settle buy/sell       |
+| Liga            | `fixtures` · `resolveLeagueTable`                                             |
 | Kadra           | `players` (+ `potential`) · `resolveClubSquad` · match development · pasma UI |
 | Trening         | `resolveClubTraining` · `last_training_on` · skill Thin ≤ potential · XI Gate |
 | Hub             | `resolveHubPhase` · `resolvePrimaryCta`                                       |
-| UI presentation | `UI_DESIGN_GUIDE.md` §16 · `UI_COPY`                                    |
-| Produkt         | GDD                                                                     |
-| Obraz           | Visual DNA · Style Lock · World Art registry                            |
+| UI presentation | `UI_DESIGN_GUIDE.md` §16 · `UI_COPY`                                          |
+| Produkt         | GDD                                                                           |
+| Obraz           | Visual DNA · Style Lock · World Art registry                                  |
 
 ### Najważniejsze katalogi
 
@@ -206,18 +206,18 @@ GDD-16+ · LFE-UI-MOTION-01 · full 22 fixtures · hardening transferów (SQL↔
 
 ## 8. UI (stan ekranów)
 
-| Obszar        | Stan                                                                        |
-| ------------- | --------------------------------------------------------------------------- |
-| **Landing**   | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal) |
-| **Branding**  | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                     |
-| **Login**     | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage             |
-| **Register**  | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only           |
-| **Hub**       | CLOSED UI P0 · decision-first · Night Pitch Office                          |
-| **Match**     | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post fidelity             |
+| Obszar        | Stan                                                                           |
+| ------------- | ------------------------------------------------------------------------------ |
+| **Landing**   | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal)    |
+| **Branding**  | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                        |
+| **Login**     | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage                |
+| **Register**  | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only              |
+| **Hub**       | CLOSED UI P0 · decision-first · Night Pitch Office                             |
+| **Match**     | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post fidelity                |
 | **Squad**     | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential |
-| **Training**  | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)         |
-| **Transfers** | CLOSED Thin 01–08 + presentation                                                |
-| **Finance**   | CLOSED Thin + presentation                                                      |
+| **Training**  | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)        |
+| **Transfers** | CLOSED Thin 01–08 + presentation                                               |
+| **Finance**   | CLOSED Thin + presentation                                                     |
 
 ---
 
@@ -332,16 +332,16 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## 15. Current Project Health
 
-| Obszar       | Ocena        | Komentarz                                       |
-| ------------ | ------------ | ----------------------------------------------- |
-| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany       |
-| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                  |
-| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne     |
-| UX           | **Dobry**    | Front door zamknięty; Hub decision-first        |
-| Gameplay     | **Thin+**    | Pętla sezonu + Training Depth + Match development     |
-| Dokumentacja | **Aktualna** | PLAYERS-02 DOCS CLOSE · baseline warstwy              |
-| CI           | **GREEN**    | tip `main` · feat `cd222ba`                           |
-| Production   | **GREEN**    | Vercel · Domain PLAYERS-02 `cd222ba`                  |
+| Obszar       | Ocena        | Komentarz                                         |
+| ------------ | ------------ | ------------------------------------------------- |
+| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany         |
+| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                    |
+| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne       |
+| UX           | **Dobry**    | Front door zamknięty; Hub decision-first          |
+| Gameplay     | **Thin+**    | Pętla sezonu + Training Depth + Match development |
+| Dokumentacja | **Aktualna** | PLAYERS-02 DOCS CLOSE · baseline warstwy          |
+| CI           | **GREEN**    | tip `main` · feat `cd222ba`                       |
+| Production   | **GREEN**    | Vercel · Domain PLAYERS-02 `cd222ba`              |
 
 ---
 

@@ -18,21 +18,21 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 **PRODUCTION VERIFIED · GREEN · LFE-PLAYERS-02 CLOSED**
 
-|                         |                                                                |
-| ----------------------- | -------------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)      |
-| **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)   |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                                 |
-| **Documentation tip**   | **`fa0848b`** — LFE-PLAYERS-02 DOCS CLOSE                       |
-| **Prod**                | https://lastfootball.vercel.app                                |
+|                         |                                                              |
+| ----------------------- | ------------------------------------------------------------ |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)    |
+| **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin) |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                               |
+| **Documentation tip**   | **`fa0848b`** — LFE-PLAYERS-02 DOCS CLOSE                    |
+| **Prod**                | https://lastfootball.vercel.app                              |
 
-| Tor               | Stan                                                                                                                       |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Tor               | Stan                                                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Platform          | Onboarding · First Match · Hub SEASON · League · Finance · **Players Dev (02)** · Transfers (01…08) · Training Depth (02) |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide §16                                           |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                        |
-| Design            | GDD-01…15 · §26 CLOSED · World Art CLOSED · next: Owner (GDD-16+ / motion / 22 fixtures)                                   |
-| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                                        |
+| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide §16                                          |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                       |
+| Design            | GDD-01…15 · §26 CLOSED · World Art CLOSED · next: Owner (GDD-16+ / motion / 22 fixtures)                                  |
+| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                                       |
 
 ## W trakcie
 

@@ -9,31 +9,31 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## SSOT
 
-| Fakt              | Źródło                                                                                          |
-| ----------------- | ----------------------------------------------------------------------------------------------- |
-| Wiersze           | tabela `players`                                                                                |
-| UI                | **wyłącznie** `resolveClubSquad(club, rows)` → `SquadDto`                                       |
-| IO                | `listClubPlayers` (aktywna kadra; bez `DEPARTED`)                                               |
-| Skill             | `players.skill` (1…99)                                                                          |
-| Potential         | `players.potential` (1…99; `potential ≥ skill`) — wariant B: `max(skill, seeded)`               |
-| Potential UI      | **tylko pasmo** (`potentialLabel`: Niski / Średni / Wysoki / Bardzo wysoki) — **bez liczby**    |
-| Match development | pure `applyMatchDevelopmentEffects` + RPC `apply_match_development` (atomowo; idempotent log)  |
-| Starter ids       | `s-{tag}-…`                                                                                     |
-| Buy ids           | `t-{tag}-…` (Transfers)                                                                         |
-| Version           | default `1`                                                                                     |
-| Status            | `READY` \| `INJURED` \| `SUSPENDED` \| `TIRED` \| `DEPARTED`                                    |
+| Fakt              | Źródło                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| Wiersze           | tabela `players`                                                                              |
+| UI                | **wyłącznie** `resolveClubSquad(club, rows)` → `SquadDto`                                     |
+| IO                | `listClubPlayers` (aktywna kadra; bez `DEPARTED`)                                             |
+| Skill             | `players.skill` (1…99)                                                                        |
+| Potential         | `players.potential` (1…99; `potential ≥ skill`) — wariant B: `max(skill, seeded)`             |
+| Potential UI      | **tylko pasmo** (`potentialLabel`: Niski / Średni / Wysoki / Bardzo wysoki) — **bez liczby**  |
+| Match development | pure `applyMatchDevelopmentEffects` + RPC `apply_match_development` (atomowo; idempotent log) |
+| Starter ids       | `s-{tag}-…`                                                                                   |
+| Buy ids           | `t-{tag}-…` (Transfers)                                                                       |
+| Version           | default `1`                                                                                   |
+| Status            | `READY` \| `INJURED` \| `SUSPENDED` \| `TIRED` \| `DEPARTED`                                  |
 
 ## Development Thin (LFE-PLAYERS-02)
 
-| Ścieżka            | Reguła                                                                                         |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| Generacja potential | Deterministyczny seed (id+age) → `potential = max(skill, seeded)`                             |
-| Match (PRIMARY)    | Tylko starterzy; max +1 skill / gracz / mecz; **K_MATCH=5**; `skill` nigdy > `potential`       |
-| Persist meczu      | `apply_match_development(club, match_key, updates)` + `match_development_log`                  |
-| Training           | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC)                              |
-| Transfer fee       | **bez zmian** — `deriveTransferFee(skill, age)` only                                           |
-| Age                | Hook pure `applySeasonAgeEffects` / `onSeasonEnd` — **brak** auto `age++` w produkcie          |
-| LFE                | **zero zmian**                                                                                 |
+| Ścieżka             | Reguła                                                                                   |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| Generacja potential | Deterministyczny seed (id+age) → `potential = max(skill, seeded)`                        |
+| Match (PRIMARY)     | Tylko starterzy; max +1 skill / gracz / mecz; **K_MATCH=5**; `skill` nigdy > `potential` |
+| Persist meczu       | `apply_match_development(club, match_key, updates)` + `match_development_log`            |
+| Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC)                        |
+| Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                     |
+| Age                 | Hook pure `applySeasonAgeEffects` / `onSeasonEnd` — **brak** auto `age++` w produkcie    |
+| LFE                 | **zero zmian**                                                                           |
 
 ## Seed
 

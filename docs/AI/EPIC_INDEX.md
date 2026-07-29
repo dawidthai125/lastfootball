@@ -20,10 +20,10 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 | Warstwa                 | Hash / EPIC                                             |
 | ----------------------- | ------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                    |
-| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                            |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)          |
-| **Documentation tip**   | **`fa0848b`** — LFE-PLAYERS-02 DOCS CLOSE                       |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
+| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                   |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
+| **Documentation tip**   | **`fa0848b`** — LFE-PLAYERS-02 DOCS CLOSE               |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -34,7 +34,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                       |
 | LFE-LEAGUE-01…03                               | Fixtures · tabela · 11 meczów                         |
 | LFE-ECONOMY-01                                 | Cash Thin (D18)                                       |
-| LFE-PLAYERS-01 · **02**                            | Kadra `players` + Development Thin (D19/D22)          |
+| LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)          |
 | LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20) |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)          |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                |

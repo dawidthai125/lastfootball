@@ -36,7 +36,7 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`           |
 | **Presentation tip**        | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)  |
 | Presentation message        | `feat(auth-ux): redesign login/register experience with Landing modal` |
-| **Documentation tip**       | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                             |
+| **Documentation tip**       | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                              |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                        |
 
 Prior domain TRAINING-02 (`5e6c2ad`) pozostaje w historii; tip domenowy = PLAYERS-02.
@@ -78,7 +78,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Settlement sell   | `completeTransferSell` (instant \| live)       |
 | Training UI       | `resolveClubTraining`                          |
 | Training persist  | RPC `complete_training_session`                |
-| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)  |
+| Training effects  | `applyTrainingSessionEffects` (status+skill≤P) |
 | Potential         | `players.potential` · `resolvePlayerPotential` |
 | Match development | RPC `apply_match_development` · K_MATCH=5      |
 | XI Gate           | `validateStartingXi` / `resolveStartingXi`     |

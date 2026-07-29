@@ -158,18 +158,18 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** trening nie może być mockiem; musi mutować trwałą kadrę, mieć 1 slot / dzień bez grind backlogu, oraz dawać czytelny Thin depth (skill + XI gate) bez farmy i bez LFE.
 **Zasada:**
 
-| Fakt          | SSOT / kontrakt                                                                  |
-| ------------- | -------------------------------------------------------------------------------- |
-| UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                         |
+| Fakt          | SSOT / kontrakt                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                                          |
 | Skutki        | `players.status` + `players.skill` — bez insert/delete; bez XP / OVR; **skill ≤ potential** (D22) |
-| Persist       | RPC `complete_training_session` (atomowo status + skill + `last_training_on`)                      |
-| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                                              |
-| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`)                    |
-| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`                                |
-| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin vs potential)       |
-| Anti-farm     | max +1 skill / gracz / sesja; K=3; soft ceiling ≥85 tylko `high`; mecz > trening                   |
-| XI Gate       | INJURED/SUSPENDED hard block; TIRED OK + warning ≥4; kick-off hard fail                            |
-| LFE           | **bez zmian** Match Engine / PUBLIC API (brak skill/fatigue w seedzie)                             |
+| Persist       | RPC `complete_training_session` (atomowo status + skill + `last_training_on`)                     |
+| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                                             |
+| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`)                   |
+| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`                               |
+| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin vs potential)      |
+| Anti-farm     | max +1 skill / gracz / sesja; K=3; soft ceiling ≥85 tylko `high`; mecz > trening                  |
+| XI Gate       | INJURED/SUSPENDED hard block; TIRED OK + warning ≥4; kick-off hard fail                           |
+| LFE           | **bez zmian** Match Engine / PUBLIC API (brak skill/fatigue w seedzie)                            |
 
 **Thin wyjątek vs GDD §8.4:** dzień = **UTC date**, nie timezone gracza (brak SSOT TZ).  
 **Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), XP, attribute DB, kontuzje treningowe, morale numeric, mapowanie skill→LFE.  
@@ -181,17 +181,17 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** GDD §7 wymaga ceiling rozwoju i primary path z meczu bez farmy treningowej i bez LFE.  
 **Zasada:**
 
-| Fakt               | SSOT / kontrakt                                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------- |
-| Potential SSOT     | kolumna `players.potential` (1…99; check `potential ≥ skill`)                                           |
-| Generacja (B)      | `resolvePlayerPotential` = `max(skill, seedPotentialCeiling(id, age))` — deterministyczny seed          |
-| Match (PRIMARY)    | pure `applyMatchDevelopmentEffects` — tylko starterzy; +1 max; **K_MATCH=5**; skill ≤ potential         |
-| Persist            | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)                    |
-| Training           | D21 respektuje potential (TS + SQL clamp)                                                               |
-| Fee                | **bez zmian** — `deriveTransferFee(skill, age)`                                                         |
-| Age                | pure `applySeasonAgeEffects` + `onSeasonEnd` hook — **brak** auto age++ w produkcie                     |
-| Presentation       | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals          |
-| LFE                | **zero zmian**                                                                                          |
+| Fakt            | SSOT / kontrakt                                                                                 |
+| --------------- | ----------------------------------------------------------------------------------------------- |
+| Potential SSOT  | kolumna `players.potential` (1…99; check `potential ≥ skill`)                                   |
+| Generacja (B)   | `resolvePlayerPotential` = `max(skill, seedPotentialCeiling(id, age))` — deterministyczny seed  |
+| Match (PRIMARY) | pure `applyMatchDevelopmentEffects` — tylko starterzy; +1 max; **K_MATCH=5**; skill ≤ potential |
+| Persist         | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)            |
+| Training        | D21 respektuje potential (TS + SQL clamp)                                                       |
+| Fee             | **bez zmian** — `deriveTransferFee(skill, age)`                                                 |
+| Age             | pure `applySeasonAgeEffects` + `onSeasonEnd` hook — **brak** auto age++ w produkcie             |
+| Presentation    | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals  |
+| LFE             | **zero zmian**                                                                                  |
 
 **Poza Thin:** Academy · talents · career/dev history · XP · morale · attribute DB · numeric potential UI · Physics/ECS.  
 **Źródło:** LFE-PLAYERS-02 (prod `cd222ba`).  

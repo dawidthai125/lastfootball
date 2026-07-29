@@ -6,17 +6,17 @@ Trening zespołowy Thin + **Training Depth** (GDD §8 wycinek) — przygotowanie
 
 ## SSOT
 
-| Fakt           | Źródło                                                                           |
-| -------------- | -------------------------------------------------------------------------------- |
-| UI             | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                         |
+| Fakt           | Źródło                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| UI             | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                                    |
 | Skutki kadry   | `players.status` + `players.skill` (bez insert/delete; bez XP / OVR; **skill ≤ potential**) |
-| Persist sesji  | RPC `complete_training_session` — atomowo status + skill + `last_training_on`                |
-| Efekty (pure)  | `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin vs potential)      |
-| Ostatnia sesja | `clubs.last_training_on` (`date`, dzień UTC `YYYY-MM-DD`)                        |
-| Unlock         | played fixtures ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive)                 |
-| Shared unlock  | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`              |
-| Slot dnia      | 1 sesja / dzień kalendarzowy UTC (Thin vs GDD „timezone gracza”)                 |
-| XI Gate        | INJURED / SUSPENDED = hard block; TIRED = OK + warning (≥4); kick-off hard fail  |
+| Persist sesji  | RPC `complete_training_session` — atomowo status + skill + `last_training_on`               |
+| Efekty (pure)  | `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin vs potential)     |
+| Ostatnia sesja | `clubs.last_training_on` (`date`, dzień UTC `YYYY-MM-DD`)                                   |
+| Unlock         | played fixtures ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive)                            |
+| Shared unlock  | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`                         |
+| Slot dnia      | 1 sesja / dzień kalendarzowy UTC (Thin vs GDD „timezone gracza”)                            |
+| XI Gate        | INJURED / SUSPENDED = hard block; TIRED = OK + warning (≥4); kick-off hard fail             |
 
 ## Unlock Nav
 

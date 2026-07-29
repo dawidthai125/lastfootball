@@ -87,14 +87,13 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 ## FUTURE
 
-| Item                                    | Notatka                     |
-| --------------------------------------- | --------------------------- |
-| LFE Physics / full Rules                | RESERVED / częściowe eventy |
-| ECS storage                             | RESERVED                    |
-| Replay persist / video export           | poza MVP                    |
-| Mobile native                           | poza scope                  |
-| Individual training / XP / attribute DB / Academy | poza Thin Depth (D21/D22) |
-
+| Item                                              | Notatka                     |
+| ------------------------------------------------- | --------------------------- |
+| LFE Physics / full Rules                          | RESERVED / częściowe eventy |
+| ECS storage                                       | RESERVED                    |
+| Replay persist / video export                     | poza MVP                    |
+| Mobile native                                     | poza scope                  |
+| Individual training / XP / attribute DB / Academy | poza Thin Depth (D21/D22)   |
 
 ---
 
