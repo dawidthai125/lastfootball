@@ -3,6 +3,7 @@
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
 
+import { LocationHero, SoftLockState, StateBanner } from '@/components/ui';
 import { runTrainingSession } from '@/lib/training/actions';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
@@ -18,13 +19,24 @@ function lockCopy(dto: TrainingDto): string {
     case 'squad_unavailable':
       return 'Brak aktywnej kadry — trening niedostępny.';
     default:
-      return '';
+      return 'Sesja treningowa jest teraz niedostępna.';
+  }
+}
+
+function lockTitle(dto: TrainingDto): string {
+  switch (dto.lockReason) {
+    case 'already_trained_today':
+      return 'Trening na dziś zakończony';
+    case 'squad_unavailable':
+      return 'Brak kadry do treningu';
+    default:
+      return 'Trening jeszcze niedostępny';
   }
 }
 
 /**
- * Training Experience — LFE-UI-EVOLUTION-01F.
- * Decision-first presentation; training action/DTO unchanged.
+ * Training Experience — LFE-UI-IMPL-03 / HF-TRN-01 · HF-TRN-02.
+ * Decision-first; training action/DTO unchanged.
  */
 export function TrainingView({ training }: { training: TrainingDto }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
@@ -33,29 +45,40 @@ export function TrainingView({ training }: { training: TrainingDto }) {
   );
   const [state, action, pending] = useActionState(runTrainingSession, TRAINING_ACTION_INITIAL);
 
+  if (!training.canTrain) {
+    return (
+      <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
+        <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
+        <SoftLockState
+          waId="ILL-002"
+          illustrationSrc="/assets/world-art/ill-002-softlock-training.png"
+          title={lockTitle(training)}
+          reason={lockCopy(training)}
+          unlockHint={`Rozegrane: ${training.playedCount}/${training.playedRequired} · Dziś (UTC): ${training.today}`}
+          secondaryHref="/squad"
+          secondaryLabel="Kadra"
+        />
+      </div>
+    );
+  }
+
   const r = training.readiness;
   const isRegen = focusId === 'regeneration';
-  const lockMessage = !training.canTrain ? lockCopy(training) : '';
-  const statusLabel = training.canTrain ? 'Sesja dostępna' : 'Sesja niedostępna';
-
   const hasFeedback =
     (state.ok && !state.skipped) || (state.ok && state.skipped) || Boolean(state.error);
 
   return (
-    <div className="lf-tr">
-      {/* M2 — Training Hero (D2 / D7: stays primary after submit) */}
+    <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
+      <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
+
       <header className="lf-tr__hero">
-        <p className={training.canTrain ? 'lf-tr__status' : 'lf-tr__status lf-tr__status--locked'}>
-          {statusLabel}
-        </p>
+        <p className="lf-tr__status">Sesja dostępna</p>
         <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
         <p className="lf-tr__meta">
           Rozegrane: {training.playedCount}/{training.playedRequired} · Dziś (UTC): {training.today}
         </p>
-        {lockMessage ? <p className="lf-tr__lock-note">{lockMessage}</p> : null}
       </header>
 
-      {/* M3 — Focus (primary decision) */}
       <section className="lf-tr__block" aria-labelledby="lf-tr-focus-title">
         <h3 id="lf-tr-focus-title" className="lf-tr__block-title">
           Fokus
@@ -76,7 +99,6 @@ export function TrainingView({ training }: { training: TrainingDto }) {
         </div>
       </section>
 
-      {/* M3 — Intensity (supporting) */}
       <section className="lf-tr__block" aria-labelledby="lf-tr-intensity-title">
         <h3 id="lf-tr-intensity-title" className="lf-tr__block-title lf-tr__block-title--support">
           Intensywność
@@ -107,19 +129,20 @@ export function TrainingView({ training }: { training: TrainingDto }) {
         )}
       </section>
 
-      {/* M3 — Primary CTA (D1); D5: same action / hidden / disabled */}
       <form action={action} className="lf-tr__cta-wrap">
         <input type="hidden" name="focusId" value={focusId} />
         <input type="hidden" name="intensityId" value={intensityId} />
-        <button type="submit" className="lf-tr__primary" disabled={!training.canTrain || pending}>
+        <button type="submit" className="lf-tr__primary" disabled={pending}>
           {pending ? 'Trening…' : 'Przeprowadź trening'}
         </button>
         <Link href="/squad" className="lf-tr__secondary">
           Kadra
         </Link>
+        <Link href="/hub" className="lf-tr__secondary">
+          Hub
+        </Link>
       </form>
 
-      {/* M4 — Readiness under CTA (D4 / D6) */}
       <section className="lf-tr__readiness" aria-labelledby="lf-tr-readiness-label">
         <p id="lf-tr-readiness-label" className="lf-tr__readiness-label">
           Gotowość kadry
@@ -137,7 +160,6 @@ export function TrainingView({ training }: { training: TrainingDto }) {
         </p>
       </section>
 
-      {/* M4 — Feedback below readiness (D7: never replaces Hero) */}
       {hasFeedback ? (
         <div className="lf-tr__feedback" aria-live="polite">
           {state.ok && !state.skipped ? (
@@ -151,11 +173,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
               Sesja na dziś była już zapisana.
             </p>
           ) : null}
-          {state.error ? (
-            <p className="lf-tr__feedback-msg lf-tr__feedback-msg--error" role="alert">
-              {state.error}
-            </p>
-          ) : null}
+          {state.error ? <StateBanner tone="error">{state.error}</StateBanner> : null}
         </div>
       ) : null}
     </div>

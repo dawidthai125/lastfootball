@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/Button';
+import { ConfirmSubmit, LocationHero, SoftLockState } from '@/components/ui';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import {
@@ -241,15 +242,17 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         </span>
       ) : null}
       <div className="lf-tx-actions__row">
-        <form action={action} className="inline">
-          <input type="hidden" name="offerId" value={offer.offerId} />
-          <input type="hidden" name="playerId" value={offer.playerId} />
-          <input type="hidden" name="phase" value="opening" />
-          <input type="hidden" name="decision" value="accept" />
-          <Button type="submit" variant="primary" disabled={disabled || pending}>
-            {pending ? '…' : 'Akceptuj'}
-          </Button>
-        </form>
+        <ConfirmSubmit label="Akceptuj" disabled={disabled} pending={pending}>
+          <form action={action} className="inline">
+            <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="playerId" value={offer.playerId} />
+            <input type="hidden" name="phase" value="opening" />
+            <input type="hidden" name="decision" value="accept" />
+            <Button type="submit" variant="primary" disabled={disabled || pending}>
+              {pending ? '…' : 'Potwierdź'}
+            </Button>
+          </form>
+        </ConfirmSubmit>
         {offer.canCounter ? (
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
@@ -483,7 +486,7 @@ type DecisionCase =
   | { kind: 'h2h-out-countered'; offer: LiveH2hOfferDto };
 
 /**
- * Transfer Command Center — LFE-UI-EVOLUTION-01D (presentation only).
+ * Transfer Command Center — LFE-UI-IMPL-03 / HF-XFR-01 · HF-XFR-03.
  * Actions / DTO / resolvers unchanged.
  */
 export function TransfersView({ market }: { market: TransferMarketDto }) {
@@ -498,8 +501,31 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
 
   const windowLabel = market.windowOpen ? 'Okno otwarte' : 'Okno zamknięte';
 
+  if (!market.windowOpen) {
+    return (
+      <div className="lf-tx" data-pti="PTI-01-XFR-02-M" data-lf-impl="LFE-UI-IMPL-03">
+        <LocationHero
+          waId="HERO-005"
+          src="/assets/world-art/hero-005-transfer-night.png"
+          priority
+        />
+        <SoftLockState
+          waId="ILL-003"
+          illustrationSrc="/assets/world-art/ill-003-window-closed.png"
+          title="Okno transferowe zamknięte"
+          reason="Finalizacja transakcji jest teraz niedostępna. Wróć po kolejnych meczach ligowych — reguła okna pochodzi z klubu, nie z UI."
+          unlockHint={`${windowLabel} · Kasa ${market.cashLabel} · Budżet ${market.envelopeLabel}`}
+          secondaryHref="/finance"
+          secondaryLabel="Finanse"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="lf-tx" data-pti="PTI-01-XFR-02-M" data-lf-impl="LFE-UI-IMPL-01">
+    <div className="lf-tx" data-pti="PTI-01-XFR-02-M" data-lf-impl="LFE-UI-IMPL-03">
+      <LocationHero waId="HERO-005" src="/assets/world-art/hero-005-transfer-night.png" priority />
+
       {/* A — context line (no KPI wall) */}
       <p className="lf-tx__context" aria-label="Kontekst transferów">
         {windowLabel}
@@ -512,13 +538,6 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
         </span>
         Budżet {market.envelopeLabel}
       </p>
-
-      {!market.windowOpen ? (
-        <p className="lf-tx__note">
-          Okno transferowe jest zamknięte. Możesz przeglądać oferty i rynek, ale finalizacja
-          transakcji jest niedostępna. Wróć po kolejnych meczach ligowych.
-        </p>
-      ) : null}
 
       <nav className="lf-tx__soft-nav" aria-label="Powiązane ekrany">
         <Link href="/finance" className="lf-tx__soft-link">

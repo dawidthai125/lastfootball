@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { EmptyState, LocationHero } from '@/components/ui';
 import { formatMoney, type ClubFinanceDto, type FinanceMovementDto } from '@/lib/finance';
 
 import './finance-decision.css';
@@ -18,19 +19,19 @@ function lastMovementSummary(m: FinanceMovementDto | null): string {
 }
 
 /**
- * Finances Experience — LFE-UI-EVOLUTION-01H.
- * Decision-first presentation; economy / DTO unchanged (D5 / D8).
+ * Finances Experience — LFE-UI-IMPL-03 / HF-FIN-01.
+ * Decision-first; economy / DTO unchanged.
  */
 export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
   const movements = finance.recentMovements;
   const hasMovements = movements.length > 0;
-  /** Presentation-only calm heuristic (D8) — no domain change. */
   const needsReaction = Boolean(finance.lastMovement && finance.lastMovement.amount < 0);
   const primaryLabel = needsReaction ? 'Przejdź do transferów' : 'Zobacz rynek transferowy';
 
   return (
-    <div className="lf-fi">
-      {/* M1 — Hero: saldo + pytanie (D2); no KPI wall (D7) */}
+    <div className="lf-fi" data-lf-impl="LFE-UI-IMPL-03">
+      <LocationHero waId="HERO-007" src="/assets/world-art/hero-007-finance-ledger.png" priority />
+
       <header className="lf-fi__hero">
         <p className="lf-fi__eyebrow">Finanse</p>
         <p className="lf-fi__cash">{finance.cashLabel}</p>
@@ -38,7 +39,6 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
         <p className="lf-fi__currency">{finance.currency}</p>
       </header>
 
-      {/* M2 — Primary CTA deep-link Transfers (D1 / D8) */}
       <div className="lf-fi__cta-wrap">
         <Link href="/transfers" className="lf-fi__primary">
           {primaryLabel}
@@ -48,7 +48,6 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
         </Link>
       </div>
 
-      {/* M2 — Status Summary before history (D3) */}
       <section className="lf-fi__status" aria-labelledby="lf-fi-status-label">
         <p id="lf-fi-status-label" className="lf-fi__status-label">
           Podsumowanie
@@ -60,17 +59,19 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
         </p>
       </section>
 
-      {/* M3 / M4 — History browse + empty state (D4 / D6) */}
       <section className="lf-fi__browse" aria-labelledby="lf-fi-browse-title">
         <h2 id="lf-fi-browse-title" className="lf-fi__browse-title">
           Ostatnie operacje
         </h2>
 
         {!hasMovements ? (
-          <p className="lf-fi__empty">
-            Brak zapisanych operacji. Gdy pojawi się ruch kasowy, zobaczysz go tutaj — decyzje
-            transferowe podejmiesz na rynku.
-          </p>
+          <EmptyState
+            waId="EMP-003"
+            illustrationSrc="/assets/world-art/emp-003-blank-ledger.png"
+            title="Księga jeszcze pusta"
+            body="Brak zapisanych operacji. Gdy pojawi się ruch kasowy, zobaczysz go tutaj — decyzje transferowe podejmiesz na rynku."
+            links={[{ href: '/transfers', label: 'Transfery' }]}
+          />
         ) : (
           <>
             <ul className="lf-fi__cards">

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { PlayerPortrait } from '@/components/assets';
+import { EmptyState, LocationHero } from '@/components/ui';
 import {
   POSITION_FILTERS,
   STATUS_FILTERS,
@@ -100,10 +101,35 @@ function comparePlayers(
 }
 
 /**
- * Squad Experience — LFE-UI-EVOLUTION-01G.
+ * Squad Experience — LFE-UI-IMPL-03 / HF-SQD-01.
  * Decision-first presentation; squad DTO / domain unchanged.
  */
 export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
+  if (players.length === 0) {
+    return <SquadEmpty />;
+  }
+  return <SquadRoster players={players} />;
+}
+
+function SquadEmpty() {
+  return (
+    <div className="lf-sq" data-lf-impl="LFE-UI-IMPL-03">
+      <LocationHero waId="HERO-004" src="/assets/world-art/hero-004-locker-night.png" priority />
+      <EmptyState
+        waId="EMP-002"
+        illustrationSrc="/assets/world-art/emp-002-empty-locker.png"
+        title="Szatnia jest pusta"
+        body="Nie ma jeszcze zawodników do przeglądu. Wróć do Hub albo sprawdź trening, gdy kadra będzie dostępna."
+        links={[
+          { href: '/hub', label: 'Hub' },
+          { href: '/training', label: 'Trening' },
+        ]}
+      />
+    </div>
+  );
+}
+
+function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
   const router = useRouter();
   const [position, setPosition] = useState<(typeof POSITION_FILTERS)[number]>('ALL');
   const [status, setStatus] = useState<(typeof STATUS_FILTERS)[number]>('ALL');
@@ -152,7 +178,8 @@ export function SquadView({ players }: { players: readonly SquadPlayerDto[] }) {
   }
 
   return (
-    <div className="lf-sq">
+    <div className="lf-sq" data-lf-impl="LFE-UI-IMPL-03">
+      <LocationHero waId="HERO-004" src="/assets/world-art/hero-004-locker-night.png" priority />
       <div className="lf-sq__axis">
         {/* M1 — Squad Hero (D2) */}
         <header className="lf-sq__hero">
