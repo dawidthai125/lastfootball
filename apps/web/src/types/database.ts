@@ -380,6 +380,14 @@ export type Database = {
         Args: { p_club_id: string; p_player_id: string };
         Returns: Json;
       };
+      complete_training_session: {
+        Args: {
+          p_club_id: string;
+          p_training_on: string;
+          p_updates: Json;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       [_ in never]: never;

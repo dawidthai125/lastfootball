@@ -65,6 +65,20 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     expect(xi).toHaveLength(11);
   });
 
+  it('resolveStartingXi hard-fails on injured starter (no auto-swap)', () => {
+    const clubId = 'club-xi-gate';
+    const rows = rowsFromSeed(clubId).map((r, i) =>
+      i === 0 && r.starter ? { ...r, status: 'INJURED' as const } : r,
+    );
+    expect(() => resolveStartingXi(rows)).toThrow(SquadUnavailableError);
+    try {
+      resolveStartingXi(rows);
+    } catch (e) {
+      expect(e).toBeInstanceOf(SquadUnavailableError);
+      expect((e as SquadUnavailableError).message).toMatch(/kontuzjowanych|zawieszonych/i);
+    }
+  });
+
   it('getSquadPlayerById reads from resolved squad', () => {
     const clubId = 'abc';
     const squad = resolveClubSquad({ id: clubId }, rowsFromSeed(clubId));

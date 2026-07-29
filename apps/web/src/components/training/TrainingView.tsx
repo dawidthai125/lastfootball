@@ -35,8 +35,8 @@ function lockTitle(dto: TrainingDto): string {
 }
 
 /**
- * Training Experience — LFE-UI-IMPL-03 / HF-TRN-01 · HF-TRN-02.
- * Decision-first; training action/DTO unchanged.
+ * Training Experience — LFE-UI-IMPL-03 / HF-TRN-01 · HF-TRN-02 · LFE-TRAINING-02 feedback.
+ * Decision-first; domain via resolveClubTraining + runTrainingSession.
  */
 export function TrainingView({ training }: { training: TrainingDto }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
@@ -162,10 +162,17 @@ export function TrainingView({ training }: { training: TrainingDto }) {
 
       {hasFeedback ? (
         <div className="lf-tr__feedback" aria-live="polite">
-          {state.ok && !state.skipped ? (
+          {state.ok && !state.skipped && state.summary ? (
             <p className="lf-tr__feedback-msg lf-tr__feedback-msg--ok">
-              Sesja zapisana. Statusy kadry zaktualizowane — sprawdź{' '}
-              <Link href="/squad">Kadra</Link>.
+              Sesja zapisana · Trenowało <strong>{state.summary.trained}</strong>
+              {' · '}
+              Zmęczeni <strong>{state.summary.tired}</strong>
+              {' · '}
+              Zregenerowani <strong>{state.summary.regenerated}</strong>
+              {' · '}
+              +skill <strong>{state.summary.skillUp}</strong>
+              {' — '}
+              <Link href="/squad">Kadra</Link>
             </p>
           ) : null}
           {state.ok && state.skipped ? (

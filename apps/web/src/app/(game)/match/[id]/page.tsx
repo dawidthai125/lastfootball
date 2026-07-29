@@ -14,15 +14,15 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-function SquadError() {
+function SquadError({ detail }: { detail?: string }) {
   return (
     <Panel title="Kadra niedostępna">
       <p style={{ margin: 0, color: 'var(--lf-color-text-muted)' }}>
-        Nie można przygotować meczu — brak składu w bazie. Wróć do{' '}
+        {detail ?? 'Nie można przygotować meczu — brak składu w bazie.'} Wróć do{' '}
         <Link href="/squad" style={{ color: 'var(--lf-color-text-gold)' }}>
           kadry
-        </Link>
-        .
+        </Link>{' '}
+        lub popraw XI przed meczem.
       </p>
     </Panel>
   );
@@ -39,7 +39,7 @@ export default async function PreMatchPage({ params }: PageProps) {
       const ourXi = await loadClubStartingXi(club);
       return <PreMatchView bundle={buildFirstPreMatchBundle(club, ourXi)} firstMatch />;
     } catch (e) {
-      if (e instanceof SquadUnavailableError) return <SquadError />;
+      if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
       throw e;
     }
   }
@@ -93,7 +93,7 @@ export default async function PreMatchPage({ params }: PageProps) {
     const ourXi = await loadClubStartingXi(club);
     return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto, ourXi)} />;
   } catch (e) {
-    if (e instanceof SquadUnavailableError) return <SquadError />;
+    if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
     throw e;
   }
 }

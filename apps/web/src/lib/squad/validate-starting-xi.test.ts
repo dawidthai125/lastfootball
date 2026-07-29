@@ -44,13 +44,39 @@ describe('LFE-UI-IMPL-05 validateStartingXi', () => {
     expect(validateStartingXi(ok).ok).toBe(true);
   });
 
-  it('warns on injured starters without failing', () => {
+  it('hard-blocks injured starters', () => {
     const xi = Array.from({ length: 11 }, (_, i) =>
       player({
         id: `w${i}`,
         position: i === 0 ? 'BR' : 'N',
         starter: true,
         status: i === 1 ? 'INJURED' : 'READY',
+      }),
+    );
+    const v = validateStartingXi(xi);
+    expect(v.ok).toBe(false);
+    expect(v.errors.length).toBeGreaterThan(0);
+  });
+
+  it('hard-blocks suspended starters', () => {
+    const xi = Array.from({ length: 11 }, (_, i) =>
+      player({
+        id: `s${i}`,
+        position: i === 0 ? 'BR' : 'N',
+        starter: true,
+        status: i === 2 ? 'SUSPENDED' : 'READY',
+      }),
+    );
+    expect(validateStartingXi(xi).ok).toBe(false);
+  });
+
+  it('allows tired with warning at threshold ≥4', () => {
+    const xi = Array.from({ length: 11 }, (_, i) =>
+      player({
+        id: `t${i}`,
+        position: i === 0 ? 'BR' : 'N',
+        starter: true,
+        status: i > 0 && i < 5 ? 'TIRED' : 'READY',
       }),
     );
     const v = validateStartingXi(xi);
@@ -68,6 +94,15 @@ describe('LFE-UI-IMPL-05 applyXiSelection', () => {
     const next = applyXiSelection(players, null, 'b1');
     expect(next.players.find((p) => p.id === 'b1')?.starter).toBe(true);
     expect(next.selectedId).toBeNull();
+  });
+
+  it('does not promote injured bench', () => {
+    const players = [
+      player({ id: 'gk', position: 'BR', starter: true }),
+      player({ id: 'inj', position: 'N', starter: false, status: 'INJURED' }),
+    ];
+    const next = applyXiSelection(players, null, 'inj');
+    expect(next.players.find((p) => p.id === 'inj')?.starter).toBe(false);
   });
 
   it('swaps starter with bench when XI full', () => {

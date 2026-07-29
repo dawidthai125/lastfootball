@@ -1,18 +1,38 @@
 import type { createClient } from '@/lib/supabase/server';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
-import { applyTrainingSessionEffects } from '@/lib/training/apply-effects';
+import {
+  applyTrainingSessionEffects,
+  summarizeTrainingSessionEffects,
+} from '@/lib/training/apply-effects';
 import { resolveClubTraining } from '@/lib/training/resolve-club-training';
-import type { TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
+import type {
+  TrainingFocusId,
+  TrainingIntensityId,
+  TrainingSessionSummary,
+} from '@/lib/training/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
+type RpcResult = {
+  ok?: boolean;
+  skipped?: boolean;
+  changed_count?: number;
+  error?: string;
+};
+
 export type CompleteTrainingResult =
-  { ok: true; skipped: boolean; changedCount: number } | { ok: false; error: string };
+  | {
+      ok: true;
+      skipped: boolean;
+      changedCount: number;
+      summary: TrainingSessionSummary;
+    }
+  | { ok: false; error: string };
 
 /**
- * Atomic-ish team session: status updates only + clubs.last_training_on.
- * Does not insert/delete players or change skill.
+ * Atomic team session via RPC: status + skill + clubs.last_training_on.
+ * Growth rules: pure applyTrainingSessionEffects (TS SSOT).
  */
 export async function completeTrainingSession(
   supabase: AppSupabase,
@@ -37,7 +57,12 @@ export async function completeTrainingSession(
 
   if (!resolved.canTrain) {
     if (resolved.lockReason === 'already_trained_today') {
-      return { ok: true, skipped: true, changedCount: 0 };
+      return {
+        ok: true,
+        skipped: true,
+        changedCount: 0,
+        summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0 },
+      };
     }
     const msg =
       resolved.lockReason === 'not_unlocked'
@@ -48,34 +73,53 @@ export async function completeTrainingSession(
     return { ok: false, error: msg };
   }
 
-  const before = input.activePlayers.map((p) => ({ id: p.id, status: p.status }));
+  const before = input.activePlayers.map((p) => ({
+    id: p.id,
+    status: p.status,
+    skill: p.skill,
+  }));
   const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId);
+  const summary = summarizeTrainingSessionEffects(before, after);
 
-  let changedCount = 0;
+  const updates: { id: string; status: string; skill: number }[] = [];
   for (let i = 0; i < after.length; i++) {
     const next = after[i]!;
     const prev = before[i]!;
-    if (next.status === prev.status) continue;
-    const { error } = await supabase
-      .from('players')
-      .update({ status: next.status } as never)
-      .eq('id', next.id)
-      .eq('club_id', input.clubId)
-      .is('departed_at', null);
-    if (error) {
-      return { ok: false, error: 'Nie udało się zaktualizować statusów zawodników.' };
-    }
-    changedCount += 1;
+    if (next.status === prev.status && next.skill === prev.skill) continue;
+    updates.push({ id: next.id, status: next.status, skill: next.skill });
   }
 
-  const { error: clubErr } = await supabase
-    .from('clubs')
-    .update({ last_training_on: today } as never)
-    .eq('id', input.clubId);
+  const { data, error } = await supabase.rpc(
+    'complete_training_session' as never,
+    {
+      p_club_id: input.clubId,
+      p_training_on: today,
+      p_updates: updates,
+    } as never,
+  );
 
-  if (clubErr) {
-    return { ok: false, error: 'Nie udało się zapisać dnia treningu.' };
+  if (error) {
+    return { ok: false, error: error.message || 'Nie udało się zapisać treningu.' };
   }
 
-  return { ok: true, skipped: false, changedCount };
+  const row = data as RpcResult | null;
+  if (!row || row.ok !== true) {
+    return { ok: false, error: row?.error || 'Nie udało się zapisać treningu.' };
+  }
+
+  if (row.skipped === true) {
+    return {
+      ok: true,
+      skipped: true,
+      changedCount: 0,
+      summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0 },
+    };
+  }
+
+  return {
+    ok: true,
+    skipped: false,
+    changedCount: typeof row.changed_count === 'number' ? row.changed_count : updates.length,
+    summary,
+  };
 }

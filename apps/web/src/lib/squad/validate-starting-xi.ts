@@ -19,8 +19,8 @@ export function isXiEligibleStatus(status: PlayerStatus): boolean {
 }
 
 /**
- * Pure XI validation — HF-SQD-04 / STATE-SPECS warn XI.
- * Exactly 11 starters + ≥1 BR; soft warnings for injured/suspended.
+ * Pure XI validation — HF-SQD-04 / LFE-TRAINING-02 XI Gate.
+ * Exactly 11 starters + ≥1 BR; INJURED/SUSPENDED = hard block; TIRED ≥4 = warning.
  */
 export function validateStartingXi(starters: readonly SquadPlayerDto[]): XiValidation {
   const active = starters.filter((p) => isXiEligibleStatus(p.status));
@@ -38,8 +38,8 @@ export function validateStartingXi(starters: readonly SquadPlayerDto[]): XiValid
 
   const blocked = active.filter((p) => p.status === 'INJURED' || p.status === 'SUSPENDED');
   if (blocked.length > 0) {
-    warnings.push(
-      `${blocked.length} zawodnik${blocked.length === 1 ? '' : 'ów'} w XI ma status kontuzji lub zawieszenia.`,
+    errors.push(
+      `${blocked.length} zawodnik${blocked.length === 1 ? '' : 'ów'} w XI ma status kontuzji lub zawieszenia — usuń ich ze składu.`,
     );
   }
 
@@ -98,10 +98,14 @@ export function applyXiSelection(
     return { players: list, selectedId };
   }
 
+  const blockedStatus = tapped.status === 'INJURED' || tapped.status === 'SUSPENDED';
   const starterCount = list.filter((p) => p.starter && p.status !== 'DEPARTED').length;
 
   if (!selectedId) {
     if (!tapped.starter && starterCount < 11) {
+      if (blockedStatus) {
+        return { players: list, selectedId: null };
+      }
       tapped.starter = true;
       return { players: list, selectedId: null };
     }
@@ -119,6 +123,17 @@ export function applyXiSelection(
 
   if (selected.starter === tapped.starter) {
     return { players: list, selectedId: tappedId };
+  }
+
+  // Swap: do not promote INJURED/SUSPENDED onto XI (no auto-heal / auto-swap around gate).
+  if (!tapped.starter && blockedStatus) {
+    return { players: list, selectedId: null };
+  }
+  if (selected.starter && (selected.status === 'INJURED' || selected.status === 'SUSPENDED')) {
+    // Allow demoting blocked starter by swapping with eligible bench.
+    if (tapped.status === 'INJURED' || tapped.status === 'SUSPENDED') {
+      return { players: list, selectedId: null };
+    }
   }
 
   selected.starter = !selected.starter;

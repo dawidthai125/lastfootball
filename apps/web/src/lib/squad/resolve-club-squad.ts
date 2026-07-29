@@ -89,21 +89,30 @@ export function resolveClubSquad(
 /**
  * Starting XI for LFE sessions — from DB rows only (no seed).
  * Throws if fewer than 11 starters among active players.
+ * LFE-TRAINING-02: hard fail when XI includes INJURED/SUSPENDED (no auto-swap).
  */
 export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
-  const xi = rows
-    .filter((r) => r.departedAt == null && r.status !== 'DEPARTED' && r.starter)
-    .map((r): RosterPlayerSeed => ({
-      id: r.id,
-      name: r.name,
-      number: r.shirtNumber,
-      pos: r.pos,
-      role: r.role as PitchRole,
-      starter: true,
-      captain: r.captain || undefined,
-    }));
+  const xiRows = rows.filter((r) => r.departedAt == null && r.status !== 'DEPARTED' && r.starter);
+  const clubId = rows[0]?.clubId ?? 'unknown';
+
+  const blocked = xiRows.filter((r) => r.status === 'INJURED' || r.status === 'SUSPENDED');
+  if (blocked.length > 0) {
+    throw new SquadUnavailableError(
+      clubId,
+      'Skład XI zawiera kontuzjowanych lub zawieszonych. Popraw XI przed meczem.',
+    );
+  }
+
+  const xi = xiRows.map((r): RosterPlayerSeed => ({
+    id: r.id,
+    name: r.name,
+    number: r.shirtNumber,
+    pos: r.pos,
+    role: r.role as PitchRole,
+    starter: true,
+    captain: r.captain || undefined,
+  }));
   if (xi.length !== 11) {
-    const clubId = rows[0]?.clubId ?? 'unknown';
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
   }
   return xi;

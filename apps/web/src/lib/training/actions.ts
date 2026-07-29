@@ -68,5 +68,9 @@ export async function runTrainingSession(
   revalidatePath('/squad');
   revalidatePath('/hub');
 
-  return { ok: true, skipped: result.skipped };
+  return {
+    ok: true,
+    skipped: result.skipped,
+    summary: result.summary,
+  };
 }

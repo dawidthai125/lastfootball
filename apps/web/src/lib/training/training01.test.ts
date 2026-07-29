@@ -4,7 +4,10 @@ import { countPlayedInList, hasPlayedUnlock, utcDateString } from '@/lib/fixture
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import type { PlayerRowDto } from '@/lib/squad/types';
-import { applyTrainingSessionEffects } from '@/lib/training/apply-effects';
+import {
+  applyTrainingSessionEffects,
+  summarizeTrainingSessionEffects,
+} from '@/lib/training/apply-effects';
 import { resolveClubTraining } from '@/lib/training/resolve-club-training';
 import { TRAINING_THIN } from '@/lib/training/types';
 
@@ -116,21 +119,22 @@ describe('resolveClubTraining (LFE-TRAINING-01)', () => {
 
 describe('applyTrainingSessionEffects', () => {
   const base = [
-    { id: 'a', status: 'READY' as const },
-    { id: 'b', status: 'READY' as const },
-    { id: 'c', status: 'TIRED' as const },
-    { id: 'd', status: 'INJURED' as const },
-    { id: 'e', status: 'READY' as const },
+    { id: 'a', status: 'READY' as const, skill: 60 },
+    { id: 'b', status: 'READY' as const, skill: 60 },
+    { id: 'c', status: 'TIRED' as const, skill: 60 },
+    { id: 'd', status: 'INJURED' as const, skill: 60 },
+    { id: 'e', status: 'READY' as const, skill: 60 },
   ];
 
-  it('regeneration turns TIRED → READY; leaves INJURED', () => {
+  it('regeneration turns TIRED → READY; leaves INJURED; no skill', () => {
     const out = applyTrainingSessionEffects(base, 'regeneration', 'normal');
     expect(out.find((p) => p.id === 'c')?.status).toBe('READY');
     expect(out.find((p) => p.id === 'd')?.status).toBe('INJURED');
     expect(out.filter((p) => p.status === 'READY').length).toBe(4);
+    expect(out.every((p) => p.skill === 60)).toBe(true);
   });
 
-  it('light intensity is a no-op on statuses', () => {
+  it('light intensity is a no-op on statuses and skill', () => {
     const out = applyTrainingSessionEffects(base, 'tactics', 'light');
     expect(out).toEqual(base);
   });
@@ -139,7 +143,6 @@ describe('applyTrainingSessionEffects', () => {
     const out = applyTrainingSessionEffects(base, 'technique', 'normal');
     expect(out.find((p) => p.id === 'd')?.status).toBe('INJURED');
     const tiredReady = out.filter((p) => p.status === 'TIRED' && p.id !== 'c');
-    // ready ids sorted: a, b, e → index 0 (a) tires
     expect(out.find((p) => p.id === 'a')?.status).toBe('TIRED');
     expect(out.find((p) => p.id === 'b')?.status).toBe('READY');
     expect(out.find((p) => p.id === 'e')?.status).toBe('READY');
@@ -157,5 +160,72 @@ describe('applyTrainingSessionEffects', () => {
     const out = applyTrainingSessionEffects(base, 'tactics', 'high');
     expect(out).toHaveLength(base.length);
     expect(out.map((p) => p.id).sort()).toEqual(base.map((p) => p.id).sort());
+  });
+});
+
+describe('applyTrainingSessionEffects skill (LFE-TRAINING-02)', () => {
+  const base = [
+    { id: 'a', status: 'READY' as const, skill: 60 },
+    { id: 'b', status: 'READY' as const, skill: 60 },
+    { id: 'c', status: 'TIRED' as const, skill: 60 },
+    { id: 'd', status: 'INJURED' as const, skill: 60 },
+    { id: 'e', status: 'READY' as const, skill: 60 },
+    { id: 'f', status: 'READY' as const, skill: 60 },
+    { id: 'g', status: 'READY' as const, skill: 60 },
+  ];
+
+  it('caps skill-ups at K=3 and +1 per player', () => {
+    const out = applyTrainingSessionEffects(base, 'tactics', 'normal');
+    const ups = out.filter((p, i) => p.skill > base[i]!.skill);
+    expect(ups.length).toBeLessThanOrEqual(TRAINING_THIN.SKILL_UP_MAX_PER_SESSION);
+    for (const p of ups) {
+      const prev = base.find((b) => b.id === p.id)!;
+      expect(p.skill - prev.skill).toBe(1);
+    }
+    expect(out.find((p) => p.id === 'd')?.skill).toBe(60);
+  });
+
+  it('soft ceiling: skill >= 85 only grows on high', () => {
+    const ceiling = [
+      { id: 'x', status: 'READY' as const, skill: 85 },
+      { id: 'y', status: 'READY' as const, skill: 86 },
+      { id: 'z', status: 'READY' as const, skill: 70 },
+    ];
+    const normal = applyTrainingSessionEffects(ceiling, 'tactics', 'normal');
+    expect(normal.find((p) => p.id === 'x')?.skill).toBe(85);
+    expect(normal.find((p) => p.id === 'y')?.skill).toBe(86);
+    expect(normal.find((p) => p.id === 'z')?.skill).toBe(71);
+
+    const high = applyTrainingSessionEffects(ceiling, 'tactics', 'high');
+    expect(high.find((p) => p.id === 'x')?.skill).toBe(86);
+    expect(high.find((p) => p.id === 'y')?.skill).toBe(86);
+    expect(high.find((p) => p.id === 'z')?.skill).toBe(71);
+  });
+
+  it('focus bias is deterministic and differs by focus', () => {
+    const tactics = applyTrainingSessionEffects(base, 'tactics', 'normal')
+      .filter((p, i) => p.skill > base[i]!.skill)
+      .map((p) => p.id)
+      .sort();
+    const technique = applyTrainingSessionEffects(base, 'technique', 'normal')
+      .filter((p, i) => p.skill > base[i]!.skill)
+      .map((p) => p.id)
+      .sort();
+    expect(tactics).not.toEqual(technique);
+    expect(tactics).toEqual(
+      applyTrainingSessionEffects(base, 'tactics', 'normal')
+        .filter((p, i) => p.skill > base[i]!.skill)
+        .map((p) => p.id)
+        .sort(),
+    );
+  });
+
+  it('summarizeTrainingSessionEffects counts deltas', () => {
+    const after = applyTrainingSessionEffects(base, 'regeneration', 'normal');
+    const summary = summarizeTrainingSessionEffects(base, after);
+    expect(summary.trained).toBe(base.length);
+    expect(summary.regenerated).toBe(1);
+    expect(summary.tired).toBe(0);
+    expect(summary.skillUp).toBe(0);
   });
 });

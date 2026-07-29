@@ -15,7 +15,7 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-function SquadError({ matchId }: { matchId: string }) {
+function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
   return (
     <div data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04">
       <LocationHero waId="HERO-003" src="/assets/world-art/hero-003-pitch-night.png" priority />
@@ -23,7 +23,7 @@ function SquadError({ matchId }: { matchId: string }) {
         waId="EMP-002"
         illustrationSrc="/assets/world-art/emp-002-empty-locker.png"
         title="Kadra niedostępna"
-        body="Nie można rozpocząć meczu — brak składu. Wróć do przedmeczu i ustaw XI."
+        body={detail ?? 'Nie można rozpocząć meczu — brak składu. Wróć do przedmeczu i ustaw XI.'}
         links={[
           { href: matchPrePath(matchId), label: UI_COPY.backToPrematch },
           { href: '/squad', label: UI_COPY.squadNav },
@@ -51,7 +51,9 @@ export default async function LiveMatchPage({ params }: PageProps) {
         />
       );
     } catch (e) {
-      if (e instanceof SquadUnavailableError) return <SquadError matchId={id} />;
+      if (e instanceof SquadUnavailableError) {
+        return <SquadError matchId={id} detail={e.message} />;
+      }
       throw e;
     }
   }
@@ -75,7 +77,9 @@ export default async function LiveMatchPage({ params }: PageProps) {
       />
     );
   } catch (e) {
-    if (e instanceof SquadUnavailableError) return <SquadError matchId={id} />;
+    if (e instanceof SquadUnavailableError) {
+      return <SquadError matchId={id} detail={e.message} />;
+    }
     throw e;
   }
 }

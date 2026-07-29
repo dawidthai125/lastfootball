@@ -1,8 +1,14 @@
-/** Thin training constants — temporary until fuller GDD §8 / §26 (LFE-TRAINING-01). */
+/** Thin training constants — temporary until fuller GDD §8 / §26 (LFE-TRAINING-01/02). */
 export const TRAINING_THIN = {
   UNLOCK_AFTER_PLAYED: 2,
   DEFAULT_FOCUS_ID: 'tactics',
   DEFAULT_INTENSITY_ID: 'normal',
+  /** Max skill + per player per session (anti-farm). */
+  SKILL_UP_MAX_PER_PLAYER: 1,
+  /** Max players receiving +skill per session (K). */
+  SKILL_UP_MAX_PER_SESSION: 3,
+  /** skill >= ceiling grows only on high intensity. */
+  SKILL_SOFT_CEILING: 85,
 } as const;
 
 export type TrainingFocusId = 'tactics' | 'technique' | 'physical' | 'regeneration';
@@ -61,6 +67,14 @@ export type TrainingDto = {
   readonly matchDayPolicy?: undefined;
   /** Future: individual training — always false in Thin. */
   readonly individualAvailable?: false;
+};
+
+/** Post-session feedback counts (LFE-TRAINING-02). */
+export type TrainingSessionSummary = {
+  readonly trained: number;
+  readonly tired: number;
+  readonly regenerated: number;
+  readonly skillUp: number;
 };
 
 export const TRAINING_FOCUSES: readonly TrainingFocusOption[] = [
