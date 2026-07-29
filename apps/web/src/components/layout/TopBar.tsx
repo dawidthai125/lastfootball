@@ -7,6 +7,7 @@ import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
+import { formatMoney } from '@/lib/finance/format-money';
 import { resolveHubPhase } from '@/lib/hub';
 
 function phaseLabel(phase: ReturnType<typeof resolveHubPhase>): string {
@@ -16,7 +17,7 @@ function phaseLabel(phase: ReturnType<typeof resolveHubPhase>): string {
 }
 
 /**
- * Shell TopBar — LFE-UI-EVOLUTION-01B: klub first, bez KPI metrics.
+ * Shell TopBar — LFE-UI-IMPL-04: klub first, 1× kasa muted (HF-SHELL-01).
  */
 export function TopBar() {
   const club = useClub();
@@ -27,10 +28,12 @@ export function TopBar() {
 
   const clubName = club?.name ?? 'Klub';
   const shortName = club?.shortName ?? 'LF';
+  const cashLabel = club ? formatMoney(club.cashBalance) : null;
 
   return (
     <header
       className="flex shrink-0 items-center"
+      data-lf-impl="LFE-UI-IMPL-04"
       style={{
         height: 'var(--lf-shell-topbar)',
         background: 'var(--lf-color-bg-raised)',
@@ -60,6 +63,7 @@ export function TopBar() {
           padding: 'var(--lf-space-1) var(--lf-space-2)',
           borderRadius: 'var(--lf-radius-sm)',
           minWidth: 'var(--lf-space-6)',
+          minHeight: 32,
           justifyContent: 'center',
         }}
       >
@@ -109,7 +113,20 @@ export function TopBar() {
         </div>
       </Link>
 
+      {cashLabel ? (
+        <div className="lf-chrome-metric hidden md:flex" aria-label="Kasa klubu">
+          <span className="lf-chrome-metric__label">Kasa</span>
+          <span className="lf-chrome-metric__value tabular-nums">{cashLabel}</span>
+        </div>
+      ) : null}
+
       <div className="ml-auto flex items-center" style={{ gap: 'var(--lf-space-1)' }}>
+        {cashLabel ? (
+          <div className="lf-chrome-metric md:hidden" aria-label="Kasa klubu">
+            <span className="lf-chrome-metric__value tabular-nums">{cashLabel}</span>
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={toggleNotifications}
@@ -122,11 +139,13 @@ export function TopBar() {
             color: 'var(--lf-color-text-muted)',
             padding: 'var(--lf-space-1) var(--lf-space-2)',
             borderRadius: 'var(--lf-radius-sm)',
-            minHeight: 32,
+            minHeight: 44,
+            minWidth: 44,
+            justifyContent: 'center',
           }}
           aria-label="Powiadomienia"
         >
-          <NavIcon id="messages" size={14} />
+          <NavIcon id="messages" size={16} />
         </button>
 
         <Link
@@ -141,7 +160,7 @@ export function TopBar() {
             gap: 'var(--lf-space-2)',
             padding: 'var(--lf-space-1)',
             borderRadius: 'var(--lf-radius-sm)',
-            minHeight: 32,
+            minHeight: 44,
             textDecoration: 'none',
           }}
         >
@@ -179,7 +198,7 @@ export function TopBar() {
               padding: 'var(--lf-space-1) var(--lf-space-2)',
               borderRadius: 'var(--lf-radius-sm)',
               cursor: 'pointer',
-              minHeight: 32,
+              minHeight: 44,
             }}
           >
             Wyjdź

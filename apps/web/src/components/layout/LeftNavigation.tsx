@@ -1,10 +1,12 @@
 'use client';
 
+import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { ClubCrest, NavIcon } from '@/components/assets';
 import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
@@ -21,7 +23,7 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 /**
- * Left nav — LFE-UI-EVOLUTION-01B: dyskretny chrome, bez konkurencyjnego CTA, Dev tylko w development.
+ * Left nav — LFE-UI-IMPL-04: icon rail default, soft-lock → SYS-04 modal.
  */
 export function LeftNavigation() {
   const pathname = usePathname();
@@ -35,10 +37,14 @@ export function LeftNavigation() {
     trainingUnlocked,
   };
   const showDev = process.env.NODE_ENV === 'development';
+  const [lockTitle, setLockTitle] = useState<string | null>(null);
+
+  const closeLock = useCallback(() => setLockTitle(null), []);
 
   return (
     <aside
       className="lf-app-shell__nav hidden flex-col border-r md:flex"
+      data-lf-impl="LFE-UI-IMPL-04"
       style={{
         width: navCollapsed ? 'var(--lf-shell-nav-collapsed)' : 'var(--lf-shell-nav)',
         background: 'var(--lf-color-bg-raised)',
@@ -125,24 +131,23 @@ export function LeftNavigation() {
                 paddingInline: navCollapsed ? 'var(--lf-space-2)' : 'var(--lf-space-3)',
                 fontSize: 'var(--lf-type-caption)',
                 justifyContent: navCollapsed ? ('center' as const) : ('space-between' as const),
-                opacity: locked ? 0.55 : 1,
-                cursor: locked ? ('default' as const) : undefined,
               };
 
               if (locked) {
                 return (
-                  <span
+                  <button
                     key={item.id}
-                    title={`${item.label} — odblokuje się wkrótce`}
-                    className="lf-nav-item"
+                    type="button"
+                    title={`${item.label} — niedostępne`}
+                    className="lf-nav-item lf-nav-item--locked"
                     style={itemStyle}
-                    aria-disabled="true"
+                    onClick={() => setLockTitle(item.label)}
                   >
                     <span
                       className="flex items-center truncate font-[family-name:var(--font-ui)]"
                       style={{ gap: 'var(--lf-space-2)' }}
                     >
-                      <NavIcon id={item.id} active={false} size={navCollapsed ? 18 : 16} />
+                      <NavIcon id={item.id} active={false} size={navCollapsed ? 20 : 16} />
                       {navCollapsed ? null : item.label}
                     </span>
                     {!navCollapsed ? (
@@ -156,7 +161,7 @@ export function LeftNavigation() {
                         wkrótce
                       </span>
                     ) : null}
-                  </span>
+                  </button>
                 );
               }
 
@@ -172,7 +177,7 @@ export function LeftNavigation() {
                     className="flex items-center truncate font-[family-name:var(--font-ui)]"
                     style={{ gap: 'var(--lf-space-2)' }}
                   >
-                    <NavIcon id={item.id} active={active} size={navCollapsed ? 18 : 16} />
+                    <NavIcon id={item.id} active={active} size={navCollapsed ? 20 : 16} />
                     {navCollapsed ? null : item.label}
                   </span>
                 </Link>
@@ -221,7 +226,7 @@ export function LeftNavigation() {
                 }}
               >
                 {navCollapsed ? (
-                  <NavIcon id={item.id} active={active} size={18} />
+                  <NavIcon id={item.id} active={active} size={20} />
                 ) : (
                   <span className="flex items-center" style={{ gap: 'var(--lf-space-2)' }}>
                     <NavIcon id={item.id} active={active} size={16} />
@@ -233,6 +238,13 @@ export function LeftNavigation() {
           })}
         </div>
       ) : null}
+
+      <SoftLockModal
+        open={Boolean(lockTitle)}
+        title={lockTitle ? `${lockTitle} niedostępne` : 'Niedostępne'}
+        reason="Ta lokacja odblokuje się wraz z postępem klubu. Reguła pochodzi z resolveNavAccess — nie z UI."
+        onClose={closeLock}
+      />
     </aside>
   );
 }

@@ -18,7 +18,7 @@ export function ShellProvider({
   children: ReactNode;
   showRail?: boolean;
 }) {
-  const [navCollapsed, setNavCollapsed] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(true);
   const toggleNav = useCallback(() => setNavCollapsed((v) => !v), []);
 
   const value = useMemo(

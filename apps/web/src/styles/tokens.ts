@@ -120,8 +120,10 @@ export const grid = {
   gutter: space[3],
   marginApp: space[4],
   shell: {
-    nav: '184px',
-    navCollapsed: '72px',
+    /** Expanded labels — tighter than legacy 184px */
+    nav: '160px',
+    /** HF-SHELL-01 icon rail 72–88px */
+    navCollapsed: '80px',
     rail: '232px',
     /** HF-SHELL-01: 48–56px */
     topbar: '52px',

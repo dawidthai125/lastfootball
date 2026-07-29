@@ -1,4 +1,4 @@
-/* LFE-UI-EVOLUTION-01B — MobileNav primary + Więcej sheet */
+/* LFE-UI-IMPL-04 — Mobile bottom nav (HF-SHELL-02) + Więcej sheet */
 
 .lf-mobile-nav {
   display: flex;
@@ -7,11 +7,13 @@
   justify-content: space-between;
   gap: var(--lf-space-1);
   padding: var(--lf-space-1) var(--lf-space-2);
+  padding-bottom: max(var(--lf-space-1), env(safe-area-inset-bottom, 0px));
   background: var(--lf-color-bg-raised);
-  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
-  box-shadow: inset 0 -1px 0 var(--lf-color-border-gold);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  box-shadow: inset 0 1px 0 var(--lf-color-border-gold);
   z-index: var(--lf-z-chrome);
   min-width: 0;
+  min-height: var(--lf-shell-mobile-nav, 52px);
 }
 
 .lf-mobile-nav__slot {
@@ -25,7 +27,7 @@
   min-height: 44px;
   padding: var(--lf-space-1);
   border: none;
-  border-bottom: var(--lf-border-width-thick) solid transparent;
+  border-top: var(--lf-border-width-thick) solid transparent;
   background: transparent;
   color: var(--lf-color-text-muted);
   font-size: var(--lf-type-label);
@@ -36,7 +38,7 @@
 }
 
 .lf-mobile-nav__slot--active {
-  border-bottom-color: var(--lf-color-gold-base);
+  border-top-color: var(--lf-color-gold-base);
   color: var(--lf-color-gold-base);
   background: var(--lf-color-gold-soft);
 }
@@ -44,7 +46,7 @@
 .lf-mobile-nav__slot--locked {
   opacity: 0.55;
   color: var(--lf-color-text-faint);
-  cursor: default;
+  cursor: pointer;
 }
 
 .lf-mobile-more {
@@ -72,6 +74,7 @@
   background: var(--lf-color-bg-panel);
   border-top: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
   box-shadow: var(--lf-shadow-md);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .lf-mobile-more__header {
@@ -86,7 +89,7 @@
 
 .lf-mobile-more__title {
   margin: 0;
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-family: var(--font-ui), 'Archivo', system-ui, sans-serif;
   font-size: var(--lf-type-h2);
   font-weight: 700;
   color: var(--lf-color-text-primary);
@@ -96,12 +99,12 @@
   border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
   background: transparent;
   color: var(--lf-color-text-muted);
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-family: var(--font-ui), 'Archivo', system-ui, sans-serif;
   font-size: var(--lf-type-caption);
   padding: var(--lf-space-1) var(--lf-space-2);
   border-radius: var(--lf-radius-sm);
   cursor: pointer;
-  min-height: 36px;
+  min-height: 44px;
 }
 
 .lf-mobile-more__body {
@@ -114,7 +117,7 @@
 
 .lf-mobile-more__group-label {
   margin: 0 0 var(--lf-space-2);
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-family: var(--font-ui), 'Archivo', system-ui, sans-serif;
   font-size: var(--lf-type-label);
   font-weight: 600;
   letter-spacing: var(--lf-type-tracking-label);
@@ -135,13 +138,18 @@
   display: flex;
   align-items: center;
   gap: var(--lf-space-2);
-  min-height: 40px;
+  width: 100%;
+  min-height: 44px;
   padding: var(--lf-space-2);
   color: var(--lf-color-text-secondary);
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-family: var(--font-body), 'Source Sans 3', system-ui, sans-serif;
   font-size: var(--lf-type-caption);
   text-decoration: none;
   border-radius: var(--lf-radius-sm);
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
 }
 
 .lf-mobile-more__item--active {

@@ -86,10 +86,11 @@
 
   --lf-grid-gutter: 12px;
   --lf-grid-margin: 16px;
-  --lf-shell-nav: 184px;
-  --lf-shell-nav-collapsed: 72px;
+  --lf-shell-nav: 160px;
+  --lf-shell-nav-collapsed: 80px;
   --lf-shell-rail: 232px;
   --lf-shell-topbar: 52px;
+  --lf-shell-mobile-nav: 52px;
 
   --lf-overlay-panel-width: 400px;
   --lf-overlay-modal-width: 560px;
@@ -154,7 +155,7 @@ body {
 body {
   background: var(--lf-color-bg-base);
   color: var(--lf-color-text-secondary);
-  font-family: var(--font-body), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-family: var(--font-body), 'Source Sans 3', ui-sans-serif, sans-serif;
   font-size: var(--lf-type-body);
   line-height: 1.35;
   -webkit-font-smoothing: antialiased;
@@ -269,7 +270,7 @@ textarea {
 }
 
 .lf-chrome-metric__label {
-  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-family: var(--font-ui), 'Archivo', ui-sans-serif, sans-serif;
   font-size: var(--lf-type-label);
   font-weight: 600;
   letter-spacing: var(--lf-type-tracking-label);
@@ -279,11 +280,11 @@ textarea {
 }
 
 .lf-chrome-metric__value {
-  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-family: var(--font-ui), 'Archivo', ui-sans-serif, sans-serif;
   font-size: var(--lf-type-caption);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--lf-color-text-primary);
+  color: var(--lf-color-text-muted);
   line-height: 1.2;
 }
 
@@ -315,7 +316,7 @@ textarea {
 
 .lf-section-shell__title {
   margin: 0;
-  font-family: var(--font-ui), 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  font-family: var(--font-ui), 'Archivo', ui-sans-serif, sans-serif;
   font-size: var(--lf-type-label);
   font-weight: 600;
   letter-spacing: var(--lf-type-tracking-label);
@@ -327,8 +328,8 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 32px;
-  border-left: var(--lf-border-width-thick) solid transparent;
+  min-height: 40px;
+  border-left: 2px solid transparent;
   transition:
     background var(--lf-motion-fast) var(--lf-motion-easing),
     color var(--lf-motion-fast) var(--lf-motion-easing),
@@ -349,6 +350,109 @@ textarea {
 .lf-nav-item--active:hover {
   background: var(--lf-color-gold-soft);
   color: var(--lf-color-text-primary);
+}
+
+.lf-nav-item--locked {
+  opacity: 0.55;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+/* Soft-lock modal SYS-04 */
+.lf-slm {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lf-z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .lf-slm {
+    align-items: center;
+  }
+}
+
+.lf-slm__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: var(--lf-color-overlay-scrim);
+  cursor: pointer;
+}
+
+.lf-slm__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 28rem);
+  margin: var(--lf-space-3);
+  padding: var(--lf-space-5);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-color-bg-panel);
+  border: 1px solid var(--lf-color-border-subtle);
+  box-shadow: var(--lf-shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+}
+
+.lf-slm__title {
+  margin: 0;
+  font-family: var(--font-ui), 'Archivo', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-h1);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-slm__body {
+  margin: 0;
+  font-family: var(--font-body), 'Source Sans 3', ui-sans-serif, sans-serif;
+  font-size: var(--lf-type-body);
+  line-height: 1.45;
+  color: var(--lf-color-text-muted);
+}
+
+.lf-slm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-3);
+  margin-top: var(--lf-space-2);
+}
+
+.lf-slm__hub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--lf-space-4);
+  border-radius: var(--lf-radius-md);
+  border: 1px solid var(--lf-color-border-subtle);
+  color: var(--lf-color-text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--lf-type-body);
+}
+
+.lf-slm__hub:hover {
+  background: var(--lf-color-bg-hover);
+}
+
+.lf-slm__close {
+  min-height: 44px;
+  padding: 0 var(--lf-space-3);
+  border: none;
+  background: transparent;
+  color: var(--lf-color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-size: var(--lf-type-caption);
 }
 
 .lf-grid {

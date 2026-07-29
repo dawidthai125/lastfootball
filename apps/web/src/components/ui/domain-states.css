@@ -125,15 +125,15 @@
   min-height: 44px;
   padding: var(--lf-space-3) var(--lf-space-4);
   border-radius: var(--lf-radius-md);
-  border: 1px solid var(--lf-color-border-gold);
-  color: var(--lf-color-text-gold);
+  border: 1px solid var(--lf-color-border-subtle);
+  color: var(--lf-color-text-secondary);
   text-decoration: none;
   font-weight: 600;
   font-size: var(--lf-type-body);
 }
 
 .lf-sl__hub:hover {
-  background: color-mix(in srgb, var(--lf-color-gold-base) 12%, transparent);
+  background: var(--lf-color-bg-hover);
 }
 
 .lf-sl__soft {

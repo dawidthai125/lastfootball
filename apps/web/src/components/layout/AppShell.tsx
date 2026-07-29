@@ -38,11 +38,10 @@ function ShellFrame({ children }: { children: ReactNode }) {
   return (
     <div
       className="lf-app-shell"
-      data-lf-impl={hideMatchChrome ? 'LFE-UI-IMPL-02' : 'LFE-UI-IMPL-01'}
+      data-lf-impl={hideMatchChrome ? 'LFE-UI-IMPL-02' : 'LFE-UI-IMPL-04'}
       data-match-path={hideMatchChrome ? 'immersive' : undefined}
     >
       {hideMatchChrome ? null : <TopBar />}
-      {hideMatchChrome ? null : <MobileNav />}
       <div className={bodyClass}>
         {hideMatchChrome ? null : <LeftNavigation />}
         <main className={mainClass}>{children}</main>
@@ -52,6 +51,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
           </div>
         ) : null}
       </div>
+      {hideMatchChrome ? null : <MobileNav />}
       <OverlayRoot />
     </div>
   );

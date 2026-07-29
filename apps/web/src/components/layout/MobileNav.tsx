@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useId, useState } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavIcon } from '@/components/assets';
 import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { NAV_GROUPS, type NavItem } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
@@ -44,8 +45,7 @@ function findNavItem(id: string): NavItem | undefined {
 }
 
 /**
- * Mobile nav — LFE-UI-EVOLUTION-02 variant A:
- * Hub · Trening · Kadra · Transfery · Więcej (Terminarz/Mecz w Więcej).
+ * Mobile bottom nav — LFE-UI-IMPL-04 / HF-SHELL-02 Variant A.
  */
 export function MobileNav() {
   const pathname = usePathname();
@@ -58,7 +58,9 @@ export function MobileNav() {
     trainingUnlocked,
   };
   const [moreOpen, setMoreOpen] = useState(false);
+  const [lockTitle, setLockTitle] = useState<string | null>(null);
   const titleId = useId();
+  const closeLock = useCallback(() => setLockTitle(null), []);
 
   useEffect(() => {
     setMoreOpen(false);
@@ -89,7 +91,11 @@ export function MobileNav() {
 
   return (
     <>
-      <nav className="lf-mobile-nav md:hidden" aria-label="Menu mobilne">
+      <nav
+        className="lf-mobile-nav md:hidden"
+        aria-label="Menu mobilne"
+        data-lf-impl="LFE-UI-IMPL-04"
+      >
         {primaryItems.map((item) => {
           const active = isActive(pathname, item.href);
           const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
@@ -104,21 +110,22 @@ export function MobileNav() {
 
           if (locked) {
             return (
-              <span
+              <button
                 key={item.id}
+                type="button"
                 className={className}
-                title={`${item.label} — wkrótce`}
-                aria-disabled="true"
+                title={`${item.label} — niedostępne`}
+                onClick={() => setLockTitle(item.label)}
               >
-                <NavIcon id={item.id} active={false} size={14} />
+                <NavIcon id={item.id} active={false} size={16} />
                 <span className="font-[family-name:var(--font-ui)]">{label}</span>
-              </span>
+              </button>
             );
           }
 
           return (
             <Link key={item.id} href={item.href} className={className}>
-              <NavIcon id={item.id} active={active} size={14} />
+              <NavIcon id={item.id} active={active} size={16} />
               <span className="font-[family-name:var(--font-ui)]">{label}</span>
             </Link>
           );
@@ -131,6 +138,7 @@ export function MobileNav() {
           aria-controls={moreOpen ? titleId : undefined}
           onClick={() => setMoreOpen((v) => !v)}
         >
+          <NavIcon id="settings" active={moreOpen} size={16} />
           <span className="font-[family-name:var(--font-ui)] font-semibold">Więcej</span>
         </button>
       </nav>
@@ -172,14 +180,19 @@ export function MobileNav() {
                       if (locked) {
                         return (
                           <li key={item.id}>
-                            <span
+                            <button
+                              type="button"
                               className="lf-mobile-more__item lf-mobile-more__item--locked"
-                              title={`${item.label} — wkrótce`}
+                              title={`${item.label} — niedostępne`}
+                              onClick={() => {
+                                setMoreOpen(false);
+                                setLockTitle(item.label);
+                              }}
                             >
-                              <NavIcon id={item.id} active={false} size={14} />
+                              <NavIcon id={item.id} active={false} size={16} />
                               {item.label}
                               <span className="lf-mobile-more__soon">wkrótce</span>
-                            </span>
+                            </button>
                           </li>
                         );
                       }
@@ -190,7 +203,7 @@ export function MobileNav() {
                             className={`lf-mobile-more__item ${active ? 'lf-mobile-more__item--active' : ''}`}
                             onClick={() => setMoreOpen(false)}
                           >
-                            <NavIcon id={item.id} active={active} size={14} />
+                            <NavIcon id={item.id} active={active} size={16} />
                             {item.label}
                           </Link>
                         </li>
@@ -203,6 +216,13 @@ export function MobileNav() {
           </div>
         </div>
       ) : null}
+
+      <SoftLockModal
+        open={Boolean(lockTitle)}
+        title={lockTitle ? `${lockTitle} niedostępne` : 'Niedostępne'}
+        reason="Ta lokacja odblokuje się wraz z postępem klubu. Reguła pochodzi z resolveNavAccess — nie z UI."
+        onClose={closeLock}
+      />
     </>
   );
 }
