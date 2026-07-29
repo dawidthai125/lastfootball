@@ -16,14 +16,14 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN · GDD-18 CLOSED** (Domain: LFE-PLAYERS-02 · Presentation: LFE-UI-MOTION-01)
+**PRODUCTION VERIFIED · GREEN · GDD-19 CLOSED** (Domain: LFE-PLAYERS-02 · Presentation: LFE-UI-MOTION-01)
 
 |                         |                                                               |
 | ----------------------- | ------------------------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)     |
 | **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)  |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| **Documentation tip**   | **`4dedd71`** — GDD-18 Ranking Thin (sezonowy ranking klubów) |
+| **Documentation tip**   | **`fcbbe3c`** — GDD-19 Osiągnięcia Thin (kamienie / historia) |
 | **Prod**                | https://lastfootball.vercel.app                               |
 
 | Tor               | Stan                                                                                                                      |
@@ -31,12 +31,12 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | Platform          | Onboarding · First Match · Hub SEASON · League · Finance · **Players Dev (02)** · Transfers (01…08) · Training Depth (02) |
 | UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                       |
 | Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                       |
-| Design            | GDD-01…**18** (Thin) · §26 CLOSED · World Art CLOSED · next: **GDD-19** READY FOR AUDIT                                   |
+| Design            | GDD-01…**19** (Thin) · §26 CLOSED · World Art CLOSED · next: **GDD-21** READY FOR AUDIT                                   |
 | Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                                       |
 
 ## W trakcie
 
-Brak otwartego EPIC. **GDD-18** CLOSED (content `84b7f4d` · tip CLOSE `4dedd71`) · **LFE-UI-MOTION-01** CLOSED · **GDD-17** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
+Brak otwartego EPIC. **GDD-19** CLOSED (`fcbbe3c`) · **GDD-18** CLOSED · **LFE-UI-MOTION-01** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
 
 ## Operacyjne
 
@@ -45,7 +45,7 @@ Brak otwartego EPIC. **GDD-18** CLOSED (content `84b7f4d` · tip CLOSE `4dedd71`
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-**Rekomendacja:** **GDD-19** (§19 Osiągnięcia) — **READY FOR AUDIT** · full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 (kod).
+**Rekomendacja:** **GDD-21** (§21 Wiadomości) — **READY FOR AUDIT** · full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 / LFE-ACHIEVEMENTS-01 (kod).
 
 ## Decyzje
 
@@ -53,4 +53,4 @@ Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](.
 
 ## Last updated
 
-2026-07-30 — GDD-18 CLOSE
+2026-07-30 — GDD-19 CLOSE

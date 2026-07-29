@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-19 Osiągnięcia Thin** (docs filled) + **GDD-§26A** + **GDD-§26B** ukończone. §3–§19 (Thin) + §20 + §23 + **§26**. Następny szkielet = **GDD-17+** (§21–22 / §24+; kolejność = Owner).
+GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-19 Osiągnięcia Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§19 (Thin) + §20 + §23 + **§26**. Następny = **GDD-21** (§21 Wiadomości) — **READY FOR AUDIT**.
 
 ## Completed
 
@@ -30,7 +30,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED                             |
 | GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED                |
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
-| **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · docs filled                |
+| **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `fcbbe3c` |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 
@@ -42,9 +42,10 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Planned
 
-| Stage   | Zakres                                                 |
-| ------- | ------------------------------------------------------ |
-| GDD-17+ | Pozostałe szkielety (§21–22 / §24+; kolejność = Owner) |
+| Stage      | Zakres                                              |
+| ---------- | --------------------------------------------------- |
+| **GDD-21** | **§21 Wiadomości** — **READY FOR AUDIT**            |
+| GDD-17+    | Pozostałe szkielety (§22 / §24+; kolejność = Owner) |
 
 ## Future
 
@@ -70,4 +71,4 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Last updated
 
-2026-07-30 — GDD-19 Osiągnięcia Thin
+2026-07-30 — GDD-19 Osiągnięcia Thin CLOSED · next GDD-21 READY FOR AUDIT

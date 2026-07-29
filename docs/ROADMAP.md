@@ -10,7 +10,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Domain feature baseline:** **`cd222ba`** — LFE-PLAYERS-02 CLOSED (Player Development Thin).  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Development (PLAYERS-02)** · **GDD-16** · **GDD-17** · **GDD-18** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Development (PLAYERS-02)** · **GDD-16** · **GDD-17** · **GDD-18** · **GDD-19** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -29,6 +29,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 | **GDD-16**                                             | **CLOSED** · §16 Akademia Thin A (Intake + Promote) · docs `4805f7e`                                          |
 | **GDD-17**                                             | **CLOSED** · §17 Skauting Information Thin B · docs `2595cc9` · CI GREEN · PRODUCTION VERIFIED                |
 | **GDD-18**                                             | **CLOSED** · §18 Ranking Thin (sezonowy ranking klubów) · tip `4dedd71` · CI GREEN · PRODUCTION VERIFIED      |
+| **GDD-19**                                             | **CLOSED** · §19 Osiągnięcia Thin (kamienie / historia) · tip `fcbbe3c` · CI GREEN · PRODUCTION VERIFIED      |
 | **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs)                                                                       |
 | **GDD-§26B**                                           | **CLOSED** · `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                                  |
 | **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                                                                       |
@@ -81,16 +82,17 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 ## PLANNED ⬜
 
-| Item                                               | Zależność                        |
-| -------------------------------------------------- | -------------------------------- |
-| **GDD-19** (§19 Osiągnięcia)                       | **READY FOR AUDIT**              |
-| GDD-17+ (pozostałe §20+ już filled; §21–22 / §24+) | Owner GO (kolejność)             |
-| LFE-ACADEMY-01 (kod)                               | po GDD-16 · osobny AUDIT         |
-| LFE-SCOUTING-01 (kod)                              | po GDD-17 · osobny AUDIT         |
-| LFE-RANKING-01 (kod)                               | po GDD-18 · osobny AUDIT         |
-| Full 22-fixture season (opt.)                      | po LEAGUE-03 · GDD §10 home+away |
-| Zawężenie LFE PUBLIC exports                       | chore                            |
-| Ratings v2                                         | bogatsze Player Match Data       |
+| Item                           | Zależność                        |
+| ------------------------------ | -------------------------------- |
+| **GDD-21** (§21 Wiadomości)    | **READY FOR AUDIT**              |
+| GDD-17+ (pozostałe §22 / §24+) | Owner GO (kolejność)             |
+| LFE-ACADEMY-01 (kod)           | po GDD-16 · osobny AUDIT         |
+| LFE-SCOUTING-01 (kod)          | po GDD-17 · osobny AUDIT         |
+| LFE-RANKING-01 (kod)           | po GDD-18 · osobny AUDIT         |
+| LFE-ACHIEVEMENTS-01 (kod)      | po GDD-19 · osobny AUDIT         |
+| Full 22-fixture season (opt.)  | po LEAGUE-03 · GDD §10 home+away |
+| Zawężenie LFE PUBLIC exports   | chore                            |
+| Ratings v2                     | bogatsze Player Match Data       |
 
 ## FUTURE
 
@@ -106,9 +108,9 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 ## Next Recommended EPIC
 
-**GDD-19** (§19 Osiągnięcia) — **READY FOR AUDIT**.  
-Alternatywy: full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 (kod) · Ratings v2.  
-Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documentation tip: GDD-18 `4dedd71`.
+**GDD-21** (§21 Wiadomości) — **READY FOR AUDIT**.  
+Alternatywy: full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 / LFE-ACHIEVEMENTS-01 (kod) · Ratings v2.  
+Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documentation tip: GDD-19 `fcbbe3c`.
 
 ## Decyzje roadmapy
 
@@ -132,6 +134,7 @@ Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documen
 - Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill ≤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
 - Match development = PRIMARY growth · RPC `apply_match_development` · K_MATCH=5 · starters only (D22 / PLAYERS-02).
 - **§18 Ranking Thin** = sezonowy ranking klubów (docs); ≠ §6 / §10 / §17; placeholder `/rankings` ≠ SSOT; kod = Future.
+- **§19 Osiągnięcia Thin** = kamienie / historia (docs); ≠ §6 / §18; §20 hook ≠ katalog; placeholder `/achievements` ≠ SSOT; kod = Future.
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
 - **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); nie zmienia Domain tip PLAYERS-02.
 
@@ -141,4 +144,4 @@ Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documen
 
 ## Last updated
 
-2026-07-30 — GDD-18 CLOSED · Documentation tip `4dedd71` · next **GDD-19 READY FOR AUDIT**
+2026-07-30 — GDD-19 CLOSED · Documentation tip `fcbbe3c` · next **GDD-21 READY FOR AUDIT**

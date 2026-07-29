@@ -18,8 +18,8 @@ git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline cd222ba            # Domain feature baseline PLAYERS-02
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
-git log -1 --oneline 4dedd71            # Documentation tip GDD-18 Ranking Thin
-git log -1 --oneline 84b7f4d            # GDD-18 content (pre-prettier)
+git log -1 --oneline fcbbe3c            # Documentation tip GDD-19 Achievements Thin
+git log -1 --oneline 4dedd71            # Prior docs tip GDD-18 CLOSE
 ```
 
 ---
@@ -38,11 +38,11 @@ git log -1 --oneline 84b7f4d            # GDD-18 content (pre-prettier)
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `4dedd71` — **GDD-18** Ranking Thin (sezonowy ranking klubów)         |
+| **Documentation tip**       | `fcbbe3c` — **GDD-19** Osiągnięcia Thin (kamienie / historia)         |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                       |
 
 Prior presentation AUTH-UX (`9dc834a`) pozostaje w historii; tip prezentacji = MOTION-01.  
-GDD-18 content = `84b7f4d`; prettier = `a8236df`; Documentation tip (CLOSE sync) = `4dedd71`.
+Prior docs tip GDD-18 CLOSE = `4dedd71`. GDD-19 content / tip = `fcbbe3c`.
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -87,6 +87,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Match development | RPC `apply_match_development` · K_MATCH=5                              |
 | XI Gate           | `validateStartingXi` / `resolveStartingXi`                             |
 | Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT      |
+| Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT          |
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css` |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                              |
 | Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                               |
@@ -99,8 +100,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Akademii** · **kod Skautingu** · **kod Rankingu** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full).
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Akademii** · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full).
 
 ## Last updated
 
-2026-07-30 — GDD-18 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `4dedd71` · UI P0 `54d0724`)
+2026-07-30 — GDD-19 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `fcbbe3c` · UI P0 `54d0724`)
