@@ -101,7 +101,7 @@ function LocationHero({ session }: { session: HubSession }) {
   const matchday = session === 'matchday';
   return (
     <div
-      className={`lf-hub__hero${matchday ? ' lf-hub__hero--matchday' : ''}`}
+      className={matchday ? 'lf-hub__hero lf-hub__hero--matchday' : 'lf-hub__hero'}
       data-wa="HERO-001"
       aria-hidden
     >
