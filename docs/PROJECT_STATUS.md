@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)     |
 | **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)  |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| **Documentation tip**   | **`fcbbe3c`** — GDD-19 Osiągnięcia Thin (kamienie / historia) |
+| **Documentation tip**   | **`2c619ca`** — GDD-19 Osiągnięcia Thin (kamienie / historia) |
 | **Prod**                | https://lastfootball.vercel.app                               |
 
 | Tor               | Stan                                                                                                                      |
@@ -36,7 +36,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## W trakcie
 
-Brak otwartego EPIC. **GDD-19** CLOSED (`fcbbe3c`) · **GDD-18** CLOSED · **LFE-UI-MOTION-01** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
+Brak otwartego EPIC. **GDD-19** CLOSED (content `fcbbe3c` · tip CLOSE `2c619ca`) · **GDD-18** CLOSED · **LFE-UI-MOTION-01** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
 
 ## Operacyjne
 

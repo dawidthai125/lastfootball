@@ -30,7 +30,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED                             |
 | GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED                |
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
-| **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `fcbbe3c` |
+| **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `2c619ca` |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 

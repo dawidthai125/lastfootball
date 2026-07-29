@@ -10,7 +10,7 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16 Akademia Thin A CLOSED** · **GDD-17 
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `fcbbe3c` (GDD-19) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `2c619ca` (GDD-19) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
 Następny: **GDD-21** (§21 Wiadomości) — **READY FOR AUDIT**.
 

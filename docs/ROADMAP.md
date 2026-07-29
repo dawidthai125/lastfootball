@@ -29,7 +29,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 | **GDD-16**                                             | **CLOSED** · §16 Akademia Thin A (Intake + Promote) · docs `4805f7e`                                          |
 | **GDD-17**                                             | **CLOSED** · §17 Skauting Information Thin B · docs `2595cc9` · CI GREEN · PRODUCTION VERIFIED                |
 | **GDD-18**                                             | **CLOSED** · §18 Ranking Thin (sezonowy ranking klubów) · tip `4dedd71` · CI GREEN · PRODUCTION VERIFIED      |
-| **GDD-19**                                             | **CLOSED** · §19 Osiągnięcia Thin (kamienie / historia) · tip `fcbbe3c` · CI GREEN · PRODUCTION VERIFIED      |
+| **GDD-19**                                             | **CLOSED** · §19 Osiągnięcia Thin (kamienie / historia) · tip `2c619ca` · CI GREEN · PRODUCTION VERIFIED      |
 | **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs)                                                                       |
 | **GDD-§26B**                                           | **CLOSED** · `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                                  |
 | **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                                                                       |
@@ -110,7 +110,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 **GDD-21** (§21 Wiadomości) — **READY FOR AUDIT**.  
 Alternatywy: full 22 fixtures · transfers hardening · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 / LFE-ACHIEVEMENTS-01 (kod) · Ratings v2.  
-Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documentation tip: GDD-19 `fcbbe3c`.
+Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documentation tip: GDD-19 `2c619ca`.
 
 ## Decyzje roadmapy
 
@@ -144,4 +144,4 @@ Domain tip: PLAYERS-02 `cd222ba`; Presentation tip: MOTION-01 `9fd14fc`; Documen
 
 ## Last updated
 
-2026-07-30 — GDD-19 CLOSED · Documentation tip `fcbbe3c` · next **GDD-21 READY FOR AUDIT**
+2026-07-30 — GDD-19 CLOSED · Documentation tip `2c619ca` · next **GDD-21 READY FOR AUDIT**

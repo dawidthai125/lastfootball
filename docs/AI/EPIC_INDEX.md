@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED  |
 | **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED          |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED        |
-| **Documentation tip**   | **`fcbbe3c`** — GDD-19 Osiągnięcia Thin CLOSED |
+| **Documentation tip**   | **`2c619ca`** — GDD-19 Osiągnięcia Thin CLOSED |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -68,7 +68,7 @@ GDD-01…19 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **GDD-16**                | Akademia Thin A (Intake + Promote) · docs `4805f7e`                                                           |
 | **GDD-17**                | Skauting Information Thin B · docs `2595cc9`                                                                  |
 | **GDD-18**                | Ranking Thin (sezonowy ranking klubów) · tip `4dedd71`                                                        |
-| **GDD-19**                | Osiągnięcia Thin (kamienie / historia) · tip `fcbbe3c`                                                        |
+| **GDD-19**                | Osiągnięcia Thin (kamienie / historia) · tip `2c619ca`                                                        |
 | **LFE-UI-MOTION-01**      | Presentation motion Thin · Hub/Match · Guide §8 · `9fd14fc`                                                   |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 

@@ -18,7 +18,8 @@ git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline cd222ba            # Domain feature baseline PLAYERS-02
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
-git log -1 --oneline fcbbe3c            # Documentation tip GDD-19 Achievements Thin
+git log -1 --oneline 2c619ca            # Documentation tip GDD-19 CLOSE sync
+git log -1 --oneline fcbbe3c            # GDD-19 content (achievements thin)
 git log -1 --oneline 4dedd71            # Prior docs tip GDD-18 CLOSE
 ```
 
@@ -38,11 +39,11 @@ git log -1 --oneline 4dedd71            # Prior docs tip GDD-18 CLOSE
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `fcbbe3c` — **GDD-19** Osiągnięcia Thin (kamienie / historia)         |
+| **Documentation tip**       | `2c619ca` — **GDD-19** Osiągnięcia Thin (kamienie / historia)         |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                       |
 
 Prior presentation AUTH-UX (`9dc834a`) pozostaje w historii; tip prezentacji = MOTION-01.  
-Prior docs tip GDD-18 CLOSE = `4dedd71`. GDD-19 content / tip = `fcbbe3c`.
+Prior docs tip GDD-18 CLOSE = `4dedd71`. GDD-19 content = `fcbbe3c`; Documentation tip (CLOSE sync) = `2c619ca`.
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -104,4 +105,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — GDD-19 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `fcbbe3c` · UI P0 `54d0724`)
+2026-07-30 — GDD-19 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `2c619ca` · UI P0 `54d0724`)
