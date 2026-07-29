@@ -40,8 +40,9 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Feature baseline (skrót)
 
-Patrz **wyłącznie** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — nie kopiuj hashy tutaj na sztywno.
+Patrz **wyłącznie** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — Production Baseline · Domain · tip.  
+Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01
+2026-07-29 — LFE-DOCS-BASELINE-01

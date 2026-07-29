@@ -3,17 +3,17 @@
 ## Cel
 
 Szybki health check połączeń (GitHub / Vercel / Supabase).  
-**Feature baseline:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — nie utrzymuj tu osobnego hasha.
+**Production Baseline:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — nie utrzymuj tu osobnego hasha.
 
 ## GitHub
 
-| Check            | Result                                                 |
-| ---------------- | ------------------------------------------------------ |
-| Remote           | `https://github.com/dawidthai125/lastfootball.git`     |
-| Branch           | `main`                                                 |
-| Tip              | `git log -1`                                           |
-| Feature baseline | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)   |
-| CI               | Format · Typecheck · Lint · Test · Build · Secret scan |
+| Check               | Result                                                 |
+| ------------------- | ------------------------------------------------------ |
+| Remote              | `https://github.com/dawidthai125/lastfootball.git`     |
+| Branch              | `main`                                                 |
+| Tip                 | `git log -1`                                           |
+| Production Baseline | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)   |
+| CI                  | Format · Typecheck · Lint · Test · Build · Secret scan |
 
 ## Vercel / Supabase
 
@@ -25,4 +25,4 @@ Szybki health check połączeń (GitHub / Vercel / Supabase).
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-29 — LFE-DOCS-BASELINE-01

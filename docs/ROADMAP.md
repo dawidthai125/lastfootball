@@ -6,9 +6,10 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08 CLOSED).  
-UI Evolution 01–02 · DOCS-UX-03 CLOSED (docs tip — patrz [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)).  
-GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Live H2H · Pending · Counter · Vercel Production.
+**Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
+**Domain feature baseline:** **`9b1c575`** — LFE-TRANSFERS-08 CLOSED (bez zmian domenowych).  
+Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md).  
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Office UI P0 · Vercel Production.
 
 ---
 
@@ -49,6 +50,17 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Li
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation) |
 | **LFE-UI-EVOLUTION-02**                                | **CLOSED** · daily manager loop · Kadra SSOT · Mobile Variant A (presentation)                             |
 | **LFE-DOCS-UX-03**                                     | **CLOSED** · UI Presentation Contract (Guide §16) · Patterns · HUB sync · postmortem REFERENCE             |
+| **LFE-ART / WORLD-ART / HIFI / PROTO / PLAYTEST**      | **CLOSED** · Visual DNA · Style Lock · Hi-Fi · Proto · Playtest → GO impl                                  |
+| **LFE-DOCS-SYNC-01**                                   | **CLOSED** · design SSOT + world-art verification w repo                                                   |
+| **LFE-UI-IMPL-01**                                     | **CLOSED** · Shell + Hub Night Pitch Office · `282cfc9`                                                    |
+| **LFE-UI-IMPL-02**                                     | **CLOSED** · Match Path Tunnel→Post · `769ce4a`                                                            |
+| **LFE-UI-IMPL-03**                                     | **CLOSED** · Core Domains P0 + shared states · `d850f0e`                                                   |
+| **LFE-UI-IMPL-04**                                     | **CLOSED** · Shell polish · nav · soft-lock · `d9bb5b6`                                                    |
+| **LFE-UI-IMPL-05**                                     | **CLOSED** · Match XI / skład · `47340fe`                                                                  |
+| **LFE-CONTENT-PASS-01**                                | **CLOSED** · `UI_COPY` microcopy · `50ddf1a`                                                               |
+| **LFE-UI-IMPL-06A**                                    | **CLOSED** · Desktop Hub layout · nav tooltips · `00b2c2a`                                                 |
+| **LFE-UI-IMPL-06**                                     | **CLOSED** · Live → Post fidelity · **Production Baseline** `54d0724`                                      |
+| **LFE-DOCS-BASELINE-01**                               | **CLOSED** · sync status / baseline / roadmap po UI P0                                                     |
 
 ## IN PROGRESS 🔄
 
@@ -61,6 +73,7 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Li
 | Item                             | Zależność                        |
 | -------------------------------- | -------------------------------- |
 | GDD-16+                          | Owner GO (docs)                  |
+| LFE-UI-MOTION-01                 | po UI P0 (opcjonalny polish)     |
 | Training depth (skill / XI gate) | po TRAINING-01 (D21 poza)        |
 | Full 22-fixture season (opt.)    | po LEAGUE-03 · GDD §10 home+away |
 | Zawężenie LFE PUBLIC exports     | chore                            |
@@ -79,8 +92,8 @@ GDD-§26A/B · LEAGUE-03 · E1 · N1 · Incoming · Listing · Seller nego · Li
 
 ## Next Recommended EPIC
 
-**Owner wybiera.** Kandydaci: GDD-16+ · Training depth · full 22 fixtures.  
-Uzasadnienie: rynek Thin (Live Instant + Pending + 1× Counter + listing + nego) na produkcji.
+**Owner wybiera.** Kandydaci: GDD-16+ · Training depth · full 22 fixtures · LFE-UI-MOTION-01.  
+Uzasadnienie: UI P0 + rynek Thin na produkcji; Domain baseline TRANSFERS-08 bez zmian.
 
 ## Decyzje roadmapy
 
@@ -103,11 +116,12 @@ Uzasadnienie: rynek Thin (Live Instant + Pending + 1× Counter + listing + nego)
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
 - Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
+- **UI P0** = presentation Night Pitch Office (IMPL-01…06); nie zmienia Domain baseline.
 
 ## Powiązania
 
-[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (status kanoniczny) · [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) · [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
+[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (status kanoniczny) · [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) · [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · [`implementation/`](./implementation/)
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01 · UI Evolution + DOCS-UX-03 w DONE
+2026-07-29 — LFE-DOCS-BASELINE-01 · UI P0 CLOSED · Production Baseline `54d0724`

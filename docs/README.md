@@ -6,17 +6,19 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ## Aktualny stan
 
-| Warstwa               | Stan                                                                                     |
-| --------------------- | ---------------------------------------------------------------------------------------- |
-| **Feature baseline**  | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `9b1c575` (LFE-TRANSFERS-08)      |
-| **Documentation tip** | `4a0b3ee` — LFE-DOCS-UX-03 (nie zmienia feature baseline)                                |
-| **Status projektu**   | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                        |
-| Production            | https://lastfootball.vercel.app                                                          |
-| Platform              | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training |
-| LFE / Match UI        | EPIC-1…7 · Live Bridge · Canvas · Replay · Post Match · Ratings                          |
-| GDD                   | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                           |
-| UI Presentation       | Guide §16 Contract · UI Evolution 01/02 · postmortem REFERENCE                           |
-| Infra                 | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                      |
+| Warstwa                     | Stan                                                                                      |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0) |
+| **Domain feature baseline** | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)                                       |
+| **Documentation tip**       | LFE-DOCS-BASELINE-01 (nie zastępuje Production / Domain)                                  |
+| **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                         |
+| Production                  | https://lastfootball.vercel.app                                                           |
+| Platform                    | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training  |
+| LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                           |
+| GDD                         | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                            |
+| UI Presentation             | Guide §16 · **UI P0 CLOSED** (IMPL-01…06) · Night Pitch Office                            |
+| Impl notes                  | [`implementation/`](./implementation/)                                                    |
+| Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                       |
 
 ## Jak czytać (AI)
 
@@ -90,4 +92,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01
+2026-07-29 — LFE-DOCS-BASELINE-01

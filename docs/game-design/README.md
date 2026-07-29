@@ -6,9 +6,11 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide §16) po UI Evolution 01–02 / DOCS-UX-03. **Pozostałe rozdziały = szkielet**.
+Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
 
-Ścieżka UI Night Pitch Office: World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS** · implementacja **IMPL-01** (`282cfc9`) + **IMPL-02** (`769ce4a`) **PASS**. SSOT projektowe zsynchronizowane w **LFE-DOCS-SYNC-01**. Następny etap UI: **LFE-UI-IMPL-03** (Owner GO). GDD-16+ osobno (Owner GO).
+**UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
+**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+GDD-16+ osobno (Owner GO).
 
 ## Opis działania
 
@@ -107,4 +109,4 @@ Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23
 
 ## Last updated
 
-2026-07-29 — LFE-DOCS-SYNC-01 (SSOT design + verification w repo · IMPL-01/02 PASS)
+2026-07-29 — LFE-DOCS-BASELINE-01 (UI P0 CLOSED · Production Baseline `54d0724`)

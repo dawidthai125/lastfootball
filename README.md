@@ -11,12 +11,12 @@ Kontrakt silnika: [`docs/lfe/LFE_ARCHITECTURE_FREEZE.md`](docs/lfe/LFE_ARCHITECT
 > **Nowy ChatGPT / Cursor:** [`AGENTS.md`](AGENTS.md) → [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/START_HERE.md`](docs/AI/START_HERE.md). Nie potrzebujesz historii czatu.
 
 **Production:** https://lastfootball.vercel.app  
-**Feature baseline:** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) (LFE-TRANSFERS-08 · `9b1c575`)  
-**Status:** [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) · UI: Guide §16 Presentation Contract
+**Production Baseline:** [`docs/AI/CURRENT_BASELINE.md`](docs/AI/CURRENT_BASELINE.md) — UI P0 `54d0724` · Domain TRANSFERS-08 `9b1c575`  
+**Status:** [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) · UI: Guide §16 · Night Pitch Office
 
 ## Stan produktu (skrót)
 
-Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin (Instant + Pending + 1× Counter) · Training Thin · Match Live · UI Evolution 01–02 (decision-first).
+Onboarding · First Match · Hub (`EARLY_CLUB` / `SEASON`) · League · Finance · Players SSOT · Transfers Thin (Instant + Pending + 1× Counter) · Training Thin · Match Path (Tunnel→Live→Post) · **UI P0 CLOSED** (Night Pitch Office).
 
 **Next recommended EPIC:** Owner wybiera — [`docs/ROADMAP.md`](docs/ROADMAP.md).
 

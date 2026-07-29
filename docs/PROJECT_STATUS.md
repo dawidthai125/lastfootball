@@ -10,35 +10,36 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | Feature baseline / docs tip | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                           |
 | Lista EPIC DONE/PLANNED     | [`ROADMAP.md`](./ROADMAP.md)                                                   |
 | Indeks EPIC (skrót AI)      | [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md)                                       |
+| UI P0 implementation        | [`implementation/`](./implementation/)                                         |
 | Onboarding AI               | [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) |
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN**
+**PRODUCTION VERIFIED · GREEN · UI P0 CLOSED**
 
-|                          |                                                                                        |
-| ------------------------ | -------------------------------------------------------------------------------------- |
-| **Ostatni feature EPIC** | **LFE-TRANSFERS-08** (Counter Offers Thin)                                             |
-| **Feature baseline**     | `9b1c575` — szczegóły wyłącznie w [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) |
-| **Documentation tip**    | **LFE-DOCS-UX-03** · `4a0b3ee`                                                         |
-| **Prod**                 | https://lastfootball.vercel.app                                                        |
+|                         |                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)                                   |
+| **Domain feature**      | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych w torze UI)                              |
+| **Documentation tip**   | **LFE-DOCS-BASELINE-01** — szczegóły w [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) |
+| **Prod**                | https://lastfootball.vercel.app                                                             |
 
-| Tor               | Stan                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers (01…08) · Training |
-| UX presentation   | UI Evolution 01–02 CLOSED · Guide §16 Presentation Contract                                       |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post Match                                                   |
-| Design            | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                                    |
-| Infra             | Vercel + Supabase `anoeimngwptucjdugjme`                                                          |
+| Tor               | Stan                                                                                                           |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers (01…08) · Training              |
+| UX presentation   | **UI P0 CLOSED** · Night Pitch Office · Guide §16 · IMPL-01…06 · 06A · CONTENT-PASS-01                         |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive                                               |
+| Design            | GDD-01…15 · §26 CLOSED · World Art CLOSED · Hi-Fi/Proto/Playtest PASS · next: Owner (GDD-16+ / motion / depth) |
+| Infra             | Vercel + Supabase `anoeimngwptucjdugjme`                                                                       |
 
 ## W trakcie
 
-Brak otwartego EPIC produktowego / docs sync po AI-DOCS-SYNC-01.
+Brak otwartego EPIC produktowego po LFE-DOCS-BASELINE-01.
 
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) — Owner wybiera.  
-Kandydat hardening transferów: [`platform/TRANSFER_ARCHITECTURE.md`](./platform/TRANSFER_ARCHITECTURE.md).
+Kandydaci: GDD-16+ · Training depth · full 22 fixtures · LFE-UI-MOTION-01 · hardening transferów ([`platform/TRANSFER_ARCHITECTURE.md`](./platform/TRANSFER_ARCHITECTURE.md)).
 
 ## Decyzje
 
@@ -46,4 +47,4 @@ Indeks: [`AI/DECISIONS.md`](./AI/DECISIONS.md) · pełne: [`DECISIONS.md`](./DEC
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01
+2026-07-29 — LFE-DOCS-BASELINE-01

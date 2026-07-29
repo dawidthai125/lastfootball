@@ -18,7 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-**`9b1c575`** — LFE-TRANSFERS-08 CLOSED · szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
+| Warstwa                 | Hash / EPIC                                   |
+| ----------------------- | --------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
+| **Domain baseline**     | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED       |
+
+Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
 
 ## Platform DONE (skrót)
 
@@ -34,11 +39,11 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Engine / Match UI DONE
 
-LFE EPIC-1…7 · Architecture Freeze · Gameplay · Match AI · Match Engine · Live Bridge · Canvas · Replay · Post Match · Ratings
+LFE EPIC-1…7 · Architecture Freeze · Gameplay · Match AI · Match Engine · Live Bridge · Canvas · Replay · Post Match · Ratings · **Match Path immersive (IMPL-02/06)**
 
 ## Design DONE
 
-GDD-01…15 · §20 · §23 · §26 (liczby Thin)
+GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto · Playtest
 
 ## UI / Docs UX DONE
 
@@ -48,22 +53,29 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin)
 | LFE-UI-EVOLUTION-02       | Daily manager loop · Kadra SSOT · Mobile Variant A                                                            |
 | LFE-UX-POSTMORTEM-01      | Historia (**REFERENCE**) — [`../game-design/LFE-UX-POSTMORTEM-01.md`](../game-design/LFE-UX-POSTMORTEM-01.md) |
 | LFE-DOCS-UX-03            | Presentation Contract w Guide §16 · Patterns · HUB sync                                                       |
+| LFE-DOCS-SYNC-01          | Design SSOT + world-art verification w repo                                                                   |
+| **LFE-UI-IMPL-01…06**     | **Night Pitch Office UI P0** · Shell→Hub→Match→Domains→XI→Content→Hub UX→Live/Post                            |
+| LFE-UI-IMPL-06A           | Desktop Hub layout · nav tooltips                                                                             |
+| LFE-CONTENT-PASS-01       | `UI_COPY` microcopy                                                                                           |
+| LFE-DOCS-BASELINE-01      | Project baseline sync po UI P0                                                                                |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
+Impl notes: [`../implementation/`](../implementation/).  
 Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth, full 22 fixtures, LFE PUBLIC trim.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth, full 22 fixtures, LFE-UI-MOTION-01, LFE PUBLIC trim.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Naming
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`
-- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-UI-EVOLUTION-*`
+- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-UI-EVOLUTION-*`
+- UI impl: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-26 — AI-DOCS-SYNC-01 (ROADMAP zsynchronizowany)
+**ACTIVE** · 2026-07-29 — LFE-DOCS-BASELINE-01

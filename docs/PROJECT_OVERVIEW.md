@@ -22,9 +22,9 @@ Czym jest Last Football, stack i granice fazy (orientacja).
 | ----------------- | ---------------------------------------------------------------------------------- |
 | Produkt           | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                     |
 | Platforma         | Onboarding · First Match · Hub · League · Finance · Players · Transfers · Training |
-| UX                | Decision-first (UI Evolution 01–02) · Presentation Contract Guide §16              |
-| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post Match                              |
-| Prod              | https://lastfootball.vercel.app                                                    |
+| UX                | **UI P0 CLOSED** · Night Pitch Office · Guide §16 · IMPL-01…06                     |
+| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post · Match Path                       |
+| Prod              | https://lastfootball.vercel.app · Baseline `54d0724`                               |
 
 ## Opis działania (orientacja)
 
@@ -46,4 +46,4 @@ Szczegóły „Not on production”: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BAS
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01 (REFERENCE; usunięty stale hash)
+2026-07-29 — LFE-DOCS-BASELINE-01 (REFERENCE; bez hashy poza pointerami do CURRENT_BASELINE)

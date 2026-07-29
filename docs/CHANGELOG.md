@@ -7,7 +7,90 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Aktualny stan
 
-Production feature baseline **`9b1c575`** (LFE-TRANSFERS-08) — tip may be docs after feat.
+**Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
+**Domain feature baseline:** **`9b1c575`** (LFE-TRANSFERS-08) — tip docs może być nowszy.
+
+---
+
+## [2026-07-29] — LFE-DOCS-BASELINE-01 · CLOSED
+
+### Docs
+
+- Sync `PROJECT_STATUS` · `CURRENT_BASELINE` · `ROADMAP` · `implementation/README` po UI P0
+- Oficjalny **Production Baseline** = `54d0724` (IMPL-06); Domain = TRANSFERS-08 bez zmian
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-06 · CLOSED
+
+### Product / UX
+
+- Live → Post fidelity (HF-MCH-04/05/07/08) · responsive stage · HT banner · decision-first Post
+- Production Baseline → **`54d0724`**
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-06A · CLOSED
+
+### Product / UX
+
+- Desktop Hub width · hero · instant nav tooltips · `00b2c2a`
+
+---
+
+## [2026-07-29] — LFE-CONTENT-PASS-01 · CLOSED
+
+### Product / UX
+
+- Shared `UI_COPY` glossary · Kadra ≠ Skład · Hub exit copy · `50ddf1a`
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-05 · CLOSED
+
+### Product / UX
+
+- Match XI / skład SCR-SQD-04 · `47340fe`
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-04 · CLOSED
+
+### Product / UX
+
+- Shell polish · icon rail · soft-lock modal · typography · `d9bb5b6`
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-03 · CLOSED
+
+### Product / UX
+
+- Core Domains P0 (Squad/Training/Transfers/Finance) + shared states · `d850f0e`
+
+---
+
+## [2026-07-29] — LFE-DOCS-SYNC-01 · CLOSED
+
+### Docs
+
+- Design SSOT + world-art verification w repo · `27badbc`
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-02 · CLOSED
+
+### Product / UX
+
+- Match Path Tunnel → VS → Pre → Live → Goal → Final → Post · `769ce4a`
+
+---
+
+## [2026-07-29] — LFE-UI-IMPL-01 · CLOSED
+
+### Product / UX
+
+- Shell + Hub Night Pitch Office · `282cfc9`
 
 ---
 
