@@ -12,6 +12,8 @@ import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
 import { UI_COPY } from '@/lib/ui/copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
+import './left-nav.css';
+
 function isActive(pathname: string, href: string): boolean {
   if (href === '/hub') return pathname === '/hub';
   if (href === '/squad') {
@@ -24,7 +26,7 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 /**
- * Left nav — LFE-UI-IMPL-04: icon rail default, soft-lock → SYS-04 modal.
+ * Left nav — LFE-UI-IMPL-04 icon rail + LFE-UI-IMPL-06A instant tooltips (collapsed).
  */
 export function LeftNavigation() {
   const pathname = usePathname();
@@ -39,13 +41,15 @@ export function LeftNavigation() {
   };
   const showDev = process.env.NODE_ENV === 'development';
   const [lockTitle, setLockTitle] = useState<string | null>(null);
+  const clubName = club?.name ?? 'Klub';
 
   const closeLock = useCallback(() => setLockTitle(null), []);
 
   return (
     <aside
       className="lf-app-shell__nav hidden flex-col border-r md:flex"
-      data-lf-impl="LFE-UI-IMPL-04"
+      data-lf-impl="LFE-UI-IMPL-06A"
+      data-nav-collapsed={navCollapsed ? 'true' : 'false'}
       style={{
         width: navCollapsed ? 'var(--lf-shell-nav-collapsed)' : 'var(--lf-shell-nav)',
         background: 'var(--lf-color-bg-raised)',
@@ -67,7 +71,7 @@ export function LeftNavigation() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
             <ClubCrest
               shortName={club?.shortName ?? 'LF'}
-              clubName={club?.name ?? 'Klub'}
+              clubName={clubName}
               crestTemplateId={club?.crestTemplateId}
               accentColor={club?.primaryColor}
               size="sm"
@@ -80,15 +84,19 @@ export function LeftNavigation() {
                   color: 'var(--lf-color-text-primary)',
                 }}
               >
-                {club?.name ?? 'Klub'}
+                {clubName}
               </div>
             </div>
           </div>
         ) : (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
+            className="lf-nav-crest"
+            data-lf-tooltip={clubName}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
             <ClubCrest
               shortName={club?.shortName ?? 'LF'}
-              clubName={club?.name ?? 'Klub'}
+              clubName={clubName}
               crestTemplateId={club?.crestTemplateId}
               accentColor={club?.primaryColor}
               size="sm"
@@ -123,6 +131,7 @@ export function LeftNavigation() {
               const active = isActive(pathname, item.href);
               const access = resolveNavAccess(item.id, phase, navCtx);
               const locked = access === 'soft_locked';
+              const tip = navCollapsed ? item.label : undefined;
               const itemStyle = {
                 color: locked
                   ? 'var(--lf-color-text-faint)'
@@ -139,7 +148,8 @@ export function LeftNavigation() {
                   <button
                     key={item.id}
                     type="button"
-                    title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
+                    aria-label={`${item.label} — ${UI_COPY.softLockUnavailable}`}
+                    data-lf-tooltip={tip}
                     className="lf-nav-item lf-nav-item--locked"
                     style={itemStyle}
                     onClick={() => setLockTitle(item.label)}
@@ -170,7 +180,8 @@ export function LeftNavigation() {
                 <Link
                   key={item.id}
                   href={item.href}
-                  title={item.label}
+                  aria-label={item.label}
+                  data-lf-tooltip={tip}
                   className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
                   style={itemStyle}
                 >
@@ -217,7 +228,8 @@ export function LeftNavigation() {
               <Link
                 key={item.id}
                 href={item.href}
-                title={item.label}
+                aria-label={item.label}
+                data-lf-tooltip={navCollapsed ? item.label : undefined}
                 className={`lf-nav-item ${active ? 'lf-nav-item--active' : ''}`}
                 style={{
                   color: active ? 'var(--lf-color-text-primary)' : 'var(--lf-color-text-muted)',

@@ -70,28 +70,32 @@ export function EarlyClubHub({
       className="lf-hub"
       data-hub-phase={phase}
       data-hub-session={session}
-      data-lf-impl="LFE-UI-IMPL-01"
+      data-lf-impl="LFE-UI-IMPL-06A"
     >
       <LocationHero session={session} />
 
-      <AtmosphereLayer
-        className="lf-hub__decision"
-        aria-label={event.eyebrow}
-        layers={['vignette', 'grain']}
-      >
-        <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
-        <h1 className="lf-hub__decision-title">{event.title}</h1>
-        <p className="lf-hub__decision-meta">{event.meta}</p>
-        {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
-      </AtmosphereLayer>
+      <div className="lf-hub__decision-stage">
+        <AtmosphereLayer
+          className="lf-hub__decision"
+          aria-label={event.eyebrow}
+          layers={['vignette', 'grain']}
+        >
+          <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
+          <h1 className="lf-hub__decision-title">{event.title}</h1>
+          <p className="lf-hub__decision-meta">{event.meta}</p>
+          {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
+        </AtmosphereLayer>
 
-      <PrimaryCta cta={primary} />
+        <PrimaryCta cta={primary} />
+      </div>
 
-      <ClubIdentity club={club} status={status} />
-
-      <SecondaryRow actions={secondary} />
-
-      <LightStatus status={status} />
+      <div className="lf-hub__body">
+        <ClubIdentity club={club} status={status} />
+        <div className="lf-hub__actions">
+          <SecondaryRow actions={secondary} />
+          <LightStatus status={status} />
+        </div>
+      </div>
 
       <WelcomeMessage message={message} />
     </div>

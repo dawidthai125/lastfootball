@@ -1,0 +1,76 @@
+/* LFE-UI-IMPL-06A — icon-rail instant tooltips (collapsed only). */
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-item[data-lf-tooltip] {
+  position: relative;
+}
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-item[data-lf-tooltip]::after {
+  content: attr(data-lf-tooltip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--lf-z-dropdown);
+  box-sizing: border-box;
+  max-width: 12rem;
+  padding: 6px 10px;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-strong);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-panel);
+  color: var(--lf-color-text-primary);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: none;
+}
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-item[data-lf-tooltip]:hover::after,
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-item[data-lf-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-crest[data-lf-tooltip] {
+  position: relative;
+}
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-crest[data-lf-tooltip]::after {
+  content: attr(data-lf-tooltip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--lf-z-dropdown);
+  padding: 6px 10px;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-strong);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-panel);
+  color: var(--lf-color-text-primary);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: none;
+}
+
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-crest[data-lf-tooltip]:hover::after,
+.lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-crest[data-lf-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-item[data-lf-tooltip]::after,
+  .lf-app-shell__nav[data-nav-collapsed='true'] .lf-nav-crest[data-lf-tooltip]::after {
+    transition: none;
+  }
+}
