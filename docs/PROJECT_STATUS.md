@@ -34,7 +34,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## W trakcie
 
-LFE-AUTH-UX-01 — Auth experience redesign (Login Modal · /login · /register · header).
+Brak otwartego EPIC produktowego po LFE-AUTH-UX-01.
 
 ## Co następne
 
@@ -47,4 +47,4 @@ Indeks: [`AI/DECISIONS.md`](./AI/DECISIONS.md) · pełne: [`DECISIONS.md`](./DEC
 
 ## Last updated
 
-2026-07-29 — LFE-AUTH-UX-01
+2026-07-29 — LFE-AUTH-UX-01 CLOSED (`9dc834a`)

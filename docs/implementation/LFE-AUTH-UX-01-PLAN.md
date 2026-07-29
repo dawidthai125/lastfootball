@@ -64,13 +64,14 @@ Spójne doświadczenie: Landing ↔ Login Modal ↔ `/login` ↔ `/register` w e
 - [x] Login Modal: blur · anim · ESC · outside · focus trap
 - [x] `/login` · `/register` jak część gry
 - [x] Brak regresji auth logic
-- [ ] typecheck · lint · test · build · **CI GREEN**
+- [x] typecheck · lint · test · build · **CI GREEN** (`9dc834a`)
 
 ---
 
 ## Historia
 
-| Wersja | Data       | Opis                       |
-| ------ | ---------- | -------------------------- |
-| 1.0.0  | 2026-07-29 | Plan IMPLEMENT po Owner GO |
-| 1.1.0  | 2026-07-29 | Implementacja lokalna      |
+| Wersja | Data       | Opis                          |
+| ------ | ---------- | ----------------------------- |
+| 1.0.0  | 2026-07-29 | Plan IMPLEMENT po Owner GO    |
+| 1.1.0  | 2026-07-29 | Implementacja lokalna         |
+| 1.2.0  | 2026-07-29 | CI GREEN + verification shots |
