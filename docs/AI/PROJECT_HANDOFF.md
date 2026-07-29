@@ -19,9 +19,10 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                           |
 | **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                 |
 | **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)           |
-| **Documentation tip**           | pending Owner COMMIT — **LFE-PLAYERS-02** DOCS CLOSE (pin po commit)            |
+| **Documentation tip**           | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                                      |
 | **Branch**                      | `main`                                                                          |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · LFE-PLAYERS-02 CLOSED · brak otwartego EPIC       |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · LFE-PLAYERS-02 FULLY CLOSED · brak otwartego EPIC |
+
 | **Production URL**              | https://lastfootball.vercel.app                                                 |
 | **Alias**                       | https://lastfootball.pl                                                         |
 | **CI Status**                   | GREEN na tip `main` (Format · Typecheck · Lint · Test · Build) · run PLAYERS-02 |

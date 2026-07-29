@@ -36,7 +36,7 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`           |
 | **Presentation tip**        | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)  |
 | Presentation message        | `feat(auth-ux): redesign login/register experience with Landing modal` |
-| **Documentation tip**       | pending Owner COMMIT — **LFE-PLAYERS-02** DOCS CLOSE (pin po commit)   |
+| **Documentation tip**       | `fa0848b` — **LFE-PLAYERS-02** DOCS CLOSE                             |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                        |
 
 Prior domain TRAINING-02 (`5e6c2ad`) pozostaje w historii; tip domenowy = PLAYERS-02.

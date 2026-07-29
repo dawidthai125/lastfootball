@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)      |
 | **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)   |
 | **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                                 |
-| **Documentation tip**   | pending Owner COMMIT — LFE-PLAYERS-02 DOCS CLOSE (pin po commit) |
+| **Documentation tip**   | **`fa0848b`** — LFE-PLAYERS-02 DOCS CLOSE                       |
 | **Prod**                | https://lastfootball.vercel.app                                |
 
 | Tor               | Stan                                                                                                                       |
@@ -36,7 +36,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## W trakcie
 
-Brak otwartego EPIC produktowego. **LFE-PLAYERS-02** COMPLETED (feat `cd222ba` · CI GREEN · Production VERIFIED · DOCS CLOSE w toku / tip pin po COMMIT).
+Brak otwartego EPIC produktowego. **LFE-PLAYERS-02** FULLY CLOSED (feat `cd222ba` · docs `fa0848b` · CI GREEN · Production VERIFIED).
 
 ## Operacyjne
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Sync D22 · PLAYERS.md · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG
 - Domain feature baseline → `cd222ba` (Player Development Thin)
+- Documentation tip → `fa0848b`
 - Operacyjne: migracja `players.potential` + RPC `apply_match_development` na prod
 
 ### Added (shipped on `main` — LFE-PLAYERS-02)
