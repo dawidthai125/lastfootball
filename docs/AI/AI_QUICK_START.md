@@ -10,15 +10,15 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                          |
-| ------------------- | -------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`cd222ba`** — LFE-PLAYERS-02 (Player Development Thin) |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
+|                     |                                                               |
+| ------------------- | ------------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
+| Domain baseline     | **`cd222ba`** — LFE-PLAYERS-02 (Player Development Thin)      |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
 | Documentation tip   | **`4dedd71`** — GDD-18 Ranking Thin (sezonowy ranking klubów) |
-| Prod                | https://lastfootball.vercel.app                          |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
+| Prod                | https://lastfootball.vercel.app                               |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
 
 ## Pipeline (jedyny)
 

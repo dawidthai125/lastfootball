@@ -11,7 +11,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)        |
 | **Domain feature baseline** | `cd222ba` — LFE-PLAYERS-02 (Player Development Thin)                                             |
 | **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                             |
-| **Documentation tip**       | `4dedd71` — GDD-18 Ranking Thin (sezonowy ranking klubów)                            |
+| **Documentation tip**       | `4dedd71` — GDD-18 Ranking Thin (sezonowy ranking klubów)                                        |
 | **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                               |
 | **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                |
 | Production                  | https://lastfootball.vercel.app                                                                  |

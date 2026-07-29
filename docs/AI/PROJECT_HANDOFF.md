@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                  |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + Player Development + MOTION-01 + **GDD-18** |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                    |
-| **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                                          |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                    |
-| **Documentation tip**           | `4dedd71` — **GDD-18** Ranking Thin (sezonowy ranking klubów)                                            |
-| **Branch**                      | `main`                                                                                                   |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · GDD-18 CLOSED · MOTION-01 · Domain PLAYERS-02 · brak otwartego EPIC        |
+| Pole                            | Wartość                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + Player Development + MOTION-01 + **GDD-18**         |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                             |
+| **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                                   |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                             |
+| **Documentation tip**           | `4dedd71` — **GDD-18** Ranking Thin (sezonowy ranking klubów)                                     |
+| **Branch**                      | `main`                                                                                            |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · GDD-18 CLOSED · MOTION-01 · Domain PLAYERS-02 · brak otwartego EPIC |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -233,15 +233,15 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED** (kolejność rekomendowana):
 
-| #   | EPIC / temat                 | Priorytet            | Notatka                                |
-| --- | ---------------------------- | -------------------- | -------------------------------------- |
-| 1   | **GDD-19** (§19 Osiągnięcia) | **P0 · READY FOR AUDIT** | Następny szkielet GDD — Owner      |
-| 2   | Full 22-fixture season       | P2                   | Wymaga decyzji vs Thin 11              |
-| 3   | Transfers hardening          | P2                   | Tech debt — `TRANSFER_ARCHITECTURE.md` |
-| 4   | LFE-ACADEMY-01 (kod)         | P2                   | Po GDD-16; osobny AUDIT                |
-| 5   | LFE-SCOUTING-01 (kod)        | P2                   | Po GDD-17; osobny AUDIT                |
-| 6   | LFE-RANKING-01 (kod)         | P2                   | Po GDD-18; osobny AUDIT                |
-| 7   | Ratings v2 · LFE PUBLIC trim | P3                   | Chore / depth                          |
+| #   | EPIC / temat                 | Priorytet                | Notatka                                |
+| --- | ---------------------------- | ------------------------ | -------------------------------------- |
+| 1   | **GDD-19** (§19 Osiągnięcia) | **P0 · READY FOR AUDIT** | Następny szkielet GDD — Owner          |
+| 2   | Full 22-fixture season       | P2                       | Wymaga decyzji vs Thin 11              |
+| 3   | Transfers hardening          | P2                       | Tech debt — `TRANSFER_ARCHITECTURE.md` |
+| 4   | LFE-ACADEMY-01 (kod)         | P2                       | Po GDD-16; osobny AUDIT                |
+| 5   | LFE-SCOUTING-01 (kod)        | P2                       | Po GDD-17; osobny AUDIT                |
+| 6   | LFE-RANKING-01 (kod)         | P2                       | Po GDD-18; osobny AUDIT                |
+| 7   | Ratings v2 · LFE PUBLIC trim | P3                       | Chore / depth                          |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 

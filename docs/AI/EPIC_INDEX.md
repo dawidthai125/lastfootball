@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                               |
-| ----------------------- | --------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED             |
-| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                     |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED                   |
-| **Documentation tip**   | **`4dedd71`** — GDD-18 Ranking Thin CLOSED                |
+| Warstwa                 | Hash / EPIC                                   |
+| ----------------------- | --------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
+| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED         |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
+| **Documentation tip**   | **`4dedd71`** — GDD-18 Ranking Thin CLOSED    |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 

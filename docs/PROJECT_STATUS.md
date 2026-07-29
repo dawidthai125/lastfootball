@@ -18,13 +18,13 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 **PRODUCTION VERIFIED · GREEN · GDD-18 CLOSED** (Domain: LFE-PLAYERS-02 · Presentation: LFE-UI-MOTION-01)
 
-|                         |                                                              |
-| ----------------------- | ------------------------------------------------------------ |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)    |
-| **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin) |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)     |
+|                         |                                                               |
+| ----------------------- | ------------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)     |
+| **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)  |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
 | **Documentation tip**   | **`4dedd71`** — GDD-18 Ranking Thin (sezonowy ranking klubów) |
-| **Prod**                | https://lastfootball.vercel.app                              |
+| **Prod**                | https://lastfootball.vercel.app                               |
 
 | Tor               | Stan                                                                                                                      |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
