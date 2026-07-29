@@ -4,7 +4,7 @@
 **Etap:** OWNER CHANGE REQUEST — Landing redesign (BEZ IMPLEMENTACJI)  
 **Data:** 2026-07-29  
 **Zakres:** wyłącznie `/` (marketing home)  
-**Zakaz tego etapu:** kod · commit · push · zmiany DNA / World Art assetów / tokenów DS  
+**Zakaz tego etapu:** kod · commit · push · zmiany DNA / World Art assetów / tokenów DS
 
 > Ten dokument czeka na **Owner GO** przed IMPLEMENT.  
 > Po akceptacji: osobny etap IMPLEMENT (layout + kompozycja + użycie **istniejących** WA / tokenów).
@@ -13,12 +13,12 @@
 
 ## 0. Metadane
 
-| Pole              | Wartość                                                                 |
-| ----------------- | ----------------------------------------------------------------------- |
-| Kod dziś          | `LandingPage.tsx` · `landing.css` · `(marketing)/layout.tsx`            |
-| SSOT produktowy   | GDD §4.1 · Guide §2–3 (brand first na landing) · Night Pitch Office     |
-| Production Baseline | UI P0 `54d0724` (panel) — **Landing nie był częścią IMPL-01…06**     |
-| Status            | **DRAFT — oczekuje Owner GO**                                           |
+| Pole                | Wartość                                                             |
+| ------------------- | ------------------------------------------------------------------- |
+| Kod dziś            | `LandingPage.tsx` · `landing.css` · `(marketing)/layout.tsx`        |
+| SSOT produktowy     | GDD §4.1 · Guide §2–3 (brand first na landing) · Night Pitch Office |
+| Production Baseline | UI P0 `54d0724` (panel) — **Landing nie był częścią IMPL-01…06**    |
+| Status              | **DRAFT — oczekuje Owner GO**                                       |
 
 ---
 
@@ -26,29 +26,29 @@
 
 ## 1.1 Objawy (Owner)
 
-| Objaw Owner                         | Potwierdzone w kodzie / prod                          |
-| ----------------------------------- | ----------------------------------------------------- |
-| Wygląda jak MVP                     | Tak                                                   |
-| Mała część szerokości monitora      | Tak                                                   |
-| Ogromne puste przestrzenie          | Tak                                                   |
-| Słabe CTA                           | Tak                                                   |
-| Brak „wow”                          | Tak                                                   |
-| Brak charakteru marketingowego      | Tak                                                   |
-| Nie pokazuje możliwości gry         | Tak                                                   |
-| Nie zachęca do założenia klubu      | Częściowo (copy OK, prezentacja produktu słaba)       |
+| Objaw Owner                    | Potwierdzone w kodzie / prod                    |
+| ------------------------------ | ----------------------------------------------- |
+| Wygląda jak MVP                | Tak                                             |
+| Mała część szerokości monitora | Tak                                             |
+| Ogromne puste przestrzenie     | Tak                                             |
+| Słabe CTA                      | Tak                                             |
+| Brak „wow”                     | Tak                                             |
+| Brak charakteru marketingowego | Tak                                             |
+| Nie pokazuje możliwości gry    | Tak                                             |
+| Nie zachęca do założenia klubu | Częściowo (copy OK, prezentacja produktu słaba) |
 
 ## 1.2 Przyczyny źródłowe (nie „brak polishu”)
 
-| ID  | Przyczyna                                                                 | Dowód w kodzie |
-| --- | ------------------------------------------------------------------------- | -------------- |
-| R1  | **Hero = wąska kolumna treści** (`max-width: 40rem`) na full viewport     | `.lf-landing__hero-inner { width: min(40rem, 100%) }` |
-| R2  | **Brak dominant image** — tylko AtmosphereLayer (flood/grain/vignette), bez HERO-00x | Hero nie ładuje `hero-001` / `hero-002` / `hero-003` |
-| R3  | **Primary CTA wizualnie soft** — `gold-soft` + outline, nie solid Primary gold | `.lf-landing__cta--primary` |
-| R4  | **„Wow” = pusty SVG herb**, nie produkt / świat gry                       | `HeroCrest` |
-| R5  | **Story visuals = abstrakcyjne motywy** (swatche, lista, drabinka IV→I)   | `IdentityVisual` / `MatchBeatVisual` / `SeasonVisual` |
-| R6  | **Sekcje story `max-width: 64rem`** + centrowanie → pas pustki na ≥1440px | `.lf-landing__story` |
-| R7  | **Landing nie przeszedł UI P0 fidelity** — pozostał P0.5 PLATFORM-01      | Komentarz „P0.5 Section Flow S0–S4” |
-| R8  | Brand **podwójny** (header + hero wordmark) konkuruje z headline          | `LandingHeader` + `.lf-landing__brand-hero` |
+| ID  | Przyczyna                                                                            | Dowód w kodzie                                        |
+| --- | ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| R1  | **Hero = wąska kolumna treści** (`max-width: 40rem`) na full viewport                | `.lf-landing__hero-inner { width: min(40rem, 100%) }` |
+| R2  | **Brak dominant image** — tylko AtmosphereLayer (flood/grain/vignette), bez HERO-00x | Hero nie ładuje `hero-001` / `hero-002` / `hero-003`  |
+| R3  | **Primary CTA wizualnie soft** — `gold-soft` + outline, nie solid Primary gold       | `.lf-landing__cta--primary`                           |
+| R4  | **„Wow” = pusty SVG herb**, nie produkt / świat gry                                  | `HeroCrest`                                           |
+| R5  | **Story visuals = abstrakcyjne motywy** (swatche, lista, drabinka IV→I)              | `IdentityVisual` / `MatchBeatVisual` / `SeasonVisual` |
+| R6  | **Sekcje story `max-width: 64rem`** + centrowanie → pas pustki na ≥1440px            | `.lf-landing__story`                                  |
+| R7  | **Landing nie przeszedł UI P0 fidelity** — pozostał P0.5 PLATFORM-01                 | Komentarz „P0.5 Section Flow S0–S4”                   |
+| R8  | Brand **podwójny** (header + hero wordmark) konkuruje z headline                     | `LandingHeader` + `.lf-landing__brand-hero`           |
 
 ## 1.3 Werdykt RCA
 
@@ -80,13 +80,13 @@ Brakuje: **jednego dominant visual plane** (murawa / tunel / gabinet).
 
 ## 2.2 Benchmark konkurencji (marketing home)
 
-| Produkt                 | Hero                                              | CTA                              | Pokaz możliwości                         | Desktop width                         | Mobile                          |
-| ----------------------- | ------------------------------------------------- | -------------------------------- | ---------------------------------------- | ------------------------------------- | ------------------------------- |
-| **Football Manager**    | Full-bleed art / sezon key art · brand mocny      | Buy / Wishlist / Play (store)    | Screenshots / features / editions        | Edge-to-edge media · szerokie pásma   | Stack · duże CTA                |
-| **Top Eleven**          | Athletic hero + klub / zawodnicy                  | Play / Download primary          | Feature tiles · social proof             | Szerokie paski · grid feature         | App-store first                 |
-| **Hattrick**            | Prostszy, community / club fantasy                | Join / Login                     | „Build club” narrative                   | Często wąższy content — **ale** hero z kontekstem | Prosty stack            |
-| **FootballTeam**       | Sport UI + match excitement                       | Play free / Register             | Modes / leagues teaser                   | Wide marketing bands                  | CTA sticky-ish                  |
-| **EA FC Ultimate Team** | Cinematic pack/player hero · premium motion       | Play / Buy                       | Modes, rewards, live seasons             | **Full-bleed cinematic** · zero „wąskiej kartki” | Hero crop mobile          |
+| Produkt                 | Hero                                         | CTA                           | Pokaz możliwości                  | Desktop width                                     | Mobile           |
+| ----------------------- | -------------------------------------------- | ----------------------------- | --------------------------------- | ------------------------------------------------- | ---------------- |
+| **Football Manager**    | Full-bleed art / sezon key art · brand mocny | Buy / Wishlist / Play (store) | Screenshots / features / editions | Edge-to-edge media · szerokie pásma               | Stack · duże CTA |
+| **Top Eleven**          | Athletic hero + klub / zawodnicy             | Play / Download primary       | Feature tiles · social proof      | Szerokie paski · grid feature                     | App-store first  |
+| **Hattrick**            | Prostszy, community / club fantasy           | Join / Login                  | „Build club” narrative            | Często wąższy content — **ale** hero z kontekstem | Prosty stack     |
+| **FootballTeam**        | Sport UI + match excitement                  | Play free / Register          | Modes / leagues teaser            | Wide marketing bands                              | CTA sticky-ish   |
+| **EA FC Ultimate Team** | Cinematic pack/player hero · premium motion  | Play / Buy                    | Modes, rewards, live seasons      | **Full-bleed cinematic** · zero „wąskiej kartki”  | Hero crop mobile |
 
 ### Lekcje dla LastFootball (bez kopiowania UI)
 
@@ -98,16 +98,16 @@ Brakuje: **jednego dominant visual plane** (murawa / tunel / gabinet).
 
 ## 2.3 Ocena wymiarów (as-is)
 
-| Wymiar            | Ocena | Komentarz                                              |
-| ----------------- | ----- | ------------------------------------------------------ |
-| Hero              | 2/5   | Pełna wysokość, ale bez obrazu świata; wąski copy block |
-| Hierarchy         | 3/5   | Copy sensowny; brand×2 + crest rozpraszają             |
-| CTA               | 2/5   | Soft gold; Secondary konkuruje wagą                    |
-| Sekcje            | 2/5   | Dobra intencja S1–S3; visuals nie sprzedają gry        |
-| Spacing           | 2/5   | Dużo void = „pusto”, nie „premium breathing”           |
-| Desktop width     | 1/5   | Główny fail vs Owner                                   |
-| Mobile            | 3/5   | Stack OK; nadal słaby hero visual                      |
-| Marketing / wow   | 1/5   | Brak cinematic / product proof                         |
+| Wymiar          | Ocena | Komentarz                                               |
+| --------------- | ----- | ------------------------------------------------------- |
+| Hero            | 2/5   | Pełna wysokość, ale bez obrazu świata; wąski copy block |
+| Hierarchy       | 3/5   | Copy sensowny; brand×2 + crest rozpraszają              |
+| CTA             | 2/5   | Soft gold; Secondary konkuruje wagą                     |
+| Sekcje          | 2/5   | Dobra intencja S1–S3; visuals nie sprzedają gry         |
+| Spacing         | 2/5   | Dużo void = „pusto”, nie „premium breathing”            |
+| Desktop width   | 1/5   | Główny fail vs Owner                                    |
+| Mobile          | 3/5   | Stack OK; nadal słaby hero visual                       |
+| Marketing / wow | 1/5   | Brak cinematic / product proof                          |
 
 ## 2.4 Co zostawić (działa)
 
@@ -137,15 +137,15 @@ Brakuje: **jednego dominant visual plane** (murawa / tunel / gabinet).
 
 ## 3.2 Struktura sekcji (marketing, nie dashboard)
 
-| #  | Sekcja            | Cel                                              | Visual (istniejące WA)        |
-| -- | ----------------- | ------------------------------------------------ | ----------------------------- |
-| H  | Header            | Brand · Zaloguj (soft)                           | mark gold                     |
-| S0 | **Hero**          | Brand signal + promise + ◆ Załóż klub            | **HERO-002** lub **HERO-003** full-bleed |
-| S1 | **Świat klubu**   | Gabinet / decyzja dnia                           | HERO-001 office               |
-| S2 | **Mecz**          | Tunnel → Live emocja                             | HERO-002 + Live strip motif*  |
-| S3 | **Sezon**         | Kadra / transfery / trening jako pętla           | HERO-004 / 005 / 006 collage** |
-| S4 | Close             | Powtórzenie Primary                              | thin pitch wash               |
-| F  | Footer            | Legal                                            | —                             |
+| #   | Sekcja          | Cel                                    | Visual (istniejące WA)                   |
+| --- | --------------- | -------------------------------------- | ---------------------------------------- |
+| H   | Header          | Brand · Zaloguj (soft)                 | mark gold                                |
+| S0  | **Hero**        | Brand signal + promise + ◆ Załóż klub  | **HERO-002** lub **HERO-003** full-bleed |
+| S1  | **Świat klubu** | Gabinet / decyzja dnia                 | HERO-001 office                          |
+| S2  | **Mecz**        | Tunnel → Live emocja                   | HERO-002 + Live strip motif*             |
+| S3  | **Sezon**       | Kadra / transfery / trening jako pętla | HERO-004 / 005 / 006 collage**           |
+| S4  | Close           | Powtórzenie Primary                    | thin pitch wash                          |
+| F   | Footer          | Legal                                  | —                                        |
 
 \*Motif = kompozycja CSS scorebug-like z tokenów (bez nowych assetów) lub crop istniejącego.  
 \*\*Collage = **jeden** rząd 3 lokacji edge-to-edge (nie karty KPI) — reuse hero PNGs.
@@ -164,10 +164,10 @@ Zgodnie z regułą hero budget + Guide brand-first:
 
 ## 3.4 CTA strategy
 
-| CTA            | Rola        | Wygląd                         |
-| -------------- | ----------- | ------------------------------ |
-| **Załóż klub** | Primary ◆   | Solid `gold-base` · on-gold text · min-height 48–56 |
-| **Zaloguj się**| Secondary ○ | Outline subtle · w hero + header |
+| CTA             | Rola        | Wygląd                                              |
+| --------------- | ----------- | --------------------------------------------------- |
+| **Załóż klub**  | Primary ◆   | Solid `gold-base` · on-gold text · min-height 48–56 |
+| **Zaloguj się** | Secondary ○ | Outline subtle · w hero + header                    |
 
 Copy Primary pozostaje „Załóż klub” (GDD §4.1 „Graj / Załóż klub”) — bez zmiany `UI_COPY` domen gry.
 
@@ -245,31 +245,32 @@ Copy Primary pozostaje „Załóż klub” (GDD §4.1 „Graj / Załóż klub”
 
 ## 5.1 Kierunek wizualny
 
-| Element        | Spec Hi-Fi                                                                 |
-| -------------- | -------------------------------------------------------------------------- |
-| Paleta         | void / base / panel · brass gold · scarlet **tylko** Live motif            |
-| Typo           | Archivo display/UI · Source Sans 3 body                                    |
-| Hero art       | `HERO-002-tunnel-night` **lub** `HERO-003-pitch-night` (Owner wybór A/B)   |
-| Hero mobile    | `hero-002-tunnel-mobile` jeśli tunnel; else crop pitch                     |
-| Overlay        | gradient do `bg.base` — czytelność H1; **bez** stickers na art             |
-| Primary        | jak Hub: `gold-base` fill · `text-on-gold` · radius md · nie pill          |
-| Motion         | 2–3: hero veil breathe subtle · CTA focus · story reveal (już IO)          |
-| Zakaz          | nowe kolory · purple glow · KPI cards · inset gallery hero                 |
+| Element     | Spec Hi-Fi                                                               |
+| ----------- | ------------------------------------------------------------------------ |
+| Paleta      | void / base / panel · brass gold · scarlet **tylko** Live motif          |
+| Typo        | Archivo display/UI · Source Sans 3 body                                  |
+| Hero art    | `HERO-002-tunnel-night` **lub** `HERO-003-pitch-night` (Owner wybór A/B) |
+| Hero mobile | `hero-002-tunnel-mobile` jeśli tunnel; else crop pitch                   |
+| Overlay     | gradient do `bg.base` — czytelność H1; **bez** stickers na art           |
+| Primary     | jak Hub: `gold-base` fill · `text-on-gold` · radius md · nie pill        |
+| Motion      | 2–3: hero veil breathe subtle · CTA focus · story reveal (już IO)        |
+| Zakaz       | nowe kolory · purple glow · KPI cards · inset gallery hero               |
 
 ## 5.2 Wariant A vs B (Owner wybiera)
 
-| | **A — Tunnel** (rekomendowany) | **B — Pitch** |
-| --- | --- | --- |
-| Art | HERO-002 | HERO-003 |
-| Emocja | Wejście na mecz / „wejdź do gry” | Nocna murawa / stadium prestige |
-| Spójność z Match Path | Silna (IMPL-02) | Silna z Live/Post |
-| Mobile | gotowy `-mobile` asset | crop z desktop |
+|                       | **A — Tunnel** (rekomendowany)   | **B — Pitch**                   |
+| --------------------- | -------------------------------- | ------------------------------- |
+| Art                   | HERO-002                         | HERO-003                        |
+| Emocja                | Wejście na mecz / „wejdź do gry” | Nocna murawa / stadium prestige |
+| Spójność z Match Path | Silna (IMPL-02)                  | Silna z Live/Post               |
+| Mobile                | gotowy `-mobile` asset           | crop z desktop                  |
 
 **Rekomendacja audytu:** **Wariant A (Tunnel)** — najsilniejszy most Landing → First Match / Match Path.
 
 ## 5.3 Sekcje Hi-Fi (detail)
 
 ### S0 Hero
+
 - Full-bleed Image fill · object-position center.
 - Copy block: desktop `max-width: 36rem` **w lewej/dolnej strefie**, nie center-column całej strony.
 - Brand: jeden `type.h1` gold caps „LastFootball”.
@@ -277,25 +278,29 @@ Copy Primary pozostaje „Załóż klub” (GDD §4.1 „Graj / Załóż klub”
 - Primary solid · Secondary outline · gap space-3.
 
 ### S1 Świat klubu
+
 - Full-bleed lub 55/45: HERO-001 + copy „Nadasz klubowi imię, barwy i herb”.
 - Bez swatchy jako głównego visuala.
 
 ### S2 Mecz
+
 - Copy „Decyzja. Mecz. Wynik.” + HERO-002/003 + opcjonalny mini scorebug (tokeny) jako **dowód Live**, nie dashboard.
 
 ### S3 Sezon
+
 - Jeden headline + trzy **edge-to-edge** panele lokacji (004/005/006) — bez ramek „card SaaS” (border hair ok, bez shadow stack).
 
 ### S4 Close
+
 - Jak dziś intencją; Primary solid; tło thin pitch wash (color-mix), nie nowy asset.
 
 ## 5.4 Desktop width rules
 
-| Breakpoint | Zachowanie |
-| ---------- | ---------- |
-| ≥1200 | Hero full viewport width · story bands full · copy inset 48–64px |
-| 768–1199 | Hero full · story 1-col lub 2-col bez max 64rem cap |
-| ≤767 | Stack · Primary 100% width |
+| Breakpoint | Zachowanie                                                       |
+| ---------- | ---------------------------------------------------------------- |
+| ≥1200      | Hero full viewport width · story bands full · copy inset 48–64px |
+| 768–1199   | Hero full · story 1-col lub 2-col bez max 64rem cap              |
+| ≤767       | Stack · Primary 100% width                                       |
 
 **Usunąć** sztuczne `max-width: 40rem` / `64rem` jako „cała strona”.  
 Dopuszczalne: `max-width` **tylko** na bloku tekstu dla czytelności (36–42rem), nie na całej sekcji.
@@ -341,6 +346,6 @@ Szacunek IMPLEMENT: layout + CSS + podmiana visuals (bez logiki auth).
 
 ## Historia
 
-| Wersja | Data       | Opis                                      |
-| ------ | ---------- | ----------------------------------------- |
-| 0.1.0  | 2026-07-29 | Audit + RCA + wireframe + Hi-Fi proposal  |
+| Wersja | Data       | Opis                                     |
+| ------ | ---------- | ---------------------------------------- |
+| 0.1.0  | 2026-07-29 | Audit + RCA + wireframe + Hi-Fi proposal |

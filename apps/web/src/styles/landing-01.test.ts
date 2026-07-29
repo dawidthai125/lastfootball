@@ -2,10 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const landingCss = readFileSync(
-  join(process.cwd(), 'src/components/landing/landing.css'),
-  'utf8',
-);
+const landingCss = readFileSync(join(process.cwd(), 'src/components/landing/landing.css'), 'utf8');
 const landingPage = readFileSync(
   join(process.cwd(), 'src/components/landing/LandingPage.tsx'),
   'utf8',

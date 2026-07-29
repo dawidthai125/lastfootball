@@ -10,13 +10,13 @@
 
 ## 0. Decyzje Ownera (lock)
 
-| # | Decyzja | Wartość |
-| --- | --- | --- |
-| 1 | Hero | **A — Tunnel** (`HERO-002` + mobile) |
-| 2 | SVG „Twój herb” | **Usunąć** |
-| 3 | Primary CTA copy | **„Załóż klub”** |
-| 4 | Support | Krótki opis pod H1 |
-| 5 | S3 / Showcase | World Art + **statyczne cropy UI** (tokeny, bez nowych ilustracji) |
+| #   | Decyzja          | Wartość                                                            |
+| --- | ---------------- | ------------------------------------------------------------------ |
+| 1   | Hero             | **A — Tunnel** (`HERO-002` + mobile)                               |
+| 2   | SVG „Twój herb”  | **Usunąć**                                                         |
+| 3   | Primary CTA copy | **„Załóż klub”**                                                   |
+| 4   | Support          | Krótki opis pod H1                                                 |
+| 5   | S3 / Showcase    | World Art + **statyczne cropy UI** (tokeny, bez nowych ilustracji) |
 
 **Bez zmian:** World Art pliki · Visual DNA · Design System · tokeny · branding.
 
@@ -37,32 +37,32 @@ Landing w jakości UI P0:
 
 ## 2. IA sekcji (to-be)
 
-| # | Sekcja | Implementacja |
-| --- | --- | --- |
-| 1 | Header | Istniejący `LandingHeader` |
-| 2 | Hero Tunnel | Full-bleed `hero-002-tunnel-*` · brand · H1 · support · CTA |
-| 3 | CTA | Primary solid + Secondary w hero (+ close) |
-| 4 | Gabinet | Band HERO-001 + copy tożsamości |
-| 5 | Match Experience | Band HERO-003 + static scorebug crop |
-| 6 | Sezon | Edge strip HERO-004 / 005 / 006 |
-| 7 | UI Showcase | Static crops: Decision · Scorebug · XI strip |
-| 8 | Closing CTA | Solid „Załóż klub” |
-| 9 | Footer | Legal (bez zmian treści) |
+| #   | Sekcja           | Implementacja                                               |
+| --- | ---------------- | ----------------------------------------------------------- |
+| 1   | Header           | Istniejący `LandingHeader`                                  |
+| 2   | Hero Tunnel      | Full-bleed `hero-002-tunnel-*` · brand · H1 · support · CTA |
+| 3   | CTA              | Primary solid + Secondary w hero (+ close)                  |
+| 4   | Gabinet          | Band HERO-001 + copy tożsamości                             |
+| 5   | Match Experience | Band HERO-003 + static scorebug crop                        |
+| 6   | Sezon            | Edge strip HERO-004 / 005 / 006                             |
+| 7   | UI Showcase      | Static crops: Decision · Scorebug · XI strip                |
+| 8   | Closing CTA      | Solid „Załóż klub”                                          |
+| 9   | Footer           | Legal (bez zmian treści)                                    |
 
 ---
 
 ## 3. Pliki
 
-| Plik | Akcja |
-| --- | --- |
-| `LandingPage.tsx` | Rewrite sekcji |
-| `landing.css` | Full-bleed layout · Primary solid · bands |
-| `LandingUiCrops.tsx` | Nowe — static UI crops (tokeny) |
-| `LandingArt.tsx` | Nowe — WA `<picture>` / Image helpers |
-| `StorySection.tsx` | Band full-width (bez max 64rem) |
-| `HeroCrest.tsx` | Usunąć |
-| `index.ts` | Eksporty |
-| Docs PLAN / NOTES / TEST-PLAN | Ten EPIC |
+| Plik                          | Akcja                                     |
+| ----------------------------- | ----------------------------------------- |
+| `LandingPage.tsx`             | Rewrite sekcji                            |
+| `landing.css`                 | Full-bleed layout · Primary solid · bands |
+| `LandingUiCrops.tsx`          | Nowe — static UI crops (tokeny)           |
+| `LandingArt.tsx`              | Nowe — WA `<picture>` / Image helpers     |
+| `StorySection.tsx`            | Band full-width (bez max 64rem)           |
+| `HeroCrest.tsx`               | Usunąć                                    |
+| `index.ts`                    | Eksporty                                  |
+| Docs PLAN / NOTES / TEST-PLAN | Ten EPIC                                  |
 
 **Nie ruszamy:** AppShell · Hub · Live logika · auth flow · WA PNG.
 
@@ -81,7 +81,7 @@ Landing w jakości UI P0:
 
 ## Historia
 
-| Wersja | Data | Opis |
-| --- | --- | --- |
-| 1.0.0 | 2026-07-29 | Plan IMPLEMENT po Owner GO |
-| 1.1.0 | 2026-07-29 | Implementacja zamknięta lokalnie |
+| Wersja | Data       | Opis                             |
+| ------ | ---------- | -------------------------------- |
+| 1.0.0  | 2026-07-29 | Plan IMPLEMENT po Owner GO       |
+| 1.1.0  | 2026-07-29 | Implementacja zamknięta lokalnie |
