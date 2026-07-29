@@ -10,7 +10,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
 **Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
+**Documentation tip:** **`4805f7e`** (GDD-16).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-29] — GDD-16 · CLOSED
+
+### Docs
+
+- §16 Akademia Thin A (Intake + Promote) w `GAME_DESIGN_DOCUMENT.md`
+- Sync CURRENT_DESIGN · game-design ROADMAP · PLAYERS.md
+- Documentation tip → **`4805f7e`**
 
 ---
 

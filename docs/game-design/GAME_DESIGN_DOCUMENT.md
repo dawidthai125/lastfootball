@@ -6490,19 +6490,19 @@ Dać menedżerowi opcjonalną, świadomą ścieżkę **naboru młodzieży** i **
 
 **Szybki kontrakt Thin A (SSOT)**
 
-| Parametr                         | Wartość Thin A                                      |
-| -------------------------------- | --------------------------------------------------- |
-| Obowiązkowość                    | Opcjonalna (świadoma decyzja)                       |
-| Zakres                           | Intake + Promote                                    |
-| Poziomy / gwiazdki / ośrodek     | OUT (Future)                                        |
-| Potential                        | Kontrakt §7 / D22 — pasma only                      |
-| Academy / youth OVR              | Zakaz                                               |
-| Rozwój przed promocją            | Bez osobnego growth path przebijającego mecz        |
-| Rozwój po promocji               | Match PRIMARY · Training SUPPORTING                 |
-| Transfery                        | Po promocji jak senior (§12); bez nowej krzywej fee |
-| Koszty                           | Filozofia only · bez liczb                          |
-| Skauting (§17)                   | OUT                                                 |
-| Placeholder `/academy`           | Nie-SSOT · nie podstawa implementacji               |
+| Parametr                          | Wartość Thin A                                      |
+| --------------------------------- | --------------------------------------------------- |
+| Obowiązkowość                     | Opcjonalna (świadoma decyzja)                       |
+| Zakres                            | Intake + Promote                                    |
+| Poziomy / gwiazdki / ośrodek      | OUT (Future)                                        |
+| Potential                         | Kontrakt §7 / D22 — pasma only                      |
+| Academy / youth OVR               | Zakaz                                               |
+| Rozwój przed promocją             | Bez osobnego growth path przebijającego mecz        |
+| Rozwój po promocji                | Match PRIMARY · Training SUPPORTING                 |
+| Transfery                         | Po promocji jak senior (§12); bez nowej krzywej fee |
+| Koszty                            | Filozofia only · bez liczb                          |
+| Skauting (§17)                    | OUT                                                 |
+| Placeholder `/academy`            | Nie-SSOT · nie podstawa implementacji               |
 | Trenerzy / infrastruktura / staff | Future — poprawiają jakość decyzji, nie auto-growth |
 
 ---
@@ -6533,14 +6533,14 @@ Ustawić ton: akademia wspiera długi łuk klubu, nie zastępuje meczu ani nie w
 
 ### 16.2 Słownik
 
-| Pojęcie              | Znaczenie Thin A                                                                 |
-| -------------------- | -------------------------------------------------------------------------------- |
-| **Akademia**         | Opcjonalna lokalizacja decyzji: nabór młodzieży + promocja do seniorów           |
-| **Młodzież (intake)** | Zawodnik w ścieżce akademii **przed** promocją — nie ma osobnego OVR akademii    |
-| **Promocja**         | Świadoma decyzja: młodzież wchodzi do kadry seniorów i podlega §7/§8/§9/§12      |
-| **Senior**           | Zawodnik w aktywnej kadrze po promocji (lub z innych źródeł: kreacja, transfer)   |
-| **Intake**           | Nabór / pojawienie się perspektywy młodzieżowej w akademii                       |
-| **Potential (pasmo)**| Sygnał sufitu rozwoju — kontrakt §7; UI bez liczby surowej (D22)                 |
+| Pojęcie               | Znaczenie Thin A                                                                |
+| --------------------- | ------------------------------------------------------------------------------- |
+| **Akademia**          | Opcjonalna lokalizacja decyzji: nabór młodzieży + promocja do seniorów          |
+| **Młodzież (intake)** | Zawodnik w ścieżce akademii **przed** promocją — nie ma osobnego OVR akademii   |
+| **Promocja**          | Świadoma decyzja: młodzież wchodzi do kadry seniorów i podlega §7/§8/§9/§12     |
+| **Senior**            | Zawodnik w aktywnej kadrze po promocji (lub z innych źródeł: kreacja, transfer) |
+| **Intake**            | Nabór / pojawienie się perspektywy młodzieżowej w akademii                      |
+| **Potential (pasmo)** | Sygnał sufitu rozwoju — kontrakt §7; UI bez liczby surowej (D22)                |
 
 ---
 
@@ -6690,7 +6690,7 @@ Akademia nie jest obowiązkowa; lokalizacja nie dyktuje Primary dnia meczowego.
 
 **Zależności**
 
-- §23; §20 (zadanie dnia może *opcjonalnie* wskazać akademię — nie musi).
+- §23; §20 (zadanie dnia może _opcjonalnie_ wskazać akademię — nie musi).
 
 ---
 
@@ -6742,19 +6742,19 @@ Zamrozić filozofię rozbudowy bez auto-growth.
 
 ### 16.14 MVP Thin vs Future (tabela)
 
-| Element                         | Thin A | Future        |
-| ------------------------------- | ------ | ------------- |
-| Intake                          | TAK    | pogłębiony    |
-| Promote                         | TAK    | auto-opcje?   |
-| Poziomy / gwiazdki / ośrodek    | NIE    | TAK           |
-| Academy / youth OVR             | NIE    | NIE (zakaz)   |
-| Match PRIMARY po promocji       | TAK    | TAK           |
-| Training SUPPORTING po promocji | TAK    | TAK           |
-| Trening akademii                | NIE    | opcjonalnie   |
-| Koszty (liczby)                 | NIE    | §26           |
-| Skauting §17                    | NIE    | TAK           |
+| Element                         | Thin A | Future                |
+| ------------------------------- | ------ | --------------------- |
+| Intake                          | TAK    | pogłębiony            |
+| Promote                         | TAK    | auto-opcje?           |
+| Poziomy / gwiazdki / ośrodek    | NIE    | TAK                   |
+| Academy / youth OVR             | NIE    | NIE (zakaz)           |
+| Match PRIMARY po promocji       | TAK    | TAK                   |
+| Training SUPPORTING po promocji | TAK    | TAK                   |
+| Trening akademii                | NIE    | opcjonalnie           |
+| Koszty (liczby)                 | NIE    | §26                   |
+| Skauting §17                    | NIE    | TAK                   |
 | Staff / infrastruktura          | NIE    | decyzje ≠ auto-growth |
-| Implementacja UI / DB           | NIE*   | osobny EPIC   |
+| Implementacja UI / DB           | NIE*   | osobny EPIC           |
 
 \*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
 
@@ -6771,18 +6771,18 @@ Zamrozić filozofię rozbudowy bez auto-growth.
 
 ### 16.16 Zależności i ZERO DUPLICATE
 
-| System        | Relacja                                      |
-| ------------- | -------------------------------------------- |
-| §7            | Potential · rozwój · PRIMARY mecz            |
-| §8            | Training SUPPORTING po promocji              |
-| §9 / §10      | Minuty / rytm; akademia ≠ Primary dnia meczu |
-| §12           | Rynek po promocji                            |
-| §14 / §26     | Koszty = filozofia teraz; liczby później     |
-| §6            | Infrastruktura ośrodka = Future              |
-| §17           | Skauting = OUT (zależność Future)            |
-| §23           | Hub / opcjonalność                           |
-| Guide (UI)    | Presentation Contract — osobny od GDD §16    |
-| D19 / D22     | SSOT implementacji kadry / potential         |
+| System     | Relacja                                      |
+| ---------- | -------------------------------------------- |
+| §7         | Potential · rozwój · PRIMARY mecz            |
+| §8         | Training SUPPORTING po promocji              |
+| §9 / §10   | Minuty / rytm; akademia ≠ Primary dnia meczu |
+| §12        | Rynek po promocji                            |
+| §14 / §26  | Koszty = filozofia teraz; liczby później     |
+| §6         | Infrastruktura ośrodka = Future              |
+| §17        | Skauting = OUT (zależność Future)            |
+| §23        | Hub / opcjonalność                           |
+| Guide (UI) | Presentation Contract — osobny od GDD §16    |
+| D19 / D22  | SSOT implementacji kadry / potential         |
 
 ---
 

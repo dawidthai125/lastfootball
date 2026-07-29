@@ -10,7 +10,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Domain feature baseline:** **`cd222ba`** — LFE-PLAYERS-02 CLOSED (Player Development Thin).  
 **Presentation tip:** **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Branding · Auth UX).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Development (PLAYERS-02)** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Development (PLAYERS-02)** · **GDD-16 Akademia Thin A** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -26,6 +26,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 | Live Bridge · Canvas · Replay · Post Match · Ratings   | match UI pipeline                                                                                          |
 | CI Prettier                                            | format gate                                                                                                |
 | GDD-01…15                                              | §3–§15 + §20 + §23                                                                                         |
+| **GDD-16**                                             | **CLOSED** · §16 Akademia Thin A (Intake + Promote) · docs `4805f7e`                                       |
 | **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs)                                                                    |
 | **GDD-§26B**                                           | **CLOSED** · `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                               |
 | **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                                                                    |
@@ -79,8 +80,10 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 | Item                          | Zależność                        |
 | ----------------------------- | -------------------------------- |
-| GDD-16+                       | Owner GO (docs)                  |
+| GDD-17 Skauting (docs)        | po GDD-16                        |
+| GDD-16+ (pozostałe szkielety) | Owner GO (kolejność)             |
 | LFE-UI-MOTION-01              | po UI P0 (opcjonalny polish)     |
+| LFE-ACADEMY-01 (kod)          | po GDD-16 · osobny AUDIT         |
 | Full 22-fixture season (opt.) | po LEAGUE-03 · GDD §10 home+away |
 | Zawężenie LFE PUBLIC exports  | chore                            |
 | Ratings v2                    | bogatsze Player Match Data       |
@@ -99,9 +102,9 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Develop
 
 ## Next Recommended EPIC
 
-**GDD-16+** (docs produktowe) lub **LFE-UI-MOTION-01** — Owner wybiera.  
-Alternatywy: full 22 fixtures · transfers hardening · Ratings v2.  
-Domain tip: PLAYERS-02 `cd222ba`; front door (Landing/Auth) zamknięty.
+**GDD-17 Skauting** (docs) lub **LFE-UI-MOTION-01** — Owner wybiera.  
+Alternatywy: full 22 fixtures · transfers hardening · LFE-ACADEMY-01 (kod) · Ratings v2.  
+Domain tip: PLAYERS-02 `cd222ba`; Documentation tip: GDD-16 `4805f7e`.
 
 ## Decyzje roadmapy
 
@@ -133,4 +136,4 @@ Domain tip: PLAYERS-02 `cd222ba`; front door (Landing/Auth) zamknięty.
 
 ## Last updated
 
-2026-07-29 — LFE-PLAYERS-02 · Domain `cd222ba`
+2026-07-29 — GDD-16 · Docs tip `4805f7e` · Domain `cd222ba`

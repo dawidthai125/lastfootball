@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (GDD-16 FIX CLOSE)
+
+- Prettier GDD §16 / ROADMAP · sync HANDOFF · tip `4805f7e` · next EPIC = GDD-17
+
 ### Docs (LFE-PLAYERS-02 CLOSE)
 
 - Sync D22 · PLAYERS.md · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG
 - Domain feature baseline → `cd222ba` (Player Development Thin)
-- Documentation tip → `fa0848b`
+- Documentation tip → `fa0848b` (superseded by GDD-16 tip `4805f7e`)
 - Operacyjne: migracja `players.potential` + RPC `apply_match_development` na prod
 
 ### Added (shipped on `main` — LFE-PLAYERS-02)
