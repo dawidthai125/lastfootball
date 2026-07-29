@@ -2,10 +2,10 @@
 
 **EPIC:** LFE-UI-WIREFRAMES-01  
 **Data:** 2026-07-29  
-**Zakres:** P0 — pętla dzienna + Match Path  
+**Zakres:** P0 — pętla dzienna + Match Path
 
 > IA: [`LFE-UI-WIREFRAMES-01-IA.md`](./LFE-UI-WIREFRAMES-01-IA.md)  
-> Wireframes: [`LFE-UI-WIREFRAMES-01-WIREFRAMES.md`](./LFE-UI-WIREFRAMES-01-WIREFRAMES.md)  
+> Wireframes: [`LFE-UI-WIREFRAMES-01-WIREFRAMES.md`](./LFE-UI-WIREFRAMES-01-WIREFRAMES.md)
 
 ---
 
@@ -42,7 +42,7 @@ flowchart LR
 
 **Zasady:**
 
-- Soft-linki łączą sąsiadów — nie dodają drugiego Primary.  
+- Soft-linki łączą sąsiadów — nie dodają drugiego Primary.
 - Soft-lock na węźle → SCR-SYS-04 / lokalny SoftLockState → powrót Hub lub wyjaśnienie.
 
 ---
@@ -83,11 +83,11 @@ flowchart TD
 
 **Warianty:**
 
-| Warunek | Ścieżka |
-| ------- | ------ |
-| First Match (przed Hub unlock) | MCH-01 → … → post → Hub unlock |
-| Matchday z Hubu | Hub ◆ → MCH-02 (lub checklist) → … |
-| Soft-lock składu | SQD-04 / modal SYS-04 — bez nowych reguł |
+| Warunek                        | Ścieżka                                  |
+| ------------------------------ | ---------------------------------------- |
+| First Match (przed Hub unlock) | MCH-01 → … → post → Hub unlock           |
+| Matchday z Hubu                | Hub ◆ → MCH-02 (lub checklist) → …       |
+| Soft-lock składu               | SQD-04 / modal SYS-04 — bez nowych reguł |
 
 **Live:** ograniczone akcje UI; feedback przez overlay (gol) i chip Live.
 
@@ -171,22 +171,22 @@ IA nie definiuje dat unlock — tylko prezentuje wynik resolvera.
 
 ## 9. Macierz przejść P0 (skrót)
 
-| From | To | Trigger |
-| ---- | -- | ------- |
-| Hub | Match Path | Primary matchday |
-| Hub | Training/Squad/Transfers/Finance | Secondary |
-| Training | Hub / Squad | Soft-link |
-| Squad | Training | Soft-link |
-| Squad detal | Squad lista | Back / breadcrumb |
-| Transfers | Finance | Soft-link |
-| Finance | Transfers | Soft-link |
-| Post-match | Hub | Primary |
-| Any locked | Soft-lock | Nav attempt |
+| From        | To                               | Trigger           |
+| ----------- | -------------------------------- | ----------------- |
+| Hub         | Match Path                       | Primary matchday  |
+| Hub         | Training/Squad/Transfers/Finance | Secondary         |
+| Training    | Hub / Squad                      | Soft-link         |
+| Squad       | Training                         | Soft-link         |
+| Squad detal | Squad lista                      | Back / breadcrumb |
+| Transfers   | Finance                          | Soft-link         |
+| Finance     | Transfers                        | Soft-link         |
+| Post-match  | Hub                              | Primary           |
+| Any locked  | Soft-lock                        | Nav attempt       |
 
 ---
 
 ## Historia
 
-| Wersja | Data | Opis |
-| ------ | ---- | ---- |
-| 0.1.0 | 2026-07-29 | Flows P0 · daily · match · domeny |
+| Wersja | Data       | Opis                              |
+| ------ | ---------- | --------------------------------- |
+| 0.1.0  | 2026-07-29 | Flows P0 · daily · match · domeny |

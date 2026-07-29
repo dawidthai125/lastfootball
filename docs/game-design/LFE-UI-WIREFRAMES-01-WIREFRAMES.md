@@ -2,10 +2,10 @@
 
 **EPIC:** LFE-UI-WIREFRAMES-01  
 **Data:** 2026-07-29  
-**Wierność:** **LOW** — bloki · etykiety · hierarchia · **bez** koloru · **bez** typografii finalnej · **bez** assetów renderowanych  
+**Wierność:** **LOW** — bloki · etykiety · hierarchia · **bez** koloru · **bez** typografii finalnej · **bez** assetów renderowanych
 
 > IA: [`LFE-UI-WIREFRAMES-01-IA.md`](./LFE-UI-WIREFRAMES-01-IA.md)  
-> Flows: [`LFE-UI-WIREFRAMES-01-FLOWS.md`](./LFE-UI-WIREFRAMES-01-FLOWS.md)  
+> Flows: [`LFE-UI-WIREFRAMES-01-FLOWS.md`](./LFE-UI-WIREFRAMES-01-FLOWS.md)
 
 **Legenda bloków:**
 
@@ -40,13 +40,13 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-| Pole | Wartość |
-| ---- | ------- |
-| **Cel** | Orientacja + dostęp do P0 |
-| **Akcje** | Nav lokacji · (TopBar bez dominant CTA) |
-| **Komponenty** | AppShell · TopBar · NavItem · Status |
-| **World Art** | `BG-001` · `TEX-001` · `ICO-*` · crest |
-| **Powiązania** | Wszystkie SCR P0 |
+| Pole           | Wartość                                 |
+| -------------- | --------------------------------------- |
+| **Cel**        | Orientacja + dostęp do P0               |
+| **Akcje**      | Nav lokacji · (TopBar bez dominant CTA) |
+| **Komponenty** | AppShell · TopBar · NavItem · Status    |
+| **World Art**  | `BG-001` · `TEX-001` · `ICO-*` · crest  |
+| **Powiązania** | Wszystkie SCR P0                        |
 
 **Breadcrumbs (desktop, głębokość ≥2):**
 
@@ -103,13 +103,13 @@ Primary CTA: **full-width**, touch ≥44px.
 └────────────────────────────────────────┘
 ```
 
-| Pole | Wartość |
-| ---- | ------- |
-| **Cel użytkownika** | Wybrać jedną ścieżkę dnia |
-| **Główne akcje** | ◆ Match · ○ pętla ≤5 |
-| **Komponenty** | LocationHero · DecisionBlock · Primary · Secondary · SoftLink |
-| **World Art** | `HERO-001` · `BG-002` · `OFF-*` · `ICO-001` |
-| **Powiązania** | → Match Path · Training · Squad · Transfers · Finance |
+| Pole                | Wartość                                                       |
+| ------------------- | ------------------------------------------------------------- |
+| **Cel użytkownika** | Wybrać jedną ścieżkę dnia                                     |
+| **Główne akcje**    | ◆ Match · ○ pętla ≤5                                          |
+| **Komponenty**      | LocationHero · DecisionBlock · Primary · Secondary · SoftLink |
+| **World Art**       | `HERO-001` · `BG-002` · `OFF-*` · `ICO-001`                   |
+| **Powiązania**      | → Match Path · Training · Squad · Transfers · Finance         |
 
 **Wariant idle (SCR-HUB-02):** ten sam szkielet; treść Decision z resolvera (nie Matchday).  
 **EARLY (SCR-HUB-04):** bez dodatkowych kart KPI.
@@ -382,17 +382,17 @@ Breadcrumb: brak (root lokacji).
 
 ## 17. Zasady lo-fi (DoD wireframe)
 
-- [x] Brak kolorów / Hi-Fi / mock pixel-perfect  
-- [x] Jedno Primary na ekran decyzji  
-- [x] Hub Secondary ≤5  
-- [x] Hero nie zasłania Decision  
-- [x] Mobile stack + bottom nav opisane  
-- [x] Breadcrumbs tylko głębokość ≥2  
+- [x] Brak kolorów / Hi-Fi / mock pixel-perfect
+- [x] Jedno Primary na ekran decyzji
+- [x] Hub Secondary ≤5
+- [x] Hero nie zasłania Decision
+- [x] Mobile stack + bottom nav opisane
+- [x] Breadcrumbs tylko głębokość ≥2
 
 ---
 
 ## Historia
 
-| Wersja | Data | Opis |
-| ------ | ---- | ---- |
-| 0.1.0 | 2026-07-29 | Lo-fi wireframes P0 · ASCII bloki |
+| Wersja | Data       | Opis                              |
+| ------ | ---------- | --------------------------------- |
+| 0.1.0  | 2026-07-29 | Lo-fi wireframes P0 · ASCII bloki |

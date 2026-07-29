@@ -2,7 +2,7 @@
 
 **EPIC:** LFE-WORLD-ART-04  
 **Status:** ACTIVE — obowiązuje przy każdym assetcie volume  
-**Data:** 2026-07-28  
+**Data:** 2026-07-28
 
 > Proces jakości produkcji biblioteki pod **Style Lock ACTIVE**.  
 > DNA: [`LFE-WORLD-ART-03-VISUAL-DNA.md`](./LFE-WORLD-ART-03-VISUAL-DNA.md) (**LOCKED**).  
@@ -43,54 +43,54 @@ Każdy asset oceniany:
 
 ### 2.1 Visual DNA (LOCKED)
 
-- [ ] Z1 Miejsce przed panelem  
-- [ ] Z2 Night Pitch temperatura  
-- [ ] Z3 Światło masztów / biurka  
-- [ ] Z4 Materiał przed efektem  
-- [ ] Z5 Semi-flat Sport Editorial (**hard FAIL** przy photoreal regress)  
-- [ ] Z6 Crop, nie katalog  
-- [ ] Z7 Atmosfera ≤ ~10% (BG/overlay)  
-- [ ] Z8 Paleta void/brass/pitch  
-- [ ] Z9 Klub vs produkt (gdy crest/brand)  
-- [ ] Z10 Family match vs board v02 / Wave peers  
+- [ ] Z1 Miejsce przed panelem
+- [ ] Z2 Night Pitch temperatura
+- [ ] Z3 Światło masztów / biurka
+- [ ] Z4 Materiał przed efektem
+- [ ] Z5 Semi-flat Sport Editorial (**hard FAIL** przy photoreal regress)
+- [ ] Z6 Crop, nie katalog
+- [ ] Z7 Atmosfera ≤ ~10% (BG/overlay)
+- [ ] Z8 Paleta void/brass/pitch
+- [ ] Z9 Klub vs produkt (gdy crest/brand)
+- [ ] Z10 Family match vs board v02 / Wave peers
 
 ### 2.2 Style Lock
 
-- [ ] Certificate ACTIVE respektowany  
-- [ ] Brak nowego kierunku „po cichu”  
-- [ ] Porównanie z `LF-REF-BOARD-FOUNDATION-v02`  
+- [ ] Certificate ACTIVE respektowany
+- [ ] Brak nowego kierunku „po cichu”
+- [ ] Porównanie z `LF-REF-BOARD-FOUNDATION-v02`
 
 ### 2.3 Foundation Reference Board
 
-- [ ] Wskazany REF z Queue użyty jako wzorzec  
-- [ ] Nie gorszy stylistycznie niż REF (semi-flat, temperatura)  
-- [ ] Nie miesza poster/tile/sheet form (lekcja REF-05/09)  
+- [ ] Wskazany REF z Queue użyty jako wzorzec
+- [ ] Nie gorszy stylistycznie niż REF (semi-flat, temperatura)
+- [ ] Nie miesza poster/tile/sheet form (lekcja REF-05/09)
 
 ### 2.4 Color System
 
-- [ ] Swatche zgodne z REF-09 / Art Bible  
-- [ ] Brak purple / cyan cyber / rainbow dominant  
-- [ ] Clubtint ≤ 1  
+- [ ] Swatche zgodne z REF-09 / Art Bible
+- [ ] Brak purple / cyan cyber / rainbow dominant
+- [ ] Clubtint ≤ 1
 
 ### 2.5 Material System
 
-- [ ] Zgodne z REF-07 / REF-05 / REF-15  
-- [ ] Grain w budżecie kanonicznym (2–3%)  
-- [ ] Brak plastic toy / pure glow  
+- [ ] Zgodne z REF-07 / REF-05 / REF-15
+- [ ] Grain w budżecie kanonicznym (2–3%)
+- [ ] Brak plastic toy / pure glow
 
 ### 2.6 Lighting System
 
-- [ ] Zgodne z REF-08 / REF-04  
-- [ ] Warm flood / desk lamp wg lokacji  
-- [ ] Cool night ambient  
-- [ ] Brak flat UI light / disco  
+- [ ] Zgodne z REF-08 / REF-04
+- [ ] Warm flood / desk lamp wg lokacji
+- [ ] Cool night ambient
+- [ ] Brak flat UI light / disco
 
 ### 2.7 Composition Rules
 
-- [ ] Warstwy FG→mid→BG lub typ sheet/tile/icon OK  
-- [ ] Safe area / negatywna przestrzeń wg typu  
-- [ ] Brak UI chrome / losowego tekstu (wyjątek: kontrolowane labele tool sheet)  
-- [ ] Brak fish-eye / niebriefowany dutch  
+- [ ] Warstwy FG→mid→BG lub typ sheet/tile/icon OK
+- [ ] Safe area / negatywna przestrzeń wg typu
+- [ ] Brak UI chrome / losowego tekstu (wyjątek: kontrolowane labele tool sheet)
+- [ ] Brak fish-eye / niebriefowany dutch
 
 ---
 
@@ -120,13 +120,13 @@ VERDICT: APPROVED / ITERATE / REJECTED
 
 ## 4. Auto-FAIL (volume)
 
-1. Photoreal drift (Z5)  
-2. Purple / SaaS dashboard aesthetic  
-3. Poster zamiast tile/sheet gdy brief wymaga lab/tile  
-4. Real club IP / celebrity faces  
-5. Losowy czytelny tekst AI  
-6. Drugi styl vs REF-16 family  
-7. Ignorowanie Style Lock ACTIVE  
+1. Photoreal drift (Z5)
+2. Purple / SaaS dashboard aesthetic
+3. Poster zamiast tile/sheet gdy brief wymaga lab/tile
+4. Real club IP / celebrity faces
+5. Losowy czytelny tekst AI
+6. Drugi styl vs REF-16 family
+7. Ignorowanie Style Lock ACTIVE
 
 ---
 
@@ -134,24 +134,24 @@ VERDICT: APPROVED / ITERATE / REJECTED
 
 ### Wave 0 exit
 
-- [ ] Wszystkie P0 Wave 0 APPROVED  
-- [ ] REF-COLOR / LIGHT / TEX prod copies APPROVED  
-- [ ] Brand + crest system P0 APPROVED  
-- [ ] Spot-check vs REF-01/07/09/04/05  
+- [ ] Wszystkie P0 Wave 0 APPROVED
+- [ ] REF-COLOR / LIGHT / TEX prod copies APPROVED
+- [ ] Brand + crest system P0 APPROVED
+- [ ] Spot-check vs REF-01/07/09/04/05
 
 ### Wave 1 exit
 
-- [ ] HERO-001/002/003 + mobile variants P0 APPROVED  
-- [ ] BG office/pitch/tunnel P0 APPROVED  
-- [ ] LOD-001/002 APPROVED  
-- [ ] Family check vs REF-16  
+- [ ] HERO-001/002/003 + mobile variants P0 APPROVED
+- [ ] BG office/pitch/tunnel P0 APPROVED
+- [ ] LOD-001/002 APPROVED
+- [ ] Family check vs REF-16
 
 ### Wave 2 exit
 
-- [ ] HERO-004/005/006 APPROVED  
-- [ ] Soft-lock spots ILL-002/003 APPROVED  
-- [ ] ICO style + ICO-001…021 APPROVED  
-- [ ] Daily loop rozróżnialny w contact sheet  
+- [ ] HERO-004/005/006 APPROVED
+- [ ] Soft-lock spots ILL-002/003 APPROVED
+- [ ] ICO style + ICO-001…021 APPROVED
+- [ ] Daily loop rozróżnialny w contact sheet
 
 **FAIL Wave exit** → nie startuj kolejnej fali.
 
@@ -159,11 +159,11 @@ VERDICT: APPROVED / ITERATE / REJECTED
 
 ## 6. Eskalacja
 
-| Sytuacja | Akcja |
-| -------- | ----- |
-| 3× ITERATE | Nowy brief lub HOLD Wave |
-| Konflikt z DNA | Wygrywa DNA LOCKED |
-| Wątpliwość Style Lock | Owner + wstrzymaj volume |
+| Sytuacja                 | Akcja                           |
+| ------------------------ | ------------------------------- |
+| 3× ITERATE               | Nowy brief lub HOLD Wave        |
+| Konflikt z DNA           | Wygrywa DNA LOCKED              |
+| Wątpliwość Style Lock    | Owner + wstrzymaj volume        |
 | Potrzeba zmiany kierunku | **Nowy EPIC** — nie hotfix w 04 |
 
 ---
@@ -177,6 +177,6 @@ Gdy później `LFE-ART-DIRECTION-02` / `LFE-UI-SKIN-*`: assety volume są wejśc
 
 ## Historia
 
-| Wersja | Data | Opis |
-| ------ | ---- | ---- |
-| 0.1.0 | 2026-07-28 | Quality process volume Wave 0–2 |
+| Wersja | Data       | Opis                            |
+| ------ | ---------- | ------------------------------- |
+| 0.1.0  | 2026-07-28 | Quality process volume Wave 0–2 |

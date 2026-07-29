@@ -4,7 +4,7 @@
 **Data aktywacji:** 2026-07-28  
 **Epic aktywujący:** LFE-WORLD-ART-03R-FIX  
 **Board:** `LF-REF-BOARD-FOUNDATION-v02`  
-**Re-certyfikacja:** [`LFE-WORLD-ART-03R-RE-CERTIFICATION.md`](./LFE-WORLD-ART-03R-RE-CERTIFICATION.md)  
+**Re-certyfikacja:** [`LFE-WORLD-ART-03R-RE-CERTIFICATION.md`](./LFE-WORLD-ART-03R-RE-CERTIFICATION.md)
 
 > Poprzedni stan (2026-07-28 render): **NIEAKTYWNY** po Gate FAIL.  
 > Po remediacji REF-05/09/02/03/06/13/16 i re-gate **0 FAIL** → Certificate **ACTIVE**.
@@ -45,13 +45,13 @@ Exceptions: none
 
 ## Skutki aktywacji
 
-| Obszar | Stan |
-| ------ | ---- |
-| Visual DNA | **`LOCKED`** |
-| Foundation Reference Board | **PASS** (`v02`) |
-| Volume `LFE-WORLD-ART-04` | **MOŻE ZOSTAĆ OTWARTY** |
-| Użycie `ref-*.png` | **Kanon Style Lock** (v02) |
-| Zmiana kierunku | Tylko nowy EPIC (Style Lock §5) |
+| Obszar                     | Stan                            |
+| -------------------------- | ------------------------------- |
+| Visual DNA                 | **`LOCKED`**                    |
+| Foundation Reference Board | **PASS** (`v02`)                |
+| Volume `LFE-WORLD-ART-04`  | **MOŻE ZOSTAĆ OTWARTY**         |
+| Użycie `ref-*.png`         | **Kanon Style Lock** (v02)      |
+| Zmiana kierunku            | Tylko nowy EPIC (Style Lock §5) |
 
 ---
 
@@ -65,7 +65,7 @@ Nie otwarto automatycznie w tym EPICu — wymaga osobnego Owner GO na start volu
 
 ## Historia
 
-| Wersja | Data | Opis |
-| ------ | ---- | ---- |
-| 0.1.0 | 2026-07-28 | NIEAKTYWNY po FAIL gate |
-| 1.0.0 | 2026-07-28 | **AKTYWNY** po remediacji PASS |
+| Wersja | Data       | Opis                           |
+| ------ | ---------- | ------------------------------ |
+| 0.1.0  | 2026-07-28 | NIEAKTYWNY po FAIL gate        |
+| 1.0.0  | 2026-07-28 | **AKTYWNY** po remediacji PASS |

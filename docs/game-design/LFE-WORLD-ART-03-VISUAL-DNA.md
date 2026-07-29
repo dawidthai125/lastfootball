@@ -3,7 +3,7 @@
 **EPIC:** LFE-WORLD-ART-03  
 **Status:** **LOCKED** (po LFE-WORLD-ART-03R-FIX · Style Lock ACTIVE · board v02)  
 **Data:** 2026-07-28  
-**Lock certificate:** [`LFE-WORLD-ART-03R-STYLE-LOCK-CERTIFICATE.md`](./LFE-WORLD-ART-03R-STYLE-LOCK-CERTIFICATE.md)  
+**Lock certificate:** [`LFE-WORLD-ART-03R-STYLE-LOCK-CERTIFICATE.md`](./LFE-WORLD-ART-03R-STYLE-LOCK-CERTIFICATE.md)
 
 > **Visual DNA** = 10 nienaruszalnych zasad obrazu LastFootball.  
 > Każda przyszła grafika **musi** je spełniać.  
@@ -79,11 +79,11 @@ Zmiana kierunku artystycznego = **nowy EPIC**, nie „mała poprawka stylu”.
 
 Zadaj przy każdym assetcie:
 
-1. Czy to **miejsce w klubie**, czy panel?  
-2. Czy noc + warm flood / lamp jest czytelne?  
-3. Czy widzę **materiał**?  
-4. Czy styl to **to samo studio** co Foundation?  
-5. Czy **nie ma** purple / twarzy / UI chrome / real club IP?  
+1. Czy to **miejsce w klubie**, czy panel?
+2. Czy noc + warm flood / lamp jest czytelne?
+3. Czy widzę **materiał**?
+4. Czy styl to **to samo studio** co Foundation?
+5. Czy **nie ma** purple / twarzy / UI chrome / real club IP?
 
 Jeśli którakolwiek odpowiedź jest zła → **nie APPROVED**.
 
@@ -91,26 +91,26 @@ Jeśli którakolwiek odpowiedź jest zła → **nie APPROVED**.
 
 ## 3. Mapowanie zasad → Quality Gate
 
-| DNA # | Kryterium Quality Guide |
-| ----- | ----------------------- |
+| DNA #    | Kryterium Quality Guide                  |
+| -------- | ---------------------------------------- |
 | 1, 2, 10 | §1.1 Art Bible · §1.7 Night Pitch Office |
-| 8 | §1.2 Color |
-| 3 | §1.3 Light |
-| 4, 7 | §1.4 Materials · BG budget |
-| 5, 6 | §1.5 Perspective · §1.6 Style |
-| 9 | Brand / crest hierarchy (brief) |
-| 10 | Style Lock + family match |
+| 8        | §1.2 Color                               |
+| 3        | §1.3 Light                               |
+| 4, 7     | §1.4 Materials · BG budget               |
+| 5, 6     | §1.5 Perspective · §1.6 Style            |
+| 9        | Brand / crest hierarchy (brief)          |
+| 10       | Style Lock + family match                |
 
 ---
 
 ## 4. Dozwolone wyjątki (wąskie)
 
-| Wyjątek | Warunek |
-| ------- | ------- |
+| Wyjątek                         | Warunek                                                |
+| ------------------------------- | ------------------------------------------------------ |
 | Daylight Academy / Training day | Ten sam klub; te same materiały; nie „inna gra casual” |
-| Medical cool light | Tylko lokacja medyczna |
-| Match Moment dutch angle | Rare; briefowany; nadal DNA 4–5–8 |
-| Marketing copy na key art | Tekst kontrolowany brand; nie losowy AI text |
+| Medical cool light              | Tylko lokacja medyczna                                 |
+| Match Moment dutch angle        | Rare; briefowany; nadal DNA 4–5–8                      |
+| Marketing copy na key art       | Tekst kontrolowany brand; nie losowy AI text           |
 
 Wyjątek **nie** zawiesza Zasad 1, 5, 8, 10.
 
@@ -118,13 +118,13 @@ Wyjątek **nie** zawiesza Zasad 1, 5, 8, 10.
 
 ## 5. Anti-DNA (lista zakazów skrócona)
 
-- SaaS / admin / KPI wall aesthetic  
-- Purple glow · cyber neon · glassmorphism show  
-- Fotorealistyczne twarze zawodników  
-- IP prawdziwych klubów / EA-FIFA lookalike  
-- Cartoon toy / chibi  
-- Losowy czytelny tekst  
-- Drugi styl „bo ładniejszy generator”  
+- SaaS / admin / KPI wall aesthetic
+- Purple glow · cyber neon · glassmorphism show
+- Fotorealistyczne twarze zawodników
+- IP prawdziwych klubów / EA-FIFA lookalike
+- Cartoon toy / chibi
+- Losowy czytelny tekst
+- Drugi styl „bo ładniejszy generator”
 
 Pełna lista FAIL: Quality Guide §4.
 
@@ -132,28 +132,28 @@ Pełna lista FAIL: Quality Guide §4.
 
 ## 6. Relacja do innych SSOT
 
-| Dokument | Relacja |
-| -------- | ------- |
-| Art Bible | Opis świata i lokacji — DNA to **skrót egzekwowalny** |
-| Foundation Pack | Wzorce referencyjne uosabiające DNA |
-| Style Lock | Procedura zamrożenia DNA |
-| Art Direction 01 | Most do UI — UI nie może łamać DNA atmosfery |
-| Guide §16 | Hierarchia decyzji UI — DNA nie wymusza KPI wall |
+| Dokument         | Relacja                                               |
+| ---------------- | ----------------------------------------------------- |
+| Art Bible        | Opis świata i lokacji — DNA to **skrót egzekwowalny** |
+| Foundation Pack  | Wzorce referencyjne uosabiające DNA                   |
+| Style Lock       | Procedura zamrożenia DNA                              |
+| Art Direction 01 | Most do UI — UI nie może łamać DNA atmosfery          |
+| Guide §16        | Hierarchia decyzji UI — DNA nie wymusza KPI wall      |
 
 ---
 
 ## 7. Status zamrożenia
 
-| Stan | Znaczenie |
-| ---- | --------- |
-| `DRAFT` | Dokument przed Owner Review |
-| `LOCKED` | **AKTUALNY** — po APPROVE Reference Board v02 + Style Lock Certificate ACTIVE (2026-07-28) |
-| `SUPERSEDED` | Tylko przez nowy EPIC zmiany kierunku |
+| Stan         | Znaczenie                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| `DRAFT`      | Dokument przed Owner Review                                                                |
+| `LOCKED`     | **AKTUALNY** — po APPROVE Reference Board v02 + Style Lock Certificate ACTIVE (2026-07-28) |
+| `SUPERSEDED` | Tylko przez nowy EPIC zmiany kierunku                                                      |
 
 ---
 
 ## Historia
 
-| Wersja | Data | Opis |
-| ------ | ---- | ---- |
-| 0.1.0 | 2026-07-28 | Pierwsze 10 zasad Visual DNA |
+| Wersja | Data       | Opis                         |
+| ------ | ---------- | ---------------------------- |
+| 0.1.0  | 2026-07-28 | Pierwsze 10 zasad Visual DNA |
