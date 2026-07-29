@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (GDD-18 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · tip `a8236df` · next EPIC = **GDD-19 READY FOR AUDIT**
+
 ### Docs (LFE-UI-MOTION-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · presentation tip `9fd14fc` · next EPIC = GDD-17+

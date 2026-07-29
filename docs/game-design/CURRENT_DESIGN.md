@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B · **GDD-18 Ranking Thin** wypełnione. §3–§18 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B · **GDD-18 Ranking Thin CLOSED**. §3–§18 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Następny: **GDD-19 READY FOR AUDIT**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -64,4 +64,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — GDD-18 Ranking Thin
+2026-07-30 — GDD-18 Ranking Thin CLOSED

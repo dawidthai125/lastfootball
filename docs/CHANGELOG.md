@@ -9,10 +9,21 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
-**Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`2595cc9`** (GDD-17).  
+**Documentation tip:** **`a8236df`** (GDD-18).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — GDD-18 · CLOSED
+
+### Docs
+
+- §18 Ranking Thin w `GAME_DESIGN_DOCUMENT.md` (sezonowy ranking klubów; ≠ §6 / §10 / §17; §19 OUT; bez liczb/ELO)
+- Sync CURRENT_DESIGN · game-design ROADMAP/README · handoff / baseline / PROJECT_STATUS / ROADMAP
+- Documentation tip → **`a8236df`** (content `84b7f4d` + prettier)
+- CI GREEN · PRODUCTION VERIFIED · brak zmian kodu aplikacji
+- Next: **GDD-19 READY FOR AUDIT**
 
 ---
 

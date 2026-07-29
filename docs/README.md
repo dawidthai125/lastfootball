@@ -11,13 +11,13 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)        |
 | **Domain feature baseline** | `cd222ba` — LFE-PLAYERS-02 (Player Development Thin)                                             |
 | **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                             |
-| **Documentation tip**       | `2595cc9` — GDD-17 Skauting Information Thin B                                                   |
+| **Documentation tip**       | `a8236df` — GDD-18 Ranking Thin (sezonowy ranking klubów)                            |
 | **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                               |
 | **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                |
 | Production                  | https://lastfootball.vercel.app                                                                  |
 | Platform                    | Onboarding · First Match · Hub · League · Finance · **Players Dev** · Transfers · Training Depth |
 | LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                  |
-| GDD                         | GDD-01…**17** Thin · §26 CLOSED · next: Owner (**GDD-17+** / 22 fixtures)                        |
+| GDD                         | GDD-01…**18** Thin · §26 CLOSED · next: **GDD-19 READY FOR AUDIT**                               |
 | UI Presentation             | Guide §16 · §8 Motion · **UI P0** · **MOTION-01** · Landing · Branding · Auth UX                 |
 | Impl notes                  | [`implementation/`](./implementation/)                                                           |
 | Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                              |
@@ -95,4 +95,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-30 — LFE-UI-MOTION-01
+2026-07-30 — GDD-18 CLOSE

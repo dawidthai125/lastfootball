@@ -46,4 +46,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-07-30 — LFE-UI-MOTION-01
+2026-07-30 — GDD-18

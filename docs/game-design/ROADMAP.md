@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§18 (Thin) + §20 + §23 + **§26**. Następny szkielet = **GDD-17+** pozostałe rozdziały (§19+; kolejność = Owner).
+GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§18 (Thin) + §20 + §23 + **§26**. Następny = **GDD-19** (§19 Osiągnięcia) — **READY FOR AUDIT**.
 
 ## Completed
 
@@ -29,7 +29,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-15     | §20 Daily tasks                                              |
 | GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED              |
 | GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED |
-| **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · docs filled |
+| **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `a8236df` |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                      |
 
@@ -41,9 +41,10 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Planned
 
-| Stage   | Zakres                                        |
-| ------- | --------------------------------------------- |
-| GDD-17+ | Pozostałe szkielety (§19+; kolejność = Owner) |
+| Stage      | Zakres                                            |
+| ---------- | ------------------------------------------------- |
+| **GDD-19** | **§19 Osiągnięcia** — **READY FOR AUDIT**         |
+| GDD-17+    | Pozostałe szkielety (§21–22 / §24+; kolejność = Owner) |
 
 ## Future
 
@@ -54,7 +55,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 - Hub: personalizacja / konfigurowalne widgety (poza MVP; kotwica §23)
 - Zadania: advanced streaks / Quest Log / social (poza MVP; kotwica §20)
 - Ranking: all-time / gracze / global (poza Thin; kotwica §18)
-- Osiągnięcia §19 (szkielet → osobny EPIC)
+- Osiągnięcia §19 → **GDD-19 READY FOR AUDIT** (nie Future)
 
 ## Najważniejsze decyzje
 
@@ -69,4 +70,4 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Last updated
 
-2026-07-30 — GDD-18 Ranking Thin
+2026-07-30 — GDD-18 Ranking Thin CLOSED · next GDD-19 READY FOR AUDIT

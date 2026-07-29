@@ -15,13 +15,13 @@
 
 | Pole                            | Wartość                                                                                                  |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + Player Development + **MOTION-01**                         |
+| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + Player Development + MOTION-01 + **GDD-18** |
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                    |
 | **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                                          |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                    |
-| **Documentation tip**           | `2595cc9` — **GDD-17** Skauting Information Thin B (docs)                                                |
+| **Documentation tip**           | `a8236df` — **GDD-18** Ranking Thin (sezonowy ranking klubów)                                            |
 | **Branch**                      | `main`                                                                                                   |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · LFE-UI-MOTION-01 CLOSED · GDD-17 · Domain PLAYERS-02 · brak otwartego EPIC |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · GDD-18 CLOSED · MOTION-01 · Domain PLAYERS-02 · brak otwartego EPIC        |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -32,11 +32,12 @@ git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline cd222ba            # Domain PLAYERS-02
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
+git log -1 --oneline a8236df            # GDD-18 Ranking Thin (docs tip)
+git log -1 --oneline 84b7f4d            # GDD-18 content (pre-prettier)
 git log -1 --oneline 2595cc9            # GDD-17 Skauting Information Thin B
-git log -1 --oneline 9dc834a            # Auth UX feat (prior presentation)
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (feat PLAYERS-02 `cd222ba` VERIFIED · presentation MOTION-01 `9fd14fc`). Domain bez zmian w MOTION-01 (presentation-only).
+**Prod deploy:** Vercel Production śledzi `main` (feat PLAYERS-02 `cd222ba` VERIFIED · presentation MOTION-01 `9fd14fc` · docs GDD-18 `a8236df`). Domain bez zmian w GDD-18 (docs-only).
 
 **Operacyjne:** Migracje Supabase: `complete_training_session` **oraz** `players.potential` + `apply_match_development` muszą zostać zastosowane na prod.
 
@@ -57,6 +58,7 @@ git log -1 --oneline 9dc834a            # Auth UX feat (prior presentation)
 | GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                     |
 | **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`              |
 | **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                     |
+| **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `a8236df`           |
 
 ### Silnik / Match UI
 
@@ -64,7 +66,7 @@ LFE EPIC-1…7 · Architecture Freeze · Live Bridge · Canvas · Replay · Post
 
 ### Design / World Art / DS
 
-GDD-01…17 (Thin) · §20 · §23 · §26 · Art Bible · World Art **CLOSED** (165 assets) · Visual DNA **LOCKED** · Style Lock **ACTIVE** · Hi-Fi · Proto · Playtest → GO impl.
+GDD-01…18 (Thin) · §20 · §23 · §26 · Art Bible · World Art **CLOSED** (165 assets) · Visual DNA **LOCKED** · Style Lock **ACTIVE** · Hi-Fi · Proto · Playtest → GO impl.
 
 ### UI P0 (Night Pitch Office)
 
@@ -201,11 +203,11 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 ### Co jest Thin (świadome limity)
 
-11 ≠ 22 fixtures · brak XP / attribute DB · **brak kodu Akademii** (GDD §16 Thin A = docs only) · **brak kodu Skautingu** (GDD §17 Thin B = docs only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo**.
+11 fixtures ≠ 22 · brak XP / attribute DB · **brak kodu Akademii** (GDD §16 Thin A = docs only) · **brak kodu Skautingu** (GDD §17 Thin B = docs only) · **brak kodu Rankingu** (GDD §18 Thin = docs only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo**.
 
 ### Planowane (Owner wybiera)
 
-**GDD-17+** (§18 Ranking / szkielety) · full 22 fixtures · hardening transferów · Ratings v2 · LFE PUBLIC trim · LFE-ACADEMY-01 / LFE-SCOUTING-01 (kod, po Owner GO).
+**GDD-19** (§19 Osiągnięcia) — **READY FOR AUDIT** · full 22 fixtures · hardening transferów · Ratings v2 · LFE PUBLIC trim · LFE-ACADEMY-01 / LFE-SCOUTING-01 / LFE-RANKING-01 (kod, po Owner GO).
 
 ---
 
@@ -233,12 +235,13 @@ Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED** (kolejność rekomendowana):
 
 | #   | EPIC / temat                 | Priorytet            | Notatka                                |
 | --- | ---------------------------- | -------------------- | -------------------------------------- |
-| 1   | **GDD-17+** (§18 Ranking)    | **P0 rekomendowany** | Pozostałe szkielety GDD — Owner        |
+| 1   | **GDD-19** (§19 Osiągnięcia) | **P0 · READY FOR AUDIT** | Następny szkielet GDD — Owner      |
 | 2   | Full 22-fixture season       | P2                   | Wymaga decyzji vs Thin 11              |
 | 3   | Transfers hardening          | P2                   | Tech debt — `TRANSFER_ARCHITECTURE.md` |
 | 4   | LFE-ACADEMY-01 (kod)         | P2                   | Po GDD-16; osobny AUDIT                |
 | 5   | LFE-SCOUTING-01 (kod)        | P2                   | Po GDD-17; osobny AUDIT                |
-| 6   | Ratings v2 · LFE PUBLIC trim | P3                   | Chore / depth                          |
+| 6   | LFE-RANKING-01 (kod)         | P2                   | Po GDD-18; osobny AUDIT                |
+| 7   | Ratings v2 · LFE PUBLIC trim | P3                   | Chore / depth                          |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -246,9 +249,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 10. Rekomendowany następny EPIC
 
-### **GDD-17+** (§18 Ranking) lub full 22 fixtures
+### **GDD-19** (§19 Osiągnięcia) — READY FOR AUDIT
 
-**Uzasadnienie:** LFE-UI-MOTION-01 CLOSED (`9fd14fc`) — presentation motion Thin. Następny naturalny szkielet docs = **§18 Ranking**, albo decyzja Ownera o sezonie 22.
+**Uzasadnienie:** GDD-18 Ranking Thin CLOSED (`a8236df`). Następny naturalny szkielet docs = **§19 Osiągnięcia**, albo decyzja Ownera o sezonie 22 / kodzie Academy·Scouting·Ranking.
 
 **Nie zaczynaj** bez AUDIT → PLAN → **Owner GO**.
 
@@ -304,9 +307,10 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
 - `LEAGUE_FIXTURE_COUNT=11` ≠ GDD home+away 22.
-- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · **kod Akademii** · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI.
-- Domain tip = PLAYERS-02 (`cd222ba`); Presentation tip = MOTION-01 (`9fd14fc`); Documentation tip = GDD-17 (`2595cc9`); UI P0 = `54d0724`.
+- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · **kod Akademii** · **kod Skautingu** · **kod Rankingu** · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI.
+- Domain tip = PLAYERS-02 (`cd222ba`); Presentation tip = MOTION-01 (`9fd14fc`); Documentation tip = GDD-18 (`a8236df`); UI P0 = `54d0724`.
 - Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
+- Ranking Thin (GDD-18): sezonowy ranking klubów · docs only · placeholder `/rankings` ≠ SSOT.
 - Sekrety `.env` — nigdy w git.
 - Force-push / rewrite `main` — zakazane.
 - Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
@@ -347,8 +351,8 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                |
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                   |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training Depth + Match development          |
-| Dokumentacja | **Aktualna** | MOTION-01 CLOSE · tip presentation `9fd14fc` · Docs GDD-17 |
-| CI           | **GREEN**    | tip `9fd14fc` VERIFIED                                     |
+| Dokumentacja | **Aktualna** | GDD-18 CLOSE · tip docs `a8236df` · Presentation `9fd14fc` |
+| CI           | **GREEN**    | tip `a8236df` VERIFIED                                     |
 | Production   | **GREEN**    | Vercel · Domain PLAYERS-02 `cd222ba`                       |
 
 ---
@@ -366,4 +370,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — LFE-UI-MOTION-01 CLOSE · presentation tip `9fd14fc` · PRODUCTION VERIFIED · CI GREEN
+2026-07-30 — GDD-18 CLOSE · Documentation tip `a8236df` · PRODUCTION VERIFIED · CI GREEN · next **GDD-19 READY FOR AUDIT**
