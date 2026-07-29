@@ -200,7 +200,7 @@
   color: var(--lf-color-status-warn);
 }
 
-/* Moment overlays */
+/* Moment overlays — enter motion: shared `.lf-motion-*` (LFE-UI-MOTION-01). */
 .lf-mp-overlay {
   position: fixed;
   inset: 0;
@@ -209,7 +209,6 @@
   flex-direction: column;
   justify-content: flex-end;
   background: var(--lf-color-overlay-scrim);
-  animation: lf-mp-overlay-in 220ms var(--lf-motion-easing) both;
 }
 
 .lf-mp-overlay__art {
@@ -234,7 +233,6 @@
     color-mix(in srgb, var(--lf-color-bg-base) 94%, transparent) 28%
   );
   text-align: center;
-  animation: lf-mp-overlay-panel-in 280ms var(--lf-motion-easing) both;
 }
 
 .lf-mp-overlay__title {
@@ -253,38 +251,9 @@
   color: var(--lf-color-text-gold);
 }
 
-@keyframes lf-mp-overlay-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes lf-mp-overlay-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .lf-mp__primary {
     transition: none;
-  }
-
-  .lf-mp-overlay,
-  .lf-mp-overlay__panel {
-    animation: lf-mp-overlay-in 120ms linear both;
-  }
-
-  .lf-mp-overlay__panel {
-    transform: none;
   }
 }
 

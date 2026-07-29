@@ -42,8 +42,14 @@ describe('LFE-UI-IMPL-06 post + overlays', () => {
     expect(postCss).toContain('.lf-post__hero');
   });
 
-  it('animates moment overlays with reduced-motion fallback', () => {
-    expect(pathCss).toContain('lf-mp-overlay-in');
+  it('uses shared motion classes for moment overlays (LFE-UI-MOTION-01)', () => {
+    const overlayTsx = readFileSync(
+      join(process.cwd(), 'src/components/match/MatchMomentOverlay.tsx'),
+      'utf8',
+    );
+    expect(overlayTsx).toContain('lf-motion-fade-in');
+    expect(overlayTsx).toContain('lf-motion-enter');
+    expect(pathCss).not.toContain('@keyframes lf-mp-overlay');
     expect(pathCss).toContain('prefers-reduced-motion');
   });
 });

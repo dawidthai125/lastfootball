@@ -1,0 +1,62 @@
+/**
+ * LFE-UI-MOTION-01 — shared presentation motion (CSS-only).
+ *
+ * SSOT wzorców: docs/game-design/UI_DESIGN_GUIDE.md §8
+ * Tylko opacity + transform. Tokeny: --lf-motion-*.
+ * ZERO DUPLICATE — ekrany konsumują te klasy, nie kopiują keyframes.
+ */
+
+@keyframes lf-motion-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lf-motion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/** Fade-only enter (np. Match overlay scrim). */
+.lf-motion-fade-in {
+  animation: lf-motion-fade-in var(--lf-motion-fast) var(--lf-motion-easing) both;
+}
+
+/** Decision / panel enter — krótki, subtelny. */
+.lf-motion-enter {
+  animation: lf-motion-enter var(--lf-motion-base) var(--lf-motion-easing) both;
+}
+
+/**
+ * Primary press — feedback tylko w :active.
+ * Bez transition: zwolnienie = natychmiastowy powrót do bazy.
+ */
+.lf-motion-press:active {
+  transform: scale(0.985);
+  opacity: 0.94;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-motion-fade-in,
+  .lf-motion-enter {
+    animation: lf-motion-fade-in var(--lf-motion-fast) linear both;
+  }
+
+  .lf-motion-enter {
+    transform: none;
+  }
+
+  .lf-motion-press:active {
+    transform: none;
+    opacity: 1;
+  }
+}

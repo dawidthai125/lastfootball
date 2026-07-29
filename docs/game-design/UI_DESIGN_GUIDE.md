@@ -142,9 +142,48 @@ Szkielet oczekiwany:
 
 ## 8. Motion
 
-- 2–3 celowe wzorce globalne (np. przejście hub→detal, feedback CTA, wejście wyniku meczu).
-- Czas trwania krótki; preferuj `ease-out`.
-- Szacunek dla `prefers-reduced-motion`.
+**SSOT implementacji Thin (LFE-UI-MOTION-01):** `apps/web/src/styles/motion.css`  
+**Tokeny:** `--lf-motion-fast` (120ms) · `--lf-motion-base` (180ms) · `--lf-motion-slow` (280ms) · `--lf-motion-easing` (`ease-out`).
+
+### 8.1 Zasady nadrzędne
+
+1. Motion = **prezentacja** — nie zmienia domeny, resolverów, DTO, LFE ani UX flow.
+2. **CSS-first** — bez Framer / Motion One / GSAP / View Transitions / nowych lib JS.
+3. Właściwości animowane: wyłącznie **`opacity`** i **`transform`**.
+4. Motion **krótkie, subtelne, praktycznie niewidoczne** — nigdy efektowne, gamingowe, neonowe.
+5. **Motion budget:** nie wydłużać odczuwanego czasu reakcji UI; jeśli użytkownik „czeka na animację” — skrócić.
+6. **REUSE:** jedne keyframes · jedne klasy · jedne tokeny — **ZERO DUPLICATE** (nie kopiować `@keyframes` w CSS ekranów).
+7. Każdy wzorzec **musi** mieć `prefers-reduced-motion`.
+
+### 8.2 Trzy wzorce Thin (kontrakt)
+
+| Wzorzec                | Klasa CSS            | Keyframes           | Czas token         | Zastosowanie Thin                        |
+| ---------------------- | -------------------- | ------------------- | ------------------ | ---------------------------------------- |
+| Fade enter             | `.lf-motion-fade-in` | `lf-motion-fade-in` | `--lf-motion-fast` | Match Goal/Final overlay (scrim)         |
+| Decision / panel enter | `.lf-motion-enter`   | `lf-motion-enter`   | `--lf-motion-base` | Hub decision block · Match overlay panel |
+| Primary press          | `.lf-motion-press`   | — (`:active` only)  | natychmiast        | Hub Primary CTA                          |
+
+**Primary press:** feedback **tylko** podczas `:active`. Po zwolnieniu UI **natychmiast** wraca do stanu bazowego (bez transition / efektów końcowych).
+
+**Match overlay:** podkreśla wydarzenie; nie odciąga uwagi od przebiegu meczu (krótki enter; logika dismiss bez zmian).
+
+### 8.3 Reduced motion
+
+Przy `prefers-reduced-motion: reduce`:
+
+- enter → krótki fade (`--lf-motion-fast`), bez `translateY`;
+- press → brak scale / zmiany opacity.
+
+### 8.4 Poza Thin (nie dodawać „przy okazji”)
+
+Landing · Navigation · route transitions · Live score tick · tabele · listy · Auth/Wizard rewrite.
+
+### 8.5 Jak użyć (bez zgadywania)
+
+1. Zaimportowany globalnie przez `globals.css` → `@import '../styles/motion.css'`.
+2. Na elemencie dodaj klasę z §8.2 (np. `className="lf-hub__decision lf-motion-enter"`).
+3. Nie definiuj lokalnych kopii `lf-motion-*` keyframes.
+4. Nie animuj `width` / `height` / `top` / `left` / `margin` / layout.
 
 ---
 

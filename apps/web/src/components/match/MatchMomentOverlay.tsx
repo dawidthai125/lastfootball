@@ -41,7 +41,7 @@ export function MatchMomentOverlay({
 
   return (
     <div
-      className="lf-mp-overlay"
+      className="lf-mp-overlay lf-motion-fade-in"
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -52,7 +52,7 @@ export function MatchMomentOverlay({
       <div className="lf-mp-overlay__art" aria-hidden>
         <Image src={src} alt="" fill sizes="100vw" priority />
       </div>
-      <div className="lf-mp-overlay__panel">
+      <div className="lf-mp-overlay__panel lf-motion-enter">
         <p className="lf-mp__eyebrow">{variant === 'goal' ? 'Moment' : 'Koniec'}</p>
         <h2 className="lf-mp-overlay__title">{title}</h2>
         {scoreLine ? <p className="lf-mp-overlay__score">{scoreLine}</p> : null}

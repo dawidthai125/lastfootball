@@ -76,7 +76,7 @@ export function EarlyClubHub({
 
       <div className="lf-hub__decision-stage">
         <AtmosphereLayer
-          className="lf-hub__decision"
+          className="lf-hub__decision lf-motion-enter"
           aria-label={event.eyebrow}
           layers={['vignette', 'grain']}
         >
@@ -220,7 +220,11 @@ function ClubIdentity({
 function PrimaryCta({ cta }: { cta: HubCta }) {
   return (
     <div className="lf-hub__primary-wrap">
-      <Link href={cta.href} data-hub-primary-cta={cta.id} className="lf-hub__primary">
+      <Link
+        href={cta.href}
+        data-hub-primary-cta={cta.id}
+        className="lf-hub__primary lf-motion-press"
+      >
         {cta.label}
       </Link>
     </div>
