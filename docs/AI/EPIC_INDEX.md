@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline**     | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
 | **Domain baseline**         | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED                       |
 | **Presentation tip**        | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)       |
-| **Documentation tip**       | tip `main` po LFE-HANDOFF-01 — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
+| **Documentation tip**       | **`a6f3951`** — LFE-HANDOFF-01                                |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 

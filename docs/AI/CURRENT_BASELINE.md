@@ -36,7 +36,7 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 | Domain message                  | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`        |
 | **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)         |
 | Presentation message            | `feat(auth-ux): redesign login/register experience with Landing modal`        |
-| **Documentation tip**           | tip `main` po **LFE-HANDOFF-01** (pin po push — ten plik)                     |
+| **Documentation tip**           | `a6f3951` — **LFE-HANDOFF-01** CLOSED                                          |
 
 UI P0 (Night Pitch Office) + Landing / Branding / Auth UX są na produkcji jako warstwa prezentacji — **bez** zmiany Domain baseline TRANSFERS-08 (DTO / settlement / unlock).
 
@@ -86,4 +86,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-29 — LFE-HANDOFF-01 (UI P0 `54d0724` · Domain TRANSFERS-08 · Presentation AUTH-UX `9dc834a`)
+2026-07-29 — LFE-HANDOFF-01 (UI P0 `54d0724` · Domain TRANSFERS-08 · Presentation AUTH-UX `9dc834a` · tip `a6f3951`)

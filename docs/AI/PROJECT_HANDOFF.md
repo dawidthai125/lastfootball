@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                   |
 | **Domain feature baseline**     | `9b1c575` — **LFE-TRANSFERS-08** (bez zmian domenowych od UI P0)        |
 | **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)   |
-| **Documentation tip**           | tip `main` po **LFE-HANDOFF-01** — patrz [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
+| **Documentation tip**           | `a6f3951` — **LFE-HANDOFF-01** CLOSED                                       |
 | **Branch**                      | `main`                                                                  |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · brak otwartego EPIC produktowego          |
 | **Production URL**              | https://lastfootball.vercel.app                                         |
