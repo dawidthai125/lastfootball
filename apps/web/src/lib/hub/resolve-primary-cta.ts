@@ -1,6 +1,7 @@
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveNavAccess } from '@/lib/hub/unlock';
 import type { HubCta, HubCtaContext, HubPhase, HubSession } from '@/lib/hub/types';
+import { UI_COPY } from '@/lib/ui/copy';
 
 const DECISION_PHASES = new Set<HubPhase>(['EARLY_CLUB', 'SEASON']);
 
@@ -21,7 +22,7 @@ export function resolvePrimaryCta(
   if (DECISION_PHASES.has(phase) && session === 'matchday' && ctx.nextFixture) {
     return {
       id: 'play-next-match',
-      label: 'Idź do meczu',
+      label: UI_COPY.goToMatch,
       href: `/match/${ctx.nextFixture.id}/tunnel`,
       access: 'open',
     };
@@ -30,7 +31,7 @@ export function resolvePrimaryCta(
   void session;
   return {
     id: 'view-squad',
-    label: 'Zobacz kadrę',
+    label: UI_COPY.viewSquad,
     href: '/squad',
     access: 'open',
   };
@@ -58,7 +59,7 @@ export function resolveSecondaryCtas(phase: HubPhase, ctx: SecondaryCtaContext =
     },
     {
       id: 'squad',
-      label: 'Kadra',
+      label: UI_COPY.squadNav,
       href: '/squad',
       access: resolveNavAccess('squad', phase, navCtx),
     },

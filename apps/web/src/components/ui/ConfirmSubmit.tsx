@@ -2,6 +2,8 @@
 
 import { useState, type ReactNode } from 'react';
 
+import { UI_COPY } from '@/lib/ui/copy';
+
 import './domain-states.css';
 
 type ConfirmSubmitProps = {
@@ -21,7 +23,7 @@ type ConfirmSubmitProps = {
  */
 export function ConfirmSubmit({
   label,
-  confirmLabel = 'Potwierdź',
+  confirmLabel = UI_COPY.confirm,
   cancelLabel = 'Anuluj',
   disabled = false,
   pending = false,
@@ -45,7 +47,7 @@ export function ConfirmSubmit({
 
   return (
     <div className="lf-cf" role="group" aria-label="Potwierdzenie decyzji">
-      <p className="lf-cf__prompt">Potwierdź rozliczenie oferty.</p>
+      <p className="lf-cf__prompt">{UI_COPY.confirmOffer}</p>
       <div className="lf-cf__row">
         {children}
         <button

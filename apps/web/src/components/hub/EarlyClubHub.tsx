@@ -15,6 +15,7 @@ import {
   type HubCta,
   type HubSession,
 } from '@/lib/hub';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import './hub-decision.css';
 
@@ -233,7 +234,7 @@ function SecondaryRow({ actions }: { actions: HubCta[] }) {
             className="lf-hub__secondary-item lf-hub__secondary-item--locked"
             title="Niedostępne w tej fazie"
           >
-            {cta.label} · niedostępne
+            {cta.label} · {UI_COPY.softLockUnavailable}
           </span>
         ) : (
           <Link key={cta.id} href={cta.href} className="lf-hub__secondary-item">

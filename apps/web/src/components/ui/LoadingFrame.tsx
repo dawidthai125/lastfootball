@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import { UI_COPY } from '@/lib/ui/copy';
+
 import './domain-states.css';
 
 type LoadingFrameProps = {
@@ -12,7 +14,7 @@ type LoadingFrameProps = {
 export function LoadingFrame({
   waId = 'LOD',
   illustrationSrc,
-  label = 'Ładowanie…',
+  label = UI_COPY.loading,
 }: LoadingFrameProps) {
   return (
     <div className="lf-ld" data-wa={waId} role="status" aria-busy="true" aria-live="polite">

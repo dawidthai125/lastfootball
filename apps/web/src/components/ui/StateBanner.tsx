@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react';
 
+import { UI_COPY } from '@/lib/ui/copy';
+
 type StateBannerProps = {
   tone?: 'error' | 'info';
   children: ReactNode;
@@ -14,7 +16,7 @@ export function StateBanner({
   tone = 'error',
   children,
   onRetry,
-  retryLabel = 'Spróbuj ponownie',
+  retryLabel = UI_COPY.retry,
 }: StateBannerProps) {
   return (
     <div

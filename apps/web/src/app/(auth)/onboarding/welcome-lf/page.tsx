@@ -5,6 +5,7 @@ import { ClubCrest } from '@/components/assets/ClubCrest';
 import { LandingCta } from '@/components/landing/LandingCta';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import '@/components/onboarding/first-match-flow.css';
 
@@ -35,11 +36,11 @@ export default async function WelcomeLastFootballPage() {
       </div>
       <h1 className="lf-landing__title">Witaj w LastFootball</h1>
       <p className="lf-fm__lead">
-        {club.name} ma już historię. Hub to twój dom — skład, terminarze i kolejne decyzje czekają.
+        {club.name} ma już historię. Hub to twój dom — kadra, terminarze i kolejne decyzje czekają.
       </p>
       <div className="lf-landing__cta-row">
         <LandingCta href="/hub" variant="primary">
-          Wejdź do Hubu
+          {UI_COPY.hubEnter}
         </LandingCta>
       </div>
     </div>

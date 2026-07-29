@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { UI_COPY } from '@/lib/ui/copy';
+
 import './domain-states.css';
 
 type SoftLockStateProps = {
@@ -26,7 +28,7 @@ export function SoftLockState({
   reason,
   unlockHint = null,
   hubHref = '/hub',
-  hubLabel = 'Wróć do Hub',
+  hubLabel = UI_COPY.hubExit,
   secondaryHref,
   secondaryLabel,
 }: SoftLockStateProps) {

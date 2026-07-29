@@ -14,6 +14,7 @@ import {
   validateStartingXi,
 } from '@/lib/squad/validate-starting-xi';
 import { matchLivePath, matchPrePath } from '@/lib/match/match-path';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import './match-xi.css';
 
@@ -60,7 +61,7 @@ export function MatchXiView({
 
       <header className="lf-xi__decision">
         <p className="lf-xi__eyebrow">Skład</p>
-        <h1 className="lf-xi__title">Ustaw skład (XI)</h1>
+        <h1 className="lf-xi__title">{UI_COPY.lineupTitle}</h1>
         <p className="lf-xi__meta">
           XI {starters.length}/11
           {validation.hasGoalkeeper ? '' : ' · brak bramkarza'}
@@ -80,10 +81,10 @@ export function MatchXiView({
         <input type="hidden" name="matchId" value={matchId} />
         <input type="hidden" name="starterIds" value={starters.map((p) => p.id).join(',')} />
         <button type="submit" className="lf-xi__primary" disabled={!validation.ok || pending}>
-          {pending ? 'Zapis…' : 'Zapisz i dalej'}
+          {pending ? UI_COPY.saving : UI_COPY.saveAndContinue}
         </button>
         <Link href={matchPrePath(matchId)} className="lf-xi__soft">
-          Wróć do checklisty
+          {UI_COPY.backToChecklist}
         </Link>
       </form>
 

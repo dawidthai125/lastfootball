@@ -6,6 +6,7 @@ import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { matchLivePath, matchTunnelPath, matchVsPath, matchXiPath } from '@/lib/match/match-path';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import './prematch-kickoff.css';
 import './match-path.css';
@@ -70,15 +71,15 @@ export function PreMatchView({
         <div className="lf-ko__cta-wrap">
           {checklistReady ? (
             <Link href={matchLivePath(fixture.id)} className="lf-mp__primary">
-              {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Start meczu'}
+              {firstMatch ? UI_COPY.playFirstMatch : UI_COPY.playMatch}
             </Link>
           ) : (
             <span className="lf-mp__primary lf-mp__primary--disabled" aria-disabled>
-              Start meczu
+              {UI_COPY.playMatch}
             </span>
           )}
           <Link href={matchXiPath(fixture.id)} className="lf-mp__soft">
-            Ustaw skład
+            {UI_COPY.setLineup}
           </Link>
         </div>
       </section>

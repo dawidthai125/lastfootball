@@ -9,6 +9,7 @@ import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
+import { UI_COPY } from '@/lib/ui/copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
 function isActive(pathname: string, href: string): boolean {
@@ -138,7 +139,7 @@ export function LeftNavigation() {
                   <button
                     key={item.id}
                     type="button"
-                    title={`${item.label} — niedostępne`}
+                    title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
                     className="lf-nav-item lf-nav-item--locked"
                     style={itemStyle}
                     onClick={() => setLockTitle(item.label)}
@@ -158,7 +159,7 @@ export function LeftNavigation() {
                           textTransform: 'uppercase',
                         }}
                       >
-                        wkrótce
+                        {UI_COPY.softLockSoon}
                       </span>
                     ) : null}
                   </button>
@@ -241,8 +242,12 @@ export function LeftNavigation() {
 
       <SoftLockModal
         open={Boolean(lockTitle)}
-        title={lockTitle ? `${lockTitle} niedostępne` : 'Niedostępne'}
-        reason="Ta lokacja odblokuje się wraz z postępem klubu. Reguła pochodzi z resolveNavAccess — nie z UI."
+        title={
+          lockTitle
+            ? `${lockTitle} jest ${UI_COPY.softLockUnavailable}`
+            : `Lokacja ${UI_COPY.softLockUnavailable}`
+        }
+        reason={UI_COPY.softLockReason}
         onClose={closeLock}
       />
     </aside>

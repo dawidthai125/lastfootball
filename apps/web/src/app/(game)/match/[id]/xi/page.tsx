@@ -10,6 +10,7 @@ import { getFixtureByIdForClub } from '@/lib/fixtures';
 import { resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchPrePath } from '@/lib/match/match-path';
+import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -48,12 +49,12 @@ export default async function MatchXiPage({ params }: PageProps) {
             waId="EMP-002"
             illustrationSrc="/assets/world-art/emp-002-empty-locker.png"
             title="Brak kadry do składu"
-            body="Nie można ustawić XI — kadra jest niedostępna. Wróć do checklisty przedmeczowej."
-            links={[{ href: matchPrePath(id), label: 'Checklist' }]}
+            body="Nie można ustawić XI — kadra jest niedostępna. Wróć do przedmeczu."
+            links={[{ href: matchPrePath(id), label: UI_COPY.backToPrematch }]}
           />
           <p style={{ marginTop: 'var(--lf-space-3)' }}>
             <Link href={matchPrePath(id)} style={{ color: 'var(--lf-color-text-gold)' }}>
-              Wróć
+              {UI_COPY.backToPrematch}
             </Link>
           </p>
         </div>

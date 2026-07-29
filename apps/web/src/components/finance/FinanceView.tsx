@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { EmptyState, LocationHero } from '@/components/ui';
 import { formatMoney, type ClubFinanceDto, type FinanceMovementDto } from '@/lib/finance';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import './finance-decision.css';
 
@@ -44,7 +45,7 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
           {primaryLabel}
         </Link>
         <Link href="/hub" className="lf-fi__secondary">
-          Wróć do Hub
+          {UI_COPY.hubExit}
         </Link>
       </div>
 

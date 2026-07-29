@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useId } from 'react';
 
+import { UI_COPY } from '@/lib/ui/copy';
+
 type SoftLockModalProps = {
   open: boolean;
   title: string;
@@ -35,7 +37,12 @@ export function SoftLockModal({ open, title, reason, onClose }: SoftLockModalPro
 
   return (
     <div className="lf-slm" role="presentation" data-lf-impl="LFE-UI-IMPL-04">
-      <button type="button" className="lf-slm__backdrop" aria-label="Zamknij" onClick={onClose} />
+      <button
+        type="button"
+        className="lf-slm__backdrop"
+        aria-label={UI_COPY.close}
+        onClick={onClose}
+      />
       <div className="lf-slm__panel" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <Image
           src="/assets/world-art/ico-020-lock.png"
@@ -50,10 +57,10 @@ export function SoftLockModal({ open, title, reason, onClose }: SoftLockModalPro
         <p className="lf-slm__body">{reason}</p>
         <div className="lf-slm__actions">
           <Link href="/hub" className="lf-slm__hub" onClick={onClose}>
-            Wróć do Hub
+            {UI_COPY.hubExit}
           </Link>
           <button type="button" className="lf-slm__close" onClick={onClose}>
-            Zamknij
+            {UI_COPY.close}
           </button>
         </div>
       </div>

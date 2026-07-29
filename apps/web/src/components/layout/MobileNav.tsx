@@ -9,6 +9,7 @@ import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { NAV_GROUPS, type NavItem } from '@/lib/nav';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
+import { UI_COPY } from '@/lib/ui/copy';
 
 import './mobile-nav.css';
 
@@ -114,7 +115,7 @@ export function MobileNav() {
                 key={item.id}
                 type="button"
                 className={className}
-                title={`${item.label} — niedostępne`}
+                title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
                 onClick={() => setLockTitle(item.label)}
               >
                 <NavIcon id={item.id} active={false} size={16} />
@@ -183,7 +184,7 @@ export function MobileNav() {
                             <button
                               type="button"
                               className="lf-mobile-more__item lf-mobile-more__item--locked"
-                              title={`${item.label} — niedostępne`}
+                              title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
                               onClick={() => {
                                 setMoreOpen(false);
                                 setLockTitle(item.label);
@@ -191,7 +192,7 @@ export function MobileNav() {
                             >
                               <NavIcon id={item.id} active={false} size={16} />
                               {item.label}
-                              <span className="lf-mobile-more__soon">wkrótce</span>
+                              <span className="lf-mobile-more__soon">{UI_COPY.softLockSoon}</span>
                             </button>
                           </li>
                         );
@@ -219,8 +220,12 @@ export function MobileNav() {
 
       <SoftLockModal
         open={Boolean(lockTitle)}
-        title={lockTitle ? `${lockTitle} niedostępne` : 'Niedostępne'}
-        reason="Ta lokacja odblokuje się wraz z postępem klubu. Reguła pochodzi z resolveNavAccess — nie z UI."
+        title={
+          lockTitle
+            ? `${lockTitle} jest ${UI_COPY.softLockUnavailable}`
+            : `Lokacja ${UI_COPY.softLockUnavailable}`
+        }
+        reason={UI_COPY.softLockReason}
         onClose={closeLock}
       />
     </>

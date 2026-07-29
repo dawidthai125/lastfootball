@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/Button';
 import { ConfirmSubmit, LocationHero, SoftLockState } from '@/components/ui';
+import { UI_COPY } from '@/lib/ui/copy';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import {
@@ -242,14 +243,14 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         </span>
       ) : null}
       <div className="lf-tx-actions__row">
-        <ConfirmSubmit label="Akceptuj" disabled={disabled} pending={pending}>
+        <ConfirmSubmit label={UI_COPY.accept} disabled={disabled} pending={pending}>
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
             <input type="hidden" name="playerId" value={offer.playerId} />
             <input type="hidden" name="phase" value="opening" />
             <input type="hidden" name="decision" value="accept" />
             <Button type="submit" variant="primary" disabled={disabled || pending}>
-              {pending ? '…' : 'Potwierdź'}
+              {pending ? '…' : UI_COPY.confirm}
             </Button>
           </form>
         </ConfirmSubmit>
@@ -513,7 +514,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
           waId="ILL-003"
           illustrationSrc="/assets/world-art/ill-003-window-closed.png"
           title="Okno transferowe zamknięte"
-          reason="Finalizacja transakcji jest teraz niedostępna. Wróć po kolejnych meczach ligowych — reguła okna pochodzi z klubu, nie z UI."
+          reason={UI_COPY.transferWindowClosed}
           unlockHint={`${windowLabel} · Kasa ${market.cashLabel} · Budżet ${market.envelopeLabel}`}
           secondaryHref="/finance"
           secondaryLabel="Finanse"

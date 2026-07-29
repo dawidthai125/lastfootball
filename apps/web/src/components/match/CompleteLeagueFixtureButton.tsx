@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 
 import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
 import { completeFixture } from '@/lib/fixtures/complete-fixture';
+import { UI_COPY } from '@/lib/ui/copy';
 
 export function CompleteLeagueFixtureButton({
   fixtureId,
@@ -42,7 +43,7 @@ export function CompleteLeagueFixtureButton({
           cursor: pending ? 'wait' : 'pointer',
         }}
       >
-        {pending ? 'Zapisuję…' : 'Wróć do Hubu'}
+        {pending ? UI_COPY.saving : UI_COPY.hubExit}
       </button>
     </form>
   );
