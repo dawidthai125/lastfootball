@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-16 (§3–§16 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-17 (§3–§17 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -29,7 +29,7 @@
 14. [Finanse](#14-finanse) ← **GDD-10**
 15. [Sponsorzy](#15-sponsorzy) ← **GDD-11**
 16. [Akademia](#16-akademia) ← **GDD-16 Thin**
-17. [Skauting](#17-skauting)
+17. [Skauting](#17-skauting) ← **GDD-17 Thin**
 18. [Ranking](#18-ranking)
 19. [Osiągnięcia](#19-osiągnięcia)
 20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
@@ -2218,7 +2218,7 @@ Zamknąć shipowalny wycinek i ścieżkę głębi.
 1. §8 pełny trening (plany, obciążenie)
 2. Głębsze atrybuty + role na boisku
 3. Akademię / youth intake — **GDD §16 Thin A (Intake + Promote) wypełnione** (GDD-16); kod = osobny EPIC
-4. Scouting & hidden potential (§17)
+4. Scouting — **GDD §17 Information Thin B wypełnione** (GDD-17); fog / hidden potential = Future (warstwa prezentacji)
 5. Szczegółowa wartość + §12
 6. Personality / media / leadership layer
 
@@ -4947,7 +4947,7 @@ Shipowalny rynek + ścieżka głębi.
 
 1. Wypożyczenia
 2. Klauzule i kontrakty wieloletnie detail
-3. Scouting (§17) z discovery
+3. Scouting (§17) — Thin = Information (GDD-17); discovery regionów / misje = Future
 4. Exchange deals
 5. Prośby o transfer + mediacje
 
@@ -6816,19 +6816,358 @@ Zamrozić filozofię rozbudowy bez auto-growth.
 
 ## 17. Skauting
 
+**Status rozdziału:** GDD-17 — opracowany (**Skauting Information Thin B** — system informacji; bez fog; bez regionów/misji/kosztów; bez wpływu na rozwój zawodnika)
+
+**Cel rozdziału**  
+Dać menedżerowi opcjonalną warstwę **informacji** (raporty / sygnały / shortlista), która **pomaga podjąć decyzję** — zwłaszcza rynkową — **bez** podejmowania decyzji za gracza i **bez** zmiany mechanik rozwoju, treningu ani transferów.
+
+**Zasady nadrzędne (decyzje GDD-17 / Owner)**
+
+1. Skauting jest wyłącznie **systemem informacji**. **Nie jest** systemem rozwoju, treningu ani progresji zawodnika.
+2. **D19 bez zmian:** jedyne SSOT zawodników klubu = tabela **`players`**. Zakaz: scout players · hidden players · osobnych tabel jako drugi model zawodnika.
+3. **D22 bez zmian:** nie zmieniać `potential`, Match Development, Training, transfer fee.
+4. **Thin:** brak fog · brak hidden potential · brak hidden skill. Thin korzysta z **obecnego** kontraktu D22 (pasma widoczne).
+5. **Future fog** (jeśli kiedyś): wyłącznie **warstwa prezentacji informacji** — nigdy logika gry, nigdy drugi model zawodnika.
+6. Thin Slice = wariant **B — Information Thin** (raporty/sygnały o kandydatach już w torze produktowym; bez discovery regionów).
+7. **Shortlista** = prywatne narzędzie menedżera: nie ranking · nie rekomendacja AI · zero wpływu na rynek · transfer · zawodnika.
+8. **Regiony** = Future.
+9. **Misje** = Future.
+10. **Koszty** = Future (→ §14 / §26).
+11. **Placeholder Scouting** (np. trasa `/scouting`, mocki inbox/overlay) **nie stanowi SSOT** i **nie może** być podstawą implementacji.
+12. Raport skauta **pomaga** podjąć decyzję, ale **nigdy nie podejmuje decyzji za gracza**.
+13. Skauting **może wspierać** decyzję transferową, ale **nigdy nie zmienia** mechaniki transferów (D20 / §12).
+14. Future (regiony · personel · doświadczenie skautów): wpływ wyłącznie na **jakość informacji** — nigdy na skill · potential · rozwój zawodnika.
+15. ZERO DUPLICATE: nie redefiniować §7 / §8 / §12 / §16 / §14 / §26.
+16. Ten rozdział **nie** opisuje kodu, schematu DB ani LFE.
+
+**Szybki kontrakt Thin B (SSOT)**
+
+| Parametr                         | Wartość Thin B                                        |
+| -------------------------------- | ----------------------------------------------------- |
+| Rola systemu                     | Informacja (raport / sygnał / shortlista)             |
+| Rozwój / trening / progresja     | OUT (zakaz)                                           |
+| Fog / hidden potential / skill   | OUT Thin (Future = tylko prezentacja)                 |
+| Regiony / misje / koszty         | OUT Thin → Future                                     |
+| Model zawodnika                  | Wyłącznie D19 `players` — bez drugiego modelu         |
+| Potential / Match / Training/fee | D22 / D20 bez zmian                                   |
+| Shortlista                       | Prywatna; zero wpływu na rynek / transfer / zawodnika |
+| Raport                           | Wspiera decyzję gracza; nie automatyzuje wyboru       |
+| Transfery                        | Wspiera decyzję; mechanika §12 / D20 bez zmian        |
+| Akademia (§16)                   | Osobny tor (Intake ≠ skauting)                        |
+| Placeholder `/scouting`          | Nie-SSOT · nie podstawa implementacji                 |
+
+---
+
+### 17.1 Filozofia
+
 **Cel**  
-Opisać odkrywanie zawodników na rynku / w regionach.
+Ustawić ton: skauting to **czytanie sygnałów**, nie grind i nie drugi silnik kariery piłkarza.
 
-**Opis**  
-Misje skautów, raporty, niepewność informacji.
+**Przebieg**
 
-**Do opracowania**
+1. Skauting odpowiada na: „Czego dowiaduję się, zanim zdecyduję?” — nie na: „Jak podbić skill?”.
+2. Brak skautingu **nie** blokuje: Hub, kolejki, treningu, transferów, akademii, finansów.
+3. Oś gry pozostaje meczowa (§3 / §9); skauting jest **opcjonalnym** wsparciem decyzji.
+4. Copy i UX (gdy powstanie) mówią „pomaga ocenić”, nie „wybiera za Ciebie”.
+5. Satysfakcja Thin B = lepsza świadomość przy decyzji — nie farmienie misji.
 
-- [ ] Regiony / bazy danych
-- [ ] Czas i koszt misji
-- [ ] Jakość raportu vs rzeczywistość
-- [ ] Limit skautów
-- [ ] Shortlista
+**Decyzje gracza**
+
+- Czy w ogóle czytać raporty / prowadzić shortlistę.
+- Co zrobić z informacją (kupić / sprzedać / zignorować / odłożyć) — zawsze decyzja gracza.
+
+**Zależności**
+
+- §3, §7, §12, §23; Guide Presentation Contract.
+
+---
+
+### 17.2 Słownik
+
+| Pojęcie                     | Znaczenie Thin B                                                                   |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| **Skauting**                | Opcjonalna lokalizacja / warstwa **informacji** o kandydatach i kontekście decyzji |
+| **Raport skauta**           | Sygnał jakościowy pomagający ocenić sytuację — bez automatu decyzji                |
+| **Sygnał**                  | Informacja prezentacyjna spójna z istniejącymi kontraktami (m.in. pasma D22)       |
+| **Shortlista**              | Prywatna lista zainteresowań menedżera — nie rynek, nie ranking, nie AI pick       |
+| **Kandydat**                | Zawodnik już w torze produktowym (kadra / rynek wg §12) — bez hidden entity        |
+| **Fog (Future)**            | Wyłącznie prezentacja niepewności informacji — nie ukryta kopia zawodnika          |
+| **Misja / region (Future)** | Odkrywanie / zasięg informacji — nie generator skill/potential                     |
+
+---
+
+### 17.3 Co skauting robi i czego nie robi
+
+**Cel**  
+Zamrozić granicę: informacja ≠ rozwój.
+
+**Skauting robi (Thin)**
+
+1. Dostarcza raporty / sygnały wspierające ocenę.
+2. Pozwala prowadzić prywatną shortlistę.
+3. Może wspierać decyzję transferową na poziomie UX/decyzji gracza.
+
+**Skauting nie robi (Thin i Forever względem rozwoju)**
+
+1. Nie jest systemem rozwoju zawodników.
+2. Nie jest systemem treningu.
+3. Nie jest systemem progresji / generowania skill.
+4. Nie mutuje `skill`, `potential`, Match Development ani Training.
+5. Nie tworzy drugiego modelu zawodnika ani hidden players.
+6. Nie zmienia mechaniki transferów (listing, nego, settle, fee).
+7. Nie zastępuje Intake Akademii (§16).
+
+**Zależności**
+
+- D19 · D22 · D20 · §7 · §8 · §12 · §16.
+
+---
+
+### 17.4 Information Thin (wariant B)
+
+**Cel**  
+Opisać shipowalny wycinek produktowy bez discovery regionów.
+
+**Przebieg**
+
+1. Thin B = **informacja o kandydatach już dostępnych** w torze produktowym (np. widocznych na rynku / w kontekście decyzji menedżera wg istniejących ekranów).
+2. Brak w Thin: generowania nowych pooli z regionów, farmy misji, multi-scout sim.
+3. Prezentacja potencjału / poziomu korzysta z **obecnego** kontraktu D22 (pasma; bez fog, bez ukrytych liczb potential w UI).
+4. Raport **nie** zastępuje karty zawodnika ani resolverów kadry/rynku — uzupełnia kontekst decyzji.
+5. Gracz zawsze zatwierdza działanie (lub rezygnuje); raport nie auto-akceptuje transferu ani promocji.
+
+**Decyzje gracza**
+
+- Które raporty czytać.
+- Czy działać na podstawie sygnału, czy zignorować.
+
+**Zależności**
+
+- §7 / D22; §12 / D20; Hub.
+
+---
+
+### 17.5 Shortlista
+
+**Cel**  
+Dać menedżerowi prywatne narzędzie organizacji zainteresowań — bez side-effectów domenowych.
+
+**Kontrakt shortlisty (SSOT)**
+
+| Reguła                         | Wartość                    |
+| ------------------------------ | -------------------------- |
+| Własność                       | Prywatna dla menedżera     |
+| Ranking                        | NIE — shortlista ≠ ranking |
+| Rekomendacja AI                | NIE — shortlista ≠ AI pick |
+| Wpływ na rynek                 | NIE                        |
+| Wpływ na transfer (mechanika)  | NIE                        |
+| Wpływ na zawodnika (`players`) | NIE                        |
+| Listing / settle / fee         | Bez zmian (D20)            |
+
+**Przebieg**
+
+1. Menedżer może oznaczać zainteresowanie nazwiskami na własny użytek.
+2. Shortlista nie tworzy ofert, nie listuje, nie settle’uje, nie zmienia statusu zawodnika.
+3. Usunięcie z shortlisty = wyłącznie preferencja UI/decyzji — bez skutku rynkowego.
+
+**Zależności**
+
+- §12 (tylko jako kontekst decyzji); D19/D20 bez mutacji ze shortlisty.
+
+---
+
+### 17.6 Relacja do zawodnika (D19 / D22)
+
+**Cel**  
+Jedna kadra, jeden ceiling — skauting nie dubluje modelu.
+
+**Przebieg**
+
+1. Jedyny SSOT zawodników klubu = **`players` (D19)**.
+2. Zakaz osobnych encji: scout players · hidden players · drugi runtime model.
+3. Potential / skill / Match PRIMARY / Training SUPPORTING = **D22 bez zmian**.
+4. Thin nie wprowadza fog ani ukrytego potential/skill.
+5. Future fog (jeśli Owner GO): tylko jak **prezentuje się** informację graczowi — dane zawodnika pozostają w jednym modelu.
+
+**Zależności**
+
+- D19 · D22 · [`docs/DECISIONS.md`](../DECISIONS.md) · platform PLAYERS.
+
+---
+
+### 17.7 Relacja do Transferów (§12 / D20)
+
+**Cel**  
+Informacja wspiera decyzję; mechanika rynku stoi.
+
+**Przebieg**
+
+1. Skauting może pomóc ocenić „czy warto kupić / sprzedać / czekać”.
+2. **Nie zmienia:** okna, listingu, nego, Incoming, settle (`completeTransferBuy` / `completeTransferSell`), fee, limitu kadry.
+3. Shortlista ≠ listing i ≠ pending offer.
+4. Po decyzji gracza obowiązuje wyłącznie istniejąca ścieżka §12 / D20.
+
+**Zależności**
+
+- §12; D20; §7.17; §26 (fee poza tym rozdziałem).
+
+---
+
+### 17.8 Relacja do Akademii (§16)
+
+**Cel**  
+Rozdzielić Intake od informacji skautingowej.
+
+**Przebieg**
+
+1. Akademia Thin A = Intake + Promote (§16) — osobny tor.
+2. Skauting Thin B **nie** jest naborami regionów ani jakością ośrodka.
+3. Fog młodzieży / skauting regionów pozostają Future względem Akademii i §17.
+4. Po promocji zawodnik podlega §7/§8/§12 jak senior — skauting tego nie redefiniuje.
+
+**Zależności**
+
+- §16; §7.
+
+---
+
+### 17.9 Relacja do Treningu (§8)
+
+**Cel**  
+Brak mostu skauting → trening.
+
+**Przebieg**
+
+1. Skauting nie odblokowuje, nie modyfikuje i nie zastępuje sesji treningowych.
+2. Trening pozostaje SUPPORTING rozwoju (D21/D22) poza §17.
+3. Raport nie generuje impulsów treningowych ani skill.
+
+**Zależności**
+
+- §8; D21; D22.
+
+---
+
+### 17.10 Unlock, Hub, opcjonalność
+
+**Cel**  
+Lokacja nie dyktuje dnia meczowego.
+
+**Przebieg**
+
+1. Skauting = świadoma, opcjonalna decyzja menedżera.
+2. W dniu meczowym Primary Hub pozostaje mecz / przygotowanie (§23).
+3. Soft-lock / moment odblokowania (gdy kod): jakościowo w sezonie — szczegół implementacyjny poza tym EPICem docs.
+4. Brak kary za nieużywanie skautingu.
+
+**Zależności**
+
+- §23; platform HUB.
+
+---
+
+### 17.11 Placeholder UI
+
+**Cel**  
+Odciąć mocki od SSOT.
+
+**Przebieg**
+
+1. Istniejący placeholder (np. `/scouting`, copy „Raport skauta”, atrapy wiadomości) **nie stanowi źródła prawdy (SSOT)**.
+2. **Nie może** być podstawą implementacji domeny, schematu ani resolverów.
+3. Przyszły UI wynika z tego rozdziału + Guide Presentation Contract — nie z mocków.
+4. Analogia produktowa: jak placeholder Akademii (`/academy`) w §16.
+
+**Zależności**
+
+- Guide Presentation Contract; §16.8 (wzorzec nie-SSOT).
+
+---
+
+### 17.12 Ekonomia (§14 / §26)
+
+**Cel**  
+Koszty poza Thin.
+
+**Przebieg**
+
+1. Thin B: **brak** kosztów misji, pensji skautów i kwot §26 w tym rozdziale.
+2. Future koszty (gdy Owner) = kategorie §14 + liczby §26 — bez pay-to-win i bez kupowania skill/potential.
+3. Personel / doświadczenie skautów (Future) płaci za **jakość informacji**, nie za rozwój zawodnika.
+
+**Zależności**
+
+- §14; §26.
+
+---
+
+### 17.13 MVP Thin vs Future
+
+| Element                        | Thin B | Future                              |
+| ------------------------------ | ------ | ----------------------------------- |
+| System informacji              | TAK    | TAK                                 |
+| Raport wspiera decyzję gracza  | TAK    | TAK                                 |
+| Shortlista prywatna            | TAK    | TAK (bez side-effectów rynkowych)   |
+| Fog / hidden potential/skill   | NIE    | Tylko prezentacja informacji        |
+| Regiony / misje                | NIE    | TAK                                 |
+| Koszty / personel / XP skautów | NIE    | Jakość informacji only              |
+| Mutacja skill / potential      | NIE    | NIE (zakaz)                         |
+| Zmiana mechaniki transferów    | NIE    | NIE (zakaz bez osobnego EPIC Owner) |
+| Drugi model zawodnika          | NIE    | NIE (zakaz)                         |
+| Implementacja UI / DB          | NIE*   | Osobny EPIC                         |
+
+\*GDD-17 = docs; kod skautingu = przyszły EPIC po Owner GO.
+
+---
+
+### 17.14 Future — regiony, misje, fog prezentacji
+
+**Cel**  
+Ścieżka głębi bez driftu rozwoju.
+
+**Przebieg**
+
+1. Future może dodać: regiony / bazy, misje (czas/przebieg), limity skautów, personel, doświadczenie skautów, koszty §26.
+2. Te warstwy wpływają wyłącznie na **jakość / zasięg / wiarygodność informacji**.
+3. **Zakaz Forever względem rozwoju:** regiony · personel · XP skautów **nie** podbijają skill · potential · Match/Training growth poza istniejącymi ścieżkami D22.
+4. **Fog** = wyłącznie warstwa **prezentacji** informacji (niepewność sygnału dla gracza). Fog **nie jest** logiką gry tworzącą ukrytą kopię zawodnika ani drugi sufit.
+5. Discovery regionów (gdy powstanie) musi kończyć się wejściem w istniejące tory (§12 / D19) — bez równoległego rynku.
+
+**Zależności**
+
+- §12; §16 Future; §26; D19; D22.
+
+---
+
+### 17.15 Kontrakty produktowe §17
+
+1. **Skauting = informacja**, nie rozwój / trening / progresja.
+2. **D19 / D22 / D20 bez zmian** w tym rozdziale.
+3. **Thin B** = Information Thin; brak fog / regionów / misji / kosztów.
+4. **Shortlista** prywatna; zero wpływu na rynek / transfer / zawodnika; nie ranking; nie AI.
+5. **Raport** pomaga; nie decyduje za gracza.
+6. **Transfer:** wsparcie decyzji ≠ zmiana mechaniki.
+7. **Placeholder Scouting ≠ SSOT.**
+8. **Future fog** = tylko prezentacja; nigdy logika gry / drugi model.
+9. **Future personel/regiony** = jakość informacji; nigdy skill/potential/rozwój.
+10. **Bez formuł / kodu / LFE** w tym rozdziale.
+
+---
+
+### 17.16 Checklista GDD-17
+
+- [x] Filozofia: system informacji
+- [x] Zakaz rozwoju / treningu / progresji / skill gen
+- [x] D19 / D22 / D20 kotwice bez zmian
+- [x] Thin B bez fog / hidden potential / hidden skill
+- [x] Shortlista: prywatna · nie ranking · nie AI · zero side-effectów
+- [x] Raport nie decyduje za gracza
+- [x] Transfer: wsparcie ≠ zmiana mechaniki
+- [x] Regiony · misje · koszty = Future
+- [x] Future: jakość informacji only; fog = prezentacja
+- [x] Placeholder Scouting ≠ SSOT
+- [x] Powiązania §7 · §8 · §12 · §16 · §26 · Hub
+- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-17 docs)
 
 ---
 

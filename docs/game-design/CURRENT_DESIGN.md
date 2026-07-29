@@ -6,31 +6,31 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · **GDD-16 Akademia Thin A** wypełnione. §3–§16 (Thin A), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16 Akademia Thin A · **GDD-17 Skauting Information Thin B** wypełnione. §3–§17 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
-| Rozdział | Temat               | Stan                                                      |
-| -------- | ------------------- | --------------------------------------------------------- |
-| §3       | Core loop           | Wypełniony                                                |
-| §4–§5    | Rejestracja / klub  | Wypełniony                                                |
-| §6       | Rozwój klubu        | Wypełniony (GDD-13)                                       |
-| §7       | Rozwój graczy       | Wypełniony (DCC)                                          |
-| §8       | Trening             | Wypełniony (DCC)                                          |
-| §9       | Doświadczenie meczu | Wypełniony                                                |
-| §10      | Liga                | Wypełniony                                                |
-| §11      | Puchary             | Wypełniony                                                |
-| §12      | Transfery           | Wypełniony (DCC)                                          |
-| §13      | Stadion             | Wypełniony                                                |
-| §14      | Finanse             | Wypełniony (kategorie; kwoty → §26)                       |
-| §15      | Sponsorzy           | Wypełniony                                                |
-| **§16**  | **Akademia**        | **Wypełniony Thin A (GDD-16)** — Intake + Promote         |
-| §17      | Skauting            | Szkielet (OUT względem GDD-16)                            |
-| §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                   |
-| §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                       |
-| §24–§25  | UI (w Guide + GDD)  | Guide + **Presentation Contract**; §24 szkielet           |
-| §26      | Liczby / balance    | **Wypełniony Thin (GDD-§26A)** · kod sync **§26B CLOSED** |
-| §27+     | Premium / …         | Future / szkielet                                         |
+| Rozdział | Temat               | Stan                                                           |
+| -------- | ------------------- | -------------------------------------------------------------- |
+| §3       | Core loop           | Wypełniony                                                     |
+| §4–§5    | Rejestracja / klub  | Wypełniony                                                     |
+| §6       | Rozwój klubu        | Wypełniony (GDD-13)                                            |
+| §7       | Rozwój graczy       | Wypełniony (DCC)                                               |
+| §8       | Trening             | Wypełniony (DCC)                                               |
+| §9       | Doświadczenie meczu | Wypełniony                                                     |
+| §10      | Liga                | Wypełniony                                                     |
+| §11      | Puchary             | Wypełniony                                                     |
+| §12      | Transfery           | Wypełniony (DCC)                                               |
+| §13      | Stadion             | Wypełniony                                                     |
+| §14      | Finanse             | Wypełniony (kategorie; kwoty → §26)                            |
+| §15      | Sponsorzy           | Wypełniony                                                     |
+| §16      | Akademia            | Wypełniony Thin A (GDD-16) — Intake + Promote                  |
+| **§17**  | **Skauting**        | **Wypełniony Information Thin B (GDD-17)** — system informacji |
+| §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                        |
+| §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                            |
+| §24–§25  | UI (w Guide + GDD)  | Guide + **Presentation Contract**; §24 szkielet                |
+| §26      | Liczby / balance    | **Wypełniony Thin (GDD-§26A)** · kod sync **§26B CLOSED**      |
+| §27+     | Premium / …         | Future / szkielet                                              |
 
 ### Sygnały produktowe (nie zastępują GDD)
 
@@ -49,6 +49,7 @@ GDD-15 CLOSED · **GDD-16 Akademia Thin A** wypełnione. §3–§16 (Thin A), **
 - Rozwój klubu (§6): Poziom · Reputacja · Prestiż — Hub tylko konsumuje.
 - Rozwój zawodników: potential pasma · Match PRIMARY · Training SUPPORTING (D22 / PLAYERS-02).
 - **Akademia (GDD §16 Thin A):** opcjonalna; Intake + Promote; brak poziomów; brak academy OVR; po promocji ten sam rozwój co senior; placeholder `/academy` ≠ SSOT; kod akademii = Future EPIC.
+- **Skauting (GDD §17 Information Thin B):** wyłącznie system informacji; shortlista prywatna (zero wpływu na rynek/transfer/zawodnika); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów w Thin; D19/D22/D20 bez zmian; placeholder `/scouting` ≠ SSOT; kod skautingu = Future EPIC.
 
 ## Najważniejsze decyzje
 
@@ -61,4 +62,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-29 — GDD-16 Akademia Thin A
+2026-07-29 — GDD-17 Skauting Information Thin B
