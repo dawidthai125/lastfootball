@@ -6,11 +6,11 @@ Onboarding dla **ChatGPT / Cursor Agent / developera** bez historii czatu i bez 
 
 ## Ścieżki startu
 
-| Rola                     | Ścieżka                                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Rola                     | Ścieżka                                                                                                  |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
 | **ChatGPT** (nowa sesja) | [`AI_QUICK_START.md`](./AI_QUICK_START.md) → [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) → ten plik → … |
-| **Cursor Agent**         | root [`AGENTS.md`](../../AGENTS.md) → Quick Start → Handoff → ten plik → …                              |
-| **Developer**            | Quick Start → [`MODULE_MAP.md`](./MODULE_MAP.md) → [`../DEV_SETUP.md`](../DEV_SETUP.md) → platform docs |
+| **Cursor Agent**         | root [`AGENTS.md`](../../AGENTS.md) → Quick Start → Handoff → ten plik → …                               |
+| **Developer**            | Quick Start → [`MODULE_MAP.md`](./MODULE_MAP.md) → [`../DEV_SETUP.md`](../DEV_SETUP.md) → platform docs  |
 
 ## Kolejność czytania (obowiązkowa dla AI)
 

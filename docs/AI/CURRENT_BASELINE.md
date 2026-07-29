@@ -6,12 +6,12 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Cztery warstwy baseline
 
-| Pojęcie                         | Znaczenie                                                                                                 |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **Production Baseline**         | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poniżej                           |
-| **Domain feature baseline**     | Ostatni commit **domenowy** (`feat(transfers…)`), bez zmian przez UI / marketing presentation             |
-| **Presentation tip**            | Ostatni feat prezentacji po UI P0 (Landing · Branding · Auth UX) — **nie** zmienia Domain baseline        |
-| **Documentation tip**           | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
+| Pojęcie                     | Znaczenie                                                                                          |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poniżej                    |
+| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(transfers…)`), bez zmian przez UI / marketing presentation      |
+| **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing · Branding · Auth UX) — **nie** zmienia Domain baseline |
+| **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                |
 
 ```bash
 git log -1 --oneline                    # tip (może być docs)
@@ -24,19 +24,19 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 
 ## Production
 
-| Pole                            | Wartość                                                                       |
-| ------------------------------- | ----------------------------------------------------------------------------- |
-| URL                             | https://lastfootball.vercel.app                                               |
-| Alias                           | https://lastfootball.pl                                                       |
-| Branch                          | `main`                                                                        |
-| **Production Baseline**         | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                  |
-| Baseline message                | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`              |
-| UI P0 status                    | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                |
-| **Domain feature baseline**     | `9b1c57578042d16e962d8026ed01abae587c294d` — **LFE-TRANSFERS-08** (bez zmian) |
-| Domain message                  | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`        |
-| **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)         |
-| Presentation message            | `feat(auth-ux): redesign login/register experience with Landing modal`        |
-| **Documentation tip**           | `a6f3951` — **LFE-HANDOFF-01** CLOSED                                          |
+| Pole                        | Wartość                                                                       |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                               |
+| Alias                       | https://lastfootball.pl                                                       |
+| Branch                      | `main`                                                                        |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                  |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`              |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                |
+| **Domain feature baseline** | `9b1c57578042d16e962d8026ed01abae587c294d` — **LFE-TRANSFERS-08** (bez zmian) |
+| Domain message              | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`        |
+| **Presentation tip**        | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)         |
+| Presentation message        | `feat(auth-ux): redesign login/register experience with Landing modal`        |
+| **Documentation tip**       | `a6f3951` — **LFE-HANDOFF-01** CLOSED                                         |
 
 UI P0 (Night Pitch Office) + Landing / Branding / Auth UX są na produkcji jako warstwa prezentacji — **bez** zmiany Domain baseline TRANSFERS-08 (DTO / settlement / unlock).
 

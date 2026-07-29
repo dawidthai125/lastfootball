@@ -10,15 +10,15 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                       |                                                                  |
-| --------------------- | ---------------------------------------------------------------- |
-| Production Baseline   | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                    |
-| Domain baseline       | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)                     |
-| Presentation tip      | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)          |
-| Documentation tip     | **`a6f3951`** — LFE-HANDOFF-01                                   |
-| Prod                  | https://lastfootball.vercel.app                                  |
-| Master handoff        | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                     |
-| Status projektu       | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                   |
+|                     |                                                         |
+| ------------------- | ------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
+| Domain baseline     | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)            |
+| Presentation tip    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
+| Documentation tip   | **`a6f3951`** — LFE-HANDOFF-01                          |
+| Prod                | https://lastfootball.vercel.app                         |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)            |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)          |
 
 ## Pipeline (jedyny)
 

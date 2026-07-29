@@ -4,12 +4,12 @@
 
 **Krótki start** (1 ekran). Nie duplikuje statusu projektu.
 
-|                            |                                                                                                                           |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **Status projektu (SSOT)** | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                                                                                |
-| **Baseline / tip**         | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                                                                      |
-| **Master handoff AI**      | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                        |
-| **Pełne handoff (mapa)**   | [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)                                                                                |
+|                            |                                                                                                                                     |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Status projektu (SSOT)** | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                                                                                          |
+| **Baseline / tip**         | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                                                                                |
+| **Master handoff AI**      | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                                  |
+| **Pełne handoff (mapa)**   | [`MASTER_HANDOFF.md`](./MASTER_HANDOFF.md)                                                                                          |
 | **AI cold start**          | [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) → [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) |
 
 ## Czytaj

@@ -18,13 +18,13 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 **PRODUCTION VERIFIED · GREEN · UI P0 + Landing/Brand/Auth CLOSED · HANDOFF**
 
-|                             |                                                                  |
-| --------------------------- | ---------------------------------------------------------------- |
-| **Production Baseline**     | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)        |
-| **Domain feature**          | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)              |
-| **Presentation tip**        | **`9dc834a`** — LFE-AUTH-UX-01                                   |
-| **Documentation tip**       | **`a6f3951`** — LFE-HANDOFF-01                                   |
-| **Prod**                    | https://lastfootball.vercel.app                                  |
+|                         |                                                           |
+| ----------------------- | --------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity) |
+| **Domain feature**      | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)       |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                            |
+| **Documentation tip**   | **`a6f3951`** — LFE-HANDOFF-01                            |
+| **Prod**                | https://lastfootball.vercel.app                           |
 
 | Tor               | Stan                                                                                                           |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |

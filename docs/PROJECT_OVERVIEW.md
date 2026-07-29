@@ -18,13 +18,13 @@ Czym jest Last Football, stack i granice fazy (orientacja).
 
 **Last Football** — przeglądarkowy football manager z silnikiem **LFE**.
 
-| Warstwa           | Stan (orientacja)                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------- |
-| Produkt           | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                     |
-| Platforma         | Onboarding · First Match · Hub · League · Finance · Players · Transfers · Training |
+| Warstwa           | Stan (orientacja)                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| Produkt           | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                                |
+| Platforma         | Onboarding · First Match · Hub · League · Finance · Players · Transfers · Training            |
 | UX                | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide §16 · IMPL-01…06 |
-| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post · Match Path                       |
-| Prod              | https://lastfootball.vercel.app · UI P0 `54d0724` · Auth UX tip `9dc834a`          |
+| Silnik / Match UI | LFE `0.9.1-match-ai01` · Canvas · Replay · Post · Match Path                                  |
+| Prod              | https://lastfootball.vercel.app · UI P0 `54d0724` · Auth UX tip `9dc834a`                     |
 
 ## Opis działania (orientacja)
 
