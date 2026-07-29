@@ -44,7 +44,7 @@
 | Live → Post ≈ Hi-Fi   | ✓      |
 | D↔M parity            | ✓      |
 | Brak regresji silnika | ✓      |
-| typecheck · test · CI | (ship) |
+| typecheck · test · CI | ✓      |
 
 ---
 
