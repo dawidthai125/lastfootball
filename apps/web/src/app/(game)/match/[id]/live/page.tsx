@@ -8,6 +8,8 @@ import { buildFirstLiveBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { matchPrePath } from '@/lib/match/match-path';
+import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
+import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -42,12 +44,15 @@ export default async function LiveMatchPage({ params }: PageProps) {
     if (isFirstMatchCompleted(club)) redirect('/hub');
     try {
       const ourXi = await loadClubStartingXi(club);
+      const players = await listClubPlayers(club.id);
+      const developmentNames = previewMatchDevelopment(players).skillUpNames;
       return (
         <LiveMatchFoundation
           bundle={buildFirstLiveBundle(club)}
           club={club}
           firstMatch
           ourXi={ourXi}
+          developmentNames={developmentNames}
         />
       );
     } catch (e) {
@@ -68,12 +73,15 @@ export default async function LiveMatchPage({ params }: PageProps) {
 
   try {
     const ourXi = await loadClubStartingXi(club);
+    const players = await listClubPlayers(club.id);
+    const developmentNames = previewMatchDevelopment(players).skillUpNames;
     return (
       <LiveMatchFoundation
         bundle={buildLeagueLiveBundle(club, dto)}
         club={club}
         leagueFixture={dto}
         ourXi={ourXi}
+        developmentNames={developmentNames}
       />
     );
   } catch (e) {

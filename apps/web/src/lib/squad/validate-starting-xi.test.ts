@@ -13,6 +13,8 @@ function player(
     form: 70,
     energy: 80,
     skill: 65,
+    potentialBand: 'medium',
+    potentialLabel: 'Średni',
     status: partial.status ?? 'READY',
     nationality: 'PL',
     attributes: [],

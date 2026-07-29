@@ -164,6 +164,9 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
         Umiejętność <strong style={{ color: 'var(--lf-color-text-gold)' }}>{player.skill}</strong>
       </span>
       <span>
+        Potencjał <strong>{player.potentialLabel}</strong>
+      </span>
+      <span>
         Status <strong>{STATUS_LABEL[player.status]}</strong>
       </span>
     </div>

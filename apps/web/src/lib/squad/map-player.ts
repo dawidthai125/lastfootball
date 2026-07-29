@@ -1,3 +1,4 @@
+import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
 
 export type PlayerDbRow = {
@@ -11,6 +12,8 @@ export type PlayerDbRow = {
   captain: boolean;
   age: number;
   skill: number;
+  /** Optional for older fixtures/tests — filled via resolvePlayerPotential when absent. */
+  potential?: number | null;
   status: string;
   nationality: string;
   version: number;
@@ -38,6 +41,10 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     captain: row.captain,
     age: row.age,
     skill: row.skill,
+    potential:
+      typeof row.potential === 'number' && row.potential >= 1
+        ? Math.min(99, Math.max(row.skill, row.potential))
+        : resolvePlayerPotential(row.skill, row.id, row.age),
     status: mapStatus(row.status),
     nationality: row.nationality,
     version: row.version,

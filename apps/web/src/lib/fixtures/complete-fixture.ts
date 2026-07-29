@@ -6,12 +6,14 @@ import { redirect } from 'next/navigation';
 import { env } from '@/config/env';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
+import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
+import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
 
 /**
  * Idempotent: mark fixture played with score, promote next scheduled → upcoming,
- * credit match reward once (LFE-ECONOMY-01).
+ * credit match reward once (LFE-ECONOMY-01), apply match development (LFE-PLAYERS-02).
  */
 export async function completeFixture(
   _prev: CompleteFixtureState,
@@ -71,6 +73,16 @@ export async function completeFixture(
   };
 
   if (row.status !== 'played') {
+    const players = await listClubPlayers(clubId);
+    const dev = await applyMatchDevelopment(supabase, {
+      clubId,
+      matchKey: row.id,
+      activePlayers: players,
+    });
+    if (!dev.ok) {
+      return { error: dev.error };
+    }
+
     const playedAt = new Date().toISOString();
     const home = Math.trunc(homeScore);
     const away = Math.trunc(awayScore);

@@ -1,3 +1,5 @@
+import type { PotentialBandId } from '@/lib/squad/potential';
+
 /** Domain player readiness — stored in DB; localized in STATUS_LABEL / UI. */
 export type PlayerStatus = 'READY' | 'INJURED' | 'SUSPENDED' | 'TIRED' | 'DEPARTED';
 
@@ -10,6 +12,9 @@ export type SquadPlayerDto = {
   readonly form: number;
   readonly energy: number;
   readonly skill: number;
+  /** Presentation only — never expose raw potential number. */
+  readonly potentialBand: PotentialBandId;
+  readonly potentialLabel: string;
   readonly status: PlayerStatus;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
@@ -42,6 +47,8 @@ export type PlayerRowDto = {
   readonly captain: boolean;
   readonly age: number;
   readonly skill: number;
+  /** Ceiling SSOT — skill never exceeds potential. */
+  readonly potential: number;
   readonly status: PlayerStatus;
   readonly nationality: string;
   readonly version: number;

@@ -37,12 +37,15 @@ export function LiveMatchFoundation({
   firstMatch = false,
   leagueFixture = null,
   ourXi = null,
+  developmentNames = [],
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
   firstMatch?: boolean;
   leagueFixture?: FixtureDto | null;
   ourXi?: readonly RosterPlayerSeed[] | null;
+  /** Post Match development signals (LFE-PLAYERS-02). */
+  developmentNames?: readonly string[];
 }) {
   const { fixture } = bundle;
   const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(
@@ -167,6 +170,7 @@ export function LiveMatchFoundation({
         onJumpToEvent={(item) => openReplayAt(item)}
         onDismiss={() => setPostMatchOpen(false)}
         rewardLine={rewardLine}
+        developmentNames={developmentNames}
         continueSlot={
           firstMatch ? (
             <CompleteFirstMatchButton />

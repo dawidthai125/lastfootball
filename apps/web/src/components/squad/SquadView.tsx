@@ -330,6 +330,8 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                     <span className="lf-sq__card-meta">
                       {p.position} · Forma {p.form} · Energia {p.energy} ·{' '}
                       <span className="lf-sq__skill">{p.skill}</span>
+                      {' · '}
+                      Pot. {p.potentialLabel}
                     </span>
                   </span>
                   <span
@@ -374,6 +376,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                     {sort === key ? (dir === 'asc' ? ' ↑' : ' ↓') : ''}
                   </th>
                 ))}
+                <th style={{ textAlign: 'left' }}>Potencjał</th>
               </tr>
             </thead>
             <tbody>
@@ -430,12 +433,13 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                         {STATUS_LABEL[p.status]}
                       </span>
                     </td>
+                    <td style={{ color: 'var(--lf-color-text-muted)' }}>{p.potentialLabel}</td>
                   </tr>
                 );
               })}
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="lf-sq__table-empty">
+                  <td colSpan={8} className="lf-sq__table-empty">
                     Brak zawodników dla wybranych filtrów. Zmień filtry lub wróć do pełnej listy.
                   </td>
                 </tr>

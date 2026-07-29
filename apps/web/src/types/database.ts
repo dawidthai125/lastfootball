@@ -65,6 +65,7 @@ export type Database = {
           captain: boolean;
           age: number;
           skill: number;
+          potential: number;
           status: string;
           nationality: string;
           version: number;
@@ -83,6 +84,7 @@ export type Database = {
           captain?: boolean;
           age: number;
           skill: number;
+          potential: number;
           status?: string;
           nationality?: string;
           version?: number;
@@ -101,6 +103,7 @@ export type Database = {
           captain?: boolean;
           age?: number;
           skill?: number;
+          potential?: number;
           status?: string;
           nationality?: string;
           version?: number;
@@ -111,6 +114,32 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: 'players_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: false;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      match_development_log: {
+        Row: {
+          club_id: string;
+          match_key: string;
+          applied_at: string;
+        };
+        Insert: {
+          club_id: string;
+          match_key: string;
+          applied_at?: string;
+        };
+        Update: {
+          club_id?: string;
+          match_key?: string;
+          applied_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'match_development_log_club_id_fkey';
             columns: ['club_id'];
             isOneToOne: false;
             referencedRelation: 'clubs';
@@ -384,6 +413,14 @@ export type Database = {
         Args: {
           p_club_id: string;
           p_training_on: string;
+          p_updates: Json;
+        };
+        Returns: Json;
+      };
+      apply_match_development: {
+        Args: {
+          p_club_id: string;
+          p_match_key: string;
           p_updates: Json;
         };
         Returns: Json;

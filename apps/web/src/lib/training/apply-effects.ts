@@ -10,6 +10,7 @@ export type TrainingPlayerSlice = {
   readonly id: string;
   readonly status: PlayerStatus;
   readonly skill: number;
+  readonly potential: number;
 };
 
 function focusSkillOffset(focusId: TrainingFocusId): number {
@@ -38,6 +39,7 @@ function skillBoostIds(
       return false;
     }
     if (p.skill >= 99) return false;
+    if (p.skill >= p.potential) return false;
     if (p.skill >= TRAINING_THIN.SKILL_SOFT_CEILING && intensityId !== 'high') {
       return false;
     }
@@ -74,7 +76,9 @@ export function applyTrainingSessionEffects(
 ): TrainingPlayerSlice[] {
   if (focusId === 'regeneration') {
     return players.map((p) => {
-      if (p.status === 'TIRED') return { id: p.id, status: 'READY' as const, skill: p.skill };
+      if (p.status === 'TIRED') {
+        return { id: p.id, status: 'READY' as const, skill: p.skill, potential: p.potential };
+      }
       return p;
     });
   }
@@ -107,10 +111,10 @@ export function applyTrainingSessionEffects(
 
     let skill = p.skill;
     if (toBoost.has(p.id)) {
-      skill = Math.min(99, p.skill + TRAINING_THIN.SKILL_UP_MAX_PER_PLAYER);
+      skill = Math.min(99, p.potential, p.skill + TRAINING_THIN.SKILL_UP_MAX_PER_PLAYER);
     }
 
-    return { id: p.id, status, skill };
+    return { id: p.id, status, skill, potential: p.potential };
   });
 }
 

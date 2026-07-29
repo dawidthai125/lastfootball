@@ -119,11 +119,11 @@ describe('resolveClubTraining (LFE-TRAINING-01)', () => {
 
 describe('applyTrainingSessionEffects', () => {
   const base = [
-    { id: 'a', status: 'READY' as const, skill: 60 },
-    { id: 'b', status: 'READY' as const, skill: 60 },
-    { id: 'c', status: 'TIRED' as const, skill: 60 },
-    { id: 'd', status: 'INJURED' as const, skill: 60 },
-    { id: 'e', status: 'READY' as const, skill: 60 },
+    { id: 'a', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'b', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'c', status: 'TIRED' as const, skill: 60, potential: 99 },
+    { id: 'd', status: 'INJURED' as const, skill: 60, potential: 99 },
+    { id: 'e', status: 'READY' as const, skill: 60, potential: 99 },
   ];
 
   it('regeneration turns TIRED → READY; leaves INJURED; no skill', () => {
@@ -165,13 +165,13 @@ describe('applyTrainingSessionEffects', () => {
 
 describe('applyTrainingSessionEffects skill (LFE-TRAINING-02)', () => {
   const base = [
-    { id: 'a', status: 'READY' as const, skill: 60 },
-    { id: 'b', status: 'READY' as const, skill: 60 },
-    { id: 'c', status: 'TIRED' as const, skill: 60 },
-    { id: 'd', status: 'INJURED' as const, skill: 60 },
-    { id: 'e', status: 'READY' as const, skill: 60 },
-    { id: 'f', status: 'READY' as const, skill: 60 },
-    { id: 'g', status: 'READY' as const, skill: 60 },
+    { id: 'a', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'b', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'c', status: 'TIRED' as const, skill: 60, potential: 99 },
+    { id: 'd', status: 'INJURED' as const, skill: 60, potential: 99 },
+    { id: 'e', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'f', status: 'READY' as const, skill: 60, potential: 99 },
+    { id: 'g', status: 'READY' as const, skill: 60, potential: 99 },
   ];
 
   it('caps skill-ups at K=3 and +1 per player', () => {
@@ -187,9 +187,9 @@ describe('applyTrainingSessionEffects skill (LFE-TRAINING-02)', () => {
 
   it('soft ceiling: skill >= 85 only grows on high', () => {
     const ceiling = [
-      { id: 'x', status: 'READY' as const, skill: 85 },
-      { id: 'y', status: 'READY' as const, skill: 86 },
-      { id: 'z', status: 'READY' as const, skill: 70 },
+      { id: 'x', status: 'READY' as const, skill: 85, potential: 99 },
+      { id: 'y', status: 'READY' as const, skill: 86, potential: 99 },
+      { id: 'z', status: 'READY' as const, skill: 70, potential: 99 },
     ];
     const normal = applyTrainingSessionEffects(ceiling, 'tactics', 'normal');
     expect(normal.find((p) => p.id === 'x')?.skill).toBe(85);

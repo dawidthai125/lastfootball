@@ -1,3 +1,4 @@
+import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
@@ -238,6 +239,7 @@ export async function completeTransferBuy(
     captain: false,
     age: listing.age,
     skill: listing.skill,
+    potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
     status: 'READY',
     nationality: 'POL',
     version: 1,

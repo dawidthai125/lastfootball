@@ -1,6 +1,7 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
+import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 import type { PlayerRowDto, SquadDto, SquadPlayerDto } from '@/lib/squad/types';
 import { SquadUnavailableError } from '@/lib/squad/types';
@@ -36,6 +37,7 @@ function roleLabel(pos: string, captain: boolean): string {
 function toDto(row: PlayerRowDto): SquadPlayerDto {
   const skill = row.skill;
   const shirt = row.shirtNumber;
+  const potentialBand = resolvePotentialBand(row.potential);
   return {
     id: row.id,
     name: row.name,
@@ -45,6 +47,8 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     form: 60 + (shirt % 25),
     energy: 70 + (shirt % 20),
     skill,
+    potentialBand,
+    potentialLabel: potentialBandLabel(row.potential),
     status: row.status,
     nationality: row.nationality,
     attributes: [

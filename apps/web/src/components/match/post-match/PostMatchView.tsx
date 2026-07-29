@@ -24,6 +24,8 @@ type PostMatchViewProps = {
   readonly continueSlot?: ReactNode;
   /** One-line match reward (LFE-ECONOMY-01); league only. */
   readonly rewardLine?: string | null;
+  /** Match development preview names (LFE-PLAYERS-02) — no potential numbers. */
+  readonly developmentNames?: readonly string[];
 };
 
 /**
@@ -38,6 +40,7 @@ export function PostMatchView({
   onDismiss,
   continueSlot,
   rewardLine = null,
+  developmentNames = [],
 }: PostMatchViewProps) {
   const mvp =
     summary.mvpPlayerId == null
@@ -63,6 +66,11 @@ export function PostMatchView({
         <p className="lf-post__eyebrow">Po meczu</p>
         <p className="lf-post__insight">{insight}</p>
         {rewardLine ? <p className="lf-post__reward">{rewardLine}</p> : null}
+        {developmentNames.length > 0 ? (
+          <p className="lf-post__reward" aria-label="Rozwój po meczu">
+            Rozwój: {developmentNames.join(', ')} (+1 umiejętność)
+          </p>
+        ) : null}
 
         <div className="lf-post__scoreline">
           <TeamBlock name={summary.homeName} shortName={summary.homeShort} align="end" />

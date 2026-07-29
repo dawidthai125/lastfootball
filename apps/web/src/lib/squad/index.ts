@@ -34,6 +34,19 @@ export {
 export type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 export { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 export { mapPlayerRow } from '@/lib/squad/map-player';
+export {
+  resolvePlayerPotential,
+  resolvePotentialBand,
+  potentialBandLabel,
+  POTENTIAL_BAND_LABEL,
+} from '@/lib/squad/potential';
+export type { PotentialBandId } from '@/lib/squad/potential';
+export { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
+export {
+  applyMatchDevelopmentEffects,
+  summarizeMatchDevelopment,
+} from '@/lib/squad/match-development';
+export { applySeasonAgeEffects, onSeasonEnd } from '@/lib/squad/season-age';
 
 // Server I/O (listClubPlayers / loadClubStartingXi) — import from
 // `@/lib/squad/get-players` or `@/lib/squad/load-starting-xi` (not this barrel).

@@ -77,6 +77,7 @@ export async function completeTrainingSession(
     id: p.id,
     status: p.status,
     skill: p.skill,
+    potential: p.potential,
   }));
   const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId);
   const summary = summarizeTrainingSessionEffects(before, after);

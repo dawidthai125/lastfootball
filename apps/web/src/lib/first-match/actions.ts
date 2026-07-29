@@ -7,10 +7,12 @@ import type { CompleteFirstMatchState } from '@/lib/first-match/action-types';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { ensureClubFixtures } from '@/lib/fixtures/ensure-club-fixtures';
 import { env } from '@/config/env';
+import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
+import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * Idempotent SSOT write: set clubs.first_match_completed_at once, then Welcome.
+ * Idempotent SSOT write: match development + clubs.first_match_completed_at once, then Welcome.
  */
 export async function completeFirstMatch(
   _prev: CompleteFirstMatchState,
@@ -43,6 +45,16 @@ export async function completeFirstMatch(
   const row = club as { id: string; first_match_completed_at: string | null };
 
   if (!row.first_match_completed_at) {
+    const players = await listClubPlayers(row.id);
+    const dev = await applyMatchDevelopment(supabase, {
+      clubId: row.id,
+      matchKey: 'first-match',
+      activePlayers: players,
+    });
+    if (!dev.ok) {
+      return { error: dev.error };
+    }
+
     const { error: updErr } = await supabase
       .from('clubs')
       .update({ first_match_completed_at: new Date().toISOString() } as never)
