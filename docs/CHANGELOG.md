@@ -10,8 +10,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
 **Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
+**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
 **Documentation tip:** **`2595cc9`** (GDD-17).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-UI-MOTION-01 · CLOSED
+
+### Presentation
+
+- Shared CSS motion Thin (`styles/motion.css`) · Hub decision enter / Primary press · Match Goal/Final overlay
+- Guide §8 Motion kontrakt · ZERO DUPLICATE · reduced-motion · CSS-only
+- Presentation tip → **`9fd14fc`**
+- CI GREEN · PRODUCTION VERIFIED · bez zmian domeny / resolverów / LFE
 
 ---
 

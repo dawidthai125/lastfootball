@@ -14,7 +14,7 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | ------------------- | -------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
 | Domain baseline     | **`cd222ba`** — LFE-PLAYERS-02 (Player Development Thin) |
-| Presentation tip    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)  |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
 | Documentation tip   | **`2595cc9`** — GDD-17 Skauting Information Thin B       |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
@@ -49,4 +49,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — GDD-17
+**ACTIVE** · 2026-07-30 — LFE-UI-MOTION-01

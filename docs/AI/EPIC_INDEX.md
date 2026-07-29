@@ -22,7 +22,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | ----------------------- | --------------------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED             |
 | **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                     |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)   |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED                   |
 | **Documentation tip**   | **`2595cc9`** — GDD-17 Skauting Information Thin B CLOSED |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
@@ -67,6 +67,7 @@ GDD-01…17 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **LFE-PLAYERS-02**        | Player Development Thin · potential + match growth · D22 · `cd222ba`                                          |
 | **GDD-16**                | Akademia Thin A (Intake + Promote) · docs `4805f7e`                                                           |
 | **GDD-17**                | Skauting Information Thin B · docs `2595cc9`                                                                  |
+| **LFE-UI-MOTION-01**      | Presentation motion Thin · Hub/Match · Guide §8 · `9fd14fc`                                                   |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
@@ -75,7 +76,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** LFE-UI-MOTION-01 · GDD-17+ (§18) · full 22 fixtures.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** GDD-17+ (§18) · full 22 fixtures.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -83,9 +84,9 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** LFE-UI-MOTI
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`
 - Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`
-- UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`
+- UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`, `LFE-UI-MOTION-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — GDD-17
+**ACTIVE** · 2026-07-30 — LFE-UI-MOTION-01

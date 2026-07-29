@@ -3,7 +3,7 @@
 **EPIC:** LFE-HANDOFF-01  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
 **Status:** ACTIVE — master handoff dla nowej sesji ChatGPT / Cursor  
-**Data:** 2026-07-29
+**Data:** 2026-07-30
 
 > **Cel:** cold start nowej sesji AI w **&lt; 5 minut** — wyłącznie z `docs/` + kodu.  
 > **Nie** zastępuje SSOT statusu / baseline / listy EPIC — **łączy** je w jeden dokument startowy.  
@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                   |
-| ------------------------------- | ----------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + **Player Development**                      |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                     |
-| **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                           |
-| **Presentation tip**            | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)                     |
-| **Documentation tip**           | `2595cc9` — **GDD-17** Skauting Information Thin B (docs)                                 |
-| **Branch**                      | `main`                                                                                    |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · GDD-17 CLOSED · LFE-PLAYERS-02 Domain · brak otwartego EPIC |
+| Pole                            | Wartość                                                                                                  |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + Landing/Brand/Auth + Training Depth + Player Development + **MOTION-01**                         |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                    |
+| **Domain feature baseline**     | `cd222ba` — **LFE-PLAYERS-02** (potential · match growth · D22)                                          |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                    |
+| **Documentation tip**           | `2595cc9` — **GDD-17** Skauting Information Thin B (docs)                                                |
+| **Branch**                      | `main`                                                                                                   |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · LFE-UI-MOTION-01 CLOSED · GDD-17 · Domain PLAYERS-02 · brak otwartego EPIC |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -31,11 +31,12 @@
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline cd222ba            # Domain PLAYERS-02
+git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 git log -1 --oneline 2595cc9            # GDD-17 Skauting Information Thin B
-git log -1 --oneline 9dc834a            # Auth UX feat (presentation tip)
+git log -1 --oneline 9dc834a            # Auth UX feat (prior presentation)
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (feat PLAYERS-02 `cd222ba` VERIFIED). Domain bez zmian w GDD-17 (docs-only).
+**Prod deploy:** Vercel Production śledzi `main` (feat PLAYERS-02 `cd222ba` VERIFIED · presentation MOTION-01 `9fd14fc`). Domain bez zmian w MOTION-01 (presentation-only).
 
 **Operacyjne:** Migracje Supabase: `complete_training_session` **oraz** `players.potential` + `apply_match_development` muszą zostać zastosowane na prod.
 
@@ -71,11 +72,12 @@ IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01 · DOCS-BASELINE-01 — *
 
 ### Marketing / Auth presentation (po UI P0)
 
-| EPIC                 | Commit    | Skrót                                                 |
-| -------------------- | --------- | ----------------------------------------------------- |
-| **LFE-LANDING-01**   | `ffa20c6` | Landing marketing · Tunnel hero · full-bleed          |
-| **LFE-BRANDING-01B** | `1fbd6b5` | Logo K1+K3 · favicons · OG · BrandLogo                |
-| **LFE-AUTH-UX-01**   | `9dc834a` | Login Modal · premium `/login` · `/register` · header |
+| EPIC                 | Commit    | Skrót                                                    |
+| -------------------- | --------- | -------------------------------------------------------- |
+| **LFE-LANDING-01**   | `ffa20c6` | Landing marketing · Tunnel hero · full-bleed             |
+| **LFE-BRANDING-01B** | `1fbd6b5` | Logo K1+K3 · favicons · OG · BrandLogo                   |
+| **LFE-AUTH-UX-01**   | `9dc834a` | Login Modal · premium `/login` · `/register` · header    |
+| **LFE-UI-MOTION-01** | `9fd14fc` | Shared CSS motion Thin · Hub enter/press · Match overlay |
 
 ### Docs
 
@@ -203,24 +205,25 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 ### Planowane (Owner wybiera)
 
-**LFE-UI-MOTION-01** · GDD-17+ (§18 Ranking / szkielety) · full 22 fixtures · hardening transferów · Ratings v2 · LFE PUBLIC trim · LFE-ACADEMY-01 / LFE-SCOUTING-01 (kod, po Owner GO).
+**GDD-17+** (§18 Ranking / szkielety) · full 22 fixtures · hardening transferów · Ratings v2 · LFE PUBLIC trim · LFE-ACADEMY-01 / LFE-SCOUTING-01 (kod, po Owner GO).
 
 ---
 
 ## 8. UI (stan ekranów)
 
-| Obszar        | Stan                                                                           |
-| ------------- | ------------------------------------------------------------------------------ |
-| **Landing**   | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal)    |
-| **Branding**  | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                        |
-| **Login**     | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage                |
-| **Register**  | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only              |
-| **Hub**       | CLOSED UI P0 · decision-first · Night Pitch Office                             |
-| **Match**     | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post fidelity                |
-| **Squad**     | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential |
-| **Training**  | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)        |
-| **Transfers** | CLOSED Thin 01–08 + presentation                                               |
-| **Finance**   | CLOSED Thin + presentation                                                     |
+| Obszar        | Stan                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| **Landing**   | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal)               |
+| **Branding**  | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                                   |
+| **Login**     | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage                           |
+| **Register**  | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only                         |
+| **Hub**       | CLOSED UI P0 · decision-first · **MOTION-01** enter/press · Night Pitch Office            |
+| **Match**     | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post · **MOTION-01** Goal/Final overlay |
+| **Squad**     | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential            |
+| **Training**  | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)                   |
+| **Transfers** | CLOSED Thin 01–08 + presentation                                                          |
+| **Finance**   | CLOSED Thin + presentation                                                                |
+| **Motion**    | CLOSED **LFE-UI-MOTION-01** · shared `motion.css` · Guide §8 · `9fd14fc`                  |
 
 ---
 
@@ -230,13 +233,12 @@ Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED** (kolejność rekomendowana):
 
 | #   | EPIC / temat                 | Priorytet            | Notatka                                |
 | --- | ---------------------------- | -------------------- | -------------------------------------- |
-| 1   | **LFE-UI-MOTION-01**         | **P0 rekomendowany** | Opcjonalny polish motion po UI P0      |
-| 2   | GDD-17+ (§18 Ranking / …)    | P1                   | Pozostałe szkielety GDD — Owner        |
-| 3   | Full 22-fixture season       | P2                   | Wymaga decyzji vs Thin 11              |
-| 4   | Transfers hardening          | P2                   | Tech debt — `TRANSFER_ARCHITECTURE.md` |
-| 5   | LFE-ACADEMY-01 (kod)         | P2                   | Po GDD-16; osobny AUDIT                |
-| 6   | LFE-SCOUTING-01 (kod)        | P2                   | Po GDD-17; osobny AUDIT                |
-| 7   | Ratings v2 · LFE PUBLIC trim | P3                   | Chore / depth                          |
+| 1   | **GDD-17+** (§18 Ranking)    | **P0 rekomendowany** | Pozostałe szkielety GDD — Owner        |
+| 2   | Full 22-fixture season       | P2                   | Wymaga decyzji vs Thin 11              |
+| 3   | Transfers hardening          | P2                   | Tech debt — `TRANSFER_ARCHITECTURE.md` |
+| 4   | LFE-ACADEMY-01 (kod)         | P2                   | Po GDD-16; osobny AUDIT                |
+| 5   | LFE-SCOUTING-01 (kod)        | P2                   | Po GDD-17; osobny AUDIT                |
+| 6   | Ratings v2 · LFE PUBLIC trim | P3                   | Chore / depth                          |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -244,9 +246,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 10. Rekomendowany następny EPIC
 
-### **LFE-UI-MOTION-01** (lub GDD-17+ §18 Ranking)
+### **GDD-17+** (§18 Ranking) lub full 22 fixtures
 
-**Uzasadnienie:** GDD-17 Skauting Information Thin B zamknięta docs (`2595cc9`). Szkielet §17 domknięty; naturalny polish = motion, albo kolejny rozdział GDD (§18). Kod skautingu/akademii = osobne EPICi po Owner GO.
+**Uzasadnienie:** LFE-UI-MOTION-01 CLOSED (`9fd14fc`) — presentation motion Thin. Następny naturalny szkielet docs = **§18 Ranking**, albo decyzja Ownera o sezonie 22.
 
 **Nie zaczynaj** bez AUDIT → PLAN → **Owner GO**.
 
@@ -303,7 +305,8 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
 - `LEAGUE_FIXTURE_COUNT=11` ≠ GDD home+away 22.
 - Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · **kod Akademii** · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI.
-- Domain tip = PLAYERS-02 (`cd222ba`); Documentation tip = GDD-17 (`2595cc9`); UI P0 / Landing / Auth = presentation.
+- Domain tip = PLAYERS-02 (`cd222ba`); Presentation tip = MOTION-01 (`9fd14fc`); Documentation tip = GDD-17 (`2595cc9`); UI P0 = `54d0724`.
+- Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
 - Sekrety `.env` — nigdy w git.
 - Force-push / rewrite `main` — zakazane.
 - Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
@@ -337,16 +340,16 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## 15. Current Project Health
 
-| Obszar       | Ocena        | Komentarz                                         |
-| ------------ | ------------ | ------------------------------------------------- |
-| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany         |
-| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                    |
-| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne       |
-| UX           | **Dobry**    | Front door zamknięty; Hub decision-first          |
-| Gameplay     | **Thin+**    | Pętla sezonu + Training Depth + Match development |
-| Dokumentacja | **Aktualna** | GDD-17 CLOSE · tip `2595cc9` · Domain PLAYERS-02  |
-| CI           | **GREEN**    | tip `2595cc9` VERIFIED                            |
-| Production   | **GREEN**    | Vercel · Domain PLAYERS-02 `cd222ba`              |
+| Obszar       | Ocena        | Komentarz                                                  |
+| ------------ | ------------ | ---------------------------------------------------------- |
+| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                  |
+| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                             |
+| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                |
+| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                   |
+| Gameplay     | **Thin+**    | Pętla sezonu + Training Depth + Match development          |
+| Dokumentacja | **Aktualna** | MOTION-01 CLOSE · tip presentation `9fd14fc` · Docs GDD-17 |
+| CI           | **GREEN**    | tip `9fd14fc` VERIFIED                                     |
+| Production   | **GREEN**    | Vercel · Domain PLAYERS-02 `cd222ba`                       |
 
 ---
 
@@ -363,4 +366,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-29 — GDD-17 CLOSE · tip `2595cc9` · PRODUCTION VERIFIED · CI GREEN
+2026-07-30 — LFE-UI-MOTION-01 CLOSE · presentation tip `9fd14fc` · PRODUCTION VERIFIED · CI GREEN

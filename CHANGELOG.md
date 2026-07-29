@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-UI-MOTION-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · presentation tip `9fd14fc` · next EPIC = GDD-17+
+
+### Added (shipped on `main` — LFE-UI-MOTION-01)
+
+- Shared `motion.css` · Hub enter/press · Match Goal/Final overlay · Guide §8
+
 ### Docs (GDD-17 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · tip `2595cc9` · next EPIC = LFE-UI-MOTION-01 / GDD-17+
