@@ -21,9 +21,9 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                             |
 | ----------------------- | ------------------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
-| **Domain baseline**     | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED                 |
+| **Domain baseline**     | **`5e6c2ad`** — LFE-TRAINING-02 CLOSED                  |
 | **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
-| **Documentation tip**   | **`a6f3951`** — LFE-HANDOFF-01                          |
+| **Documentation tip**   | **`DOCSTIP`** — LFE-TRAINING-02 DOCS CLOSE              |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -36,7 +36,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | LFE-ECONOMY-01                                 | Cash Thin (D18)                                       |
 | LFE-PLAYERS-01                                 | Kadra `players` (D19)                                 |
 | LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20) |
-| LFE-TRAINING-01                                | Trening Thin (D21)                                    |
+| LFE-TRAINING-01 · **02**                       | Trening Thin + Depth (skill · XI Gate) (D21)          |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                |
 
 ## Engine / Match UI DONE
@@ -63,6 +63,7 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **LFE-LANDING-01**        | Marketing Landing · Tunnel hero                                                                               |
 | **LFE-BRANDING-01B**      | Logo K1+K3 · favicons · OG                                                                                    |
 | **LFE-AUTH-UX-01**        | Login Modal · AuthStage login/register                                                                        |
+| **LFE-TRAINING-02**       | Training Depth · skill + XI Gate · RPC · `5e6c2ad`                                                            |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
@@ -71,7 +72,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** Training depth · potem GDD-16+, LFE-UI-MOTION-01, full 22 fixtures.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** GDD-16+ · LFE-UI-MOTION-01 · full 22 fixtures.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -84,4 +85,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** Training de
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-HANDOFF-01
+**ACTIVE** · 2026-07-29 — LFE-TRAINING-02

@@ -7,11 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-TRAINING-02 CLOSE)
+
+- Sync D21 · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG
+- Domain feature baseline → `5e6c2ad` (Training Depth)
+- Operacyjne: Migracja Supabase RPC `complete_training_session` musi zostać zastosowana na środowisku produkcyjnym
+
+### Added (shipped on `main` — LFE-TRAINING-02)
+
+- Training Depth: skill progression Thin on `players.skill` (anti-farm: +1 / K=3 / ceiling ≥85 high-only)
+- Atomic RPC `complete_training_session` (status + skill + `last_training_on`)
+- XI Gate: INJURED/SUSPENDED hard block; TIRED warning ≥4; kick-off hard fail (no LFE coupling)
+- Session feedback: trained · tired · regenerated · +skill
+
 ### Docs (LFE-HANDOFF-01)
 
 - Master handoff AI: `docs/AI/PROJECT_HANDOFF.md` (15 sekcji · cold start &lt; 5 min)
 - Sync baseline / status / roadmap / EPIC index / README / AGENTS po Landing · Branding · Auth UX
-- Presentation tip pinned: `9dc834a` (LFE-AUTH-UX-01); Production UI P0 `54d0724`; Domain TRANSFERS-08
+- Presentation tip pinned: `9dc834a` (LFE-AUTH-UX-01); Production UI P0 `54d0724`; Domain TRANSFERS-08 (superseded by TRAINING-02)
 
 ### Added (shipped on `main` — LFE-AUTH-UX-01)
 

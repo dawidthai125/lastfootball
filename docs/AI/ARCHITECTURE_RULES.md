@@ -61,7 +61,7 @@ supabase/ (Auth + Postgres migrations)
 - Seed = create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad`.
 - Pusta baza → `SquadUnavailableError` (bez fallbacku do seeda).
 - Odejście = `DEPARTED` + `departed_at` (bez DELETE) — D20.
-- Training mutuje wyłącznie `status` (D21) — bez drugiej tabeli kadry.
+- Training mutuje `status` + `skill` (D21 / TRAINING-02) — bez drugiej tabeli kadry; atrybuty UI = derive(skill).
 
 ## Transfers rules (LFE-TRANSFERS-01 / D20 + E1/N1)
 
@@ -82,12 +82,14 @@ supabase/ (Auth + Postgres migrations)
 - Unlock okna: `UNLOCK_AFTER_PLAYED=2` (Thin wyjątek vs GDD K11); shared `hasPlayedUnlock` (D21).
 - Poza Thin: AI clubs, Instant Sell nego, custom ask, 2+ counters, buyer Counter, timeout / AI pending inbox, escrow, potential, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.
 
-## Training rules (LFE-TRAINING-01 / D21)
+## Training rules (LFE-TRAINING-01/02 / D21)
 
 - `/training` konsumuje **tylko** `resolveClubTraining()` — brak mocków.
-- Mutacje: `players.status` + `clubs.last_training_on` — **bez** `skill` / insert/delete.
+- Mutacje: `players.status` + `players.skill` + `clubs.last_training_on` — atomowo via RPC `complete_training_session`.
+- Efekty pure: `applyTrainingSessionEffects` (anti-farm: +1 / K=3 / ceiling ≥85 high-only).
+- XI Gate: INJURED/SUSPENDED hard block; TIRED warning ≥4; kick-off hard fail (bez LFE skill/fatigue).
 - 1 sesja / dzień UTC; unlock played ≥ 2; bez zmian LFE.
-- Poza Thin: indywidualny, plany, cash cost, skill growth, filtr XI.
+- Poza Thin: indywidualny, plany, cash cost, XP, potential, attribute DB, kontuzje treningowe.
 
 ## REUSE FIRST / ZERO DUPLICATE
 
@@ -109,4 +111,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-29 — LFE-TRAINING-02

@@ -7,10 +7,10 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`9b1c575`** — LFE-TRANSFERS-08 CLOSED (bez zmian domenowych).  
+**Domain feature baseline:** **`5e6c2ad`** — LFE-TRAINING-02 CLOSED (Training Depth).  
 **Presentation tip:** **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Branding · Auth UX).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · **Training Depth (01+02)** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -48,6 +48,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Offic
 | **LFE-TRANSFERS-07**                                   | **CLOSED** · Live H2H Pending Offers Thin                                                                  |
 | **LFE-TRANSFERS-08**                                   | **CLOSED** · Live H2H Counter Offers Thin (1× seller→buyer)                                                |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                              |
+| **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                         |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation) |
 | **LFE-UI-EVOLUTION-02**                                | **CLOSED** · daily manager loop · Kadra SSOT · Mobile Variant A (presentation)                             |
 | **LFE-DOCS-UX-03**                                     | **CLOSED** · UI Presentation Contract (Guide §16) · Patterns · HUB sync · postmortem REFERENCE             |
@@ -75,31 +76,31 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Offic
 
 ## PLANNED ⬜
 
-| Item                             | Zależność                        |
-| -------------------------------- | -------------------------------- |
-| GDD-16+                          | Owner GO (docs)                  |
-| LFE-UI-MOTION-01                 | po UI P0 (opcjonalny polish)     |
-| Training depth (skill / XI gate) | po TRAINING-01 (D21 poza)        |
-| Full 22-fixture season (opt.)    | po LEAGUE-03 · GDD §10 home+away |
-| Zawężenie LFE PUBLIC exports     | chore                            |
-| Ratings v2                       | bogatsze Player Match Data       |
+| Item                          | Zależność                        |
+| ----------------------------- | -------------------------------- |
+| GDD-16+                       | Owner GO (docs)                  |
+| LFE-UI-MOTION-01              | po UI P0 (opcjonalny polish)     |
+| Full 22-fixture season (opt.) | po LEAGUE-03 · GDD §10 home+away |
+| Zawężenie LFE PUBLIC exports  | chore                            |
+| Ratings v2                    | bogatsze Player Match Data       |
 
 ## FUTURE
 
-| Item                          | Notatka                     |
-| ----------------------------- | --------------------------- |
-| LFE Physics / full Rules      | RESERVED / częściowe eventy |
-| ECS storage                   | RESERVED                    |
-| Replay persist / video export | poza MVP                    |
-| Mobile native                 | poza scope                  |
+| Item                                    | Notatka                     |
+| --------------------------------------- | --------------------------- |
+| LFE Physics / full Rules                | RESERVED / częściowe eventy |
+| ECS storage                             | RESERVED                    |
+| Replay persist / video export           | poza MVP                    |
+| Mobile native                           | poza scope                  |
+| Individual training / XP / attribute DB | poza Thin Depth (D21)       |
 
 ---
 
 ## Next Recommended EPIC
 
-**Training depth (skill / XI gate)** — uzasadnienie: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-Alternatywy (Owner wybiera): GDD-16+ · LFE-UI-MOTION-01 · full 22 fixtures · transfers hardening.  
-Domain baseline TRANSFERS-08 bez zmian; front door (Landing/Auth) zamknięty.
+**GDD-16+** (docs produktowe) lub **LFE-UI-MOTION-01** — Owner wybiera.  
+Alternatywy: full 22 fixtures · transfers hardening · Ratings v2.  
+Domain tip: TRAINING-02 `5e6c2ad`; front door (Landing/Auth) zamknięty.
 
 ## Decyzje roadmapy
 
@@ -120,9 +121,9 @@ Domain baseline TRANSFERS-08 bez zmian; front door (Landing/Auth) zamknięty.
 - Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
 - Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
-- Trening = `resolveClubTraining` + `last_training_on` + status-only na `players`; shared `hasPlayedUnlock` (D21).
+- Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
-- **UI P0** = presentation Night Pitch Office (IMPL-01…06); nie zmienia Domain baseline.
+- **UI P0** = presentation Night Pitch Office (IMPL-01…06); nie zmienia Domain tip TRAINING-02.
 
 ## Powiązania
 
@@ -130,4 +131,4 @@ Domain baseline TRANSFERS-08 bez zmian; front door (Landing/Auth) zamknięty.
 
 ## Last updated
 
-2026-07-29 — LFE-HANDOFF-01 · UI P0 `54d0724` · Presentation tip AUTH-UX `9dc834a`
+2026-07-29 — LFE-TRAINING-02 · Domain `5e6c2ad`

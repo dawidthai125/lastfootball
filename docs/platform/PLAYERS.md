@@ -31,7 +31,7 @@ D19 (D16 superseded) — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin
 
-Edycja XI, `potential`, pensje; rozwój `skill` z treningu (D21 poza).
+Edycja XI poza Match Path; `potential`; pensje; XP / attribute DB (atrybuty UI = derive(skill); skill rośnie Thin z TRAINING-02).
 
 ## UI (presentation)
 

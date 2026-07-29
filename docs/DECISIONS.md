@@ -118,9 +118,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Dlaczego:** kadra musi być trwała przed Transfers/Training; seed runtime uniemożliwiał mutacje.  
 **Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id starter **`s-{tag}-…`**; buy **`t-{tag}-…`** (D20); **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED` | `DEPARTED`** (lokalizacja w UI; aktywna kadra bez `DEPARTED`).  
-**Poza Thin:** edycja XI, `potential`, pensje z cash; rozwój `skill` z treningu → D21 poza.  
+**Poza Thin:** edycja XI (poza Match Path), `potential`, pensje z cash; pełny model atrybutów / XP — poza D21 Depth.  
 **Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).  
-**Uwaga:** Training mutuje `status` (D21) — bez osobnej tabeli kadry.
+**Uwaga:** Training mutuje `status` + `skill` (D21 / TRAINING-02) — bez osobnej tabeli kadry; atrybuty UI = derive(skill).
 
 ### D20 — Transfer market Thin + `resolveTransferMarket` · CLOSED
 
@@ -153,24 +153,28 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego (`4b58507`); Live Instant (`8824793`); Pending (`be95006`); Counter — LFE-TRANSFERS-08.  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
-### D21 — Team training Thin + `resolveClubTraining` · CLOSED
+### D21 — Team training Thin + Depth (`resolveClubTraining`) · CLOSED
 
-**Dlaczego:** trening nie może być mockiem; musi mutować trwałą kadrę i mieć 1 slot / dzień bez grind backlogu.  
+**Dlaczego:** trening nie może być mockiem; musi mutować trwałą kadrę, mieć 1 slot / dzień bez grind backlogu, oraz dawać czytelny Thin depth (skill + XI gate) bez farmy i bez LFE.
 **Zasada:**
 
-| Fakt          | SSOT / kontrakt                                                                 |
-| ------------- | ------------------------------------------------------------------------------- |
-| UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                        |
-| Skutki        | tylko `players.status` — **bez** `skill`, bez insert/delete                     |
-| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                           |
-| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`) |
-| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`             |
-| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high)              |
-| LFE           | **bez zmian** Match Engine / PUBLIC API                                         |
+| Fakt          | SSOT / kontrakt                                                                  |
+| ------------- | -------------------------------------------------------------------------------- |
+| UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                         |
+| Skutki        | `players.status` + `players.skill` — bez insert/delete; bez XP / OVR / potential |
+| Persist       | RPC `complete_training_session` (atomowo status + skill + `last_training_on`)    |
+| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                            |
+| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`)  |
+| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`              |
+| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin)  |
+| Anti-farm     | max +1 skill / gracz / sesja; K=3; soft ceiling ≥85 tylko `high`; mecz > trening |
+| XI Gate       | INJURED/SUSPENDED hard block; TIRED OK + warning ≥4; kick-off hard fail          |
+| LFE           | **bez zmian** Match Engine / PUBLIC API (brak skill/fatigue w seedzie)           |
 
 **Thin wyjątek vs GDD §8.4:** dzień = **UTC date**, nie timezone gracza (brak SSOT TZ).  
-**Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), wzrost skill, filtr XI po statusie.  
-**Źródło:** LFE-TRAINING-01 (prod `10de062`).
+**Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), XP, potential, attribute DB, kontuzje treningowe, morale numeric, mapowanie skill→LFE.  
+**Źródło:** LFE-TRAINING-01 (prod `10de062`); **LFE-TRAINING-02** Depth (prod `5e6c2ad`).  
+**Operacyjne:** Migracja Supabase RPC `complete_training_session` musi zostać zastosowana na środowisku produkcyjnym.
 
 ## Najważniejsze decyzje (meta)
 
@@ -191,4 +195,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02 · LFE-TRANSFERS-08
+2026-07-29 — LFE-TRAINING-02 · D21 Depth

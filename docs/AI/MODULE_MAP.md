@@ -43,7 +43,7 @@ lastfootball/
 Hub CTA ──► /matches | /transfers | /training | /league | /finance
 complete-fixture ──► cash reward + ensureTransferWindow
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
-training ──► players.status + clubs.last_training_on
+training ──► players.status + players.skill + clubs.last_training_on (RPC)
 Live match ──► LFE MatchSession / CommandBus (nie z Canvas)
 ```
 
