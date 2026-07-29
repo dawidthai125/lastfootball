@@ -17,6 +17,13 @@ export {
   resolveStartingXi,
   getSquadPlayerById,
 } from '@/lib/squad/resolve-club-squad';
+export {
+  validateStartingXi,
+  applyXiSelection,
+  sortXiPlayers,
+  isGoalkeeper,
+} from '@/lib/squad/validate-starting-xi';
+export type { XiValidation } from '@/lib/squad/validate-starting-xi';
 /** AI / tests / create generator — not for player-club runtime reads. */
 export {
   seedClubRoster,

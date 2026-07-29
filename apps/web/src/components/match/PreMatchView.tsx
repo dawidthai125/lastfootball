@@ -5,7 +5,7 @@ import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
-import { matchLivePath, matchTunnelPath, matchVsPath } from '@/lib/match/match-path';
+import { matchLivePath, matchTunnelPath, matchVsPath, matchXiPath } from '@/lib/match/match-path';
 
 import './prematch-kickoff.css';
 import './match-path.css';
@@ -77,8 +77,8 @@ export function PreMatchView({
               Start meczu
             </span>
           )}
-          <Link href="/squad" className="lf-mp__soft">
-            Ustaw skład (Kadra)
+          <Link href={matchXiPath(fixture.id)} className="lf-mp__soft">
+            Ustaw skład
           </Link>
         </div>
       </section>

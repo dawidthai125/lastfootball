@@ -18,6 +18,10 @@ export function matchLivePath(id: string): string {
   return `/match/${id}/live`;
 }
 
+export function matchXiPath(id: string): string {
+  return `/match/${id}/xi`;
+}
+
 /** Immersive Match Path — hide shell nav (Hi-Fi). */
 export function isMatchPathPathname(pathname: string): boolean {
   return pathname === '/match' || pathname.startsWith('/match/');
