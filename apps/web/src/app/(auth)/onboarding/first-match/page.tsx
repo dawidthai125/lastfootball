@@ -45,8 +45,8 @@ export default async function FirstMatchIntroPage() {
         Ustaw się na ławce, wyjdź na boisko i domknij pierwszy gwizdek w historii klubu.
       </p>
       <div className="lf-landing__cta-row">
-        <LandingCta href={FIRST_MATCH_PATHS.prematch} variant="primary">
-          Przygotuj pierwszy mecz
+        <LandingCta href={FIRST_MATCH_PATHS.tunnel} variant="primary">
+          Wejdź do tunelu
         </LandingCta>
       </div>
       <p className="lf-fm__footnote">

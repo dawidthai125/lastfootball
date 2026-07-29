@@ -76,7 +76,7 @@ describe('hub session + primary CTA', () => {
     const primary = resolvePrimaryCta(phase, session, { nextFixture: next, hasFixtures: true });
     expect(primary.access).toBe('open');
     expect(primary.id).toBe('play-next-match');
-    expect(primary.href).toBe(`/match/${next.id}`);
+    expect(primary.href).toBe(`/match/${next.id}/tunnel`);
   });
 
   it('idle without upcoming → Zobacz kadrę', () => {

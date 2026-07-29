@@ -11,6 +11,7 @@ import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
 import type { ReplaySpeed } from '@/gameplay/replay';
 import { dashboardMock } from '@/data/mock';
+import { MatchMomentOverlay } from '@/components/match/MatchMomentOverlay';
 import {
   buildPostMatchSummary,
   findReplayIndexForEvent,
@@ -25,9 +26,7 @@ import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { RosterPlayerSeed } from '@/lib/squad';
 
 /**
- * Live Match UI — broadcast chrome + Canvas + Post Match (after MATCH_END).
- * Reads MatchState / EventBus via LiveMatchRuntime; commands go through CommandBus.
- * Canvas / Replay never mutate MatchState.
+ * Live Match UI — LFE-UI-IMPL-02: Live + Goal overlay + Final whistle + Post.
  */
 export function LiveMatchFoundation({
   bundle,
@@ -61,12 +60,34 @@ export function LiveMatchFoundation({
   const [feedFilter, setFeedFilter] = useState<'all' | LiveEventKind>('all');
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
   const [postMatchOpen, setPostMatchOpen] = useState(false);
+  const [finalOpen, setFinalOpen] = useState(false);
+  const [goalOverlay, setGoalOverlay] = useState<{
+    id: string;
+    title: string;
+    score: string;
+  } | null>(null);
+  const [seenGoalIds, setSeenGoalIds] = useState<Set<string>>(() => new Set());
 
   const finished = snapshot ? isMatchFinished(snapshot.matchState, snapshot.events) : false;
 
   useEffect(() => {
-    if (finished) setPostMatchOpen(true);
-  }, [finished]);
+    if (finished && !postMatchOpen) setFinalOpen(true);
+  }, [finished, postMatchOpen]);
+
+  useEffect(() => {
+    if (!snapshot || finalOpen || postMatchOpen) return;
+    const goals = snapshot.feed.filter((e) => e.kind === 'goal');
+    const newest = goals[goals.length - 1];
+    if (!newest) return;
+    const gid = `${newest.minute}-${newest.text ?? newest.kind}`;
+    if (seenGoalIds.has(gid)) return;
+    setSeenGoalIds((prev) => new Set(prev).add(gid));
+    setGoalOverlay({
+      id: gid,
+      title: 'GOL!',
+      score: `${snapshot.homeScore}–${snapshot.awayScore}`,
+    });
+  }, [snapshot, seenGoalIds, finalOpen, postMatchOpen]);
 
   useEffect(() => {
     if (!runtime || postMatchOpen) return;
@@ -158,6 +179,23 @@ export function LiveMatchFoundation({
     );
   }
 
+  if (finalOpen && finished) {
+    return (
+      <div data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-07">
+        <MatchMomentOverlay
+          variant="final"
+          title="Koniec meczu"
+          scoreLine={`${snapshot.homeScore}–${snapshot.awayScore}`}
+          primaryLabel="Podsumowanie"
+          onPrimary={() => {
+            setFinalOpen(false);
+            setPostMatchOpen(true);
+          }}
+        />
+      </div>
+    );
+  }
+
   const events =
     feedFilter === 'all' ? snapshot.feed : snapshot.feed.filter((e) => e.kind === feedFilter);
 
@@ -166,13 +204,23 @@ export function LiveMatchFoundation({
 
   return (
     <div
+      data-lf-impl="LFE-UI-IMPL-02"
+      data-mch="SCR-MCH-04"
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: 'var(--lf-space-3)',
-        minHeight: 'calc(100dvh - var(--lf-shell-topbar) - var(--lf-space-6))',
+        minHeight: '100dvh',
       }}
     >
+      {goalOverlay ? (
+        <MatchMomentOverlay
+          variant="goal"
+          title={goalOverlay.title}
+          scoreLine={goalOverlay.score}
+          onDismiss={() => setGoalOverlay(null)}
+        />
+      ) : null}
       {/* Broadcast scorebug */}
       <header
         role="status"
@@ -1032,7 +1080,7 @@ export function LiveMatchFoundation({
             }}
           >
             <Link
-              href={`/match/${fixture.id}`}
+              href={`/match/${fixture.id}/tunnel`}
               style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-gold)' }}
             >
               ← Pre Match

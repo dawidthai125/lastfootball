@@ -16,14 +16,16 @@ function ShellFrame({ children }: { children: ReactNode }) {
   const { navCollapsed, showRail } = useShell();
   const pathname = usePathname();
   const isHub = pathname === '/hub' || pathname === '/hub/';
-  const isMatchRoute = pathname === '/match' || pathname.startsWith('/match/');
-  // LFE-UI-EVOLUTION-01B: hide rail on Hub and all /match routes (incl. live).
-  const railVisible = showRail && !isHub && !isMatchRoute;
+  const isMatchPath = pathname === '/match' || pathname.startsWith('/match/');
+  // LFE-UI-IMPL-02: hide rail + nav during Match Path (Hi-Fi immersive).
+  const railVisible = showRail && !isHub && !isMatchPath;
+  const hideMatchChrome = isMatchPath;
 
   const bodyClass = [
     'lf-app-shell__body',
     navCollapsed ? 'lf-app-shell__body--collapsed' : '',
     railVisible ? 'lf-app-shell__body--with-rail' : '',
+    hideMatchChrome ? 'lf-app-shell__body--match-path' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -34,11 +36,15 @@ function ShellFrame({ children }: { children: ReactNode }) {
     .join(' ');
 
   return (
-    <div className="lf-app-shell" data-lf-impl="LFE-UI-IMPL-01">
-      <TopBar />
-      <MobileNav />
+    <div
+      className="lf-app-shell"
+      data-lf-impl={hideMatchChrome ? 'LFE-UI-IMPL-02' : 'LFE-UI-IMPL-01'}
+      data-match-path={hideMatchChrome ? 'immersive' : undefined}
+    >
+      {hideMatchChrome ? null : <TopBar />}
+      {hideMatchChrome ? null : <MobileNav />}
       <div className={bodyClass}>
-        <LeftNavigation />
+        {hideMatchChrome ? null : <LeftNavigation />}
         <main className={mainClass}>{children}</main>
         {railVisible ? (
           <div className="lf-app-shell__rail">

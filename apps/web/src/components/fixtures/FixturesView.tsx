@@ -56,7 +56,7 @@ function statusStyle(status: MatchStatus): { border: string; bg: string; text: s
 function preMatchHref(f: Fixture): string | null {
   if (f.status === 'played') return null;
   if (f.status === 'live') return `/match/${f.id}/live`;
-  if (f.status === 'upcoming') return `/match/${f.id}`;
+  if (f.status === 'upcoming') return `/match/${f.id}/tunnel`;
   return null;
 }
 

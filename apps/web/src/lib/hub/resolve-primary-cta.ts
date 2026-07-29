@@ -21,8 +21,8 @@ export function resolvePrimaryCta(
   if (DECISION_PHASES.has(phase) && session === 'matchday' && ctx.nextFixture) {
     return {
       id: 'play-next-match',
-      label: 'Przygotuj mecz',
-      href: `/match/${ctx.nextFixture.id}`,
+      label: 'Idź do meczu',
+      href: `/match/${ctx.nextFixture.id}/tunnel`,
       access: 'open',
     };
   }

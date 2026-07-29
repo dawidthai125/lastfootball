@@ -226,6 +226,14 @@ textarea {
   grid-template-columns: var(--lf-shell-nav-collapsed) minmax(0, 1fr) var(--lf-shell-rail);
 }
 
+/* LFE-UI-IMPL-02 — Match Path immersive (no nav columns) */
+.lf-app-shell__body--match-path,
+.lf-app-shell__body--match-path.lf-app-shell__body--collapsed,
+.lf-app-shell__body--match-path.lf-app-shell__body--with-rail,
+.lf-app-shell__body--match-path.lf-app-shell__body--collapsed.lf-app-shell__body--with-rail {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .lf-app-shell__rail {
   min-height: 0;
   overflow: hidden;

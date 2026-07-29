@@ -73,7 +73,7 @@ export function NextMatchHero({ fixture, clubName, clubShortName }: NextMatchHer
         </div>
         {fixture.status === 'upcoming' || fixture.status === 'scheduled' ? (
           <Link
-            href={`/match/${fixture.id}`}
+            href={`/match/${fixture.id}/tunnel`}
             className="font-[family-name:var(--font-ui)] font-semibold"
             style={{
               borderWidth: 'var(--lf-border-width-hair)',

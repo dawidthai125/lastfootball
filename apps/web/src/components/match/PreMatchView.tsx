@@ -5,12 +5,13 @@ import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { matchLivePath, matchTunnelPath, matchVsPath } from '@/lib/match/match-path';
 
 import './prematch-kickoff.css';
+import './match-path.css';
 
 /**
- * Kick-Off Experience — LFE-UI-EVOLUTION-01E.
- * Decision-first presentation only; lineup/tactics remain read-only.
+ * HF-MCH-03 Pre-match checklist + kick-off context (LFE-UI-IMPL-02).
  */
 export function PreMatchView({
   bundle,
@@ -29,75 +30,86 @@ export function PreMatchView({
     .filter(Boolean)
     .join(' · ');
   const tacticPreview = bundle.tactics.slice(0, 3);
+  const checklistReady = bundle.ourLineup.length >= 11;
 
   return (
-    <div className="lf-ko">
+    <div className="lf-ko" data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-03">
       <Breadcrumbs
-        items={
-          firstMatch
-            ? [
-                { label: 'Pierwszy mecz', href: FIRST_MATCH_PATHS.intro },
-                { label: `vs ${fixture.opponent}` },
-              ]
-            : [
-                { label: 'Rozgrywki', href: '/league' },
-                { label: 'Terminarz', href: '/matches' },
-                { label: `vs ${fixture.opponent}` },
-              ]
-        }
+        items={[
+          { label: 'Tunel', href: matchTunnelPath(fixture.id) },
+          { label: 'VS', href: matchVsPath(fixture.id) },
+          { label: `vs ${fixture.opponent}` },
+        ]}
       />
 
-      {/* M2 — Kick-Off Hero + dominant CTA */}
+      <section className="lf-mp__decision" aria-label="Checklist przedmeczowa">
+        <p className="lf-mp__eyebrow">Pre-match</p>
+        <h1 className="lf-mp__title">Gotowi do meczu?</h1>
+        <ul className="lf-mp__checklist">
+          <li className="lf-mp__check">
+            <span>Skład wyjściowy (XI)</span>
+            <span
+              className={
+                checklistReady
+                  ? 'lf-mp__check-status'
+                  : 'lf-mp__check-status lf-mp__check-status--warn'
+              }
+            >
+              {checklistReady ? 'OK' : 'Sprawdź'}
+            </span>
+          </li>
+          <li className="lf-mp__check">
+            <span>Taktyka</span>
+            <span className="lf-mp__check-status">OK</span>
+          </li>
+          <li className="lf-mp__check">
+            <span>Kick-off</span>
+            <span className="lf-mp__check-status">OK</span>
+          </li>
+        </ul>
+        <div className="lf-ko__cta-wrap">
+          {checklistReady ? (
+            <Link href={matchLivePath(fixture.id)} className="lf-mp__primary">
+              {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Start meczu'}
+            </Link>
+          ) : (
+            <span className="lf-mp__primary lf-mp__primary--disabled" aria-disabled>
+              Start meczu
+            </span>
+          )}
+          <Link href="/squad" className="lf-mp__soft">
+            Ustaw skład (Kadra)
+          </Link>
+        </div>
+      </section>
+
       <AtmosphereLayer aria-label="Kick-Off" className="lf-ko__hero">
         <div className="lf-ko__hero-inner">
           <p className="lf-ko__eyebrow">{fixture.competitionLabel}</p>
-
           <div className="lf-ko__matchup">
             <div className="lf-ko__side">
               <CrestMonogram initials={home.shortName} label={home.name} />
               <FormPills form={home.form} />
             </div>
-
             <div className="lf-ko__vs-block">
               <p className="lf-ko__vs">VS</p>
               <p className="lf-ko__countdown tabular-nums">{bundle.countdown}</p>
             </div>
-
             <div className="lf-ko__side">
               <CrestMonogram initials={away.shortName} label={away.name} />
               <FormPills form={away.form} />
             </div>
           </div>
-
-          {/* D6: termin tylko tutaj — nie w Additional Context */}
           <p className="lf-ko__when">{whenLabel}</p>
-
-          <div className="lf-ko__cta-wrap">
-            <Link href={`/match/${fixture.id}/live`} className="lf-ko__primary">
-              {firstMatch ? 'Rozpocznij pierwszy mecz' : 'Rozpocznij mecz'}
-            </Link>
-            {firstMatch ? (
-              <Link href={FIRST_MATCH_PATHS.intro} className="lf-ko__secondary">
-                Wstecz
-              </Link>
-            ) : (
-              <Link href="/matches" className="lf-ko__secondary">
-                Wróć do terminarza
-              </Link>
-            )}
-          </div>
         </div>
       </AtmosphereLayer>
 
-      {/* M3 — summaries under CTA */}
       <div className="lf-ko__summaries">
         <section className="lf-ko__section" aria-labelledby="lf-ko-xi-title">
           <h2 id="lf-ko-xi-title" className="lf-ko__section-title">
             Wyjściowa 11
           </h2>
-          {/* D6: formacja tylko tutaj */}
           <p className="lf-ko__section-meta">{bundle.formation}</p>
-
           <ul className="lf-ko__xi">
             {bundle.ourLineup.map((r) => (
               <li key={`${r.number}-${r.name}`} className="lf-ko__xi-row">
@@ -111,7 +123,6 @@ export function PreMatchView({
               </li>
             ))}
           </ul>
-
           <p className="lf-ko__condition">
             Kondycja zespołu: {bundle.teamCondition.label} · {bundle.teamCondition.value}%
           </p>
@@ -124,7 +135,6 @@ export function PreMatchView({
           <p className="lf-ko__tactics-line">
             Styl gry: <strong>{bundle.styleLabel}</strong>
           </p>
-
           <ul className="lf-ko__tactics-list">
             {tacticPreview.map((t) => (
               <li key={t.id} className="lf-ko__tactic">
@@ -133,7 +143,6 @@ export function PreMatchView({
               </li>
             ))}
           </ul>
-
           <div className="lf-ko__pitch" aria-label="Podgląd ustawienia">
             <div className="lf-ko__pitch-frame" aria-hidden />
             {bundle.pitchSlots.map((s) => (
@@ -149,17 +158,14 @@ export function PreMatchView({
         </section>
       </div>
 
-      {/* M4 — Additional Context below fold (D4: no placeholders) */}
       <section className="lf-ko__context" aria-labelledby="lf-ko-context-title">
         <h2 id="lf-ko-context-title" className="lf-ko__context-title">
           Kontekst meczu
         </h2>
-
         <div className="lf-ko__context-block">
           <p className="lf-ko__context-label">Stadion</p>
           <p className="lf-ko__context-value">{fixture.stadium}</p>
         </div>
-
         <div className="lf-ko__context-block">
           <p className="lf-ko__context-label">Pogoda</p>
           <p className="lf-ko__context-value">
@@ -167,7 +173,6 @@ export function PreMatchView({
             {bundle.weatherNote ? ` — ${bundle.weatherNote}` : ''}
           </p>
         </div>
-
         {bundle.stakes.length > 0 ? (
           <div className="lf-ko__context-block">
             <p className="lf-ko__context-label">Stawka</p>
@@ -182,7 +187,6 @@ export function PreMatchView({
             </ul>
           </div>
         ) : null}
-
         {bundle.h2h.length > 0 ? (
           <div className="lf-ko__context-block">
             <p className="lf-ko__context-label">Ostatnie spotkania</p>
@@ -197,8 +201,16 @@ export function PreMatchView({
             </ul>
           </div>
         ) : null}
-
         {bundle.ticker ? <p className="lf-ko__ticker">{bundle.ticker}</p> : null}
+        {firstMatch ? (
+          <Link href={FIRST_MATCH_PATHS.intro} className="lf-mp__soft">
+            Wstecz · intro
+          </Link>
+        ) : (
+          <Link href="/matches" className="lf-mp__soft">
+            Wróć do terminarza
+          </Link>
+        )}
       </section>
     </div>
   );

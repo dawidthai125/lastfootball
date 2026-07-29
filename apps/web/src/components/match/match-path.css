@@ -1,0 +1,270 @@
+/* LFE-UI-IMPL-02 — Match Path presentation (Night Pitch Office). */
+
+.lf-mp {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--lf-shell-topbar, 52px));
+  min-width: 0;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-mp--immersive {
+  min-height: 100dvh;
+}
+
+.lf-mp__hero {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 220px;
+  overflow: hidden;
+  background: var(--lf-color-bg-inset);
+}
+
+.lf-mp__hero-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.lf-mp__hero-img--desktop {
+  display: none;
+}
+
+.lf-mp__hero-img--mobile {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .lf-mp__hero-img--desktop {
+    display: block;
+  }
+
+  .lf-mp__hero-img--mobile {
+    display: none;
+  }
+}
+
+.lf-mp__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    color-mix(in srgb, var(--lf-color-bg-base) 88%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+.lf-mp__decision {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-5) var(--lf-space-4);
+  background: color-mix(in srgb, var(--lf-color-bg-panel) 92%, transparent);
+  border-top: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+}
+
+.lf-mp__eyebrow {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-label);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-mp__title {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: clamp(1.5rem, 5vw, var(--lf-type-hero));
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-mp__support {
+  margin: 0;
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-mp__meta {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+.lf-mp__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: var(--lf-space-3) var(--lf-space-5);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-color-gold-base);
+  color: var(--lf-color-text-on-gold, var(--lf-color-bg-void));
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-h2);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.lf-mp__primary:hover {
+  filter: brightness(1.06);
+}
+
+.lf-mp__primary:focus-visible {
+  outline: 2px solid var(--lf-color-border-gold);
+  outline-offset: 2px;
+}
+
+.lf-mp__primary--disabled {
+  opacity: var(--lf-opacity-disabled);
+  pointer-events: none;
+}
+
+.lf-mp__soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  color: var(--lf-color-text-muted);
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lf-mp__vs-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-4);
+  text-align: center;
+}
+
+.lf-mp__vs-mark {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: clamp(1.75rem, 6vw, var(--lf-type-hero));
+  font-weight: 700;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-mp__side-name {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-body);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-mp__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+}
+
+.lf-mp__check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lf-space-3);
+  min-height: 44px;
+  padding: var(--lf-space-3);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-mp__check-status {
+  font-size: var(--lf-type-label);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-status-ok);
+}
+
+.lf-mp__check-status--warn {
+  color: var(--lf-color-status-warn);
+}
+
+/* Moment overlays */
+.lf-mp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lf-z-modal);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: var(--lf-color-overlay-scrim);
+}
+
+.lf-mp-overlay__art {
+  position: absolute;
+  inset: 0;
+}
+
+.lf-mp-overlay__art img {
+  object-fit: cover;
+}
+
+.lf-mp-overlay__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-6) var(--lf-space-4);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--lf-color-bg-base) 94%, transparent) 28%
+  );
+  text-align: center;
+}
+
+.lf-mp-overlay__title {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-mp-overlay__score {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--lf-type-h1);
+  font-weight: 700;
+  color: var(--lf-color-text-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-mp__primary {
+    transition: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .lf-mp__primary {
+    width: auto;
+    min-width: 16rem;
+    align-self: flex-start;
+  }
+
+  .lf-mp__decision {
+    padding-inline: var(--lf-space-6);
+  }
+}
