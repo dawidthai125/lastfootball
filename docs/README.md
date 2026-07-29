@@ -10,7 +10,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | --------------------------- | ----------------------------------------------------------------------------------------- |
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0) |
 | **Domain feature baseline** | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)                                       |
-| **Documentation tip**       | LFE-DOCS-BASELINE-01 (nie zastępuje Production / Domain)                                  |
+| **Documentation tip**       | `3918cf5` — LFE-DOCS-BASELINE-01 (nie zastępuje Production / Domain)                      |
 | **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                         |
 | Production                  | https://lastfootball.vercel.app                                                           |
 | Platform                    | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training  |

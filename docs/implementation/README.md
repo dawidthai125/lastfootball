@@ -23,7 +23,7 @@ Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Hi-Fi).
 | LFE-CONTENT-PASS-01  | `50ddf1a`     | Global microcopy · `UI_COPY`                |
 | LFE-UI-IMPL-06A      | `00b2c2a`     | Desktop Hub layout · nav tooltips           |
 | LFE-UI-IMPL-06       | `54d0724`     | Live Match & Post fidelity                  |
-| LFE-DOCS-BASELINE-01 | tip `main`    | Project baseline sync (ten indeks)          |
+| LFE-DOCS-BASELINE-01 | `3918cf5`     | Project baseline sync (ten indeks)          |
 
 ## Dokumenty per EPIC
 

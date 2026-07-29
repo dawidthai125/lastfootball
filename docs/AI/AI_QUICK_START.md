@@ -10,14 +10,14 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                              |
-| ------------------- | ------------------------------------------------------------ |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                |
-| Domain baseline     | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)                 |
-| Documentation tip   | **LFE-DOCS-BASELINE-01** (nie zastępuje Production Baseline) |
-| Prod                | https://lastfootball.vercel.app                              |
-| SSOT hash / tip     | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               |
+|                     |                                                |
+| ------------------- | ---------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED  |
+| Domain baseline     | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)   |
+| Documentation tip   | **`3918cf5`** — LFE-DOCS-BASELINE-01           |
+| Prod                | https://lastfootball.vercel.app                |
+| SSOT hash / tip     | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) |
 
 ## Pipeline (jedyny)
 

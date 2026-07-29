@@ -32,7 +32,7 @@ git log -1 --oneline 9b1c575            # Domain feature baseline TRANSFERS-08
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                |
 | **Domain feature baseline** | `9b1c57578042d16e962d8026ed01abae587c294d` — **LFE-TRANSFERS-08** (bez zmian) |
 | Domain message              | `feat(transfers): add live H2H counter offers Thin (LFE-TRANSFERS-08)`        |
-| **Documentation tip**       | `LFE-DOCS-BASELINE-01` — hash = tip `main` po tym CLOSE (patrz `git log -1`)  |
+| **Documentation tip**       | `3918cf5` — **LFE-DOCS-BASELINE-01** CLOSED                                   |
 
 UI P0 (Night Pitch Office) jest na produkcji jako warstwa prezentacji — **bez** zmiany Domain baseline TRANSFERS-08 (DTO / settlement / unlock).
 

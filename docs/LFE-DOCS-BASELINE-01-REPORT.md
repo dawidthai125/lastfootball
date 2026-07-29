@@ -29,11 +29,11 @@ Zsynchronizować dokumentację ze stanem produkcji po IMPL-01…06.
 
 ## 2. Oficjalny Production Baseline
 
-| Warstwa                     | Hash / ID               | Znaczenie                                |
-| --------------------------- | ----------------------- | ---------------------------------------- |
-| **Production Baseline**     | **`54d0724`**           | UI P0 CLOSED (Live→Post fidelity)        |
-| **Domain feature baseline** | `9b1c575`               | TRANSFERS-08 — settlement / DTO / unlock |
-| **Documentation tip**       | tip `main` po tym CLOSE | LFE-DOCS-BASELINE-01                     |
+| Warstwa                     | Hash / ID     | Znaczenie                                |
+| --------------------------- | ------------- | ---------------------------------------- |
+| **Production Baseline**     | **`54d0724`** | UI P0 CLOSED (Live→Post fidelity)        |
+| **Domain feature baseline** | `9b1c575`     | TRANSFERS-08 — settlement / DTO / unlock |
+| **Documentation tip**       | `3918cf5`     | LFE-DOCS-BASELINE-01                     |
 
 **Zasada:** tip docs **nie** zastępuje Production Baseline ani Domain baseline.
 
@@ -69,7 +69,7 @@ Zsynchronizować dokumentację ze stanem produkcji po IMPL-01…06.
 | Docs = stan produkcji                | ✓           |
 | Production Baseline jednoznaczny     | ✓ `54d0724` |
 | Kompletność odwołań / numeracja EPIC | ✓           |
-| CI GREEN (po push docs-only)         | (ship)      |
+| CI GREEN (po push docs-only)         | ✓           |
 
 ---
 
