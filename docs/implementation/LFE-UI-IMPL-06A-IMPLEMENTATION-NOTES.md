@@ -48,7 +48,7 @@ Breakpointy ≥768 / ≥1200 only. Stack Decision→Primary→Club→Secondary b
 | Desktop szerokość + center   | ✓      |
 | Hero wyeksponowany           | ✓      |
 | Mobile bez regresji          | ✓      |
-| typecheck · test · CI        | (ship) |
+| typecheck · test · CI        | ✓      |
 
 ---
 
