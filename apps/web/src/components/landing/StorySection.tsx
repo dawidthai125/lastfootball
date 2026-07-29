@@ -8,15 +8,25 @@ type StorySectionProps = {
   eyebrow?: string;
   title: string;
   children: ReactNode;
-  /** Optional visual slot (wow / atmosphere) */
+  /** Optional visual slot (World Art / UI crop) */
   visual?: ReactNode;
   reverse?: boolean;
+  /** Full-bleed band (no narrow max-width) */
+  band?: boolean;
 };
 
 /**
- * S1–S3 story beat — reveal on scroll once; static if reduced motion.
+ * Story beat — reveal on scroll; full-width marketing bands.
  */
-export function StorySection({ id, eyebrow, title, children, visual, reverse }: StorySectionProps) {
+export function StorySection({
+  id,
+  eyebrow,
+  title,
+  children,
+  visual,
+  reverse,
+  band = true,
+}: StorySectionProps) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -39,7 +49,7 @@ export function StorySection({ id, eyebrow, title, children, visual, reverse }: 
           io.disconnect();
         }
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
     );
     io.observe(node);
     return () => io.disconnect();
@@ -51,6 +61,7 @@ export function StorySection({ id, eyebrow, title, children, visual, reverse }: 
       id={id}
       className={[
         'lf-landing__story',
+        band ? 'lf-landing__story--band' : '',
         reverse ? 'lf-landing__story--reverse' : '',
         visible ? 'lf-landing__story--visible' : '',
       ]
@@ -65,11 +76,7 @@ export function StorySection({ id, eyebrow, title, children, visual, reverse }: 
         </h2>
         <div className="lf-landing__story-body">{children}</div>
       </div>
-      {visual ? (
-        <div className="lf-landing__story-visual" aria-hidden>
-          {visual}
-        </div>
-      ) : null}
+      {visual ? <div className="lf-landing__story-visual">{visual}</div> : null}
     </section>
   );
 }

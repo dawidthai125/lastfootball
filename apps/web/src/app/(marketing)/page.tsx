@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Załóż klub. Prowadź go przez ligę. Każdy mecz jest Twój.',
 };
 
-/** Public Landing — LFE-PLATFORM-01 P1 (S0–S4). */
+/** Public Landing — LFE-LANDING-01 (UI P0 marketing home). */
 export default function MarketingHomePage() {
   return <LandingPage />;
 }

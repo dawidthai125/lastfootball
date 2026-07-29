@@ -1,5 +1,6 @@
 export { LandingPage } from './LandingPage';
 export { LandingHeader } from './LandingHeader';
 export { LandingCta } from './LandingCta';
-export { HeroCrest } from './HeroCrest';
+export { LandingArt } from './LandingArt';
+export { LandingUiCrops, LandingScorebugCrop } from './LandingUiCrops';
 export { StorySection } from './StorySection';

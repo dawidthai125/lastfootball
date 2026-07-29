@@ -1,30 +1,36 @@
 import Link from 'next/link';
 
-import { AtmosphereLayer } from '@/components/assets/AtmosphereLayer';
-import { HeroCrest } from '@/components/landing/HeroCrest';
+import { LandingArt } from '@/components/landing/LandingArt';
 import { LandingCta } from '@/components/landing/LandingCta';
+import { LandingScorebugCrop, LandingUiCrops } from '@/components/landing/LandingUiCrops';
 import { StorySection } from '@/components/landing/StorySection';
 
 /**
- * Public Landing — P0.5 Section Flow S0–S4.
- * Tokens only; no game AppShell.
+ * Public Landing — LFE-LANDING-01 (UI P0 marketing home).
+ * Tokens + existing World Art only; no game AppShell.
  */
 export function LandingPage() {
   return (
     <>
-      {/* S0 — Hero: brand first, one CTA group, full-bleed atmosphere */}
-      <AtmosphereLayer
-        className="lf-landing__hero"
-        aria-label="Wejście do LastFootball"
-        layers={['floodlight', 'vignette', 'grain']}
-      >
-        <div className="lf-landing__hero-scrim" />
+      {/* 2–3 — Full-bleed Hero Tunnel + CTA */}
+      <section className="lf-landing__hero" aria-label="Wejście do LastFootball">
+        <LandingArt
+          waId="HERO-002"
+          desktopSrc="/assets/world-art/hero-002-tunnel-night.png"
+          mobileSrc="/assets/world-art/hero-002-tunnel-mobile.png"
+          alt=""
+          className="lf-landing__hero-art"
+          priority
+        />
+        <div className="lf-landing__hero-scrim" aria-hidden />
         <div className="lf-landing__hero-inner">
           <p className="lf-landing__brand-hero">LastFootball</p>
           <h1 className="lf-landing__headline">Załóż klub. Prowadź go przez ligę.</h1>
-          <p className="lf-landing__support">Każdy mecz jest Twój.</p>
-          <HeroCrest />
-          <div className="lf-landing__cta-row">
+          <p className="lf-landing__support">
+            Każdy mecz jest Twój. Budujesz tożsamość klubu w gabinecie, prowadzisz go przez sezon i
+            wracasz z wynikiem, który należy do Ciebie.
+          </p>
+          <div className="lf-landing__cta-row lf-landing__cta-row--hero">
             <LandingCta href="/register" variant="primary">
               Załóż klub
             </LandingCta>
@@ -33,49 +39,102 @@ export function LandingPage() {
             </LandingCta>
           </div>
         </div>
-      </AtmosphereLayer>
+      </section>
 
-      {/* S1 — Identity */}
+      {/* 4 — Gabinet Managera */}
       <StorySection
-        id="tozsamosc"
-        eyebrow="Tożsamość"
-        title="Nadasz klubowi imię, barwy i herb"
-        visual={<IdentityVisual />}
+        id="gabinet"
+        eyebrow="Gabinet"
+        title="Decyzja dnia w Twoim klubie"
+        visual={
+          <LandingArt
+            waId="HERO-001"
+            desktopSrc="/assets/world-art/hero-001-office-night.png"
+            mobileSrc="/assets/world-art/hero-001-office-mobile.png"
+            alt="Gabinet managera nocą"
+            className="lf-landing__band-art"
+          />
+        }
       >
         <p>
-          Nie wypełniasz formularza CRM — projektujesz klub, który będzie Twój od pierwszej minuty.
-          Nazwa, skrót, kolory, herb: to akt własności, zanim zagrasz pierwszy mecz.
+          Nadasz klubowi imię, barwy i herb — potem wracasz do gabinetu, gdzie jedna sprawa dnia
+          prowadzi Cię do następnego meczu. Nie dashboard KPI. Biurko managera.
         </p>
       </StorySection>
 
-      {/* S2 — Match */}
+      {/* 5 — Match Experience */}
       <StorySection
         id="mecz"
         eyebrow="Mecz"
         title="Decyzja. Mecz. Wynik."
         reverse
-        visual={<MatchBeatVisual />}
+        visual={
+          <div className="lf-landing__match-visual">
+            <LandingArt
+              waId="HERO-003"
+              desktopSrc="/assets/world-art/hero-003-pitch-night.png"
+              alt="Nocna murawa"
+              className="lf-landing__band-art"
+            />
+            <LandingScorebugCrop />
+          </div>
+        }
       >
         <p>
-          Serce gry to mecz — przygotujesz skład, wejdziesz w napięcie spotkania i wrócisz z
-          wynikiem, który należy do Ciebie. Nie raport w tabeli. Przeżycie.
+          Z tunelu na murawę: przygotujesz skład, wejdziesz w napięcie spotkania i zobaczysz wynik,
+          który należy do Ciebie. Serce gry to przeżycie meczu — nie raport w tabeli.
         </p>
       </StorySection>
 
-      {/* S3 — Season */}
-      <StorySection
-        id="sezon"
-        eyebrow="Sezon"
-        title="Budujesz instytucję, nie listę zadań"
-        visual={<SeasonVisual />}
-      >
-        <p>
-          Kolejka po kolejce rośnie reputacja i prestiż klubu. Wracasz, bo masz powód: następny
-          mecz, decyzję dnia, własną drogę w lidze.
-        </p>
-      </StorySection>
+      {/* 6 — Sezon */}
+      <section className="lf-landing__season" id="sezon" aria-labelledby="sezon-title">
+        <div className="lf-landing__season-copy">
+          <p className="lf-landing__eyebrow">Sezon</p>
+          <h2 id="sezon-title" className="lf-landing__story-title">
+            Kadra. Transfery. Trening.
+          </h2>
+          <p className="lf-landing__story-body">
+            Kolejka po kolejce budujesz instytucję: szatnia, biuro transferowe i boisko treningowe —
+            ta sama pętla, która wraca Cię do następnego meczu.
+          </p>
+        </div>
+        <div className="lf-landing__season-strip" aria-hidden>
+          <LandingArt
+            waId="HERO-004"
+            desktopSrc="/assets/world-art/hero-004-locker-night.png"
+            alt=""
+            className="lf-landing__season-panel"
+          />
+          <LandingArt
+            waId="HERO-005"
+            desktopSrc="/assets/world-art/hero-005-transfer-night.png"
+            alt=""
+            className="lf-landing__season-panel"
+          />
+          <LandingArt
+            waId="HERO-006"
+            desktopSrc="/assets/world-art/hero-006-training.png"
+            alt=""
+            className="lf-landing__season-panel"
+          />
+        </div>
+      </section>
 
-      {/* S4 — Close CTA */}
+      {/* 7 — UI Showcase */}
+      <section className="lf-landing__showcase" id="produkt" aria-labelledby="showcase-title">
+        <div className="lf-landing__showcase-intro">
+          <p className="lf-landing__eyebrow">Produkt</p>
+          <h2 id="showcase-title" className="lf-landing__story-title">
+            Tak wygląda gra
+          </h2>
+          <p className="lf-landing__story-body">
+            Gabinet, Live scorebug i skład XI — te same ekrany, które zobaczysz po założeniu klubu.
+          </p>
+        </div>
+        <LandingUiCrops />
+      </section>
+
+      {/* 8 — Closing CTA */}
       <section className="lf-landing__close" aria-labelledby="close-title">
         <h2 id="close-title" className="lf-landing__close-title">
           Twój klub czeka na pierwszą decyzję
@@ -88,6 +147,7 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* 9 — Footer */}
       <footer className="lf-landing__footer">
         <p className="lf-landing__footer-brand">LastFootball</p>
         <nav className="lf-landing__footer-links" aria-label="Informacje prawne">
@@ -100,37 +160,5 @@ export function LandingPage() {
         </nav>
       </footer>
     </>
-  );
-}
-
-function IdentityVisual() {
-  return (
-    <div className="lf-landing__motif lf-landing__motif--identity">
-      <span className="lf-landing__swatch" style={{ background: 'var(--lf-color-pitch)' }} />
-      <span className="lf-landing__swatch" style={{ background: 'var(--lf-color-gold-base)' }} />
-      <span className="lf-landing__swatch" style={{ background: 'var(--lf-color-text-primary)' }} />
-      <span className="lf-landing__motif-label">Barwy · Herb · Nazwa</span>
-    </div>
-  );
-}
-
-function MatchBeatVisual() {
-  return (
-    <ol className="lf-landing__beat">
-      <li>Przygotuj</li>
-      <li className="lf-landing__beat-live">Mecz</li>
-      <li>Wynik</li>
-    </ol>
-  );
-}
-
-function SeasonVisual() {
-  return (
-    <div className="lf-landing__ladder" aria-hidden>
-      <span>IV</span>
-      <span>III</span>
-      <span>II</span>
-      <span className="lf-landing__ladder-focus">I</span>
-    </div>
   );
 }
