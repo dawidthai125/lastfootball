@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)** wypełnione. UI Guide + **Presentation Contract (§16)**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · **GDD-16 Akademia Thin A** wypełnione. §3–§16 (Thin A), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -24,9 +24,11 @@ GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (G
 | §13      | Stadion             | Wypełniony                                                |
 | §14      | Finanse             | Wypełniony (kategorie; kwoty → §26)                       |
 | §15      | Sponsorzy           | Wypełniony                                                |
+| **§16**  | **Akademia**        | **Wypełniony Thin A (GDD-16)** — Intake + Promote         |
+| §17      | Skauting            | Szkielet (OUT względem GDD-16)                            |
 | §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                   |
 | §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                       |
-| §24–§25  | UI (w Guide + GDD)  | Guide + **§16 Presentation Contract**; §24 szkielet       |
+| §24–§25  | UI (w Guide + GDD)  | Guide + **Presentation Contract**; §24 szkielet           |
 | §26      | Liczby / balance    | **Wypełniony Thin (GDD-§26A)** · kod sync **§26B CLOSED** |
 | §27+     | Premium / …         | Future / szkielet                                         |
 
@@ -45,6 +47,8 @@ GDD-15 CLOSED. §3–§15, **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (G
 - §26A: SSOT liczb Thin (starter 100 000 · W/D/L 5k/2.5k/1k · EUR · fee derive); D18/D20 = SSOT implementacji.
 - Stadion: preset statyczny MVP.
 - Rozwój klubu (§6): Poziom · Reputacja · Prestiż — Hub tylko konsumuje.
+- Rozwój zawodników: potential pasma · Match PRIMARY · Training SUPPORTING (D22 / PLAYERS-02).
+- **Akademia (GDD §16 Thin A):** opcjonalna; Intake + Promote; brak poziomów; brak academy OVR; po promocji ten sam rozwój co senior; placeholder `/academy` ≠ SSOT; kod akademii = Future EPIC.
 
 ## Najważniejsze decyzje
 
@@ -53,8 +57,8 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Powiązania
 
-[GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md) · [ROADMAP.md](./ROADMAP.md) · [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md) (§16) · [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) · [`../platform/HUB.md`](../platform/HUB.md)
+[GAME_DESIGN_DOCUMENT.md](./GAME_DESIGN_DOCUMENT.md) · [ROADMAP.md](./ROADMAP.md) · [UI_DESIGN_GUIDE.md](./UI_DESIGN_GUIDE.md) (Guide Presentation Contract) · [LFE-UX-POSTMORTEM-01.md](./LFE-UX-POSTMORTEM-01.md) · [`../platform/HUB.md`](../platform/HUB.md)
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-29 — GDD-16 Akademia Thin A

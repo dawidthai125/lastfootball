@@ -45,9 +45,10 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 D19 · **D22** — [`../DECISIONS.md`](../DECISIONS.md).
 
-## Poza Thin
+## Poza Thin (kod)
 
-Academy / talenty · career history · XP · attribute DB · numeric potential w UI · auto season-end age · morale numeric.
+Academy **implementacja** / talenty · career history · XP · attribute DB · numeric potential w UI · auto season-end age · morale numeric.  
+**GDD §16 Thin A** (Intake + Promote) = wypełniony docs — nie mylić z brakiem kodu akademii.
 
 ## UI (presentation)
 
@@ -66,4 +67,4 @@ Migracja: `supabase/migrations/20260729120000_player_potential_development.sql`
 
 ## Last updated
 
-2026-07-29 — LFE-PLAYERS-02
+2026-07-29 — GDD-16 Akademia Thin A (docs)

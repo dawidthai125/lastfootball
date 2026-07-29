@@ -6,13 +6,13 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED**. Wypełnione §3–§15, **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
+Faza 2: GDD-01…15 **CLOSED** · **GDD-16 Akademia Thin A CLOSED**. Wypełnione §3–§16 (Thin A), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX CLOSED** (po UI P0).  
 **Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Presentation tip:** `9dc834a` (AUTH-UX) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-GDD-16+ osobno (Owner GO).
+Pozostałe GDD-16+ (np. §17) osobno (Owner GO).
 
 ## Opis działania
 
@@ -111,4 +111,4 @@ GDD-16+ osobno (Owner GO).
 
 ## Last updated
 
-2026-07-29 — LFE-HANDOFF-01 (UI P0 `54d0724` · Presentation tip AUTH-UX `9dc834a`)
+2026-07-29 — GDD-16 Akademia Thin A

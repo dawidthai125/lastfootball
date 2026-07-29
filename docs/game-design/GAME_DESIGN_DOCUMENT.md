@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-15 (§3–§15, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-16 (§3–§16 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -28,7 +28,7 @@
 13. [Stadion](#13-stadion) ← **GDD-12**
 14. [Finanse](#14-finanse) ← **GDD-10**
 15. [Sponsorzy](#15-sponsorzy) ← **GDD-11**
-16. [Akademia](#16-akademia)
+16. [Akademia](#16-akademia) ← **GDD-16 Thin**
 17. [Skauting](#17-skauting)
 18. [Ranking](#18-ranking)
 19. [Osiągnięcia](#19-osiągnięcia)
@@ -2217,8 +2217,8 @@ Zamknąć shipowalny wycinek i ścieżkę głębi.
 
 1. §8 pełny trening (plany, obciążenie)
 2. Głębsze atrybuty + role na boisku
-3. Akademię / youth intake
-4. Scouting & hidden potential
+3. Akademię / youth intake — **GDD §16 Thin A (Intake + Promote) wypełnione** (GDD-16); kod = osobny EPIC
+4. Scouting & hidden potential (§17)
 5. Szczegółowa wartość + §12
 6. Personality / media / leadership layer
 
@@ -2677,7 +2677,7 @@ Shipowalny wycinek + ścieżka rozbudowy.
 2. Lekki buff taktyczny na 1 mecz
 3. Plany 3–7 dni
 4. Personel / jakość ośrodka (§6 / infrastruktura)
-5. Integracja akademii (§16)
+5. Integracja akademii (§16) — **GDD-16 Thin A docs** (Intake + Promote); trening akademii / poziomy ośrodka = Future
 
 **Decyzje gracza**
 
@@ -6470,19 +6470,347 @@ Ship vs rozbudowa.
 
 ## 16. Akademia
 
+**Status rozdziału:** GDD-16 — opracowany (**Akademia Thin A** — Intake + Promote; bez poziomów akademii, bez osobnego systemu rozwoju, bez liczb ekonomii)
+
+**Cel rozdziału**  
+Dać menedżerowi opcjonalną, świadomą ścieżkę **naboru młodzieży** i **promocji do seniorów**, spójną z istniejącym rozwojem zawodników (§7) — bez drugiego OVR i bez obowiązku korzystania z akademii.
+
+**Zasady nadrzędne (decyzje GDD-16 / Owner)**
+
+1. **Akademia jest świadomą decyzją menedżera** — nie jest obowiązkową mechaniką gry; sezon i oś meczowa działają bez niej.
+2. Thin A = wyłącznie **Intake** (nabór) + **Promote** (promocja do seniorów).
+3. **Brak poziomów akademii** w Thin (poziomy · gwiazdki · rating · jakość ośrodka = **Future**).
+4. **Potential** = wyłącznie istniejący kontrakt produktowy §7 / implementacja D22 (pasma; `potential ≥ skill`); **zakaz** academy OVR · youth OVR · drugiego systemu rozwoju.
+5. Po promocji zawodnik jest **seniorem** w sensie rozwoju: **Match Development = PRIMARY**, **Training = SUPPORTING** — identycznie jak każdy inny zawodnik kadry (§7 / §8).
+6. Koszty akademii = **wyłącznie filozofia** w tym rozdziale — **bez liczb** (kwoty → ewentualnie §26 w Future).
+7. **§17 Skauting** pozostaje poza zakresem; tu tylko zależność Future.
+8. **Placeholder UI Akademii** (np. trasa `/academy` z mockami) **nie stanowi SSOT** i **nie może** być podstawą implementacji — SSOT = ten rozdział; przyszły UI wynika z GDD + Guide Presentation Contract (nie mylić z numerem „§16” Guide).
+9. ZERO DUPLICATE: nie redefiniować potencjału (§7), treningu (§8), rynku (§12) ani kas (§14/§26).
+10. Ten rozdział **nie** opisuje kodu, schematu DB ani LFE.
+
+**Szybki kontrakt Thin A (SSOT)**
+
+| Parametr                         | Wartość Thin A                                      |
+| -------------------------------- | --------------------------------------------------- |
+| Obowiązkowość                    | Opcjonalna (świadoma decyzja)                       |
+| Zakres                           | Intake + Promote                                    |
+| Poziomy / gwiazdki / ośrodek     | OUT (Future)                                        |
+| Potential                        | Kontrakt §7 / D22 — pasma only                      |
+| Academy / youth OVR              | Zakaz                                               |
+| Rozwój przed promocją            | Bez osobnego growth path przebijającego mecz        |
+| Rozwój po promocji               | Match PRIMARY · Training SUPPORTING                 |
+| Transfery                        | Po promocji jak senior (§12); bez nowej krzywej fee |
+| Koszty                           | Filozofia only · bez liczb                          |
+| Skauting (§17)                   | OUT                                                 |
+| Placeholder `/academy`           | Nie-SSOT · nie podstawa implementacji               |
+| Trenerzy / infrastruktura / staff | Future — poprawiają jakość decyzji, nie auto-growth |
+
+---
+
+### 16.1 Filozofia Akademii
+
 **Cel**  
-Zaplanować rozwój młodzieży.
+Ustawić ton: akademia wspiera długi łuk klubu, nie zastępuje meczu ani nie wymusza grindu.
 
-**Opis**  
-Generowanie talentów, promocja do seniorów.
+**Przebieg**
 
-**Do opracowania**
+1. Akademia odpowiada na: „Czy chcę świadomie budować kadrę od młodzieży?”
+2. Brak akademii **nie** blokuje: Hub, kolejki, treningu seniorów, transferów, finansów.
+3. Oś gry pozostaje meczowa (§3 / §9); akademia jest **opcjonalnym** torami decyzji.
+4. Copy i UX (gdy powstanie) mówią „możesz”, nie „musisz”.
+5. Satysfakcja Thin A = decyzja naboru + decyzja promocji — nie farmienie skill poza meczem.
 
-- [ ] Poziomy akademii
-- [ ] Nabór / promowanie
-- [ ] Jakość generowanych zawodników
-- [ ] Koszty utrzymania
-- [ ] Relacja z treningiem seniorów
+**Decyzje gracza**
+
+- Czy w ogóle zajmować się akademią w danym sezonie / oknie.
+- Kogo wypromować (lub nie).
+
+**Zależności**
+
+- §3, §7, §23; Guide Presentation Contract.
+
+---
+
+### 16.2 Słownik
+
+| Pojęcie              | Znaczenie Thin A                                                                 |
+| -------------------- | -------------------------------------------------------------------------------- |
+| **Akademia**         | Opcjonalna lokalizacja decyzji: nabór młodzieży + promocja do seniorów           |
+| **Młodzież (intake)** | Zawodnik w ścieżce akademii **przed** promocją — nie ma osobnego OVR akademii    |
+| **Promocja**         | Świadoma decyzja: młodzież wchodzi do kadry seniorów i podlega §7/§8/§9/§12      |
+| **Senior**           | Zawodnik w aktywnej kadrze po promocji (lub z innych źródeł: kreacja, transfer)   |
+| **Intake**           | Nabór / pojawienie się perspektywy młodzieżowej w akademii                       |
+| **Potential (pasmo)**| Sygnał sufitu rozwoju — kontrakt §7; UI bez liczby surowej (D22)                 |
+
+---
+
+### 16.3 Relacja do kadry seniorów
+
+**Cel**  
+Jedna logika zawodnika po promocji — bez drugiej „ligi młodzieżowej OVR”.
+
+**Przebieg**
+
+1. Po **Promote** zawodnik jest częścią kadry seniorów w sensie produktowym (§7).
+2. Nie istnieje równoległy model „youth OVR” ani „academy rating” wpływający na mecz inaczej niż u seniorów.
+3. Przed promocją młodzież **nie** jest zamiennikiem pełnego XI seniorów jako osobny silnik statystyk.
+4. Implementacja (Future kod) musi respektować SSOT kadry seniorów (D19: tabela zawodników klubu) — ten rozdział nie projektuje schematu.
+
+**Zależności**
+
+- §7; D19 / D22 (implementacja).
+
+---
+
+### 16.4 Potential i jakość talentu
+
+**Cel**  
+Jakość perspektywy = istniejący potencjał (pasma), nie nowa metryka.
+
+**Przebieg**
+
+1. Potencjał młodzieży i seniorów używa **tego samego kontraktu**: pasma (Niski / Średni / Wysoki / Bardzo wysoki) · sufit rozwoju · spójność z poziomem/skill.
+2. **Zakaz:** academy OVR, youth OVR, ukryty drugi sufit „tylko akademia”.
+3. Generacja / przypisanie potencjału przy intake musi być zgodna z regułą produktową §7 i z D22 (deterministyczny sufit · `potential ≥ skill`) — bez publikowania formuł silnika w GDD.
+4. UI (Future) pokazuje **pasma**, nie surowe liczby potencjału.
+
+**Zależności**
+
+- §7.3–7.4; D22.
+
+---
+
+### 16.5 Nabór (Intake) — Thin A
+
+**Cel**  
+Opisać pojawienie się młodzieży w akademii bez poziomów ośrodka.
+
+**Przebieg**
+
+1. Intake = zdarzenie / decyzja naboru w ramach Thin A (rytm jakościowy: np. okno sezonowe lub rzadki slot — **bez** wymagania pełnego season-end w produkcie Thin).
+2. Wynik intake: perspektywa z pozycją, wiekiem młodzieżowym, **pasmem potential**, niskim poziomem startowym — bez osobnego growth engine.
+3. Brak w Thin A: multi-intake farmy, skautingu regionów (§17), jakości ośrodka sterującej ratingiem.
+4. Menedżer może **zignorować** intake (opcjonalność akademii).
+
+**Decyzje gracza**
+
+- Przyjąć / odłożyć uwagę na nabór (gdy UI odblokuje lokalizację).
+
+**Zależności**
+
+- §7 (wiek / potential); §10 rytm sezonu (lekko); §17 OUT.
+
+---
+
+### 16.6 Promocja (Promote) — Thin A
+
+**Cel**  
+Jedyna brama z akademii do pętli seniorów.
+
+**Przebieg**
+
+1. Promote = świadoma decyzja menedżera (nie auto-promocja w Thin A).
+2. Skutek: zawodnik wchodzi w kadrę seniorów i podlega pełnemu kontraktowi rozwoju §7.
+3. Po promocji **natychmiast** obowiązuje: Match Development = **PRIMARY**, Training = **SUPPORTING** (§7.12 / §8).
+4. Brak promocji = brak udziału w senior growth path (mecz/trening seniorów).
+5. Limit jakościowy Thin: promocja nie tworzy „super-talentów” poza pasmami potential.
+
+**Decyzje gracza**
+
+- Kogo wypromować, kiedy, przy jakiej głębokości kadry seniorów.
+
+**Zależności**
+
+- §7, §8, §9 (XI), §12 (późniejszy rynek).
+
+---
+
+### 16.7 Rozwój przed promocją
+
+**Cel**  
+Nie dopuścić do farmy akademii.
+
+**Przebieg**
+
+1. Thin A **nie** wprowadza osobnego treningu akademii ani meczy młodzieżowych jako PRIMARY growth.
+2. Przed promocją nie ma drugiego toru skill/OVR równoległego do §7.
+3. Ewentualne sygnały narracyjne („perspektywa”, pasmo potential) ≠ wzrost poziomu seniorów.
+4. Pełny rozwój zaczyna się **po** Promote.
+
+---
+
+### 16.8 Rozwój po promocji
+
+**Cel**  
+Zamrozić reuse istniejącego Player Development.
+
+**Przebieg**
+
+1. Po promocji zawodnik = senior w rozwoju.
+2. **Match Development = PRIMARY** (minuty / występy w meczach seniorów).
+3. **Training = SUPPORTING** (impuls zespołowy §8; nie przebija meczu; respektuje potential).
+4. Sufit = potential (pasma / kontrakt D22); skill/poziom nigdy nie „przeskakuje” akademią.
+5. Brak osobnego buffa „absolwent akademii” w Thin A.
+
+**Zależności**
+
+- §7.12–7.13; §8; D21; D22.
+
+---
+
+### 16.9 Transfery
+
+**Cel**  
+Po promocji — ten sam rynek.
+
+**Przebieg**
+
+1. Przed promocją: młodzież akademii **nie** jest pełnoprawnym towarem rynku Thin w sensie osobnego youth market OVR.
+2. Po promocji: obowiązuje §12 (listing, nego, settle) jak dla innych zawodników kadry.
+3. Wartość / fee: **bez** nowej krzywej opartej o „academy rating”; fee pozostaje w kontrakcie ekonomii / implementacji (skill+age Thin — bez potential w fee).
+4. Fog scouting młodzieży = §17 / Future — w Thin A brak.
+
+**Zależności**
+
+- §12; §7.17; §26 (liczby fee poza tym rozdziałem).
+
+---
+
+### 16.10 Unlock, Hub, opcjonalność
+
+**Cel**  
+Akademia nie jest obowiązkowa; lokalizacja nie dyktuje Primary dnia meczowego.
+
+**Przebieg**
+
+1. Akademia = świadoma decyzja; gracz może nigdy nie otworzyć lokalizacji.
+2. W dniu meczowym Primary Hub pozostaje mecz / przygotowanie (§23) — akademia nie przejmuje Primary.
+3. Soft-lock / moment odblokowania lokalizacji (gdy kod): jakościowo po wejściu w sezon / po progu rozegranych meczów — **szczegół implementacyjny poza tym EPICem docs**; produktowo nie earlier niż sensowny SEASON.
+4. Brak kary za nieużywanie akademii.
+
+**Zależności**
+
+- §23; §20 (zadanie dnia może *opcjonalnie* wskazać akademię — nie musi).
+
+---
+
+### 16.11 Koszty (filozofia only)
+
+**Cel**  
+Nazwać kategorię bez liczb.
+
+**Przebieg**
+
+1. W wizji długiej akademia **może** mieć koszt utrzymania / inwestycji (kategoria ekonomii).
+2. W GDD-16 Thin A: **brak kwot, progów i tabel §26**.
+3. Thin A działa narracyjnie bez paywall i bez cash-gate w tym rozdziale.
+4. Gdy Owner zatwierdzi liczby — wyłącznie przez §26, nie przez ad-hoc w §16.
+
+**Zależności**
+
+- §14; §26 (Future liczby).
+
+---
+
+### 16.12 Placeholder UI — nie-SSOT
+
+**Cel**  
+Jednoznacznie odciąć mocki od designu.
+
+**Przebieg**
+
+1. Istniejący placeholder Akademii w produkcie (mocki: poziom akademii, budżet, tabela z liczbowym potencjałem) **nie jest źródłem prawdy**.
+2. **Zakaz** traktowania placeholder jako specyfikacji implementacji, DTO, unlock ani ekonomii.
+3. Przyszły EPIC kodu / UI musi wynikać z **tego rozdziału GDD §16** oraz Guide Presentation Contract; mocki należy zastąpić lub usunąć, nie „ożywiać”.
+4. Szczególnie: **liczbowy potencjał w mocku** jest sprzeczny z kontraktem pasm (D22) i nie obowiązuje.
+
+---
+
+### 16.13 Future — trenerzy, infrastruktura, personel
+
+**Cel**  
+Zamrozić filozofię rozbudowy bez auto-growth.
+
+**Przebieg**
+
+1. Future może dodać: poziomy akademii, gwiazdki, rating ośrodka, jakość naboru, trenerów, infrastrukturę, personel, koszty §26, trening akademii, §17 Skauting, season-end age++.
+2. Te warstwy mają **poprawiać jakość decyzji menedżera** (lepszy sygnał, lepszy intake, czytelniejszy timing promocji).
+3. **Zakaz Future-driftu:** staff / budynki **nie** automatycznie podbijają skill/poziom zawodników poza istniejącymi ścieżkami Match PRIMARY · Training SUPPORTING · potential ceiling.
+4. Nadal brak academy OVR jako osobnego silnika meczu.
+
+---
+
+### 16.14 MVP Thin vs Future (tabela)
+
+| Element                         | Thin A | Future        |
+| ------------------------------- | ------ | ------------- |
+| Intake                          | TAK    | pogłębiony    |
+| Promote                         | TAK    | auto-opcje?   |
+| Poziomy / gwiazdki / ośrodek    | NIE    | TAK           |
+| Academy / youth OVR             | NIE    | NIE (zakaz)   |
+| Match PRIMARY po promocji       | TAK    | TAK           |
+| Training SUPPORTING po promocji | TAK    | TAK           |
+| Trening akademii                | NIE    | opcjonalnie   |
+| Koszty (liczby)                 | NIE    | §26           |
+| Skauting §17                    | NIE    | TAK           |
+| Staff / infrastruktura          | NIE    | decyzje ≠ auto-growth |
+| Implementacja UI / DB           | NIE*   | osobny EPIC   |
+
+\*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
+
+---
+
+### 16.15 Decyzje gracza (Thin A)
+
+- Czy korzystać z akademii w ogóle.
+- Czy zająć się naborem (intake).
+- Kogo i kiedy wypromować.
+- Jak włączyć wypromowanego do XI / minut (rozwój meczowy).
+
+---
+
+### 16.16 Zależności i ZERO DUPLICATE
+
+| System        | Relacja                                      |
+| ------------- | -------------------------------------------- |
+| §7            | Potential · rozwój · PRIMARY mecz            |
+| §8            | Training SUPPORTING po promocji              |
+| §9 / §10      | Minuty / rytm; akademia ≠ Primary dnia meczu |
+| §12           | Rynek po promocji                            |
+| §14 / §26     | Koszty = filozofia teraz; liczby później     |
+| §6            | Infrastruktura ośrodka = Future              |
+| §17           | Skauting = OUT (zależność Future)            |
+| §23           | Hub / opcjonalność                           |
+| Guide (UI)    | Presentation Contract — osobny od GDD §16    |
+| D19 / D22     | SSOT implementacji kadry / potential         |
+
+---
+
+### 16.17 Kontrakty produktowe §16
+
+1. **Akademia jest opcjonalna** — świadoma decyzja, nie obowiązek.
+2. **Thin A = Intake + Promote** — nic więcej.
+3. **Brak poziomów akademii** w Thin.
+4. **Jeden kontrakt potential** (§7 / D22) — zakaz academy/youth OVR.
+5. **Po promocji:** Match = PRIMARY · Training = SUPPORTING.
+6. **Koszty:** filozofia without numbers.
+7. **Placeholder Academy ≠ SSOT.**
+8. **Future staff/infra:** lepsze decyzje, nie auto-level zawodników.
+9. **§17 poza zakresem** tego wypełnienia.
+10. **Bez formuł / kodu / LFE** w tym rozdziale.
+
+---
+
+### 16.18 Status checklisty §16
+
+- [x] Filozofia · opcjonalność · słownik
+- [x] Intake + Promote Thin A
+- [x] Potential = D22 / §7 · zakaz drugiego OVR
+- [x] Rozwój po promocji = Match PRIMARY · Training SUPPORTING
+- [x] Transfery · koszty filozofia · placeholder nie-SSOT
+- [x] Future: poziomy / staff bez auto-growth
+- [x] §17 OUT jako zależność
+- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-16 docs)
 
 ---
 

@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-§26A** + **GDD-§26B** ukończone. §3–§15 + §20 + §23 + **§26 liczby Thin** + sync kodu. Następny szkielet = **GDD-16+** (Owner GO).
+GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§16 (Thin A) + §20 + §23 + **§26**. Następny szkielet = **GDD-16+** pozostałe rozdziały (kolejność = Owner; §17 Skauting rekomendowany).
 
 ## Completed
 
@@ -27,6 +27,7 @@ GDD-01…15 + **GDD-§26A** + **GDD-§26B** ukończone. §3–§15 + §20 + §23
 | GDD-13   | §6 Club development                           |
 | GDD-14   | §23 Hub / main panel                          |
 | GDD-15   | §20 Daily tasks                               |
+| **GDD-16** | **§16 Akademia Thin A** (Intake + Promote) · CLOSED |
 | GDD-§26A | §26 Economy numbers Thin (docs SSOT) · CLOSED |
 | GDD-§26B | §26 Code sync (`ECONOMY_THIN`) · CLOSED       |
 
@@ -40,7 +41,7 @@ GDD-01…15 + **GDD-§26A** + **GDD-§26B** ukończone. §3–§15 + §20 + §23
 
 | Stage   | Zakres                                            |
 | ------- | ------------------------------------------------- |
-| GDD-16+ | Pozostałe rozdziały szkieletu (kolejność = Owner) |
+| GDD-16+ | Pozostałe szkielety (§17+; kolejność = Owner)     |
 
 ## Future
 
@@ -64,4 +65,4 @@ GDD-01…15 + **GDD-§26A** + **GDD-§26B** ukończone. §3–§15 + §20 + §23
 
 ## Last updated
 
-2026-07-25 — GDD-§26B CLOSE
+2026-07-29 — GDD-16 Akademia Thin A
