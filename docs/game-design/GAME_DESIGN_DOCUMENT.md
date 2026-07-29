@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-18 (§3–§18 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-19 (§3–§19 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -31,7 +31,7 @@
 16. [Akademia](#16-akademia) ← **GDD-16 Thin**
 17. [Skauting](#17-skauting) ← **GDD-17 Thin**
 18. [Ranking](#18-ranking) ← **GDD-18 Thin**
-19. [Osiągnięcia](#19-osiągnięcia)
+19. [Osiągnięcia](#19-osiągnięcia) ← **GDD-19 Thin**
 20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
 21. [Wiadomości](#21-wiadomości)
 22. [Powiadomienia](#22-powiadomienia)
@@ -1550,17 +1550,17 @@ Uniknąć kolizji z przyszłymi rozdziałami rankingów i achievementów.
 **Przebieg**
 
 1. **§18 Ranking** **konsumuje** sygnały klubu (np. kontekst sezonu) — nie definiuje Poziomu / Reputacji / Prestiżu. Thin = sezonowy ranking klubów (GDD-18).
-2. **§19 Osiągnięcia** wyrażają kamienie i historię; Prestiż jako pojęcie = §6 (rozdział §19 = szkielet do osobnego EPIC).
+2. **§19 Osiągnięcia** **wyrażają** kamienie i historię; Prestiż jako pojęcie = §6. Thin = filozofia + kategorie + kontrakt (GDD-19).
 3. Leaderboard ≠ Poziom klubu; achievement ≠ Reputacja.
-4. Kotwica obowiązuje stale; po GDD-18 Thin nadal: ranking nie redefiniuje §6.
+4. Kotwica obowiązuje stale: ranking i osiągnięcia **nie** redefiniują §6.
 
 **Decyzje gracza**
 
-- (Opcjonalnie) przeglądać ranking sezonowy klubów / (Future) osiągnięcia jako warstwę retencji, nie jako definicję klubu.
+- (Opcjonalnie) przeglądać ranking sezonowy klubów / osiągnięcia jako warstwę retencji, nie jako definicję klubu.
 
 **Zależności**
 
-- §18 (Thin — GDD-18), §19 (szkielet), §11.16.
+- §18 (Thin — GDD-18), §19 (Thin — GDD-19), §11.16.
 
 ---
 
@@ -7543,21 +7543,353 @@ Zamrozić kierunek bez zobowiązań Thin.
 
 ## 19. Osiągnięcia
 
+**Status rozdziału:** GDD-19 — opracowany (**Osiągnięcia Thin** — filozofia · kategorie · kontrakt produktowy; bez liczb, XP, progów, list ID i implementacji)
+
+**Cel rozdziału**  
+Dać menedżerowi opcjonalną warstwę **kamieni milowych i historii** — celebrowanie momentów kariery i klubu jako retencję długiego łuku — **bez** redefinicji metryk klubu (§6), **bez** mieszania z rankingiem (§18) i **bez** zamiany zadań dnia (§20) w katalog achievementów.
+
+**Zasady nadrzędne (decyzje GDD-19 / Owner)**
+
+1. Osiągnięcia **wyrażają** kamienie milowe / historię — są warstwą retencji i dumy, nie osią gry.
+2. **§6** pozostaje **jedynym SSOT** Poziomu klubu · Reputacji · Prestiżu. Achievement **nie** zastępuje słownika metryk (§6.15).
+3. **§18 Ranking** i **§19 Osiągnięcia** to **dwa niezależne systemy** — ranking ≠ lista achievementów.
+4. **§20 Zadania** mogą **prowadzić** (hook) do odblokowania osiągnięcia — **nie są** katalogiem §19.
+5. Thin = wyłącznie **filozofia · kategorie jakościowe · kontrakt produktowy · MVP vs Future · granice SSOT**.
+6. **Zakaz** w tym rozdziale: liczb · XP · progów · algorytmów · list ID contentu · opisu kodu / DB / resolverów / LFE.
+7. Nagrody Thin = **wyłącznie kategorie** (odesłania do §14 / §6 / odblokowanie) — bez wartości §26.
+8. Widoczne vs ukryte = zasada jakościowa w Thin; głęboka mechanika discovery = Future.
+9. Integracja powiadomień (§22) / wiadomości (§21) = wyłącznie odesłanie jakościowe w Thin; full = Future / osobny EPIC.
+10. Osiągnięcia są **opcjonalne** względem meczu i Hub Primary (§3 / §23) — nie przejmują Primary CTA.
+11. **Placeholder UI Osiągnięć** (np. trasa `/achievements`) **nie stanowi SSOT** i **nie może** być podstawą implementacji.
+12. ZERO DUPLICATE: nie redefiniować §6 · §18 · §20 · §14 / §26 · Hub (§23).
+13. Ten rozdział **nie** opisuje kodu, schematu DB ani LFE.
+
+**Szybki kontrakt Thin (SSOT)**
+
+| Parametr                        | Wartość Thin                                      |
+| ------------------------------- | ------------------------------------------------- |
+| Rola systemu                    | Wyrażenie kamieni milowych / historii (retencja)  |
+| Obowiązkowość                   | Opcjonalna względem meczu / Hub Primary           |
+| Poziom · Reputacja · Prestiż    | Wyłącznie **§6** — achievement nie definiuje      |
+| Ranking (§18)                   | Niezależny system — ≠ osiągnięcia                 |
+| Zadania (§20)                   | Mogą hookować odblokowanie; nie są katalogiem §19 |
+| Kategorie                       | Jakościowe only — bez ID contentu / progów        |
+| Nagrody                         | Kategorie only — bez liczb                        |
+| Ukryte vs widoczne              | Zasada jakościowa; detale = Future                |
+| Progres UI / muzeum             | Placeholder ≠ SSOT; UI real = Future              |
+| Powiadomienia / wiadomości      | Odesłanie only → Future / §21–§22                 |
+| Liczby · XP · progi · algorytmy | **Zakaz**                                         |
+| Placeholder `/achievements`     | Nie-SSOT · nie podstawa implementacji             |
+| Kod / UI / DB / LFE             | OUT (osobny EPIC po Owner GO)                     |
+
+---
+
+### 19.1 Filozofia
+
 **Cel**  
-Zaplanować system achievementów.
+Ustawić ton: osiągnięcia celebrują historię — nie wymuszają grindu i nie budują drugiego silnika klubu.
 
-**Opis**  
-Nagrody za kamienie milowe — retencja i cele długie.
+**Przebieg**
 
-> **Kotwica SSOT:** Prestiż i historia klubu jako pojęcia → **§6**; osiągnięcia **wyrażają** kamienie, nie zastępują słownika metryk (§6.15).
+1. Osiągnięcia odpowiadają na: „Jakie kamienie zapisała moja kariera / mój klub?”
+2. Brak korzystania z ekranu osiągnięć **nie** blokuje: Hub, kolejki, transferów, treningu, finansów.
+3. Oś gry pozostaje meczowa (§3 / §9); osiągnięcia są **opcjonalną** warstwą retencji i kolekcji chwil.
+4. Copy i UX (gdy powstanie) mówią o historii i dumie — nie o „musisz domknąć checklistę XP”.
+5. Satysfakcja Thin = czytelne wyrażenie kamienia — nie farmienie osobnej waluty achievementów.
 
-**Do opracowania**
+**Decyzje gracza**
 
-- [ ] Kategorie osiągnięć
-- [ ] Nagrody
-- [ ] Ukryte vs widoczne
-- [ ] Progres UI
-- [ ] Integracja z powiadomieniami
+- Czy otwierać / celebrować kamienie.
+- Czy traktować je jako osobisty cel ambicji (bez kary za ignorowanie).
+
+**Zależności**
+
+- §3, §6.15, §23; Guide Presentation Contract (gdy UI).
+
+---
+
+### 19.2 Słownik
+
+| Pojęcie                          | Znaczenie Thin                                                               |
+| -------------------------------- | ---------------------------------------------------------------------------- |
+| **Osiągnięcie**                  | Trwały zapis kamienia milowego / chwili historii klubu lub kariery menedżera |
+| **Kamień milowy**                | Sensowny moment produktowy (jakościowo) — nie próg liczbowy w tym rozdziale  |
+| **Kategoria**                    | Rodzaj achievementu (sportowy · klubowy · kariera · sezon/puchar) — bez ID   |
+| **Odblokowanie**                 | Moment, w którym kamień staje się częścią historii (jakościowo)              |
+| **Prestiż / Reputacja / Poziom** | Metryki klubu — **wyłącznie §6**                                             |
+| **Ranking**                      | Sezonowe porównanie klubów (§18) — **≠** osiągnięcia                         |
+| **Zadanie dnia**                 | Lekki cel dnia (§20) — może hookować achievement; **≠** katalog §19          |
+
+---
+
+### 19.3 Co osiągnięcia robią i czego nie robią
+
+**Cel**  
+Zamrozić granice produktu.
+
+**Osiągnięcia robią (Thin)**
+
+1. Wyrażają kamienie milowe i historię klubu / kariery.
+2. Wspierają retencję i dumę długiego łuku.
+3. Mogą być celem ambicji opcjonalnej — bez obowiązku.
+
+**Osiągnięcia nie robią (Thin)**
+
+1. **Nie** definiują ani nie zastępują Poziomu / Reputacji / Prestiżu (§6).
+2. **Nie** są rankingiem sezonowym (§18).
+3. **Nie** są katalogiem zadań dnia (§20) ani Quest Logiem.
+4. **Nie** zmieniają fee, skill, potential, settle transferów, wyniku LFE.
+5. **Nie** przejmują Hub Primary CTA (§23).
+6. **Nie** wprowadzają liczb, XP, progów, algorytmów ani list ID w tym rozdziale.
+
+**Zależności**
+
+- §6.15, §18, §20, §23.
+
+---
+
+### 19.4 Kategorie (jakościowe)
+
+**Cel**  
+Nazwać rodzaje achievementów bez content ID i bez progów.
+
+| Kategoria (Thin)              | Sens jakościowy                                                  |
+| ----------------------------- | ---------------------------------------------------------------- |
+| **Sportowe**                  | Kamienie z meczu / kolejki / sezonu ligowego                     |
+| **Klubowe / instytucjonalne** | Historia organizacji (tożsamość, rozwój odczucia)                |
+| **Kariera menedżera**         | Pierwsze kroki / ścieżka menedżerska (np. First Match jako hook) |
+| **Sezonowe / pucharowe**      | Momenty ligi i pucharu jako historia — nie Prestiż §6            |
+
+**Zasady**
+
+1. Kategorie są **jakościowe** — bez tabel ID, bez progów „X meczów = achievement”.
+2. Przykłady w innych rozdziałach (np. „Pierwszy mecz”, „Awans”) = **hooki narracyjne**, nie lista contentu SSOT w Thin.
+3. Pełny katalog contentu = Future / osobny EPIC po Owner GO.
+
+**Zależności**
+
+- §3, §9, §10, §11; §6 (historia vs metryki).
+
+---
+
+### 19.5 Relacja do §6 (metryki klubu)
+
+**Cel**  
+Utrzymać §6 jako jedyny SSOT metryk.
+
+**Przebieg**
+
+1. Poziom klubu · Reputacja · Prestiż = **wyłącznie §6**.
+2. Osiągnięcia **wyrażają** kamienie i historię — mogą współbrzmieć z odczuciem Prestiżu, ale **nie** są Prestiżem.
+3. Achievement ≠ Reputacja; achievement ≠ Poziom klubu.
+4. Zakaz: „achievement score” jako nowej metryki klubowej w GDD Thin.
+
+**Zależności**
+
+- §6.2 · §6.15.
+
+---
+
+### 19.6 Relacja do §18 (Ranking)
+
+**Cel**  
+Utrzymać dwa niezależne systemy.
+
+**Przebieg**
+
+1. **§18** = sezonowy ranking klubów (porównanie).
+2. **§19** = kamienie / historia (wyrażenie).
+3. Ranking **nie** jest listą achievementów; achievement **nie** jest pozycją rankingową.
+4. ZERO DUPLICATE: nie łączyć leaderboardu z katalogiem achievementów w jednym kontrakcie.
+
+**Zależności**
+
+- §18 (GDD-18 Thin).
+
+---
+
+### 19.7 Relacja do §20 (Zadania)
+
+**Cel**  
+Hook bez katalogu.
+
+**Przebieg**
+
+1. Zadanie dnia (§20) może **opcjonalnie** prowadzić do odblokowania achievementu (hook jakościowy).
+2. §20 **nie** jest katalogiem achievementów i **nie** definiuje listy §19.
+3. Nagrody zadań pozostają kategoriami (§20.6) z odesłaniem do §19 — bez liczb.
+4. Ukończenie zadania **nie** wymaga achievementu; achievement **nie** wymaga Quest Logu.
+
+**Zależności**
+
+- §20; §23 (Primary dnia meczowego nadrzędny).
+
+---
+
+### 19.8 Relacja do §11 / trofeum
+
+**Cel**  
+Nie dublować Prestiżu pucharowego.
+
+**Przebieg**
+
+1. Skutki pucharowe dla **Prestiżu** opisuje **§11.16** → **§6**.
+2. Finał / trofeum może być **hookiem** achievementu historii — bez nowej definicji Prestiżu.
+3. Kosmetyczne trofeum na stadionie (§13) = Future / osobna decyzja Ownera — poza Thin docs jako implementacja.
+
+**Zależności**
+
+- §6, §11.16, §13 (Future kosmetyka).
+
+---
+
+### 19.9 Relacja do Hub / opcjonalność
+
+**Cel**  
+Osiągnięcia nie konkurują z Primary.
+
+**Przebieg**
+
+1. W dniu meczowym Primary Hub = mecz / przygotowanie (§23).
+2. Osiągnięcia — jeśli kiedyś w UI — pozostają **opcjonalne** (System / kontekst), nie Primary.
+3. Brak kary za nieotwieranie `/achievements`.
+4. Soft-lock / moment odblokowania lokalizacji (gdy kod) = szczegół implementacyjny poza tym EPICem docs.
+
+**Zależności**
+
+- §23; §20.
+
+---
+
+### 19.10 Nagrody (kategorie only)
+
+**Cel**  
+Nagrodzić bez arkusza liczb.
+
+**Przebieg**
+
+1. Nagrody achievementów w Thin opisujemy **kategoriami** (np. środki · prestiż lekki jako pojęcie §6 · odblokowanie / informacja).
+2. Kwoty i tabele → **§26** (poza tym rozdziałem); kasa → **§14**.
+3. §19 **nie** wprowadza osobnej waluty achievementów ani XP bar.
+4. Pay-to-unlock / pay-to-complete achievement = **zakaz** (§27).
+
+**Zależności**
+
+- §14, §26, §6, §27.
+
+---
+
+### 19.11 Widoczne vs ukryte (jakościowo)
+
+**Cel**  
+Zasada bez mechaniki discovery.
+
+**Przebieg**
+
+1. Thin dopuszcza rozróżnienie: achievement **widoczny** (cel znany) vs **ukryty** (niespodzianka historii).
+2. Brak w Thin: reguł discovery, fog list, progów odsłaniania.
+3. Pełny design ukrytych achievementów = Future.
+
+---
+
+### 19.12 Placeholder UI — nie-SSOT
+
+**Cel**  
+Odciąć mocki / inventory od designu.
+
+**Przebieg**
+
+1. Istniejący placeholder Osiągnięć (np. `/achievements`) **nie jest źródłem prawdy**.
+2. Screen inventory (`SCR-ACH-01`) i assety World Art (`HERO-010`, `TRP-*`) **nie** stanowią kontraktu produktowego Thin.
+3. **Zakaz** traktowania placeholder jako specyfikacji implementacji, DTO, unlock ani nagród liczbowych.
+4. Przyszły EPIC kodu / UI musi wynikać z **tego rozdziału GDD §19** oraz Guide Presentation Contract.
+
+---
+
+### 19.13 MVP Thin vs Future (tabela)
+
+| Element                           | Thin             | Future                |
+| --------------------------------- | ---------------- | --------------------- |
+| Filozofia · kategorie · kontrakt  | TAK              | pogłębiony            |
+| Katalog ID / content list         | NIE              | TAK (osobny GO)       |
+| Liczby · XP · progi · algorytmy   | NIE              | osobny EPIC / ew. §26 |
+| Redefinicja §6                    | NIE              | NIE (zakaz)           |
+| Scalenie z rankingiem §18         | NIE              | NIE (zakaz)           |
+| §20 jako katalog achievementów    | NIE              | NIE (zakaz)           |
+| Hook z §20 / First Match / puchar | TAK (jakościowo) | + reguły tech         |
+| Ukryte vs widoczne (zasada)       | TAK              | + mechanika discovery |
+| Powiadomienia §22 full            | NIE              | TAK                   |
+| UI muzeum / trofea real           | NIE*             | osobny EPIC           |
+| Implementacja UI / DB / resolver  | NIE*             | osobny EPIC           |
+
+\*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
+
+---
+
+### 19.14 Future — kierunek poza Thin
+
+**Cel**  
+Zamrozić kierunek bez zobowiązań Thin.
+
+**Przebieg**
+
+1. Future może dodać: katalog contentu · progi · XP (tylko po Owner GO) · pełne §21/§22 · UI muzeum · kosmetykę stadionu · kod.
+2. Nadal obowiązuje: achievement **nie** redefiniuje §6 i **nie** scala się z §18 w jeden system.
+3. Pay-to-win achievement = nadal zakaz (§27).
+
+---
+
+### 19.15 Decyzje gracza (Thin)
+
+- Czy otwierać ekran osiągnięć / historii.
+- Czy celebrować kamień po odblokowaniu.
+- Czy traktować achievement jako cel ambicji — bez obowiązku wobec osi meczowej.
+
+---
+
+### 19.16 Zależności i ZERO DUPLICATE
+
+| System      | Relacja                                                   |
+| ----------- | --------------------------------------------------------- |
+| §3 / §9     | Mecz = oś; osiągnięcia ≠ obowiązek                        |
+| **§6**      | Jedyny SSOT metryk — achievement wyraża historię          |
+| §11.16      | Trofeum → Prestiż §6; achievement = możliwy hook historii |
+| §14 / §26   | Nagrody = kategorie; liczby poza tym rozdziałem           |
+| **§18**     | Ranking ≠ osiągnięcia                                     |
+| **§20**     | Hook możliwy; §20 ≠ katalog §19                           |
+| §21 / §22   | Odesłanie only w Thin                                     |
+| §23         | Hub Primary nienaruszony                                  |
+| §27         | Brak pay-to-unlock                                        |
+| Guide (UI)  | Presentation Contract — przyszły UI                       |
+| Placeholder | `/achievements` ≠ SSOT                                    |
+
+---
+
+### 19.17 Kontrakty produktowe §19
+
+1. **Osiągnięcia = wyrażenie kamieni / historii**, nie definicja klubu i nie oś gry.
+2. **§6 = jedyny SSOT** Poziomu / Reputacji / Prestiżu.
+3. **§18 i §19 = dwa niezależne systemy.**
+4. **§20 może hookować** odblokowanie — **nie jest** katalogiem achievementów.
+5. **Thin = filozofia · kategorie · kontrakt** — bez content ID.
+6. **Zakaz liczb · XP · progów · algorytmów** w tym rozdziale.
+7. **Nagrody = kategorie only.**
+8. **Placeholder Achievements ≠ SSOT.**
+9. **Bez formuł / kodu / LFE** w tym rozdziale.
+
+---
+
+### 19.18 Checklista GDD-19
+
+- [x] Filozofia · opcjonalność · słownik
+- [x] Kategorie jakościowe (bez ID / progów)
+- [x] §6 kotwica — wyrażenie, nie redefinicja
+- [x] §18 ≠ §19 · §20 hook ≠ katalog
+- [x] Nagrody kategorie only · widoczne/ukryte jakościowo
+- [x] Zakaz liczb / XP / progów / algorytmów / kodu
+- [x] Placeholder `/achievements` ≠ SSOT
+- [x] MVP Thin vs Future · kontrakty produktowe
+- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-19 docs)
 
 ---
 

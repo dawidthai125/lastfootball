@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§18 (Thin) + §20 + §23 + **§26**. Następny = **GDD-19** (§19 Osiągnięcia) — **READY FOR AUDIT**.
+GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-19 Osiągnięcia Thin** (docs filled) + **GDD-§26A** + **GDD-§26B** ukończone. §3–§19 (Thin) + §20 + §23 + **§26**. Następny szkielet = **GDD-17+** (§21–22 / §24+; kolejność = Owner).
 
 ## Completed
 
@@ -30,6 +30,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED                             |
 | GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED                |
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
+| **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · docs filled                |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 
@@ -41,10 +42,9 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Planned
 
-| Stage      | Zakres                                                 |
-| ---------- | ------------------------------------------------------ |
-| **GDD-19** | **§19 Osiągnięcia** — **READY FOR AUDIT**              |
-| GDD-17+    | Pozostałe szkielety (§21–22 / §24+; kolejność = Owner) |
+| Stage   | Zakres                                                 |
+| ------- | ------------------------------------------------------ |
+| GDD-17+ | Pozostałe szkielety (§21–22 / §24+; kolejność = Owner) |
 
 ## Future
 
@@ -55,13 +55,13 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 - Hub: personalizacja / konfigurowalne widgety (poza MVP; kotwica §23)
 - Zadania: advanced streaks / Quest Log / social (poza MVP; kotwica §20)
 - Ranking: all-time / gracze / global (poza Thin; kotwica §18)
-- Osiągnięcia §19 → **GDD-19 READY FOR AUDIT** (nie Future)
+- Osiągnięcia: katalog contentu / UI muzeum / kod (poza Thin; kotwica §19)
 
 ## Najważniejsze decyzje
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
+- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §19 = osiągnięcia (historia) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
 - §26 = SSOT liczb; D18/D20 = SSOT implementacji.
 
 ## Powiązania
@@ -70,4 +70,4 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Last updated
 
-2026-07-30 — GDD-18 Ranking Thin CLOSED · next GDD-19 READY FOR AUDIT
+2026-07-30 — GDD-19 Osiągnięcia Thin
