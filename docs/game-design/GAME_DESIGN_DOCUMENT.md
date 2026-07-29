@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-17 (§3–§17 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-18 (§3–§18 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -30,7 +30,7 @@
 15. [Sponsorzy](#15-sponsorzy) ← **GDD-11**
 16. [Akademia](#16-akademia) ← **GDD-16 Thin**
 17. [Skauting](#17-skauting) ← **GDD-17 Thin**
-18. [Ranking](#18-ranking)
+18. [Ranking](#18-ranking) ← **GDD-18 Thin**
 19. [Osiągnięcia](#19-osiągnięcia)
 20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
 21. [Wiadomości](#21-wiadomości)
@@ -1549,18 +1549,18 @@ Uniknąć kolizji z przyszłymi rozdziałami rankingów i achievementów.
 
 **Przebieg**
 
-1. **§18 Ranking** będzie **konsumował** sygnały klubu (np. kontekst sezonu) — nie definiuje Poziomu / Reputacji / Prestiżu.
-2. **§19 Osiągnięcia** wyrażają kamienie i historię; Prestiż jako pojęcie = §6.
+1. **§18 Ranking** **konsumuje** sygnały klubu (np. kontekst sezonu) — nie definiuje Poziomu / Reputacji / Prestiżu. Thin = sezonowy ranking klubów (GDD-18).
+2. **§19 Osiągnięcia** wyrażają kamienie i historię; Prestiż jako pojęcie = §6 (rozdział §19 = szkielet do osobnego EPIC).
 3. Leaderboard ≠ Poziom klubu; achievement ≠ Reputacja.
-4. Do czasu wypełnienia §18–§19: obowiązuje ta kotwica.
+4. Kotwica obowiązuje stale; po GDD-18 Thin nadal: ranking nie redefiniuje §6.
 
 **Decyzje gracza**
 
-- (Future) przeglądać rankingi/osiągnięcia jako warstwę retencji, nie jako definicję klubu.
+- (Opcjonalnie) przeglądać ranking sezonowy klubów / (Future) osiągnięcia jako warstwę retencji, nie jako definicję klubu.
 
 **Zależności**
 
-- §18, §19 (szkielet), §11.16.
+- §18 (Thin — GDD-18), §19 (szkielet), §11.16.
 
 ---
 
@@ -7173,21 +7173,371 @@ Koszty poza Thin.
 
 ## 18. Ranking
 
+**Status rozdziału:** GDD-18 — opracowany (**Ranking Thin** — sezonowy ranking klubów; bez all-time; bez rankingu graczy/zawodników; bez liczb, ELO i algorytmów)
+
+**Cel rozdziału**  
+Dać menedżerowi opcjonalną warstwę **rywalizacji sezonowej między klubami** — porównywanie pozycji w sezonie jako retencję i ambicję — **bez** redefinicji metryk klubu (§6), **bez** zastępowania tabeli ligowej (§10) i **bez** obowiązku wobec osi meczowej.
+
+**Zasady nadrzędne (decyzje GDD-18 / Owner)**
+
+1. Ranking jest **warstwą rywalizacji / retencji**, nie osią gry i nie definicją klubu.
+2. Thin = wyłącznie **sezonowy ranking klubów**.
+3. **§6** pozostaje **jedynym SSOT** Poziomu klubu · Reputacji · Prestiżu. Ranking **konsumuje** sygnały — **nie** redefiniuje metryk (§6.15).
+4. **§10 Liga / tabela ligowa** **nie jest** Rankingiem. Tabela = wynik sportowy ligi; ranking = osobna warstwa. ZERO DUPLICATE.
+5. **§17 Shortlista** **nie jest** Rankingiem (kotwica GDD-17).
+6. **§19 Osiągnięcia** pozostają **poza zakresem** tego EPIC (szkielet osobny).
+7. Thin: **brak** rankingu graczy / zawodników · **brak** all-time / historycznego · **brak** widoczności global / multi-serwer / MP.
+8. **Zakaz** w tym rozdziale: liczb · wzorów · ELO · algorytmów · progów · ratingów liczbowych · opisu kodu / DB / resolverów / LFE.
+9. Fair reset i anti-abuse = wyłącznie **zasady jakościowe** (bez reguł liczbowych); szczegóły techniczne = Future / osobny EPIC.
+10. Widoczność Thin = **lokalny kontekst sezonu / ligi produktowej** (jakościowo) — bez specyfikacji „serwera” jako SSOT.
+11. Ranking jest **opcjonalny** względem meczu i Hub Primary (§3 / §23) — nie przejmuje Primary CTA.
+12. **Placeholder UI Rankingu** (np. trasa `/rankings` z mockami) **nie stanowi SSOT** i **nie może** być podstawą implementacji.
+13. ZERO DUPLICATE: nie redefiniować §6 · §10 · §17 · §19 · §14 / §26 · Hub (§23).
+14. Ten rozdział **nie** opisuje kodu, schematu DB ani LFE.
+
+**Szybki kontrakt Thin (SSOT)**
+
+| Parametr                         | Wartość Thin                                              |
+| -------------------------------- | --------------------------------------------------------- |
+| Przedmiot                        | **Kluby**                                                 |
+| Horyzont                         | **Sezonowy** only                                         |
+| Rola systemu                     | Rywalizacja / porównywanie klubów w sezonie (retencja)    |
+| Obowiązkowość                    | Opcjonalna względem meczu / Hub Primary                   |
+| Poziom · Reputacja · Prestiż     | Wyłącznie **§6** — ranking tylko konsumuje sygnały        |
+| Tabela ligowa (§10)              | Osobna; ranking jej nie zastępuje i nie dubluje           |
+| Shortlista (§17)                 | Nie jest rankingiem                                       |
+| Osiągnięcia (§19)                | OUT                                                       |
+| All-time / historyczne           | OUT Thin → Future                                         |
+| Ranking graczy / zawodników      | OUT Thin → Future                                         |
+| Global / multi-serwer / MP       | OUT Thin → Future (§29)                                   |
+| Liczby · ELO · wzory · algorytmy | **Zakaz**                                                 |
+| Fair reset / anti-abuse          | Zasady jakościowe only                                    |
+| Widoczność Thin                  | Lokalny kontekst sezonu / ligi (jakościowo)               |
+| Placeholder `/rankings`          | Nie-SSOT · nie podstawa implementacji                     |
+| Kod / UI / DB / LFE              | OUT (osobny EPIC po Owner GO)                             |
+
+---
+
+### 18.1 Filozofia
+
 **Cel**  
-Zdefiniować rankingi graczy / klubów.
+Ustawić ton: ranking sezonowy klubów wspiera ambicję i porównywanie — nie grind i nie drugi silnik klubu.
 
-**Opis**  
-Leaderboardy sezonowe i historyczne.
+**Przebieg**
 
-> **Kotwica SSOT:** Poziom klubu / Reputacja / Prestiż definiuje **§6**. Ranking **konsumuje** sygnały, nie redefiniuje metryk klubu (§6.15).
+1. Ranking odpowiada na: „Jak wypada mój klub wśród innych w tym sezonie?” (warstwa porównawcza).
+2. Brak korzystania z rankingu **nie** blokuje: Hub, kolejki, tabeli ligowej, transferów, treningu, finansów.
+3. Oś gry pozostaje meczowa (§3 / §9); ranking jest **opcjonalną** warstwą retencji.
+4. Copy i UX (gdy powstanie) mówią o rywalizacji sezonowej klubów — nie o „musisz wspinać się po ELO”.
+5. Satysfakcja Thin = czytelne porównanie klubów w sezonie — nie farmienie osobnej metryki poza sportem.
 
-**Do opracowania**
+**Decyzje gracza**
 
-- [ ] Metryki rankingu
-- [ ] Sezon vs all-time
-- [ ] Fair reset
-- [ ] Widoczność (global / lokal)
-- [ ] Anti-abuse
+- Czy w ogóle otwierać / śledzić ranking sezonowy.
+- Czy traktować pozycję jako osobisty cel ambicji (bez kary za ignorowanie).
+
+**Zależności**
+
+- §3, §6.15, §10, §23; Guide Presentation Contract (gdy UI).
+
+---
+
+### 18.2 Słownik
+
+| Pojęcie                      | Znaczenie Thin                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------ |
+| **Ranking sezonowy klubów**  | Opcjonalna warstwa porównywania **klubów** w ramach **jednego sezonu**         |
+| **Pozycja rankingowa**       | Odczucie miejsca klubu w tej warstwie (jakościowo) — **nie** definicja §6      |
+| **Sygnał (konsumowany)**     | Kontekst sezonu / sportu / metryk §6, z którego ranking **korzysta**, nie tworzy |
+| **Tabela ligowa**            | Standings ligi (§10) — wynik sportowy rozgrywek; **≠** ranking                 |
+| **Poziom / Reputacja / Prestiż** | Metryki klubu — **wyłącznie §6**                                           |
+| **Shortlista**               | Prywatne zainteresowanie menedżera (§17) — **≠** ranking                       |
+| **All-time**                 | Historyczny / międzysezonowy leaderboard — **Future**                          |
+
+---
+
+### 18.3 Co ranking robi i czego nie robi
+
+**Cel**  
+Zamrozić granice produktu.
+
+**Ranking robi (Thin)**
+
+1. Daje opcjonalną warstwę **rywalizacji sezonowej między klubami**.
+2. Pozwala menedżerowi **porównać** swój klub z innymi w horyzoncie sezonu.
+3. Może wspierać retencję i ambicję długiego łuku — bez obowiązku.
+
+**Ranking nie robi (Thin)**
+
+1. **Nie** definiuje ani nie zastępuje Poziomu / Reputacji / Prestiżu (§6).
+2. **Nie** jest tabelą ligową i **nie** dubluje standings (§10).
+3. **Nie** jest shortlistą (§17) ani listą osiągnięć (§19).
+4. **Nie** zmienia fee, skill, potential, settle transferów, wyniku LFE.
+5. **Nie** przejmuje Hub Primary CTA (§23).
+6. **Nie** wprowadza liczb, ELO, wzorów ani algorytmów w tym rozdziale.
+
+**Zależności**
+
+- §6.15, §10, §17, §23.
+
+---
+
+### 18.4 Sezonowy ranking klubów (Thin)
+
+**Cel**  
+Jedyny wariant Thin.
+
+**Przebieg**
+
+1. Thin obejmuje **wyłącznie** ranking **klubów** w horyzoncie **sezonu**.
+2. Przedmiotem porównania są kluby — nie zawodnicy i nie osobny ranking „menedżera” jako osobnej encji produktowej w Thin.
+3. Nowy sezon = nowy kontekst warstwy rankingowej (patrz fair reset jakościowy — §18.11).
+4. All-time, ranking graczy/zawodników, global/MP = **Future** (§18.15).
+
+**Decyzje gracza**
+
+- Śledzić pozycję sezonową klubu albo skupić się wyłącznie na lidze / meczu.
+
+**Zależności**
+
+- §10 (rytm sezonu / liga jako kontekst); §6 (sygnały).
+
+---
+
+### 18.5 Relacja do §6 (metryki klubu)
+
+**Cel**  
+Utrzymać §6 jako jedyny SSOT metryk.
+
+**Przebieg**
+
+1. Poziom klubu · Reputacja · Prestiż = **wyłącznie §6**.
+2. Ranking **konsumuje** sygnały (np. kontekst sezonu, odczucie prestiżu/reputacji jako tło) — **nie** tworzy równoległego słownika metryk.
+3. Leaderboard ≠ Poziom klubu; pozycja rankingowa ≠ Reputacja; ranking ≠ Prestiż.
+4. Zakaz: „ranking score” jako nowej metryki klubowej w GDD Thin.
+
+**Zależności**
+
+- §6.2 · §6.15.
+
+---
+
+### 18.6 Relacja do §10 (Liga / tabela)
+
+**Cel**  
+Rozdzielić standings od rankingu.
+
+**Przebieg**
+
+1. **Tabela ligowa** (§10) = derive wyniku sportowego w lidze (punkty / bilans w sensie produktowym ligi).
+2. **Ranking sezonowy klubów** = osobna warstwa porównawcza — **nie** kopia tabeli i **nie** jej nazwa zamienna.
+3. Gracz może czytać tabelę bez rankingu i odwrotnie (gdy UI powstanie).
+4. ZERO DUPLICATE: nie redefiniować reguł ligi, awansu/spadku ani derive tabeli w §18.
+
+**Zależności**
+
+- §10; implementacja tabeli (gdy kod) pozostaje poza tym rozdziałem.
+
+---
+
+### 18.7 Relacja do §11 / Prestiż pucharowy
+
+**Cel**  
+Nie dublować Prestiżu.
+
+**Przebieg**
+
+1. Skutki pucharowe dla Prestiżu opisuje **§11.16** z odesłaniem do **§6**.
+2. Ranking może **odzwierciedlać kontekst** sezonu (w tym atmosferę sukcesu) wyłącznie jako konsumpcję sygnałów — bez nowej definicji Prestiżu.
+3. Trofeum / finał ≠ automatyczny „wpis rankingu” jako osobna metryka w Thin.
+
+**Zależności**
+
+- §6, §11.16.
+
+---
+
+### 18.8 Relacja do §17 (Shortlista)
+
+**Cel**  
+Utrzymać kotwicę GDD-17.
+
+**Przebieg**
+
+1. Shortlista = prywatne narzędzie zainteresowań menedżera.
+2. Shortlista **nie jest** rankingiem (jawny zakaz §17).
+3. Ranking klubów **nie** używa shortlisty jako źródła pozycji i **nie** zamienia shortlisty w leaderboard.
+
+**Zależności**
+
+- §17.5.
+
+---
+
+### 18.9 Relacja do Hub / opcjonalność
+
+**Cel**  
+Ranking nie konkuruje z Primary.
+
+**Przebieg**
+
+1. W dniu meczowym Primary Hub = mecz / przygotowanie (§23).
+2. Ranking — jeśli kiedyś w UI — pozostaje **opcjonalny** (secondary / kontekst), nie Primary.
+3. Brak kary za nieotwieranie rankingu.
+4. Soft-lock / moment odblokowania lokalizacji (gdy kod) = szczegół implementacyjny poza tym EPICem docs.
+
+**Zależności**
+
+- §23; §20 (zadanie dnia może _opcjonalnie_ wskazać ranking — nie musi).
+
+---
+
+### 18.10 Widoczność (Thin)
+
+**Cel**  
+Opisać zakres widoczności bez specyfikacji serwera.
+
+**Przebieg**
+
+1. Thin: widoczność w **lokalnym kontekście sezonu / ligi produktowej** (jakościowo — „kluby w tym samym torze sezonowym”).
+2. Brak w Thin: globalnego leaderboardu, multi-serwera, rankingu międzyregionowego, MP (§29).
+3. Etykiety placeholder typu „EU-1” w mockach **nie są SSOT**.
+
+**Zależności**
+
+- §10 (kontekst ligi); §29 = Future.
+
+---
+
+### 18.11 Fair reset (jakościowo)
+
+**Cel**  
+Uczciwy start warstwy rankingowej przy nowym sezonie — bez liczb.
+
+**Przebieg**
+
+1. Nowy sezon = **nowy kontekst** sezonowego rankingu klubów.
+2. Reset / domknięcie sezonu ma być odczuwane jako **fair** (czysta rama nowego porównania) — bez „wiecznego długu” pozycji z poprzedniego sezonu w Thin.
+3. All-time / historia międzysezonowa = Future (osobna warstwa, nie mylić z Thin).
+4. Brak progów liczbowych, cron-spec i algorytmów w tym rozdziale.
+
+---
+
+### 18.12 Anti-abuse (jakościowo)
+
+**Cel**  
+Zasada produktowa bez implementacji.
+
+**Przebieg**
+
+1. Ranking **nie** powinien nagradzać nadużyć ani omijania fair play sezonu.
+2. Thin zapisuje wyłącznie zasadę jakościową — **bez** list exploitów, timeoutów, detection rules.
+3. Szczegóły techniczne anti-abuse = Future / osobny EPIC implementacyjny (poza GDD-18 docs).
+
+---
+
+### 18.13 Placeholder UI — nie-SSOT
+
+**Cel**  
+Odciąć mocki od designu.
+
+**Przebieg**
+
+1. Istniejący placeholder Rankingu w produkcie (np. `/rankings` z atrapami klubów / „rating”) **nie jest źródłem prawdy**.
+2. **Zakaz** traktowania placeholder jako specyfikacji implementacji, DTO, unlock, metryk §6 ani tabeli §10.
+3. Przyszły EPIC kodu / UI musi wynikać z **tego rozdziału GDD §18** oraz Guide Presentation Contract; mocki należy zastąpić lub usunąć, nie „ożywiać” jako SSOT.
+4. Szczególnie: **liczbowy „rating” w mocku** nie obowiązuje jako kontrakt produktu.
+
+---
+
+### 18.14 MVP Thin vs Future (tabela)
+
+| Element                            | Thin | Future                    |
+| ---------------------------------- | ---- | ------------------------- |
+| Sezonowy ranking klubów            | TAK  | pogłębiony                |
+| All-time / historyczny             | NIE  | TAK                       |
+| Ranking graczy / zawodników        | NIE  | opcjonalnie               |
+| Global / multi-serwer / MP         | NIE  | §29 / Owner GO            |
+| Redefinicja §6                     | NIE  | NIE (zakaz)               |
+| Zastąpienie tabeli §10             | NIE  | NIE (zakaz)               |
+| Shortlista jako ranking (§17)      | NIE  | NIE (zakaz)               |
+| §19 Osiągnięcia                    | NIE  | osobny EPIC docs          |
+| Liczby · ELO · wzory · algorytmy   | NIE  | osobny EPIC / ew. §26     |
+| Fair reset (zasada jakościowa)     | TAK  | + reguły tech             |
+| Anti-abuse (zasada jakościowa)     | TAK  | + implementacja           |
+| Implementacja UI / DB / resolver   | NIE* | osobny EPIC               |
+
+\*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
+
+---
+
+### 18.15 Future — kierunek poza Thin
+
+**Cel**  
+Zamrozić kierunek bez zobowiązań Thin.
+
+**Przebieg**
+
+1. Future może dodać: all-time · ranking graczy/zawodników · widoczność global/MP · liczby/ELO (wyłącznie po osobnym Owner GO / ew. §26) · pełny anti-abuse techniczny · UI rzeczywisty.
+2. Integracja z **§19 Osiągnięcia** = osobny EPIC docs — nie w GDD-18.
+3. Nadal obowiązuje: ranking **nie** redefiniuje §6 i **nie** zastępuje §10.
+4. Staff / social / esport leaderboardy = poza Thin; tylko po Owner GO.
+
+---
+
+### 18.16 Decyzje gracza (Thin)
+
+- Czy otwierać ranking sezonowy klubów.
+- Czy traktować pozycję jako cel ambicji sezonu.
+- Czy skupić się wyłącznie na tabeli ligowej / meczu (ranking opcjonalny).
+
+---
+
+### 18.17 Zależności i ZERO DUPLICATE
+
+| System        | Relacja                                                      |
+| ------------- | ------------------------------------------------------------ |
+| §3 / §9       | Mecz = oś; ranking ≠ obowiązek                               |
+| **§6**        | Jedyny SSOT Poziomu / Reputacji / Prestiżu — ranking konsumuje |
+| **§10**       | Tabela ligowa ≠ ranking                                      |
+| §11.16        | Prestiż pucharowy → §6; ranking nie definiuje Prestiżu       |
+| **§17**       | Shortlista ≠ ranking                                         |
+| **§19**       | OUT — osobny szkielet / EPIC                                 |
+| §23           | Hub Primary nienaruszony                                     |
+| §26           | Brak liczb w tym rozdziale                                   |
+| §29           | MP / global = Future                                         |
+| Guide (UI)    | Presentation Contract — przyszły UI                          |
+| Placeholder   | `/rankings` ≠ SSOT                                           |
+
+---
+
+### 18.18 Kontrakty produktowe §18
+
+1. **Ranking = warstwa rywalizacji / retencji**, nie definicja klubu i nie oś gry.
+2. **Thin = sezonowy ranking klubów** — nic więcej.
+3. **§6 = jedyny SSOT** Poziomu / Reputacji / Prestiżu; ranking tylko konsumuje sygnały.
+4. **§10 tabela ≠ Ranking.**
+5. **§17 shortlista ≠ Ranking.**
+6. **§19 Achievements = OUT** z tego EPIC.
+7. **Brak** all-time · rankingu graczy/zawodników · global/MP w Thin.
+8. **Zakaz liczb · ELO · wzorów · algorytmów** w tym rozdziale.
+9. **Fair reset / anti-abuse** = jakościowe only.
+10. **Placeholder Ranking ≠ SSOT.**
+11. **Bez formuł / kodu / LFE** w tym rozdziale.
+
+---
+
+### 18.19 Checklista GDD-18
+
+- [x] Filozofia · opcjonalność · słownik
+- [x] Thin: sezonowy ranking klubów only
+- [x] §6 kotwica — konsumpcja, nie redefinicja
+- [x] §10 ≠ Ranking · §17 shortlista ≠ Ranking · §19 OUT
+- [x] Widoczność lokalna sezonu · fair reset · anti-abuse jakościowe
+- [x] Zakaz liczb / ELO / algorytmów / kodu
+- [x] Placeholder `/rankings` ≠ SSOT
+- [x] MVP Thin vs Future · kontrakty produktowe
+- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-18 docs)
 
 ---
 

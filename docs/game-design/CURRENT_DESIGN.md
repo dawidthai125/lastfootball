@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16 Akademia Thin A · **GDD-17 Skauting Information Thin B** wypełnione. §3–§17 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B · **GDD-18 Ranking Thin** wypełnione. §3–§18 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -25,12 +25,13 @@ GDD-15 CLOSED · GDD-16 Akademia Thin A · **GDD-17 Skauting Information Thin B*
 | §14      | Finanse             | Wypełniony (kategorie; kwoty → §26)                            |
 | §15      | Sponsorzy           | Wypełniony                                                     |
 | §16      | Akademia            | Wypełniony Thin A (GDD-16) — Intake + Promote                  |
-| **§17**  | **Skauting**        | **Wypełniony Information Thin B (GDD-17)** — system informacji |
+| §17      | Skauting            | Wypełniony Information Thin B (GDD-17) — system informacji     |
+| **§18**  | **Ranking**         | **Wypełniony Thin (GDD-18)** — sezonowy ranking klubów         |
 | §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                        |
 | §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                            |
 | §24–§25  | UI (w Guide + GDD)  | Guide + **Presentation Contract**; §24 szkielet                |
 | §26      | Liczby / balance    | **Wypełniony Thin (GDD-§26A)** · kod sync **§26B CLOSED**      |
-| §27+     | Premium / …         | Future / szkielet                                              |
+| §19 · §27+ | Osiągnięcia / Premium / … | Future / szkielet                                        |
 
 ### Sygnały produktowe (nie zastępują GDD)
 
@@ -50,11 +51,12 @@ GDD-15 CLOSED · GDD-16 Akademia Thin A · **GDD-17 Skauting Information Thin B*
 - Rozwój zawodników: potential pasma · Match PRIMARY · Training SUPPORTING (D22 / PLAYERS-02).
 - **Akademia (GDD §16 Thin A):** opcjonalna; Intake + Promote; brak poziomów; brak academy OVR; po promocji ten sam rozwój co senior; placeholder `/academy` ≠ SSOT; kod akademii = Future EPIC.
 - **Skauting (GDD §17 Information Thin B):** wyłącznie system informacji; shortlista prywatna (zero wpływu na rynek/transfer/zawodnika); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów w Thin; D19/D22/D20 bez zmian; placeholder `/scouting` ≠ SSOT; kod skautingu = Future EPIC.
+- **Ranking (GDD §18 Thin):** sezonowy ranking **klubów** only; konsumuje sygnały §6 — nie redefiniuje Poziomu/Reputacji/Prestiżu; **≠** tabela ligowa (§10); **≠** shortlista (§17); §19 OUT; brak liczb/ELO/algorytmów; placeholder `/rankings` ≠ SSOT; kod rankingu = Future EPIC.
 
 ## Najważniejsze decyzje
 
 Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.  
-§6 = metryki klubu · §20 = zadania · §23 = Hub · **§26 = liczby / balans**.
+§6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §20 = zadania · §23 = Hub · **§26 = liczby / balans**.
 
 ## Powiązania
 
@@ -62,4 +64,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-29 — GDD-17 Skauting Information Thin B
+2026-07-30 — GDD-18 Ranking Thin

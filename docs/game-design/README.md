@@ -6,13 +6,13 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED** · **GDD-16 Akademia Thin A CLOSED** · **GDD-17 Skauting Information Thin B CLOSED**. Wypełnione §3–§17 (Thin), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
+Faza 2: GDD-01…15 **CLOSED** · **GDD-16 Akademia Thin A CLOSED** · **GDD-17 Skauting Information Thin B CLOSED** · **GDD-18 Ranking Thin** (docs filled). Wypełnione §3–§18 (Thin), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
-**Landing · Branding · Auth UX CLOSED** (po UI P0).  
-**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Presentation tip:** `9dc834a` (AUTH-UX) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
+**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Presentation tip:** `9fd14fc` (MOTION-01) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Pozostałe GDD-17+ (np. §18 Ranking) osobno (Owner GO).
+Pozostałe GDD-17+ (np. §19 Osiągnięcia) osobno (Owner GO).
 
 ## Opis działania
 
@@ -111,4 +111,4 @@ Pozostałe GDD-17+ (np. §18 Ranking) osobno (Owner GO).
 
 ## Last updated
 
-2026-07-29 — GDD-17 Skauting Information Thin B
+2026-07-30 — GDD-18 Ranking Thin

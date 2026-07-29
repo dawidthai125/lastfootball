@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§17 (Thin) + §20 + §23 + **§26**. Następny szkielet = **GDD-17+** pozostałe rozdziały (kolejność = Owner).
+GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§18 (Thin) + §20 + §23 + **§26**. Następny szkielet = **GDD-17+** pozostałe rozdziały (§19+; kolejność = Owner).
 
 ## Completed
 
@@ -28,7 +28,8 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-14     | §23 Hub / main panel                                             |
 | GDD-15     | §20 Daily tasks                                                  |
 | GDD-16     | §16 Akademia Thin A (Intake + Promote) · CLOSED                  |
-| **GDD-17** | **§17 Skauting Information Thin B** (system informacji) · CLOSED |
+| GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED     |
+| **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · docs filled     |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                    |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                          |
 
@@ -42,7 +43,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 | Stage   | Zakres                                        |
 | ------- | --------------------------------------------- |
-| GDD-17+ | Pozostałe szkielety (§18+; kolejność = Owner) |
+| GDD-17+ | Pozostałe szkielety (§19+; kolejność = Owner) |
 
 ## Future
 
@@ -52,12 +53,14 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 - Infrastruktura / rozbudowa stadionu (poza MVP; kotwica §6 / §13)
 - Hub: personalizacja / konfigurowalne widgety (poza MVP; kotwica §23)
 - Zadania: advanced streaks / Quest Log / social (poza MVP; kotwica §20)
+- Ranking: all-time / gracze / global (poza Thin; kotwica §18)
+- Osiągnięcia §19 (szkielet → osobny EPIC)
 
 ## Najważniejsze decyzje
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = metryki klubu · §20 = zadania · §23 = Hub · §26 = liczby / balans.
+- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
 - §26 = SSOT liczb; D18/D20 = SSOT implementacji.
 
 ## Powiązania
@@ -66,4 +69,4 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Last updated
 
-2026-07-29 — GDD-17 Skauting Information Thin B
+2026-07-30 — GDD-18 Ranking Thin
