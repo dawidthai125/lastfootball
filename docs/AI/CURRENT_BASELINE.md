@@ -1,20 +1,20 @@
-# AI — Current Baseline (Production)
+ï»¿# AI â€” Current Baseline (Production)
 
 ## Cel
 
-Jedyny szybki SSOT: **co jest wdro¿one na produkcji teraz**.
+Jedyny szybki SSOT: **co jest wdroÅ¼one na produkcji teraz**.
 
 ## Cztery warstwy baseline
 
-| Pojêcie                     | Znaczenie                                                                                          |
+| PojÄ™cie                     | Znaczenie                                                                                          |
 | --------------------------- | -------------------------------------------------------------------------------------------------- |
-| **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poni¿ej                    |
-| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(training…)` / `feat(transfers…)`)                               |
-| **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing · Branding · Auth UX) — **nie** zmienia Domain baseline |
-| **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastêpuje Production / Domain / Presentation tip                |
+| **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) â€” hash w tabeli poniÅ¼ej                    |
+| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(trainingâ€¦)` / `feat(transfersâ€¦)`)                               |
+| **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing Â· Branding Â· Auth UX) â€” **nie** zmienia Domain baseline |
+| **Documentation tip**       | Nowszy `docs:` na `main` â€” **nie** zastÄ™puje Production / Domain / Presentation tip                |
 
 ```bash
-git log -1 --oneline                    # tip (mo¿e byæ docs)
+git log -1 --oneline                    # tip (moÅ¼e byÄ‡ docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline 5e6c2ad            # Domain feature baseline TRAINING-02
 git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
@@ -24,20 +24,20 @@ git log -1 --oneline 9dc834a            # Presentation tip AUTH-UX-01
 
 ## Production
 
-| Pole                        | Wartoœæ                                                                |
+| Pole                        | WartoÅ›Ä‡                                                                |
 | --------------------------- | ---------------------------------------------------------------------- |
 | URL                         | https://lastfootball.vercel.app                                        |
 | Alias                       | https://lastfootball.pl                                                |
 | Branch                      | `main`                                                                 |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live › Post fidelity)           |
+| **Production Baseline**     | `54d0724` â€” **LFE-UI-IMPL-06** CLOSED (Live â†’ Post fidelity)           |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`       |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01         |
-| **Domain feature baseline** | `5e6c2ad` — **LFE-TRAINING-02** (Training Depth · skill + XI Gate)     |
+| UI P0 status                | **CLOSED** Â· IMPL-01â€¦06 Â· 06A Â· CONTENT-PASS-01 Â· DOCS-SYNC-01         |
+| **Domain feature baseline** | `5e6c2ad` â€” **LFE-TRAINING-02** (Training Depth Â· skill + XI Gate)     |
 | Domain message              | `feat(training): implement LFE-TRAINING-02 training depth`             |
-| **Presentation tip**        | `9dc834a` — **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)  |
+| **Presentation tip**        | `9dc834a` â€” **LFE-AUTH-UX-01** (Landing + Branding + Auth UX na prod)  |
 | Presentation message        | `feat(auth-ux): redesign login/register experience with Landing modal` |
-| **Documentation tip**       | `ea8f2d5` — **LFE-TRAINING-02** DOCS CLOSE                             |
-| Status                      | **PRODUCTION VERIFIED · GREEN**                                        |
+| **Documentation tip**       | `ea8f2d5` â€” **LFE-TRAINING-02** DOCS CLOSE                             |
+| Status                      | **PRODUCTION VERIFIED Â· GREEN**                                        |
 
 Prior domain TRANSFERS-08 (`9b1c575`) pozostaje w historii; tip domenowy = TRAINING-02.
 
@@ -45,19 +45,19 @@ Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
 ## Stack
 
-- Next.js 15 (App Router) · TypeScript · Turbopack/dev
+- Next.js 15 (App Router) Â· TypeScript Â· Turbopack/dev
 - Supabase Auth + Postgres (`anoeimngwptucjdugjme`)
 - Vercel Production
-- LFE `@lastfootball/lfe` · `0.9.1-match-ai01`
+- LFE `@lastfootball/lfe` Â· `0.9.1-match-ai01`
 
 ## Player path (verified)
 
 ```
-Landing › Auth (modal lub /login|/register) › Welcome › Club Wizard · Reveal
-  › First Match › Tunnel › VS › Pre › (XI) › Live › Post › Welcome LF
-  › Hub (EARLY_CLUB › SEASON) · Night Pitch Office shell
-  › Squad · Training (Depth: skill + XI Gate) · Transfers · Finance · Terminarz
-  › Match Path immersive (chrome ukryty na /match/*)
+Landing â†’ Auth (modal lub /login|/register) â†’ Welcome â†’ Club Wizard Â· Reveal
+  â†’ First Match â†’ Tunnel â†’ VS â†’ Pre â†’ (XI) â†’ Live â†’ Post â†’ Welcome LF
+  â†’ Hub (EARLY_CLUB â†’ SEASON) Â· Night Pitch Office shell
+  â†’ Squad Â· Training (Depth: skill + XI Gate) Â· Transfers Â· Finance Â· Terminarz
+  â†’ Match Path immersive (chrome ukryty na /match/*)
 ```
 
 ## Critical SSOT
@@ -79,20 +79,20 @@ Landing › Auth (modal lub /login|/register) › Welcome › Club Wizard · Reveal
 | Training persist  | RPC `complete_training_session`              |
 | Training effects  | `applyTrainingSessionEffects` (status+skill) |
 | XI Gate           | `validateStartingXi` / `resolveStartingXi`   |
-| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16         |
+| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` Â§16         |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)    |
-| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`     |
+| Branding          | K1+K3 Â· `BrandLogo` Â· `apps/web/public/`     |
 | Impl notes UI     | `docs/implementation/`                       |
 | Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                 |
 
 ## Operacyjne
 
-> Migracja Supabase RPC `complete_training_session` musi zostaæ zastosowana na œrodowisku produkcyjnym.
+> Migracja Supabase RPC `complete_training_session` musi zostaÄ‡ zastosowana na Å›rodowisku produkcyjnym.
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · potential · full **22** fixtures · Physics · individual training · XP / attribute DB · envelope ratio ? 1 · P1+ domains (Board / Sponsors UI full).
+AI clubs Â· 2+ counters Â· buyer Counter Â· Instant Sell nego Â· custom ask Â· timeout / AI pending Â· escrow Â· `completeLiveTransfer()` Â· potential Â· full **22** fixtures Â· Physics Â· individual training Â· XP / attribute DB Â· envelope ratio â‰  1 Â· P1+ domains (Board / Sponsors UI full).
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02 (Domain `5e6c2ad` · UI P0 `54d0724` · Presentation AUTH-UX `9dc834a`)
+2026-07-29 â€” LFE-TRAINING-02 (Domain `5e6c2ad` Â· UI P0 `54d0724` Â· Presentation AUTH-UX `9dc834a`)
