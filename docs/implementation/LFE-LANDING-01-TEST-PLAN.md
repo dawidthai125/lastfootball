@@ -75,12 +75,12 @@
 
 ## 8. Quality Gate checklist
 
-- [ ] Landing wykorzystuje szerokość desktopu
-- [ ] Hero daje efekt „wow” (Tunnel)
-- [ ] CTA wyraźnie eksponowane (solid gold)
-- [ ] Pokazane rzeczywiste elementy gry (WA + UI crops)
-- [ ] Desktop i Mobile spójne
-- [ ] CI GREEN
+- [x] Landing wykorzystuje szerokość desktopu
+- [x] Hero daje efekt „wow” (Tunnel)
+- [x] CTA wyraźnie eksponowane (solid gold)
+- [x] Pokazane rzeczywiste elementy gry (WA + UI crops)
+- [x] Desktop i Mobile spójne
+- [x] CI GREEN (`c6c67dd`)
 
 ---
 

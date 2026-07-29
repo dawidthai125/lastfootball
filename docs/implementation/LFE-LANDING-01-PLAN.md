@@ -75,7 +75,7 @@ Landing w jakości UI P0:
 - [x] CTA wyraźne (solid gold)
 - [x] Rzeczywiste elementy gry (WA + UI crops)
 - [x] Desktop / Mobile spójne
-- [x] typecheck · test · build (lokalnie PASS) · CI — po push
+- [x] typecheck · test · build (lokalnie PASS) · **CI GREEN** (`c6c67dd`)
 
 ---
 
