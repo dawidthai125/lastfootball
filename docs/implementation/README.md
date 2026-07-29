@@ -2,13 +2,18 @@
 
 ## Cel
 
-Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Hi-Fi).  
+Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Landing / Auth).  
 **Nie** jest SSOT statusu projektu — status: [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md).  
-**Baseline:** [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).
+**Baseline:** [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Master handoff:** [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).
 
 ## Production Baseline (UI P0)
 
 **`54d0724`** — LFE-UI-IMPL-06 CLOSED · program UI P0 zakończony.
+
+## Presentation tip (po UI P0)
+
+**`9dc834a`** — LFE-AUTH-UX-01 CLOSED · Landing + Branding + Auth UX.
 
 ## Zamknięte EPICi (kolejność)
 
@@ -23,18 +28,22 @@ Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Hi-Fi).
 | LFE-CONTENT-PASS-01  | `50ddf1a`     | Global microcopy · `UI_COPY`                |
 | LFE-UI-IMPL-06A      | `00b2c2a`     | Desktop Hub layout · nav tooltips           |
 | LFE-UI-IMPL-06       | `54d0724`     | Live Match & Post fidelity                  |
-| LFE-DOCS-BASELINE-01 | `3918cf5`     | Project baseline sync (ten indeks)          |
+| LFE-DOCS-BASELINE-01 | `3918cf5`     | Project baseline sync                       |
+| LFE-LANDING-01       | `ffa20c6`     | Marketing Landing redesign                  |
+| LFE-BRANDING-01B     | `1fbd6b5`     | Logo K1+K3 · favicons · OG                  |
+| LFE-AUTH-UX-01       | `9dc834a`     | Login Modal · AuthStage login/register      |
+| LFE-HANDOFF-01       | tip `main`    | Master handoff AI (docs only)               |
 
 ## Dokumenty per EPIC
 
-Szukaj: `LFE-UI-IMPL-0N-*.md` · `LFE-CONTENT-PASS-01-*.md` · `LFE-DOCS-SYNC-01-REPORT.md` · `LFE-DOCS-BASELINE-01-REPORT.md` (w `docs/`).
+Szukaj: `LFE-UI-IMPL-0N-*.md` · `LFE-CONTENT-PASS-01-*.md` · `LFE-LANDING-01-*.md` · `LFE-BRANDING-01*-*.md` · `LFE-AUTH-UX-01-*.md` · `LFE-DOCS-*-*.md` · `../AI/PROJECT_HANDOFF.md`.
 
 ## Zasady
 
 - Presentation only względem DTO / resolvers / unlock / settlement.
 - Guide §16 = kontrakt UI.
-- World Art / Visual DNA / Style Lock — bez driftu w IMPL.
+- World Art / Visual DNA / Style Lock / branding assets — bez driftu bez Owner GO.
 
 ## Last updated
 
-2026-07-29 — LFE-DOCS-BASELINE-01
+2026-07-29 — LFE-HANDOFF-01

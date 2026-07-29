@@ -10,14 +10,15 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                |
-| ------------------- | ---------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED  |
-| Domain baseline     | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)   |
-| Documentation tip   | **`3918cf5`** — LFE-DOCS-BASELINE-01           |
-| Prod                | https://lastfootball.vercel.app                |
-| SSOT hash / tip     | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) |
+|                       |                                                                  |
+| --------------------- | ---------------------------------------------------------------- |
+| Production Baseline   | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                    |
+| Domain baseline       | **`9b1c575`** — LFE-TRANSFERS-08 (bez zmian)                     |
+| Presentation tip      | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)          |
+| Documentation tip     | tip `main` po **LFE-HANDOFF-01** — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
+| Prod                  | https://lastfootball.vercel.app                                  |
+| Master handoff        | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                     |
+| Status projektu       | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                   |
 
 ## Pipeline (jedyny)
 
@@ -38,13 +39,14 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Czytaj dalej
 
+Master kontekst sesji: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).  
 Pełna kolejność obowiązkowa: [`START_HERE.md`](./START_HERE.md).  
 Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE.
 
 ## Powiązane
 
-[`../../AGENTS.md`](../../AGENTS.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
+[`../../AGENTS.md`](../../AGENTS.md) · [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-DOCS-BASELINE-01
+**ACTIVE** · 2026-07-29 — LFE-HANDOFF-01

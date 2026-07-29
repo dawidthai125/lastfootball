@@ -8,8 +8,9 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
 **Domain feature baseline:** **`9b1c575`** — LFE-TRANSFERS-08 CLOSED (bez zmian domenowych).  
-Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Office UI P0 · Vercel Production.
+**Presentation tip:** **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Branding · Auth UX).  
+Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -61,6 +62,10 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Offic
 | **LFE-UI-IMPL-06A**                                    | **CLOSED** · Desktop Hub layout · nav tooltips · `00b2c2a`                                                 |
 | **LFE-UI-IMPL-06**                                     | **CLOSED** · Live → Post fidelity · **Production Baseline** `54d0724`                                      |
 | **LFE-DOCS-BASELINE-01**                               | **CLOSED** · sync status / baseline / roadmap po UI P0                                                     |
+| **LFE-LANDING-01**                                     | **CLOSED** · marketing home · Tunnel hero · `ffa20c6`                                                      |
+| **LFE-BRANDING-01B**                                   | **CLOSED** · logo K1+K3 · favicons · OG · `1fbd6b5`                                                        |
+| **LFE-AUTH-UX-01**                                     | **CLOSED** · Login Modal · AuthStage `/login` `/register` · **Presentation tip** `9dc834a`                 |
+| **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                 |
 
 ## IN PROGRESS 🔄
 
@@ -92,8 +97,9 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Thin · Night Pitch Offic
 
 ## Next Recommended EPIC
 
-**Owner wybiera.** Kandydaci: GDD-16+ · Training depth · full 22 fixtures · LFE-UI-MOTION-01.  
-Uzasadnienie: UI P0 + rynek Thin na produkcji; Domain baseline TRANSFERS-08 bez zmian.
+**Training depth (skill / XI gate)** — uzasadnienie: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
+Alternatywy (Owner wybiera): GDD-16+ · LFE-UI-MOTION-01 · full 22 fixtures · transfers hardening.  
+Domain baseline TRANSFERS-08 bez zmian; front door (Landing/Auth) zamknięty.
 
 ## Decyzje roadmapy
 
@@ -124,4 +130,4 @@ Uzasadnienie: UI P0 + rynek Thin na produkcji; Domain baseline TRANSFERS-08 bez 
 
 ## Last updated
 
-2026-07-29 — LFE-DOCS-BASELINE-01 · UI P0 CLOSED · Production Baseline `54d0724`
+2026-07-29 — LFE-HANDOFF-01 · UI P0 `54d0724` · Presentation tip AUTH-UX `9dc834a`

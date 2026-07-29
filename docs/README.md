@@ -6,19 +6,21 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ## Aktualny stan
 
-| Warstwa                     | Stan                                                                                      |
-| --------------------------- | ----------------------------------------------------------------------------------------- |
-| **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0) |
-| **Domain feature baseline** | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)                                       |
-| **Documentation tip**       | `3918cf5` — LFE-DOCS-BASELINE-01 (nie zastępuje Production / Domain)                      |
-| **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                         |
-| Production                  | https://lastfootball.vercel.app                                                           |
-| Platform                    | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training  |
-| LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                           |
-| GDD                         | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                            |
-| UI Presentation             | Guide §16 · **UI P0 CLOSED** (IMPL-01…06) · Night Pitch Office                            |
-| Impl notes                  | [`implementation/`](./implementation/)                                                    |
-| Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                       |
+| Warstwa                     | Stan                                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)          |
+| **Domain feature baseline** | `9b1c575` — LFE-TRANSFERS-08 (bez zmian domenowych)                                                |
+| **Presentation tip**        | `9dc834a` — LFE-AUTH-UX-01 (Landing · Branding · Auth)                                             |
+| **Documentation tip**       | tip `main` po LFE-HANDOFF-01 — [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                |
+| **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                 |
+| **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                  |
+| Production                  | https://lastfootball.vercel.app                                                                    |
+| Platform                    | Onboarding · First Match · Hub · League · Finance · Players · Transfers 01…08 · Training           |
+| LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                    |
+| GDD                         | GDD-01…15 · §26 CLOSED · next: Owner (GDD-16+)                                                     |
+| UI Presentation             | Guide §16 · **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office                   |
+| Impl notes                  | [`implementation/`](./implementation/)                                                             |
+| Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                                |
 
 ## Jak czytać (AI)
 
@@ -40,6 +42,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | Dokument                                                         | Opis                    |
 | ---------------------------------------------------------------- | ----------------------- |
 | [AI/AI_QUICK_START.md](./AI/AI_QUICK_START.md)                   | Cold start 1 ekran      |
+| [AI/PROJECT_HANDOFF.md](./AI/PROJECT_HANDOFF.md)                 | **Master handoff** AI   |
 | [AI/START_HERE.md](./AI/START_HERE.md)                           | Onboarding map          |
 | [AI/CURRENT_BASELINE.md](./AI/CURRENT_BASELINE.md)               | Feature baseline vs tip |
 | [AI/MODULE_MAP.md](./AI/MODULE_MAP.md)                           | Katalogi / moduły       |

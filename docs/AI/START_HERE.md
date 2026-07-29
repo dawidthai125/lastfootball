@@ -8,8 +8,8 @@ Onboarding dla **ChatGPT / Cursor Agent / developera** bez historii czatu i bez 
 
 | Rola                     | Ścieżka                                                                                                 |
 | ------------------------ | ------------------------------------------------------------------------------------------------------- |
-| **ChatGPT** (nowa sesja) | [`AI_QUICK_START.md`](./AI_QUICK_START.md) → ten plik → baseline → rules → task docs                    |
-| **Cursor Agent**         | root [`AGENTS.md`](../../AGENTS.md) → Quick Start → ten plik → …                                        |
+| **ChatGPT** (nowa sesja) | [`AI_QUICK_START.md`](./AI_QUICK_START.md) → [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) → ten plik → … |
+| **Cursor Agent**         | root [`AGENTS.md`](../../AGENTS.md) → Quick Start → Handoff → ten plik → …                              |
 | **Developer**            | Quick Start → [`MODULE_MAP.md`](./MODULE_MAP.md) → [`../DEV_SETUP.md`](../DEV_SETUP.md) → platform docs |
 
 ## Kolejność czytania (obowiązkowa dla AI)
@@ -17,6 +17,7 @@ Onboarding dla **ChatGPT / Cursor Agent / developera** bez historii czatu i bez 
 | #   | Dokument                                                                | Po co                      |
 | --- | ----------------------------------------------------------------------- | -------------------------- |
 | 0   | [`AI_QUICK_START.md`](./AI_QUICK_START.md)                              | 1 ekran                    |
+| 0b  | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                            | master kontekst sesji      |
 | 1   | **Ten plik**                                                            | mapa + zakazy              |
 | 2   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)                          | produkcja (feature vs tip) |
 | 3   | [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)                      | warstwy + SSOT map         |
@@ -91,4 +92,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md).
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01
+2026-07-29 — LFE-HANDOFF-01

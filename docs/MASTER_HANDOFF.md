@@ -4,9 +4,10 @@
 
 Mapa przekazania projektu (architektura, SSOT domen, flows).  
 **Status „gdzie jesteśmy”:** wyłącznie [`PROJECT_STATUS.md`](./PROJECT_STATUS.md).  
-**Feature baseline / docs tip:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — **nie kopiuj hashy tutaj**.
+**Feature baseline / docs tip:** wyłącznie [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — **nie kopiuj hashy tutaj**.  
+**Master kontekst sesji AI (15 sekcji):** [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
-**Cold start AI:** [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) → [`AI/START_HERE.md`](./AI/START_HERE.md).
+**Cold start AI:** [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) → [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) → [`AI/START_HERE.md`](./AI/START_HERE.md).
 
 ---
 
@@ -16,6 +17,7 @@ Mapa przekazania projektu (architektura, SSOT domen, flows).
 | --------------------------- | ----------------------------------------------------------------------------- |
 | Status projektu             | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md)                                    |
 | Feature baseline + docs tip | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                          |
+| Master handoff AI           | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                            |
 | Lista EPIC                  | [`ROADMAP.md`](./ROADMAP.md) · skrót [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) |
 | Prod URL                    | https://lastfootball.vercel.app                                               |
 
@@ -131,4 +133,4 @@ CLOSE: aktualizuj **ROADMAP** · **PROJECT_STATUS** · **CURRENT_BASELINE** (fea
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-SYNC-01 (status → PROJECT_STATUS; bez kopiowania hashy)
+2026-07-29 — LFE-HANDOFF-01 (pointer → PROJECT_HANDOFF; bez kopiowania hashy)

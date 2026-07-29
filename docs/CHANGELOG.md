@@ -8,7 +8,44 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`9b1c575`** (LFE-TRANSFERS-08) — tip docs może być nowszy.
+**Domain feature baseline:** **`9b1c575`** (LFE-TRANSFERS-08).  
+**Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
+Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-29] — LFE-HANDOFF-01 · CLOSED
+
+### Docs
+
+- Master handoff AI: `docs/AI/PROJECT_HANDOFF.md`
+- Sync baseline / status / roadmap / EPIC index po Landing · Branding · Auth UX
+- Presentation tip = `9dc834a`; Production UI P0 bez zmian
+
+---
+
+## [2026-07-29] — LFE-AUTH-UX-01 · CLOSED
+
+### Product / UX
+
+- Login Modal na Landing · AuthStage `/login` `/register` · premium header
+- Presentation tip → **`9dc834a`** (bez zmian Domain / World Art / tokenów)
+
+---
+
+## [2026-07-29] — LFE-BRANDING-01B · CLOSED
+
+### Product / UX
+
+- Logo K1+K3 · favicons · OG · BrandLogo · `1fbd6b5`
+
+---
+
+## [2026-07-29] — LFE-LANDING-01 · CLOSED
+
+### Product / UX
+
+- Marketing Landing redesign · Tunnel hero · `ffa20c6`
 
 ---
 

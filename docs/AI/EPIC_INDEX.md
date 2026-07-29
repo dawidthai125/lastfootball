@@ -18,12 +18,14 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                   |
-| ----------------------- | --------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED       |
+| Warstwa                     | Hash / EPIC                                                   |
+| --------------------------- | ------------------------------------------------------------- |
+| **Production Baseline**     | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
+| **Domain baseline**         | **`9b1c575`** — LFE-TRANSFERS-08 CLOSED                       |
+| **Presentation tip**        | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)       |
+| **Documentation tip**       | tip `main` po LFE-HANDOFF-01 — [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) |
 
-Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
+Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
 ## Platform DONE (skrót)
 
@@ -58,6 +60,10 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | LFE-UI-IMPL-06A           | Desktop Hub layout · nav tooltips                                                                             |
 | LFE-CONTENT-PASS-01       | `UI_COPY` microcopy                                                                                           |
 | LFE-DOCS-BASELINE-01      | Project baseline sync po UI P0                                                                                |
+| **LFE-LANDING-01**        | Marketing Landing · Tunnel hero                                                                               |
+| **LFE-BRANDING-01B**      | Logo K1+K3 · favicons · OG                                                                                    |
+| **LFE-AUTH-UX-01**        | Login Modal · AuthStage login/register                                                                        |
+| **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
 Impl notes: [`../implementation/`](../implementation/).  
@@ -65,17 +71,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — m.in. GDD-16+, Training depth, full 22 fixtures, LFE-UI-MOTION-01, LFE PUBLIC trim.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** Training depth · potem GDD-16+, LFE-UI-MOTION-01, full 22 fixtures.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Naming
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`
-- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-UI-EVOLUTION-*`
-- UI impl: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`
+- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`
+- UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-DOCS-BASELINE-01
+**ACTIVE** · 2026-07-29 — LFE-HANDOFF-01

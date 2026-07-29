@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-HANDOFF-01)
+
+- Master handoff AI: `docs/AI/PROJECT_HANDOFF.md` (15 sekcji · cold start &lt; 5 min)
+- Sync baseline / status / roadmap / EPIC index / README / AGENTS po Landing · Branding · Auth UX
+- Presentation tip pinned: `9dc834a` (LFE-AUTH-UX-01); Production UI P0 `54d0724`; Domain TRANSFERS-08
+
 ### Added (shipped on `main` — LFE-AUTH-UX-01)
 
 - Auth UX redesign: Login Modal na Landing (blur · ESC · outside · focus trap)
