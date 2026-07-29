@@ -65,7 +65,7 @@ export function RegisterForm() {
         className="lf-landing__cta lf-landing__cta--primary lf-auth-form__submit"
         disabled={pending}
       >
-        {pending ? 'Tworzenie konta…' : 'Utwórz konto'}
+        {pending ? 'Tworzenie konta…' : 'Rozpocznij karierę'}
       </button>
 
       <p className="lf-auth-form__switch">

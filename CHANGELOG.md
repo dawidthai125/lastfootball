@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-AUTH-UX-01)
+
+- Auth UX redesign: Login Modal na Landing (blur · ESC · outside · focus trap)
+- Premium marketing header (wyższy · większe logo · mocniejsze CTA Zaloguj)
+- `/login` i `/register` jako AuthStage z Tunnel hero — spójne z Landing / Night Pitch Office
+- Presentation-only: bez zmian logiki auth · tokenów · World Art · brandingu
+
 ### Added (shipped on `main` — LFE-BRANDING-01B)
 
 - Brand refresh K1+K3: geometryczny monogram LF + wordmark `LASTFOOTBALL` (bez spacji)

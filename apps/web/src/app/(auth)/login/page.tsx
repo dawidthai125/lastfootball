@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { AuthStage } from '@/components/auth/AuthStage';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { env } from '@/config/env';
 
@@ -27,11 +28,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <div className="lf-landing__gate lf-landing__gate--auth">
-      <p className="lf-landing__eyebrow">Powrót do klubu</p>
-      <h1>Zaloguj się</h1>
-      <p className="lf-landing__gate-lead">Wejdź do swojego świata menedżerskiego.</p>
+    <AuthStage
+      tone="login"
+      eyebrow="Powrót do klubu"
+      title="Zaloguj się"
+      lead="Wejdź do swojego świata menedżerskiego. Gabinet, tunel i mecz czekają."
+    >
       <LoginForm nextPath={nextPath} bannerError={bannerError} />
-    </div>
+    </AuthStage>
   );
 }

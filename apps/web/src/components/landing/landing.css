@@ -5,6 +5,7 @@
   background: var(--lf-color-bg-void);
   color: var(--lf-color-text-primary);
   font-family: var(--font-body), system-ui, sans-serif;
+  --lf-landing-header-h: 4.5rem;
 }
 
 .lf-landing--auth {
@@ -15,12 +16,14 @@
 .lf-landing__auth-main {
   flex: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: var(--lf-space-6) var(--lf-space-4);
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 0;
+  padding: 0;
 }
 
-/* —— Header —— */
+/* —— Header (marketing local height — do not touch Hub --lf-shell-topbar) —— */
 .lf-landing__header {
   position: sticky;
   top: 0;
@@ -28,15 +31,30 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--lf-shell-topbar);
+  min-height: var(--lf-landing-header-h);
+  height: auto;
+  padding-block: var(--lf-space-3);
   padding-inline: var(--lf-space-4);
-  background: color-mix(in srgb, var(--lf-color-bg-void) 92%, transparent);
+  background: color-mix(in srgb, var(--lf-color-bg-void) 88%, transparent);
+  backdrop-filter: blur(10px);
   border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--lf-color-border-gold) 35%, transparent);
+}
+
+@media (min-width: 768px) {
+  .lf-landing {
+    --lf-landing-header-h: 5rem;
+  }
+
+  .lf-landing__header {
+    padding-block: var(--lf-space-4);
+    padding-inline: var(--lf-space-6);
+  }
 }
 
 @media (min-width: 1200px) {
   .lf-landing__header {
-    padding-inline: var(--lf-space-6);
+    padding-inline: var(--lf-space-8);
   }
 }
 
@@ -47,7 +65,47 @@
   color: inherit;
 }
 
+.lf-landing__brand-logo {
+  height: auto;
+  max-width: min(56vw, 14rem);
+}
+
 .lf-landing__header-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border-radius: var(--lf-radius-md);
+  border: var(--lf-border-width-hair) solid transparent;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--lf-color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--lf-motion-fast) var(--lf-motion-easing),
+    border-color var(--lf-motion-fast) var(--lf-motion-easing),
+    background-color var(--lf-motion-fast) var(--lf-motion-easing);
+}
+
+.lf-landing__header-login--cta {
+  border-color: var(--lf-color-border-gold);
+  background: color-mix(in srgb, var(--lf-color-gold-soft) 70%, transparent);
+  color: var(--lf-color-text-gold);
+}
+
+.lf-landing__header-login--cta:hover {
+  border-color: var(--lf-color-gold-base);
+  color: var(--lf-color-text-primary);
+  background: var(--lf-color-gold-soft);
+}
+
+.lf-landing__header-home {
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: var(--lf-type-caption);
   font-weight: 600;
@@ -55,10 +113,9 @@
   text-transform: uppercase;
   text-decoration: none;
   color: var(--lf-color-text-muted);
-  transition: color var(--lf-motion-fast) var(--lf-motion-easing);
 }
 
-.lf-landing__header-login:hover {
+.lf-landing__header-home:hover {
   color: var(--lf-color-text-primary);
 }
 
@@ -95,7 +152,7 @@
 /* —— Hero Tunnel (full-bleed) —— */
 .lf-landing__hero {
   position: relative;
-  min-height: calc(100dvh - var(--lf-shell-topbar));
+  min-height: calc(100dvh - var(--lf-landing-header-h));
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
@@ -912,6 +969,226 @@
   font: inherit;
 }
 
+/* —— Login Modal —— */
+.lf-login-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lf-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--lf-space-4);
+}
+
+.lf-login-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--lf-color-bg-void) 62%, transparent);
+  backdrop-filter: blur(12px);
+  animation: lf-login-modal-fade var(--lf-motion-base) var(--lf-motion-easing) both;
+}
+
+.lf-login-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(28rem, 100%);
+  max-height: min(90dvh, 44rem);
+  overflow: auto;
+  padding: var(--lf-space-6);
+  border-radius: var(--lf-radius-md);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: linear-gradient(180deg, var(--lf-color-bg-panel) 0%, var(--lf-color-bg-void) 100%);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  animation: lf-login-modal-rise var(--lf-motion-slow) var(--lf-motion-easing) both;
+}
+
+.lf-login-modal__brand {
+  margin-bottom: var(--lf-space-4);
+}
+
+.lf-login-modal__title {
+  margin: 0 0 var(--lf-space-2);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, var(--lf-type-h1));
+  color: var(--lf-color-text-primary);
+}
+
+.lf-login-modal__lead {
+  margin: 0 0 var(--lf-space-5);
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+  line-height: 1.45;
+}
+
+.lf-login-modal__dismiss {
+  margin-top: var(--lf-space-4);
+  width: 100%;
+  min-height: 44px;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  background: transparent;
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.lf-login-modal__dismiss:hover {
+  color: var(--lf-color-text-primary);
+  border-color: var(--lf-color-border-strong);
+}
+
+@keyframes lf-login-modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lf-login-modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* —— Auth Stage (/login · /register) —— */
+.lf-auth-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - var(--lf-landing-header-h));
+  padding: var(--lf-space-5) var(--lf-space-4);
+  overflow: hidden;
+}
+
+.lf-auth-stage__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.lf-auth-stage__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--lf-color-bg-void) 90%, transparent) 0%,
+    color-mix(in srgb, var(--lf-color-bg-void) 58%, transparent) 48%,
+    color-mix(in srgb, var(--lf-color-bg-void) 35%, transparent) 100%
+  );
+}
+
+.lf-auth-stage__panel {
+  position: relative;
+  z-index: 2;
+  width: min(32rem, 100%);
+  padding: var(--lf-space-6);
+  border-radius: var(--lf-radius-md);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  background: color-mix(in srgb, var(--lf-color-bg-panel) 92%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.4);
+  animation: lf-landing-enter var(--lf-motion-slow) var(--lf-motion-easing) both;
+}
+
+@media (min-width: 768px) {
+  .lf-auth-stage {
+    padding: var(--lf-space-8);
+    justify-content: flex-start;
+    padding-inline: clamp(var(--lf-space-6), 8vw, 6rem);
+  }
+
+  .lf-auth-stage__panel {
+    width: min(36rem, 100%);
+    padding: var(--lf-space-7) var(--lf-space-6);
+  }
+}
+
+.lf-auth-stage--register .lf-auth-stage__panel {
+  border-color: var(--lf-color-border-gold);
+  box-shadow:
+    0 20px 56px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px color-mix(in srgb, var(--lf-color-gold-base) 22%, transparent);
+}
+
+.lf-auth-stage__brand {
+  margin-bottom: var(--lf-space-5);
+}
+
+.lf-auth-stage__title {
+  margin: 0 0 var(--lf-space-3);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.5vw, var(--lf-type-hero));
+  line-height: 1.12;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-auth-stage__lead {
+  margin: 0 0 var(--lf-space-5);
+  max-width: 34rem;
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+  line-height: 1.5;
+}
+
+.lf-auth-stage__body {
+  width: 100%;
+}
+
+/* Onboarding gate pages — keep comfortable padding when not AuthStage */
+.lf-landing__auth-main > .lf-landing__gate {
+  margin: var(--lf-space-6) auto;
+}
+
+/* Auth form presentation polish (no FormControls API change) */
+.lf-auth-form input[type='email'],
+.lf-auth-form input[type='password'],
+.lf-auth-form input[type='text'] {
+  min-height: 48px;
+  padding: var(--lf-space-3) var(--lf-space-4);
+  border-radius: var(--lf-radius-sm);
+  border-color: var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-inset);
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-primary);
+}
+
+.lf-auth-form input:focus {
+  border-color: var(--lf-color-border-gold);
+  outline: 2px solid color-mix(in srgb, var(--lf-color-gold-base) 35%, transparent);
+  outline-offset: 1px;
+}
+
+.lf-auth-form label > span:first-child {
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  color: var(--lf-color-text-muted);
+}
+
+.lf-auth-stage--register .lf-auth-form__submit {
+  min-height: 52px;
+  font-size: var(--lf-type-h2);
+}
+
 @keyframes lf-landing-enter {
   from {
     opacity: 0;
@@ -925,7 +1202,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .lf-landing__hero-inner,
-  .lf-landing__story {
+  .lf-landing__story,
+  .lf-login-modal__backdrop,
+  .lf-login-modal__panel,
+  .lf-auth-stage__panel {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

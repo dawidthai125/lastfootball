@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 type BrandLogoProps = {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'lockup' | 'wordmark' | 'monogram';
   mode?: 'dark' | 'light';
   className?: string;
@@ -12,6 +12,8 @@ const SIZE_MAP = {
   sm: { w: 104, h: 20, monogram: 20 },
   md: { w: 166, h: 28, monogram: 24 },
   lg: { w: 274, h: 46, monogram: 40 },
+  /** Premium marketing header / auth chrome */
+  xl: { w: 220, h: 38, monogram: 32 },
 } as const;
 
 /**

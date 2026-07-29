@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { AuthStage } from '@/components/auth/AuthStage';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 import { env } from '@/config/env';
 
@@ -10,18 +11,18 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="lf-landing__gate lf-landing__gate--auth">
-      <p className="lf-landing__eyebrow">Nowy menedżer</p>
-      <h1>Utwórz konto</h1>
-      <p className="lf-landing__gate-lead">
-        Najpierw konto — zaraz potem stworzysz swój klub. Bez zbędnych pól.
-      </p>
+    <AuthStage
+      tone="register"
+      eyebrow="Pierwszy krok kariery"
+      title="Rozpocznij jako menedżer"
+      lead="Załóż konto — zaraz potem nadasz klubowi imię, barwy i herb. Bez zbędnych pól."
+    >
       {!env.isSupabaseConfigured ? (
         <p className="lf-auth-form__error" role="alert">
           Auth wymaga skonfigurowanego Supabase (env).
         </p>
       ) : null}
       <RegisterForm />
-    </div>
+    </AuthStage>
   );
 }

@@ -3,6 +3,7 @@ import { BrandLogo } from '@/components/assets';
 
 import { LandingArt } from '@/components/landing/LandingArt';
 import { LandingCta } from '@/components/landing/LandingCta';
+import { LandingHeroCtas } from '@/components/landing/LandingHeroCtas';
 import { LandingScorebugCrop, LandingUiCrops } from '@/components/landing/LandingUiCrops';
 import { StorySection } from '@/components/landing/StorySection';
 
@@ -36,14 +37,7 @@ export function LandingPage() {
             Każdy mecz jest Twój. Budujesz tożsamość klubu w gabinecie, prowadzisz go przez sezon i
             wracasz z wynikiem, który należy do Ciebie.
           </p>
-          <div className="lf-landing__cta-row lf-landing__cta-row--hero">
-            <LandingCta href="/register" variant="primary">
-              Załóż klub
-            </LandingCta>
-            <LandingCta href="/login" variant="secondary">
-              Zaloguj się
-            </LandingCta>
-          </div>
+          <LandingHeroCtas />
         </div>
       </section>
 
