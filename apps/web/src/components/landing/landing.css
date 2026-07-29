@@ -43,26 +43,8 @@
 .lf-landing__brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--lf-space-2);
   text-decoration: none;
   color: inherit;
-}
-
-.lf-landing__brand-mark {
-  width: var(--lf-space-3);
-  height: var(--lf-space-3);
-  background: var(--lf-color-gold-base);
-  border-radius: var(--lf-radius-xs);
-  box-shadow: 0 0 0 1px var(--lf-color-border-gold);
-}
-
-.lf-landing__brand-name {
-  font-family: var(--font-ui), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: var(--lf-type-table);
-  letter-spacing: var(--lf-type-tracking-label);
-  text-transform: uppercase;
-  color: var(--lf-color-text-primary);
 }
 
 .lf-landing__header-login {
@@ -170,12 +152,11 @@
 
 .lf-landing__brand-hero {
   margin: 0;
-  font-family: var(--font-ui), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.75rem, 4vw, var(--lf-type-h1));
-  letter-spacing: var(--lf-type-tracking-label);
-  text-transform: uppercase;
-  color: var(--lf-color-text-gold);
+}
+
+.lf-landing__brand-hero-mark {
+  max-width: min(86vw, 22rem);
+  height: auto;
 }
 
 .lf-landing__headline {
@@ -781,11 +762,11 @@
 
 .lf-landing__footer-brand {
   margin: 0;
-  font-family: var(--font-ui), system-ui, sans-serif;
-  font-size: var(--lf-type-caption);
-  letter-spacing: var(--lf-type-tracking-label);
-  text-transform: uppercase;
-  color: var(--lf-color-text-faint);
+}
+
+.lf-landing__footer-brand-logo {
+  opacity: 0.76;
+  height: auto;
 }
 
 .lf-landing__footer-links {

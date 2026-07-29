@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 128" role="img" aria-labelledby="t d">
+  <title id="t">LastFootball logo</title>
+  <desc id="d">Monogram LF i wordmark LASTFOOTBALL.</desc>
+  <rect width="760" height="128" rx="20" fill="#0B1118" />
+  <g transform="translate(14 14)">
+    <rect width="100" height="100" rx="18" fill="#0B1118" stroke="#8B7340" />
+    <g fill="#C9A85C">
+      <path d="M23 16h11v55h33v11H23V16Z" />
+      <path d="M42 16h33v11H53v13h19v11H53v31H42V16Z" />
+    </g>
+  </g>
+  <text
+    x="140"
+    y="80"
+    fill="#C9A85C"
+    font-family="Archivo, Arial Narrow, Arial, sans-serif"
+    font-size="52"
+    font-weight="700"
+    letter-spacing="2.2"
+  >
+    LASTFOOTBALL
+  </text>
+</svg>

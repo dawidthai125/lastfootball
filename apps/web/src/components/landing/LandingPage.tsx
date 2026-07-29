@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandLogo } from '@/components/assets';
 
 import { LandingArt } from '@/components/landing/LandingArt';
 import { LandingCta } from '@/components/landing/LandingCta';
@@ -24,7 +25,12 @@ export function LandingPage() {
         />
         <div className="lf-landing__hero-scrim" aria-hidden />
         <div className="lf-landing__hero-inner">
-          <p className="lf-landing__brand-hero">LastFootball</p>
+          <BrandLogo
+            size="lg"
+            variant="wordmark"
+            className="lf-landing__brand-hero-mark"
+            priority
+          />
           <h1 className="lf-landing__headline">Załóż klub. Prowadź go przez ligę.</h1>
           <p className="lf-landing__support">
             Każdy mecz jest Twój. Budujesz tożsamość klubu w gabinecie, prowadzisz go przez sezon i
@@ -149,7 +155,7 @@ export function LandingPage() {
 
       {/* 9 — Footer */}
       <footer className="lf-landing__footer">
-        <p className="lf-landing__footer-brand">LastFootball</p>
+        <BrandLogo size="sm" variant="wordmark" className="lf-landing__footer-brand-logo" />
         <nav className="lf-landing__footer-links" aria-label="Informacje prawne">
           <Link href="/regulamin" className="lf-landing__footer-link">
             Regulamin

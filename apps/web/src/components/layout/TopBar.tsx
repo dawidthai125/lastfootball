@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
+import { BrandLogo, ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
 import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
@@ -108,7 +108,10 @@ export function TopBar() {
               color: 'var(--lf-color-text-faint)',
             }}
           >
-            LastFootball · {phaseLabel(phase)}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <BrandLogo size="sm" variant="monogram" />
+              <span>{phaseLabel(phase)}</span>
+            </span>
           </div>
         </div>
       </Link>

@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { ClubCrest, NavIcon } from '@/components/assets';
+import { BrandLogo, ClubCrest, NavIcon } from '@/components/assets';
 import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
@@ -86,6 +86,9 @@ export function LeftNavigation() {
               >
                 {clubName}
               </div>
+              <div style={{ marginTop: '2px', opacity: 0.72 }}>
+                <BrandLogo size="sm" variant="wordmark" />
+              </div>
             </div>
           </div>
         ) : (
@@ -101,6 +104,9 @@ export function LeftNavigation() {
               accentColor={club?.primaryColor}
               size="sm"
             />
+            <span style={{ marginLeft: '4px', opacity: 0.72 }}>
+              <BrandLogo size="sm" variant="monogram" />
+            </span>
           </div>
         )}
       </div>

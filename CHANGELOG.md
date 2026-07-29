@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (shipped on `main` — LFE-BRANDING-01B)
+
+- Brand refresh K1+K3: geometryczny monogram LF + wordmark `LASTFOOTBALL` (bez spacji)
+- Pełny pakiet logo: `logo*.svg`, `monogram.svg`, `favicon.svg/.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `social-preview.png`
+- Wdrożenie brandingu w Landing/Header/Auth/Hub/Nav + metadata (`icons`, OpenGraph, Twitter) + `manifest.ts`
+- Usunięcie legacy „złotego CSS-kwadratu” z chrome marketingowego
+
 ### Docs (AI-DOCS-SYNC-01)
 
 - ROADMAP / CHANGELOG sync: UI Evolution 01–02 · DOCS-UX-03

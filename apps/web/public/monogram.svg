@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="t d">
+  <title id="t">LastFootball monogram</title>
+  <desc id="d">Geometryczny monogram LF w kolorze brass na ciemnym tle.</desc>
+  <rect width="128" height="128" rx="22" fill="#0B1118" />
+  <g fill="#C9A85C">
+    <path d="M34 22h14v70h40v14H34V22Z" />
+    <path d="M58 22h40v14H72v17h22v14H72v39H58V22Z" />
+  </g>
+  <rect x="1.5" y="1.5" width="125" height="125" rx="20.5" fill="none" stroke="#8B7340" />
+</svg>
