@@ -41,9 +41,9 @@ lastfootball/
 
 ```
 Hub CTA ──► /matches | /transfers | /training | /league | /finance
-complete-fixture ──► cash reward + ensureTransferWindow
+complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
-training ──► players.status + players.skill + clubs.last_training_on (RPC)
+training ──► players.status + players.skill (≤ potential) + clubs.last_training_on (RPC)
 Live match ──► LFE MatchSession / CommandBus (nie z Canvas)
 ```
 
@@ -56,14 +56,15 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Supabase
 
-| Obszar    | Tabele / RPC (skrót)                                                    |
-| --------- | ----------------------------------------------------------------------- |
-| Klub      | `clubs` (`cash_balance`, `transfer_window_open`, `last_training_on`, …) |
-| Kadra     | `players` (`transfer_listed_at`, `departed_at`, status)                 |
-| Liga      | `fixtures`                                                              |
-| Finanse   | `finance_movements`                                                     |
-| Transfery | `transfer_deals`, `transfer_offers`, RPC live H2H                       |
+| Obszar    | Tabele / RPC (skrót)                                                                      |
+| --------- | ----------------------------------------------------------------------------------------- |
+| Klub      | `clubs` (`cash_balance`, `transfer_window_open`, `last_training_on`, …)                   |
+| Kadra     | `players` (`potential`, `transfer_listed_at`, `departed_at`, status)                      |
+| Rozwój    | `match_development_log` · RPC `apply_match_development` · RPC `complete_training_session` |
+| Liga      | `fixtures`                                                                                |
+| Finanse   | `finance_movements`                                                                       |
+| Transfery | `transfer_deals`, `transfer_offers`, RPC live H2H                                         |
 
 ## Status
 
-**ACTIVE** · 2026-07-26 — AI-DOCS-CONSOLIDATION-02
+**ACTIVE** · 2026-07-29 — LFE-PLAYERS-02

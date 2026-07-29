@@ -7,10 +7,10 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`5e6c2ad`** — LFE-TRAINING-02 CLOSED (Training Depth).  
+**Domain feature baseline:** **`cd222ba`** — LFE-PLAYERS-02 CLOSED (Player Development Thin).  
 **Presentation tip:** **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Branding · Auth UX).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · **Training Depth (01+02)** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · **Player Development (PLAYERS-02)** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -38,6 +38,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · **Training Depth (01+02)** · Nigh
 | **LFE-LEAGUE-03**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=11` · top-up                                                            |
 | **LFE-ECONOMY-01**                                     | **CLOSED** · cash SSOT · movements · `/finance` · SEASON                                                   |
 | **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19                                                     |
+| **LFE-PLAYERS-02**                                     | **CLOSED** · Player Development Thin · `potential` + match growth · D22 · `cd222ba`                        |
 | **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20                                                   |
 | **LFE-TRANSFERS-02-E1**                                | **CLOSED** · derived envelope (`resolveTransferEnvelope`, ratio 1)                                         |
 | **LFE-TRANSFERS-02-N1**                                | **CLOSED** · stateless buy negotiation Thin                                                                |
@@ -92,7 +93,8 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · **Training Depth (01+02)** · Nigh
 | ECS storage                             | RESERVED                    |
 | Replay persist / video export           | poza MVP                    |
 | Mobile native                           | poza scope                  |
-| Individual training / XP / attribute DB | poza Thin Depth (D21)       |
+| Individual training / XP / attribute DB / Academy | poza Thin Depth (D21/D22) |
+
 
 ---
 
@@ -100,7 +102,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · **Training Depth (01+02)** · Nigh
 
 **GDD-16+** (docs produktowe) lub **LFE-UI-MOTION-01** — Owner wybiera.  
 Alternatywy: full 22 fixtures · transfers hardening · Ratings v2.  
-Domain tip: TRAINING-02 `5e6c2ad`; front door (Landing/Auth) zamknięty.
+Domain tip: PLAYERS-02 `cd222ba`; front door (Landing/Auth) zamknięty.
 
 ## Decyzje roadmapy
 
@@ -119,11 +121,12 @@ Domain tip: TRAINING-02 `5e6c2ad`; front door (Landing/Auth) zamknięty.
 - Live H2H = listed `players` innych klubów; Instant @ 100% ask; atomowy RPC; `players.id` stałe (TRANSFERS-06).
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
 - Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
-- Kadra = `players`; UI tylko przez `resolveClubSquad` (D19); seed ≠ runtime.
-- Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20).
-- Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
+- Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed ≠ runtime; pasma potencjału only.
+- Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20); fee **bez** potential.
+- Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill ≤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
+- Match development = PRIMARY growth · RPC `apply_match_development` · K_MATCH=5 · starters only (D22 / PLAYERS-02).
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
-- **UI P0** = presentation Night Pitch Office (IMPL-01…06); nie zmienia Domain tip TRAINING-02.
+- **UI P0** = presentation Night Pitch Office (IMPL-01…06); nie zmienia Domain tip PLAYERS-02.
 
 ## Powiązania
 
@@ -131,4 +134,4 @@ Domain tip: TRAINING-02 `5e6c2ad`; front door (Landing/Auth) zamknięty.
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02 · Domain `5e6c2ad`
+2026-07-29 — LFE-PLAYERS-02 · Domain `cd222ba`

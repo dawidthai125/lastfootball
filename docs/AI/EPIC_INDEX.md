@@ -20,10 +20,10 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 | Warstwa                 | Hash / EPIC                                             |
 | ----------------------- | ------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
-| **Domain baseline**     | **`5e6c2ad`** — LFE-TRAINING-02 CLOSED                  |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
-| **Documentation tip**   | **`ea8f2d5`** — LFE-TRAINING-02 DOCS CLOSE              |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                    |
+| **Domain baseline**     | **`cd222ba`** — LFE-PLAYERS-02 CLOSED                            |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)          |
+| **Documentation tip**   | pending Owner COMMIT — LFE-PLAYERS-02 DOCS CLOSE                 |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -34,9 +34,9 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                       |
 | LFE-LEAGUE-01…03                               | Fixtures · tabela · 11 meczów                         |
 | LFE-ECONOMY-01                                 | Cash Thin (D18)                                       |
-| LFE-PLAYERS-01                                 | Kadra `players` (D19)                                 |
+| LFE-PLAYERS-01 · **02**                            | Kadra `players` + Development Thin (D19/D22)          |
 | LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20) |
-| LFE-TRAINING-01 · **02**                       | Trening Thin + Depth (skill · XI Gate) (D21)          |
+| LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)          |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                |
 
 ## Engine / Match UI DONE
@@ -64,6 +64,7 @@ GDD-01…15 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **LFE-BRANDING-01B**      | Logo K1+K3 · favicons · OG                                                                                    |
 | **LFE-AUTH-UX-01**        | Login Modal · AuthStage login/register                                                                        |
 | **LFE-TRAINING-02**       | Training Depth · skill + XI Gate · RPC · `5e6c2ad`                                                            |
+| **LFE-PLAYERS-02**        | Player Development Thin · potential + match growth · D22 · `cd222ba`                                          |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
@@ -85,4 +86,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** GDD-16+ · 
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-TRAINING-02
+**ACTIVE** · 2026-07-29 — LFE-PLAYERS-02

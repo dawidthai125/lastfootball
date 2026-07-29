@@ -118,9 +118,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Dlaczego:** kadra musi być trwała przed Transfers/Training; seed runtime uniemożliwiał mutacje.  
 **Zasada:** tabela **`players`** = jedyne SSOT zawodników klubu gracza; **`resolveClubSquad(club, rows)` → `SquadDto`** = jedyny kontrakt UI; `listClubPlayers` = I/O; seed (`seedClubRoster` / `seedStarterSquad`) **wyłącznie** create / backfill / testy; AI = `seedBotSquad` / `seedOpponentSquad` (poza `players`); **brak fallbacku do seeda** przy pustej bazie → `SquadUnavailableError`; id starter **`s-{tag}-…`**; buy **`t-{tag}-…`** (D20); **`version` default 1**; status domenowy **`READY` | `INJURED` | `SUSPENDED` | `TIRED` | `DEPARTED`** (lokalizacja w UI; aktywna kadra bez `DEPARTED`).  
-**Poza Thin:** edycja XI (poza Match Path), `potential`, pensje z cash; pełny model atrybutów / XP — poza D21 Depth.  
-**Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`).  
-**Uwaga:** Training mutuje `status` + `skill` (D21 / TRAINING-02) — bez osobnej tabeli kadry; atrybuty UI = derive(skill).
+**Poza Thin:** edycja XI (poza Match Path), pensje z cash; pełny model atrybutów / XP / Academy — poza D21/D22.  
+**Źródło:** LFE-PLAYERS-01 (prod `0b960b5`; prettier `d43fa3d`); **potential** = D22 / PLAYERS-02.  
+**Uwaga:** Training mutuje `status` + `skill` (D21) z ceiling `potential` (D22); Match development mutuje `skill` (D22); atrybuty UI = derive(skill); UI potential = **pasma only**.
 
 ### D20 — Transfer market Thin + `resolveTransferMarket` · CLOSED
 
@@ -149,7 +149,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Live H2H (LFE-TRANSFERS-06):** Human↔Human; podaż = listed `players`; Instant Buy @ 100% ask; `players.id` stałe; atomowy RPC z buy/sell live; brak AI clubs/tabeli listingów; seed catalogue = fallback; brak `completeLiveTransfer()`.  
 **Pending H2H (LFE-TRANSFERS-07):** jedyna tabela `transfer_offers`; Instant równolegle; kwoty NEGOTIATION_THIN; wielu buyerów pending; Accept/Instant/Unlist supersede w TX; Create/Reject/Withdraw bez mutacji cash/players/deals; brak escrow/timeout/AI pending; settle wyłącznie `completeTransferBuy`/`Sell`.  
 **Counter H2H (LFE-TRANSFERS-08):** 1× Counter wyłącznie Seller; po Counter Accept = Buyer; `opening_amount` immutable; `current_amount` jedyna kwota settle; Counter mutuje tylko amount/phase/last_actor (RPC `FOR UPDATE`); Reject opening=seller / countered=buyer; brak escrow/timeout/AI H2H / 2+ counters.  
-**Poza Thin:** AI clubs, Instant Sell nego, custom ask, **2+ counters**, buyer Counter, timeout / AI pending inbox, potential, escrow, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.  
+**Poza Thin:** AI clubs, Instant Sell nego, custom ask, **2+ counters**, buyer Counter, timeout / AI pending inbox, escrow, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.
 **Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego (`4b58507`); Live Instant (`8824793`); Pending (`be95006`); Counter — LFE-TRANSFERS-08.  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
@@ -161,24 +161,45 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Fakt          | SSOT / kontrakt                                                                  |
 | ------------- | -------------------------------------------------------------------------------- |
 | UI            | **wyłącznie** `resolveClubTraining(...)` → `TrainingDto`                         |
-| Skutki        | `players.status` + `players.skill` — bez insert/delete; bez XP / OVR / potential |
-| Persist       | RPC `complete_training_session` (atomowo status + skill + `last_training_on`)    |
-| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                            |
-| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`)  |
-| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`              |
-| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin)  |
-| Anti-farm     | max +1 skill / gracz / sesja; K=3; soft ceiling ≥85 tylko `high`; mecz > trening |
-| XI Gate       | INJURED/SUSPENDED hard block; TIRED OK + warning ≥4; kick-off hard fail          |
-| LFE           | **bez zmian** Match Engine / PUBLIC API (brak skill/fatigue w seedzie)           |
+| Skutki        | `players.status` + `players.skill` — bez insert/delete; bez XP / OVR; **skill ≤ potential** (D22) |
+| Persist       | RPC `complete_training_session` (atomowo status + skill + `last_training_on`)                      |
+| Dzień sesji   | `clubs.last_training_on` (`date` UTC)                                                              |
+| Unlock        | played ≥ `TRAINING_THIN.UNLOCK_AFTER_PLAYED=2` (derive; nav `trainingUnlocked`)                    |
+| Shared helper | `hasPlayedUnlock` / `countPlayedInList` / `countClubPlayedFixtures`                                |
+| Efekty        | pure `applyTrainingSessionEffects` (regen / light / normal / high + skill Thin vs potential)       |
+| Anti-farm     | max +1 skill / gracz / sesja; K=3; soft ceiling ≥85 tylko `high`; mecz > trening                   |
+| XI Gate       | INJURED/SUSPENDED hard block; TIRED OK + warning ≥4; kick-off hard fail                            |
+| LFE           | **bez zmian** Match Engine / PUBLIC API (brak skill/fatigue w seedzie)                             |
 
 **Thin wyjątek vs GDD §8.4:** dzień = **UTC date**, nie timezone gracza (brak SSOT TZ).  
-**Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), XP, potential, attribute DB, kontuzje treningowe, morale numeric, mapowanie skill→LFE.  
-**Źródło:** LFE-TRAINING-01 (prod `10de062`); **LFE-TRAINING-02** Depth (prod `5e6c2ad`).  
+**Poza Thin:** trening indywidualny, plany, buff taktyczny, koszt cash (§26), XP, attribute DB, kontuzje treningowe, morale numeric, mapowanie skill→LFE.  
+**Źródło:** LFE-TRAINING-01 (prod `10de062`); **LFE-TRAINING-02** Depth (prod `5e6c2ad`); ceiling potential = D22.  
 **Operacyjne:** Migracja Supabase RPC `complete_training_session` musi zostać zastosowana na środowisku produkcyjnym.
+
+### D22 — Player Development Thin (`potential` + match growth) · CLOSED
+
+**Dlaczego:** GDD §7 wymaga ceiling rozwoju i primary path z meczu bez farmy treningowej i bez LFE.  
+**Zasada:**
+
+| Fakt               | SSOT / kontrakt                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| Potential SSOT     | kolumna `players.potential` (1…99; check `potential ≥ skill`)                                           |
+| Generacja (B)      | `resolvePlayerPotential` = `max(skill, seedPotentialCeiling(id, age))` — deterministyczny seed          |
+| Match (PRIMARY)    | pure `applyMatchDevelopmentEffects` — tylko starterzy; +1 max; **K_MATCH=5**; skill ≤ potential         |
+| Persist            | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)                    |
+| Training           | D21 respektuje potential (TS + SQL clamp)                                                               |
+| Fee                | **bez zmian** — `deriveTransferFee(skill, age)`                                                         |
+| Age                | pure `applySeasonAgeEffects` + `onSeasonEnd` hook — **brak** auto age++ w produkcie                     |
+| Presentation       | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals          |
+| LFE                | **zero zmian**                                                                                          |
+
+**Poza Thin:** Academy · talents · career/dev history · XP · morale · attribute DB · numeric potential UI · Physics/ECS.  
+**Źródło:** LFE-PLAYERS-02 (prod `cd222ba`).  
+**Operacyjne:** Migracja `20260729120000_player_potential_development.sql` musi zostać zastosowana na prod.
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.  
+Każde złamanie D1–D22 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -187,7 +208,8 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-TRANSFERS-05 (2026-07-26):** seller nego S2 na Incoming; `resolveSellerNegotiationStep`; `completeTransferSell(agreedAmount)`.  
 **LFE-TRANSFERS-06 (2026-07-26):** Live H2H Instant @ 100% ask; atomic RPC; `players.id` stałe.  
 **LFE-TRANSFERS-07 (2026-07-26):** Pending H2H `transfer_offers`; Thin presets; supersede; brak escrow/timeout.  
-**LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.
+**LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
+**LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.
 
 ## Powiązania
 
@@ -195,4 +217,4 @@ Każde złamanie D1–D21 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02 · D21 Depth
+2026-07-29 — LFE-PLAYERS-02 · D22

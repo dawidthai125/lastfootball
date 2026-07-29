@@ -8,9 +8,23 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`5e6c2ad`** (LFE-TRAINING-02).  
+**Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
 **Presentation tip:** **`9dc834a`** (LFE-AUTH-UX-01).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-29] — LFE-PLAYERS-02 · CLOSED
+
+### Product
+
+- Player Development Thin: `players.potential` + match growth (PRIMARY) + training ceiling
+- Domain tip → **`cd222ba`**
+- Operacyjne: Migracja `20260729120000_player_potential_development.sql` na prod
+
+### Docs
+
+- D22 · PLAYERS.md · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG
 
 ---
 

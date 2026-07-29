@@ -6,7 +6,9 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 
 ## Kiedy czytać
 
-Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D21, P\*).
+## Kiedy czytać
+
+Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D22, P\*).
 
 ## Platform / product (2026)
 
@@ -22,6 +24,7 @@ Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D21
 | P8  | Supabase prod/dev = project `anoeimngwptucjdugjme`                                                              | LFE-INFRA-01               |
 | P9  | `fixtures` + `planClubFixtures` = SSOT terminarza; `LEAGUE_FIXTURE_COUNT=11` + top-up · **CLOSED**              | LFE-LEAGUE-01→03           |
 | P10 | `players` + `resolveClubSquad(rows)` = SSOT kadry; seed ≠ runtime · **CLOSED**                                  | LFE-PLAYERS-01 (= D19)     |
+| P10b| `players.potential` + match development Thin · pasma UI · RPC atomic · **CLOSED**                               | LFE-PLAYERS-02 (= D22)     |
 | P11 | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED                    | LFE-LEAGUE-02              |
 | P12 | `cash_balance` + `finance_movements` + `resolveClubFinance` = Finance Thin; stałe §26 · **CLOSED**              | LFE-ECONOMY-01 (= D18)     |
 | P13 | `resolveTransferMarket` + window + deals · cash-only · **CLOSED**                                               | LFE-TRANSFERS-01 (= D20)   |
@@ -44,4 +47,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02
+2026-07-29 — LFE-PLAYERS-02

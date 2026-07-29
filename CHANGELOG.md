@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-PLAYERS-02 CLOSE)
+
+- Sync D22 · PLAYERS.md · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG
+- Domain feature baseline → `cd222ba` (Player Development Thin)
+- Operacyjne: migracja `players.potential` + RPC `apply_match_development` na prod
+
+### Added (shipped on `main` — LFE-PLAYERS-02)
+
+- `players.potential` SSOT (wariant B: max(skill, seeded)); UI pasma only
+- Match development PRIMARY: +1 · K_MATCH=5 · starters · atomic RPC `apply_match_development`
+- Training-02 ceiling vs potential; age hook only (no auto age++)
+- Transfer fee unchanged (`deriveTransferFee(skill, age)`)
+
 ### Docs (LFE-TRAINING-02 CLOSE)
 
 - Sync D21 · TRAINING.md · ROADMAP · CURRENT_BASELINE · PROJECT_STATUS · HANDOFF · CHANGELOG

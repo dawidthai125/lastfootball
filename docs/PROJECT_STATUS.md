@@ -16,31 +16,31 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN · LFE-TRAINING-02 CLOSED**
+**PRODUCTION VERIFIED · GREEN · LFE-PLAYERS-02 CLOSED**
 
-|                         |                                                           |
-| ----------------------- | --------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity) |
-| **Domain feature**      | **`5e6c2ad`** — **LFE-TRAINING-02** (Training Depth)      |
-| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                            |
-| **Documentation tip**   | **`ea8f2d5`** — LFE-TRAINING-02 DOCS CLOSE                |
-| **Prod**                | https://lastfootball.vercel.app                           |
+|                         |                                                                |
+| ----------------------- | -------------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)      |
+| **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin)   |
+| **Presentation tip**    | **`9dc834a`** — LFE-AUTH-UX-01                                 |
+| **Documentation tip**   | pending Owner COMMIT — LFE-PLAYERS-02 DOCS CLOSE (pin po commit) |
+| **Prod**                | https://lastfootball.vercel.app                                |
 
-| Tor               | Stan                                                                                                             |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players · Transfers (01…08) · **Training Depth (02)** |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide §16                                 |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)              |
-| Design            | GDD-01…15 · §26 CLOSED · World Art CLOSED · next: Owner (GDD-16+ / motion / 22 fixtures)                         |
-| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                              |
+| Tor               | Stan                                                                                                                       |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · **Players Dev (02)** · Transfers (01…08) · Training Depth (02) |
+| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · Night Pitch Office · Guide §16                                           |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                        |
+| Design            | GDD-01…15 · §26 CLOSED · World Art CLOSED · next: Owner (GDD-16+ / motion / 22 fixtures)                                   |
+| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN                                                                        |
 
 ## W trakcie
 
-Brak otwartego EPIC produktowego. **LFE-TRAINING-02** FULLY CLOSED (feat `5e6c2ad` · CI GREEN · Production VERIFIED).
+Brak otwartego EPIC produktowego. **LFE-PLAYERS-02** COMPLETED (feat `cd222ba` · CI GREEN · Production VERIFIED · DOCS CLOSE w toku / tip pin po COMMIT).
 
 ## Operacyjne
 
-> Migracja Supabase RPC `complete_training_session` musi zostać zastosowana na środowisku produkcyjnym.
+> Migracje Supabase: `complete_training_session` **oraz** `players.potential` + `apply_match_development` (`20260729120000_…`) muszą zostać zastosowane na środowisku produkcyjnym.
 
 ## Co następne
 
@@ -49,8 +49,8 @@ Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](.
 
 ## Decyzje
 
-Indeks: [`AI/DECISIONS.md`](./AI/DECISIONS.md) · pełne: [`DECISIONS.md`](./DECISIONS.md) (D21 Depth).
+[`DECISIONS.md`](./DECISIONS.md) · D19 · D21 · **D22**.
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02
+2026-07-29 — LFE-PLAYERS-02

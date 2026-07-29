@@ -33,4 +33,4 @@ Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlemen
 
 ## Last updated
 
-2026-07-29 — LFE-HANDOFF-01
+2026-07-29 — LFE-PLAYERS-02

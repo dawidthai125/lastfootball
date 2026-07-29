@@ -12,13 +12,13 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 |                     |                                                         |
 | ------------------- | ------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
-| Domain baseline     | **`5e6c2ad`** — LFE-TRAINING-02 (Training Depth)        |
-| Presentation tip    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth) |
-| Documentation tip   | **`ea8f2d5`** — LFE-TRAINING-02 DOCS CLOSE              |
-| Prod                | https://lastfootball.vercel.app                         |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)            |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)          |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED              |
+| Domain baseline     | **`cd222ba`** — LFE-PLAYERS-02 (Player Development Thin)  |
+| Presentation tip    | **`9dc834a`** — LFE-AUTH-UX-01 (Landing · Brand · Auth)   |
+| Documentation tip   | pending Owner COMMIT — LFE-PLAYERS-02 DOCS CLOSE          |
+| Prod                | https://lastfootball.vercel.app                           |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)              |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)            |
 
 ## Pipeline (jedyny)
 
@@ -49,4 +49,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-TRAINING-02
+**ACTIVE** · 2026-07-29 — LFE-PLAYERS-02
