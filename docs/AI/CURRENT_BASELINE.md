@@ -18,7 +18,7 @@ git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline cd222ba            # Domain feature baseline PLAYERS-02
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
-git log -1 --oneline a8236df            # Documentation tip GDD-18 Ranking Thin
+git log -1 --oneline 4dedd71            # Documentation tip GDD-18 Ranking Thin
 git log -1 --oneline 84b7f4d            # GDD-18 content (pre-prettier)
 ```
 
@@ -38,11 +38,11 @@ git log -1 --oneline 84b7f4d            # GDD-18 content (pre-prettier)
 | Domain message              | `feat(players): implement LFE-PLAYERS-02 player development`          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `a8236df` — **GDD-18** Ranking Thin (sezonowy ranking klubów)         |
+| **Documentation tip**       | `4dedd71` — **GDD-18** Ranking Thin (sezonowy ranking klubów)         |
 | Status                      | **PRODUCTION VERIFIED · GREEN**                                       |
 
 Prior presentation AUTH-UX (`9dc834a`) pozostaje w historii; tip prezentacji = MOTION-01.  
-GDD-18 content = `84b7f4d`; tip docs (prettier) = `a8236df`.
+GDD-18 content = `84b7f4d`; prettier = `a8236df`; Documentation tip (CLOSE sync) = `4dedd71`.
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -103,4 +103,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — GDD-18 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `a8236df` · UI P0 `54d0724`)
+2026-07-30 — GDD-18 CLOSED (Domain `cd222ba` · Presentation tip `9fd14fc` · Docs tip `4dedd71` · UI P0 `54d0724`)

@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)    |
 | **Domain feature**      | **`cd222ba`** — **LFE-PLAYERS-02** (Player Development Thin) |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)     |
-| **Documentation tip**   | **`a8236df`** — GDD-18 Ranking Thin (sezonowy ranking klubów) |
+| **Documentation tip**   | **`4dedd71`** — GDD-18 Ranking Thin (sezonowy ranking klubów) |
 | **Prod**                | https://lastfootball.vercel.app                              |
 
 | Tor               | Stan                                                                                                                      |
@@ -36,7 +36,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## W trakcie
 
-Brak otwartego EPIC. **GDD-18** CLOSED (`84b7f4d` / tip `a8236df`) · **LFE-UI-MOTION-01** CLOSED · **GDD-17** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
+Brak otwartego EPIC. **GDD-18** CLOSED (content `84b7f4d` · tip CLOSE `4dedd71`) · **LFE-UI-MOTION-01** CLOSED · **GDD-17** CLOSED · **LFE-PLAYERS-02** Domain FULLY CLOSED (`cd222ba`).
 
 ## Operacyjne
 
