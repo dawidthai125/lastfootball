@@ -1,12 +1,67 @@
-/* LFE-UI-EVOLUTION-01A — Hub decision presentation (tokens only). */
+/* LFE-UI-IMPL-01 — Hub decision presentation (Night Pitch Office / Hi-Fi). */
 
 .lf-hub {
   display: flex;
   flex-direction: column;
   gap: var(--lf-space-4);
-  max-width: 40rem;
+  max-width: 42rem;
   min-width: 0;
   overflow-x: hidden;
+}
+
+/* —— LocationHero (HERO-001 World Art) —— */
+.lf-hub__hero {
+  position: relative;
+  width: 100%;
+  min-height: 140px;
+  max-height: 220px;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-color-bg-inset);
+}
+
+.lf-hub__hero--matchday {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lf-color-gold-base) 35%, transparent);
+}
+
+.lf-hub__hero-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.lf-hub__hero-img--desktop {
+  display: none;
+}
+
+.lf-hub__hero-img--mobile {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .lf-hub__hero {
+    min-height: 180px;
+    max-height: 280px;
+  }
+
+  .lf-hub__hero-img--desktop {
+    display: block;
+  }
+
+  .lf-hub__hero-img--mobile {
+    display: none;
+  }
+}
+
+.lf-hub__hero-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 20%,
+    color-mix(in srgb, var(--lf-color-bg-base) 75%, transparent) 100%
+  );
+  pointer-events: none;
 }
 
 /* —— Decision Banner (match / event) —— */
@@ -14,7 +69,8 @@
   position: relative;
   padding: var(--lf-space-5) var(--lf-space-4);
   background: var(--lf-color-bg-panel);
-  border-bottom: var(--lf-border-width-thick) solid var(--lf-color-border-gold);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
+  border-radius: var(--lf-radius-md);
 }
 
 .lf-hub__decision-eyebrow {
@@ -62,18 +118,18 @@
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
-  min-height: 44px;
+  min-height: 48px;
   padding: var(--lf-space-3) var(--lf-space-5);
   border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
   background: var(--lf-color-gold-base);
-  color: var(--lf-color-bg-void);
+  color: var(--lf-color-text-on-gold, var(--lf-color-bg-void));
   font-family: var(--font-ui), system-ui, sans-serif;
   font-weight: 700;
   font-size: var(--lf-type-h2);
   letter-spacing: var(--lf-type-tracking-label);
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: var(--lf-radius-sm);
+  border-radius: var(--lf-radius-md);
   transition: filter var(--lf-motion-fast) var(--lf-motion-easing);
 }
 
@@ -143,26 +199,25 @@
 .lf-hub__secondary-item {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--lf-color-text-muted);
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-raised);
+  color: var(--lf-color-text-secondary);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: var(--lf-type-caption);
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--lf-color-border-subtle);
-  text-underline-offset: 3px;
+  text-decoration: none;
+  border-radius: var(--lf-radius-sm);
 }
 
 .lf-hub__secondary-item:hover {
-  color: var(--lf-color-text-secondary);
-  text-decoration-color: var(--lf-color-text-muted);
+  color: var(--lf-color-text-primary);
+  border-color: var(--lf-color-border-strong);
 }
 
 .lf-hub__secondary-item--locked {
-  text-decoration: none;
+  opacity: var(--lf-opacity-disabled);
   color: var(--lf-color-text-faint);
   cursor: default;
 }

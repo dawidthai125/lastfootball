@@ -34,7 +34,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
   if (!player) notFound();
 
   return (
-    <div className="lf-sq-detail">
+    <div className="lf-sq-detail" data-pti="PTI-01-SQD-03-M" data-lf-impl="LFE-UI-IMPL-01">
       <Breadcrumbs
         items={[
           { label: 'Klub', href: '/club' },

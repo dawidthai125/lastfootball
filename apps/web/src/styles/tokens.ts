@@ -1,16 +1,17 @@
 /**
- * LFE-DESIGN-TOKENS-01 — canonical values (SSOT UI).
- * Do not invent colors/spacing/radius outside this map.
+ * LFE-DESIGN-TOKENS-01 + LFE-UI-IMPL-01 alignment to LFE-UI-SKIN-01 (Night Pitch Office).
+ * Do not invent colors/spacing/radius outside this map / Style Lock.
  */
 
 export const colors = {
   bg: {
     void: '#03050A',
-    base: '#080E18',
-    raised: '#0C1420',
-    panel: '#111A28',
-    panelAlt: '#152031',
-    inset: '#0A101A',
+    /** SKIN-01 `bg.base` */
+    base: '#07111C',
+    raised: '#0C1824',
+    panel: '#0E1A28',
+    panelAlt: '#142030',
+    inset: '#0A121C',
     hover: '#1A2838',
   },
   border: {
@@ -19,16 +20,18 @@ export const colors = {
     gold: '#8A7340',
   },
   text: {
-    primary: '#F0F4FA',
-    secondary: '#D8E0EC',
-    muted: '#8B9BB0',
+    primary: '#EDF2F8',
+    secondary: '#C5D0DE',
+    muted: '#8494A8',
     faint: '#5C6D82',
-    gold: '#C4A35A',
+    gold: '#C9A85C',
+    onGold: '#12100A',
   },
   gold: {
-    base: '#C4A35A',
+    /** SKIN-01 brass primary */
+    base: '#C9A85C',
     dim: '#8A7340',
-    soft: 'rgba(196, 163, 90, 0.12)',
+    soft: 'rgba(201, 168, 92, 0.12)',
   },
   status: {
     ok: '#5A9E6F',
@@ -43,7 +46,7 @@ export const colors = {
   pitch: '#1F5C38',
   overlay: {
     scrim: 'rgba(3, 5, 10, 0.72)',
-    hero: 'rgba(8, 12, 20, 0.55)',
+    hero: 'rgba(7, 17, 28, 0.55)',
   },
 } as const;
 
@@ -61,9 +64,10 @@ export const space = {
 
 export const radius = {
   none: '0px',
-  xs: '1px',
-  sm: '2px',
-  md: '4px',
+  xs: '2px',
+  /** Hi-Fi COMPONENT-SPECS: umiarkowany, nie pill */
+  sm: '6px',
+  md: '8px',
 } as const;
 
 export const borderWidth = {
@@ -117,9 +121,10 @@ export const grid = {
   marginApp: space[4],
   shell: {
     nav: '184px',
-    navCollapsed: '56px',
+    navCollapsed: '72px',
     rail: '232px',
-    topbar: '40px',
+    /** HF-SHELL-01: 48–56px */
+    topbar: '52px',
   },
 } as const;
 
@@ -175,6 +180,7 @@ export const cssVariableMap: Record<string, string> = {
   '--lf-color-text-muted': colors.text.muted,
   '--lf-color-text-faint': colors.text.faint,
   '--lf-color-text-gold': colors.text.gold,
+  '--lf-color-text-on-gold': colors.text.onGold,
 
   '--lf-color-gold-base': colors.gold.base,
   '--lf-color-gold-dim': colors.gold.dim,

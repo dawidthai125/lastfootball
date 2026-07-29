@@ -8,26 +8,27 @@
 
 :root {
   --lf-color-bg-void: #03050a;
-  --lf-color-bg-base: #080e18;
-  --lf-color-bg-raised: #0c1420;
-  --lf-color-bg-panel: #111a28;
-  --lf-color-bg-panel-alt: #152031;
-  --lf-color-bg-inset: #0a101a;
+  --lf-color-bg-base: #07111c;
+  --lf-color-bg-raised: #0c1824;
+  --lf-color-bg-panel: #0e1a28;
+  --lf-color-bg-panel-alt: #142030;
+  --lf-color-bg-inset: #0a121c;
   --lf-color-bg-hover: #1a2838;
 
   --lf-color-border-subtle: #2a3a4f;
   --lf-color-border-strong: #3d5168;
   --lf-color-border-gold: #8a7340;
 
-  --lf-color-text-primary: #f0f4fa;
-  --lf-color-text-secondary: #d8e0ec;
-  --lf-color-text-muted: #8b9bb0;
+  --lf-color-text-primary: #edf2f8;
+  --lf-color-text-secondary: #c5d0de;
+  --lf-color-text-muted: #8494a8;
   --lf-color-text-faint: #5c6d82;
-  --lf-color-text-gold: #c4a35a;
+  --lf-color-text-gold: #c9a85c;
+  --lf-color-text-on-gold: #12100a;
 
-  --lf-color-gold-base: #c4a35a;
+  --lf-color-gold-base: #c9a85c;
   --lf-color-gold-dim: #8a7340;
-  --lf-color-gold-soft: rgba(196, 163, 90, 0.12);
+  --lf-color-gold-soft: rgba(201, 168, 92, 0.12);
 
   --lf-color-status-ok: #5a9e6f;
   --lf-color-status-ok-soft: rgba(90, 158, 111, 0.15);
@@ -52,9 +53,9 @@
   --lf-space-8: 48px;
 
   --lf-radius-none: 0px;
-  --lf-radius-xs: 1px;
-  --lf-radius-sm: 2px;
-  --lf-radius-md: 4px;
+  --lf-radius-xs: 2px;
+  --lf-radius-sm: 6px;
+  --lf-radius-md: 8px;
 
   --lf-border-width-hair: 1px;
   --lf-border-width-thick: 2px;
@@ -86,9 +87,9 @@
   --lf-grid-gutter: 12px;
   --lf-grid-margin: 16px;
   --lf-shell-nav: 184px;
-  --lf-shell-nav-collapsed: 56px;
+  --lf-shell-nav-collapsed: 72px;
   --lf-shell-rail: 232px;
-  --lf-shell-topbar: 40px;
+  --lf-shell-topbar: 52px;
 
   --lf-overlay-panel-width: 400px;
   --lf-overlay-modal-width: 560px;

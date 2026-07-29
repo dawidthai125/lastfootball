@@ -499,7 +499,7 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
   const windowLabel = market.windowOpen ? 'Okno otwarte' : 'Okno zamknięte';
 
   return (
-    <div className="lf-tx">
+    <div className="lf-tx" data-pti="PTI-01-XFR-02-M" data-lf-impl="LFE-UI-IMPL-01">
       {/* A — context line (no KPI wall) */}
       <p className="lf-tx__context" aria-label="Kontekst transferów">
         {windowLabel}

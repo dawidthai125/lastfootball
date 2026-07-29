@@ -34,7 +34,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
     .join(' ');
 
   return (
-    <div className="lf-app-shell">
+    <div className="lf-app-shell" data-lf-impl="LFE-UI-IMPL-01">
       <TopBar />
       <MobileNav />
       <div className={bodyClass}>

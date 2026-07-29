@@ -407,6 +407,22 @@
   min-width: 0;
 }
 
+/* LFE-UI-IMPL-01 PTI-01 — SQD-03-M mobile parity */
+@media (max-width: 767px) {
+  .lf-sq-detail {
+    padding-bottom: calc(var(--lf-space-6) + 56px);
+  }
+
+  .lf-sq-detail__decisions {
+    flex-direction: column;
+  }
+
+  .lf-sq-detail__decision {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (min-width: 768px) {
   .lf-sq__hero {
     padding: var(--lf-space-6) var(--lf-space-5);

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import type { ClubDto } from '@/lib/club/types';
@@ -18,8 +19,9 @@ import {
 import './hub-decision.css';
 
 /**
- * Decision Hub — GDD §23 / LFE-UI-EVOLUTION-01A + daily loop 02 (presentation).
- * Unlock via existing resolveNavAccess — no new domain rules.
+ * Decision Hub — LFE-UI-IMPL-01 / Hi-Fi HF-HUB-01|02|04.
+ * Hero → Decision → Primary → Secondary≤5 → Context meta.
+ * Unlock via resolveNavAccess — no new domain rules.
  */
 export function EarlyClubHub({
   club,
@@ -36,7 +38,6 @@ export function EarlyClubHub({
   hasFixtures?: boolean;
   leaguePositionLabel?: string | null;
   cashLabel?: string | null;
-  /** Existing unlock flag — presentation only (resolveNavAccess). */
   trainingUnlocked?: boolean;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
@@ -54,22 +55,73 @@ export function EarlyClubHub({
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
   const message = buildWelcomeMessage(club, nextFixture);
+  const event = resolveDecisionEvent({
+    club,
+    session,
+    nextFixture,
+    lastMatch,
+    dayLabel: status.dayLabel,
+    league: status.league,
+  });
 
   return (
-    <div className="lf-hub" data-hub-phase={phase} data-hub-session={session}>
-      <DecisionBanner
-        club={club}
-        session={session}
-        nextFixture={nextFixture}
-        lastMatch={lastMatch}
-        dayLabel={status.dayLabel}
-        league={status.league}
-      />
+    <div
+      className="lf-hub"
+      data-hub-phase={phase}
+      data-hub-session={session}
+      data-lf-impl="LFE-UI-IMPL-01"
+    >
+      <LocationHero session={session} />
+
+      <AtmosphereLayer
+        className="lf-hub__decision"
+        aria-label={event.eyebrow}
+        layers={['vignette', 'grain']}
+      >
+        <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
+        <h1 className="lf-hub__decision-title">{event.title}</h1>
+        <p className="lf-hub__decision-meta">{event.meta}</p>
+        {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
+      </AtmosphereLayer>
+
       <PrimaryCta cta={primary} />
+
       <ClubIdentity club={club} status={status} />
+
       <SecondaryRow actions={secondary} />
+
       <LightStatus status={status} />
+
       <WelcomeMessage message={message} />
+    </div>
+  );
+}
+
+function LocationHero({ session }: { session: HubSession }) {
+  const matchday = session === 'matchday';
+  return (
+    <div
+      className={`lf-hub__hero${matchday ? ' lf-hub__hero--matchday' : ''}`}
+      data-wa="HERO-001"
+      aria-hidden
+    >
+      <Image
+        className="lf-hub__hero-img lf-hub__hero-img--desktop"
+        src="/assets/world-art/hero-001-office-night.png"
+        alt=""
+        fill
+        sizes="(max-width: 767px) 0px, 100vw"
+        priority
+      />
+      <Image
+        className="lf-hub__hero-img lf-hub__hero-img--mobile"
+        src="/assets/world-art/hero-001-office-mobile.png"
+        alt=""
+        fill
+        sizes="(min-width: 768px) 0px, 100vw"
+        priority
+      />
+      <div className="lf-hub__hero-veil" />
     </div>
   );
 }
@@ -82,38 +134,6 @@ type DecisionBannerProps = {
   dayLabel: string;
   league: string;
 };
-
-/** Domain entity: nearest match / session event — not a KPI strip. */
-function DecisionBanner({
-  club,
-  session,
-  nextFixture,
-  lastMatch,
-  dayLabel,
-  league,
-}: DecisionBannerProps) {
-  const event = resolveDecisionEvent({
-    club,
-    session,
-    nextFixture,
-    lastMatch,
-    dayLabel,
-    league,
-  });
-
-  return (
-    <AtmosphereLayer
-      className="lf-hub__decision"
-      aria-label={event.eyebrow}
-      layers={['vignette', 'grain']}
-    >
-      <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
-      <h1 className="lf-hub__decision-title">{event.title}</h1>
-      <p className="lf-hub__decision-meta">{event.meta}</p>
-      {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
-    </AtmosphereLayer>
-  );
-}
 
 function resolveDecisionEvent({
   club,
@@ -165,7 +185,6 @@ function resolveDecisionEvent({
   };
 }
 
-/** Domain entity: club — compact identity, not a dashboard hero card. */
 function ClubIdentity({
   club,
   status,
@@ -212,9 +231,9 @@ function SecondaryRow({ actions }: { actions: HubCta[] }) {
           <span
             key={cta.id}
             className="lf-hub__secondary-item lf-hub__secondary-item--locked"
-            title="Odblokuje się wkrótce"
+            title="Niedostępne w tej fazie"
           >
-            {cta.label} · wkrótce
+            {cta.label} · niedostępne
           </span>
         ) : (
           <Link key={cta.id} href={cta.href} className="lf-hub__secondary-item">
@@ -242,7 +261,6 @@ function LightStatus({ status }: { status: ReturnType<typeof buildLightStatus> }
   );
 }
 
-/** Domain entity: board message — typographic, not a KPI card. */
 function WelcomeMessage({ message }: { message: ReturnType<typeof buildWelcomeMessage> }) {
   return (
     <section className="lf-hub__message" aria-label="Wiadomość">

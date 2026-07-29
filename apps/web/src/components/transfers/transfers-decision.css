@@ -228,6 +228,26 @@
   color: var(--lf-color-text-muted);
 }
 
+/* LFE-UI-IMPL-01 PTI-01 — XFR-02-M offer actions mobile */
+@media (max-width: 767px) {
+  .lf-tx__case {
+    padding-block: var(--lf-space-4);
+  }
+
+  .lf-tx-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lf-tx-actions button,
+  .lf-tx-actions .lf-btn,
+  .lf-tx__primary-cta {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
 @media (min-width: 768px) {
   .lf-tx__case {
     flex-direction: row;
