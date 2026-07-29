@@ -32,7 +32,7 @@ Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Landing / Auth
 | LFE-LANDING-01       | `ffa20c6`     | Marketing Landing redesign                  |
 | LFE-BRANDING-01B     | `1fbd6b5`     | Logo K1+K3 · favicons · OG                  |
 | LFE-AUTH-UX-01       | `9dc834a`     | Login Modal · AuthStage login/register      |
-| LFE-HANDOFF-01       | tip `main`    | Master handoff AI (docs only)               |
+| LFE-HANDOFF-01       | `a6f3951`     | Master handoff AI (docs only)               |
 
 ## Dokumenty per EPIC
 
