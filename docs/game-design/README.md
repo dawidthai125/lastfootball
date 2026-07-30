@@ -6,13 +6,13 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED** · **GDD-16 Akademia Thin A CLOSED** · **GDD-17 Skauting Information Thin B CLOSED** · **GDD-18 Ranking Thin CLOSED** · **GDD-19 Osiągnięcia Thin CLOSED**. Wypełnione §3–§19 (Thin), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
+Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 Thin CLOSED** · **GDD-21 Wiadomości Thin — IMPLEMENT COMPLETE (oczekuje VERIFY)**. Wypełnione §3–§21 (Thin; §22 szkielet), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Production Baseline:** `54d0724` (LFE-UI-IMPL-06) · **Domain tip:** `9c6fe86` (ACADEMY-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `57a5875` (ACADEMY-01 CLOSE) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `9c6fe86` (ACADEMY-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `57a5875` (ACADEMY-01 CLOSE) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny gate: **M2.5 — First Domain Implementation Review** (nie GDD-21 / Scouting IMPLEMENT).
+Następny po CLOSE GDD-21: **GDD-22** (docs) · potem AUDIT LFE-SCOUTING-01.
 
 ## Opis działania
 

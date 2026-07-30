@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-19 (§3–§19 Thin, §20 oraz §23 uzupełnione; pozostałe rozdziały = szkielet)  
+**Etap:** GDD-21 (§3–§21 Thin, §20 oraz §23 uzupełnione; §22+ = szkielet / Future)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -33,7 +33,7 @@
 18. [Ranking](#18-ranking) ← **GDD-18 Thin**
 19. [Osiągnięcia](#19-osiągnięcia) ← **GDD-19 Thin**
 20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
-21. [Wiadomości](#21-wiadomości)
+21. [Wiadomości](#21-wiadomości) ← **GDD-21 Thin**
 22. [Powiadomienia](#22-powiadomienia)
 23. [Panel główny](#23-panel-główny) ← **GDD-14**
 24. [Interfejs użytkownika](#24-interfejs-użytkownika)
@@ -8221,29 +8221,323 @@ Granica monetyzacji.
 - [x] Integracja §23 / §3 / §5 / §9
 - [x] MVP vs Future + kontrakty
 - [ ] Copy puli celów po playtestach
-- [ ] Sync §21–§22 po ich wypełnieniu
+- [x] Sync §21 (GDD-21 Thin) — §22 po GDD-22
 - [ ] Liczby nagród (§26) — Future
 
 ---
 
 ## 21. Wiadomości
 
+**Status rozdziału:** GDD-21 — opracowany (**Wiadomości Thin** — in-app inbox · typy · limit · CTA do istniejących ekranów; bez push, email, AI, DB, kodu i liczb)
+
+**Cel rozdziału**  
+Dać menedżerowi **limitowaną skrzynkę in-app**, która **odzwierciedla** zdarzenia już istniejące w domenie (mecz, transfer, sezon, onboarding) i **prowadzi** do właściwego ekranu decyzji — **bez** drugiego procesu ofert, **bez** redefinicji zadań dnia i **bez** przejmowania Hub Primary.
+
+**Zasady nadrzędne (decyzje GDD-21 / Owner)**
+
+1. **Wiadomość jest zawsze skutkiem zdarzenia domenowego, nigdy jego przyczyną.** (patrz §21.1a)
+2. Thin = **wyłącznie in-app inbox** (skrzynka + skrót na Hubie) — bez push / email / SMS.
+3. Wiadomości są **limitowane** — nie spam; czytelność > objętość.
+4. CTA wiadomości prowadzi **wyłącznie** do **istniejących** lokalizacji produktu (deep-link produktowy).
+5. **Transfery (§12)** pozostają **jedynym SSOT procesu ofert** (lista · nego · settle). §21 może dać **skrót narracyjny** + link do Transferów — nigdy drugi inbox decyzyjny.
+6. Kotwica habit / cel dnia = **§20**. Wiadomość może **wskazywać** cel; **nie** redefiniuje systemu zadań.
+7. Granica z **§22**: wiadomość w skrzynce ≠ powiadomienie push / alert kanałowy — szczegóły §22 = osobny EPIC docs.
+8. **§23 Hub:** wiadomość **nie** przejmuje Primary CTA dnia meczowego; skrót = warstwa 5 lub Secondary kontekstowe.
+9. **Placeholder UI** (`/messages`, podgląd na Hubie, mocki) **nie stanowi SSOT** i **nie może** być podstawą implementacji.
+10. ZERO DUPLICATE: nie redefiniować §12 · §20 · §22 · §23 · §19.
+11. Ten rozdział **nie** opisuje kodu, schematu DB, resolverów ani LFE.
+12. Zakaz w Thin: liczb §26 · XP · progów · algorytmów · generatorów AI · katalogu ID contentu.
+
+**Szybki kontrakt Thin (SSOT)**
+
+| Parametr                        | Wartość Thin                                            |
+| ------------------------------- | ------------------------------------------------------- |
+| Kanał                           | **In-app inbox only**                                   |
+| Rola                            | Skutek zdarzenia domenowego · nawigacja do decyzji      |
+| Przyczyna zdarzeń               | **Nigdy** wiadomość (zakaz)                             |
+| Proces ofert                    | **Wyłącznie §12 / Transfery** — §21 = skrót + deep-link |
+| CTA                             | ≤1 · tylko istniejące ekrany                            |
+| Limit / rotacja                 | Jakościowo — nie spam                                   |
+| Hub Primary (dzień meczowy)     | Nienaruszony — wiadomość ≠ Primary                      |
+| Relacja §20                     | Wskazanie celu · nie drugi system zadań                 |
+| Relacja §22                     | Granica only — push = GDD-22                            |
+| Placeholder `/messages`         | Nie-SSOT · nie podstawa implementacji                   |
+| Push · email · AI · DB · kod    | **OUT**                                                 |
+| Liczby · XP · progi · algorytmy | **Zakaz**                                               |
+
+---
+
+### 21.1 Filozofia inboxu
+
 **Cel**  
-Opisać inbox narracyjny i systemowy.
+Ustawić ton: skrzynka służy sprawczości menedżera, nie feedowi treści.
 
-**Opis**  
-Wiadomości od zarządu, mediów, agentów, systemu — limitowane, nie spam.
+**Przebieg**
 
-> **Kotwica:** cel dnia / habit loop = **§20**. Wiadomość może wskazywać cel; nie redefiniuje systemu zadań.
+1. Inbox odpowiada na: „Co się wydarzyło, o czym powinienem wiedzieć — i dokąd iść?”
+2. Brak otwierania skrzynki **nie** blokuje: Hub, meczów, transferów, treningu, finansów.
+3. Oś gry pozostaje meczowa (§3 / §9); wiadomości są **opcjonalną** warstwą komunikacji.
+4. Copy mówi „sprawa / informacja”, nie „musisz przeczytać wszystko”.
+5. Satysfakcja Thin = szybkie zrozumienie skutku zdarzenia + jeden sensowny krok dalej.
 
-**Do opracowania**
+**Decyzje gracza**
 
-- [ ] Typy wiadomości
-- [ ] Priorytety / limit / rotacja
-- [ ] Archiwum
-- [ ] Akcje z wiadomości (CTA)
-- [ ] Relacja z §20 (wskazanie celu) i §22
-- [ ] Generowanie treści (szablony)
+- Czy otworzyć wiadomość / skrót.
+- Czy przejść CTA do lokalizacji domeny, czy zignorować (bez kary sezonowej).
+
+**Zależności**
+
+- §3, §23; Guide Presentation Contract (gdy UI).
+
+---
+
+### 21.1a Zasada skutku (nadrzędna) — konsekwencje architektoniczne
+
+**Zasada (SSOT produktowy)**  
+**Wiadomość jest zawsze skutkiem zdarzenia domenowego, nigdy jego przyczyną.**
+
+**Znaczenie**
+
+1. Najpierw istnieje fakt domeny (mecz zakończony · oferta na rynku · okno otwarte · klub utworzony · sesja treningowa · promocja akademii itd.).
+2. Dopiero potem — opcjonalnie — pojawia się wiadomość jako **wyraz / skrót / nawigacja** do tego faktu.
+3. Wiadomość **nie** tworzy oferty, **nie** settle’uje transferu, **nie** zmienia wyniku meczu, **nie** odpala treningu, **nie** przyznaje achievementu i **nie** ustawia celu dnia jako systemu.
+
+**Konsekwencje dla architektury (produkt → przyszły kod)**
+
+| Zasada projektu           | Konsekwencja dla §21 / przyszłej implementacji                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **SSOT FIRST**            | SSOT zdarzenia pozostaje w module domeny (§9 mecz · §12 transfer · §20 zadanie · §8 trening …). Inbox **nie** jest drugim SSOT tego faktu. |
+| **REUSE FIRST**           | CTA i treść **reuse’ują** istniejące lokalizacje i stany (Transfery, Hub, Kadra…). Zakaz osobnego „silnika spraw” równoległego do domeny.  |
+| **ZERO DUPLICATE LOGIC**  | Zakaz dublowania nego/settle/listy ofert w skrzynce. Zakaz osobnej maszyny stanów oferty „tylko dla wiadomości”.                           |
+| **Presentation ≠ Domain** | Skrzynka / copy / badge „Nowa” = warstwa prezentacji skutku. Reguły biznesowe (fee, settle, XI, growth) **nie** żyją w inboxie.            |
+
+**Zakazy wynikające z zasady**
+
+1. Wiadomość jako jedyny nośnik decyzji, której nie ma w module domeny.
+2. Akcja w skrzynce, która mutuje domenę **z pominięciem** oficjalnej ścieżki (np. Accept oferty poza Transferami).
+3. Generowanie „sprawy”, która dopiero potem ma wymusić zdarzenie domenowe.
+
+**Zależności**
+
+- §12, §20, §23; przyszły EPIC kodu inboxu (poza tym rozdziałem).
+
+---
+
+### 21.2 Słownik
+
+| Pojęcie                | Znaczenie Thin                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| **Wiadomość**          | Skrót narracyjny / systemowy **skutku** zdarzenia domenowego                    |
+| **Skrzynka (inbox)**   | In-app lista wiadomości klubu — limitowana                                      |
+| **CTA wiadomości**     | Co najwyżej jeden deep-link do **istniejącej** lokalizacji produktu             |
+| **Skrót oferty**       | Wiadomość wskazująca sprawę transferową — **bez** procesu nego/settle           |
+| **Zdarzenie domenowe** | Fakt w module gry (mecz, transfer, sezon, onboarding, …) — przyczyna wiadomości |
+| **Powiadomienie**      | Alert kanałowy (§22) — **≠** wiadomość w skrzynce                               |
+| **Cel dnia**           | Lekki hak §20 — wiadomość może wskazywać; nie zastępuje                         |
+
+---
+
+### 21.3 Typy jakościowe nadawców
+
+**Cel**  
+Nazwać rodzaje bez katalogu ID contentu i bez generatorów AI.
+
+| Typ (Thin)         | Sens jakościowy                               | Typowy skutek jakiego zdarzenia (przykłady)  |
+| ------------------ | --------------------------------------------- | -------------------------------------------- |
+| **Zarząd**         | Ton klubu / oczekiwania / powitanie           | Onboarding · miękki landing sezonowy         |
+| **System**         | Fakt produktowy (okno, odblokowanie, stan)    | Okno transferowe · unlock modułu · soft-lock |
+| **Media / flavor** | Klimat · bez obowiązku decyzji                | Po meczu · derby · narracja lekka            |
+| **Agent / flavor** | Klimat rynkowy — **nie** osobny process ofert | Sygnał „jest sprawa na rynku” → Transfery    |
+| **Skrót oferty**   | Nawigacja do §12                              | Pojawienie / zmiana sprawy w **Transferach** |
+
+**Zasady**
+
+1. Typ nie tworzy osobnego silnika domeny.
+2. Brak typów wymagających microtransaction (§27).
+3. Brak czatów agentów / wątków nego w Thin.
+
+---
+
+### 21.4 Priorytet · limit · rotacja (jakościowo)
+
+**Cel**  
+Zachować „inbox zero menedżerski” bez cron-spec i bez liczb.
+
+**Przebieg**
+
+1. Priorytet jakościowy: sprawy wymagające decyzji (np. skrót oferty) > informacja systemowa > flavor.
+2. Limit: skrzynka ma być **przejrzysta** — nadmiar = błąd produktu, nie „więcej engagementu”.
+3. Rotacja / świeżość: powiązana z kontekstem kalendarza i zdarzeń (§10 / §23), nie z losowym grindem.
+4. Brak kary za nieprzeczytanie (spójnie z soft FOMO §20 / §3.10).
+5. Szczegóły timerów / persistencji / archiwum pełnego = Future / implementacja później.
+
+**Zależności**
+
+- §3.10, §10, §20, §23.
+
+---
+
+### 21.5 CTA i deep-link do istniejących ekranów
+
+**Cel**  
+Jedna wiadomość → co najwyżej jeden sensowny krok w istniejącej IA.
+
+| Typ jakościowy     | Dozwolony cel CTA (przykłady jakościowe) |
+| ------------------ | ---------------------------------------- |
+| Powitalna / zarząd | Hub · Kadra · ścieżka pierwszego meczu   |
+| System             | Terminarz · Finanse · Trening · Hub      |
+| Media / flavor     | Hub · brak CTA                           |
+| Skrót oferty       | **wyłącznie Transfery**                  |
+
+**Zakazy**
+
+1. CTA do nieistniejącego modułu jako fałszywego SSOT.
+2. CTA uruchamiające settle / nego / Accept **poza** ekranem Transferów.
+3. Wiele równorzędnych CTA konkurujących z Hub Primary.
+
+**Zależności**
+
+- §23; Guide Presentation Contract; mapa lokalizacji produktu.
+
+---
+
+### 21.6 Relacja do Transferów (§12) — skrót vs SSOT procesu
+
+**Cel**  
+Zamrozić: jeden proces ofert.
+
+**Przebieg**
+
+1. Lista · nego · Accept / Reject / Counter · settle = **wyłącznie** §12 (i implementacja transferów).
+2. §21 może pokazać **skrót** („masz sprawę transferową”) z deep-linkiem do Transferów.
+3. §21 **nie** definiuje stanów oferty, kwot, timeoutów ani drugiej listy decyzyjnej.
+4. Odczytanie lub zignorowanie skrótu **nie** zamyka ani nie akceptuje oferty.
+
+**Kontrakt**
+
+| Warstwa          | SSOT                     |
+| ---------------- | ------------------------ |
+| Proces oferty    | §12 / Transfery          |
+| Skrót narracyjny | §21 (skutek + nawigacja) |
+
+**Zależności**
+
+- §12; zasada §21.1a.
+
+---
+
+### 21.7 Relacja do §20 · §22 · §23 · §3
+
+**§20 Zadania**
+
+1. Cel dnia pozostaje w §20 (dokładnie jeden główny na Hubie).
+2. Wiadomość może **wskazywać** cel / sprawę dnia — nie tworzy Quest Boardu.
+3. W dniu meczowym mecz > zadanie (§20 / §23) — wiadomość nie odwraca tej hierarchii.
+
+**§22 Powiadomienia**
+
+1. Wiadomość w skrzynce ≠ alert push / email.
+2. Ten rozdział **nie** projektuje kanałów push — to GDD-22.
+3. Soft FOMO i brak kary za nieobecność — spójne z §20; push nie może karać (§22).
+
+**§23 Hub**
+
+1. Dzień meczowy: Primary = mecz / przygotowanie — **wiadomość nigdy nie jest Primary**.
+2. Skrót wiadomości = warstwa 5 (pomocnicza) lub Secondary w idle / nowy klub.
+3. Progressive disclosure: inbox nie konkuruje wizualnie z Primary.
+
+**§3 / onboarding**
+
+1. Wiadomość powitalna zarządu = typ jakościowy **po** utworzeniu klubu / we właściwym momencie pętli.
+2. **Nie blokuje** Primary CTA pierwszego meczu / Hubu.
+
+**Zależności**
+
+- §3, §5, §20, §22, §23.
+
+---
+
+### 21.8 Placeholder UI — nie-SSOT
+
+**Cel**  
+Odciąć mocki od designu.
+
+**Przebieg**
+
+1. Istniejący placeholder skrzynki (np. trasa `/messages`, podgląd „Wiadomości” na Hubie, atrapy Overlay) **nie jest źródłem prawdy**.
+2. **Zakaz** traktowania mocków jako specyfikacji typów, limitów, CTA, unlock ani procesu ofert.
+3. Przyszły EPIC kodu / UI musi wynikać z **tego rozdziału** oraz Guide Presentation Contract; mocki należy zastąpić lub usunąć, nie „ożywiać”.
+
+---
+
+### 21.9 Thin vs Future
+
+| Element                       | Thin | Future                      |
+| ----------------------------- | ---- | --------------------------- |
+| In-app inbox                  | TAK  | pogłębiony                  |
+| Typy jakościowe               | TAK  | katalog contentu / szablony |
+| Limit / rotacja jakościowa    | TAK  | reguły techniczne / cron    |
+| CTA → istniejące ekrany       | TAK  | —                           |
+| Skrót oferty → Transfery      | TAK  | —                           |
+| Zasada skutku (§21.1a)        | TAK  | —                           |
+| Push / email / SMS            | NIE  | §22 / osobny EPIC           |
+| Archiwum pełne / wyszukiwarka | NIE  | TAK                         |
+| Chat agentów / wątki nego     | NIE  | NIE (zakaz driftu vs §12)   |
+| AI generowanie treści         | NIE  | tylko po Owner GO           |
+| DB / resolver / kod           | NIE* | osobny EPIC                 |
+| Liczby §26                    | NIE  | N/A dla inbox               |
+
+\*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
+
+---
+
+### 21.10 Decyzje gracza (Thin)
+
+- Czy otworzyć skrót / skrzynkę.
+- Czy przejść CTA do lokalizacji domeny.
+- Czy zignorować wiadomość (bez kary sezonowej).
+
+---
+
+### 21.11 Zależności i ZERO DUPLICATE
+
+| System   | Relacja                                                           |
+| -------- | ----------------------------------------------------------------- |
+| §12      | SSOT ofert; §21 = skrót + deep-link                               |
+| §20      | Cel dnia; wiadomość wskazuje, nie redefiniuje                     |
+| §22      | Granica: skrzynka ≠ push                                          |
+| §23      | Hub Primary nienaruszony; warstwa 5 / Secondary                   |
+| §3 / §5  | Powitalna jako skutek onboardingu                                 |
+| §19      | Osiągnięcia mogą mieć komunikat później — bez dublowania katalogu |
+| §9 / §10 | Zdarzenia meczowe / sezonowe jako typowe przyczyny wiadomości     |
+| Guide UI | Presentation Contract — osobny od logiki domeny                   |
+
+---
+
+### 21.12 Kontrakty produktowe §21
+
+1. **Wiadomość = skutek zdarzenia domenowego — nigdy przyczyna.**
+2. **In-app only** w Thin.
+3. **Transfery = jedyny SSOT procesu ofert**; §21 = skrót + link.
+4. **CTA ≤1** · tylko istniejące ekrany.
+5. **Nie spam** — limit i priorytet jakościowy.
+6. **§20 / §23** — bez redefinicji celu dnia i bez Primary dnia meczu.
+7. **§22** — tylko granica; push poza zakresem.
+8. **Placeholder messages ≠ SSOT.**
+9. **SSOT FIRST · REUSE FIRST · ZERO DUPLICATE · Presentation ≠ Domain** — egzekwowane przez §21.1a.
+10. **Bez kodu / DB / liczb / AI** w tym rozdziale.
+
+---
+
+### 21.13 Status checklisty §21
+
+- [x] Filozofia inboxu · zasada skutku (§21.1a) · słownik
+- [x] Typy jakościowe · limit / rotacja · CTA
+- [x] Transfery = SSOT ofert · skrót tylko
+- [x] Granice §20 · §22 · §23 · §3
+- [x] Placeholder nie-SSOT · Thin vs Future · kontrakty
+- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-21 docs)
+- [ ] Sync statusów projektu (DOCS CLOSE po Owner VERIFY)
 
 ---
 
