@@ -92,7 +92,6 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 | ------------------------------- | -------------------------------- |
 | **LFE-DAILY-01** (kod)          | **READY FOR AUDIT** · po GDD-20  |
 | LFE-ACHIEVEMENTS-01 (kod)       | po GDD-19 · osobny AUDIT         |
-| LFE-ACHIEVEMENTS-01 (kod)       | po GDD-19 · osobny AUDIT         |
 | LFE-RANKING-01 (kod)            | po GDD-18 · osobny AUDIT         |
 | Full 22-fixture season (opt.)   | po LEAGUE-03 · GDD §10 home+away |
 | Zawężenie LFE PUBLIC exports    | chore                            |

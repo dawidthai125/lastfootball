@@ -51,7 +51,7 @@ Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](.
 
 ## Decyzje
 
-[`DECISIONS.md`](./DECISIONS.md) · D19 · D20 · D21 · D22 · **D23**.
+[`DECISIONS.md`](./DECISIONS.md) · D19 · D20 · D21 · D22 · D23 · **D24**.
 
 ## Last updated
 

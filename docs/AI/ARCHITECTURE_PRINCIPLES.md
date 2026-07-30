@@ -87,12 +87,30 @@ Wzorcę operacyjne: [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md). Reguły warstw
 
 ---
 
+## PRESENTATION ≠ DOMAIN
+
+**Opis:** EPICi prezentacji (UI / motion / copy / chrome) **nie** zmieniają resolverów, DTO, unlock ani settlement. Domain EPICi **nie** „łatwią” layoutu poza kontraktem Guide.  
+**Uzasadnienie:** Drift UI↔domena psuje SSOT i cold start.  
+**Przykład:** MOTION-01 = CSS Thin (Guide §8); Academy/Scouting UI tylko konsumuje `resolveClubAcademy` / `resolveClubScouting`.  
+**SSOT kontraktu UI:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
+
+---
+
+## INFORMATION THIN
+
+**Opis:** Warstwa informacji (np. skauting) **porządkuje fakty** wspierające decyzję menedżera — **nie** ocenia zawodnika i **nie** podejmuje decyzji za gracza.  
+**Uzasadnienie:** Unika drugiego modelu oceny / AI pick / scout_score jako ukrytego SSOT.  
+**Przykład:** `scout_shortlist` = refs `(club_id, player_id)` → `players.id`; zero wpływu na AI, rynek, transfery, potencjał, symulację (D24).  
+**Skrót:** [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
+
+---
+
 ## OWNER GO FOR MUTATIONS OF RECORD
 
 **Opis:** Commit, push i decyzje produktowe tylko po jawnym Owner GO.  
 **Uzasadnienie:** Historia `main` = produkcja.  
-**Przykład:** Pipeline kończy się CLOSE dopiero po GREEN CI i akceptacji Ownera.
+**Przykład:** Pipeline kończy się FULLY CLOSED dopiero po PRODUCTION VERIFY + DOCS CLOSE path i akceptacji Ownera.
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-30 — AI-DOCS-HARDENING-01 (Presentation ≠ Domain · Information Thin)

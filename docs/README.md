@@ -27,6 +27,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 1. [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md)
 2. [`AI/START_HERE.md`](./AI/START_HERE.md)
 3. [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)
+   3b. [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md)
 4. [`AI/ARCHITECTURE_RULES.md`](./AI/ARCHITECTURE_RULES.md)
 5. [`AI/ARCHITECTURE_PRINCIPLES.md`](./AI/ARCHITECTURE_PRINCIPLES.md)
 6. [`AI/COMMON_PATTERNS.md`](./AI/COMMON_PATTERNS.md)
@@ -45,6 +46,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | [AI/PROJECT_HANDOFF.md](./AI/PROJECT_HANDOFF.md)                 | **Master handoff** AI   |
 | [AI/START_HERE.md](./AI/START_HERE.md)                           | Onboarding map          |
 | [AI/CURRENT_BASELINE.md](./AI/CURRENT_BASELINE.md)               | Feature baseline vs tip |
+| [AI/ARCHITECTURAL_DECISIONS.md](./AI/ARCHITECTURAL_DECISIONS.md) | Skrót D19–D24 + Thin    |
 | [AI/MODULE_MAP.md](./AI/MODULE_MAP.md)                           | Katalogi / moduły       |
 | [AI/EPIC_INDEX.md](./AI/EPIC_INDEX.md)                           | Indeks EPIC             |
 | [AI/ARCHITECTURE_RULES.md](./AI/ARCHITECTURE_RULES.md)           | Warstwy + SSOT          |
@@ -95,4 +97,4 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSE
+2026-07-30 — AI-DOCS-HARDENING-01

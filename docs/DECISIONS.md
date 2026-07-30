@@ -215,13 +215,35 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Presentation  | pasma potential only · brak poziomów akademii / budżetu                                                 |
 | LFE           | **zero zmian**                                                                                          |
 
-**Poza Thin:** poziomy ośrodka · cash-gate · trening akademii · auto-promote · skauting §17 · inbox §21/§22.  
+**Poza Thin:** poziomy ośrodka · cash-gate · trening akademii · auto-promote · inbox §21/§22.  
 **Źródło:** LFE-ACADEMY-01 (feat `9c6fe86` · tip prior `4a516f3`).  
-**Operacyjne:** Migracja `20260730120000_academy_track.sql` zastosowana na prod.
+**Operacyjne:** Migracja `20260730120000_academy_track.sql` zastosowana na prod.  
+**Skauting:** osobna decyzja **D24** (ten sam `players` — shortlista = refs only).
+
+### D24 — Scouting Information Thin (`resolveClubScouting` · `scout_shortlist`) · CLOSED
+
+**Dlaczego:** GDD §17 Thin B wymaga opcjonalnej warstwy informacji bez drugiego modelu zawodnika i bez oceny za gracza.  
+**Zasada:**
+
+| Fakt        | SSOT / kontrakt                                                                                    |
+| ----------- | -------------------------------------------------------------------------------------------------- |
+| Model       | Kandydaci wyłącznie z `players` (D19) — zakaz drugiego modelu / hidden players / youth scout table |
+| UI          | **tylko** `resolveClubScouting` → `ScoutingDto`                                                    |
+| REUSE       | `resolveTransferMarket` · potential pasma (D22) · filtry Academy/senior (D23) — bez forka fee/OVR  |
+| Shortlista  | `scout_shortlist` = **wyłącznie** `(club_id, player_id)` → `players.id` (+ `created_at`)           |
+| Persist     | Preferencje menedżera — **zero** kolumn skill / potential / scout_score / AI rank                  |
+| Side-effect | Shortlista **nie** wpływa na AI, rynek, transfery, potencjał ani symulację                         |
+| Rola Thin   | Skauting **porządkuje** informacje; **nie** ocenia zawodnika i **nie** podejmuje decyzji za gracza |
+| Unlock nav  | soft-lock przed SEASON · **open** w SEASON                                                         |
+| LFE         | **zero zmian**                                                                                     |
+
+**Poza Thin:** fog · regiony · misje · koszty · personel · `scout_score` / AI ranking · hidden potential.  
+**Źródło:** LFE-SCOUTING-01 (feat `93fd6d5` · tip docs `cae2323`).  
+**Operacyjne:** Migracja `20260730140000_scout_shortlist.sql` zastosowana na prod.
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D23 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D24 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -232,12 +254,13 @@ Każde złamanie D1–D23 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-TRANSFERS-07 (2026-07-26):** Pending H2H `transfer_offers`; Thin presets; supersede; brak escrow/timeout.  
 **LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
 **LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
-**LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.
+**LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.  
+**LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md)
 
 ## Last updated
 
-2026-07-30 — LFE-ACADEMY-01 · D23
+2026-07-30 — LFE-SCOUTING-01 · D24 · AI-DOCS-HARDENING-01

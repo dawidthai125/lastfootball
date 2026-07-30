@@ -23,7 +23,8 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 ## Pipeline (jedyny)
 
 ```
-AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI
+  → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
@@ -45,7 +46,7 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Powiązane
 
-[`../../AGENTS.md`](../../AGENTS.md) · [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)
+[`../../AGENTS.md`](../../AGENTS.md) · [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) · [`START_HERE.md`](./START_HERE.md) · [`EPIC_INDEX.md`](./EPIC_INDEX.md) · [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md)
 
 ## Status
 

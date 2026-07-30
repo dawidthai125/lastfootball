@@ -7,21 +7,26 @@ Jak prowadzić EPIC z Ownerem i Cursor / ChatGPT.
 ## Pipeline (jedyny — obowiązkowy)
 
 ```
-AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI
+  → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-| Etap       | Agent                                    | Owner                           |
-| ---------- | ---------------------------------------- | ------------------------------- |
-| AUDIT      | stan kodu/docs, luki, ryzyka             | czyta raport                    |
-| PLAN       | M1–Mn, SSOT, poza zakresem, AC           | **GO → IMPLEMENT**              |
-| IMPLEMENT  | kod/docs w scope                         | **GO → COMMIT** (po VALIDATION) |
-| VALIDATION | format · typecheck · lint · test · build | —                               |
-| COMMIT     | jeden spójny commit; bez sekretów        | **GO → PUSH**                   |
-| PUSH       | `git push`                               | —                               |
-| CI         | monitor Format→…→Secret scan = GREEN     | **GO → CLOSE**                  |
-| CLOSE      | sync status docs (ROADMAP, BASELINE, …)  | akceptacja FULLY CLOSED         |
+| Etap              | Agent                                                      | Owner                           |
+| ----------------- | ---------------------------------------------------------- | ------------------------------- |
+| AUDIT             | stan kodu/docs, luki, ryzyka                               | czyta raport                    |
+| PLAN              | M1–Mn, SSOT, poza zakresem, AC                             | **GO → IMPLEMENT**              |
+| IMPLEMENT         | kod/docs w scope                                           | **GO → COMMIT** (po VALIDATION) |
+| VALIDATION        | format · typecheck · lint · test · build                   | —                               |
+| COMMIT            | jeden spójny commit; bez sekretów                          | **GO → PUSH**                   |
+| PUSH              | `git push`                                                 | —                               |
+| CI                | monitor Format→…→Secret scan = GREEN                       | —                               |
+| PRODUCTION VERIFY | Vercel · smoke · migracje prod (jeśli dotyczy)             | przegląd / PASS                 |
+| DOCS CLOSE        | sync STATUS · ROADMAP · BASELINE · HANDOFF · CHANGELOG · … | **GO → DOCS COMMIT**            |
+| DOCS COMMIT       | commit docs                                                | **GO → DOCS PUSH**              |
+| DOCS PUSH         | `git push` docs                                            | —                               |
+| FINAL DOCS VERIFY | CI tip · tip pin · raport **EPIC FULLY CLOSED**            | akceptacja FULLY CLOSED         |
 
-Praktyka: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md).
+Praktyka: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · [`../WORKFLOW.md`](../WORKFLOW.md) · [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md).
 
 ## Zasady EPIC-u
 
@@ -29,23 +34,25 @@ Praktyka: [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md) · [`../RELEASE_PROCE
 2. **Poza zakresem** w PLAN — nie ruszaj.
 3. **Bez commit/push** aż Owner GO.
 4. Raport końcowy każdego etapu (szablon w zadaniu Ownera).
-5. Po CLOSE: aktualizuj **ROADMAP** (lista EPIC), **CURRENT_BASELINE** (feature hash), CHANGELOG — bez kopiowania pełnych list EPIC do 5 plików.
+5. Po DOCS CLOSE: aktualizuj **ROADMAP** (lista EPIC), **CURRENT_BASELINE** (feature hash), CHANGELOG — bez kopiowania pełnych list EPIC do 5 plików.
+6. **Nie** uznawaj EPIC za CLOSED po samym CI GREEN — wymagany PRODUCTION VERIFY + docs CLOSE path.
 
 ## Definition of Done (kod)
 
 - AC z PLAN spełnione
 - format · typecheck · lint · test · build PASS
 - CI GREEN po push
+- PRODUCTION VERIFY PASS (gdy feat / migracja)
 - brak runtime mocków; SSOT zachowany
-- docs zsynchronizowane przy CLOSE
+- docs zsynchronizowane; FINAL DOCS VERIFY · **EPIC FULLY CLOSED**
 
 ## Naming
 
-- Product: `LFE-PLATFORM-01`, `LFE-TRAINING-01`, …
+- Product: `LFE-PLATFORM-01`, `LFE-TRAINING-01`, `LFE-SCOUTING-01`, …
 - Engine: EPIC-1…7, `LFE-*-01` (Canvas, Replay, …)
 - Design: `GDD-NN`
-- Docs hygiene / consolidation: `AI-DOCS-HYGIENE-01`, `AI-DOCS-CONSOLIDATION-02`
+- Docs hygiene: `AI-DOCS-HYGIENE-01`, `AI-DOCS-CONSOLIDATION-02`, `AI-DOCS-AUDIT-01`, `AI-DOCS-HARDENING-01`
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-30 — AI-DOCS-HARDENING-01

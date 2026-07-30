@@ -97,11 +97,12 @@ LFE-DOCS-01 · DOCS-UX-03 · DOCS-SYNC-01 · DOCS-BASELINE-01 · **LFE-HANDOFF-0
 - First Match **przed** Hubem; unlock Hub = `first_match_completed_at`.
 - Domain UI **tylko** przez resolvery; **NO RUNTIME MOCKS**; **SEED ≠ RUNTIME**.
 - Transfer settle **tylko** `completeTransferBuy` / `completeTransferSell`.
-- UI presentation ≠ zmiana DTO / unlock / settlement (Guide §16).
+- UI presentation ≠ zmiana DTO / unlock / settlement (Guide §16) — **Presentation ≠ Domain**.
 - Visual DNA / Style Lock / World Art / tokeny / branding SVG — **bez driftu** bez osobnego Owner GO.
 - Kalendarz Thin = **11** fixtures (≠ GDD 22) — świadomy wyjątek.
+- **Information Thin / Skauting (D24):** shortlista = refs only; porządkuje informacje, **nie** ocenia / nie decyduje za gracza; zero wpływu na AI/rynek/symulację.
 
-Pełny indeks: [`DECISIONS.md`](./DECISIONS.md) · [`../DECISIONS.md`](../DECISIONS.md).
+Pełny indeks: [`../DECISIONS.md`](../DECISIONS.md) · skrót trwały: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
 
@@ -127,6 +128,7 @@ Pełny indeks: [`DECISIONS.md`](./DECISIONS.md) · [`../DECISIONS.md`](../DECISI
 | Liga            | `fixtures` · `resolveLeagueTable`                                                               |
 | Kadra           | `players` (+ `potential` · `academy_track`) · `resolveClubSquad` · match development · pasma UI |
 | Akademia        | `resolveClubAcademy` · Intake/Promote · max 3 · D23                                             |
+| Skauting        | `resolveClubScouting` · `scout_shortlist` `(club_id, player_id)` → `players.id` · D24           |
 | Trening         | `resolveClubTraining` · `last_training_on` · skill Thin ≤ potential · XI Gate · senior filter   |
 | Hub             | `resolveHubPhase` · `resolvePrimaryCta`                                                         |
 | UI presentation | `UI_DESIGN_GUIDE.md` §16 · `UI_COPY`                                                            |
@@ -336,21 +338,22 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ```
 AUDIT → (RCA jeśli regresja) → PLAN → OWNER GO → IMPLEMENT → VERIFY
-  → COMMIT → PUSH → CI GREEN → PRODUCTION VERIFY → CLOSE
+  → COMMIT → PUSH → CI GREEN → PRODUCTION VERIFY
+  → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-| Etap              | Zasada                                                       |
-| ----------------- | ------------------------------------------------------------ |
-| AUDIT             | stan kodu/docs · luki · ryzyka — **bez** IMPLEMENT bez GO    |
-| PLAN              | scope · AC · poza zakresem · SSOT                            |
-| OWNER GO          | jedyny sygnał do kodu / commit / push                        |
-| IMPLEMENT         | tylko scope PLAN                                             |
-| VERIFY            | format · typecheck · lint · test · build                     |
-| COMMIT            | jeden spójny commit; bez sekretów                            |
-| PUSH              | `main` lub uzgodniony branch                                 |
-| CI                | GREEN obowiązkowe przed CLOSE                                |
-| PRODUCTION VERIFY | Vercel / smoke krytycznej ścieżki gdy feat                   |
-| CLOSE             | sync ROADMAP · PROJECT_STATUS · CURRENT_BASELINE · CHANGELOG |
+| Etap              | Zasada                                                    |
+| ----------------- | --------------------------------------------------------- |
+| AUDIT             | stan kodu/docs · luki · ryzyka — **bez** IMPLEMENT bez GO |
+| PLAN              | scope · AC · poza zakresem · SSOT                         |
+| OWNER GO          | jedyny sygnał do kodu / commit / push                     |
+| IMPLEMENT         | tylko scope PLAN                                          |
+| VERIFY            | format · typecheck · lint · test · build                  |
+| COMMIT            | jeden spójny commit; bez sekretów                         |
+| PUSH              | `main` lub uzgodniony branch                              |
+| CI                | GREEN obowiązkowe przed CLOSE                             |
+| PRODUCTION VERIFY | Vercel / smoke / migracje gdy feat                        |
+| DOCS CLOSE…       | sync SSOT · tip pin · **EPIC FULLY CLOSED**               |
 
 Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
 
@@ -358,30 +361,31 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## 15. Current Project Health
 
-| Obszar       | Ocena        | Komentarz                                                            |
-| ------------ | ------------ | -------------------------------------------------------------------- |
-| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                            |
-| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                                       |
-| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                          |
-| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                             |
-| Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + **Scouting** |
-| Dokumentacja | **Aktualna** | SCOUTING-01 CLOSE · Domain `93fd6d5` · Presentation `9fd14fc`        |
-| CI           | **GREEN**    | tip feat fix VERIFIED · docs CLOSE na kolejnym tipie                 |
-| Production   | **GREEN**    | Vercel · Domain SCOUTING-01 `93fd6d5`                                |
+| Obszar       | Ocena        | Komentarz                                                               |
+| ------------ | ------------ | ----------------------------------------------------------------------- |
+| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                               |
+| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                                          |
+| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                             |
+| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                |
+| Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + **Scouting**    |
+| Dokumentacja | **Aktualna** | HARDENING-01 · SCOUTING D24 · Domain `93fd6d5` · Presentation `9fd14fc` |
+| CI           | **GREEN**    | tip feat VERIFIED · docs tip `cae2323`                                  |
+| Production   | **GREEN**    | Vercel · Domain SCOUTING-01 `93fd6d5`                                   |
 
 ---
 
 ## Powiązania
 
-| Dokument                                       | Rola                                     |
-| ---------------------------------------------- | ---------------------------------------- |
-| [`AI_QUICK_START.md`](./AI_QUICK_START.md)     | 1 ekran                                  |
-| [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) | **SSOT hashy**                           |
-| [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) | **SSOT statusu**                         |
-| [`../ROADMAP.md`](../ROADMAP.md)               | **SSOT listy EPIC**                      |
-| [`../HANDOFF.md`](../HANDOFF.md)               | krótki alias                             |
-| [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md) | mapa architektury (bez kopiowania hashy) |
+| Dokument                                                     | Rola                                     |
+| ------------------------------------------------------------ | ---------------------------------------- |
+| [`AI_QUICK_START.md`](./AI_QUICK_START.md)                   | 1 ekran                                  |
+| [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) | skrót D19–D24 + Thin principles          |
+| [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               | **SSOT hashy**                           |
+| [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               | **SSOT statusu**                         |
+| [`../ROADMAP.md`](../ROADMAP.md)                             | **SSOT listy EPIC**                      |
+| [`../HANDOFF.md`](../HANDOFF.md)                             | krótki alias                             |
+| [`../MASTER_HANDOFF.md`](../MASTER_HANDOFF.md)               | mapa architektury (bez kopiowania hashy) |
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · next **LFE-DAILY-01 READY FOR AUDIT**
+2026-07-30 — AI-DOCS-HARDENING-01 · D24 · next **LFE-DAILY-01 READY FOR AUDIT**

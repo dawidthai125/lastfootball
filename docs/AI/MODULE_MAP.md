@@ -31,6 +31,8 @@ lastfootball/
 | Liga          | `resolveLeagueTable`                    | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
 | Finanse       | `resolveClubFinance`                    | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
 | Kadra         | `resolveClubSquad`                      | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
+| Akademia      | `resolveClubAcademy`                    | `lib/academy/`                   | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Academy Thin A)                                                         |
+| Skauting      | `resolveClubScouting`                   | `lib/scouting/`                  | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Scouting Thin B) · D24                                                  |
 | Transfery     | `resolveTransferMarket`                 | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
 | Trening       | `resolveClubTraining`                   | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
 | Auth / klub   | session + club DTO                      | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
@@ -40,10 +42,12 @@ lastfootball/
 ## Relacje (skrót)
 
 ```
-Hub CTA ──► /matches | /transfers | /training | /league | /finance
+Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
 complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
 training ──► players.status + players.skill (≤ potential) + clubs.last_training_on (RPC)
+academy ──► players.academy_track / promoted_at (Intake + Promote; D23)
+scouting ──► resolveClubScouting + scout_shortlist refs (club_id, player_id) → players.id (D24)
 Live match ──► LFE MatchSession / CommandBus (nie z Canvas)
 ```
 
@@ -56,15 +60,16 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Supabase
 
-| Obszar    | Tabele / RPC (skrót)                                                                      |
-| --------- | ----------------------------------------------------------------------------------------- |
-| Klub      | `clubs` (`cash_balance`, `transfer_window_open`, `last_training_on`, …)                   |
-| Kadra     | `players` (`potential`, `transfer_listed_at`, `departed_at`, status)                      |
-| Rozwój    | `match_development_log` · RPC `apply_match_development` · RPC `complete_training_session` |
-| Liga      | `fixtures`                                                                                |
-| Finanse   | `finance_movements`                                                                       |
-| Transfery | `transfer_deals`, `transfer_offers`, RPC live H2H                                         |
+| Obszar     | Tabele / RPC (skrót)                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| Klub       | `clubs` (`cash_balance`, `transfer_window_open`, `last_training_on`, …)                   |
+| Kadra      | `players` (`potential`, `transfer_listed_at`, `departed_at`, `academy_track`, status)     |
+| Shortlista | `scout_shortlist` — wyłącznie `(club_id, player_id)` → `players.id` (preferencje; D24)    |
+| Rozwój     | `match_development_log` · RPC `apply_match_development` · RPC `complete_training_session` |
+| Liga       | `fixtures`                                                                                |
+| Finanse    | `finance_movements`                                                                       |
+| Transfery  | `transfer_deals`, `transfer_offers`, RPC live H2H                                         |
 
 ## Status
 
-**ACTIVE** · 2026-07-29 — LFE-PLAYERS-02
+**ACTIVE** · 2026-07-30 — AI-DOCS-HARDENING-01 (Academy + Scouting)

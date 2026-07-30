@@ -17,7 +17,7 @@ Last Football is built so a new agent session can work from **`docs/` + code alo
 7. [`docs/AI/COMMON_PATTERNS.md`](docs/AI/COMMON_PATTERNS.md)
 8. [`docs/AI/EPIC_WORKFLOW.md`](docs/AI/EPIC_WORKFLOW.md)
 9. [`docs/AI/ENGINEERING_GUIDE.md`](docs/AI/ENGINEERING_GUIDE.md)
-10. Task-specific: [`docs/AI/MODULE_MAP.md`](docs/AI/MODULE_MAP.md) · platform / LFE / GDD · status [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)
+10. Task-specific: [`docs/AI/MODULE_MAP.md`](docs/AI/MODULE_MAP.md) · [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md) · platform / LFE / GDD · status [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)
 
 ## Hard rules (never violate)
 
@@ -30,13 +30,15 @@ Last Football is built so a new agent session can work from **`docs/` + code alo
 - Canvas / Replay never call Engine or mutate `MatchState`.
 - Hub is a **decision screen**, not a mid-season dashboard.
 - First Hub unlock: `clubs.first_match_completed_at`.
-- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSquad`, `resolveClubAcademy`, `resolveTransferMarket`, `resolveClubTraining`, …).
+- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSquad`, `resolveClubAcademy`, `resolveClubScouting`, `resolveTransferMarket`, `resolveClubTraining`, …).
 - UI presentation EPICs: follow [`docs/game-design/UI_DESIGN_GUIDE.md`](docs/game-design/UI_DESIGN_GUIDE.md) §16 (Presentation Contract); do not change resolvers/DTO/unlock without a domain Owner GO.
+- **Presentation ≠ Domain** · **Information Thin** (skauting porządkuje, nie decyduje) — skrót: [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Pipeline (jedyny)
 
 ```
-AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI
+  → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
 ## Feature baseline (skrót)
@@ -46,4 +48,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01
+2026-07-30 — AI-DOCS-HARDENING-01
