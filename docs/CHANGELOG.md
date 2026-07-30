@@ -10,8 +10,20 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`9c6fe86`** (LFE-ACADEMY-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`57a5875`** — LFE-ACADEMY-01 CLOSE.  
+**Documentation tip:** _(CLOSE)_ — **GDD-21** (content `bf07a44`).  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — GDD-21 · CLOSED
+
+### Docs
+
+- §21 Wiadomości Thin w `GAME_DESIGN_DOCUMENT.md` (inbox · skutek zdarzenia · Transfery SSOT ofert · CTA do istniejących ekranów; ≠ push/§22)
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · EPIC_INDEX · QUICK_START · game-design README
+- Documentation tip → _(CLOSE)_ (content `bf07a44`)
+- CI GREEN · PRODUCTION VERIFIED · brak zmian kodu aplikacji
+- Next: **GDD-22 READY FOR AUDIT**
 
 ---
 

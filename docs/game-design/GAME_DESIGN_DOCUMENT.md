@@ -8537,7 +8537,7 @@ Odciąć mocki od designu.
 - [x] Granice §20 · §22 · §23 · §3
 - [x] Placeholder nie-SSOT · Thin vs Future · kontrakty
 - [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-21 docs)
-- [ ] Sync statusów projektu (DOCS CLOSE po Owner VERIFY)
+- [x] Sync statusów projektu (DOCS CLOSE)
 
 ---
 

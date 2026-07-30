@@ -4,7 +4,7 @@
 **Typ:** docs-only Thin  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS (model hybrydowy · Tor A)  
-**Status PLAN:** IMPLEMENT COMPLETE · oczekuje **OWNER VERIFICATION** → potem COMMIT / DOCS CLOSE
+**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `bf07a44` · DOCS CLOSE sync
 
 ---
 
@@ -126,15 +126,15 @@ GDD-21 nazywa granicę („wiadomość w skrzynce ≠ alert push”). Szczegół
 
 ## 5. Acceptance Criteria (IMPLEMENT docs)
 
-- [ ] §21 wypełniony strukturą z §3 tego PLAN-u (Thin, bez liczb/kodu/DB).
-- [ ] Jawny kontrakt: Transfery = SSOT ofert; §21 = skrót + deep-link.
-- [ ] Jawny kontrakt: CTA tylko do istniejących ekranów.
-- [ ] Jawne OUT: push · email · AI · DB · kod.
-- [ ] Placeholder `/messages` oznaczony nie-SSOT.
-- [ ] ZERO DUPLICATE vs §20 · §12 · §22 · §23 · §19.
-- [ ] Checklista §21 + TOC / status rozdziału zaktualizowane.
-- [ ] Po Owner VERIFY: DOCS CLOSE sync (STATUS · ROADMAP · BASELINE tip · HANDOFF · EPIC_INDEX · CHANGELOG · game-design README) — **bez** zmian w `apps/` / `supabase/`.
-- [ ] Prettier docs przed commit.
+- [x] §21 wypełniony strukturą z §3 tego PLAN-u (Thin, bez liczb/kodu/DB).
+- [x] Jawny kontrakt: Transfery = SSOT ofert; §21 = skrót + deep-link.
+- [x] Jawny kontrakt: CTA tylko do istniejących ekranów.
+- [x] Jawne OUT: push · email · AI · DB · kod.
+- [x] Placeholder `/messages` oznaczony nie-SSOT.
+- [x] ZERO DUPLICATE vs §20 · §12 · §22 · §23 · §19.
+- [x] Checklista §21 + TOC / status rozdziału zaktualizowane.
+- [x] Po Owner VERIFY: DOCS CLOSE sync (STATUS · ROADMAP · BASELINE tip · HANDOFF · EPIC_INDEX · CHANGELOG · game-design README) — **bez** zmian w `apps/` / `supabase/`.
+- [x] Prettier docs przed commit.
 
 ---
 

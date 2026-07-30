@@ -16,12 +16,11 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 57a5875            # Documentation tip ACADEMY-01 CLOSE sync
+git log -1 --oneline bf07a44            # GDD-21 content (messages thin)
 git log -1 --oneline 9c6fe86            # Domain feature baseline ACADEMY-01
-git log -1 --oneline 4a516f3            # Prior tip (prettier PLAN; before DOCS CLOSE)
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
-git log -1 --oneline cd222ba            # Prior domain PLAYERS-02
-git log -1 --oneline 2c619ca            # Prior docs tip GDD-19 CLOSE
+git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
+git log -1 --oneline 1d78648            # Prior pin ACADEMY-01 tip
 ```
 
 ---
@@ -40,10 +39,10 @@ git log -1 --oneline 2c619ca            # Prior docs tip GDD-19 CLOSE
 | Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `57a5875` — **LFE-ACADEMY-01** DOCS CLOSE sync                        |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · ACADEMY-01 FULLY CLOSED             |
+| **Documentation tip**       | _(CLOSE)_ — **GDD-21** Wiadomości Thin (content `bf07a44`)            |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-21 CLOSED · ACADEMY-01 CLOSED   |
 
-Prior domain tip PLAYERS-02 = `cd222ba`. Prior tip przed CLOSE = `4a516f3` (style PLAN). Prior docs tip GDD-19 = `2c619ca`.
+Prior docs tip ACADEMY-01 CLOSE = `57a5875` (pin `1d78648`). GDD-21 content = `bf07a44`. Domain tip bez zmian (docs-only).
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -91,6 +90,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`         |
 | Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT      |
 | Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT          |
+| Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT |
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css` |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                              |
 | Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                               |
@@ -103,8 +103,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR.
 
 ## Last updated
 
-2026-07-30 — LFE-ACADEMY-01 CLOSED (Domain `9c6fe86` · tip prior `4a516f3` · Presentation `9fd14fc` · UI P0 `54d0724`)
+2026-07-30 — GDD-21 CLOSED (Domain `9c6fe86` · Presentation `9fd14fc` · content `bf07a44` · UI P0 `54d0724`)

@@ -16,14 +16,14 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN · LFE-ACADEMY-01 CLOSED** (Domain: Academy Thin A · Presentation: MOTION-01)
+**PRODUCTION VERIFIED · GREEN · GDD-21 CLOSED** (Domain: Academy · Presentation: MOTION-01 · Docs: §21 Wiadomości Thin)
 
 |                         |                                                             |
 | ----------------------- | ----------------------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)   |
 | **Domain feature**      | **`9c6fe86`** — **LFE-ACADEMY-01** (Intake + Promote · D23) |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)    |
-| **Documentation tip**   | **`57a5875`** — LFE-ACADEMY-01 DOCS CLOSE                   |
+| **Documentation tip**   | _(CLOSE)_ — **GDD-21** Wiadomości Thin (content `bf07a44`)  |
 | **Prod**                | https://lastfootball.vercel.app                             |
 
 | Tor               | Stan                                                                                                             |
@@ -31,12 +31,13 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players Dev · Transfers · Training · **Academy (01)** |
 | UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16              |
 | Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)              |
-| Design            | GDD-01…**19** (Thin) · §26 CLOSED · World Art CLOSED · GDD-21 PLAN gotowy (nie IMPLEMENT) · **next: M2.5**       |
+| Design            | GDD-01…**21** (Thin; §22 szkielet) · §26 CLOSED · World Art CLOSED · **next: GDD-22 READY FOR AUDIT**            |
 | Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN · migracja `academy_track` na prod                           |
 
 ## W trakcie
 
-Brak otwartego EPIC. **LFE-ACADEMY-01** FULLY CLOSED (feat `9c6fe86` · style `4a516f3` · PRODUCTION VERIFY PASS). Następny Owner: **M2.5 First Domain Implementation Review**.
+Brak otwartego EPIC. **GDD-21** CLOSED (content `bf07a44`) · **M2.5 PASS** · **LFE-ACADEMY-01** CLOSED.  
+**Nie startować** AUDIT GDD-22 bez Owner GO.
 
 ## Operacyjne
 
@@ -45,8 +46,8 @@ Brak otwartego EPIC. **LFE-ACADEMY-01** FULLY CLOSED (feat `9c6fe86` · style `4
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-**Rekomendacja:** **M2.5 — First Domain Implementation Review** (po Academy).  
-**Nie startować** LFE-SCOUTING-01 ani GDD-21 IMPLEMENT przed M2.5 / Owner GO.
+**Rekomendacja:** **GDD-22** (§22 Powiadomienia) — **READY FOR AUDIT** (po Owner GO).  
+Po GDD-21+22: AUDIT LFE-SCOUTING-01.
 
 ## Decyzje
 
@@ -54,4 +55,4 @@ Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](.
 
 ## Last updated
 
-2026-07-30 — LFE-ACADEMY-01 CLOSE
+2026-07-30 — GDD-21 CLOSE
