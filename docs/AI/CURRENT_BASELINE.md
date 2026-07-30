@@ -16,6 +16,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
+git log -1 --oneline 57a5875            # Documentation tip ACADEMY-01 CLOSE sync
 git log -1 --oneline 9c6fe86            # Domain feature baseline ACADEMY-01
 git log -1 --oneline 4a516f3            # Prior tip (prettier PLAN; before DOCS CLOSE)
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
@@ -39,7 +40,7 @@ git log -1 --oneline 2c619ca            # Prior docs tip GDD-19 CLOSE
 | Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | _(ten CLOSE)_ — **LFE-ACADEMY-01** DOCS CLOSE sync                    |
+| **Documentation tip**       | `57a5875` — **LFE-ACADEMY-01** DOCS CLOSE sync                        |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · ACADEMY-01 FULLY CLOSED             |
 
 Prior domain tip PLAYERS-02 = `cd222ba`. Prior tip przed CLOSE = `4a516f3` (style PLAN). Prior docs tip GDD-19 = `2c619ca`.

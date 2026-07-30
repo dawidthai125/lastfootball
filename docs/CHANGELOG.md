@@ -10,7 +10,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`9c6fe86`** (LFE-ACADEMY-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** _(CLOSE sync)_ — LFE-ACADEMY-01.  
+**Documentation tip:** **`57a5875`** — LFE-ACADEMY-01 CLOSE.  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---

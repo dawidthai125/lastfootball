@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                     |
 | **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                   |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                     |
-| **Documentation tip**           | _(CLOSE sync)_ — **LFE-ACADEMY-01** DOCS CLOSE (prior tip `4a516f3`)                      |
+| **Documentation tip**           | `57a5875` — **LFE-ACADEMY-01** DOCS CLOSE                                                 |
 | **Branch**                      | `main`                                                                                    |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **ACADEMY-01 CLOSED** · MOTION-01 · next **M2.5**           |
 
