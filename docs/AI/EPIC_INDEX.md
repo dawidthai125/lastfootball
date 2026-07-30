@@ -1,4 +1,4 @@
-﻿# AI — EPIC Index
+# AI — EPIC Index
 
 ## Cel
 
@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
 | **Domain baseline**     | **`93fd6d5`** — LFE-SCOUTING-01 CLOSED        |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | `cae2323` — **LFE-SCOUTING-01** CLOSE         |
+| **Documentation tip**   | `3c6f757` — **LFE-SCOUTING-01** CLOSE         |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 

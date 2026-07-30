@@ -1,4 +1,4 @@
-﻿# PROJECT HANDOFF — Last Football
+# PROJECT HANDOFF — Last Football
 
 **EPIC:** LFE-HANDOFF-01  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                        |
 | **Domain feature baseline**     | `93fd6d5` — **LFE-SCOUTING-01** (Information Thin · shortlist)                               |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                        |
-| **Documentation tip**           | `cae2323` — **LFE-SCOUTING-01** CLOSE sync (pin)                                             |
+| **Documentation tip**           | `3c6f757` — **AI-DOCS-HARDENING-01** CLOSE (pin)                                             |
 | **Branch**                      | `main`                                                                                       |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **SCOUTING-01 CLOSED** · ACADEMY-01 · M2.5 · next **DAILY-01** |
 
@@ -30,7 +30,7 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline cae2323     # Documentation tip SCOUTING-01 CLOSE (pin)
+git log -1 --oneline 3c6f757     # Documentation tip HARDENING-01 CLOSE (pin)
 git log -1 --oneline 93fd6d5            # Domain SCOUTING-01
 git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
@@ -369,7 +369,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + **Scouting**    |
 | Dokumentacja | **Aktualna** | HARDENING-01 · SCOUTING D24 · Domain `93fd6d5` · Presentation `9fd14fc` |
-| CI           | **GREEN**    | tip feat VERIFIED · docs tip `cae2323`                                  |
+| CI           | **GREEN**    | tip feat VERIFIED · docs tip `3c6f757`                                  |
 | Production   | **GREEN**    | Vercel · Domain SCOUTING-01 `93fd6d5`                                   |
 
 ---

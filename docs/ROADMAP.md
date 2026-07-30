@@ -1,4 +1,4 @@
-﻿# Roadmap — Last Football
+# Roadmap — Last Football
 
 ## Cel
 
@@ -9,7 +9,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
 **Domain feature baseline:** **`93fd6d5`** — LFE-SCOUTING-01 CLOSED (Information Thin).  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** `cae2323` — **LFE-SCOUTING-01** CLOSE sync (pin).  
+**Documentation tip:** `3c6f757` — **AI-DOCS-HARDENING-01** CLOSE (pin).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
