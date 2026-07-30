@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 9027baf            # Domain feature baseline LEAGUE-04
+git log -1 --oneline e6885dc            # Domain feature baseline TRANSFERS-09
+git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
 git log -1 --oneline bf86749            # Prior Domain RANKING-01
 git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
 git log -1 --oneline 73e1361            # Prior Domain DAILY-01
@@ -36,12 +37,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `9027baf` — **LFE-LEAGUE-04** (Full 22 · double RR)                   |
-| Domain message              | `feat(league): implement LFE-LEAGUE-04 full 22-fixture double RR`     |
+| **Domain feature baseline** | `e6885dc` — **LFE-TRANSFERS-09** (fee parity · single live settle)    |
+| Domain message              | `feat(transfers): harden LFE-TRANSFERS-09 TD-01 and TD-02`            |
+| Prior Domain                | `9027baf` — LFE-LEAGUE-04 (Full 22 · double RR)                       |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)                             |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · LEAGUE-04 CLOSED · RANKING-01       |
+| **Documentation tip**       | _(pin po docs sync — patrz tip `main`)_                               |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · TRANSFERS-09 CLOSED · TD-01/TD-02   |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -126,13 +128,13 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Operacyjne
 
-> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01:** brak nowych migracji (derive only).
+> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09).  
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04:** brak nowych migracji schematu tabel (LEAGUE-04 = top-up fixtures).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf` · Presentation `9fd14fc`
+2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc` · TD-01/TD-02 CLOSED · D38

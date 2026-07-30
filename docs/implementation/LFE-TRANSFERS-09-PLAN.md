@@ -4,8 +4,9 @@
 **Typ:** Domain hardening — parity fee/nego TS↔SQL · single live RPC invoke  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT COMPLETE · Owner **GO PLAN** · TRANSFERS-01…08 CLOSED · D20  
-**Status PLAN:** DRAFT — czeka na Owner **GO IMPLEMENT**  
-**Baseline wejścia:** tip `39817db` · Domain LEAGUE-04 `9027baf` · transfers baseline feature `9b1c575`
+**Status PLAN:** CLOSED · EPIC LFE-TRANSFERS-09 FULLY CLOSED (feat `e6885dc` · PRODUCTION VERIFY PASS · DOCS CLOSE)  
+**Baseline wejścia:** tip `39817db` · Domain LEAGUE-04 `9027baf` · transfers baseline feature `9b1c575`  
+**Domain feat:** `e6885dc`
 
 ---
 

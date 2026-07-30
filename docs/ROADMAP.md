@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`9027baf`** — LFE-LEAGUE-04 CLOSED (Full 22 · double RR).
+**Domain feature baseline:** **`e6885dc`** — LFE-TRANSFERS-09 CLOSED (fee parity · single live settle).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · **Transfers Hardening (09)** · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -62,6 +62,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 | **LFE-TRANSFERS-06**                                   | **CLOSED** · Live H2H Instant Buy Thin                                                                              |
 | **LFE-TRANSFERS-07**                                   | **CLOSED** · Live H2H Pending Offers Thin                                                                           |
 | **LFE-TRANSFERS-08**                                   | **CLOSED** · Live H2H Counter Offers Thin (1× seller→buyer)                                                         |
+| **LFE-TRANSFERS-09**                                   | **CLOSED** · Hardening TD-01/TD-02 · fee parity SQL↔TS · single live settle · D38 · feat `e6885dc`                  |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                       |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                  |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)          |
@@ -115,8 +116,8 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 ## Next Recommended EPIC
 
-**Transfers hardening** — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
-Domain tip: LEAGUE-04 `9027baf`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip CLOSE pin.
+**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): Season End Thin · TD-03 P2 (actions cleanup).  
+Domain tip: TRANSFERS-09 `e6885dc`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -135,6 +136,7 @@ Domain tip: LEAGUE-04 `9027baf`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip
 - Live H2H = listed `players` innych klubów; Instant @ 100% ask; atomowy RPC; `players.id` stałe (TRANSFERS-06).
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
 - Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
+- Transfers hardening = fee SQL helpers + parity gate · single live settle invoke · D38 (TRANSFERS-09 · TD-01/TD-02 CLOSED).
 - Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed ≠ runtime; pasma potencjału only.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20); fee **bez** potential.
 - Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill ≤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
@@ -157,4 +159,4 @@ Domain tip: LEAGUE-04 `9027baf`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf` · next **Transfers hardening READY FOR AUDIT**
+2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc` · TD-01/TD-02 CLOSED · D38 · next Owner GO

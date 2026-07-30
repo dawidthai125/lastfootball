@@ -8,10 +8,26 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`9027baf`** (LFE-LEAGUE-04).
+**Domain feature baseline:** **`e6885dc`** (LFE-TRANSFERS-09).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-TRANSFERS-09 · CLOSED
+
+### Product
+
+- TD-01 CLOSED: SQL helpers `derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin` + Vitest parity gate
+- TD-02 CLOSED: Live Instant/Accept = jeden settle invoke (Single Settlement Path)
+- D38: publiczne API Buy/Sell + RPC Args bez breaking change
+- Domain tip → **`e6885dc`** · migracja `20260730150000_transfer_fee_parity_helpers.sql` na prod
+- CI GREEN · PRODUCTION VERIFIED · TD-03+ pozostaje P2
+
+### Docs
+
+- Sync TRANSFER_ARCHITECTURE · CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · DECISIONS D38 · EPIC_INDEX
 
 ---
 

@@ -15,7 +15,7 @@ AUDIT / PLAN / IMPLEMENT EPIC-ów transferowych; onboarding przed zmianą settle
 
 ## Status
 
-**ACTIVE** · baseline feature **`9b1c575`** (LFE-TRANSFERS-08 CLOSED)
+**ACTIVE** · Domain hardening **`e6885dc`** (LFE-TRANSFERS-09 CLOSED) · feature market **`9b1c575`** (LFE-TRANSFERS-08)
 
 ---
 
@@ -32,7 +32,9 @@ AUDIT / PLAN / IMPLEMENT EPIC-ów transferowych; onboarding przed zmianą settle
 
 **Zakaz:** `completeLiveTransfer()`, drugi settle helper, escrow hold.
 
-Live Instant / Accept wołają sell+buy → RPC może wykonać się 2×; drugi call jest **idempotentny** (`live-buy:{playerId}`). To znany dług ergonomiczny (nie drugi path).
+**Live Instant / Accept (LFE-TRANSFERS-09 · TD-02 CLOSED):** dokładnie **jeden** invoke `completeTransferBuy` **lub** `completeTransferSell` (live) → jeden RPC. Idempotencja `live-buy:{playerId}` pozostaje.
+
+**Fee / allow-list SQL (TD-01 CLOSED):** `derive_transfer_fee_thin` · `is_allowed_transfer_amount_thin` — parity gate Vitest vs `ECONOMY_THIN` / `NEGOTIATION_THIN`.
 
 ---
 
@@ -94,14 +96,14 @@ Presety: **90 / 95 / 100 / 110%** ask (`deriveTransferFee`).
 
 ## Świadome kompromisy / dług
 
-| ID     | Priorytet | Temat                                                                                                |
-| ------ | --------- | ---------------------------------------------------------------------------------------------------- |
-| TD-01  | P1        | Formuła fee + allow-list **skopiowana w SQL** vs `ECONOMY_THIN` / `NEGOTIATION_THIN` — ryzyko driftu |
-| TD-02  | P1        | Double-invoke live RPC (sell+buy)                                                                    |
-| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4, stub roster na Accept                                           |
+| ID     | Priorytet | Temat                                                      | Status                                    |
+| ------ | --------- | ---------------------------------------------------------- | ----------------------------------------- |
+| TD-01  | P1        | Fee + allow-list SQL ↔ TS drift                            | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
+| TD-02  | P1        | Double-invoke live RPC (sell+buy)                          | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
+| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4 (stub Accept usunięty) | Otwarte                                   |
 
 **Poza Thin:** escrow · timeout · AI H2H · 2+ counters · buyer Counter · custom ask · `completeLiveTransfer()`.
 
 ## Last updated
 
-2026-07-26 — AI-DOCS-CONSOLIDATION-02
+2026-07-30 — LFE-TRANSFERS-09 CLOSED · TD-01/TD-02 CLOSED

@@ -149,8 +149,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Live H2H (LFE-TRANSFERS-06):** Human↔Human; podaż = listed `players`; Instant Buy @ 100% ask; `players.id` stałe; atomowy RPC z buy/sell live; brak AI clubs/tabeli listingów; seed catalogue = fallback; brak `completeLiveTransfer()`.  
 **Pending H2H (LFE-TRANSFERS-07):** jedyna tabela `transfer_offers`; Instant równolegle; kwoty NEGOTIATION_THIN; wielu buyerów pending; Accept/Instant/Unlist supersede w TX; Create/Reject/Withdraw bez mutacji cash/players/deals; brak escrow/timeout/AI pending; settle wyłącznie `completeTransferBuy`/`Sell`.  
 **Counter H2H (LFE-TRANSFERS-08):** 1× Counter wyłącznie Seller; po Counter Accept = Buyer; `opening_amount` immutable; `current_amount` jedyna kwota settle; Counter mutuje tylko amount/phase/last_actor (RPC `FOR UPDATE`); Reject opening=seller / countered=buyer; brak escrow/timeout/AI H2H / 2+ counters.  
+**Hardening (LFE-TRANSFERS-09):** TD-01/TD-02 CLOSED — SQL helpers `derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin` + Vitest parity gate; Live Instant/Accept = **jeden** settle invoke; publiczne API = Buy/Sell (D38); brak zmian semantyki produktu.  
 **Poza Thin:** AI clubs, Instant Sell nego, custom ask, **2+ counters**, buyer Counter, timeout / AI pending inbox, escrow, ratio ≠ 1, stored envelope, `completeLiveTransfer()`.
-**Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego (`4b58507`); Live Instant (`8824793`); Pending (`be95006`); Counter — LFE-TRANSFERS-08.  
+**Źródło:** LFE-TRANSFERS-01; E1; N1 (`8d9d772`); Incoming (`4f69b5d`); Listing (`de23db6`); Seller nego (`4b58507`); Live Instant (`8824793`); Pending (`be95006`); Counter — LFE-TRANSFERS-08; Hardening — LFE-TRANSFERS-09 (`e6885dc`).  
 **Uwaga:** licznik played współdzielony z Training przez `hasPlayedUnlock` (D21). **§26 = SSOT liczb fee; D20 = SSOT implementacji rynku.**
 
 ### D21 — Team training Thin + Depth (`resolveClubTraining`) · CLOSED
@@ -321,9 +322,25 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-LEAGUE-04 (feat `9027baf`).  
 **Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).
 
+### D38 — Transfer public API compatibility (Buy/Sell + live RPC Args) · CLOSED
+
+**Dlaczego:** Hardening TD-01/02 nie może łamać klientów UI / Single Settlement Path.  
+**Zasada:**
+
+| Fakt              | SSOT / kontrakt                                                               |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Public settle API | wyłącznie `completeTransferBuy` / `completeTransferSell`                      |
+| Zakaz             | `completeLiveTransfer()` / druga ścieżka settlement                           |
+| Live RPC Args     | `complete_live_h2h_transfer` — bez breaking change Args                       |
+| Fee SQL           | `derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin` (parity vs TS) |
+| Live orkiestracja | Instant → Buy; Accept opening → Sell; Accept countered → Buy (1× RPC)         |
+
+**Źródło:** LFE-TRANSFERS-09 (feat `e6885dc`).  
+**Operacyjne:** Migracja `20260730150000_transfer_fee_parity_helpers.sql` na prod.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

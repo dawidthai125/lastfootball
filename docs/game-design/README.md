@@ -10,10 +10,10 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `9027baf` (LEAGUE-04) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `e6885dc` (TRANSFERS-09) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** _(pin po docs sync)_ — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny: **Transfers hardening READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
-PLAN closed: [`../implementation/LFE-LEAGUE-04-PLAN.md`](../implementation/LFE-LEAGUE-04-PLAN.md).
+Następny: **Owner GO** — **nie startować** AUDIT bez GO.  
+PLAN closed: [`../implementation/LFE-TRANSFERS-09-PLAN.md`](../implementation/LFE-TRANSFERS-09-PLAN.md).
 
 ## Opis działania
 
@@ -112,4 +112,4 @@ PLAN closed: [`../implementation/LFE-LEAGUE-04-PLAN.md`](../implementation/LFE-L
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf`
+2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc`

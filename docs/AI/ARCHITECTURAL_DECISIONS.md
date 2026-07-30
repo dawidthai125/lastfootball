@@ -38,7 +38,7 @@
 
 ---
 
-## D19–D28 (skrót)
+## D19–D28 · D38 (skrót)
 
 | ID      | Temat                     | Sedno (1 linia)                                                                   |
 | ------- | ------------------------- | --------------------------------------------------------------------------------- |
@@ -52,6 +52,7 @@
 | **D26** | Achievements Thin         | `resolveClubAchievements` derive; immutable history; ≠ XP/score/§6/Ranking.       |
 | **D27** | Ranking Thin              | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
 | **D28** | League calendar 22        | `LEAGUE_FIXTURE_COUNT=22` double RR; MD1–11 identity; AI↔AI double RR.            |
+| **D38** | Transfer public API       | Buy/Sell only · fee SQL helpers · 1× live settle · TRANSFERS-09.                  |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -89,4 +90,4 @@
 - DTO bez points/WDL/goals/ELO; pasma = enum; copy UI = `UI_COPY` (D29).
 - Nav open EARLY_CLUB; bieżący sezon; derive only.
 
-**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 · D28
+**ACTIVE** · 2026-07-30 — LFE-TRANSFERS-09 · D38

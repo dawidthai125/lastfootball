@@ -18,6 +18,13 @@ Rynek transferowy Thin (buy/sell + nego + AI incoming + listing + Live H2H Insta
 | Settlement            | `completeTransferBuy` / `completeTransferSell` (live) |
 | Cash                  | `cash_balance`                                        |
 
+## Settlement
+
+- Single Settlement Path: `completeTransferBuy` / `completeTransferSell` only.
+- Live Instant → Buy (1×); Accept opening → Sell (1×); Accept countered → Buy (1×) — LFE-TRANSFERS-09.
+- Fee SQL: `derive_transfer_fee_thin` · allow-list: `is_allowed_transfer_amount_thin` (parity vs TS).
+- Brak escrow / timeout / AI H2H / `completeLiveTransfer()`.
+
 ## Counter H2H (LFE-TRANSFERS-08)
 
 - 1 Counter na ofertę — wyłącznie **Seller**; po Counter **Accept = Buyer**.

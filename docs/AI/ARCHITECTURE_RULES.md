@@ -130,6 +130,7 @@ supabase/ (Auth + Postgres migrations)
 - Live H2H (TRANSFERS-06): Instant Buy @ 100% ask; `players.id` niezmienne; atomowy `complete_live_h2h_transfer` tylko z `completeTransferBuy`/`Sell` (source live); seed catalogue = fallback; brak `completeLiveTransfer()`.
 - Pending H2H (TRANSFERS-07): jedyna tabela `transfer_offers`; Instant równolegle; kwoty NEGOTIATION_THIN; Create/Reject/Withdraw bez cash/players/deals; Accept/Instant/Unlist supersede pending w tej samej TX; brak escrow/timeout/AI pending.
 - Counter H2H (TRANSFERS-08): 1× Counter wyłącznie Seller; po Counter Accept = Buyer; `opening_amount` immutable; settle @ `current_amount`; Counter RPC `FOR UPDATE` mutuje tylko `current_amount`/`phase`/`last_actor`; Reject: opening→seller, countered→buyer.
+- Hardening (TRANSFERS-09 / D38): fee SQL = `derive_transfer_fee_thin` + `is_allowed_transfer_amount_thin` (parity gate vs `ECONOMY_THIN` / `NEGOTIATION_THIN`); Live Instant/Accept = **jeden** settle invoke; Args RPC bez breaking change.
 - Settlement buy: `completeTransferBuy` (seed **lub** live) po rewalidacji.
 - Settlement sell: `completeTransferSell` (instant void **lub** live) + `isAllowedAgreedAmount`.
 - Buy ids seed = `t-{tag}-…`; katalog = `seedTransferCatalogue()` (fallback).
@@ -165,4 +166,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 · D28
+2026-07-30 — LFE-TRANSFERS-09 · D38 · TD-01/TD-02 CLOSED

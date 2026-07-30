@@ -6,21 +6,21 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 
 ## Aktualny stan
 
-| Warstwa                     | Stan                                                                                                                                            |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)                                                       |
-| **Domain feature baseline** | `9027baf` — LFE-LEAGUE-04 (Full 22 · double RR)                                                                                                 |
-| **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                                                                            |
-| **Documentation tip**       | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)                                                                                                       |
-| **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                                              |
-| **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                                                               |
-| Production                  | https://lastfootball.vercel.app                                                                                                                 |
-| Platform                    | Onboarding · First Match · Hub · **League 22** · Finance · Players · Transfers · Training · Academy · Scouting · Achievements · Ranking · Daily |
-| LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                                                                 |
-| GDD                         | GDD-01…**22** Thin · §26 CLOSED · next: **Transfers hardening READY FOR AUDIT**                                                                 |
-| UI Presentation             | Guide §16 · §8 Motion · **UI P0** · **MOTION-01** · Landing · Branding · Auth UX                                                                |
-| Impl notes                  | [`implementation/`](./implementation/)                                                                                                          |
-| Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                                                                             |
+| Warstwa                     | Stan                                                                                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)                                                          |
+| **Domain feature baseline** | `e6885dc` — LFE-TRANSFERS-09 (fee parity · single live settle)                                                                                     |
+| **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                                                                               |
+| **Documentation tip**       | _(pin po docs sync)_                                                                                                                               |
+| **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                                                 |
+| **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                                                                  |
+| Production                  | https://lastfootball.vercel.app                                                                                                                    |
+| Platform                    | Onboarding · First Match · Hub · League 22 · Finance · Players · **Transfers 09** · Training · Academy · Scouting · Achievements · Ranking · Daily |
+| LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                                                                    |
+| GDD                         | GDD-01…**22** Thin · §26 CLOSED · next: **Owner GO**                                                                                               |
+| UI Presentation             | Guide §16 · §8 Motion · **UI P0** · **MOTION-01** · Landing · Branding · Auth UX                                                                   |
+| Impl notes                  | [`implementation/`](./implementation/)                                                                                                             |
+| Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                                                                                |
 
 ## Jak czytać (AI)
 

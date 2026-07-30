@@ -21,9 +21,9 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                   |
 | ----------------------- | --------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`3915be9`** — LFE-ACHIEVEMENTS-01 CLOSED    |
+| **Domain baseline**     | **`e6885dc`** — LFE-TRANSFERS-09 CLOSED       |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)     |
+| **Documentation tip**   | _(pin po docs sync)_                          |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -41,6 +41,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-DAILY-01**                               | Daily Goal Thin · resolveClubDailyGoal derive · `73e1361` |
 | **LFE-ACHIEVEMENTS-01**                        | Achievements Information Thin · `3915be9` · D26           |
 | LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20)     |
+| **LFE-TRANSFERS-09**                           | Hardening TD-01/TD-02 · D38 · `e6885dc`                   |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)              |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                    |
 
@@ -88,9 +89,9 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Transfers hardening READY FOR AUDIT**.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **czekaj na Owner GO**.
 
-**Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
+**TD-03+ (P2):** transfers actions / displayPos — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Naming
 
@@ -101,4 +102,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Transfers
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 CLOSED · next Transfers hardening
+**ACTIVE** · 2026-07-30 — LFE-TRANSFERS-09 CLOSED · next Owner GO
