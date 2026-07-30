@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { ClubProvider } from '@/components/club/ClubProvider';
 import { AppShell } from '@/components/layout/AppShell';
+import { SoftLockRouteGate } from '@/components/layout/SoftLockRouteGate';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fixtures';
@@ -60,7 +61,9 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       trainingUnlocked={trainingUnlocked}
       messages={messages}
     >
-      <AppShell>{children}</AppShell>
+      <AppShell>
+        <SoftLockRouteGate>{children}</SoftLockRouteGate>
+      </AppShell>
     </ClubProvider>
   );
 }

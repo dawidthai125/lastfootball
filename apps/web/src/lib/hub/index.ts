@@ -9,6 +9,13 @@ export type {
 export { resolveHubPhase, resolveHubSession } from '@/lib/hub/types';
 export { resolvePrimaryCta, resolveSecondaryCtas } from '@/lib/hub/resolve-primary-cta';
 export { resolveNavAccess, isModuleSoftLocked } from '@/lib/hub/unlock';
+export type { NavAccessContext } from '@/lib/hub/unlock';
+export {
+  normalizePathname,
+  resolveNavItemForPathname,
+  resolveRouteNavAccess,
+  isRouteSoftLocked,
+} from '@/lib/hub/route-access';
 export {
   resolveClubDailyGoal,
   type ClubDailyGoalDto,
