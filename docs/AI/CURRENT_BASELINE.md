@@ -16,6 +16,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
+git log -1 --oneline f871ca8            # Documentation tip GDD-22 CLOSE
 git log -1 --oneline 09b85e7            # GDD-22 content (notifications thin)
 git log -1 --oneline c24efef            # Prior docs tip GDD-21 CLOSE
 git log -1 --oneline bf07a44            # GDD-21 content
@@ -39,10 +40,10 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | _(CLOSE)_ — **GDD-22** Powiadomienia Thin (content `09b85e7`)         |
+| **Documentation tip**       | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`)         |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-22 CLOSED · GDD-21 · ACADEMY-01 |
 
-Documentation tip GDD-22 CLOSE = _(CLOSE)_ (content `09b85e7`). Prior GDD-21 CLOSE = `c24efef`. Domain tip bez zmian (docs-only).
+Documentation tip GDD-22 CLOSE = `f871ca8` (content `09b85e7`). Prior GDD-21 CLOSE = `c24efef`. Domain tip bez zmian (docs-only).
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -108,4 +109,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — GDD-22 CLOSED · tip _(CLOSE)_ (Domain `9c6fe86` · Presentation `9fd14fc` · content `09b85e7` · UI P0 `54d0724`)
+2026-07-30 — GDD-22 CLOSED · tip `f871ca8` (Domain `9c6fe86` · Presentation `9fd14fc` · content `09b85e7` · UI P0 `54d0724`)

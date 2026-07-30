@@ -70,4 +70,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7` · tip _(CLOSE)_
+2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7` · tip `f871ca8`

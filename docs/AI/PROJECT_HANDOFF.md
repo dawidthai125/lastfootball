@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                             |
 | **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                           |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                             |
-| **Documentation tip**           | _(CLOSE)_ — **GDD-22** Powiadomienia Thin (content `09b85e7`)                                     |
+| **Documentation tip**           | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`)                                     |
 | **Branch**                      | `main`                                                                                            |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **GDD-22 CLOSED** · GDD-21 · M2.5 PASS · next **SCOUTING-01 AUDIT** |
 
@@ -30,13 +30,14 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
+git log -1 --oneline f871ca8            # Documentation tip GDD-22 CLOSE
 git log -1 --oneline 09b85e7            # GDD-22 content
 git log -1 --oneline c24efef            # Prior docs tip GDD-21 CLOSE
 git log -1 --oneline 9c6fe86            # Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Academy `9c6fe86` · presentation MOTION-01 `9fd14fc` · docs GDD-22 content `09b85e7`). Domain bez zmian w GDD-22 (docs-only).
+**Prod deploy:** Vercel Production śledzi `main` (Domain Academy `9c6fe86` · presentation MOTION-01 `9fd14fc` · docs tip GDD-22 `f871ca8` · content `09b85e7`). Domain bez zmian w GDD-22 (docs-only).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** — zastosowane.
 
@@ -61,7 +62,7 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 | **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                |
 | **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                |
 | **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                   |
-| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · DOCS CLOSE _(tip)_           |
+| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · tip `f871ca8`                |
 | **M2.5**                                       | **PASS** · First Domain Implementation Review                             |
 
 ### Silnik / Match UI
@@ -379,4 +380,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — GDD-22 CLOSED · content `09b85e7` · tip _(CLOSE)_ · Domain `9c6fe86` · next **LFE-SCOUTING-01 READY FOR AUDIT**
+2026-07-30 — GDD-22 CLOSED · content `09b85e7` · tip `f871ca8` · Domain `9c6fe86` · next **LFE-SCOUTING-01 READY FOR AUDIT**

@@ -32,7 +32,7 @@ GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + 
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
 | **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `2c619ca` |
 | **GDD-21** | **§21 Wiadomości Thin** · **CLOSED** · tip `c24efef` · content `bf07a44`    |
-| **GDD-22** | **§22 Powiadomienia Thin** · **CLOSED** · content `09b85e7` · tip _(CLOSE)_ |
+| **GDD-22** | **§22 Powiadomienia Thin** · **CLOSED** · content `09b85e7` · tip `f871ca8` |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 

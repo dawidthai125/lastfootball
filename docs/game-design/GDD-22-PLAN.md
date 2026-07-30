@@ -4,7 +4,7 @@
 **Typ:** docs-only Thin  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS (Owner GO AUDIT → Owner GO PLAN)  
-**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `09b85e7` · DOCS CLOSE sync
+**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `09b85e7` · tip `f871ca8`
 **Baseline wejścia:** GDD-21 CLOSED (`bf07a44` / tip `c24efef`) · Domain `9c6fe86` · Presentation `9fd14fc` · HEAD tip docs `c93db5f`
 
 ---
