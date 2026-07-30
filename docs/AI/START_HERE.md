@@ -62,7 +62,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
   → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-**Brak EPIC IN PROGRESS:** następny = **LFE-DAILY-01 READY FOR AUDIT** — start wyłącznie od **AUDIT** po **Owner GO**.
+**Brak EPIC IN PROGRESS:** następny = **LFE-ACHIEVEMENTS-01 READY FOR AUDIT** — start wyłącznie od **AUDIT** po **Owner GO**.
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
 

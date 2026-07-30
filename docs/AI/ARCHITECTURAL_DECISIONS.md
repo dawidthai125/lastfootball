@@ -12,13 +12,13 @@
 
 ## Jak czytać tipy (nie mylić)
 
-| Warstwa                 | SSOT               | Znaczenie                                      |
-| ----------------------- | ------------------ | ---------------------------------------------- |
-| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                          |
-| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Scouting `93fd6d5`) |
-| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)             |
-| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                     |
-| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip  |
+| Warstwa                 | SSOT               | Znaczenie                                     |
+| ----------------------- | ------------------ | --------------------------------------------- |
+| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                         |
+| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Daily `73e1361`)   |
+| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)            |
+| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                    |
+| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip |
 
 ---
 
@@ -38,7 +38,7 @@
 
 ---
 
-## D19–D24 (skrót)
+## D19–D25 (skrót)
 
 | ID      | Temat                     | Sedno (1 linia)                                                                   |
 | ------- | ------------------------- | --------------------------------------------------------------------------------- |
@@ -48,6 +48,7 @@
 | **D22** | Potential / match growth  | `players.potential`; UI = pasma only; match PRIMARY; trening SUPPORTING.          |
 | **D23** | Academy Thin A            | `academy_track` / `promoted_at` na `players`; max 3; `resolveClubAcademy`.        |
 | **D24** | Scouting Information Thin | `resolveClubScouting`; `scout_shortlist` = `(club_id, player_id)` → `players.id`. |
+| **D25** | Daily Goal Thin           | `resolveClubDailyGoal` derive only; Primary > Daily; ≠ Secondary daily loop.      |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -56,14 +57,21 @@
 - Shortlista **nie** wpływa na AI, rynek, transfery, potencjał, symulację.
 - Skauting **porządkuje** informacje — **nie** podejmuje decyzji za gracza.
 
+### D25 — kontrakt Daily Goal (must-know)
+
+- Pure derive · **brak** persist / Quest Engine / cron / nagród.
+- **Primary CTA zawsze nadrzędny**; Daily Goal = sugestia Information Thin.
+- ≠ `resolveSecondaryCtas` (daily loop nawigacji).
+- Deep-link tylko do istniejących tras; wynik deterministyczny dla tego samego stanu.
+
 ---
 
 ## Gdzie szukać kodu
 
-[`MODULE_MAP.md`](./MODULE_MAP.md) — Academy · Scouting · Training · Transfers · …
+[`MODULE_MAP.md`](./MODULE_MAP.md) — Hub · Daily Goal · Academy · Scouting · Training · Transfers · …
 
 ---
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — AI-DOCS-HARDENING-01
+**ACTIVE** · 2026-07-30 — LFE-DAILY-01 · D25

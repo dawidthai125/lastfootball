@@ -25,24 +25,25 @@ lastfootball/
 
 ## `apps/web` — domeny platformy
 
-| Domenа        | Resolver UI (SSOT)                      | Kod (głównie)                    | Docs                                                                                                                     |
-| ------------- | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Hub           | `resolveHubPhase` / `resolvePrimaryCta` | `lib/hub/`                       | [`platform/HUB.md`](../platform/HUB.md)                                                                                  |
-| Liga          | `resolveLeagueTable`                    | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
-| Finanse       | `resolveClubFinance`                    | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
-| Kadra         | `resolveClubSquad`                      | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
-| Akademia      | `resolveClubAcademy`                    | `lib/academy/`                   | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Academy Thin A)                                                         |
-| Skauting      | `resolveClubScouting`                   | `lib/scouting/`                  | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Scouting Thin B) · D24                                                  |
-| Transfery     | `resolveTransferMarket`                 | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
-| Trening       | `resolveClubTraining`                   | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
-| Auth / klub   | session + club DTO                      | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
-| First Match   | tunnel + `first_match_completed_at`     | `lib/first-match/`               | [`platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                  |
-| Match Live UI | session bind — nie Engine               | `gameplay/`, `components/match/` | [`web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                |
+| Domenа        | Resolver UI (SSOT)                                                   | Kod (głównie)                    | Docs                                                                                                                     |
+| ------------- | -------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Hub           | `resolveHubPhase` / `resolvePrimaryCta` / **`resolveClubDailyGoal`** | `lib/hub/`                       | [`platform/HUB.md`](../platform/HUB.md) · D25                                                                            |
+| Liga          | `resolveLeagueTable`                                                 | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
+| Finanse       | `resolveClubFinance`                                                 | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
+| Kadra         | `resolveClubSquad`                                                   | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
+| Akademia      | `resolveClubAcademy`                                                 | `lib/academy/`                   | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Academy Thin A)                                                         |
+| Skauting      | `resolveClubScouting`                                                | `lib/scouting/`                  | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Scouting Thin B) · D24                                                  |
+| Transfery     | `resolveTransferMarket`                                              | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
+| Trening       | `resolveClubTraining`                                                | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
+| Auth / klub   | session + club DTO                                                   | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
+| First Match   | tunnel + `first_match_completed_at`                                  | `lib/first-match/`               | [`platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                  |
+| Match Live UI | session bind — nie Engine                                            | `gameplay/`, `components/match/` | [`web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                |
 
 ## Relacje (skrót)
 
 ```
 Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
+Daily Goal ──► resolveClubDailyGoal (derive) ──► istniejące trasy (suggestion; Primary nadrzędny)
 complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
 training ──► players.status + players.skill (≤ potential) + clubs.last_training_on (RPC)
@@ -72,4 +73,4 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — AI-DOCS-HARDENING-01 (Academy + Scouting)
+**ACTIVE** · 2026-07-30 — LFE-DAILY-01 (Daily Goal · D25)

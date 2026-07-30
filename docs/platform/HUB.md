@@ -3,7 +3,8 @@
 ## Cel
 
 Hub = **ekran decyzji** (GDD §23), nie dashboard mid-season.  
-Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
+Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
+**Daily Goal (§20):** [`../implementation/LFE-DAILY-01-PLAN.md`](../implementation/LFE-DAILY-01-PLAN.md) · D25.
 
 ## State Machine
 
@@ -17,18 +18,20 @@ Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.
 **Jedyny resolver fazy:** `resolveHubPhase(club, { hasFixtures })`.  
 **Sesja:** `resolveHubSession(phase, nextFixture, lastPlayed)` → `matchday` | `post_match` | `idle`.  
 **Jedyny Primary CTA:** `resolvePrimaryCta(phase, session, { nextFixture })`.  
-**Secondary (daily):** `resolveSecondaryCtas(phase, { hasFixtures, trainingUnlocked, transferWindowOpen })` — access via `resolveNavAccess`.
+**Daily Goal (sugestia §20):** `resolveClubDailyGoal(...)` — pure derive · ≤1 · może `null` · **nie** Primary.  
+**Secondary (daily loop UI):** `resolveSecondaryCtas(phase, { hasFixtures, trainingUnlocked, transferWindowOpen })` — access via `resolveNavAccess`.
 
 ## Decision layout (EARLY_CLUB + SEASON)
 
-Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02):
+Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02 · LFE-DAILY-01):
 
 1. **Decision Banner** — najbliższy mecz / last match / first-match strip
 2. **Exactly 1** Primary CTA
-3. Kompaktowa tożsamość klubu
-4. ≤5 Secondary — **daily loop** (poniżej)
-5. Lekki status (liga, pozycja, kasa, …)
-6. Jedna wiadomość zarządu
+3. **Daily Goal Thin** — opcjonalna sugestia „Dziś warto” **pod** Primary (Information Thin; Guide §16)
+4. Kompaktowa tożsamość klubu
+5. ≤5 Secondary — **daily loop** nawigacji (poniżej)
+6. Lekki status (liga, pozycja, kasa, …)
+7. Jedna wiadomość zarządu
 
 ### Primary CTA
 
@@ -36,6 +39,19 @@ Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02):
 | ------------------------------- | ---------------- | ------------- |
 | `matchday` + `nextFixture`      | Przygotuj mecz   | `/match/{id}` |
 | Fallback (idle / brak upcoming) | **Zobacz kadrę** | `/squad`      |
+
+### Daily Goal Thin (LFE-DAILY-01 / D25 / GDD §20)
+
+| Reguła                                           | Wartość                                                            |
+| ------------------------------------------------ | ------------------------------------------------------------------ |
+| Resolver                                         | **tylko** `resolveClubDailyGoal` (pure derive)                     |
+| Persist / Quest Engine / cron / ekonomia         | **Zakaz**                                                          |
+| Priorytet                                        | **Primary CTA > Daily Goal** zawsze                                |
+| Matchday                                         | Sugestia zsynchronizowana z kierunkiem meczu (`syncedWithPrimary`) |
+| Idle + trening odblokowany + brak sesji UTC dziś | Sugestia `/training`                                               |
+| Soft-lock treningu                               | Brak sugestii treningu                                             |
+| Deep-link                                        | Tylko istniejące trasy                                             |
+| ≠                                                | `resolveSecondaryCtas` (daily **loop** nawigacji)                  |
 
 ### Secondary CTA — daily loop (max 5)
 
@@ -81,12 +97,12 @@ Soft-lock: Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EA
 
 ## Zakazane
 
-FOMO kolejki 12, Top 4 fiction, peer-CTA treningu, fikcyjne okno transferowe, `dashboardMock` na Hub, UI omijające resolvery domen, nowe reguły unlock „pod UI”.
+FOMO kolejki 12, Top 4 fiction, peer-CTA treningu, fikcyjne okno transferowe, `dashboardMock` na Hub, UI omijające resolvery domen, nowe reguły unlock „pod UI”, elevacja Daily Goal do Primary, Quest Engine / persist celów dnia.
 
 ## Kod
 
-`components/hub/*` · `lib/hub/*` · shell nav (`MobileNav`, TopBar)
+`components/hub/*` · `lib/hub/*` (`resolveClubDailyGoal`) · shell nav (`MobileNav`, TopBar)
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03 (sync po LFE-UI-EVOLUTION-02)
+2026-07-30 — LFE-DAILY-01 (Daily Goal Thin · D25)

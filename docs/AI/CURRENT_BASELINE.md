@@ -2,24 +2,22 @@
 
 ## Cel
 
-Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
+Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Cztery warstwy baseline
 
 | Pojęcie                     | Znaczenie                                                                                                 |
 | --------------------------- | --------------------------------------------------------------------------------------------------------- |
 | **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poniżej                           |
-| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(scouting…)` / `feat(academy…)` / `feat(players…)` / `feat(training…)`) |
+| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(hub…daily…)` / `feat(scouting…)` / `feat(academy…)` / …)               |
 | **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing · Brand · Auth · **Motion**) — **nie** zmienia Domain baseline |
 | **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
 
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 3c6f757     # Documentation tip AI-DOCS-HARDENING-01 CLOSE (pin)
-git log -1 --oneline 93fd6d5            # Domain feature baseline SCOUTING-01
-git log -1 --oneline a29812d            # Build fix (client barrel)
-git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
+git log -1 --oneline 73e1361            # Domain feature baseline DAILY-01
+git log -1 --oneline 93fd6d5            # Prior Domain SCOUTING-01
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 ```
 
@@ -35,12 +33,12 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `93fd6d5` — **LFE-SCOUTING-01** (Information Thin · shortlist)        |
-| Domain message              | `feat(scouting): implement LFE-SCOUTING-01 Information Thin`          |
+| **Domain feature baseline** | `73e1361` — **LFE-DAILY-01** (Daily Goal Thin · derive)               |
+| Domain message              | `feat(hub): implement LFE-DAILY-01 Daily Goal Thin derive`            |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `3c6f757` — **AI-DOCS-HARDENING-01** CLOSE (pin)                      |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · SCOUTING-01 CLOSED · ACADEMY-01     |
+| **Documentation tip**       | CLOSE sync LFE-DAILY-01 (pin follows)                                 |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · DAILY-01 CLOSED · SCOUTING-01       |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -57,6 +55,7 @@ Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Reveal
   → First Match → Tunnel → VS → Pre → (XI) → Live → Post → Welcome LF
   → Hub (EARLY_CLUB → SEASON) · Night Pitch Office shell
+  → Daily Goal Thin (resolveClubDailyGoal · suggestion under Primary)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -89,6 +88,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                   |
 | Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                 |
 | Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`              |
+| Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny     |
 | Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT                |
 | Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT                    |
 | Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT        |
@@ -99,6 +99,13 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Impl notes        | `docs/implementation/`                                                           |
 | Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                     |
 
+### Daily Goal (kontrakt Thin)
+
+- `resolveClubDailyGoal` = **pure derive** z Hub session / Primary / fixtures / training unlock / `last_training_on` + UTC.
+- **Nie** Quest Engine · **nie** persist · **nie** mutacje domeny · **nie** ekonomia / cron.
+- Primary CTA zawsze nadrzędny; Daily Goal = Information Thin (sugestia).
+- ≠ Secondary CTA daily **loop** (`resolveSecondaryCtas`).
+
 ### Shortlista (kontrakt Thin)
 
 - `scout_shortlist` jest **wyłącznie relacją preferencji** `(club_id, player_id)` referencjonującą `players.id`.
@@ -107,12 +114,13 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Operacyjne
 
-> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`).
+> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`).  
+> **LFE-DAILY-01:** brak nowych migracji (derive only).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score`.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań.
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · Presentation `9fd14fc` · Docs tip `3c6f757` (HARDENING-01)
+2026-07-30 — LFE-DAILY-01 CLOSED · Domain `73e1361` · Presentation `9fd14fc`

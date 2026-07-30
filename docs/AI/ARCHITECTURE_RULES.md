@@ -32,6 +32,7 @@ supabase/ (Auth + Postgres migrations)
 | Faza Hub           | `resolveHubPhase(club)` wyłącznie                            |
 | Sesja Hub          | `resolveHubSession(phase, next, lastPlayed)`                 |
 | Primary CTA Hub    | `resolvePrimaryCta(phase, session, ctx)` wyłącznie           |
+| Daily Goal Hub     | `resolveClubDailyGoal(...)` → `ClubDailyGoalDto \| null`     |
 | Terminarz ligowy   | `fixtures` → `FixtureDto` / `getNextFixture`                 |
 | Saldo kasy         | `clubs.cash_balance`                                         |
 | Historia finansów  | `finance_movements`                                          |
@@ -57,6 +58,15 @@ supabase/ (Auth + Postgres migrations)
 - Dokładnie **1 Primary CTA**.
 - Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse + **Akademia** + **Skauting** open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
+
+## Daily Goal rules (LFE-DAILY-01 / D25 / GDD §20)
+
+- Hub konsumuje **tylko** `resolveClubDailyGoal()` jako sugestię warstwy 2 — **nie** Primary.
+- Derive only: zakaz tabel quest/daily, cronów, nagród, mutacji domeny.
+- **Primary CTA > Daily Goal** zawsze; matchday sync z kierunkiem meczu.
+- ≠ `resolveSecondaryCtas` (daily **loop** nawigacji UI Evolution-02).
+- REUSE: Hub session/Primary · fixtures · `last_training_on` + `utcDateString` · unlock treningu.
+- Poza Thin: Quest Engine · persist/claim · streaki · nagrody §26 · inbox/push jako zależność.
 
 ## Players rules (LFE-PLAYERS-01 / D19)
 
@@ -131,4 +141,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-29 — LFE-TRAINING-02
+2026-07-30 — LFE-DAILY-01 · D25

@@ -241,9 +241,30 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-SCOUTING-01 (feat `93fd6d5` · tip docs `cae2323`).  
 **Operacyjne:** Migracja `20260730140000_scout_shortlist.sql` zastosowana na prod.
 
+### D25 — Daily Goal Thin (`resolveClubDailyGoal`) · CLOSED
+
+**Dlaczego:** GDD §20 wymaga lekkiego haka „Co warto dziś zrobić?” bez Quest Engine i bez konkurencji z osią meczową / Primary CTA.  
+**Zasada:**
+
+| Fakt      | SSOT / kontrakt                                                                                             |
+| --------- | ----------------------------------------------------------------------------------------------------------- |
+| UI / API  | **tylko** `resolveClubDailyGoal(...)` → `ClubDailyGoalDto \| null`                                          |
+| Model     | **Derive only** — zakaz tabel `daily_*` / quest persist / claim                                             |
+| REUSE     | `resolveHubSession` · `resolvePrimaryCta` · fixtures · `lastTrainingOn` · `utcDateString` · unlock treningu |
+| Priorytet | **Primary CTA > Daily Goal** zawsze; sugestia nie elevuje się do Primary                                    |
+| Matchday  | Sugestia zsynchronizowana z kierunkiem meczu (`syncedWithPrimary`)                                          |
+| Mutacje   | **Zero** (brak cash / prestige / skill / fixtures / training RPC)                                           |
+| Ekonomika | **Zero** nagród liczbowych / waluty zadań / cron / reset dnia                                               |
+| ≠         | `resolveSecondaryCtas` (daily **loop** nawigacji UI) — nie mylić z §20                                      |
+| LFE       | **zero zmian**                                                                                              |
+
+**Poza Thin:** Quest Engine · Quest Log · streaki advanced · persist/claim · nagrody §26 · inbox/push jako zależność.  
+**Źródło:** LFE-DAILY-01 (feat `73e1361`).  
+**Operacyjne:** Brak nowych migracji.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D24 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D25 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -255,7 +276,8 @@ Każde złamanie D1–D24 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
 **LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
 **LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.  
-**LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.
+**LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.  
+**LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.
 
 ## Powiązania
 
@@ -263,4 +285,4 @@ Każde złamanie D1–D24 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 · D24 · AI-DOCS-HARDENING-01
+2026-07-30 — LFE-DAILY-01 · D25

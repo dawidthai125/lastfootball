@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. **LFE-SCOUTING-01 CLOSED**. Następny = **LFE-DAILY-01 READY FOR AUDIT** (Owner GO).
+GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. **LFE-SCOUTING-01 CLOSED**. Następny = **LFE-ACHIEVEMENTS-01 READY FOR AUDIT** (Owner GO).
 
 ## Completed
 
@@ -74,4 +74,4 @@ GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + 
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · next LFE-DAILY-01 READY FOR AUDIT
+2026-07-30 — LFE-DAILY-01 CLOSED · Domain `73e1361` · next LFE-ACHIEVEMENTS-01 READY FOR AUDIT

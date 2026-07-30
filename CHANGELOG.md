@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-DAILY-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D25 · Domain tip `73e1361` · next **LFE-ACHIEVEMENTS-01 READY FOR AUDIT**
+- Kontrakt: `resolveClubDailyGoal` derive only · Primary CTA nadrzędny · brak persist / Quest Engine / ekonomii
+
+### Added (shipped on `main` — LFE-DAILY-01)
+
+- `resolveClubDailyGoal` · Hub suggestion under Primary · REUSE Hub/fixtures/training UTC
+
 ### Docs (AI-DOCS-HARDENING-01 CLOSE)
 
 - ARCHITECTURAL_DECISIONS · MODULE_MAP Academy/Scouting · D24 · pełny CLOSE path · tip `3c6f757`

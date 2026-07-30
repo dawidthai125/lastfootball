@@ -8,10 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`93fd6d5`** (LFE-SCOUTING-01).
+**Domain feature baseline:** **`73e1361`** (LFE-DAILY-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** `3c6f757` — **AI-DOCS-HARDENING-01** CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-DAILY-01 (pin follows).
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-DAILY-01 · CLOSED
+
+### Product
+
+- Daily Goal Thin: `resolveClubDailyGoal` · sugestia Information Thin na Hubie pod Primary
+- Derive only · Primary CTA nadrzędny · brak persist / Quest Engine / mutacji / ekonomii
+- Domain tip → **`73e1361`** · D25 · brak migracji
+- CI GREEN · PRODUCTION VERIFIED · next **LFE-ACHIEVEMENTS-01 READY FOR AUDIT**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · HUB · ARCHITECTURE_RULES · DECISIONS · MODULE_MAP · EPIC_INDEX · QUICK_START
 
 ---
 

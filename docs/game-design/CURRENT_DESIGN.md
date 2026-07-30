@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-SCOUTING-01 CLOSED** (kod). Następny: **LFE-DAILY-01 READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-SCOUTING-01 CLOSED** (kod). Następny: **LFE-ACHIEVEMENTS-01 READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -44,6 +44,7 @@ GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** �
 - **Hub EARLY_CLUB (LFE-HUB-01):** decision layout; bez mid-season dashboard mock.
 - **UI Evolution 01–02:** decision-first (Hero → Decision → Context); Hub Secondary = daily loop (Trening · Kadra · Transfery · Finanse · Terminarz); **Kadra** = `/squad` („Skład” = XI); Mobile Variant A. Szczegóły → [`UI_DESIGN_GUIDE.md`](./UI_DESIGN_GUIDE.md) §16; historia → [`LFE-UX-POSTMORTEM-01.md`](./LFE-UX-POSTMORTEM-01.md) (REFERENCE).
 - Zadania (§20): opcjonalne; 1 cel dnia na Hubie; w dniu meczowym mecz > zadanie; soft FOMO; nagrody = kategorie.
+- **Daily Goal (LFE-DAILY-01 / D25):** `resolveClubDailyGoal` derive only · sugestia pod Primary · Primary nadrzędny · brak persist/Quest Engine.
 - Liga: 12 klubów, 22 kolejki, awans/spadek bez playoffów MVP (design; live fixtures SSOT = planned).
 - Trening: odblokowanie po 2 zagranych meczach; 1 sesja/dzień (soft-lock na Day 1).
 - Transfery: Accept/Reject + max 1 kontroferta; skład 18–22 (soft-lock Day 1).
@@ -70,4 +71,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5`
+2026-07-30 — LFE-DAILY-01 CLOSED · Domain `73e1361`

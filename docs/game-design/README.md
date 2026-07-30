@@ -12,7 +12,7 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
 **Domain tip:** `93fd6d5` (SCOUTING-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `3c6f757` SCOUTING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny: **LFE-DAILY-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
+Następny: **LFE-ACHIEVEMENTS-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
 PLAN closed: [`../implementation/LFE-SCOUTING-01-PLAN.md`](../implementation/LFE-SCOUTING-01-PLAN.md).
 
 ## Opis działania
@@ -112,4 +112,4 @@ PLAN closed: [`../implementation/LFE-SCOUTING-01-PLAN.md`](../implementation/LFE
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5`
+2026-07-30 — LFE-DAILY-01 CLOSED · Domain `73e1361`

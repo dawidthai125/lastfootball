@@ -17,7 +17,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | Production                  | https://lastfootball.vercel.app                                                                             |
 | Platform                    | Onboarding · First Match · Hub · League · Finance · Players · Transfers · Training · Academy · **Scouting** |
 | LFE / Match UI              | EPIC-1…7 · Live · Canvas · Replay · Post · Match Path immersive                                             |
-| GDD                         | GDD-01…**22** Thin · §26 CLOSED · next: **LFE-DAILY-01 READY FOR AUDIT**                                    |
+| GDD                         | GDD-01…**22** Thin · §26 CLOSED · next: **LFE-ACHIEVEMENTS-01 READY FOR AUDIT**                             |
 | UI Presentation             | Guide §16 · §8 Motion · **UI P0** · **MOTION-01** · Landing · Branding · Auth UX                            |
 | Impl notes                  | [`implementation/`](./implementation/)                                                                      |
 | Infra                       | Supabase `anoeimngwptucjdugjme` · Vercel · CI GREEN                                                         |

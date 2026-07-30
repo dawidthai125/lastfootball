@@ -21,25 +21,26 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                   |
 | ----------------------- | --------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`93fd6d5`** — LFE-SCOUTING-01 CLOSED        |
+| **Domain baseline**     | **`73e1361`** — LFE-DAILY-01 CLOSED           |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | `3c6f757` — **LFE-SCOUTING-01** CLOSE         |
+| **Documentation tip**   | CLOSE sync LFE-DAILY-01 (pin follows)         |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
 ## Platform DONE (skrót)
 
-| ID                                             | Temat                                                  |
-| ---------------------------------------------- | ------------------------------------------------------ |
-| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                        |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela · 11 meczów                          |
-| LFE-ECONOMY-01                                 | Cash Thin (D18)                                        |
-| LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)           |
-| **LFE-ACADEMY-01**                             | Academy Thin A · Intake + Promote · D23 · `9c6fe86`    |
-| **LFE-SCOUTING-01**                            | Scouting Information Thin · shortlist refs · `93fd6d5` |
-| LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20)  |
-| LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)           |
-| GDD-§26A / §26B                                | SSOT liczb + sync kodu                                 |
+| ID                                             | Temat                                                     |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                           |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela · 11 meczów                             |
+| LFE-ECONOMY-01                                 | Cash Thin (D18)                                           |
+| LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)              |
+| **LFE-ACADEMY-01**                             | Academy Thin A · Intake + Promote · D23 · `9c6fe86`       |
+| **LFE-SCOUTING-01**                            | Scouting Information Thin · shortlist refs · `93fd6d5`    |
+| **LFE-DAILY-01**                               | Daily Goal Thin · resolveClubDailyGoal derive · `73e1361` |
+| LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20)     |
+| LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)              |
+| GDD-§26A / §26B                                | SSOT liczb + sync kodu                                    |
 
 ## Engine / Match UI DONE
 
@@ -85,7 +86,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-DAILY-01 READY FOR AUDIT**.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-ACHIEVEMENTS-01 READY FOR AUDIT**.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -98,4 +99,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-DAILY
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-SCOUTING-01 CLOSED · next LFE-DAILY-01
+**ACTIVE** · 2026-07-30 — LFE-DAILY-01 CLOSED · next LFE-ACHIEVEMENTS-01
