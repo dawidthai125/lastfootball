@@ -17,6 +17,12 @@ export const UI_COPY = {
   playMatch: 'Zagraj mecz',
   playFirstMatch: 'Rozpocznij pierwszy mecz',
 
+  /** LFE-DAILY-01 — Daily Goal Thin (suggestion only; not Primary) */
+  dailyGoalEyebrow: 'Dziś warto',
+  dailyGoalMatch: 'Dokończ przygotowanie meczu',
+  dailyGoalSquad: 'Sprawdź kadrę',
+  dailyGoalTraining: 'Przeprowadź trening',
+
   softLockUnavailable: 'niedostępne',
   softLockSoon: 'wkrótce',
   softLockReason:

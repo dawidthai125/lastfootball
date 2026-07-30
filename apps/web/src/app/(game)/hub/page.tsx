@@ -8,6 +8,7 @@ import {
   getLastPlayedFixture,
   getNextFixture,
   hasPlayedUnlock,
+  utcDateString,
 } from '@/lib/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { resolveCashChipLabel, resolveClubFinance } from '@/lib/finance';
@@ -50,6 +51,7 @@ export default async function HubPage() {
       leaguePositionLabel={leaguePositionLabel}
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
+      todayUtc={utcDateString()}
     />
   );
 }

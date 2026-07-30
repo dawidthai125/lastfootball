@@ -3,15 +3,18 @@ import Image from 'next/image';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import type { ClubDto } from '@/lib/club/types';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import {
   buildLastMatchStrip,
   buildLightStatus,
   buildWelcomeMessage,
+  resolveClubDailyGoal,
   resolveHubPhase,
   resolveHubSession,
   resolvePrimaryCta,
   resolveSecondaryCtas,
+  type ClubDailyGoalDto,
   type HubCta,
   type HubSession,
 } from '@/lib/hub';
@@ -20,8 +23,8 @@ import { UI_COPY } from '@/lib/ui/copy';
 import './hub-decision.css';
 
 /**
- * Decision Hub — LFE-UI-IMPL-01 / Hi-Fi HF-HUB-01|02|04.
- * Hero → Decision → Primary → Secondary≤5 → Context meta.
+ * Decision Hub — LFE-UI-IMPL-01 / Hi-Fi HF-HUB-01|02|04 · LFE-DAILY-01.
+ * Hero → Decision → Primary → Daily Goal (suggestion) → Secondary≤5 → Context.
  * Unlock via resolveNavAccess — no new domain rules.
  */
 export function EarlyClubHub({
@@ -32,6 +35,7 @@ export function EarlyClubHub({
   leaguePositionLabel = null,
   cashLabel = null,
   trainingUnlocked = false,
+  todayUtc = utcDateString(),
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -40,6 +44,8 @@ export function EarlyClubHub({
   leaguePositionLabel?: string | null;
   cashLabel?: string | null;
   trainingUnlocked?: boolean;
+  /** Injected UTC day for Daily Goal determinism (tests / page). */
+  todayUtc?: string;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -47,6 +53,17 @@ export function EarlyClubHub({
     nextFixture,
     lastPlayedFixture,
     hasFixtures,
+  });
+  const dailyGoal = resolveClubDailyGoal({
+    phase,
+    session,
+    primary,
+    nextFixture,
+    lastPlayedFixture,
+    hasFixtures,
+    trainingUnlocked,
+    lastTrainingOn: club.lastTrainingOn,
+    todayUtc,
   });
   const secondary = resolveSecondaryCtas(phase, {
     hasFixtures,
@@ -71,6 +88,7 @@ export function EarlyClubHub({
       data-hub-phase={phase}
       data-hub-session={session}
       data-lf-impl="LFE-UI-IMPL-06A"
+      data-lf-daily="LFE-DAILY-01"
     >
       <LocationHero session={session} />
 
@@ -87,6 +105,7 @@ export function EarlyClubHub({
         </AtmosphereLayer>
 
         <PrimaryCta cta={primary} />
+        <DailyGoalSuggestion goal={dailyGoal} />
       </div>
 
       <div className="lf-hub__body">
@@ -228,6 +247,23 @@ function PrimaryCta({ cta }: { cta: HubCta }) {
         {cta.label}
       </Link>
     </div>
+  );
+}
+
+/** Information Thin — suggestion only; never styled as Primary (LFE-DAILY-01). */
+function DailyGoalSuggestion({ goal }: { goal: ClubDailyGoalDto | null }) {
+  if (!goal) return null;
+  return (
+    <p
+      className="lf-hub__daily"
+      data-daily-kind={goal.kind}
+      data-daily-synced={goal.syncedWithPrimary}
+    >
+      <span className="lf-hub__daily-eyebrow">{UI_COPY.dailyGoalEyebrow}</span>
+      <Link href={goal.href} className="lf-hub__daily-link">
+        {goal.label}
+      </Link>
+    </p>
   );
 }
 

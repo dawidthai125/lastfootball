@@ -137,6 +137,42 @@
   outline-offset: 2px;
 }
 
+/* —— Daily Goal Thin (LFE-DAILY-01) — suggestion under Primary; not hero CTA —— */
+.lf-hub__daily {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--lf-space-2);
+  min-width: 0;
+}
+
+.lf-hub__daily-eyebrow {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-hub__daily-link {
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+  color: var(--lf-color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.lf-hub__daily-link:hover {
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-hub__daily-link:focus-visible {
+  outline: 2px solid var(--lf-color-border-gold);
+  outline-offset: 2px;
+}
+
 /* —— Body: club + actions —— */
 .lf-hub__body {
   display: flex;
