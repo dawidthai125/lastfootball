@@ -25,7 +25,7 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **Czekaj na Owner GO** (nie startować AUDIT bez GO). Kandydaci poza scope: Settings/§22 · Club Thin · Season End · TD-03 P2.
+Brak otwartego EPIC. **Czekaj na Owner GO** (nie startować AUDIT bez GO). Kandydaci poza scope: Settings/§22 · Season End · TD-03 P2.
 
 ## Powiązania
 
@@ -33,4 +33,4 @@ Brak otwartego EPIC. **Czekaj na Owner GO** (nie startować AUDIT bez GO). Kandy
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 · D40–D46 CLOSED
+2026-07-30 — LFE-CLUB-01 · D47–D51 CLOSED

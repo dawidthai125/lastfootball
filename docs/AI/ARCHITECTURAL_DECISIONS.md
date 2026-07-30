@@ -53,6 +53,11 @@
 | **D27** | Ranking Thin              | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
 | **D28** | League calendar 22        | `LEAGUE_FIXTURE_COUNT=22` double RR; MD1–11 identity; AI↔AI double RR.            |
 | **D38** | Transfer public API       | Buy/Sell only · fee SQL helpers · 1× live settle · TRANSFERS-09.                  |
+| **D47** | Club = Identity           | `/club` tożsamość ≠ progresja §6.                                                 |
+| **D48** | Profile Composition       | `ClubProfileDto` = compose faktów; zero drugiego modelu.                          |
+| **D49** | No Staff on Club          | Brak personelu Future na `/club`.                                                 |
+| **D50** | View presentation only    | `ClubProfileView` bez logiki biznesowej.                                          |
+| **D51** | One club profile resolver | `resolveClubProfile` = sole DTO `/club`.                                          |
 | **D40** | Fake Production Rule      | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41** | No runtime mocks          | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42** | Messages Are Derived      | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -103,4 +108,8 @@
 - `/messages` + Overlay = **ta sama** DTO · UI nie sortuje/filtruje.
 - **NO RUNTIME MOCKS** · brak DB / mark-as-read / Accept w skrzynce.
 
-**ACTIVE** · 2026-07-30 — LFE-MESSAGES-01 · D40–D46
+### D47–D51 — kontrakt Club Profile (must-know)
+
+- Identity ≠ progression · Composition only · no staff · View = DTO only · `resolveClubProfile` sole SSOT.
+
+**ACTIVE** · 2026-07-30 — LFE-CLUB-01 · D47–D51

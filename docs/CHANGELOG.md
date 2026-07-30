@@ -8,10 +8,26 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`800ed0d`** (LFE-MESSAGES-01).
+**Domain feature baseline:** **`36ba9be`** (LFE-CLUB-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`9bbbba6`** — LFE-MESSAGES-01 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-CLUB-01 · CLOSED
+
+### Product
+
+- `resolveClubProfile` derive only · Composition z ClubDto · starter · cash · league position
+- `/club` bez PlaceholderPage / „Podgląd UI” / personelu / silnika §6
+- `ClubProfileView` = presentation only (D50)
+- Domain tip → **`36ba9be`** · D47–D51 CLOSED
+- CI GREEN · PRODUCTION VERIFIED
+
+### Docs
+
+- Sync CLUB · CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · DECISIONS D47–D51 · EPIC_INDEX
 
 ---
 

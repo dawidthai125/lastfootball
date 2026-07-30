@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 800ed0d            # Domain feature baseline MESSAGES-01
+git log -1 --oneline 36ba9be            # Domain feature baseline CLUB-01
+git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
 git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
 git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
 git log -1 --oneline bf86749            # Prior Domain RANKING-01
@@ -38,13 +39,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `800ed0d` — **LFE-MESSAGES-01** (derived inbox Thin · D40–D46)        |
-| Domain message              | `feat(messages): implement LFE-MESSAGES-01 derived inbox Thin`        |
-| Prior Domain                | `e6885dc` — LFE-TRANSFERS-09                                          |
+| **Domain feature baseline** | `36ba9be` — **LFE-CLUB-01** (identity profile Thin · D47–D51)         |
+| Domain message              | `feat(club): implement LFE-CLUB-01 identity profile Thin`             |
+| Prior Domain                | `800ed0d` — LFE-MESSAGES-01                                           |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`9bbbba6`** — LFE-MESSAGES-01 CLOSE (pin)                           |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · MESSAGES-01 CLOSED · D40–D46        |
+| **Documentation tip**       | _(pin po docs sync)_                                                  |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · CLUB-01 CLOSED · D47–D51            |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -64,6 +65,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Daily Goal Thin (resolveClubDailyGoal · suggestion under Primary)
   → Achievements Thin (resolveClubAchievements · immutable history)
   → Messages Thin (resolveClubMessages · /messages + Overlay · ta sama DTO)
+  → Club identity Thin (resolveClubProfile · /club · D47–D51)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -100,6 +102,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26      |
 | Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO                |
 | Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                                  |
+| Klub (profil)     | `resolveClubProfile` — identity Thin · D47–D51 · `/club` sole DTO                    |
 | Wiadomości        | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO |
 | Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future     |
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`               |
@@ -114,6 +117,12 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 - `/messages` + Overlay = **ta sama** `ClubMessagesDto` (D43); UI **nie** sortuje / nie filtruje (D44).
 - **Nie** DB · migracje · mark-as-read · Accept/Reject · drugi proces ofert (D46); Transfery = SSOT ofert.
 - **NO RUNTIME MOCKS** (D40/D41) — brak MessagesPreview / MOCK_NOTIFICATIONS / stałego badge.
+
+### Club Profile (kontrakt Thin)
+
+- `resolveClubProfile` = **jedyny** SSOT UI `/club` (D51) — pure Composition (D48).
+- Identity ≠ progression (D47); brak silnika §6 · brak personelu (D49).
+- `ClubProfileView` = presentation only (D50); brak PlaceholderPage / mocków.
 
 ### Achievements (kontrakt Thin)
 
@@ -138,12 +147,12 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d` · D40–D46 CLOSED
+2026-07-30 — LFE-CLUB-01 CLOSED · Domain `36ba9be` · D47–D51 CLOSED

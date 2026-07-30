@@ -372,9 +372,36 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D40–D46:** LFE-MESSAGES-01 (feat `800ed0d`).
 
+### D47 — Club Is Identity, Not Progression · CLOSED
+
+**Dlaczego:** `/club` nie może stać się grindem poziomu / XP.  
+**Zasada:** Surface klubu = tożsamość + kontekst; zakaz UI progresji §6 (liczby · progi · silnik).
+
+### D48 — Profile Is Composition · CLOSED
+
+**Dlaczego:** Drift przy wielu builderach karty klubu.  
+**Zasada:** `ClubProfileDto` = kompozycja istniejących faktów (`ClubDto` · starter · cash · tabela); zero drugiego modelu.
+
+### D49 — No Staff on Club Profile · CLOSED
+
+**Dlaczego:** Personel Future na odblokowanym `/club` = fałszywy SSOT.  
+**Zasada:** Brak sekcji Personel / asystent / skaut / „wkrótce” na karcie klubu.
+
+### D50 — ClubProfileView Presentation Only · CLOSED
+
+**Dlaczego:** Logika w View → duplikat reguł.  
+**Zasada:** View renderuje wyłącznie `ClubProfileDto` — bez resolve / format / STARTER.
+
+### D51 — `resolveClubProfile` = jedyne źródło DTO `/club` · CLOSED
+
+**Dlaczego:** PlaceholderPage + bezpośrednie ClubDto w page = Fake Production.  
+**Zasada:** Jedyny feed UI = `resolveClubProfile`; zakaz PlaceholderPage / „Podgląd UI” na `/club`.
+
+**Źródło D47–D51:** LFE-CLUB-01 (feat `36ba9be`).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D46 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D51 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -392,6 +419,7 @@ Każde złamanie D1–D28 / D38 / D40–D46 wymaga **AUDIT** i aktualizacji tego
 **LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
 **LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
 **LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
+**LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
 
 ## Powiązania
 
@@ -399,4 +427,4 @@ Każde złamanie D1–D28 / D38 / D40–D46 wymaga **AUDIT** i aktualizacji tego
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 · D40–D46
+2026-07-30 — LFE-CLUB-01 · D47–D51

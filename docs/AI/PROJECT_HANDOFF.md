@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                              |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Production Version**          | UI P0 + Academy + Scouting + Daily + Achievements + Ranking + League 22 + Transfers 09 + **Messages 01** + MOTION-01 + GDD-16…**22** |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                |
-| **Domain feature baseline**     | `800ed0d` — **LFE-MESSAGES-01** (derived inbox Thin · D40–D46)                                                                       |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                |
-| **Documentation tip**           | **`9bbbba6`** — LFE-MESSAGES-01 CLOSE (pin)                                                                                          |
-| **Branch**                      | `main`                                                                                                                               |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **MESSAGES-01 CLOSED** · D40–D46 · TRANSFERS-09 · next **Owner GO**                                    |
+| Pole                            | Wartość                                                                                                                                        |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + Academy + Scouting + Daily + Achievements + Ranking + League 22 + Transfers 09 + Messages 01 + **Club 01** + MOTION-01 + GDD-16…**22** |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                          |
+| **Domain feature baseline**     | `36ba9be` — **LFE-CLUB-01** (identity profile Thin · D47–D51)                                                                                  |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                          |
+| **Documentation tip**           | _(pin po docs sync)_                                                                                                                           |
+| **Branch**                      | `main`                                                                                                                                         |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **CLUB-01 CLOSED** · D47–D51 · MESSAGES-01 · next **Owner GO**                                                   |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -30,7 +30,8 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 800ed0d            # Domain MESSAGES-01
+git log -1 --oneline 36ba9be            # Domain CLUB-01
+git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
 git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
 git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
 git log -1 --oneline bf86749            # Prior Domain RANKING-01
@@ -41,7 +42,7 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain MESSAGES-01 `800ed0d` · presentation MOTION-01 `9fd14fc`).
+**Prod deploy:** Vercel Production śledzi `main` (Domain CLUB-01 `36ba9be` · presentation MOTION-01 `9fd14fc`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** · **fee parity helpers** (TRANSFERS-09) — zastosowane.  
 **LFE-MESSAGES-01:** brak migracji (derive only).  
@@ -68,6 +69,7 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 | LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)                  |
 | **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`      |
 | **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`              |
+| **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                |
 | LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                                 |
 | GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                                   |
 | **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                            |
@@ -281,7 +283,7 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ### **Czekaj na Owner GO**
 
-**Uzasadnienie:** LFE-MESSAGES-01 FULLY CLOSED (`800ed0d`) · D40–D46 CLOSED · TRANSFERS-09 CLOSED. Brak otwartego EPIC.
+**Uzasadnienie:** LFE-CLUB-01 FULLY CLOSED (`36ba9be`) · D47–D51 CLOSED · MESSAGES-01 CLOSED. Brak otwartego EPIC.
 
 **Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO.
 
@@ -340,8 +342,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 - `LEAGUE_FIXTURE_COUNT=22` · double RR · D28 · PRODUCTION VERIFIED (`9027baf`).
 - Transfers hardening: TD-01/TD-02 CLOSED · D38 · PRODUCTION VERIFIED (`e6885dc`) · parity gate Vitest.
 - Messages Thin: D40–D46 CLOSED · PRODUCTION VERIFIED (`800ed0d`) · `resolveClubMessages` · Overlay = ta sama DTO · brak runtime mocków.
-- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · Ranking ELO/points-as-surface · Achievements XP/score/ekonomii · Messages DB/mark-as-read · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
-- Domain tip = MESSAGES-01 (`800ed0d`); prior TRANSFERS-09 `e6885dc`; prior LEAGUE-04 `9027baf`; prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
+- Club Profile Thin: D47–D51 CLOSED · PRODUCTION VERIFIED (`36ba9be`) · `resolveClubProfile` · brak silnika §6 / personelu.
+- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · Ranking ELO/points-as-surface · Achievements XP/score/ekonomii · Messages DB/mark-as-read · §6 numeric engine / club staff UI · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
+- Domain tip = CLUB-01 (`36ba9be`); prior MESSAGES-01 `800ed0d`; prior TRANSFERS-09 `e6885dc`; prior LEAGUE-04 `9027baf`; prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
 - Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
 - Ranking Thin (GDD-18 / D27): `resolveClubRanking` · table input · Information Thin · PRODUCTION VERIFIED (`bf86749`).
 - Osiągnięcia Thin (GDD-19 / D26): `resolveClubAchievements` · Information Thin · immutable history · PRODUCTION VERIFIED.
@@ -352,6 +355,7 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 - Ranking Thin (D27): `resolveClubRanking` table input · własny DTO · bez ELO/points surface · PRODUCTION VERIFIED.
 - League calendar (D28): `LEAGUE_FIXTURE_COUNT=22` · double RR · top-up MD12–22 · PRODUCTION VERIFIED (`9027baf`).
 - Messages Thin (D40–D46): `resolveClubMessages` · E1–E3 · `/messages` + Overlay · PRODUCTION VERIFIED (`800ed0d`).
+- Club Profile Thin (D47–D51): `resolveClubProfile` · `/club` · PRODUCTION VERIFIED (`36ba9be`).
 - Sekrety `.env` — nigdy w git.
 - Force-push / rewrite `main` — zakazane.
 - Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
@@ -393,9 +397,9 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                                      |
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                                         |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + Ranking + **Messages** |
-| Dokumentacja | **Aktualna** | MESSAGES-01 D40–D46 · Domain `800ed0d` · Presentation `9fd14fc`                                                  |
+| Dokumentacja | **Aktualna** | CLUB-01 D47–D51 · Domain `36ba9be` · Presentation `9fd14fc`                                                      |
 | CI           | **GREEN**    | tip feat VERIFIED                                                                                                |
-| Production   | **GREEN**    | Vercel · Domain MESSAGES-01 `800ed0d` · derive only (brak migracji)                                              |
+| Production   | **GREEN**    | Vercel · Domain CLUB-01 `36ba9be` · derive only (brak migracji)                                                  |
 
 ---
 
@@ -413,4 +417,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 CLOSED · D40–D46 · Domain `800ed0d` · next **Owner GO**
+2026-07-30 — LFE-CLUB-01 CLOSED · D47–D51 · Domain `36ba9be` · next **Owner GO**

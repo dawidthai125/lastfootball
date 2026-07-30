@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-LEAGUE-04 CLOSED** · **LFE-TRANSFERS-09 CLOSED** · **LFE-MESSAGES-01 CLOSED** (kod Thin). Następny: **Owner GO**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-LEAGUE-04 CLOSED** · **LFE-TRANSFERS-09 CLOSED** · **LFE-MESSAGES-01 CLOSED** · **LFE-CLUB-01 CLOSED** (kod Thin). Następny: **Owner GO**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -51,12 +51,13 @@ GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** �
 - Finanse: 1 kasa; live cash-only (D20); envelope = Future (§14 / poza Thin).
 - §26A: SSOT liczb Thin (starter 100 000 · W/D/L 5k/2.5k/1k · EUR · fee derive); D18/D20 = SSOT implementacji.
 - Stadion: preset statyczny MVP.
-- Rozwój klubu (§6): Poziom · Reputacja · Prestiż — Hub tylko konsumuje.
+- Rozwój klubu (§6): Poziom · Reputacja · Prestiż — filozofia GDD; kod Thin = etykiety jakościowe na `/club` (bez silnika).
 - Rozwój zawodników: potential pasma · Match PRIMARY · Training SUPPORTING (D22 / PLAYERS-02).
 - **Akademia (GDD §16 Thin A):** opcjonalna; Intake + Promote; brak poziomów; brak academy OVR; po promocji ten sam rozwój co senior; placeholder `/academy` ≠ SSOT; kod akademii = Future EPIC.
 - **Skauting (GDD §17 Information Thin B + LFE-SCOUTING-01):** system informacji; `resolveClubScouting`; `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (**nie** drugi model); shortlista prywatna (**zero** wpływu na AI/rynek/transfery/potencjał/symulację); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów/`scout_score` w Thin; D19/D22/D20 bez zmian.
 - **Ranking (GDD §18 Thin + LFE-RANKING-01):** `resolveClubRanking` Information Thin · table input only · własny DTO · **≠** league columns · **≠** ELO · **≠** §6; D27.
 - **Osiągnięcia (GDD §19 Thin + LFE-ACHIEVEMENTS-01):** `resolveClubAchievements` Information Thin · derive · immutable history · **≠** §6 · **≠** ranking · **≠** Daily; bez XP/score/ekonomii; D26.
+- **Klub / profil (LFE-CLUB-01):** `resolveClubProfile` identity Thin · Composition · jakościowa organizacja · brak silnika §6 / personelu · D47–D51.
 - **Wiadomości (GDD §21 Thin + LFE-MESSAGES-01):** `resolveClubMessages` derive E1–E3; wiadomość = skutek zdarzenia (nigdy przyczyna); Transfery = SSOT ofert; `/messages` + Overlay = ta sama DTO; CTA → istniejące ekrany; **≠** powiadomienie §22; D40–D46; brak DB/mocków.
 - **Powiadomienia (GDD §22 Thin):** polityka soft remindów; **zaproszenie ≠ wymuszenie**; opt-out ≠ utrata informacji (Hub / Inbox / domena); Soft FOMO · opt-in · dedup; **≠** wiadomość §21; push/email/SDK/quiet hours = Future; Overlay reuse Messages DTO (nie osobny SSOT list).
 
@@ -71,4 +72,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d` · D40–D46
+2026-07-30 — LFE-CLUB-01 CLOSED · Domain `36ba9be` · D40–D46
