@@ -437,8 +437,8 @@ export async function setTransferListing(
 }
 
 /**
- * Live H2H Instant Buy @ 100% ask (LFE-TRANSFERS-06).
- * One deriveTransferFee snapshot; settlement via completeTransferSell + completeTransferBuy (live).
+ * Live H2H Instant Buy @ 100% ask (LFE-TRANSFERS-06 / LFE-TRANSFERS-09).
+ * One deriveTransferFee snapshot; single settlement entry via completeTransferBuy (live).
  */
 export async function buyLiveTransferPlayer(
   _prev: TransferActionState,
@@ -539,19 +539,6 @@ export async function buyLiveTransferPlayer(
     status: p.status,
     departed_at: p.departedAt,
   }));
-
-  const sellResult = await completeTransferSell(supabase, {
-    source: 'live',
-    clubId: sellerClubId,
-    transferWindowOpen: listing.sellerWindowOpen,
-    playerId,
-    buyerClubId: buyer.id,
-    currentAsk: askSnapshot,
-    agreedAmount: askSnapshot,
-    playerSkill: listing.skill,
-    playerAge: listing.age,
-  });
-  if (!sellResult.ok) return { error: sellResult.error };
 
   const buyResult = await completeTransferBuy(supabase, {
     source: 'live',
@@ -695,9 +682,10 @@ export async function createLiveTransferOffer(
 }
 
 /**
- * Accept H2H pending offer.
- * phase=opening → seller; phase=countered → buyer.
- * Settlement via buy/sell live only @ current_amount. Funds fail → stays pending.
+ * Accept H2H pending offer (LFE-TRANSFERS-09: single settle invoke).
+ * phase=opening → seller → completeTransferSell (live).
+ * phase=countered → buyer → completeTransferBuy (live).
+ * Funds fail → stays pending (RPC).
  */
 export async function acceptLiveTransferOffer(
   _prev: TransferActionState,
@@ -804,49 +792,49 @@ export async function acceptLiveTransferOffer(
 
   const agreedAmount = offer.current_amount;
 
-  // RPC validates funds/roster; stubs satisfy live buy length check on TS path.
-  const rosterForBuy = Array.from({ length: 18 }, (_, i) => ({
-    id: `stub-${i}`,
-    name: 'Stub',
-    shirt_number: i + 1,
-    pos: 'ŚP',
-    role: 'CM',
-    starter: false,
-    age: 20,
-    skill: 50,
-    status: 'READY',
-    departed_at: null as string | null,
-  }));
+  if (offer.phase === 'opening') {
+    const sellResult = await completeTransferSell(supabase, {
+      source: 'live',
+      clubId: offer.seller_club_id,
+      transferWindowOpen: Boolean(actor.transfer_window_open),
+      playerId: offer.player_id,
+      buyerClubId: offer.buyer_club_id,
+      currentAsk,
+      agreedAmount,
+      playerSkill: player.skill,
+      playerAge: player.age,
+      acceptOfferId: offer.id,
+    });
+    if (!sellResult.ok) return { error: sellResult.error };
+  } else {
+    const active = await listClubPlayers(offer.buyer_club_id);
+    const activeMapped = active.map((p) => ({
+      id: p.id,
+      name: p.name,
+      shirt_number: p.shirtNumber,
+      pos: p.pos,
+      role: p.role,
+      starter: p.starter,
+      age: p.age,
+      skill: p.skill,
+      status: p.status,
+      departed_at: p.departedAt,
+    }));
 
-  const sellerWindowOpen = offer.phase === 'opening' ? Boolean(actor.transfer_window_open) : true;
-
-  const sellResult = await completeTransferSell(supabase, {
-    source: 'live',
-    clubId: offer.seller_club_id,
-    transferWindowOpen: sellerWindowOpen,
-    playerId: offer.player_id,
-    buyerClubId: offer.buyer_club_id,
-    currentAsk,
-    agreedAmount,
-    playerSkill: player.skill,
-    playerAge: player.age,
-    acceptOfferId: offer.id,
-  });
-  if (!sellResult.ok) return { error: sellResult.error };
-
-  const buyResult = await completeTransferBuy(supabase, {
-    source: 'live',
-    clubId: offer.buyer_club_id,
-    cashBalance: agreedAmount,
-    transferWindowOpen: true,
-    playerId: offer.player_id,
-    sellerClubId: offer.seller_club_id,
-    currentAsk,
-    agreedAmount,
-    activePlayers: rosterForBuy,
-    acceptOfferId: offer.id,
-  });
-  if (!buyResult.ok) return { error: buyResult.error };
+    const buyResult = await completeTransferBuy(supabase, {
+      source: 'live',
+      clubId: offer.buyer_club_id,
+      cashBalance: actor.cash_balance,
+      transferWindowOpen: Boolean(actor.transfer_window_open),
+      playerId: offer.player_id,
+      sellerClubId: offer.seller_club_id,
+      currentAsk,
+      agreedAmount,
+      activePlayers: activeMapped,
+      acceptOfferId: offer.id,
+    });
+    if (!buyResult.ok) return { error: buyResult.error };
+  }
 
   revalidatePath('/', 'layout');
   return { ok: true };

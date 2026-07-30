@@ -110,7 +110,8 @@ type LiveRpcResult = {
 
 /**
  * Invokes atomic DB Live H2H settlement (security definer RPC).
- * Not exported — buy/sell remain the only settlement entry points.
+ * Not exported — buy/sell remain the only settlement entry points (Single Settlement Path).
+ * Live Instant/Accept: one call into buy or sell → one RPC invoke (LFE-TRANSFERS-09 TD-02).
  */
 async function invokeLiveH2hRpc(
   supabase: AppSupabase,
