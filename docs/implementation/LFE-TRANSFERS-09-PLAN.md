@@ -24,34 +24,34 @@ Usunąć dług P1 rynku transferowego **bez** zmiany semantyki produktu (D20 / G
 
 ## 1. Zamrożone decyzje Ownera (nienaruszalne)
 
-| #   | Decyzja                                                                                      |
-| --- | -------------------------------------------------------------------------------------------- |
-| 1   | Scope = **tylko TD-01 + TD-02** (TD-03+ OUT)                                                  |
-| 2   | Zachować **Single Settlement Path** (`completeTransferBuy` / `completeTransferSell`)         |
-| 3   | **Nie** tworzyć drugiej ścieżki settlement (`completeLiveTransfer()` zakazane)               |
-| 4   | Docelowo **jeden entrypoint** invoke do RPC live na settle (jedno wywołanie z orkiestracji)  |
-| 5   | Wyeliminować możliwość driftu TS ↔ SQL dla fee i negotiation presets                         |
-| 6   | Obowiązkowy **parity gate** (wspólna definicja / generowanie / testy)                         |
-| 7   | Dopuszczalny refaktor SQL/RPC **bez** zmian schematu                                         |
-| 8   | **Brak** nowych tabel / kolumn                                                               |
-| 9   | **Brak** zmian GDD i semantyki produktu                                                      |
-| 10  | **Brak** escrow · timeoutów · buyer Counter · AI negotiation                                 |
-| 11  | SSOT FIRST · REUSE FIRST · ZERO DUPLICATE LOGIC · Single Settlement Path                     |
+| #   | Decyzja                                                                                     |
+| --- | ------------------------------------------------------------------------------------------- |
+| 1   | Scope = **tylko TD-01 + TD-02** (TD-03+ OUT)                                                |
+| 2   | Zachować **Single Settlement Path** (`completeTransferBuy` / `completeTransferSell`)        |
+| 3   | **Nie** tworzyć drugiej ścieżki settlement (`completeLiveTransfer()` zakazane)              |
+| 4   | Docelowo **jeden entrypoint** invoke do RPC live na settle (jedno wywołanie z orkiestracji) |
+| 5   | Wyeliminować możliwość driftu TS ↔ SQL dla fee i negotiation presets                        |
+| 6   | Obowiązkowy **parity gate** (wspólna definicja / generowanie / testy)                       |
+| 7   | Dopuszczalny refaktor SQL/RPC **bez** zmian schematu                                        |
+| 8   | **Brak** nowych tabel / kolumn                                                              |
+| 9   | **Brak** zmian GDD i semantyki produktu                                                     |
+| 10  | **Brak** escrow · timeoutów · buyer Counter · AI negotiation                                |
+| 11  | SSOT FIRST · REUSE FIRST · ZERO DUPLICATE LOGIC · Single Settlement Path                    |
 
 ---
 
 ## 2. Zakres Thin (IN)
 
-| #   | Element                                                                                                                          |
-| --- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | SQL: **jedna** definicja helperów fee + allow-list (REUSE w `complete_live_h2h_transfer` + `counter_live_transfer_offer`)        |
-| 2   | Nowa migracja **CREATE OR REPLACE** funkcji (bez ALTER TABLE / nowych relacji)                                                 |
-| 3   | Parity gate CI: wartości `ECONOMY_THIN.TRANSFER_FEE` + `NEGOTIATION_THIN` **===** literały / kontrakt SQL helperów                |
-| 4   | Live Instant (`buyLiveTransferPlayer`): **jeden** call `completeTransferBuy` **lub** `completeTransferSell` (live) — nie oba    |
-| 5   | Live Accept (`acceptLiveTransferOffer`): **jeden** call settle — nie sell+buy                                                    |
-| 6   | Idempotencja RPC (`live-buy:{playerId}` / `live-sell:{…}`) **nienaruszona**                                                      |
-| 7   | Regresja testów transfers-01…08 + nowe testy 09 (parity + single-invoke kontrakt)                                                |
-| 8   | Aktualizacja `TRANSFER_ARCHITECTURE.md` (TD-01/02 → CLOSED) + PROJECT_STATE / ROADMAP / CHANGELOG — **tylko w DOCS CLOSE**       |
+| #   | Element                                                                                                                      |
+| --- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 1   | SQL: **jedna** definicja helperów fee + allow-list (REUSE w `complete_live_h2h_transfer` + `counter_live_transfer_offer`)    |
+| 2   | Nowa migracja **CREATE OR REPLACE** funkcji (bez ALTER TABLE / nowych relacji)                                               |
+| 3   | Parity gate CI: wartości `ECONOMY_THIN.TRANSFER_FEE` + `NEGOTIATION_THIN` **===** literały / kontrakt SQL helperów           |
+| 4   | Live Instant (`buyLiveTransferPlayer`): **jeden** call `completeTransferBuy` **lub** `completeTransferSell` (live) — nie oba |
+| 5   | Live Accept (`acceptLiveTransferOffer`): **jeden** call settle — nie sell+buy                                                |
+| 6   | Idempotencja RPC (`live-buy:{playerId}` / `live-sell:{…}`) **nienaruszona**                                                  |
+| 7   | Regresja testów transfers-01…08 + nowe testy 09 (parity + single-invoke kontrakt)                                            |
+| 8   | Aktualizacja `TRANSFER_ARCHITECTURE.md` (TD-01/02 → CLOSED) + PROJECT_STATE / ROADMAP / CHANGELOG — **tylko w DOCS CLOSE**   |
 
 ---
 
@@ -100,7 +100,7 @@ UI / actions.ts
 2. `CREATE OR REPLACE` na:
    - `complete_live_h2h_transfer(...)`
    - `counter_live_transfer_offer(...)`  
-   — **usuwa** inline formułę; woła helpery.
+     — **usuwa** inline formułę; woła helpery.
 3. Helpery pozostają `SECURITY`-bezpieczne (używane tylko z RPC; opcjonalnie `REVOKE` od `authenticated` jeśli nie muszą być publiczne).
 4. **Parity gate (obowiązkowy)** — Vitest (preferowane, REUSE runnera app):
    - assert: stałe TS === oczekiwane liczby GDD §26 / NEGOTIATION_THIN,
@@ -119,11 +119,11 @@ UI / actions.ts
 
 **Rozwiązanie (PLAN):**
 
-| Flow                         | Po hardening                                                                 |
-| ---------------------------- | ---------------------------------------------------------------------------- |
-| Instant Buy                  | **Jeden** `completeTransferBuy({ source: 'live', … })`                       |
-| Accept (opening = seller)    | **Jeden** `completeTransferSell({ source: 'live', acceptOfferId, … })`       |
-| Accept (countered = buyer)   | **Jeden** `completeTransferBuy({ source: 'live', acceptOfferId, … })`        |
+| Flow                       | Po hardening                                                           |
+| -------------------------- | ---------------------------------------------------------------------- |
+| Instant Buy                | **Jeden** `completeTransferBuy({ source: 'live', … })`                 |
+| Accept (opening = seller)  | **Jeden** `completeTransferSell({ source: 'live', acceptOfferId, … })` |
+| Accept (countered = buyer) | **Jeden** `completeTransferBuy({ source: 'live', acceptOfferId, … })`  |
 
 Uzasadnienie wyboru strony:
 
@@ -156,14 +156,14 @@ Uzasadnienie wyboru strony:
 
 ## 6. Pliki (oczekiwany touch)
 
-| Plik                                                                 | Rola                                      |
-| -------------------------------------------------------------------- | ----------------------------------------- |
-| `supabase/migrations/<ts>_transfer_fee_parity_helpers.sql` (nowy)    | Helpery + replace RPC                     |
-| `apps/web/src/lib/transfers/actions.ts`                              | Single invoke Instant / Accept            |
-| `apps/web/src/lib/transfers/complete-deal.ts`                        | Bez nowego public API; komentarze opcjonalnie |
-| `apps/web/src/lib/transfers/transfers-09*.test.ts` (nowy)            | Parity + kontrakt single-invoke           |
-| `docs/platform/TRANSFER_ARCHITECTURE.md`                             | DOCS CLOSE                                |
-| `docs/AI/PROJECT_STATE.md` · ROADMAP · CHANGELOG · HANDOFF           | DOCS CLOSE                                |
+| Plik                                                              | Rola                                          |
+| ----------------------------------------------------------------- | --------------------------------------------- |
+| `supabase/migrations/<ts>_transfer_fee_parity_helpers.sql` (nowy) | Helpery + replace RPC                         |
+| `apps/web/src/lib/transfers/actions.ts`                           | Single invoke Instant / Accept                |
+| `apps/web/src/lib/transfers/complete-deal.ts`                     | Bez nowego public API; komentarze opcjonalnie |
+| `apps/web/src/lib/transfers/transfers-09*.test.ts` (nowy)         | Parity + kontrakt single-invoke               |
+| `docs/platform/TRANSFER_ARCHITECTURE.md`                          | DOCS CLOSE                                    |
+| `docs/AI/PROJECT_STATE.md` · ROADMAP · CHANGELOG · HANDOFF        | DOCS CLOSE                                    |
 
 **Bez zmian:** `derive-fee.ts` formuła · `NEGOTIATION_THIN` wartości · Match Engine · schema tables.
 
@@ -184,12 +184,12 @@ Uzasadnienie wyboru strony:
 
 ## 8. Ryzyka i mitygacja
 
-| Ryzyko                                      | Mitygacja                                                          |
-| ------------------------------------------- | ------------------------------------------------------------------ |
-| Migracja źle skopiuje ciało RPC             | Diff względem `20260726040000_…`; testy + ręczny Instant/Accept    |
+| Ryzyko                                         | Mitygacja                                                          |
+| ---------------------------------------------- | ------------------------------------------------------------------ |
+| Migracja źle skopiuje ciało RPC                | Diff względem `20260726040000_…`; testy + ręczny Instant/Accept    |
 | Single-invoke omija walidację TS jednej strony | RPC już waliduje obie strony; zachować TS checks po stronie actora |
-| Parity regex kruchy                         | Pin na plik helperów / jednoznaczny marker `-- TRANSFER_FEE_SSOT`  |
-| Drift historycznych migracji                | Gate sprawdza **aktualną** definicję (najnowszy replace), nie 200 |
+| Parity regex kruchy                            | Pin na plik helperów / jednoznaczny marker `-- TRANSFER_FEE_SSOT`  |
+| Drift historycznych migracji                   | Gate sprawdza **aktualną** definicję (najnowszy replace), nie 200  |
 
 ---
 
@@ -206,11 +206,11 @@ Uzasadnienie wyboru strony:
 
 ## 10. Definition of Done
 
-- AC 1–8 spełnione  
-- CI GREEN na tipie z featem  
-- PRODUCTION VERIFY PASS (live settle)  
-- DOCS CLOSE + pin (wg pipeline Ownera)  
-- **STOP** — brak kolejnego EPICu bez GO  
+- AC 1–8 spełnione
+- CI GREEN na tipie z featem
+- PRODUCTION VERIFY PASS (live settle)
+- DOCS CLOSE + pin (wg pipeline Ownera)
+- **STOP** — brak kolejnego EPICu bez GO
 
 ---
 
