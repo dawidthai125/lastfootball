@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B · GDD-18 Ranking Thin · **GDD-19 Osiągnięcia Thin CLOSED**. §3–§19 (Thin), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Następny: **GDD-21 READY FOR AUDIT**. Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED**. §3–§21 (Thin; §22 szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Następny: **GDD-22 READY FOR AUDIT**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -28,6 +28,7 @@ GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B ·
 | §17      | Skauting            | Wypełniony Information Thin B (GDD-17) — system informacji |
 | **§18**  | **Ranking**         | **Wypełniony Thin (GDD-18)** — sezonowy ranking klubów     |
 | **§19**  | **Osiągnięcia**     | **Wypełniony Thin (GDD-19)** — kamienie / historia         |
+| **§21**  | **Wiadomości**      | **Wypełniony Thin (GDD-21)** — inbox · skutek zdarzenia    |
 | §20      | Zadania dzienne     | **Wypełniony (GDD-15)**                                    |
 | §23      | Panel główny (Hub)  | Wypełniony (GDD-14)                                        |
 | §24–§25  | UI (w Guide + GDD)  | Guide + **Presentation Contract**; §24 szkielet            |
@@ -54,11 +55,12 @@ GDD-15 CLOSED · GDD-16 Akademia Thin A · GDD-17 Skauting Information Thin B ·
 - **Skauting (GDD §17 Information Thin B):** wyłącznie system informacji; shortlista prywatna (zero wpływu na rynek/transfer/zawodnika); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów w Thin; D19/D22/D20 bez zmian; placeholder `/scouting` ≠ SSOT; kod skautingu = Future EPIC.
 - **Ranking (GDD §18 Thin):** sezonowy ranking **klubów** only; konsumuje sygnały §6 — nie redefiniuje Poziomu/Reputacji/Prestiżu; **≠** tabela ligowa (§10); **≠** shortlista (§17); **≠** osiągnięcia (§19); brak liczb/ELO/algorytmów; placeholder `/rankings` ≠ SSOT; kod rankingu = Future EPIC.
 - **Osiągnięcia (GDD §19 Thin):** wyrażają kamienie / historię; **≠** §6 metryki; **≠** ranking §18; §20 może hookować, nie jest katalogiem; kategorie only — bez XP/progów/ID; placeholder `/achievements` ≠ SSOT; kod achievementów = Future EPIC.
+- **Wiadomości (GDD §21 Thin):** in-app inbox; wiadomość = skutek zdarzenia domenowego (nigdy przyczyna); Transfery = SSOT ofert; CTA → istniejące ekrany; **≠** push/§22; placeholder `/messages` ≠ SSOT; kod inboxu = Future EPIC.
 
 ## Najważniejsze decyzje
 
 Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.  
-§6 = metryki klubu · §18 = ranking klubów · §19 = osiągnięcia (historia) · §20 = zadania · §23 = Hub · **§26 = liczby / balans**.
+§6 = metryki klubu · §18 = ranking klubów · §19 = osiągnięcia (historia) · §21 = wiadomości (skutek) · §20 = zadania · §23 = Hub · **§26 = liczby / balans**.
 
 ## Powiązania
 
@@ -66,4 +68,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — GDD-19 Osiągnięcia Thin CLOSED
+2026-07-30 — GDD-21 Wiadomości Thin CLOSED · tip `c24efef`

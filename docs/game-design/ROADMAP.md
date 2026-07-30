@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B** + **GDD-18 Ranking Thin CLOSED** + **GDD-19 Osiągnięcia Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§19 (Thin) + §20 + §23 + **§26**. Następny = **GDD-21** (§21 Wiadomości) — **READY FOR AUDIT**.
+GDD-01…15 + **GDD-16…19 Thin CLOSED** + **GDD-21 Wiadomości Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§21 (Thin; §22 szkielet) + §20 + §23 + **§26**. Następny = **GDD-22** (§22 Powiadomienia) — **READY FOR AUDIT**.
 
 ## Completed
 
@@ -31,6 +31,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 | GDD-17     | §17 Skauting Information Thin B (system informacji) · CLOSED                |
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
 | **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `2c619ca` |
+| **GDD-21** | **§21 Wiadomości Thin** · **CLOSED** · tip `c24efef` · content `bf07a44`    |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 
@@ -42,10 +43,10 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Planned
 
-| Stage      | Zakres                                              |
-| ---------- | --------------------------------------------------- |
-| **GDD-21** | **§21 Wiadomości** — **READY FOR AUDIT**            |
-| GDD-17+    | Pozostałe szkielety (§22 / §24+; kolejność = Owner) |
+| Stage      | Zakres                                                  |
+| ---------- | ------------------------------------------------------- |
+| **GDD-22** | **§22 Powiadomienia** — **READY FOR AUDIT**             |
+| GDD-17+    | Pozostałe szkielety (§20 kod / §24+; kolejność = Owner) |
 
 ## Future
 
@@ -62,7 +63,7 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §19 = osiągnięcia (historia) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
+- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §19 = osiągnięcia (historia) · §21 = wiadomości (skutek) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
 - §26 = SSOT liczb; D18/D20 = SSOT implementacji.
 
 ## Powiązania
@@ -71,4 +72,4 @@ GDD-01…15 + **GDD-16 Akademia Thin A** + **GDD-17 Skauting Information Thin B*
 
 ## Last updated
 
-2026-07-30 — GDD-19 Osiągnięcia Thin CLOSED · next GDD-21 READY FOR AUDIT
+2026-07-30 — GDD-21 Wiadomości Thin CLOSED · tip `c24efef` · next GDD-22 READY FOR AUDIT
