@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                  |
 | **Domain feature baseline**     | `e6885dc` — **LFE-TRANSFERS-09** (fee parity · single live settle)                                                     |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                  |
-| **Documentation tip**           | **`4b8ab48`** � LFE-TRANSFERS-09 CLOSE (pin)                                                                           |
+| **Documentation tip**           | **`4b8ab48`** — LFE-TRANSFERS-09 CLOSE (pin)                                                                           |
 | **Branch**                      | `main`                                                                                                                 |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **TRANSFERS-09 CLOSED** · TD-01/TD-02 · LEAGUE-04 · next **Owner GO**                    |
 
