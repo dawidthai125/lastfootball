@@ -11,7 +11,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)                                                                        |
 | **Domain feature baseline** | `800ed0d` — LFE-MESSAGES-01 (derived inbox Thin · D40–D46)                                                                                                       |
 | **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                                                                                             |
-| **Documentation tip**       | _(pin po docs sync)_                                                                                                                                             |
+| **Documentation tip**       | **`9bbbba6`** — LFE-MESSAGES-01 CLOSE (pin)
 | **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                                                               |
 | **Status projektu**         | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (SSOT)                                                                                                                |
 | Production                  | https://lastfootball.vercel.app                                                                                                                                  |

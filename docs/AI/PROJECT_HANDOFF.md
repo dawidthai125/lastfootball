@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                |
 | **Domain feature baseline**     | `800ed0d` — **LFE-MESSAGES-01** (derived inbox Thin · D40–D46)                                                                       |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                |
-| **Documentation tip**           | _(pin po docs sync)_                                                                                                                 |
+| **Documentation tip**           | **`9bbbba6`** — LFE-MESSAGES-01 CLOSE (pin)
 | **Branch**                      | `main`                                                                                                                               |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **MESSAGES-01 CLOSED** · D40–D46 · TRANSFERS-09 · next **Owner GO**                                    |
 
