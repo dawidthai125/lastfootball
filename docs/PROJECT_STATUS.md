@@ -1,4 +1,4 @@
-# Project Status — Last Football
+﻿# Project Status — Last Football
 
 ## Cel
 
@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)          |
 | **Domain feature**      | **`93fd6d5`** — **LFE-SCOUTING-01** (Information Thin · shortlist) |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)           |
-| **Documentation tip**   | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)            |
+| **Documentation tip**   | `8bb3643` — **LFE-SCOUTING-01** CLOSE sync (pin)                   |
 | **Prod**                | https://lastfootball.vercel.app                                    |
 
 | Tor               | Stan                                                                                                                        |

@@ -1,4 +1,4 @@
-# Game Design — Last Football
+﻿# Game Design — Last Football
 
 ## Cel dokumentu
 
@@ -10,7 +10,7 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `93fd6d5` (SCOUTING-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `DOCS_CLOSE_TIP` SCOUTING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `93fd6d5` (SCOUTING-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `8bb3643` SCOUTING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
 Następny: **LFE-DAILY-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
 PLAN closed: [`../implementation/LFE-SCOUTING-01-PLAN.md`](../implementation/LFE-SCOUTING-01-PLAN.md).

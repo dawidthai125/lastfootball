@@ -16,7 +16,7 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline DOCS_CLOSE_TIP     # Documentation tip LFE-SCOUTING-01 CLOSE (pin)
+git log -1 --oneline 8bb3643     # Documentation tip LFE-SCOUTING-01 CLOSE (pin)
 git log -1 --oneline 93fd6d5            # Domain feature baseline SCOUTING-01
 git log -1 --oneline a29812d            # Build fix (client barrel)
 git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
@@ -39,7 +39,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Domain message              | `feat(scouting): implement LFE-SCOUTING-01 Information Thin`          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)               |
+| **Documentation tip**       | `8bb3643` — **LFE-SCOUTING-01** CLOSE sync (pin)                      |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · SCOUTING-01 CLOSED · ACADEMY-01     |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
@@ -115,4 +115,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · Presentation `9fd14fc` · Docs tip `DOCS_CLOSE_TIP` (pin)
+2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · Presentation `9fd14fc` · Docs tip `8bb3643` (pin)
