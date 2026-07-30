@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                          |
 | **Domain feature baseline**     | `36ba9be` — **LFE-CLUB-01** (identity profile Thin · D47–D51)                                                                                  |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                          |
-| **Documentation tip**           | _(pin po docs sync)_                                                                                                                           |
+| **Documentation tip**           | **`d645888`** — LFE-CLUB-01 CLOSE (pin)                                                                                                        |
 | **Branch**                      | `main`                                                                                                                                         |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **CLUB-01 CLOSED** · D47–D51 · MESSAGES-01 · next **Owner GO**                                                   |
 
