@@ -45,7 +45,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Prior Domain                | `36ba9be` — LFE-CLUB-01                                                                              |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                                      |
-| **Documentation tip**       | _(pin po docs sync)_                                                                                 |
+| **Documentation tip**       | **`046dbb6`** — GDD-SEASON-END-01 CLOSE (pin)                                                        |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
