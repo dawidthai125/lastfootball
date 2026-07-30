@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                       |
 | **Domain feature baseline**     | `73e1361` — **LFE-DAILY-01** (Daily Goal Thin · derive)                                                     |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                       |
-| **Documentation tip**           | CLOSE sync LFE-DAILY-01 (pin follows)                                                                       |
+| **Documentation tip**           | ca4182e — **LFE-DAILY-01** CLOSE (pin)                                                                      |
 | **Branch**                      | `main`                                                                                                      |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **DAILY-01 CLOSED** · SCOUTING-01 · ACADEMY-01 · M2.5 · next **ACHIEVEMENTS** |
 

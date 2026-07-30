@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)   |
 | **Domain feature**      | **`73e1361`** — **LFE-DAILY-01** (Daily Goal Thin · derive) |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)    |
-| **Documentation tip**   | CLOSE sync LFE-DAILY-01 (pin follows)                       |
+| **Documentation tip**   | ca4182e — **LFE-DAILY-01** CLOSE (pin)                      |
 | **Prod**                | https://lastfootball.vercel.app                             |
 
 | Tor               | Stan                                                                                                                                     |

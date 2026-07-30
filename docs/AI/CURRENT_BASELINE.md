@@ -37,7 +37,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Domain message              | `feat(hub): implement LFE-DAILY-01 Daily Goal Thin derive`            |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | CLOSE sync LFE-DAILY-01 (pin follows)                                 |
+| **Documentation tip**       | ca4182e — **LFE-DAILY-01** CLOSE (pin)                                |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · DAILY-01 CLOSED · SCOUTING-01       |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
