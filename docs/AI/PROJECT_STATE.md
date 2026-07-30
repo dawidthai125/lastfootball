@@ -15,11 +15,13 @@
 | D22      | Player potential / match development      | Zamknięte — D22                                                                          |
 | D23      | Academy Thin A                            | Zamknięte — D23 · LFE-ACADEMY-01                                                         |
 | D24      | Scouting Information Thin                 | Zamknięte — D24 · LFE-SCOUTING-01                                                        |
+| D25      | Daily Goal Thin                           | Zamknięte — D25 · LFE-DAILY-01                                                           |
+| D26      | Achievements Information Thin             | Zamknięte — D26 · LFE-ACHIEVEMENTS-01                                                    |
 | TD-01/02 | Transfers fee SQL↔TS · double live invoke | Dług P1 — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
 
 ## Następny EPIC
 
-**LFE-DAILY-01** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
+**LFE-RANKING-01** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
 
 ## Powiązania
 
@@ -27,4 +29,4 @@
 
 ## Last updated
 
-2026-07-30 — AI-DOCS-HARDENING-01
+2026-07-30 — LFE-ACHIEVEMENTS-01 · D26

@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-SCOUTING-01 CLOSED** (kod). Następny: **LFE-ACHIEVEMENTS-01 READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-ACHIEVEMENTS-01 CLOSED** (kod Thin). Następny: **LFE-RANKING-01 READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -56,7 +56,7 @@ GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** �
 - **Akademia (GDD §16 Thin A):** opcjonalna; Intake + Promote; brak poziomów; brak academy OVR; po promocji ten sam rozwój co senior; placeholder `/academy` ≠ SSOT; kod akademii = Future EPIC.
 - **Skauting (GDD §17 Information Thin B + LFE-SCOUTING-01):** system informacji; `resolveClubScouting`; `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (**nie** drugi model); shortlista prywatna (**zero** wpływu na AI/rynek/transfery/potencjał/symulację); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów/`scout_score` w Thin; D19/D22/D20 bez zmian.
 - **Ranking (GDD §18 Thin):** sezonowy ranking **klubów** only; konsumuje sygnały §6 — nie redefiniuje Poziomu/Reputacji/Prestiżu; **≠** tabela ligowa (§10); **≠** shortlista (§17); **≠** osiągnięcia (§19); brak liczb/ELO/algorytmów; placeholder `/rankings` ≠ SSOT; kod rankingu = Future EPIC.
-- **Osiągnięcia (GDD §19 Thin):** wyrażają kamienie / historię; **≠** §6 metryki; **≠** ranking §18; §20 może hookować, nie jest katalogiem; kategorie only — bez XP/progów/ID; placeholder `/achievements` ≠ SSOT; kod achievementów = Future EPIC.
+- **Osiągnięcia (GDD §19 Thin + LFE-ACHIEVEMENTS-01):** `resolveClubAchievements` Information Thin · derive · immutable history · **≠** §6 · **≠** ranking · **≠** Daily; bez XP/score/ekonomii; D26.
 - **Wiadomości (GDD §21 Thin):** in-app inbox; wiadomość = skutek zdarzenia domenowego (nigdy przyczyna); Transfery = SSOT ofert; CTA → istniejące ekrany; **≠** powiadomienie §22; placeholder `/messages` ≠ SSOT; kod inboxu = Future EPIC.
 - **Powiadomienia (GDD §22 Thin):** polityka soft remindów; **zaproszenie ≠ wymuszenie**; opt-out ≠ utrata informacji (Hub / Inbox / domena); Soft FOMO · opt-in · dedup; **≠** wiadomość §21; push/email/SDK/quiet hours/kod = Future; Overlay notifications ≠ SSOT.
 
@@ -71,4 +71,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — LFE-DAILY-01 CLOSED · Domain `73e1361`
+2026-07-30 — LFE-ACHIEVEMENTS-01 CLOSED · Domain `3915be9`

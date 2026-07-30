@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-ACHIEVEMENTS-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D26 · Domain tip `3915be9` · next **LFE-RANKING-01 READY FOR AUDIT**
+- Kontrakt: `resolveClubAchievements` derive · immutable history · brak XP / score / ekonomii
+
+### Added (shipped on `main` — LFE-ACHIEVEMENTS-01)
+
+- `resolveClubAchievements` · `/achievements` UI · derive milestone history from domain facts
+
 ### Docs (LFE-DAILY-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D25 · Domain tip `73e1361` · next **LFE-ACHIEVEMENTS-01 READY FOR AUDIT**

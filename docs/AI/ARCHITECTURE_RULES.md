@@ -33,6 +33,7 @@ supabase/ (Auth + Postgres migrations)
 | Sesja Hub          | `resolveHubSession(phase, next, lastPlayed)`                 |
 | Primary CTA Hub    | `resolvePrimaryCta(phase, session, ctx)` wyłącznie           |
 | Daily Goal Hub     | `resolveClubDailyGoal(...)` → `ClubDailyGoalDto \| null`     |
+| Achievements UI    | `resolveClubAchievements(...)` → `ClubAchievementsDto`       |
 | Terminarz ligowy   | `fixtures` → `FixtureDto` / `getNextFixture`                 |
 | Saldo kasy         | `clubs.cash_balance`                                         |
 | Historia finansów  | `finance_movements`                                          |
@@ -67,6 +68,13 @@ supabase/ (Auth + Postgres migrations)
 - ≠ `resolveSecondaryCtas` (daily **loop** nawigacji UI Evolution-02).
 - REUSE: Hub session/Primary · fixtures · `last_training_on` + `utcDateString` · unlock treningu.
 - Poza Thin: Quest Engine · persist/claim · streaki · nagrody §26 · inbox/push jako zależność.
+
+## Achievements rules (LFE-ACHIEVEMENTS-01 / D26 / GDD §19)
+
+- `/achievements` konsumuje **tylko** `resolveClubAchievements()` — historia Information Thin.
+- Derive only z faktów domeny; **zakaz** persist / XP / Achievement Score / ekonomii.
+- Historia **immutable** względem trwałych faktów; ≠ Ranking · ≠ Daily Goal · ≠ §6.
+- Poza Thin: katalog ID · fog discovery · muzeum · nagrody §26.
 
 ## Players rules (LFE-PLAYERS-01 / D19)
 
@@ -141,4 +149,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-30 — LFE-DAILY-01 · D25
+2026-07-30 — LFE-ACHIEVEMENTS-01 · D26

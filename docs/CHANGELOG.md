@@ -8,10 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`73e1361`** (LFE-DAILY-01).
+**Domain feature baseline:** **`3915be9`** (LFE-ACHIEVEMENTS-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** ca4182e — **LFE-DAILY-01** CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-ACHIEVEMENTS-01 (pin follows).
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-ACHIEVEMENTS-01 · CLOSED
+
+### Product
+
+- Achievements Information Thin: `resolveClubAchievements` · historia kamieni na `/achievements`
+- Derive only · immutable history · brak XP / score / ekonomii · ≠ Ranking · ≠ Daily · ≠ §6
+- Domain tip → **`3915be9`** · D26 · brak migracji
+- CI GREEN · PRODUCTION VERIFIED · next **LFE-RANKING-01 READY FOR AUDIT**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · ARCHITECTURE_RULES · DECISIONS · MODULE_MAP · EPIC_INDEX · QUICK_START
 
 ---
 

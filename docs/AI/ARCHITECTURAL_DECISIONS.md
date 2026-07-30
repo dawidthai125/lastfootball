@@ -12,13 +12,13 @@
 
 ## Jak czytać tipy (nie mylić)
 
-| Warstwa                 | SSOT               | Znaczenie                                     |
-| ----------------------- | ------------------ | --------------------------------------------- |
-| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                         |
-| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Daily `73e1361`)   |
-| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)            |
-| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                    |
-| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip |
+| Warstwa                 | SSOT               | Znaczenie                                          |
+| ----------------------- | ------------------ | -------------------------------------------------- |
+| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                              |
+| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Achievements `3915be9`) |
+| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)                 |
+| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                         |
+| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip      |
 
 ---
 
@@ -38,7 +38,7 @@
 
 ---
 
-## D19–D25 (skrót)
+## D19–D26 (skrót)
 
 | ID      | Temat                     | Sedno (1 linia)                                                                   |
 | ------- | ------------------------- | --------------------------------------------------------------------------------- |
@@ -49,6 +49,7 @@
 | **D23** | Academy Thin A            | `academy_track` / `promoted_at` na `players`; max 3; `resolveClubAcademy`.        |
 | **D24** | Scouting Information Thin | `resolveClubScouting`; `scout_shortlist` = `(club_id, player_id)` → `players.id`. |
 | **D25** | Daily Goal Thin           | `resolveClubDailyGoal` derive only; Primary > Daily; ≠ Secondary daily loop.      |
+| **D26** | Achievements Thin         | `resolveClubAchievements` derive; immutable history; ≠ XP/score/§6/Ranking.       |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -64,14 +65,20 @@
 - ≠ `resolveSecondaryCtas` (daily loop nawigacji).
 - Deep-link tylko do istniejących tras; wynik deterministyczny dla tego samego stanu.
 
+### D26 — kontrakt Achievements (must-know)
+
+- Pure derive z faktów domeny · **brak** persist / XP / Achievement Score / ekonomii.
+- Historia **immutable** względem trwałych faktów.
+- ≠ Ranking · ≠ Daily Goal · ≠ §6 metryki.
+
 ---
 
 ## Gdzie szukać kodu
 
-[`MODULE_MAP.md`](./MODULE_MAP.md) — Hub · Daily Goal · Academy · Scouting · Training · Transfers · …
+[`MODULE_MAP.md`](./MODULE_MAP.md) — Hub · Daily · Achievements · Academy · Scouting · Training · Transfers · …
 
 ---
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-DAILY-01 · D25
+**ACTIVE** · 2026-07-30 — LFE-ACHIEVEMENTS-01 · D26

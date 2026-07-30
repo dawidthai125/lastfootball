@@ -28,6 +28,7 @@ lastfootball/
 | Domenа        | Resolver UI (SSOT)                                                   | Kod (głównie)                    | Docs                                                                                                                     |
 | ------------- | -------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Hub           | `resolveHubPhase` / `resolvePrimaryCta` / **`resolveClubDailyGoal`** | `lib/hub/`                       | [`platform/HUB.md`](../platform/HUB.md) · D25                                                                            |
+| Osiągnięcia   | **`resolveClubAchievements`**                                        | `lib/achievements/`              | GDD §19 · D26                                                                                                            |
 | Liga          | `resolveLeagueTable`                                                 | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
 | Finanse       | `resolveClubFinance`                                                 | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
 | Kadra         | `resolveClubSquad`                                                   | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
@@ -44,6 +45,7 @@ lastfootball/
 ```
 Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
 Daily Goal ──► resolveClubDailyGoal (derive) ──► istniejące trasy (suggestion; Primary nadrzędny)
+Achievements ──► resolveClubAchievements (derive history) ──► /achievements
 complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
 training ──► players.status + players.skill (≤ potential) + clubs.last_training_on (RPC)
@@ -73,4 +75,4 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-DAILY-01 (Daily Goal · D25)
+**ACTIVE** · 2026-07-30 — LFE-ACHIEVEMENTS-01 (D26)

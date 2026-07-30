@@ -262,9 +262,28 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-DAILY-01 (feat `73e1361`).  
 **Operacyjne:** Brak nowych migracji.
 
+### D26 — Achievements Information Thin (`resolveClubAchievements`) · CLOSED
+
+**Dlaczego:** GDD §19 wymaga opcjonalnej warstwy historii kamieni bez XP, Achievement Score, ekonomii i bez redefinicji §6 / Rankingu.  
+**Zasada:**
+
+| Fakt     | SSOT / kontrakt                                                                      |
+| -------- | ------------------------------------------------------------------------------------ |
+| UI / API | **tylko** `resolveClubAchievements(...)` → `ClubAchievementsDto`                     |
+| Model    | **Derive only** — zakaz tabel achievements / unlock persist / claim                  |
+| REUSE    | `ClubDto` · `fixtures` · `countPlayedInList` — fakty First Match · played · training |
+| Historia | **Immutable** względem trwałych faktów domeny                                        |
+| Mutacje  | **Zero** (brak cash / §6 / skill / potential / LFE)                                  |
+| ≠        | Ranking §18 · Daily Goal D25 · Quest Engine · XP · Achievement Score                 |
+| LFE      | **zero zmian**                                                                       |
+
+**Poza Thin:** katalog ID · XP · score · nagrody §26 · persist · fog discovery · muzeum.  
+**Źródło:** LFE-ACHIEVEMENTS-01 (feat `3915be9`).  
+**Operacyjne:** Brak nowych migracji.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D25 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D26 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -277,7 +296,8 @@ Każde złamanie D1–D25 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
 **LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.  
 **LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.  
-**LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.
+**LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.  
+**LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
 
 ## Powiązania
 
@@ -285,4 +305,4 @@ Każde złamanie D1–D25 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-30 — LFE-DAILY-01 · D25
+2026-07-30 — LFE-ACHIEVEMENTS-01 · D26
