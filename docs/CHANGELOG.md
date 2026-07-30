@@ -8,10 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`cd222ba`** (LFE-PLAYERS-02).  
+**Domain feature baseline:** **`9c6fe86`** (LFE-ACADEMY-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`2c619ca`** (GDD-19).  
+**Documentation tip:** _(CLOSE sync)_ — LFE-ACADEMY-01.  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-ACADEMY-01 · CLOSED
+
+### Product
+
+- Academy Thin A: `players.academy_track` / `promoted_at` · `resolveClubAcademy` · Intake (max 3) · Promote
+- Senior filters w squad / training / transfers / match development · nav open SEASON
+- Domain tip → **`9c6fe86`** · D23 · migracja `20260730120000_academy_track.sql` na prod
+- CI GREEN · PRODUCTION VERIFIED · next **M2.5**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · ARCHITECTURE_RULES · DECISIONS · PLAYERS · EPIC_INDEX · QUICK_START
 
 ---
 

@@ -6810,7 +6810,7 @@ Zamrozić filozofię rozbudowy bez auto-growth.
 - [x] Transfery · koszty filozofia · placeholder nie-SSOT
 - [x] Future: poziomy / staff bez auto-growth
 - [x] §17 OUT jako zależność
-- [ ] Implementacja kodu / UI / DB (osobny EPIC · poza GDD-16 docs)
+- [x] Implementacja kodu / UI / DB — **LFE-ACADEMY-01** CLOSED (`9c6fe86` · D23)
 
 ---
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-ACADEMY-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D23 · tip Domain `9c6fe86` · next **M2.5**
+
+### Added (shipped on `main` — LFE-ACADEMY-01)
+
+- `academy_track` / `promoted_at` · `resolveClubAcademy` · Intake/Promote · `/academy` UI · senior filters
+
 ### Docs (GDD-19 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · tip `2c619ca` · next EPIC = **GDD-21 READY FOR AUDIT**

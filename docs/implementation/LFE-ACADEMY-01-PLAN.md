@@ -4,8 +4,7 @@
 **Typ:** implementacja domeny Thin A (Intake + Promote)  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS · GDD-16 CLOSED Thin A · D19/D22  
-**Status PLAN:** COMPLETE · oczekuje **OWNER GO** na IMPLEMENT  
-**Priorytet IMPLEMENT:** **#1** (przed GDD-21 docs IMPLEMENT przy konflikcie slotu)
+**Status PLAN:** CLOSED · EPIC LFE-ACADEMY-01 FULLY CLOSED (feat `9c6fe86` · PRODUCTION VERIFY PASS · DOCS CLOSE)
 
 ---
 

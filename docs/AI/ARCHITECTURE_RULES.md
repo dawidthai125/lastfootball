@@ -38,6 +38,7 @@ supabase/ (Auth + Postgres migrations)
 | Finance UI         | `resolveClubFinance(...)` → `ClubFinanceDto` wyłącznie       |
 | Kadra (wiersze)    | tabela `players`                                             |
 | Squad UI           | `resolveClubSquad(club, rows)` → `SquadDto` wyłącznie        |
+| Academy UI         | `resolveClubAcademy(club, rows, phase)` → `AcademyDto`       |
 | Okno transferów    | `clubs.transfer_window_open`                                 |
 | Transfer market UI | `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
 | Transfer deals     | `transfer_deals` (idempotency + audit)                       |
@@ -52,7 +53,7 @@ supabase/ (Auth + Postgres migrations)
 - Hub dostępny **dopiero** po First Match.
 - Hub = **ekran decyzji**, nie dashboard analytics.
 - Dokładnie **1 Primary CTA**.
-- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
+- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse + **Akademia** open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
 
 ## Players rules (LFE-PLAYERS-01 / D19)
@@ -62,6 +63,15 @@ supabase/ (Auth + Postgres migrations)
 - Pusta baza → `SquadUnavailableError` (bez fallbacku do seeda).
 - Odejście = `DEPARTED` + `departed_at` (bez DELETE) — D20.
 - Training mutuje `status` + `skill` (D21 / TRAINING-02) — bez drugiej tabeli kadry; atrybuty UI = derive(skill).
+- Senior roster = `filterSeniorPlayers` (`academy_track = false`) — D23.
+
+## Academy rules (LFE-ACADEMY-01 / D23)
+
+- `/academy` konsumuje **tylko** `resolveClubAcademy()` — brak mocków poziomów/budżetu.
+- Jedyny model = `players` + `academy_track` / `promoted_at` — zakaz drugiej tabeli / youth OVR.
+- Intake max 3 perspektyw; Promote bez buffa skill/potential; potential = D22.
+- Squad / Training / Transfers / Match development: **tylko filtr** `academy_track` — zero logiki akademii w tych resolverach.
+- Poza Thin: poziomy akademii · cash-gate · trening akademii · auto-promote · skauting.
 
 ## Transfers rules (LFE-TRANSFERS-01 / D20 + E1/N1)
 

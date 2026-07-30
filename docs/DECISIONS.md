@@ -193,13 +193,35 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Presentation    | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals  |
 | LFE             | **zero zmian**                                                                                  |
 
-**Poza Thin:** Academy · talents · career/dev history · XP · morale · attribute DB · numeric potential UI · Physics/ECS.  
+**Poza Thin:** talents · career/dev history · XP · morale · attribute DB · numeric potential UI · Physics/ECS.  
 **Źródło:** LFE-PLAYERS-02 (prod `cd222ba`).  
-**Operacyjne:** Migracja `20260729120000_player_potential_development.sql` musi zostać zastosowana na prod.
+**Operacyjne:** Migracja `20260729120000_player_potential_development.sql` musi zostać zastosowana na prod.  
+**Academy:** osobna decyzja **D23** (ten sam `players` / potential — bez drugiego OVR).
+
+### D23 — Academy Thin A (`academy_track` · Intake + Promote) · CLOSED
+
+**Dlaczego:** GDD §16 Thin A wymaga opcjonalnego naboru i promocji bez drugiej tabeli zawodników i bez academy OVR.  
+**Zasada:**
+
+| Fakt          | SSOT / kontrakt                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| Model         | Wyłącznie `players` — zakaz `academy_players` / youth OVR                                               |
+| Tor           | `players.academy_track` (bool) · `promoted_at` (nullable)                                               |
+| UI            | **tylko** `resolveClubAcademy` → `AcademyDto`                                                           |
+| Intake        | INSERT perspektywy · max **3** · ids `a-{tag}-…` · potential via `resolvePlayerPotential` (D22)         |
+| Promote       | `academy_track=false` · `promoted_at=now()` — **bez** buffa skill/potential                             |
+| Senior filter | `filterSeniorPlayers` — squad / XI / training / transfers / match development (tylko filtr, bez logiki) |
+| Unlock nav    | soft-lock przed SEASON · **open** w SEASON                                                              |
+| Presentation  | pasma potential only · brak poziomów akademii / budżetu                                                 |
+| LFE           | **zero zmian**                                                                                          |
+
+**Poza Thin:** poziomy ośrodka · cash-gate · trening akademii · auto-promote · skauting §17 · inbox §21/§22.  
+**Źródło:** LFE-ACADEMY-01 (feat `9c6fe86` · tip prior `4a516f3`).  
+**Operacyjne:** Migracja `20260730120000_academy_track.sql` zastosowana na prod.
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D22 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D23 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -209,7 +231,8 @@ Każde złamanie D1–D22 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-TRANSFERS-06 (2026-07-26):** Live H2H Instant @ 100% ask; atomic RPC; `players.id` stałe.  
 **LFE-TRANSFERS-07 (2026-07-26):** Pending H2H `transfer_offers`; Thin presets; supersede; brak escrow/timeout.  
 **LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
-**LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.
+**LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
+**LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.
 
 ## Powiązania
 
@@ -217,4 +240,4 @@ Każde złamanie D1–D22 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-29 — LFE-PLAYERS-02 · D22
+2026-07-30 — LFE-ACADEMY-01 · D23
