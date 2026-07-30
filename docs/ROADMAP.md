@@ -9,7 +9,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
 **Domain feature baseline:** **`9c6fe86`** — LFE-ACADEMY-01 CLOSED (Academy Thin A).  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** _(CLOSE)_ — **GDD-21** (content `bf07a44`).  
+**Documentation tip:** `c24efef` — **GDD-21** (content `bf07a44`).  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Development · **Academy (01)** · **GDD-16…19 · GDD-21** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
@@ -31,7 +31,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 | **GDD-17**                                             | **CLOSED** · §17 Skauting Information Thin B · docs `2595cc9` · CI GREEN · PRODUCTION VERIFIED                  |
 | **GDD-18**                                             | **CLOSED** · §18 Ranking Thin (sezonowy ranking klubów) · tip `4dedd71` · CI GREEN · PRODUCTION VERIFIED        |
 | **GDD-19**                                             | **CLOSED** · §19 Osiągnięcia Thin (kamienie / historia) · tip `2c619ca` · CI GREEN · PRODUCTION VERIFIED        |
-| **GDD-21**                                             | **CLOSED** · §21 Wiadomości Thin · content `bf07a44` · CI GREEN · PRODUCTION VERIFIED                           |
+| **GDD-21**                                             | **CLOSED** · §21 Wiadomości Thin · tip `c24efef` · content `bf07a44` · CI GREEN · PRODUCTION VERIFIED           |
 | **M2.5**                                               | **PASS** · First Domain Implementation Review · po ACADEMY-01                                                   |
 | **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs)                                                                         |
 | **GDD-§26B**                                           | **CLOSED** · `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                                    |
@@ -115,7 +115,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 **GDD-22** (§22 Powiadomienia) — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
 Po zamknięciu GDD-22: AUDIT LFE-SCOUTING-01.  
-Domain tip: ACADEMY-01 `9c6fe86`; Presentation tip: MOTION-01 `9fd14fc`; GDD-21 content `bf07a44`.
+Domain tip: ACADEMY-01 `9c6fe86`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip GDD-21 `c24efef` (content `bf07a44`).
 
 ## Decyzje roadmapy
 
@@ -152,4 +152,4 @@ Domain tip: ACADEMY-01 `9c6fe86`; Presentation tip: MOTION-01 `9fd14fc`; GDD-21 
 
 ## Last updated
 
-2026-07-30 — GDD-21 CLOSED · content `bf07a44` · next **GDD-22 READY FOR AUDIT**
+2026-07-30 — GDD-21 CLOSED · tip `c24efef` · content `bf07a44` · next **GDD-22 READY FOR AUDIT**

@@ -4,7 +4,7 @@
 **Typ:** docs-only Thin  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS (model hybrydowy · Tor A)  
-**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `bf07a44` · DOCS CLOSE sync
+**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `bf07a44` · tip `c24efef`
 
 ---
 

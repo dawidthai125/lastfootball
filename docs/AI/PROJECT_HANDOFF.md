@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                |
 | **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                              |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                |
-| **Documentation tip**           | _(CLOSE)_ — **GDD-21** Wiadomości Thin (content `bf07a44`)                                           |
+| **Documentation tip**           | `c24efef` — **GDD-21** Wiadomości Thin (content `bf07a44`)                                           |
 | **Branch**                      | `main`                                                                                               |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **GDD-21 CLOSED** · M2.5 PASS · ACADEMY-01 · next **GDD-22 AUDIT**     |
 
@@ -30,13 +30,13 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
+git log -1 --oneline c24efef            # Documentation tip GDD-21 CLOSE
 git log -1 --oneline bf07a44            # GDD-21 content
 git log -1 --oneline 9c6fe86            # Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
-git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Academy `9c6fe86` · presentation MOTION-01 `9fd14fc` · docs GDD-21 `bf07a44`). Domain bez zmian w GDD-21 (docs-only).
+**Prod deploy:** Vercel Production śledzi `main` (Domain Academy `9c6fe86` · presentation MOTION-01 `9fd14fc` · docs tip GDD-21 `c24efef` · content `bf07a44`). Domain bez zmian w GDD-21 (docs-only).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** — zastosowane.
 
@@ -60,7 +60,7 @@ git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
 | **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                          |
 | **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                |
 | **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                |
-| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · DOCS CLOSE _(tip)_              |
+| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                   |
 | **M2.5**                                       | **PASS** · First Domain Implementation Review                             |
 
 ### Silnik / Match UI
@@ -378,4 +378,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — GDD-21 CLOSED · content `bf07a44` · Domain `9c6fe86` · Presentation `9fd14fc` · next **GDD-22 READY FOR AUDIT**
+2026-07-30 — GDD-21 CLOSED · tip `c24efef` · content `bf07a44` · Domain `9c6fe86` · next **GDD-22 READY FOR AUDIT**

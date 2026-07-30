@@ -16,11 +16,11 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
+git log -1 --oneline c24efef            # Documentation tip GDD-21 CLOSE
 git log -1 --oneline bf07a44            # GDD-21 content (messages thin)
 git log -1 --oneline 9c6fe86            # Domain feature baseline ACADEMY-01
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
-git log -1 --oneline 1d78648            # Prior pin ACADEMY-01 tip
 ```
 
 ---
@@ -39,10 +39,10 @@ git log -1 --oneline 1d78648            # Prior pin ACADEMY-01 tip
 | Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | _(CLOSE)_ — **GDD-21** Wiadomości Thin (content `bf07a44`)            |
+| **Documentation tip**       | `c24efef` — **GDD-21** Wiadomości Thin (content `bf07a44`)            |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-21 CLOSED · ACADEMY-01 CLOSED   |
 
-Prior docs tip ACADEMY-01 CLOSE = `57a5875` (pin `1d78648`). GDD-21 content = `bf07a44`. Domain tip bez zmian (docs-only).
+Documentation tip GDD-21 CLOSE = `c24efef` (content `bf07a44`). Prior ACADEMY-01 CLOSE = `57a5875`. Domain tip bez zmian (docs-only).
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -107,4 +107,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — GDD-21 CLOSED (Domain `9c6fe86` · Presentation `9fd14fc` · content `bf07a44` · UI P0 `54d0724`)
+2026-07-30 — GDD-21 CLOSED · tip `c24efef` (Domain `9c6fe86` · Presentation `9fd14fc` · content `bf07a44` · UI P0 `54d0724`)
