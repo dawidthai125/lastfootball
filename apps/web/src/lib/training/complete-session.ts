@@ -11,6 +11,7 @@ import type {
   TrainingSessionSummary,
 } from '@/lib/training/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -47,11 +48,12 @@ export async function completeTrainingSession(
   },
 ): Promise<CompleteTrainingResult> {
   const today = input.today ?? utcDateString();
+  const seniors = filterSeniorPlayers(input.activePlayers);
   const resolved = resolveClubTraining({
     clubId: input.clubId,
     playedCount: input.playedCount,
     lastTrainingOn: input.lastTrainingOn,
-    activePlayers: input.activePlayers,
+    activePlayers: seniors,
     today,
   });
 
@@ -73,7 +75,7 @@ export async function completeTrainingSession(
     return { ok: false, error: msg };
   }
 
-  const before = input.activePlayers.map((p) => ({
+  const before = seniors.map((p) => ({
     id: p.id,
     status: p.status,
     skill: p.skill,

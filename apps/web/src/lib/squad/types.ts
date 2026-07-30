@@ -55,6 +55,10 @@ export type PlayerRowDto = {
   readonly departedAt: string | null;
   /** When set — on club transfer list (LFE-TRANSFERS-04). */
   readonly transferListedAt: string | null;
+  /** LFE-ACADEMY-01: true = prospect before Promote (excluded from senior resolvers). */
+  readonly academyTrack: boolean;
+  /** Set when promoted from academy; null otherwise. */
+  readonly promotedAt: string | null;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;
@@ -80,4 +84,19 @@ export class SquadUnavailableError extends Error {
 
 export function isActivePlayer(row: PlayerRowDto): boolean {
   return row.departedAt == null && row.status !== 'DEPARTED';
+}
+
+/** Active senior — excludes academy prospects (filter only; no academy logic). */
+export function isSeniorPlayer(row: PlayerRowDto): boolean {
+  return isActivePlayer(row) && !row.academyTrack;
+}
+
+/** Active academy prospect before Promote. */
+export function isAcademyProspect(row: PlayerRowDto): boolean {
+  return isActivePlayer(row) && row.academyTrack;
+}
+
+/** Senior roster slice — used by squad / training / transfers / match (filter only). */
+export function filterSeniorPlayers(rows: readonly PlayerRowDto[]): PlayerRowDto[] {
+  return rows.filter(isSeniorPlayer);
 }

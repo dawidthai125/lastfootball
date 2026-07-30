@@ -2,6 +2,7 @@ import { formatMoney } from '@/lib/finance/format-money';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
@@ -34,7 +35,9 @@ export function resolveTransferMarket(input: {
   readonly incomingLiveOffers?: readonly LiveH2hOfferDto[];
   readonly outgoingLiveOffers?: readonly LiveH2hOfferDto[];
 }): TransferMarketDto {
-  const active = input.activePlayers.filter((p) => p.departedAt == null && p.status !== 'DEPARTED');
+  /** Senior filter only — academy prospects never enter market roster counts. */
+  const seniors = filterSeniorPlayers(input.activePlayers);
+  const active = seniors;
   const count = active.length;
   const windowOpen = input.transferWindowOpen;
   const envelope = resolveTransferEnvelope(input.cashBalance);
@@ -58,7 +61,7 @@ export function resolveTransferMarket(input: {
 
   const sellCandidates: SellCandidateDto[] = listTransferSellEligiblePlayers({
     transferWindowOpen: windowOpen,
-    activePlayers: input.activePlayers,
+    activePlayers: seniors,
   }).map((p) => {
     const fee = deriveTransferFee(p.skill, p.age);
     return {
@@ -113,7 +116,7 @@ export function resolveTransferMarket(input: {
     incomingOffers: resolveIncomingOffers({
       clubId: input.clubId,
       transferWindowOpen: windowOpen,
-      activePlayers: input.activePlayers,
+      activePlayers: seniors,
     }),
   };
 }

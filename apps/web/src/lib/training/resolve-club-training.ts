@@ -1,5 +1,6 @@
 import { hasPlayedUnlock, utcDateString } from '@/lib/fixtures/played-unlock';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import {
   TRAINING_FOCUSES,
   TRAINING_INTENSITIES,
@@ -52,11 +53,13 @@ function readinessOf(players: readonly PlayerRowDto[]): TrainingReadinessDto {
 
 /**
  * Sole training UI contract (LFE-TRAINING-01). Pure — no Supabase.
+ * Filters academy_track only — no academy domain logic.
  */
 export function resolveClubTraining(input: ResolveClubTrainingInput): TrainingDto {
+  const seniors = filterSeniorPlayers(input.activePlayers);
   const today = input.today ?? utcDateString();
   const unlocked = hasPlayedUnlock(input.playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
-  const readiness = readinessOf(input.activePlayers);
+  const readiness = readinessOf(seniors);
 
   let lockReason: TrainingLockReason = null;
   if (!unlocked) {

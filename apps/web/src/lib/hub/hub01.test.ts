@@ -137,8 +137,10 @@ describe('hub nav unlock', () => {
     expect(resolveNavAccess('league', 'EARLY_CLUB')).toBe('soft_locked');
   });
 
-  it('opens Finanse on SEASON; Transfery need window flag; Training needs unlock', () => {
+  it('opens Finanse on SEASON; Transfery need window flag; Training needs unlock; Academy open', () => {
     expect(resolveNavAccess('finance', 'SEASON')).toBe('open');
+    expect(resolveNavAccess('academy', 'SEASON')).toBe('open');
+    expect(resolveNavAccess('academy', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('training', 'SEASON')).toBe('soft_locked');
     expect(resolveNavAccess('training', 'SEASON', { trainingUnlocked: true })).toBe('open');
     expect(resolveNavAccess('transfers', 'SEASON')).toBe('soft_locked');

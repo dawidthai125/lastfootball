@@ -20,6 +20,10 @@ export type PlayerDbRow = {
   departed_at: string | null;
   /** Optional for older fixtures/tests — defaults to null. */
   transfer_listed_at?: string | null;
+  /** Optional for older fixtures/tests — defaults to false (senior). */
+  academy_track?: boolean | null;
+  /** Optional for older fixtures/tests — defaults to null. */
+  promoted_at?: string | null;
 };
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -50,5 +54,7 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     version: row.version,
     departedAt: row.departed_at,
     transferListedAt: row.transfer_listed_at ?? null,
+    academyTrack: Boolean(row.academy_track),
+    promotedAt: row.promoted_at ?? null,
   };
 }

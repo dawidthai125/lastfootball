@@ -4,11 +4,12 @@ import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import type { PlayerRowDto } from '@/lib/squad/types';
 
 const PLAYER_SELECT =
-  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at';
+  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
 /**
- * Active club roster from DB (SSOT). Excludes DEPARTED / departed_at.
- * Empty array if missing — no seed fallback.
+ * Club players from DB (SSOT) including academy prospects.
+ * Excludes DEPARTED / departed_at. Empty array if missing — no seed fallback.
+ * Senior consumers must filter via resolveClubSquad / filterSeniorPlayers.
  */
 export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
   if (!env.isSupabaseConfigured) return [];

@@ -5,6 +5,7 @@ import {
   type MatchDevelopmentSummary,
 } from '@/lib/squad/match-development';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -36,7 +37,8 @@ export async function applyMatchDevelopment(
     activePlayers: readonly PlayerRowDto[];
   },
 ): Promise<ApplyMatchDevelopmentResult> {
-  const before = input.activePlayers.map((p) => ({
+  const seniors = filterSeniorPlayers(input.activePlayers);
+  const before = seniors.map((p) => ({
     id: p.id,
     name: p.name,
     skill: p.skill,
@@ -89,11 +91,12 @@ export async function applyMatchDevelopment(
   };
 }
 
-/** Pure preview for Post Match UI (same rules as persist). */
+/** Pure preview for Post Match UI (same rules as persist). Senior filter only. */
 export function previewMatchDevelopment(
   activePlayers: readonly PlayerRowDto[],
 ): MatchDevelopmentSummary {
-  const before = activePlayers.map((p) => ({
+  const seniors = filterSeniorPlayers(activePlayers);
+  const before = seniors.map((p) => ({
     id: p.id,
     name: p.name,
     skill: p.skill,

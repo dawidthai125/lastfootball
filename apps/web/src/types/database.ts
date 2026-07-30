@@ -72,6 +72,8 @@ export type Database = {
           created_at: string;
           departed_at: string | null;
           transfer_listed_at: string | null;
+          academy_track: boolean;
+          promoted_at: string | null;
         };
         Insert: {
           id: string;
@@ -91,6 +93,8 @@ export type Database = {
           created_at?: string;
           departed_at?: string | null;
           transfer_listed_at?: string | null;
+          academy_track?: boolean;
+          promoted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -110,6 +114,8 @@ export type Database = {
           created_at?: string;
           departed_at?: string | null;
           transfer_listed_at?: string | null;
+          academy_track?: boolean;
+          promoted_at?: string | null;
         };
         Relationships: [
           {

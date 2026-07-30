@@ -11,6 +11,9 @@ export {
   STATUS_LABEL,
   SquadUnavailableError,
   isActivePlayer,
+  isSeniorPlayer,
+  isAcademyProspect,
+  filterSeniorPlayers,
 } from '@/lib/squad/types';
 export {
   resolveClubSquad,

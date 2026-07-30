@@ -4,7 +4,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 import type { PlayerRowDto, SquadDto, SquadPlayerDto } from '@/lib/squad/types';
-import { SquadUnavailableError } from '@/lib/squad/types';
+import { filterSeniorPlayers, SquadUnavailableError } from '@/lib/squad/types';
 
 /** Display/filter position — group CBs/LB into OB for squad filters. */
 function displayPosition(pos: string): string {
@@ -82,7 +82,7 @@ export function resolveClubSquad(
   club: Pick<ClubDto, 'id'>,
   rows: readonly PlayerRowDto[],
 ): SquadDto {
-  const active = rows.filter((r) => r.departedAt == null && r.status !== 'DEPARTED');
+  const active = filterSeniorPlayers(rows);
   if (active.length === 0) {
     throw new SquadUnavailableError(club.id);
   }
@@ -96,7 +96,7 @@ export function resolveClubSquad(
  * LFE-TRAINING-02: hard fail when XI includes INJURED/SUSPENDED (no auto-swap).
  */
 export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
-  const xiRows = rows.filter((r) => r.departedAt == null && r.status !== 'DEPARTED' && r.starter);
+  const xiRows = filterSeniorPlayers(rows).filter((r) => r.starter);
   const clubId = rows[0]?.clubId ?? 'unknown';
 
   const blocked = xiRows.filter((r) => r.status === 'INJURED' || r.status === 'SUSPENDED');
