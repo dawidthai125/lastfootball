@@ -14,7 +14,7 @@ const EARLY_CLUB_OPEN = new Set([
 ]);
 
 /** SEASON unlocks Liga + Finanse + Akademia on top of EARLY_CLUB opens. Transfers need window flag. */
-const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance', 'academy']);
+const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance', 'academy', 'scouting']);
 
 export type NavAccessContext = {
   readonly transferWindowOpen?: boolean;

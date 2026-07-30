@@ -6,7 +6,6 @@ import { useOverlay } from '@/components/overlay/OverlayProvider';
 
 const MOCK_NOTIFICATIONS = [
   { id: '1', title: 'Oferta transferowa', meta: '2h', href: '/transfers' },
-  { id: '2', title: 'Raport skauta', meta: '5h', href: '/scouting' },
   { id: '3', title: 'Wiadomość zarządu', meta: '1d', href: '/messages' },
 ] as const;
 
