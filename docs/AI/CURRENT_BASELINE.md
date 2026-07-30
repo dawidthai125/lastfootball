@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline bf86749            # Domain feature baseline RANKING-01
+git log -1 --oneline 9027baf            # Domain feature baseline LEAGUE-04
+git log -1 --oneline bf86749            # Prior Domain RANKING-01
 git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
 git log -1 --oneline 73e1361            # Prior Domain DAILY-01
 git log -1 --oneline 93fd6d5            # Prior Domain SCOUTING-01
@@ -35,12 +36,12 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `bf86749` — **LFE-RANKING-01** (Information Thin · seasonal)          |
-| Domain message              | `feat(ranking): implement LFE-RANKING-01 Information Thin`            |
+| **Domain feature baseline** | `9027baf` — **LFE-LEAGUE-04** (Full 22 · double RR)                   |
+| Domain message              | `feat(league): implement LFE-LEAGUE-04 full 22-fixture double RR`     |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)                            |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · RANKING-01 CLOSED · ACHIEVEMENTS-01 |
+| **Documentation tip**       | CLOSE sync LFE-LEAGUE-04 (pin follows)                                |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · LEAGUE-04 CLOSED · RANKING-01       |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -130,8 +131,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749` · Presentation `9fd14fc`
+2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf` · Presentation `9fd14fc`

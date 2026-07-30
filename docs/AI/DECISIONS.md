@@ -6,7 +6,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 
 ## Kiedy czytać
 
-Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D27, P\*).
+Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D28, P\*).
 
 ## Platform / product (2026)
 
@@ -20,7 +20,7 @@ Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D27
 | P6   | `resolveHubPhase` / `resolvePrimaryCta` = SSOT fazy i Primary CTA                                                           | LFE-HUB-01                                  |
 | P7   | Progressive disclosure: Liga + Finanse + **Akademia** + **Skauting** open na `SEASON`; Transfery gdy `transfer_window_open` | LFE-HUB-01 / TRANSFERS / ACADEMY / SCOUTING |
 | P8   | Supabase prod/dev = project `anoeimngwptucjdugjme`                                                                          | LFE-INFRA-01                                |
-| P9   | `fixtures` + `planClubFixtures` = SSOT terminarza; `LEAGUE_FIXTURE_COUNT=11` + top-up · **CLOSED**                          | LFE-LEAGUE-01→03                            |
+| P9   | `fixtures` + `planClubFixtures` = SSOT terminarza; `LEAGUE_FIXTURE_COUNT=22` double RR + top-up · **CLOSED**                | LFE-LEAGUE-01→04 (= D15/D28)                |
 | P10  | `players` + `resolveClubSquad(rows)` = SSOT kadry; seed ≠ runtime · **CLOSED**                                              | LFE-PLAYERS-01 (= D19)                      |
 | P10b | `players.potential` + match development Thin · pasma UI · RPC atomic · **CLOSED**                                           | LFE-PLAYERS-02 (= D22)                      |
 | P10c | `academy_track` + `resolveClubAcademy` · Intake/Promote Thin · max 3 · **CLOSED**                                           | LFE-ACADEMY-01 (= D23)                      |
@@ -50,4 +50,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 · D27 / P10g
+2026-07-30 — LFE-LEAGUE-04 · D28 / P9

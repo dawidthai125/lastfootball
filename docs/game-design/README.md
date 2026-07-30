@@ -10,10 +10,10 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `bf86749` (RANKING-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** **`98a3d81`** — LFE-RANKING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `9027baf` (LEAGUE-04) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** **`98a3d81`** — LFE-RANKING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny: **Full 22-fixture season READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
-PLAN closed: [`../implementation/LFE-RANKING-01-PLAN.md`](../implementation/LFE-RANKING-01-PLAN.md).
+Następny: **Transfers hardening READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
+PLAN closed: [`../implementation/LFE-LEAGUE-04-PLAN.md`](../implementation/LFE-LEAGUE-04-PLAN.md).
 
 ## Opis działania
 
@@ -112,4 +112,4 @@ PLAN closed: [`../implementation/LFE-RANKING-01-PLAN.md`](../implementation/LFE-
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749`
+2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf`

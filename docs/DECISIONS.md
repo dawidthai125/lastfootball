@@ -87,9 +87,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D15 — Fixtures DB = SSOT terminarza ligowego (Thin) · CLOSED
 
 **Dlaczego:** Hub po First Match potrzebuje kolejnego meczu bez mid-season mock.  
-**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; **jedyny plan** = `planClubFixtures`; `LEAGUE_FIXTURE_COUNT = 11` (LFE-LEAGUE-03); `ensureClubFixtures` = insert / deterministyczny top-up (bez nadpisu played/upcoming).  
-**Źródło:** LFE-LEAGUE-01 (prod `b5b64a3`); kalendarz 11 — LFE-LEAGUE-03.  
-**Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17. Thin vs GDD §10: 11 ≠ 22.
+**Zasada:** tabela `fixtures` + `opponent_club_id` (katalog AI); First Match poza tabelą; **jedyny plan** = `planClubFixtures`; `LEAGUE_FIXTURE_COUNT = 22` (LFE-LEAGUE-04 · double RR); MD1–11 identity = LEAGUE-03; `ensureClubFixtures` = insert / top-up (bez nadpisu MD istniejących).  
+**Źródło:** LFE-LEAGUE-01…03; kalendarz 22 — LFE-LEAGUE-04 (feat `9027baf`).  
+**Uwaga:** faza Hub `SEASON` (S1) — LFE-LEAGUE-02 / D17. GDD §10 home+away = **22** (D28).
 
 ### D16 — Squad seed SSOT (do czasu tabeli players) · SUPERSEDED by D19
 
@@ -101,8 +101,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D17 — League table = pure derive (`resolveLeagueTable`) · CLOSED
 
 **Dlaczego:** tabela musi być wspólna dla `/league`, Hub chip i przyszłych modułów bez drugiej SSOT.  
-**Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = deterministyczny derive (nie Match Engine); Hub → `SEASON` gdy S1 (`first_match` + fixtures); kalendarz gracza = **11** fixtures (`planClubFixtures` / top-up — LFE-LEAGUE-03).  
-**Źródło:** LFE-LEAGUE-02 (prod `71ce442`); count 11 — LFE-LEAGUE-03.
+**Zasada:** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` jest **jedynym** źródłem tabeli; brak standings DB; AI↔AI = **double RR** derive (nie Match Engine); Hub → `SEASON` gdy S1; kalendarz gracza = **22** fixtures (`planClubFixtures` / top-up — LFE-LEAGUE-04).  
+**Źródło:** LFE-LEAGUE-02; count 22 / AI double RR — LFE-LEAGUE-04 (feat `9027baf`).
 
 ### D18 — Club cash SSOT + `resolveClubFinance` (Finance Thin) · CLOSED
 
@@ -303,9 +303,27 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-RANKING-01 (feat `bf86749`).  
 **Operacyjne:** Brak nowych migracji.
 
+### D28 — League calendar 22 · Double Round Robin (`LEAGUE_FIXTURE_COUNT`) · CLOSED
+
+**Dlaczego:** GDD §10 wymaga 22 kolejek (home+away); Thin 11 był świadomym wyjątkiem LEAGUE-03.  
+**Zasada:**
+
+| Fakt    | SSOT / kontrakt                                                           |
+| ------- | ------------------------------------------------------------------------- |
+| Count   | **`LEAGUE_FIXTURE_COUNT = 22`**                                           |
+| Planner | wyłącznie `planClubFixtures`                                              |
+| MD1–11  | Identity LEAGUE-03 — **nigdy** nie przebudowywane                         |
+| MD12–22 | Rewanże (`!isHome`, ten sam opponent)                                     |
+| Top-up  | Istniejące kluby: tylko brakujące MD12–22                                 |
+| AI↔AI   | `planAiVsAiMatches` **double RR** (seed `ai-v2`)                          |
+| OUT     | Season End · awans/spadek · schedulery · Match Engine · migracje schematu |
+
+**Źródło:** LFE-LEAGUE-04 (feat `9027baf`).  
+**Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D27 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -321,6 +339,7 @@ Każde złamanie D1–D27 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.  
 **LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
 **LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
+**LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
 
 ## Powiązania
 
@@ -328,4 +347,4 @@ Każde złamanie D1–D27 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 · D27
+2026-07-30 — LFE-LEAGUE-04 · D28

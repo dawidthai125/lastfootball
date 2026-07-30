@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                               |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Academy + Scouting + Daily Goal + **Achievements** + MOTION-01 + GDD-16…**22**                                                |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                 |
-| **Domain feature baseline**     | `bf86749` — **LFE-RANKING-01** (Information Thin · seasonal)                                                                          |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                 |
-| **Documentation tip**           | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)                                                                                            |
-| **Branch**                      | `main`                                                                                                                                |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **RANKING-01 CLOSED** · ACHIEVEMENTS-01 · DAILY-01 · SCOUTING-01 · ACADEMY-01 · M2.5 · next **Full 22** |
+| Pole                            | Wartość                                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + Academy + Scouting + Daily + Achievements + Ranking + **League 22** + MOTION-01 + GDD-16…**22**              |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                |
+| **Domain feature baseline**     | `9027baf` — **LFE-LEAGUE-04** (Full 22 · double RR)                                                                  |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                |
+| **Documentation tip**           | CLOSE sync LFE-LEAGUE-04 (pin follows)                                                                               |
+| **Branch**                      | `main`                                                                                                               |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **LEAGUE-04 CLOSED** · RANKING-01 · ACHIEVEMENTS · M2.5 · next **Transfers hardening** |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -30,7 +30,8 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline bf86749            # Domain RANKING-01
+git log -1 --oneline 9027baf            # Domain LEAGUE-04
+git log -1 --oneline bf86749            # Prior Domain RANKING-01
 git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
 git log -1 --oneline 73e1361            # Prior Domain DAILY-01
 git log -1 --oneline 93fd6d5            # Prior Domain SCOUTING-01
@@ -38,7 +39,7 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Ranking `bf86749` · presentation MOTION-01 `9fd14fc` · docs tip `98a3d81`).
+**Prod deploy:** Vercel Production śledzi `main` (Domain League 22 `9027baf` · presentation MOTION-01 `9fd14fc` · docs tip CLOSE pin).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** — zastosowane.  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
@@ -52,7 +53,8 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 | EPIC                                           | Skrót                                                                              |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
 | LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                                  |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela derive · 11 meczów Thin                                          |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                                               |
+| **LFE-LEAGUE-04**                              | **Full 22** · double RR · top-up MD12–22 · D28 · `9027baf`                         |
 | LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                                       |
 | LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22)               |
 | **LFE-ACADEMY-01**                             | **Academy Thin A** · Intake + Promote · `academy_track` (D23) · `9c6fe86`          |
@@ -218,16 +220,17 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 - **Daily Goal Thin**: Hub · `resolveClubDailyGoal` · sugestia pod Primary · derive only
 - **Achievements Thin**: `/achievements` · `resolveClubAchievements` · historia kamieni · derive only
 - **Ranking Thin**: `/rankings` · `resolveClubRanking` · sezonowe porównanie · table input only
+- **League 22**: `planClubFixtures` · double RR · top-up MD12–22
 - Match development (PRIMARY): +1 / K_MATCH=5 / starters · Post Match signals
 - Match Live + Canvas + Replay + Post (immersive chrome na `/match/*`)
 
 ### Co jest Thin (świadome limity)
 
-11 fixtures ≠ 22 · brak XP / attribute DB · Ranking Thin kod = RANKING-01 (bez ELO/points surface) · Osiągnięcia Thin kod = ACHIEVEMENTS-01 (bez XP/score) · **brak kodu Wiadomości** (GDD §21 Thin = docs only) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score · Daily Goal bez persist/Quest Engine/nagród.
+kalendarz **22** (D28) · Season End OUT · brak XP / attribute DB · Ranking Thin kod = RANKING-01 (bez ELO/points surface) · Osiągnięcia Thin kod = ACHIEVEMENTS-01 (bez XP/score) · **brak kodu Wiadomości** (GDD §21 Thin = docs only) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score · Daily Goal bez persist/Quest Engine/nagród.
 
 ### Planowane (Owner wybiera)
 
-**Full 22-fixture season (opt.)** READY FOR AUDIT (Owner GO).
+**Transfers hardening** READY FOR AUDIT (Owner GO).
 
 ---
 
@@ -260,10 +263,10 @@ Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED**:
 
 | #   | EPIC / temat                    | Priorytet | Notatka                       |
 | --- | ------------------------------- | --------- | ----------------------------- |
-| 1   | **Full 22-fixture season**      | **P0**    | READY FOR AUDIT · po Owner GO |
-| 2   | Transfers hardening             | P2        | Tech debt                     |
-| 3   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth                 |
-| 4   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO           |
+| 1   | **Transfers hardening**         | **P0**    | READY FOR AUDIT · po Owner GO |
+| 2   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth                 |
+| 3   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO           |
+| 4   | Season End / awans (Future)     | P2        | Po osobnym Owner GO           |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -271,11 +274,11 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 10. Rekomendowany następny EPIC
 
-### **Full 22-fixture season (opt.)**
+### **Transfers hardening**
 
-**Uzasadnienie:** LFE-RANKING-01 FULLY CLOSED (`bf86749`). Strategia: opcjonalne rozszerzenie kalendarza vs Thin 11.
+**Uzasadnienie:** LFE-LEAGUE-04 FULLY CLOSED (`9027baf`). Kalendarz 22 domknięty; Season End poza tym EPICem.
 
-**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT Full 22 — bez Owner GO.
+**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO.
 
 **Nie zaczynaj** bez **Owner GO**.
 ---
@@ -322,16 +325,16 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 7. UI presentation → Guide §16; bez driftu DNA / Style Lock.
 8. Branding K1+K3 i World Art — zmiana tylko osobnym EPIC + GO.
 9. §26 = SSOT liczb Thin; D18/D20 = SSOT implementacji economy/transfers.
-10. Kalendarz **11** fixtures Thin — nie „cicho” robić 22 bez GO.
+10. Kalendarz **22** fixtures (D28) — Season End / awans tylko osobnym Owner GO.
 
 ---
 
 ## 13. Known Constraints
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
-- `LEAGUE_FIXTURE_COUNT=11` ≠ GDD home+away 22.
+- `LEAGUE_FIXTURE_COUNT=22` · double RR · D28 · PRODUCTION VERIFIED (`9027baf`).
 - Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · Ranking ELO/points-as-surface · Achievements XP/score/ekonomii · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
-- Domain tip = RANKING-01 (`bf86749`); Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
+- Domain tip = LEAGUE-04 (`9027baf`); prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
 - Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
 - Ranking Thin (GDD-18 / D27): `resolveClubRanking` · table input · Information Thin · PRODUCTION VERIFIED (`bf86749`).
 - Osiągnięcia Thin (GDD-19 / D26): `resolveClubAchievements` · Information Thin · immutable history · PRODUCTION VERIFIED.
@@ -340,6 +343,7 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 - Daily Goal Thin (D25): `resolveClubDailyGoal` derive only · Primary > Daily · ≠ Secondary daily loop · PRODUCTION VERIFIED.
 - Achievements Thin (D26): `resolveClubAchievements` derive · immutable history · ≠ Ranking/Daily/§6 · PRODUCTION VERIFIED.
 - Ranking Thin (D27): `resolveClubRanking` table input · własny DTO · bez ELO/points surface · PRODUCTION VERIFIED.
+- League calendar (D28): `LEAGUE_FIXTURE_COUNT=22` · double RR · top-up MD12–22 · PRODUCTION VERIFIED (`9027baf`).
 - Sekrety `.env` — nigdy w git.
 - Force-push / rewrite `main` — zakazane.
 - Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
@@ -381,9 +385,9 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                           |
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                              |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + **Ranking** |
-| Dokumentacja | **Aktualna** | RANKING D27 · Domain `bf86749` · Presentation `9fd14fc`                                               |
-| CI           | **GREEN**    | tip feat VERIFIED · docs tip `98a3d81`                                                                |
-| Production   | **GREEN**    | Vercel · Domain RANKING-01 `bf86749`                                                                  |
+| Dokumentacja | **Aktualna** | LEAGUE-04 D28 · Domain `9027baf` · Presentation `9fd14fc`                                             |
+| CI           | **GREEN**    | tip feat VERIFIED · docs CLOSE (pin follows)                                                          |
+| Production   | **GREEN**    | Vercel · Domain LEAGUE-04 `9027baf`                                                                   |
 
 ---
 
@@ -392,7 +396,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | Dokument                                                     | Rola                                     |
 | ------------------------------------------------------------ | ---------------------------------------- |
 | [`AI_QUICK_START.md`](./AI_QUICK_START.md)                   | 1 ekran                                  |
-| [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) | skrót D19–D27 + Thin principles          |
+| [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) | skrót D19–D28 + Thin principles          |
 | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               | **SSOT hashy**                           |
 | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               | **SSOT statusu**                         |
 | [`../ROADMAP.md`](../ROADMAP.md)                             | **SSOT listy EPIC**                      |
@@ -401,4 +405,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · D27 · Domain `bf86749` · next **Full 22-fixture season READY FOR AUDIT**
+2026-07-30 — LFE-LEAGUE-04 CLOSED · D28 · Domain `9027baf` · next **Transfers hardening READY FOR AUDIT**

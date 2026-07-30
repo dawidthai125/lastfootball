@@ -4,7 +4,7 @@
 **Typ:** Domain calendar Thin — wydłużenie sezonu 11 → 22 (GDD §10 home+away)  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT COMPLETE · Owner **GO PLAN** · LEAGUE-01…03 CLOSED · D15 / D17 · GDD §10  
-**Status PLAN:** ACCEPTED · Owner GO IMPLEMENT — IMPLEMENT COMPLETE (oczekuje GO COMMIT / PUSH)  
+**Status PLAN:** CLOSED · EPIC LFE-LEAGUE-04 FULLY CLOSED (feat `9027baf` · PRODUCTION VERIFY PASS · DOCS CLOSE)
 **Baseline wejścia:** Domain `bf86749` · Presentation `9fd14fc` · Docs tip `98a3d81` · tip `0656a2f`
 
 ---
@@ -255,4 +255,4 @@ Rekomendacja CLOSE: zaktualizować D15/D17 in-place (+ notatka źródło LEAGUE-
 
 ## Last updated
 
-2026-07-30 — IMPLEMENT COMPLETE · LFE-LEAGUE-04 · oczekuje GO COMMIT / PUSH
+2026-07-30 — CLOSED · feat `9027baf` · PRODUCTION VERIFY · DOCS CLOSE

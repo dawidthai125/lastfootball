@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
 | **Domain baseline**     | **`3915be9`** — LFE-ACHIEVEMENTS-01 CLOSED    |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)    |
+| **Documentation tip**   | CLOSE sync LFE-LEAGUE-04 (pin follows)        |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -32,7 +32,8 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | ID                                             | Temat                                                     |
 | ---------------------------------------------- | --------------------------------------------------------- |
 | LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                           |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela · 11 meczów                             |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                      |
+| **LFE-LEAGUE-04**                              | Full 22 · double RR · `9027baf` · D28                     |
 | LFE-ECONOMY-01                                 | Cash Thin (D18)                                           |
 | LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)              |
 | **LFE-ACADEMY-01**                             | Academy Thin A · Intake + Promote · D23 · `9c6fe86`       |
@@ -87,7 +88,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Full 22-fixture season READY FOR AUDIT**.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Transfers hardening READY FOR AUDIT**.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -100,4 +101,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Full 22-f
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-RANKING-01 CLOSED · next Full 22-fixture season
+**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 CLOSED · next Transfers hardening

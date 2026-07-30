@@ -70,6 +70,14 @@ supabase/ (Auth + Postgres migrations)
 - REUSE: Hub session/Primary · fixtures · `last_training_on` + `utcDateString` · unlock treningu.
 - Poza Thin: Quest Engine · persist/claim · streaki · nagrody §26 · inbox/push jako zależność.
 
+## League calendar rules (LFE-LEAGUE-04 / D28 / GDD §10)
+
+- `LEAGUE_FIXTURE_COUNT = 22` — jedyny SSOT długości sezonu.
+- Jedyny planner = `planClubFixtures`; MD1–11 = identity LEAGUE-03; MD12–22 = rewanże.
+- Top-up tylko brakujące MD; zero przebudowy istniejących wierszy.
+- AI↔AI w tabeli = double RR (`planAiVsAiMatches`); nie Match Engine.
+- OUT: Season End · awans/spadek · schedulery.
+
 ## Ranking rules (LFE-RANKING-01 / D27 / GDD §18)
 
 - `/rankings` konsumuje **tylko** `resolveClubRanking()` — sezonowe porównanie klubów.
@@ -157,4 +165,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 · D27
+2026-07-30 — LFE-LEAGUE-04 · D28

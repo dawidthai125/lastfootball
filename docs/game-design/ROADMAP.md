@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. **LFE-SCOUTING-01 · LFE-DAILY-01 · LFE-ACHIEVEMENTS-01 · LFE-RANKING-01 CLOSED**. Następny = **Full 22-fixture season READY FOR AUDIT** (Owner GO).
+GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. **LFE-SCOUTING-01 · LFE-DAILY-01 · LFE-ACHIEVEMENTS-01 · LFE-LEAGUE-04 CLOSED**. Następny = **Transfers hardening READY FOR AUDIT** (Owner GO).
 
 ## Completed
 
@@ -74,4 +74,4 @@ GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + 
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749` · next Full 22-fixture season READY FOR AUDIT
+2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf` · next Transfers hardening READY FOR AUDIT

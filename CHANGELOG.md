@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-LEAGUE-04 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D28 · Domain tip `9027baf` · next **Transfers hardening READY FOR AUDIT**
+- Kontrakt: `LEAGUE_FIXTURE_COUNT=22` · double RR · top-up MD12–22 · MD1–11 immutable
+
+### Added (shipped on `main` — LFE-LEAGUE-04)
+
+- Full 22-fixture season · `planClubFixtures` return legs · AI↔AI double RR derive
+
 ### Docs (LFE-RANKING-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D27 · Domain tip `bf86749` · next **Full 22-fixture season READY FOR AUDIT**

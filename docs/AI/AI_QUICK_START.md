@@ -13,9 +13,9 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                          |
 | ------------------- | -------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`bf86749`** — LFE-RANKING-01 (Information Thin)        |
+| Domain baseline     | **`9027baf`** — LFE-LEAGUE-04 (Full 22 · double RR)      |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)               |
+| Documentation tip   | CLOSE sync LFE-LEAGUE-04 (pin follows)                   |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
@@ -33,7 +33,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 1. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**
 2. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**
-3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, …)
+3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `planClubFixtures`, …)
 4. Match mutacje tylko LFE `CommandBus` / session
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
 6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
@@ -50,4 +50,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-RANKING-01 CLOSED · next Full 22-fixture season READY FOR AUDIT
+**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 CLOSED · next Transfers hardening READY FOR AUDIT

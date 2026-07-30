@@ -7,9 +7,9 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`bf86749`** — LFE-RANKING-01 CLOSED (Information Thin · seasonal).  
+**Domain feature baseline:** **`9027baf`** — LFE-LEAGUE-04 CLOSED (Full 22 · double RR).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`98a3d81`** — LFE-RANKING-01 CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-LEAGUE-04 (pin follows)
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
@@ -43,7 +43,8 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 | **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                                                                                      |
 | **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match                                                                             |
 | **LFE-LEAGUE-02**                                      | **CLOSED** · table derive · Hub SEASON · `/league` · chip                                                           |
-| **LFE-LEAGUE-03**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=11` · top-up                                                                     |
+| **LFE-LEAGUE-03**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=11` · top-up (superseded count by LEAGUE-04)                                     |
+| **LFE-LEAGUE-04**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=22` · double RR · MD1–11 identity · feat `9027baf` · PRODUCTION VERIFY           |
 | **LFE-ECONOMY-01**                                     | **CLOSED** · cash SSOT · movements · `/finance` · SEASON                                                            |
 | **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19                                                              |
 | **LFE-PLAYERS-02**                                     | **CLOSED** · Player Development Thin · `potential` + match growth · D22 · `cd222ba`                                 |
@@ -91,12 +92,11 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                        |
-| ------------------------------- | -------------------------------- |
-| Full 22-fixture season (opt.)   | po LEAGUE-03 · GDD §10 home+away |
-| Zawężenie LFE PUBLIC exports    | chore                            |
-| Ratings v2                      | bogatsze Player Match Data       |
-| Kanał push / email (§22 Future) | osobny Owner GO                  |
+| Item                            | Zależność                  |
+| ------------------------------- | -------------------------- |
+| Zawężenie LFE PUBLIC exports    | chore                      |
+| Ratings v2                      | bogatsze Player Match Data |
+| Kanał push / email (§22 Future) | osobny Owner GO            |
 
 ## FUTURE
 
@@ -115,17 +115,17 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 ## Next Recommended EPIC
 
-**Full 22-fixture season (opt.)** — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
-Domain tip: RANKING-01 `bf86749`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip CLOSE pin.
+**Transfers hardening** — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
+Domain tip: LEAGUE-04 `9027baf`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip CLOSE pin.
 
 ## Decyzje roadmapy
 
-- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem; unlock transferów/treningu po 2 played; dzień treningu = UTC; **kalendarz 11 ≠ GDD 22**).
+- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem; unlock transferów/treningu po 2 played; dzień treningu = UTC; **kalendarz = 22** / D28).
 - Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
 - Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
-- Terminarz = `fixtures` + `planClubFixtures` + top-up (D15 / LFE-LEAGUE-03).
+- Terminarz = `fixtures` + `planClubFixtures` + top-up · **22** double RR (D15 / D28 / LFE-LEAGUE-04).
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26**; kod = `ECONOMY_THIN` (§26B).
 - Envelope = `resolveTransferEnvelope` (ratio 1 Thin) — nie kolumna DB (E1).
 - Buy nego = `resolveNegotiationStep` pure / stateless (N1); settlement `agreedAmount`.
@@ -157,4 +157,4 @@ Domain tip: RANKING-01 `bf86749`; Presentation tip: MOTION-01 `9fd14fc`; Docs ti
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749` · next **Full 22-fixture season READY FOR AUDIT**
+2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf` · next **Transfers hardening READY FOR AUDIT**

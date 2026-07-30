@@ -48,4 +48,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 · D27
+2026-07-30 — LFE-LEAGUE-04 · D28

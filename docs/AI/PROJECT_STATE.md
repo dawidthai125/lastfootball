@@ -22,7 +22,7 @@
 
 ## Następny EPIC
 
-**Full 22-fixture season (opt.)** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
+**Transfers hardening** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
 
 ## Powiązania
 
@@ -30,4 +30,4 @@
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 · D27
+2026-07-30 — LFE-LEAGUE-04 · D28

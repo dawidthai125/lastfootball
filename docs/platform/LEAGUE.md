@@ -13,19 +13,21 @@ Terminarz i tabela ligowa (Thin). Hub konsumuje next match + chip pozycji.
 | Opponent   | `opponent_club_id` + katalog AI                                       |
 | Plan       | **wyłącznie** `planClubFixtures(clubId)` (pure)                       |
 | Ensure     | `ensureClubFixtures` — insert / **top-up** z tego samego planu        |
-| Liczba     | `LEAGUE_FIXTURE_COUNT = 11` (single RR vs 11 AI)                      |
+| Liczba     | `LEAGUE_FIXTURE_COUNT = 22` (double RR vs 11 AI · GDD §10)            |
+| Runda 1    | MD1–11 — identity LEAGUE-03 (nigdy nie przebudowywane)                |
+| Runda 2    | MD12–22 — rewanże (`!isHome`, ten sam opponent)                       |
 | Tabela     | **wyłącznie** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` |
-| AI↔AI      | deterministyczny derive (bez Match Engine, bez standings DB)          |
+| AI↔AI      | **double RR** derive (bez Match Engine, bez standings DB)             |
 | Chip       | `resolvePlayerLeaguePositionLabel(table)`                             |
 
 First Match (`id=first`) **nie** jest wierszem `fixtures`.
 
-### Top-up (LFE-LEAGUE-03)
+### Top-up (LFE-LEAGUE-03 / LFE-LEAGUE-04)
 
 - Brakujące matchday z `planClubFixtures` — **bez** nowego planu, **bez** nadpisu istniejących.
-- Identity MD4–11 = to, co pełny plan 11 miałby od początku (prefiks MD1–3 = legacy 3).
+- Kluby z MD1–11: top-up wyłącznie **MD12–22**.
 - Nie zmienia statusów `played` / istniejącego `upcoming`.
-- Gdy brak `upcoming` (np. krótkie 3 rozegrane) → najniższy brakujący MD = `upcoming`.
+- Gdy brak `upcoming` → najniższy brakujący MD = `upcoming`.
 
 ## UI
 
@@ -34,12 +36,12 @@ First Match (`id=first`) **nie** jest wierszem `fixtures`.
 
 ## Decyzje
 
-D15 (fixtures) · D17 (table) — [`../DECISIONS.md`](../DECISIONS.md).  
-Thin vs GDD §10: **11** fixtures (single RR), nie pełne **22** (home+away) — Future.
+D15 (fixtures) · D17 (table) · **D28** (calendar 22 / double RR) — [`../DECISIONS.md`](../DECISIONS.md).  
+GDD §10: **22** fixtures (home+away) — **CLOSED** w kodzie (LFE-LEAGUE-04).
 
 ## Poza Thin
 
-Pełne 22 kolejki, standings DB, playoff, awans/spadek runtime.
+Season End · awans/spadek runtime · 1 mecz/dzień · soft backlog · standings DB · playoff.
 
 ## Kod
 
@@ -47,4 +49,4 @@ Pełne 22 kolejki, standings DB, playoff, awans/spadek runtime.
 
 ## Last updated
 
-2026-07-25 — LFE-LEAGUE-03 CLOSE
+2026-07-30 — LFE-LEAGUE-04 CLOSE

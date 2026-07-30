@@ -8,10 +8,26 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`bf86749`** (LFE-RANKING-01).
+**Domain feature baseline:** **`9027baf`** (LFE-LEAGUE-04).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`98a3d81`** — LFE-RANKING-01 CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-LEAGUE-04 (pin follows)
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-LEAGUE-04 · CLOSED
+
+### Product
+
+- Kalendarz ligowy **22** kolejki (double RR · GDD §10)
+- `planClubFixtures` · MD1–11 identity LEAGUE-03 · MD12–22 rewanże · top-up istniejących klubów
+- AI↔AI double RR w `planAiVsAiMatches` (seed `ai-v2`)
+- Domain tip → **`9027baf`** · D28 · brak migracji schematu
+- CI GREEN · PRODUCTION VERIFIED · next **Transfers hardening READY FOR AUDIT**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · LEAGUE · DECISIONS · EPIC_INDEX
 
 ---
 

@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-RANKING-01 CLOSED** (kod Thin). Następny: **Full 22-fixture season READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-LEAGUE-04 CLOSED** (kod Thin). Następny: **Transfers hardening READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -71,4 +71,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749`
+2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf`

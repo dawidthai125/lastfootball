@@ -47,6 +47,7 @@ lastfootball/
 Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
 Daily Goal ──► resolveClubDailyGoal (derive) ──► istniejące trasy (suggestion; Primary nadrzędny)
 Achievements ──► resolveClubAchievements (derive history) ──► /achievements
+League ──► planClubFixtures (22) → ensureClubFixtures → resolveLeagueTable ──► /league
 Ranking ──► resolveLeagueTable → resolveClubRanking ──► /rankings
 complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)
 transfers settle ──► players + cash_balance + finance_movements + transfer_deals
@@ -77,4 +78,4 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-RANKING-01 (D27)
+**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 (D28)
