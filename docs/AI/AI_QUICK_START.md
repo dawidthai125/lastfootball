@@ -10,15 +10,15 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                               |
-| ------------------- | ------------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
-| Domain baseline     | **`36ba9be`** — LFE-CLUB-01 (identity profile Thin · D47–D51) |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| Documentation tip   | **`d645888`** — LFE-CLUB-01 CLOSE (pin)                       |
-| Prod                | https://lastfootball.vercel.app                               |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
+|                     |                                                              |
+| ------------------- | ------------------------------------------------------------ |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                |
+| Domain baseline     | **`46f7caa`** — LFE-SOFTLOCK-01 (route gate · D52 · D63–D67) |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)     |
+| Documentation tip   | _(pin po docs sync)_                                         |
+| Prod                | https://lastfootball.vercel.app                              |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                 |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               |
 
 ## Pipeline (jedyny)
 
@@ -50,4 +50,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 CLOSED · next Transfers hardening READY FOR AUDIT
+**ACTIVE** · 2026-07-30 — LFE-SOFTLOCK-01 CLOSED · next Owner GO

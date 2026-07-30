@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`36ba9be`** — LFE-CLUB-01 CLOSED (identity profile Thin · D47–D51).
+**Domain feature baseline:** **`46f7caa`** — LFE-SOFTLOCK-01 CLOSED (route gate · D52 · D63–D67).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`d645888`** — LFE-CLUB-01 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers Hardening (09) · Messages (01) · **Club (01)** · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers Hardening (09) · Messages (01) · Club (01) · **SoftLock (01)** · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -65,6 +65,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers Hardening (09) · Messages (01) · **Club 
 | **LFE-TRANSFERS-09**                                   | **CLOSED** · Hardening TD-01/TD-02 · fee parity SQL↔TS · single live settle · D38 · feat `e6885dc`                  |
 | **LFE-MESSAGES-01**                                    | **CLOSED** · derived inbox Thin · `resolveClubMessages` E1–E3 · D40–D46 · feat `800ed0d` · PRODUCTION VERIFY        |
 | **LFE-CLUB-01**                                        | **CLOSED** · identity profile Thin · `resolveClubProfile` · D47–D51 · feat `36ba9be` · PRODUCTION VERIFY            |
+| **LFE-SOFTLOCK-01**                                    | **CLOSED** · generic Route Gate · SoftLockState · D52 · D63–D67 · feat `46f7caa` · PRODUCTION VERIFY                |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                       |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                  |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)          |
@@ -119,7 +120,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers Hardening (09) · Messages (01) · **Club 
 ## Next Recommended EPIC
 
 **Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): Settings/§22 · Season End Thin · TD-03 P2.  
-Domain tip: CLUB-01 `36ba9be`; Presentation tip: MOTION-01 `9fd14fc`.
+Domain tip: SOFTLOCK-01 `46f7caa`; prior CLUB-01 `36ba9be`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -163,4 +164,4 @@ Domain tip: CLUB-01 `36ba9be`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Last updated
 
-2026-07-30 — LFE-CLUB-01 CLOSED · Domain `36ba9be` · D47–D51 CLOSED · next Owner GO
+2026-07-30 — LFE-SOFTLOCK-01 CLOSED · Domain `46f7caa` · D52 · D63–D67 CLOSED · next Owner GO

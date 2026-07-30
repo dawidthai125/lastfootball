@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`36ba9be`** (LFE-CLUB-01).
+**Domain feature baseline:** **`46f7caa`** (LFE-SOFTLOCK-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`d645888`** — LFE-CLUB-01 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-30] — LFE-SOFTLOCK-01 · CLOSED
+
+### Product
+
+- Generyczny `SoftLockRouteGate` — route access ≡ nav (`resolveNavAccess` / `isModuleSoftLocked` · `FLAT_NAV`).
+- Kanoniczna powierzchnia locked = `SoftLockState` (D65); pass-through poza nav (D67).
+- Strip Fake Production z `/sponsors` · `/board` · `/stadium` (D52 · D64).
+- Domain tip → **`46f7caa`** · D52 · D63–D67 CLOSED · style Prettier **`90be8f2`**.
+
+### Docs
+
+- Sync SSOT: DECISIONS · HANDOFF · ROADMAP · CHANGELOG · baseline · status · EPIC_INDEX · AI_QUICK_START.
 
 ## [2026-07-30] — LFE-CLUB-01 · CLOSED
 

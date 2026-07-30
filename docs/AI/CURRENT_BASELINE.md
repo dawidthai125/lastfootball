@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 36ba9be            # Domain feature baseline CLUB-01
+git log -1 --oneline 46f7caa            # Domain feature baseline SOFTLOCK-01
+git log -1 --oneline 36ba9be            # Prior Domain CLUB-01
 git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
 git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
 git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
@@ -39,13 +40,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `36ba9be` — **LFE-CLUB-01** (identity profile Thin · D47–D51)         |
-| Domain message              | `feat(club): implement LFE-CLUB-01 identity profile Thin`             |
-| Prior Domain                | `800ed0d` — LFE-MESSAGES-01                                           |
+| **Domain feature baseline** | `46f7caa` — **LFE-SOFTLOCK-01** (generic route gate · D52 · D63–D67)  |
+| Domain message              | `feat(softlock): implement LFE-SOFTLOCK-01 generic route gate`        |
+| Prior Domain                | `36ba9be` — LFE-CLUB-01                                               |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`d645888`** — LFE-CLUB-01 CLOSE (pin)                               |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · CLUB-01 CLOSED · D47–D51            |
+| **Documentation tip**       | _(pin po docs sync)_                                                  |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · SOFTLOCK-01 CLOSED · D52 · D63–D67  |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -66,6 +67,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Achievements Thin (resolveClubAchievements · immutable history)
   → Messages Thin (resolveClubMessages · /messages + Overlay · ta sama DTO)
   → Club identity Thin (resolveClubProfile · /club · D47–D51)
+  → Soft-lock route gate (SoftLockRouteGate · SoftLockState · D52 · D63–D67)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -147,7 +149,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
 
 ## Not on production
 
@@ -155,4 +157,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — LFE-CLUB-01 CLOSED · Domain `36ba9be` · D47–D51 CLOSED
+2026-07-30 — LFE-SOFTLOCK-01 CLOSED · Domain `46f7caa` · D52 · D63–D67 CLOSED

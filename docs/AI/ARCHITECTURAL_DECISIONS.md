@@ -58,6 +58,12 @@
 | **D49** | No Staff on Club          | Brak personelu Future na `/club`.                                                 |
 | **D50** | View presentation only    | `ClubProfileView` bez logiki biznesowej.                                          |
 | **D51** | One club profile resolver | `resolveClubProfile` = sole DTO `/club`.                                          |
+| **D52** | Soft lock ≠ Fake Prod     | Soft-lock surface nigdy nie leakuje atrap / Fake Production.                      |
+| **D63** | Route ≡ Nav access        | Deep-link access = `resolveNavAccess` / `isModuleSoftLocked`.                     |
+| **D64** | No Placeholder as lock    | PlaceholderPage ≠ mechanizm soft-lock.                                            |
+| **D65** | SoftLockState canonical   | Locked route surface = `SoftLockState`.                                           |
+| **D66** | Generic route gate        | Jeden gate; nowy lock = `FLAT_NAV` + unlock — bez edycji gate.                    |
+| **D67** | Transparent gate          | Poza `FLAT_NAV` = pass-through; zero logiki domenowej w gate.                     |
 | **D40** | Fake Production Rule      | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41** | No runtime mocks          | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42** | Messages Are Derived      | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -112,4 +118,8 @@
 
 - Identity ≠ progression · Composition only · no staff · View = DTO only · `resolveClubProfile` sole SSOT.
 
-**ACTIVE** · 2026-07-30 — LFE-CLUB-01 · D47–D51
+### D52 · D63–D67 — kontrakt SoftLock route (must-know)
+
+- Soft-lock ≠ Fake Production · route access ≡ nav · SoftLockState canonical · generic + transparent gate (`FLAT_NAV`).
+
+**ACTIVE** · 2026-07-30 — LFE-SOFTLOCK-01 · D52 · D63–D67

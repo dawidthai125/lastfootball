@@ -21,31 +21,32 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                   |
 | ----------------------- | --------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`36ba9be`** — LFE-CLUB-01 CLOSED            |
+| **Domain baseline**     | **`46f7caa`** — LFE-SOFTLOCK-01 CLOSED        |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`d645888`** — LFE-CLUB-01 CLOSE (pin)       |
+| **Documentation tip**   | _(pin po docs sync)_                          |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
 ## Platform DONE (skrót)
 
-| ID                                             | Temat                                                           |
-| ---------------------------------------------- | --------------------------------------------------------------- |
-| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                                 |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                            |
-| **LFE-LEAGUE-04**                              | Full 22 · double RR · `9027baf` · D28                           |
-| LFE-ECONOMY-01                                 | Cash Thin (D18)                                                 |
-| LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)                    |
-| **LFE-ACADEMY-01**                             | Academy Thin A · Intake + Promote · D23 · `9c6fe86`             |
-| **LFE-SCOUTING-01**                            | Scouting Information Thin · shortlist refs · `93fd6d5`          |
-| **LFE-DAILY-01**                               | Daily Goal Thin · resolveClubDailyGoal derive · `73e1361`       |
-| **LFE-ACHIEVEMENTS-01**                        | Achievements Information Thin · `3915be9` · D26                 |
-| LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20)           |
-| **LFE-TRANSFERS-09**                           | Hardening TD-01/TD-02 · D38 · `e6885dc`                         |
-| **LFE-MESSAGES-01**                            | Messages Thin · `resolveClubMessages` · D40–D46 · `800ed0d`     |
-| **LFE-CLUB-01**                                | Club identity Thin · `resolveClubProfile` · D47–D51 · `36ba9be` |
-| LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                    |
-| GDD-§26A / §26B                                | SSOT liczb + sync kodu                                          |
+| ID                                             | Temat                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------- |
+| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth / klub / First Match / Hub                                  |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                             |
+| **LFE-LEAGUE-04**                              | Full 22 · double RR · `9027baf` · D28                            |
+| LFE-ECONOMY-01                                 | Cash Thin (D18)                                                  |
+| LFE-PLAYERS-01 · **02**                        | Kadra `players` + Development Thin (D19/D22)                     |
+| **LFE-ACADEMY-01**                             | Academy Thin A · Intake + Promote · D23 · `9c6fe86`              |
+| **LFE-SCOUTING-01**                            | Scouting Information Thin · shortlist refs · `93fd6d5`           |
+| **LFE-DAILY-01**                               | Daily Goal Thin · resolveClubDailyGoal derive · `73e1361`        |
+| **LFE-ACHIEVEMENTS-01**                        | Achievements Information Thin · `3915be9` · D26                  |
+| LFE-TRANSFERS-01 · E1 · N1 · 03…08             | Rynek → Live Instant → Pending → **1× Counter** (D20)            |
+| **LFE-TRANSFERS-09**                           | Hardening TD-01/TD-02 · D38 · `e6885dc`                          |
+| **LFE-MESSAGES-01**                            | Messages Thin · `resolveClubMessages` · D40–D46 · `800ed0d`      |
+| **LFE-CLUB-01**                                | Club identity Thin · `resolveClubProfile` · D47–D51 · `36ba9be`  |
+| **LFE-SOFTLOCK-01**                            | Route soft-lock gate · SoftLockState · D52 · D63–D67 · `46f7caa` |
+| LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
+| GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
 ## Engine / Match UI DONE
 
@@ -104,4 +105,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **czekaj na
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-CLUB-01 CLOSED · next Owner GO
+**ACTIVE** · 2026-07-30 — LFE-SOFTLOCK-01 CLOSED · next Owner GO

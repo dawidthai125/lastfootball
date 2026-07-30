@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                        |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Academy + Scouting + Daily + Achievements + Ranking + League 22 + Transfers 09 + Messages 01 + **Club 01** + MOTION-01 + GDD-16…**22** |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                          |
-| **Domain feature baseline**     | `36ba9be` — **LFE-CLUB-01** (identity profile Thin · D47–D51)                                                                                  |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                          |
-| **Documentation tip**           | **`d645888`** — LFE-CLUB-01 CLOSE (pin)                                                                                                        |
-| **Branch**                      | `main`                                                                                                                                         |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **CLUB-01 CLOSED** · D47–D51 · MESSAGES-01 · next **Owner GO**                                                   |
+| Pole                            | Wartość                                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Production Version**          | UI P0 + Academy + Scouting + Daily + Achievements + Ranking + League 22 + Transfers 09 + Messages 01 + Club 01 + **SoftLock 01** + MOTION-01 + GDD-16…**22** |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                        |
+| **Domain feature baseline**     | `46f7caa` — **LFE-SOFTLOCK-01** (route gate · D52 · D63–D67)                                                                                                 |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                        |
+| **Documentation tip**           | _(pin po docs sync)_                                                                                                                                         |
+| **Branch**                      | `main`                                                                                                                                                       |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **SOFTLOCK-01 CLOSED** · D52 · D63–D67 · next **Owner GO**                                                                     |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -30,7 +30,8 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 36ba9be            # Domain CLUB-01
+git log -1 --oneline 46f7caa            # Domain SOFTLOCK-01
+git log -1 --oneline 36ba9be            # Prior Domain CLUB-01
 git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
 git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
 git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
@@ -42,10 +43,10 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain CLUB-01 `36ba9be` · presentation MOTION-01 `9fd14fc`).
+**Prod deploy:** Vercel Production śledzi `main` (Domain SOFTLOCK-01 `46f7caa` · presentation MOTION-01 `9fd14fc`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** · **fee parity helpers** (TRANSFERS-09) — zastosowane.  
-**LFE-MESSAGES-01:** brak migracji (derive only).  
+**LFE-SOFTLOCK-01 / LFE-MESSAGES-01 / LFE-CLUB-01:** brak migracji (gate / derive only).  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
 
 ---
@@ -70,6 +71,7 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 | **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`      |
 | **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`              |
 | **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                |
+| **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`               |
 | LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                                 |
 | GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                                   |
 | **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                            |
@@ -233,7 +235,7 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 ### Co jest Thin (świadome limity)
 
-kalendarz **22** (D28) · Season End OUT · brak XP / attribute DB · Ranking Thin kod = RANKING-01 (bez ELO/points surface) · Osiągnięcia Thin kod = ACHIEVEMENTS-01 (bez XP/score) · **brak kodu Wiadomości** (GDD §21 Thin = docs only) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score · Daily Goal bez persist/Quest Engine/nagród.
+kalendarz **22** (D28) · Season End OUT · brak XP / attribute DB · Ranking Thin kod = RANKING-01 (bez ELO/points surface) · Osiągnięcia Thin kod = ACHIEVEMENTS-01 (bez XP/score) · Messages Thin = derive (D40–D46) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors/Stadium **domena OUT** (soft-lock SoftLockState · D52 · bez Fake Production) · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score · Daily Goal bez persist/Quest Engine/nagród.
 
 ### Planowane (Owner wybiera)
 
@@ -261,6 +263,7 @@ kalendarz **22** (D28) · Season End OUT · brak XP / attribute DB · Ranking Th
 | **Transfers**    | CLOSED Thin 01–**09** (hardening TD-01/02) + presentation                                 |
 | **Finance**      | CLOSED Thin + presentation                                                                |
 | **Motion**       | CLOSED **LFE-UI-MOTION-01** · shared `motion.css` · Guide §8 · `9fd14fc`                  |
+| **SoftLock**     | CLOSED **LFE-SOFTLOCK-01** · Route Gate · SoftLockState · D52 · D63–D67 · `46f7caa`       |
 
 ---
 
@@ -283,7 +286,7 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ### **Czekaj na Owner GO**
 
-**Uzasadnienie:** LFE-CLUB-01 FULLY CLOSED (`36ba9be`) · D47–D51 CLOSED · MESSAGES-01 CLOSED. Brak otwartego EPIC.
+**Uzasadnienie:** LFE-SOFTLOCK-01 FULLY CLOSED (`46f7caa`) · D52 · D63–D67 CLOSED · CLUB-01 / MESSAGES-01 CLOSED. Brak otwartego EPIC.
 
 **Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO.
 
@@ -344,7 +347,7 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 - Messages Thin: D40–D46 CLOSED · PRODUCTION VERIFIED (`800ed0d`) · `resolveClubMessages` · Overlay = ta sama DTO · brak runtime mocków.
 - Club Profile Thin: D47–D51 CLOSED · PRODUCTION VERIFIED (`36ba9be`) · `resolveClubProfile` · brak silnika §6 / personelu.
 - Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · Ranking ELO/points-as-surface · Achievements XP/score/ekonomii · Messages DB/mark-as-read · §6 numeric engine / club staff UI · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
-- Domain tip = CLUB-01 (`36ba9be`); prior MESSAGES-01 `800ed0d`; prior TRANSFERS-09 `e6885dc`; prior LEAGUE-04 `9027baf`; prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
+- Domain tip = SOFTLOCK-01 (`46f7caa`); prior CLUB-01 `36ba9be`; prior MESSAGES-01 `800ed0d`; prior TRANSFERS-09 `e6885dc`; prior LEAGUE-04 `9027baf`; prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
 - Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
 - Ranking Thin (GDD-18 / D27): `resolveClubRanking` · table input · Information Thin · PRODUCTION VERIFIED (`bf86749`).
 - Osiągnięcia Thin (GDD-19 / D26): `resolveClubAchievements` · Information Thin · immutable history · PRODUCTION VERIFIED.
@@ -397,9 +400,9 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                                      |
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                                         |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + Ranking + **Messages** |
-| Dokumentacja | **Aktualna** | CLUB-01 D47–D51 · Domain `36ba9be` · Presentation `9fd14fc`                                                      |
+| Dokumentacja | **Aktualna** | SOFTLOCK-01 D52 · D63–D67 · Domain `46f7caa` · Presentation `9fd14fc`                                            |
 | CI           | **GREEN**    | tip feat VERIFIED                                                                                                |
-| Production   | **GREEN**    | Vercel · Domain CLUB-01 `36ba9be` · derive only (brak migracji)                                                  |
+| Production   | **GREEN**    | Vercel · Domain SOFTLOCK-01 `46f7caa` · brak migracji                                                            |
 
 ---
 
@@ -417,4 +420,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — LFE-CLUB-01 CLOSED · D47–D51 · Domain `36ba9be` · next **Owner GO**
+2026-07-30 — LFE-SOFTLOCK-01 CLOSED · D52 · D63–D67 · Domain `46f7caa` · next **Owner GO**

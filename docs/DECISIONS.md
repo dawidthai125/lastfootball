@@ -399,9 +399,41 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D47–D51:** LFE-CLUB-01 (feat `36ba9be`).
 
+### D52 — Soft Lock Must Never Leak Fake Production · CLOSED
+
+**Dlaczego:** Soft-lock w nav + atrapy na deep-linku = fałszywy SSOT ekonomii / infrastruktury.  
+**Zasada:** Surface soft-lockowana nie może serwować Fake Production (€, partnerów, frekwencji, „Podgląd UI” udającego produkt).
+
+### D63 — Route Access Must Match Navigation Access · CLOSED
+
+**Dlaczego:** Nav `soft_locked` + otwarty deep-link = rozjazd kontraktu dostępu.  
+**Zasada:** Stan access route ≡ `resolveNavAccess` / `isModuleSoftLocked` dla tego samego `NavItem.id` i ctx.
+
+### D64 — PlaceholderPage Is Not An Access Mechanism · CLOSED
+
+**Dlaczego:** PlaceholderPage / „Podgląd UI” mylone z odblokowanym produktem.  
+**Zasada:** Soft-lock **nie** używa PlaceholderPage jako mechanizmu dostępu.
+
+### D65 — SoftLockState Is The Canonical Locked Surface · CLOSED
+
+**Dlaczego:** Spójność Training/Academy/Scouting vs permanent locks.  
+**Zasada:** Kanoniczna powierzchnia locked na route = `SoftLockState` (bez fałszywego „Odblokuj”).
+
+### D66 — Route Gate Must Be Generic · CLOSED
+
+**Dlaczego:** Per-page ify access → drift przy nowych pozycjach nav.  
+**Zasada:** Jeden generyczny gate; nowy soft-lock = wpis w `FLAT_NAV` + reguła w `unlock` — **bez** zmiany gate.
+
+### D67 — Route Gate Must Be Transparent · CLOSED
+
+**Dlaczego:** Nested match path / trasy poza nav nie mogą być przypadkowo lockowane.  
+**Zasada:** Pathname poza `FLAT_NAV` = pass-through; gate bez logiki domenowej.
+
+**Źródło D52 · D63–D67:** LFE-SOFTLOCK-01 (feat `46f7caa`).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D51 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D51 / D52 / D63–D67 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -420,6 +452,7 @@ Każde złamanie D1–D28 / D38 / D40–D51 wymaga **AUDIT** i aktualizacji tego
 **LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
 **LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
 **LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
+**LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
 
 ## Powiązania
 
@@ -427,4 +460,4 @@ Każde złamanie D1–D28 / D38 / D40–D51 wymaga **AUDIT** i aktualizacji tego
 
 ## Last updated
 
-2026-07-30 — LFE-CLUB-01 · D47–D51
+2026-07-30 — LFE-SOFTLOCK-01 · D52 · D63–D67
