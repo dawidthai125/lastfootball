@@ -1,10 +1,6 @@
 import { FLAT_NAV, type NavItem } from '@/lib/nav';
 import type { HubNavAccess, HubPhase } from '@/lib/hub/types';
-import {
-  isModuleSoftLocked,
-  resolveNavAccess,
-  type NavAccessContext,
-} from '@/lib/hub/unlock';
+import { isModuleSoftLocked, resolveNavAccess, type NavAccessContext } from '@/lib/hub/unlock';
 
 /** Normalize trailing slash (except root). */
 export function normalizePathname(pathname: string): string {
