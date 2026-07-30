@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                              |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Academy + MOTION-01 + GDD-16…**21**                                                          |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                |
-| **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                              |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                |
-| **Documentation tip**           | `c24efef` — **GDD-21** Wiadomości Thin (content `bf07a44`)                                           |
-| **Branch**                      | `main`                                                                                               |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **GDD-21 CLOSED** · M2.5 PASS · ACADEMY-01 · next **GDD-22 AUDIT**     |
+| Pole                            | Wartość                                                                                          |
+| ------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Production Version**          | UI P0 + Academy + MOTION-01 + GDD-16…**21**                                                      |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                            |
+| **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                          |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                            |
+| **Documentation tip**           | `c24efef` — **GDD-21** Wiadomości Thin (content `bf07a44`)                                       |
+| **Branch**                      | `main`                                                                                           |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **GDD-21 CLOSED** · M2.5 PASS · ACADEMY-01 · next **GDD-22 AUDIT** |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -239,14 +239,14 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED**:
 
-| #   | EPIC / temat                          | Priorytet | Notatka                                      |
-| --- | ------------------------------------- | --------- | -------------------------------------------- |
-| 1   | **GDD-22** (§22 Powiadomienia) docs   | **P0**    | READY FOR AUDIT · po Owner GO                |
-| 2   | LFE-SCOUTING-01 (kod)                 | P1        | Po GDD-21+22 CLOSED · osobny AUDIT           |
-| 3   | LFE-DAILY-01 / ACHIEVEMENTS / RANKING | P2        | Kolejność strategii hybrydowej               |
-| 4   | Full 22-fixture season                | P2        | Wymaga decyzji vs Thin 11                    |
-| 5   | Transfers hardening                   | P2        | Tech debt                                    |
-| 6   | Ratings v2 · LFE PUBLIC trim          | P3        | Chore / depth                                |
+| #   | EPIC / temat                          | Priorytet | Notatka                            |
+| --- | ------------------------------------- | --------- | ---------------------------------- |
+| 1   | **GDD-22** (§22 Powiadomienia) docs   | **P0**    | READY FOR AUDIT · po Owner GO      |
+| 2   | LFE-SCOUTING-01 (kod)                 | P1        | Po GDD-21+22 CLOSED · osobny AUDIT |
+| 3   | LFE-DAILY-01 / ACHIEVEMENTS / RANKING | P2        | Kolejność strategii hybrydowej     |
+| 4   | Full 22-fixture season                | P2        | Wymaga decyzji vs Thin 11          |
+| 5   | Transfers hardening                   | P2        | Tech debt                          |
+| 6   | Ratings v2 · LFE PUBLIC trim          | P3        | Chore / depth                      |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 

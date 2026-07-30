@@ -68,34 +68,34 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                                                  |
-| ----------------- | ---------------------------------------------------------------------- |
-| Cash              | `cash_balance`                                                         |
-| Transfer envelope | `resolveTransferEnvelope`                                              |
-| Transfer listing  | `players.transfer_listed_at`                                           |
-| Transfer UI       | `resolveTransferMarket`                                                |
-| Live listings     | listed `players` (other clubs)                                         |
-| Pending / Counter | `transfer_offers`                                                      |
-| Opening snapshot  | `opening_amount`                                                       |
-| Settle amount     | `current_amount`                                                       |
-| Ask               | `deriveTransferFee` (skill+age only)                                   |
-| Settlement buy    | `completeTransferBuy` (seed \| live)                                   |
-| Settlement sell   | `completeTransferSell` (instant \| live)                               |
-| Training UI       | `resolveClubTraining`                                                  |
-| Training persist  | RPC `complete_training_session`                                        |
-| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                         |
-| Potential         | `players.potential` · `resolvePlayerPotential`                         |
-| Match development | RPC `apply_match_development` · K_MATCH=5                              |
-| XI Gate           | `validateStartingXi` / `resolveStartingXi`                             |
-| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`         |
-| Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT      |
-| Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT          |
+| SSOT              | Gdzie                                                                     |
+| ----------------- | ------------------------------------------------------------------------- |
+| Cash              | `cash_balance`                                                            |
+| Transfer envelope | `resolveTransferEnvelope`                                                 |
+| Transfer listing  | `players.transfer_listed_at`                                              |
+| Transfer UI       | `resolveTransferMarket`                                                   |
+| Live listings     | listed `players` (other clubs)                                            |
+| Pending / Counter | `transfer_offers`                                                         |
+| Opening snapshot  | `opening_amount`                                                          |
+| Settle amount     | `current_amount`                                                          |
+| Ask               | `deriveTransferFee` (skill+age only)                                      |
+| Settlement buy    | `completeTransferBuy` (seed \| live)                                      |
+| Settlement sell   | `completeTransferSell` (instant \| live)                                  |
+| Training UI       | `resolveClubTraining`                                                     |
+| Training persist  | RPC `complete_training_session`                                           |
+| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                            |
+| Potential         | `players.potential` · `resolvePlayerPotential`                            |
+| Match development | RPC `apply_match_development` · K_MATCH=5                                 |
+| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                |
+| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`            |
+| Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT         |
+| Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT             |
 | Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT |
-| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css` |
-| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                              |
-| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                               |
-| Impl notes UI     | `docs/implementation/`                                                 |
-| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                           |
+| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`    |
+| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                 |
+| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                  |
+| Impl notes UI     | `docs/implementation/`                                                    |
+| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                              |
 
 ## Operacyjne
 

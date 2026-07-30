@@ -86,16 +86,16 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 ## PLANNED ⬜
 
-| Item                                  | Zależność                            |
-| ------------------------------------- | ------------------------------------ |
-| **GDD-22** (§22 Powiadomienia)        | **READY FOR AUDIT** · po GDD-21      |
-| LFE-SCOUTING-01 (kod)                 | po GDD-21+22 CLOSED · osobny AUDIT   |
-| LFE-DAILY-01 (kod)                    | po GDD-20 · preferowane GDD-22       |
-| LFE-ACHIEVEMENTS-01 (kod)             | po GDD-19 · osobny AUDIT             |
-| LFE-RANKING-01 (kod)                  | po GDD-18 · osobny AUDIT             |
-| Full 22-fixture season (opt.)         | po LEAGUE-03 · GDD §10 home+away     |
-| Zawężenie LFE PUBLIC exports          | chore                                |
-| Ratings v2                            | bogatsze Player Match Data           |
+| Item                           | Zależność                          |
+| ------------------------------ | ---------------------------------- |
+| **GDD-22** (§22 Powiadomienia) | **READY FOR AUDIT** · po GDD-21    |
+| LFE-SCOUTING-01 (kod)          | po GDD-21+22 CLOSED · osobny AUDIT |
+| LFE-DAILY-01 (kod)             | po GDD-20 · preferowane GDD-22     |
+| LFE-ACHIEVEMENTS-01 (kod)      | po GDD-19 · osobny AUDIT           |
+| LFE-RANKING-01 (kod)           | po GDD-18 · osobny AUDIT           |
+| Full 22-fixture season (opt.)  | po LEAGUE-03 · GDD §10 home+away   |
+| Zawężenie LFE PUBLIC exports   | chore                              |
+| Ratings v2                     | bogatsze Player Match Data         |
 
 ## FUTURE
 
