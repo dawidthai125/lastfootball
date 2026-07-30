@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { BrandLogo, ClubCrest, NavIcon } from '@/components/assets';
-import { useClub, useClubMessages, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import {
+  useClub,
+  useClubMessages,
+  useHasFixtures,
+  useTrainingUnlocked,
+} from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';

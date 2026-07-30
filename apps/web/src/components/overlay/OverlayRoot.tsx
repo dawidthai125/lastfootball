@@ -99,7 +99,7 @@ export function OverlayRoot() {
                   <Link
                     href={n.href}
                     onClick={close}
-                    className="flex items-center justify-between border-b transition-colors no-underline"
+                    className="flex items-center justify-between border-b no-underline transition-colors"
                     style={{
                       borderColor: 'var(--lf-color-border-subtle)',
                       padding: 'var(--lf-space-2) var(--lf-space-2)',

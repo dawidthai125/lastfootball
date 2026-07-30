@@ -61,7 +61,9 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
   const h2hActionable = [
     ...input.incomingLiveOffers.filter(isPendingActionableSeller),
     ...input.outgoingLiveOffers.filter(isPendingActionableBuyer),
-  ].slice().sort((a, b) => a.offerId.localeCompare(b.offerId));
+  ]
+    .slice()
+    .sort((a, b) => a.offerId.localeCompare(b.offerId));
 
   for (const o of h2hActionable) {
     const role = o.side === 'incoming' ? 'seller' : 'buyer';
@@ -69,9 +71,7 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       id: `msg:h2h:${o.offerId}:${role}`,
       kind: 'offer_brief',
       subject:
-        role === 'seller'
-          ? `Oferta H2H: ${o.playerName}`
-          : `Kontrpropozycja H2H: ${o.playerName}`,
+        role === 'seller' ? `Oferta H2H: ${o.playerName}` : `Kontrpropozycja H2H: ${o.playerName}`,
       fromLabel: 'Transfery',
       href: '/transfers',
       priority: 'decision',

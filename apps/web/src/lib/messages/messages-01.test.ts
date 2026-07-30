@@ -88,13 +88,8 @@ describe('resolveClubMessages (LFE-MESSAGES-01)', () => {
         },
       ],
     });
-    expect(dto.items.map((i) => i.id)).toEqual([
-      'msg:h2h:a-offer:buyer',
-      'msg:h2h:b-offer:seller',
-    ]);
-    expect(dto.items.every((i) => i.priority === 'decision' && i.href === '/transfers')).toBe(
-      true,
-    );
+    expect(dto.items.map((i) => i.id)).toEqual(['msg:h2h:a-offer:buyer', 'msg:h2h:b-offer:seller']);
+    expect(dto.items.every((i) => i.priority === 'decision' && i.href === '/transfers')).toBe(true);
   });
 
   it('order: E3 decision → E2 decision → E1 info (resolver owns order)', () => {

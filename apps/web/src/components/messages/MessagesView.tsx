@@ -75,7 +75,9 @@ export function MessagesView({ messages }: { messages: ClubMessagesDto }) {
                         : 'var(--lf-color-text-faint)',
                   }}
                 >
-                  {m.priority === 'decision' ? UI_COPY.messagesPriorityDecision : UI_COPY.messagesPriorityInfo}
+                  {m.priority === 'decision'
+                    ? UI_COPY.messagesPriorityDecision
+                    : UI_COPY.messagesPriorityInfo}
                 </span>
               </Link>
             </li>
