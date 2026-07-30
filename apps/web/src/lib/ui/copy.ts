@@ -23,6 +23,23 @@ export const UI_COPY = {
   dailyGoalSquad: 'Sprawdź kadrę',
   dailyGoalTraining: 'Przeprowadź trening',
 
+  /** LFE-ACHIEVEMENTS-01 — history Thin (no XP / rewards) */
+  achievementsTitle: 'Osiągnięcia',
+  achievementsSubtitle: 'Kamienie milowe kariery i klubu',
+  achievementsEmptyHint: 'Historia zbuduje się wraz z karierą.',
+  achievementClubFoundedTitle: 'Klub założony',
+  achievementClubFoundedDetail: 'Tożsamość klubu zapisana w lidze.',
+  achievementFirstMatchTitle: 'Pierwszy mecz',
+  achievementFirstMatchDetail: 'Pierwszy oficjalny wyjazd na boisko za Tobą.',
+  achievementFirstLeagueTitle: 'Pierwszy mecz ligowy',
+  achievementFirstLeagueDetail: 'Kolejka ligowa domknięta w historii klubu.',
+  achievementFirstTrainingTitle: 'Pierwszy trening',
+  achievementFirstTrainingDetail: 'Pierwsza sesja treningowa drużyny odbyta.',
+  achievementCategoryClub: 'Klub',
+  achievementCategoryCareer: 'Kariera',
+  achievementCategorySport: 'Sport',
+  achievementCategorySeason: 'Sezon',
+
   softLockUnavailable: 'niedostępne',
   softLockSoon: 'wkrótce',
   softLockReason:

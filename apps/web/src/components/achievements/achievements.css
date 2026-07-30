@@ -1,0 +1,99 @@
+/* LFE-ACHIEVEMENTS-01 — history Thin; not Primary Hub / not rankings mock */
+
+.lf-ach {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.lf-ach__header {
+  min-width: 0;
+}
+
+.lf-ach__eyebrow {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-ach__title {
+  margin: var(--lf-space-2) 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 4vw, var(--lf-type-h1, 1.75rem));
+  line-height: 1.2;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-ach__subtitle {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-ach__hint {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+.lf-ach__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+}
+
+.lf-ach__item {
+  padding: var(--lf-space-4);
+  background: var(--lf-color-bg-panel);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  min-width: 0;
+}
+
+.lf-ach__item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+}
+
+.lf-ach__category {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-ach__when {
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.lf-ach__item-title {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-h2, 1.125rem);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-ach__item-detail {
+  margin: var(--lf-space-1) 0 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
