@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                 |
 | **Domain feature baseline**     | `bf86749` — **LFE-RANKING-01** (Information Thin · seasonal)                                                                          |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                 |
-| **Documentation tip**           | CLOSE sync LFE-RANKING-01 (pin follows)                                                                                               |
+| **Documentation tip**           | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)                                                                                            |
 | **Branch**                      | `main`                                                                                                                                |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **RANKING-01 CLOSED** · ACHIEVEMENTS-01 · DAILY-01 · SCOUTING-01 · ACADEMY-01 · M2.5 · next **Full 22** |
 
@@ -38,7 +38,7 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Ranking `bf86749` · presentation MOTION-01 `9fd14fc` · docs tip CLOSE pin).
+**Prod deploy:** Vercel Production śledzi `main` (Domain Ranking `bf86749` · presentation MOTION-01 `9fd14fc` · docs tip `98a3d81`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** — zastosowane.  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
@@ -382,7 +382,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                              |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + **Ranking** |
 | Dokumentacja | **Aktualna** | RANKING D27 · Domain `bf86749` · Presentation `9fd14fc`                                               |
-| CI           | **GREEN**    | tip feat VERIFIED · docs CLOSE (pin follows)                                                          |
+| CI           | **GREEN**    | tip feat VERIFIED · docs tip `98a3d81`                                                                |
 | Production   | **GREEN**    | Vercel · Domain RANKING-01 `bf86749`                                                                  |
 
 ---
