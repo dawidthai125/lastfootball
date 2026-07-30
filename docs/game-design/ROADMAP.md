@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16…19 Thin CLOSED** + **GDD-21 Wiadomości Thin CLOSED** + **GDD-§26A** + **GDD-§26B** ukończone. §3–§21 (Thin; §22 szkielet) + §20 + §23 + **§26**. Następny = **GDD-22** (§22 Powiadomienia) — **READY FOR AUDIT**.
+GDD-01…15 + **GDD-16…19 · GDD-21 Thin CLOSED** + **GDD-22 IMPLEMENT COMPLETE (oczekuje VERIFY)** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. Następny po CLOSE = **AUDIT LFE-SCOUTING-01** (Owner GO).
 
 ## Completed
 
@@ -37,16 +37,15 @@ GDD-01…15 + **GDD-16…19 Thin CLOSED** + **GDD-21 Wiadomości Thin CLOSED** +
 
 ## In Progress
 
-| Stage | Status                            |
-| ----- | --------------------------------- |
-| —     | Brak aktywnego etapu bez Owner GO |
+| Stage      | Status                                                     |
+| ---------- | ---------------------------------------------------------- |
+| **GDD-22** | **IMPLEMENT COMPLETE** · §22 Thin filled · oczekuje VERIFY |
 
 ## Planned
 
-| Stage      | Zakres                                                  |
-| ---------- | ------------------------------------------------------- |
-| **GDD-22** | **§22 Powiadomienia** — **READY FOR AUDIT**             |
-| GDD-17+    | Pozostałe szkielety (§20 kod / §24+; kolejność = Owner) |
+| Stage   | Zakres                                                |
+| ------- | ----------------------------------------------------- |
+| GDD-17+ | Pozostałe szkielety (§24+ / kanał push Future; Owner) |
 
 ## Future
 
@@ -72,4 +71,4 @@ GDD-01…15 + **GDD-16…19 Thin CLOSED** + **GDD-21 Wiadomości Thin CLOSED** +
 
 ## Last updated
 
-2026-07-30 — GDD-21 Wiadomości Thin CLOSED · tip `c24efef` · next GDD-22 READY FOR AUDIT
+2026-07-30 — GDD-22 Powiadomienia Thin IMPLEMENT COMPLETE · oczekuje VERIFY

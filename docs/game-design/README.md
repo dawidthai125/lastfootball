@@ -6,13 +6,14 @@ Indeks dokumentacji produktowej (GDD). **SSOT produktu** = `GAME_DESIGN_DOCUMENT
 
 ## Aktualny stan
 
-Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 Thin CLOSED**. Wypełnione §3–§21 (Thin; §22 szkielet), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
+Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 Thin CLOSED** · **GDD-22 Powiadomienia Thin — IMPLEMENT COMPLETE (oczekuje VERIFY)**. Wypełnione §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26**. UI Presentation Contract (Guide — nie mylić z GDD §16). World Art **CLOSED** · Style Lock **ACTIVE** · Hi-Fi / Proto / Playtest **PASS**.
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
 **Domain tip:** `9c6fe86` (ACADEMY-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `c24efef` GDD-21 (content `bf07a44`) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny: **GDD-22 READY FOR AUDIT** (Owner GO) · potem AUDIT LFE-SCOUTING-01.
+Następny po VERIFY/CLOSE GDD-22: **AUDIT LFE-SCOUTING-01** (Owner GO).  
+PLAN: [`GDD-22-PLAN.md`](./GDD-22-PLAN.md).
 
 ## Opis działania
 
@@ -111,4 +112,4 @@ Następny: **GDD-22 READY FOR AUDIT** (Owner GO) · potem AUDIT LFE-SCOUTING-01.
 
 ## Last updated
 
-2026-07-30 — GDD-21 Wiadomości Thin CLOSED · content `bf07a44`
+2026-07-30 — GDD-22 Powiadomienia Thin IMPLEMENT COMPLETE (oczekuje VERIFY)

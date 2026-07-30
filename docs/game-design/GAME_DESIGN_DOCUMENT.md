@@ -3,7 +3,7 @@
 **Produkt:** Last Football  
 **Dokument:** GAME_DESIGN_DOCUMENT  
 **Faza:** 2 — Game Design Foundation  
-**Etap:** GDD-21 (§3–§21 Thin, §20 oraz §23 uzupełnione; §22+ = szkielet / Future)  
+**Etap:** GDD-22 (§3–§22 Thin, §20 oraz §23 uzupełnione; §24+ = szkielet / Future)  
 **Status:** SSOT w budowie — kod gameplay nie wyprzedza decyzji z wypełnionych rozdziałów  
 **Powiązanie techniczne:** LFE (Last Football Engine) — fundament gotowy (EPIC-1…7); ten dokument **nie** opisuje implementacji silnika.
 
@@ -34,7 +34,7 @@
 19. [Osiągnięcia](#19-osiągnięcia) ← **GDD-19 Thin**
 20. [Zadania dzienne](#20-zadania-dzienne) ← **GDD-15**
 21. [Wiadomości](#21-wiadomości) ← **GDD-21 Thin**
-22. [Powiadomienia](#22-powiadomienia)
+22. [Powiadomienia](#22-powiadomienia) ← **GDD-22 Thin**
 23. [Panel główny](#23-panel-główny) ← **GDD-14**
 24. [Interfejs użytkownika](#24-interfejs-użytkownika)
 25. [Styl graficzny](#25-styl-graficzny)
@@ -454,16 +454,16 @@ Zdefiniować **uczciwe** haki retencji zgodne z menedżerem piłkarskim — nie 
 
 **Zestaw haków (doświadczenie)**
 
-| Hak                         | Jak działa w pętli          | Uwagi                                      |
-| --------------------------- | --------------------------- | ------------------------------------------ |
-| Następny mecz w kalendarzu  | Najsilniejszy powód powrotu | Zawsze widoczny na hubie                   |
-| Seria form / streak wyników | Emocja kontynuacji          | Nie karać brutalnie za zerwanie            |
-| Wiadomość „pilna”           | 1 rzecz do przeczytania     | Limit, by nie spamować (§21–22)            |
-| Zadanie dzienne             | Lekki bonus za wizytę       | Opcjonalne względem meczu (**SSOT → §20**) |
-| Pozycja w tabeli            | Ambicja tygodnia            | Czytelna zmiana vs poprzednio              |
-| Odblokowanie warstwy        | Progressive disclosure      | Nagroda za czas w grze                     |
-| Powiadomienie o meczu       | Soft remind                 | Opt-in, quiet hours (§22)                  |
-| Historia klubu              | „Wróć do swojej historii”   | Long-term                                  |
+| Hak                         | Jak działa w pętli          | Uwagi                                              |
+| --------------------------- | --------------------------- | -------------------------------------------------- |
+| Następny mecz w kalendarzu  | Najsilniejszy powód powrotu | Zawsze widoczny na hubie                           |
+| Seria form / streak wyników | Emocja kontynuacji          | Nie karać brutalnie za zerwanie                    |
+| Wiadomość „pilna”           | 1 rzecz do przeczytania     | Limit, by nie spamować (§21–22)                    |
+| Zadanie dzienne             | Lekki bonus za wizytę       | Opcjonalne względem meczu (**SSOT → §20**)         |
+| Pozycja w tabeli            | Ambicja tygodnia            | Czytelna zmiana vs poprzednio                      |
+| Odblokowanie warstwy        | Progressive disclosure      | Nagroda za czas w grze                             |
+| Powiadomienie o meczu       | Soft remind                 | Opt-in produktowy (§22 Thin); quiet hours = Future |
+| Historia klubu              | „Wróć do swojej historii”   | Long-term                                          |
 
 **Przebieg typowego powrotu po 24–48 h**
 
@@ -8055,8 +8055,8 @@ Retencja bez dark patterns.
 1. **Brak kar** za opuszczenie dnia (reputacja/sezon/skład nie cierpią „za nieobecność w zadaniu”).
 2. **Brak obowiązkowego logowania** — gra działa, gdy wracasz na mecz.
 3. Zachęta = bonus kategorii / poczucie sprawczości, nie strata.
-4. Powiadomienia o celach — tylko w ramach §22 (opt-in); §20 nie projektuje push spam.
-5. Quiet / soft landing zgodny z §3.10.
+4. Powiadomienia o celach — tylko w ramach §22 (opt-in produktowy); §20 nie projektuje spam alertów.
+5. Quiet / soft landing zgodny z §3.10; quiet hours techniczne = Future (§22 Thin OUT).
 
 **Zależności**
 
@@ -8221,7 +8221,7 @@ Granica monetyzacji.
 - [x] Integracja §23 / §3 / §5 / §9
 - [x] MVP vs Future + kontrakty
 - [ ] Copy puli celów po playtestach
-- [x] Sync §21 (GDD-21 Thin) — §22 po GDD-22
+- [x] Sync §21 (GDD-21 Thin) · Sync §22 (GDD-22 Thin)
 - [ ] Liczby nagród (§26) — Future
 
 ---
@@ -8241,7 +8241,7 @@ Dać menedżerowi **limitowaną skrzynkę in-app**, która **odzwierciedla** zda
 4. CTA wiadomości prowadzi **wyłącznie** do **istniejących** lokalizacji produktu (deep-link produktowy).
 5. **Transfery (§12)** pozostają **jedynym SSOT procesu ofert** (lista · nego · settle). §21 może dać **skrót narracyjny** + link do Transferów — nigdy drugi inbox decyzyjny.
 6. Kotwica habit / cel dnia = **§20**. Wiadomość może **wskazywać** cel; **nie** redefiniuje systemu zadań.
-7. Granica z **§22**: wiadomość w skrzynce ≠ powiadomienie push / alert kanałowy — szczegóły §22 = osobny EPIC docs.
+7. Granica z **§22**: wiadomość w skrzynce ≠ powiadomienie (alert produktowy) — polityka §22 Thin; kanał push = Future.
 8. **§23 Hub:** wiadomość **nie** przejmuje Primary CTA dnia meczowego; skrót = warstwa 5 lub Secondary kontekstowe.
 9. **Placeholder UI** (`/messages`, podgląd na Hubie, mocki) **nie stanowi SSOT** i **nie może** być podstawą implementacji.
 10. ZERO DUPLICATE: nie redefiniować §12 · §20 · §22 · §23 · §19.
@@ -8250,20 +8250,20 @@ Dać menedżerowi **limitowaną skrzynkę in-app**, która **odzwierciedla** zda
 
 **Szybki kontrakt Thin (SSOT)**
 
-| Parametr                        | Wartość Thin                                            |
-| ------------------------------- | ------------------------------------------------------- |
-| Kanał                           | **In-app inbox only**                                   |
-| Rola                            | Skutek zdarzenia domenowego · nawigacja do decyzji      |
-| Przyczyna zdarzeń               | **Nigdy** wiadomość (zakaz)                             |
-| Proces ofert                    | **Wyłącznie §12 / Transfery** — §21 = skrót + deep-link |
-| CTA                             | ≤1 · tylko istniejące ekrany                            |
-| Limit / rotacja                 | Jakościowo — nie spam                                   |
-| Hub Primary (dzień meczowy)     | Nienaruszony — wiadomość ≠ Primary                      |
-| Relacja §20                     | Wskazanie celu · nie drugi system zadań                 |
-| Relacja §22                     | Granica only — push = GDD-22                            |
-| Placeholder `/messages`         | Nie-SSOT · nie podstawa implementacji                   |
-| Push · email · AI · DB · kod    | **OUT**                                                 |
-| Liczby · XP · progi · algorytmy | **Zakaz**                                               |
+| Parametr                        | Wartość Thin                                                    |
+| ------------------------------- | --------------------------------------------------------------- |
+| Kanał                           | **In-app inbox only**                                           |
+| Rola                            | Skutek zdarzenia domenowego · nawigacja do decyzji              |
+| Przyczyna zdarzeń               | **Nigdy** wiadomość (zakaz)                                     |
+| Proces ofert                    | **Wyłącznie §12 / Transfery** — §21 = skrót + deep-link         |
+| CTA                             | ≤1 · tylko istniejące ekrany                                    |
+| Limit / rotacja                 | Jakościowo — nie spam                                           |
+| Hub Primary (dzień meczowy)     | Nienaruszony — wiadomość ≠ Primary                              |
+| Relacja §20                     | Wskazanie celu · nie drugi system zadań                         |
+| Relacja §22                     | Granica: skrzynka ≠ alert · polityka = §22 Thin · push = Future |
+| Placeholder `/messages`         | Nie-SSOT · nie podstawa implementacji                           |
+| Push · email · AI · DB · kod    | **OUT**                                                         |
+| Liczby · XP · progi · algorytmy | **Zakaz**                                                       |
 
 ---
 
@@ -8332,7 +8332,7 @@ Ustawić ton: skrzynka służy sprawczości menedżera, nie feedowi treści.
 | **CTA wiadomości**     | Co najwyżej jeden deep-link do **istniejącej** lokalizacji produktu             |
 | **Skrót oferty**       | Wiadomość wskazująca sprawę transferową — **bez** procesu nego/settle           |
 | **Zdarzenie domenowe** | Fakt w module gry (mecz, transfer, sezon, onboarding, …) — przyczyna wiadomości |
-| **Powiadomienie**      | Alert kanałowy (§22) — **≠** wiadomość w skrzynce                               |
+| **Powiadomienie**      | Alert / soft remind produktowy (§22) — **≠** wiadomość w skrzynce               |
 | **Cel dnia**           | Lekki hak §20 — wiadomość może wskazywać; nie zastępuje                         |
 
 ---
@@ -8436,9 +8436,10 @@ Zamrozić: jeden proces ofert.
 
 **§22 Powiadomienia**
 
-1. Wiadomość w skrzynce ≠ alert push / email.
-2. Ten rozdział **nie** projektuje kanałów push — to GDD-22.
-3. Soft FOMO i brak kary za nieobecność — spójne z §20; push nie może karać (§22).
+1. Wiadomość w skrzynce ≠ powiadomienie (alert / soft remind).
+2. Polityka alertów = **§22 Thin**; kanały push / email = Future (poza Thin).
+3. Soft FOMO i brak kary za nieobecność — spójne z §20; alert nie może karać (§22).
+4. Wyłączenie alertów **nie** ukrywa istotnych informacji — Hub / skrzynka / ekran domenowy pozostają SSOT dostępu.
 
 **§23 Hub**
 
@@ -8472,20 +8473,20 @@ Odciąć mocki od designu.
 
 ### 21.9 Thin vs Future
 
-| Element                       | Thin | Future                      |
-| ----------------------------- | ---- | --------------------------- |
-| In-app inbox                  | TAK  | pogłębiony                  |
-| Typy jakościowe               | TAK  | katalog contentu / szablony |
-| Limit / rotacja jakościowa    | TAK  | reguły techniczne / cron    |
-| CTA → istniejące ekrany       | TAK  | —                           |
-| Skrót oferty → Transfery      | TAK  | —                           |
-| Zasada skutku (§21.1a)        | TAK  | —                           |
-| Push / email / SMS            | NIE  | §22 / osobny EPIC           |
-| Archiwum pełne / wyszukiwarka | NIE  | TAK                         |
-| Chat agentów / wątki nego     | NIE  | NIE (zakaz driftu vs §12)   |
-| AI generowanie treści         | NIE  | tylko po Owner GO           |
-| DB / resolver / kod           | NIE* | osobny EPIC                 |
-| Liczby §26                    | NIE  | N/A dla inbox               |
+| Element                       | Thin | Future                                     |
+| ----------------------------- | ---- | ------------------------------------------ |
+| In-app inbox                  | TAK  | pogłębiony                                 |
+| Typy jakościowe               | TAK  | katalog contentu / szablony                |
+| Limit / rotacja jakościowa    | TAK  | reguły techniczne / cron                   |
+| CTA → istniejące ekrany       | TAK  | —                                          |
+| Skrót oferty → Transfery      | TAK  | —                                          |
+| Zasada skutku (§21.1a)        | TAK  | —                                          |
+| Push / email / SMS            | NIE  | Future / §22 polityka + osobny EPIC kanału |
+| Archiwum pełne / wyszukiwarka | NIE  | TAK                                        |
+| Chat agentów / wątki nego     | NIE  | NIE (zakaz driftu vs §12)                  |
+| AI generowanie treści         | NIE  | tylko po Owner GO                          |
+| DB / resolver / kod           | NIE* | osobny EPIC                                |
+| Liczby §26                    | NIE  | N/A dla inbox                              |
 
 \*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
 
@@ -8505,7 +8506,7 @@ Odciąć mocki od designu.
 | -------- | ----------------------------------------------------------------- |
 | §12      | SSOT ofert; §21 = skrót + deep-link                               |
 | §20      | Cel dnia; wiadomość wskazuje, nie redefiniuje                     |
-| §22      | Granica: skrzynka ≠ push                                          |
+| §22      | Granica: skrzynka ≠ alert; polityka Thin w §22                    |
 | §23      | Hub Primary nienaruszony; warstwa 5 / Secondary                   |
 | §3 / §5  | Powitalna jako skutek onboardingu                                 |
 | §19      | Osiągnięcia mogą mieć komunikat później — bez dublowania katalogu |
@@ -8522,7 +8523,7 @@ Odciąć mocki od designu.
 4. **CTA ≤1** · tylko istniejące ekrany.
 5. **Nie spam** — limit i priorytet jakościowy.
 6. **§20 / §23** — bez redefinicji celu dnia i bez Primary dnia meczu.
-7. **§22** — tylko granica; push poza zakresem.
+7. **§22** — granica skrzynka ≠ alert; kanał push poza Thin §21.
 8. **Placeholder messages ≠ SSOT.**
 9. **SSOT FIRST · REUSE FIRST · ZERO DUPLICATE · Presentation ≠ Domain** — egzekwowane przez §21.1a.
 10. **Bez kodu / DB / liczb / AI** w tym rozdziale.
@@ -8543,21 +8544,366 @@ Odciąć mocki od designu.
 
 ## 22. Powiadomienia
 
+**Status rozdziału:** GDD-22 — opracowany (**Powiadomienia Thin** — polityka alertów produktowych · soft FOMO · opt-in · dedup; bez push engineering, email, SDK, DB, quiet hours, kodu i liczb)
+
+**Cel rozdziału**  
+Zdefiniować **politykę soft remindów / alertów produktowych**, które **zapraszają** menedżera do decyzji już istniejącej w grze — **bez** wymuszania, **bez** kary za wyłączenie i **bez** ukrywania istotnych informacji poza Hubem / skrzynką / ekranem domenowym.
+
+**Zasady nadrzędne (decyzje GDD-22 / Owner)**
+
+1. **Powiadomienie jest zaproszeniem do podjęcia decyzji, nigdy wymuszeniem decyzji.** (patrz §22.1a)
+2. **Wyłączenie powiadomień nie może powodować utraty informacji** — każda istotna informacja musi być nadal dostępna z poziomu gry (**Hub**, **Inbox §21** lub **odpowiedni ekran domenowy**). (patrz §22.1b)
+3. Thin = **polityka alertów produktowych** — nie engineering kanału dostawy (push / email / SDK).
+4. Soft FOMO spójne z **§20.7** / **§3.10** — brak kar za nieobecność / opt-out / zignorowanie.
+5. Opt-in na poziomie produktu — gracz kontroluje; brak agresywnego default spam.
+6. Deduplikacja jakościowa — jeden sens na sprawę; anty-spam względem §21.
+7. Granica z **§21**: powiadomienie ≠ wiadomość w skrzynce.
+8. **§23 Hub:** powiadomienie **nie** przejmuje Primary CTA dnia meczowego.
+9. **§20:** remind o celu ≠ drugi system zadań / Quest Board.
+10. **Placeholder / Overlay „notifications”** **nie stanowi SSOT** i **nie może** być podstawą implementacji.
+11. ZERO DUPLICATE: nie redefiniować §12 · §20 · §21 · §23 · §19.
+12. Ten rozdział **nie** opisuje kodu, schematu DB, resolverów, SDK ani LFE.
+13. Zakaz w Thin: liczb §26 · XP · progów · algorytmów priorytetów · quiet hours jako cron · katalogu ID contentu · generatorów AI.
+
+**Szybki kontrakt Thin (SSOT)**
+
+| Parametr                          | Wartość Thin                                                |
+| --------------------------------- | ----------------------------------------------------------- |
+| Rola                              | Soft remind / zaproszenie do decyzji już istniejącej w grze |
+| Wymuszenie decyzji                | **Zakaz**                                                   |
+| Utrata info przy opt-out          | **Zakaz** — Hub · Inbox · ekran domenowy pozostają dostępne |
+| Relacja §21                       | Powiadomienie ≠ wiadomość w skrzynce                        |
+| Relacja §20                       | Remind o celu · nie drugi system zadań                      |
+| Relacja §23                       | Hub Primary nienaruszony — alert ≠ Primary dnia meczu       |
+| Soft FOMO                         | Brak kar · brak obowiązkowego loginu przez alert            |
+| Opt-in                            | Produktowo — kontrola gracza · bez SDK / DB w Thin          |
+| Dedup                             | Jakościowo — jeden sens na sprawę                           |
+| Push · email · SDK · quiet hours  | **OUT Thin** (Future)                                       |
+| Placeholder Overlay notifications | Nie-SSOT · nie podstawa implementacji                       |
+| DB · kod · liczby · AI            | **OUT**                                                     |
+
+---
+
+### 22.1 Filozofia powiadomień
+
 **Cel**  
-Zdefiniować alerty in-app / push (wysoki poziom).
+Ustawić ton: alert wspiera sprawczość i powrót, nie karze i nie zastępuje gry.
 
-**Opis**  
-Co i kiedy powiadamiamy, by nie spamować.
+**Przebieg**
 
-> **Kotwica:** zadania dzienne = **§20** (soft FOMO, brak obowiązkowego loginu). Push nie może karać za nieobecność.
+1. Powiadomienie odpowiada na: „Czy warto teraz wrócić / spojrzeć — i gdzie podjąć decyzję?”
+2. Najsilniejszy hak powrotu pozostaje **kalendarz meczów** (§3.10 / §9 / §10) — alert jest **wspierający**, nie nadrzędny.
+3. Copy i UX mówią „warto”, nie „musisz”.
+4. Brak alertów **nie** blokuje: Hub, meczów, transferów, treningu, finansów, skrzynki.
+5. Satysfakcja Thin = jasne zaproszenie + jeden sensowny krok w istniejącej IA — bez spam cascade.
 
-**Do opracowania**
+**Decyzje gracza**
 
-- [ ] Kanały (in-app, email, push)
-- [ ] Kategorie i opt-in
-- [ ] Quiet hours
-- [ ] Deduplikacja
-- [ ] Powiązanie z meczami / transferami
+- Czy włączyć / wyłączyć soft remindy (opt-in / opt-out).
+- Czy zareagować na zaproszenie, odroczyć, czy zignorować (bez kary).
+
+**Zależności**
+
+- §3.10, §20, §21, §23.
+
+---
+
+### 22.1a Zasada zaproszenia (nadrzędna) — konsekwencje architektoniczne
+
+**Zasada (SSOT produktowy)**  
+**Powiadomienie jest zaproszeniem do podjęcia decyzji, nigdy wymuszeniem decyzji.**
+
+**Znaczenie**
+
+1. Alert **wskazuje** sprawę / moment (mecz · cel dnia · soft transfer · sezon), ale **nie** zamyka ścieżki gracza.
+2. Gracz może zignorować, odroczyć, wyłączyć — **bez kary** sezonowej / reputacyjnej / składu.
+3. Alert **nie** tworzy obowiązku logowania i **nie** blokuje postępu, gdy gracz wraca organicznie.
+4. Decyzja (Accept oferty, XI, start meczu, cel dnia) żyje w **module domeny** lub na **Hubie** — nie w samym alercie jako jedynym nośniku.
+
+**Konsekwencje dla architektury (produkt → przyszły kod)**
+
+| Zasada projektu              | Konsekwencja dla §22 / przyszłej implementacji                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **SSOT FIRST**               | SSOT decyzji = Hub (§23) / domena (§9 · §12 · §20 …) / Inbox (§21 jako skutek). Alert ≠ SSOT decyzji.            |
+| **REUSE FIRST**              | Deep-link / CTA alertu **reuse’uje** istniejące lokalizacje. Zakaz osobnego „silnika decyzji tylko dla alertów”. |
+| **ZERO DUPLICATE LOGIC**     | Zakaz drugiego inboxu, drugiego Primary CTA, drugiego procesu ofert / questów „tylko z powiadomienia”.           |
+| **Presentation ≠ Domain**    | Kanał / dzwonek / badge / Overlay = prezentacja zaproszenia. Reguły biznesowe **nie** żyją w warstwie alertu.    |
+| **Zaproszenie ≠ wymuszenie** | Zakaz hard gate „musisz kliknąć alert”; zakaz kary za pominięcie; zakaz auto-akcji domeny z samego alertu.       |
+
+**Zakazy wynikające z zasady**
+
+1. Alert jako jedyny / obligatoryjny nośnik decyzji, której nie ma na Hubie / w module domeny / w skrzynce.
+2. Akcja w alercie, która mutuje domenę z pominięciem oficjalnej ścieżki (np. Accept oferty poza Transferami).
+3. Soft remind, który w praktyce jest hard FOMO (kara wyłącznie za brak kliknięcia alertu).
+4. Domyślny opt-in agresywny / spam kategorii bez kontroli gracza.
+
+**Zależności**
+
+- §12, §20, §21, §23; przyszły EPIC kanału / kodu (poza tym rozdziałem).
+
+---
+
+### 22.1b Zasada dostępności informacji (nadrzędna)
+
+**Zasada (SSOT produktowy)**  
+**Wyłączenie powiadomień nie może powodować utraty informacji — każda istotna informacja musi być nadal dostępna z poziomu gry (Hub, Inbox lub odpowiedni ekran domenowy).**
+
+**Znaczenie**
+
+1. Opt-out / brak kanału alertu **nie** czyni stanu gry „niewidzialnym”.
+2. Istotne fakty (najbliższy mecz, sprawa transferowa, cel dnia, skutek zdarzenia) pozostają czytelne w:
+   - **Hub** (§23) — decyzja „co teraz”,
+   - **Inbox** (§21) — skutek zdarzenia (gdy dotyczy),
+   - **ekran domenowy** (Terminarz · Transfery · Trening · Finanse · …).
+3. Alert jest **opcjonalnym przyspieszeniem uwagi**, nie jedynym nośnikiem prawdy.
+
+**Konsekwencje**
+
+| Warstwa              | Rola                                              |
+| -------------------- | ------------------------------------------------- |
+| Powiadomienie (§22)  | Zaproszenie / soft remind (opcjonalne)            |
+| Hub / domena / Inbox | **SSOT dostępu** do istotnej informacji i decyzji |
+
+**Zakazy**
+
+1. Informacja dostępna **wyłącznie** przez alert.
+2. Ukrywanie Primary / stanu Hub po opt-out.
+3. Uzależnienie settle / unlock / postępu sezonu od włączenia powiadomień.
+
+**Zależności**
+
+- §20, §21, §23, §3.10.
+
+---
+
+### 22.2 Słownik
+
+| Pojęcie                | Znaczenie Thin                                                            |
+| ---------------------- | ------------------------------------------------------------------------- |
+| **Powiadomienie**      | Soft remind / alert produktowy — **zaproszenie** do decyzji               |
+| **Alert**              | Synonim jakościowy powiadomienia w Thin (bez specyfikacji kanału dostawy) |
+| **Wiadomość**          | Pozycja w skrzynce in-app (§21) — **≠** powiadomienie                     |
+| **Skrzynka (inbox)**   | In-app lista skutków zdarzeń (§21)                                        |
+| **Opt-in**             | Zgoda gracza na soft remindy (kontrola produktowa)                        |
+| **Opt-out**            | Wyłączenie remindów — **bez** utraty dostępu do informacji w grze         |
+| **Deduplikacja**       | Jeden sensowny alert na jedną sprawę w oknie jakościowym                  |
+| **Soft FOMO**          | Zachęta bez kary za nieobecność / zignorowanie (§20.7 / §3.10)            |
+| **Cel dnia**           | Lekki hak §20 — alert może przypominać; nie zastępuje                     |
+| **Zdarzenie domenowe** | Fakt w module gry — źródło sprawczości; alert tylko wskazuje              |
+
+---
+
+### 22.3 Kategorie jakościowe
+
+**Cel**  
+Nazwać rodzaje soft remindów bez katalogu ID, payloadów i generatorów AI.
+
+| Kategoria (Thin)      | Sens jakościowy                         | Typowy cel zaproszenia (przykłady)    |
+| --------------------- | --------------------------------------- | ------------------------------------- |
+| **Meczowy**           | Soft remind o osi sportowej             | Hub / Terminarz / ścieżka meczu       |
+| **Sprawa dnia**       | Lekki hak §20                           | Hub (cel dnia) — nie Quest Board      |
+| **Transfer soft**     | Sygnał „jest sprawa na rynku”           | **Transfery** (§12) — nie drugi inbox |
+| **Sezonowy / system** | Okno · unlock · miękki landing sezonowy | Hub / odpowiedni ekran domenowy       |
+
+**Zasady**
+
+1. Kategoria nie tworzy osobnego silnika domeny.
+2. Brak kategorii wymagających microtransaction (§27).
+3. Brak „alert-only” spraw bez odpowiednika w Hubie / domenie / skrzynce (§22.1b).
+
+---
+
+### 22.4 Soft FOMO
+
+**Cel**  
+Retencja bez dark patterns — spójnie z §20.7 i §3.10.
+
+**Przebieg**
+
+1. **Brak kar** za nieobecność, opt-out lub zignorowanie alertu (reputacja / sezon / skład nie cierpią „za brak kliknięcia”).
+2. **Brak obowiązkowego logowania** wymuszanego przez §22.
+3. Zachęta = zaproszenie do sprawczości; najsilniejszy hak = **następny mecz** (§3.10).
+4. Quiet hours / harmonogramy ciszy = **Future** (poza Thin) — nie blokują zasady soft FOMO.
+5. Spójność z §20: zadania nie projektują push spam; §22 nie zamienia soft FOMO w hard FOMO.
+
+**Zależności**
+
+- §3.10, §20.7, §27.
+
+---
+
+### 22.5 Opt-in produktowy
+
+**Cel**  
+Zamrozić kontrolę gracza bez SDK i DB.
+
+**Przebieg**
+
+1. Soft remindy są **pod kontrolą gracza** (opt-in / łatwy opt-out) — opis jakościowy produktu.
+2. Default produktowy: **minimalny / nieagresywny** (zakaz spam-first).
+3. Opt-out **nie** powoduje utraty informacji (§22.1b).
+4. Thin **nie** projektuje ekranu ustawień, vendorów push ani persistencji preferencji.
+5. Brak opt-in ≠ utrata postępu sezonu, unlocków ani settle transferów.
+
+**Zależności**
+
+- §22.1a, §22.1b, §28 (odesłanie jakościowe bezpieczeństwa / zgody).
+
+---
+
+### 22.6 Deduplikacja jakościowa
+
+**Cel**  
+Anty-spam: jeden sens na sprawę.
+
+**Przebieg**
+
+1. W oknie jakościowym: **co najwyżej jeden** sensowny alert na jedną sprawę.
+2. Zakaz cascade: mecz + zadanie + inbox + transfer = nie cztery równorzędne alerty o tym samym momencie.
+3. Preferencja hierarchii: **kalendarz / Hub Primary** > alert; alert wspiera, nie dubluje.
+4. Relacja do §21: nie dublować tej samej treści jako „powiadomienie + wiadomość” bez różnicy roli (zaproszenie vs skutek w skrzynce).
+5. Szczegóły timerów / technicznej dedup = Future / implementacja później.
+
+**Zależności**
+
+- §21, §20, §23, §3.10.
+
+---
+
+### 22.7 Relacja do §20 · §21 · §23 · §3.10
+
+**§20 Zadania (GDD-15)**
+
+1. Cel dnia pozostaje w §20 (dokładnie jeden główny na Hubie).
+2. Alert może **przypominać** o celu — nie tworzy Quest Boardu i nie konkuruje z „1 cel”.
+3. W dniu meczowym mecz > zadanie — alert nie odwraca tej hierarchii.
+4. Soft FOMO §20.7 = kotwica; §22 jej nie osłabia.
+
+**§21 Wiadomości (GDD-21)**
+
+1. Wiadomość w skrzynce ≠ powiadomienie.
+2. Skrzynka = skutek zdarzenia (§21.1a); alert = zaproszenie (§22.1a).
+3. Opt-out alertów **nie** kasuje dostępu do skutków w skrzynce (§22.1b).
+4. Kanał push / email = Future — poza Thin obu rozdziałów jako engineering.
+
+**§23 Hub (GDD-14)**
+
+1. Dzień meczowy: Primary = mecz / przygotowanie — **powiadomienie nigdy nie jest Primary**.
+2. Wejście z alertu ląduje w Hubie lub istniejącej lokalizacji decyzji — bez omijania hierarchii sprawczości.
+3. Progressive disclosure: po wejściu do gry alert nie konkuruje wizualnie z Primary.
+
+**§3.10 Retencja**
+
+1. Hak „powiadomienie o meczu” = soft remind + opt-in (produktowo).
+2. Quiet hours wymienione historycznie przy §3.10 = **Future** (nie Thin §22).
+3. Organiczna wizyta na Hub pozostaje pełnoprawną ścieżką powrotu.
+
+**Zależności**
+
+- §3.10, §20, §21, §23.
+
+---
+
+### 22.8 Granice odpowiedzialności
+
+**Cel**  
+Jasno: co §22 definiuje, a czego nie.
+
+| §22 Thin **definiuje**                | §22 Thin **nie definiuje**               |
+| ------------------------------------- | ---------------------------------------- |
+| Filozofię i zasady nadrzędne          | Kanał push / email / SMS                 |
+| Słownik alert ≠ wiadomość             | SDK · payload · vendor                   |
+| Kategorie jakościowe                  | Quiet hours / cron / strefy czasowe      |
+| Soft FOMO · opt-in produktowy · dedup | Schemat DB · preferencje persist         |
+| Granice vs §20 / §21 / §23            | Kod · Overlay implementacja · resolver   |
+| Thin vs Future                        | Drugi proces ofert / zadań / Primary Hub |
+
+**Kotwice poza §22**
+
+- Zadania = **§20** · Skrzynka = **§21** · Hub = **§23** · Oferty = **§12** · Mecze = **§9 / §10**.
+
+---
+
+### 22.9 Placeholder UI — nie-SSOT
+
+**Cel**  
+Odciąć mocki od designu.
+
+**Przebieg**
+
+1. Istniejący Overlay „notifications”, atrapy powiązane z `/messages`, mockowe liczniki **nie są źródłem prawdy**.
+2. **Zakaz** traktowania mocków jako specyfikacji kategorii, opt-in, FOMO, dedup ani kanałów.
+3. Przyszły EPIC kodu / UI musi wynikać z **tego rozdziału** oraz Guide Presentation Contract; mocki należy zastąpić lub usunąć, nie „ożywiać”.
+4. Pomieszanie Overlay z inboxem §21 = błąd produktu — słownik §22.2 jest wiążący.
+
+---
+
+### 22.10 Thin vs Future
+
+| Element                              | Thin | Future / osobny EPIC     |
+| ------------------------------------ | ---- | ------------------------ |
+| Filozofia · słownik · zasady 22.1a/b | TAK  | —                        |
+| Kategorie jakościowe                 | TAK  | katalog ID / szablony    |
+| Soft FOMO · opt-in produktowy        | TAK  | UI ustawień pełne        |
+| Dedup jakościowy                     | TAK  | reguły techniczne / cron |
+| Granice §20 / §21 / §23              | TAK  | —                        |
+| Push / email / SMS                   | NIE  | TAK (po Owner GO)        |
+| Quiet hours                          | NIE  | TAK                      |
+| SDK · DB · preferencje persist       | NIE  | TAK                      |
+| Kod / Overlay implementacja          | NIE* | osobny EPIC              |
+| Liczby §26 · XP · progi              | NIE  | N/A dla polityki alertów |
+| AI generowanie treści                | NIE  | tylko po Owner GO        |
+
+\*Ten EPIC docs nie implementuje UI/DB; kod / kanał = osobny Owner GO później.
+
+---
+
+### 22.11 Decyzje gracza (Thin)
+
+- Czy włączyć / wyłączyć soft remindy.
+- Czy zareagować na zaproszenie (przejść do Hubu / domeny / skrzynki).
+- Czy zignorować alert (bez kary; informacja nadal w grze).
+
+---
+
+### 22.12 Zależności i ZERO DUPLICATE
+
+| System     | Relacja                                                           |
+| ---------- | ----------------------------------------------------------------- |
+| §21        | Skrzynka ≠ alert; skutek vs zaproszenie; dostęp info przy opt-out |
+| §20        | Soft FOMO · remind celu · nie drugi quest system                  |
+| §23        | Hub Primary nienaruszony; decyzja „co teraz”                      |
+| §12        | Soft transfer → tylko Transfery; brak drugiego procesu ofert      |
+| §3.10 / §9 | Kalendarz meczów = najsilniejszy hak; alert wspiera               |
+| §28        | Opt-in / zgoda — odesłanie jakościowe                             |
+| Guide UI   | Presentation Contract — osobny od logiki domeny                   |
+
+---
+
+### 22.13 Kontrakty produktowe §22
+
+1. **Powiadomienie = zaproszenie do decyzji — nigdy wymuszenie.**
+2. **Opt-out ≠ utrata informacji** — Hub · Inbox · ekran domenowy pozostają SSOT dostępu.
+3. **Powiadomienie ≠ wiadomość** (§21).
+4. Thin = **polityka** — nie push / email / SDK / quiet hours / DB / kod.
+5. **Soft FOMO** — brak kar za nieobecność / zignorowanie / wyłączenie.
+6. **Opt-in produktowy** — kontrola gracza; default nieagresywny.
+7. **Dedup jakościowy** — jeden sens na sprawę; anty-spam vs §21.
+8. **§20 / §23** — bez redefinicji celu dnia i bez Primary dnia meczu.
+9. **Placeholder notifications ≠ SSOT.**
+10. **SSOT FIRST · REUSE FIRST · ZERO DUPLICATE · Presentation ≠ Domain** — egzekwowane przez §22.1a / §22.1b.
+11. **Bez kodu / DB / liczb / AI** w tym rozdziale.
+
+---
+
+### 22.14 Status checklisty §22
+
+- [x] Filozofia · zasady nadrzędne (§22.1a · §22.1b) · słownik
+- [x] Kategorie jakościowe · Soft FOMO · opt-in · dedup
+- [x] Granice §20 · §21 · §23 · §3.10
+- [x] Granice odpowiedzialności · Placeholder nie-SSOT · Thin vs Future · kontrakty
+- [ ] Implementacja kanału push / email / SDK / DB / kodu (osobny EPIC · poza GDD-22 docs)
+- [ ] Sync statusów projektu (DOCS CLOSE po Owner VERIFY)
 
 ---
 
