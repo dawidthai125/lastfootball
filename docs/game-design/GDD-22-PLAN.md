@@ -4,7 +4,7 @@
 **Typ:** docs-only Thin  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS (Owner GO AUDIT → Owner GO PLAN)  
-**Status PLAN:** IMPLEMENT COMPLETE · oczekuje **OWNER VERIFICATION** → potem COMMIT / DOCS CLOSE  
+**Status PLAN:** **CLOSED** · OWNER VERIFY PASS · content `09b85e7` · DOCS CLOSE sync
 **Baseline wejścia:** GDD-21 CLOSED (`bf07a44` / tip `c24efef`) · Domain `9c6fe86` · Presentation `9fd14fc` · HEAD tip docs `c93db5f`
 
 ---
@@ -208,7 +208,7 @@ Thin **nie** jest specyfikacją kanału dostawy (push/email) ani engineeringiem.
 - [x] Thin vs Future: push · email · SDK · DB · quiet hours · kod = OUT.
 - [x] Placeholder / Overlay notifications oznaczony nie-SSOT.
 - [x] Checklista §22 + TOC / status rozdziału zaktualizowane.
-- [ ] Po Owner VERIFY: DOCS CLOSE sync (STATUS · ROADMAP · BASELINE tip · HANDOFF · EPIC_INDEX · CHANGELOG · game-design README / CURRENT_DESIGN / game-design ROADMAP) — **bez** zmian w `apps/` / `supabase/`.
+- [x] Po Owner VERIFY: DOCS CLOSE sync (STATUS · ROADMAP · BASELINE tip · HANDOFF · EPIC_INDEX · CHANGELOG · game-design README / CURRENT_DESIGN / game-design ROADMAP) — **bez** zmian w `apps/` / `supabase/`.
 - [x] Prettier docs przed commit.
 
 ---
@@ -291,3 +291,4 @@ OWNER GO IMPLEMENT (docs)
 | ------ | ---------- | --------------------------------------- |
 | 1.0.0  | 2026-07-30 | PLAN COMPLETE — Owner Review            |
 | 1.1.0  | 2026-07-30 | IMPLEMENT COMPLETE — Owner Verification |
+| 1.2.0  | 2026-07-30 | DOCS CLOSE · EPIC FULLY CLOSED          |

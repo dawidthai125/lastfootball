@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
 | **Domain baseline**     | **`9c6fe86`** — LFE-ACADEMY-01 CLOSED         |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | `c24efef` — **GDD-21** (content `bf07a44`)    |
+| **Documentation tip**   | _(CLOSE)_ — **GDD-22** (content `09b85e7`)    |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -46,7 +46,7 @@ LFE EPIC-1…7 · Architecture Freeze · Gameplay · Match AI · Match Engine ·
 
 ## Design DONE
 
-GDD-01…19 · **GDD-21** · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto · Playtest
+GDD-01…22 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto · Playtest
 
 ## UI / Docs UX DONE
 
@@ -72,6 +72,7 @@ GDD-01…19 · **GDD-21** · §20 · §23 · §26 (liczby Thin) · World Art · 
 | **GDD-18**                | Ranking Thin (sezonowy ranking klubów) · tip `4dedd71`                                                        |
 | **GDD-19**                | Osiągnięcia Thin (kamienie / historia) · tip `2c619ca`                                                        |
 | **GDD-21**                | Wiadomości Thin · content `bf07a44` · tip `c24efef`                                                           |
+| **GDD-22**                | Powiadomienia Thin · content `09b85e7` · DOCS CLOSE _(tip)_                                                   |
 | **M2.5**                  | First Domain Implementation Review · **PASS**                                                                 |
 | **LFE-UI-MOTION-01**      | Presentation motion Thin · Hub/Match · Guide §8 · `9fd14fc`                                                   |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
@@ -82,17 +83,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **GDD-22 READY FOR AUDIT** · potem LFE-SCOUTING-01 (po GDD-22 CLOSED).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-SCOUTING-01 READY FOR AUDIT**.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
 ## Naming
 
 - Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`
-- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`, `GDD-18`, `GDD-19`, `GDD-21`
+- Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`, `GDD-18`, `GDD-19`, `GDD-21`, `GDD-22`
 - UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`, `LFE-UI-MOTION-*`
 - Engine: EPIC-1…7
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — GDD-21 CLOSED · next GDD-22
+**ACTIVE** · 2026-07-30 — GDD-22 CLOSED · next LFE-SCOUTING-01

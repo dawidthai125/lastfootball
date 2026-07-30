@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16…19 · GDD-21 Thin CLOSED** + **GDD-22 IMPLEMENT COMPLETE (oczekuje VERIFY)** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. Następny po CLOSE = **AUDIT LFE-SCOUTING-01** (Owner GO).
+GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. Następny = **LFE-SCOUTING-01 READY FOR AUDIT** (Owner GO).
 
 ## Completed
 
@@ -32,20 +32,22 @@ GDD-01…15 + **GDD-16…19 · GDD-21 Thin CLOSED** + **GDD-22 IMPLEMENT COMPLET
 | **GDD-18** | **§18 Ranking Thin** (sezonowy ranking klubów) · **CLOSED** · tip `4dedd71` |
 | **GDD-19** | **§19 Osiągnięcia Thin** (kamienie / historia) · **CLOSED** · tip `2c619ca` |
 | **GDD-21** | **§21 Wiadomości Thin** · **CLOSED** · tip `c24efef` · content `bf07a44`    |
+| **GDD-22** | **§22 Powiadomienia Thin** · **CLOSED** · content `09b85e7` · tip _(CLOSE)_ |
 | GDD-§26A   | §26 Economy numbers Thin (docs SSOT) · CLOSED                               |
 | GDD-§26B   | §26 Code sync (`ECONOMY_THIN`) · CLOSED                                     |
 
 ## In Progress
 
-| Stage      | Status                                                     |
-| ---------- | ---------------------------------------------------------- |
-| **GDD-22** | **IMPLEMENT COMPLETE** · §22 Thin filled · oczekuje VERIFY |
+| Stage | Status                            |
+| ----- | --------------------------------- |
+| —     | Brak aktywnego etapu bez Owner GO |
 
 ## Planned
 
-| Stage   | Zakres                                                |
-| ------- | ----------------------------------------------------- |
-| GDD-17+ | Pozostałe szkielety (§24+ / kanał push Future; Owner) |
+| Stage           | Zakres                                          |
+| --------------- | ----------------------------------------------- |
+| LFE-SCOUTING-01 | Kod skautingu — **READY FOR AUDIT** (Owner GO)  |
+| GDD-17+ / §24+  | Pozostałe szkielety / kanał push Future (Owner) |
 
 ## Future
 
@@ -62,7 +64,7 @@ GDD-01…15 + **GDD-16…19 · GDD-21 Thin CLOSED** + **GDD-22 IMPLEMENT COMPLET
 
 - Jeden etap naraz; STOP po raporcie.
 - FINALIZE = QA only; DCC = fix niespójności.
-- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §19 = osiągnięcia (historia) · §21 = wiadomości (skutek) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
+- §6 = metryki klubu · §18 = sezonowy ranking klubów (konsumpcja) · §19 = osiągnięcia (historia) · §21 = wiadomości (skutek) · §22 = powiadomienia (zaproszenie) · §20 = zadania · §23 = Hub · §26 = liczby / balans.
 - §26 = SSOT liczb; D18/D20 = SSOT implementacji.
 
 ## Powiązania
@@ -71,4 +73,4 @@ GDD-01…15 + **GDD-16…19 · GDD-21 Thin CLOSED** + **GDD-22 IMPLEMENT COMPLET
 
 ## Last updated
 
-2026-07-30 — GDD-22 Powiadomienia Thin IMPLEMENT COMPLETE · oczekuje VERIFY
+2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7` · next LFE-SCOUTING-01 READY FOR AUDIT

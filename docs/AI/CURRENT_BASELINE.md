@@ -16,11 +16,11 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline c24efef            # Documentation tip GDD-21 CLOSE
-git log -1 --oneline bf07a44            # GDD-21 content (messages thin)
+git log -1 --oneline 09b85e7            # GDD-22 content (notifications thin)
+git log -1 --oneline c24efef            # Prior docs tip GDD-21 CLOSE
+git log -1 --oneline bf07a44            # GDD-21 content
 git log -1 --oneline 9c6fe86            # Domain feature baseline ACADEMY-01
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
-git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
 ```
 
 ---
@@ -39,10 +39,10 @@ git log -1 --oneline 57a5875            # Prior docs tip ACADEMY-01 CLOSE
 | Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `c24efef` — **GDD-21** Wiadomości Thin (content `bf07a44`)            |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-21 CLOSED · ACADEMY-01 CLOSED   |
+| **Documentation tip**       | _(CLOSE)_ — **GDD-22** Powiadomienia Thin (content `09b85e7`)         |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-22 CLOSED · GDD-21 · ACADEMY-01 |
 
-Documentation tip GDD-21 CLOSE = `c24efef` (content `bf07a44`). Prior ACADEMY-01 CLOSE = `57a5875`. Domain tip bez zmian (docs-only).
+Documentation tip GDD-22 CLOSE = _(CLOSE)_ (content `09b85e7`). Prior GDD-21 CLOSE = `c24efef`. Domain tip bez zmian (docs-only).
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -68,34 +68,35 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                                                     |
-| ----------------- | ------------------------------------------------------------------------- |
-| Cash              | `cash_balance`                                                            |
-| Transfer envelope | `resolveTransferEnvelope`                                                 |
-| Transfer listing  | `players.transfer_listed_at`                                              |
-| Transfer UI       | `resolveTransferMarket`                                                   |
-| Live listings     | listed `players` (other clubs)                                            |
-| Pending / Counter | `transfer_offers`                                                         |
-| Opening snapshot  | `opening_amount`                                                          |
-| Settle amount     | `current_amount`                                                          |
-| Ask               | `deriveTransferFee` (skill+age only)                                      |
-| Settlement buy    | `completeTransferBuy` (seed \| live)                                      |
-| Settlement sell   | `completeTransferSell` (instant \| live)                                  |
-| Training UI       | `resolveClubTraining`                                                     |
-| Training persist  | RPC `complete_training_session`                                           |
-| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                            |
-| Potential         | `players.potential` · `resolvePlayerPotential`                            |
-| Match development | RPC `apply_match_development` · K_MATCH=5                                 |
-| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                |
-| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`            |
-| Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT         |
-| Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT             |
-| Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT |
-| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`    |
-| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                 |
-| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                  |
-| Impl notes UI     | `docs/implementation/`                                                    |
-| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                              |
+| SSOT              | Gdzie                                                                            |
+| ----------------- | -------------------------------------------------------------------------------- |
+| Cash              | `cash_balance`                                                                   |
+| Transfer envelope | `resolveTransferEnvelope`                                                        |
+| Transfer listing  | `players.transfer_listed_at`                                                     |
+| Transfer UI       | `resolveTransferMarket`                                                          |
+| Live listings     | listed `players` (other clubs)                                                   |
+| Pending / Counter | `transfer_offers`                                                                |
+| Opening snapshot  | `opening_amount`                                                                 |
+| Settle amount     | `current_amount`                                                                 |
+| Ask               | `deriveTransferFee` (skill+age only)                                             |
+| Settlement buy    | `completeTransferBuy` (seed \| live)                                             |
+| Settlement sell   | `completeTransferSell` (instant \| live)                                         |
+| Training UI       | `resolveClubTraining`                                                            |
+| Training persist  | RPC `complete_training_session`                                                  |
+| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                                   |
+| Potential         | `players.potential` · `resolvePlayerPotential`                                   |
+| Match development | RPC `apply_match_development` · K_MATCH=5                                        |
+| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                       |
+| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                   |
+| Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT                |
+| Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT                    |
+| Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT        |
+| Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future |
+| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`           |
+| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                        |
+| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                         |
+| Impl notes UI     | `docs/implementation/`                                                           |
+| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                     |
 
 ## Operacyjne
 
@@ -103,8 +104,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR.
 
 ## Last updated
 
-2026-07-30 — GDD-21 CLOSED · tip `c24efef` (Domain `9c6fe86` · Presentation `9fd14fc` · content `bf07a44` · UI P0 `54d0724`)
+2026-07-30 — GDD-22 CLOSED · tip _(CLOSE)_ (Domain `9c6fe86` · Presentation `9fd14fc` · content `09b85e7` · UI P0 `54d0724`)

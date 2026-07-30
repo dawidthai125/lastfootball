@@ -8903,7 +8903,7 @@ Odciąć mocki od designu.
 - [x] Granice §20 · §21 · §23 · §3.10
 - [x] Granice odpowiedzialności · Placeholder nie-SSOT · Thin vs Future · kontrakty
 - [ ] Implementacja kanału push / email / SDK / DB / kodu (osobny EPIC · poza GDD-22 docs)
-- [ ] Sync statusów projektu (DOCS CLOSE po Owner VERIFY)
+- [x] Sync statusów projektu (DOCS CLOSE)
 
 ---
 

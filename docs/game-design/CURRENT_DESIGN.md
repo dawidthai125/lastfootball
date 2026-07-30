@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin** (docs filled). §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Następny po CLOSE GDD-22: **AUDIT LFE-SCOUTING-01** (Owner GO). Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. Następny: **LFE-SCOUTING-01 READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -70,4 +70,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — GDD-22 Powiadomienia Thin IMPLEMENT COMPLETE (oczekuje VERIFY)
+2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7` · tip _(CLOSE)_
