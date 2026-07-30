@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { BrandLogo, ClubCrest, NavIcon } from '@/components/assets';
-import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import { useClub, useClubMessages, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
@@ -34,6 +34,7 @@ export function LeftNavigation() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const trainingUnlocked = useTrainingUnlocked();
+  const messages = useClubMessages();
   const phase = resolveHubPhase(club, { hasFixtures });
   const navCtx = {
     transferWindowOpen: club?.transferWindowOpen,
@@ -42,6 +43,7 @@ export function LeftNavigation() {
   const showDev = process.env.NODE_ENV === 'development';
   const [lockTitle, setLockTitle] = useState<string | null>(null);
   const clubName = club?.name ?? 'Klub';
+  const messagesBadge = messages.items.length > 0;
 
   const closeLock = useCallback(() => setLockTitle(null), []);
 
@@ -198,6 +200,18 @@ export function LeftNavigation() {
                     <NavIcon id={item.id} active={active} size={navCollapsed ? 20 : 16} />
                     {navCollapsed ? null : item.label}
                   </span>
+                  {!navCollapsed && item.id === 'messages' && messagesBadge ? (
+                    <span
+                      aria-hidden
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        background: 'var(--lf-color-gold-base)',
+                        flexShrink: 0,
+                      }}
+                    />
+                  ) : null}
                 </Link>
               );
             })}

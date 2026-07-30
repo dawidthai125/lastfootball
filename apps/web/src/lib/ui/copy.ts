@@ -23,6 +23,15 @@ export const UI_COPY = {
   dailyGoalSquad: 'Sprawdź kadrę',
   dailyGoalTraining: 'Przeprowadź trening',
 
+  /** LFE-MESSAGES-01 — derived inbox (no mocks / workflow) */
+  messagesTitle: 'Wiadomości',
+  messagesSubtitle: 'Skrót spraw z Transferów i systemu',
+  messagesEmptyHint: 'Brak spraw do przejrzenia.',
+  messagesOverlayTitle: 'Sprawy',
+  messagesOpenInbox: 'Otwórz skrzynkę',
+  messagesPriorityDecision: 'Sprawa',
+  messagesPriorityInfo: 'Info',
+
   /** LFE-ACHIEVEMENTS-01 — history Thin (no XP / rewards) */
   achievementsTitle: 'Osiągnięcia',
   achievementsSubtitle: 'Kamienie milowe kariery i klubu',

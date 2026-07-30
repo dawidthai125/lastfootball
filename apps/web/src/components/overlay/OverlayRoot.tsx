@@ -2,15 +2,17 @@
 
 import Link from 'next/link';
 
+import { useClubMessages } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
+import { UI_COPY } from '@/lib/ui/copy';
 
-const MOCK_NOTIFICATIONS = [
-  { id: '1', title: 'Oferta transferowa', meta: '2h', href: '/transfers' },
-  { id: '3', title: 'Wiadomość zarządu', meta: '1d', href: '/messages' },
-] as const;
-
+/**
+ * Notifications overlay — same ClubMessagesDto as /messages (LFE-MESSAGES-01 · D43).
+ * No runtime mocks · no mark-as-read workflow.
+ */
 export function OverlayRoot() {
   const { active, close } = useOverlay();
+  const messages = useClubMessages();
 
   if (!active) return null;
 
@@ -32,7 +34,7 @@ export function OverlayRoot() {
         <aside
           role="dialog"
           aria-modal="true"
-          aria-label="Powiadomienia"
+          aria-label={UI_COPY.messagesOverlayTitle}
           className="absolute top-0 right-0 flex h-full flex-col border-l"
           style={{
             width: 'var(--lf-overlay-panel-width)',
@@ -61,7 +63,7 @@ export function OverlayRoot() {
                 color: 'var(--lf-color-text-gold)',
               }}
             >
-              Powiadomienia
+              {UI_COPY.messagesOverlayTitle}
             </h2>
             <button
               type="button"
@@ -80,39 +82,46 @@ export function OverlayRoot() {
           </header>
 
           <ul className="flex-1 overflow-y-auto" style={{ padding: 'var(--lf-space-2)' }}>
-            {MOCK_NOTIFICATIONS.map((n) => (
-              <li key={n.id}>
-                <Link
-                  href={n.href}
-                  onClick={close}
-                  className="flex items-center justify-between border-b transition-colors"
-                  style={{
-                    borderColor: 'var(--lf-color-border-subtle)',
-                    padding: 'var(--lf-space-2) var(--lf-space-2)',
-                    fontSize: 'var(--lf-type-table)',
-                    color: 'var(--lf-color-text-secondary)',
-                    transitionDuration: 'var(--lf-motion-fast)',
-                    transitionTimingFunction: 'var(--lf-motion-easing)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--lf-color-bg-hover)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <span>{n.title}</span>
-                  <span
+            {messages.items.length === 0 ? (
+              <li
+                className="font-[family-name:var(--font-ui)]"
+                style={{
+                  padding: 'var(--lf-space-3)',
+                  fontSize: 'var(--lf-type-table)',
+                  color: 'var(--lf-color-text-muted)',
+                }}
+              >
+                {UI_COPY.messagesEmptyHint}
+              </li>
+            ) : (
+              messages.items.map((n) => (
+                <li key={n.id}>
+                  <Link
+                    href={n.href}
+                    onClick={close}
+                    className="flex items-center justify-between border-b transition-colors no-underline"
                     style={{
-                      color: 'var(--lf-color-text-faint)',
-                      fontSize: 'var(--lf-type-caption)',
+                      borderColor: 'var(--lf-color-border-subtle)',
+                      padding: 'var(--lf-space-2) var(--lf-space-2)',
+                      fontSize: 'var(--lf-type-table)',
+                      color: 'var(--lf-color-text-secondary)',
+                      transitionDuration: 'var(--lf-motion-fast)',
+                      transitionTimingFunction: 'var(--lf-motion-easing)',
                     }}
                   >
-                    {n.meta}
-                  </span>
-                </Link>
-              </li>
-            ))}
+                    <span style={{ color: 'var(--lf-color-text-primary)' }}>{n.subject}</span>
+                    <span
+                      style={{
+                        color: 'var(--lf-color-text-faint)',
+                        fontSize: 'var(--lf-type-caption)',
+                      }}
+                    >
+                      {n.fromLabel}
+                    </span>
+                  </Link>
+                </li>
+              ))
+            )}
           </ul>
 
           <footer
@@ -122,9 +131,10 @@ export function OverlayRoot() {
               padding: 'var(--lf-space-2)',
             }}
           >
-            <button
-              type="button"
-              className="w-full border"
+            <Link
+              href="/messages"
+              onClick={close}
+              className="block w-full border text-center no-underline"
               style={{
                 borderColor: 'var(--lf-color-border-gold)',
                 background: 'var(--lf-color-gold-soft)',
@@ -133,10 +143,9 @@ export function OverlayRoot() {
                 padding: 'var(--lf-space-2)',
                 borderRadius: 'var(--lf-radius-sm)',
               }}
-              onClick={close}
             >
-              Oznacz wszystkie jako przeczytane
-            </button>
+              {UI_COPY.messagesOpenInbox}
+            </Link>
           </footer>
         </aside>
       ) : null}

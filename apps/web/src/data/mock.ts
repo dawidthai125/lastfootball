@@ -7,7 +7,6 @@ export const sessionChrome = {
   money: 1_245_800,
   premium: 120,
   energy: { current: 68, max: 100 },
-  notifications: 3,
   player: {
     name: 'Dawid K.',
     club: 'FC Lastovia',
@@ -53,11 +52,6 @@ export const dashboardMock = {
     { pos: 3, club: 'Orzeł Grodzisk', pts: 24, gd: 5, self: false },
     { pos: 4, club: 'FC Lastovia', pts: 22, gd: 4, self: true },
     { pos: 5, club: 'Wisła Północ', pts: 21, gd: 2, self: false },
-  ],
-  messagesPreview: [
-    { id: 'm1', from: 'Zarząd', subject: 'Oczekiwania na kolejkę 12', when: '1d', unread: true },
-    { id: 'm2', from: 'Skaut', subject: 'Raport: K. Baran', when: '5h', unread: true },
-    { id: 'm3', from: 'System', subject: 'Okno transferowe otwarte', when: '2d', unread: false },
   ],
   dailyTasks: [
     { id: 't1', label: 'Ukończ sesję treningową', done: false, reward: '+15 energii' },

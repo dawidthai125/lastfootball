@@ -3,6 +3,9 @@
 import { createContext, useContext, type ReactNode } from 'react';
 
 import type { ClubDto } from '@/lib/club/types';
+import type { ClubMessagesDto } from '@/lib/messages';
+
+const EMPTY_MESSAGES: ClubMessagesDto = { items: [] };
 
 type ClubContextValue = {
   readonly club: ClubDto | null;
@@ -10,27 +13,32 @@ type ClubContextValue = {
   readonly hasFixtures: boolean;
   /** Derived: played fixtures >= training unlock (LFE-TRAINING-01). */
   readonly trainingUnlocked: boolean;
+  /** Derived inbox — resolveClubMessages only (LFE-MESSAGES-01 · D43). */
+  readonly messages: ClubMessagesDto;
 };
 
 const ClubContext = createContext<ClubContextValue>({
   club: null,
   hasFixtures: false,
   trainingUnlocked: false,
+  messages: EMPTY_MESSAGES,
 });
 
 export function ClubProvider({
   club,
   hasFixtures = false,
   trainingUnlocked = false,
+  messages = EMPTY_MESSAGES,
   children,
 }: {
   club: ClubDto | null;
   hasFixtures?: boolean;
   trainingUnlocked?: boolean;
+  messages?: ClubMessagesDto;
   children: ReactNode;
 }) {
   return (
-    <ClubContext.Provider value={{ club, hasFixtures, trainingUnlocked }}>
+    <ClubContext.Provider value={{ club, hasFixtures, trainingUnlocked, messages }}>
       {children}
     </ClubContext.Provider>
   );
@@ -46,6 +54,11 @@ export function useHasFixtures(): boolean {
 
 export function useTrainingUnlocked(): boolean {
   return useContext(ClubContext).trainingUnlocked;
+}
+
+/** Same DTO as /messages — Overlay / nav badge (D43). */
+export function useClubMessages(): ClubMessagesDto {
+  return useContext(ClubContext).messages;
 }
 
 /** Prefer live club; fall back to mock identity only when DTO missing. */

@@ -3,7 +3,6 @@ export type NavItem = {
   href: string;
   label: string;
   shortLabel: string;
-  badge?: boolean;
 };
 
 export type NavGroup = {
@@ -65,15 +64,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     id: 'comms',
     label: 'Komunikacja',
-    items: [
-      {
-        id: 'messages',
-        href: '/messages',
-        label: 'Wiadomości',
-        shortLabel: 'W',
-        badge: true,
-      },
-    ],
+    items: [{ id: 'messages', href: '/messages', label: 'Wiadomości', shortLabel: 'W' }],
   },
   {
     id: 'system',
