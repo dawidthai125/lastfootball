@@ -8,6 +8,7 @@ const EARLY_CLUB_OPEN = new Set([
   'matches',
   'messages',
   'achievements',
+  'rankings',
   'profile',
   'settings',
   'status',

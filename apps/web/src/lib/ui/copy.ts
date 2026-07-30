@@ -40,6 +40,15 @@ export const UI_COPY = {
   achievementCategorySport: 'Sport',
   achievementCategorySeason: 'Sezon',
 
+  /** LFE-RANKING-01 — seasonal club ranking Thin (no ELO / league columns) */
+  rankingEyebrow: 'Sezon',
+  rankingTitle: 'Ranking',
+  rankingSubtitle: 'Jak wypada Twój klub wśród innych w tym sezonie',
+  rankingBandUpper: 'Górna część sezonu',
+  rankingBandMid: 'Środek stawki',
+  rankingBandLower: 'Dolna część sezonu',
+  rankingPlayerPositionPrefix: 'Twoja pozycja:',
+
   softLockUnavailable: 'niedostępne',
   softLockSoon: 'wkrótce',
   softLockReason:

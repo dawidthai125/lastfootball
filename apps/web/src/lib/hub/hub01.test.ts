@@ -131,6 +131,7 @@ describe('hub nav unlock', () => {
   it('opens matches; soft-locks mid-game modules on EARLY_CLUB', () => {
     expect(resolveNavAccess('squad', 'EARLY_CLUB')).toBe('open');
     expect(resolveNavAccess('matches', 'EARLY_CLUB')).toBe('open');
+    expect(resolveNavAccess('rankings', 'EARLY_CLUB')).toBe('open');
     expect(resolveNavAccess('training', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('transfers', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('finance', 'EARLY_CLUB')).toBe('soft_locked');

@@ -1,0 +1,107 @@
+/* LFE-RANKING-01 — seasonal club ranking Thin; not league standings surface */
+
+.lf-rank {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.lf-rank__header {
+  min-width: 0;
+}
+
+.lf-rank__eyebrow {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-rank__title {
+  margin: var(--lf-space-2) 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 4vw, var(--lf-type-h1, 1.75rem));
+  line-height: 1.2;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-rank__subtitle {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-secondary);
+}
+
+.lf-rank__context {
+  margin: var(--lf-space-2) 0 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+.lf-rank__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+}
+
+.lf-rank__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-3) var(--lf-space-4);
+  background: var(--lf-color-bg-panel);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  min-width: 0;
+}
+
+.lf-rank__item--self {
+  border-color: var(--lf-color-border-strong, var(--lf-color-text-gold));
+}
+
+.lf-rank__pos {
+  flex: 0 0 1.75rem;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-faint);
+  text-align: right;
+}
+
+.lf-rank__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+}
+
+.lf-rank__name {
+  font-size: var(--lf-type-body);
+  color: var(--lf-color-text-primary);
+}
+
+.lf-rank__name--self {
+  font-weight: 700;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-rank__band {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-muted);
+}
