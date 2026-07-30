@@ -36,6 +36,7 @@ lastfootball/
 | Akademia      | `resolveClubAcademy`                                                 | `lib/academy/`                   | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Academy Thin A)                                                         |
 | Skauting      | `resolveClubScouting`                                                | `lib/scouting/`                  | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Scouting Thin B) · D24                                                  |
 | Transfery     | `resolveTransferMarket`                                              | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
+| Wiadomości    | **`resolveClubMessages`**                                            | `lib/messages/`                  | [`platform/MESSAGES.md`](../platform/MESSAGES.md) · D40–D46                                                              |
 | Trening       | `resolveClubTraining`                                                | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
 | Auth / klub   | session + club DTO                                                   | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
 | First Match   | tunnel + `first_match_completed_at`                                  | `lib/first-match/`               | [`platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md)                                                                  |
@@ -47,6 +48,7 @@ lastfootball/
 Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
 Daily Goal ──► resolveClubDailyGoal (derive) ──► istniejące trasy (suggestion; Primary nadrzędny)
 Achievements ──► resolveClubAchievements (derive history) ──► /achievements
+Messages ──► resolveClubMessages (derive E1–E3) ──► /messages + Overlay (ta sama DTO)
 League ──► planClubFixtures (22) → ensureClubFixtures → resolveLeagueTable ──► /league
 Ranking ──► resolveLeagueTable → resolveClubRanking ──► /rankings
 complete-fixture ──► cash reward + ensureTransferWindow + match development (RPC)

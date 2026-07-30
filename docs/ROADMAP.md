@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`e6885dc`** — LFE-TRANSFERS-09 CLOSED (fee parity · single live settle).
+**Domain feature baseline:** **`800ed0d`** — LFE-MESSAGES-01 CLOSED (derived inbox Thin · D40–D46).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`4b8ab48`** — LFE-TRANSFERS-09 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · **Transfers Hardening (09)** · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers Hardening (09) · **Messages (01)** · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
 ---
 
@@ -63,6 +63,7 @@ GDD-§26A/B · LEAGUE-04 · **Transfers Hardening (09)** · Training Depth · Pl
 | **LFE-TRANSFERS-07**                                   | **CLOSED** · Live H2H Pending Offers Thin                                                                           |
 | **LFE-TRANSFERS-08**                                   | **CLOSED** · Live H2H Counter Offers Thin (1× seller→buyer)                                                         |
 | **LFE-TRANSFERS-09**                                   | **CLOSED** · Hardening TD-01/TD-02 · fee parity SQL↔TS · single live settle · D38 · feat `e6885dc`                  |
+| **LFE-MESSAGES-01**                                    | **CLOSED** · derived inbox Thin · `resolveClubMessages` E1–E3 · D40–D46 · feat `800ed0d` · PRODUCTION VERIFY        |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                       |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                  |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)          |
@@ -109,15 +110,15 @@ GDD-§26A/B · LEAGUE-04 · **Transfers Hardening (09)** · Training Depth · Pl
 | Mobile native                           | poza scope                   |
 | Individual training / XP / attribute DB | poza Thin Depth (D21/D22)    |
 | Academy levels / cash-gate / youth OVR  | poza Thin A (D23)            |
-| Kod inboxu wiadomości                   | po GDD-21 · osobny EPIC      |
+| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)       |
 | Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC |
 
 ---
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): Season End Thin · TD-03 P2 (actions cleanup).  
-Domain tip: TRANSFERS-09 `e6885dc`; Presentation tip: MOTION-01 `9fd14fc`.
+**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): Settings/§22 · Club Thin · Season End Thin · TD-03 P2.  
+Domain tip: MESSAGES-01 `800ed0d`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -137,6 +138,7 @@ Domain tip: TRANSFERS-09 `e6885dc`; Presentation tip: MOTION-01 `9fd14fc`.
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
 - Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
 - Transfers hardening = fee SQL helpers + parity gate · single live settle invoke · D38 (TRANSFERS-09 · TD-01/TD-02 CLOSED).
+- **Messages Thin** = `resolveClubMessages` derive E1–E3 · `/messages` + Overlay = ta sama DTO · brak DB/mocków · D40–D46 (MESSAGES-01).
 - Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed ≠ runtime; pasma potencjału only.
 - Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20); fee **bez** potential.
 - Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill ≤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
@@ -147,8 +149,8 @@ Domain tip: TRANSFERS-09 `e6885dc`; Presentation tip: MOTION-01 `9fd14fc`.
 - **Achievements Thin** = `resolveClubAchievements` derive · immutable history · brak XP/score/ekonomii · ≠ Ranking · ≠ §6 (GDD §19 / ACHIEVEMENTS-01 / D26).
 - **§18 Ranking Thin** = sezonowy ranking klubów; kod Thin = `resolveClubRanking` (D27); ≠ §6 / §10; table = input only.
 - **§19 Osiągnięcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); ≠ §6 / §18; §20 hook ≠ katalog.
-- **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia domenowego (nigdy przyczyna) · Transfery = SSOT ofert · CTA do istniejących ekranów; placeholder `/messages` ≠ SSOT; kod = Future.
-- **§22 Powiadomienia Thin** = polityka alertów · zaproszenie ≠ wymuszenie · opt-out ≠ utrata info (Hub/Inbox/domena) · Soft FOMO · opt-in · dedup; push/email/SDK/quiet hours/kod = Future; Overlay ≠ SSOT.
+- **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia · Transfery = SSOT ofert · kod Thin = `resolveClubMessages` (D40–D46); Overlay = ta sama DTO; brak DB/mocków.
+- **§22 Powiadomienia Thin** = polityka alertów · zaproszenie ≠ wymuszenie · opt-out ≠ utrata info (Hub/Inbox/domena) · Soft FOMO · opt-in · dedup; push/email/SDK/quiet hours/kod = Future; Overlay ≠ osobny SSOT list (reuse Messages DTO).
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
 - **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); nie zmienia Domain tip.
 - **M2.5 PASS** = standard SSOT FIRST · REUSE · ZERO DUPLICATE · Presentation ≠ Domain · Thin IN/OUT · pełny workflow.
@@ -159,4 +161,4 @@ Domain tip: TRANSFERS-09 `e6885dc`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Last updated
 
-2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc` · TD-01/TD-02 CLOSED · D38 · next Owner GO
+2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d` · D40–D46 CLOSED · next Owner GO

@@ -6,7 +6,7 @@ Skrót **wypełnionego** designu bez kopiowania całego GDD. Szczegóły i brzmi
 
 ## Aktualny stan
 
-GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-LEAGUE-04 CLOSED** (kod Thin). Następny: **Transfers hardening READY FOR AUDIT** (Owner GO). Pozostałe rozdziały = szkielet.
+GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** · **GDD-22 Powiadomienia Thin CLOSED**. §3–§22 (Thin; §24+ szkielet), **§20 Zadania**, **§23 Hub**, **§26 liczby Thin (GDD-§26A)** + **sync kodu (GDD-§26B)**. UI Guide + **Presentation Contract (Guide §16 — nie mylić z GDD §16)**. **LFE-LEAGUE-04 CLOSED** · **LFE-TRANSFERS-09 CLOSED** · **LFE-MESSAGES-01 CLOSED** (kod Thin). Następny: **Owner GO**. Pozostałe rozdziały = szkielet.
 
 ## Opis działania — wypełnione obszary
 
@@ -57,8 +57,8 @@ GDD-15 CLOSED · GDD-16…19 Thin CLOSED · **GDD-21 Wiadomości Thin CLOSED** �
 - **Skauting (GDD §17 Information Thin B + LFE-SCOUTING-01):** system informacji; `resolveClubScouting`; `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (**nie** drugi model); shortlista prywatna (**zero** wpływu na AI/rynek/transfery/potencjał/symulację); raport pomaga, nie decyduje; brak fog/regionów/misji/kosztów/`scout_score` w Thin; D19/D22/D20 bez zmian.
 - **Ranking (GDD §18 Thin + LFE-RANKING-01):** `resolveClubRanking` Information Thin · table input only · własny DTO · **≠** league columns · **≠** ELO · **≠** §6; D27.
 - **Osiągnięcia (GDD §19 Thin + LFE-ACHIEVEMENTS-01):** `resolveClubAchievements` Information Thin · derive · immutable history · **≠** §6 · **≠** ranking · **≠** Daily; bez XP/score/ekonomii; D26.
-- **Wiadomości (GDD §21 Thin):** in-app inbox; wiadomość = skutek zdarzenia domenowego (nigdy przyczyna); Transfery = SSOT ofert; CTA → istniejące ekrany; **≠** powiadomienie §22; placeholder `/messages` ≠ SSOT; kod inboxu = Future EPIC.
-- **Powiadomienia (GDD §22 Thin):** polityka soft remindów; **zaproszenie ≠ wymuszenie**; opt-out ≠ utrata informacji (Hub / Inbox / domena); Soft FOMO · opt-in · dedup; **≠** wiadomość §21; push/email/SDK/quiet hours/kod = Future; Overlay notifications ≠ SSOT.
+- **Wiadomości (GDD §21 Thin + LFE-MESSAGES-01):** `resolveClubMessages` derive E1–E3; wiadomość = skutek zdarzenia (nigdy przyczyna); Transfery = SSOT ofert; `/messages` + Overlay = ta sama DTO; CTA → istniejące ekrany; **≠** powiadomienie §22; D40–D46; brak DB/mocków.
+- **Powiadomienia (GDD §22 Thin):** polityka soft remindów; **zaproszenie ≠ wymuszenie**; opt-out ≠ utrata informacji (Hub / Inbox / domena); Soft FOMO · opt-in · dedup; **≠** wiadomość §21; push/email/SDK/quiet hours = Future; Overlay reuse Messages DTO (nie osobny SSOT list).
 
 ## Najważniejsze decyzje
 
@@ -71,4 +71,4 @@ Przy konflikcie agent ↔ pamięć czatu → **wygrywa GDD**.
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 CLOSED · Domain `9027baf`
+2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d` · D40–D46

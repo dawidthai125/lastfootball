@@ -10,10 +10,10 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `e6885dc` (TRANSFERS-09) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** **`4b8ab48`** — LFE-TRANSFERS-09 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `800ed0d` (MESSAGES-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** _(pin po docs sync)_ — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
 Następny: **Owner GO** — **nie startować** AUDIT bez GO.  
-PLAN closed: [`../implementation/LFE-TRANSFERS-09-PLAN.md`](../implementation/LFE-TRANSFERS-09-PLAN.md).
+PLAN closed: [`../platform/MESSAGES.md`](../platform/MESSAGES.md) · prior TRANSFERS-09.
 
 ## Opis działania
 
@@ -112,4 +112,4 @@ PLAN closed: [`../implementation/LFE-TRANSFERS-09-PLAN.md`](../implementation/LF
 
 ## Last updated
 
-2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc`
+2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d`

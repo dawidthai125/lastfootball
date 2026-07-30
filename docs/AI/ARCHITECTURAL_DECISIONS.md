@@ -38,7 +38,7 @@
 
 ---
 
-## D19–D28 · D38 (skrót)
+## D19–D28 · D38 · D40–D46 (skrót)
 
 | ID      | Temat                     | Sedno (1 linia)                                                                   |
 | ------- | ------------------------- | --------------------------------------------------------------------------------- |
@@ -53,6 +53,13 @@
 | **D27** | Ranking Thin              | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
 | **D28** | League calendar 22        | `LEAGUE_FIXTURE_COUNT=22` double RR; MD1–11 identity; AI↔AI double RR.            |
 | **D38** | Transfer public API       | Buy/Sell only · fee SQL helpers · 1× live settle · TRANSFERS-09.                  |
+| **D40** | Fake Production Rule      | Prod nie udaje spraw / unread bez faktu domenowego.                               |
+| **D41** | No runtime mocks          | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
+| **D42** | Messages Are Derived      | Inbox = derive skutków; nigdy przyczyna.                                          |
+| **D43** | One Event → Many Views    | `/messages` + Overlay = ta sama `ClubMessagesDto`.                                |
+| **D44** | UI nie sortuje/filtruje   | Kolejność wyłącznie w `resolveClubMessages`.                                      |
+| **D45** | One resolver              | `resolveClubMessages` = jedyne źródło danych UI.                                  |
+| **D46** | Messages Thin scope       | Brak DB / workflow / Accept w skrzynce / drugiego procesu ofert.                  |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -78,7 +85,7 @@
 
 ## Gdzie szukać kodu
 
-[`MODULE_MAP.md`](./MODULE_MAP.md) — Hub · Daily · Achievements · Academy · Scouting · Training · Transfers · …
+[`MODULE_MAP.md`](./MODULE_MAP.md) — Hub · Daily · Achievements · Messages · Academy · Scouting · Training · Transfers · …
 
 ---
 
@@ -90,4 +97,10 @@
 - DTO bez points/WDL/goals/ELO; pasma = enum; copy UI = `UI_COPY` (D29).
 - Nav open EARLY_CLUB; bieżący sezon; derive only.
 
-**ACTIVE** · 2026-07-30 — LFE-TRANSFERS-09 · D38
+### D40–D46 — kontrakt Messages (must-know)
+
+- `resolveClubMessages` = **jedyny** SSOT UI · derive E1–E3.
+- `/messages` + Overlay = **ta sama** DTO · UI nie sortuje/filtruje.
+- **NO RUNTIME MOCKS** · brak DB / mark-as-read / Accept w skrzynce.
+
+**ACTIVE** · 2026-07-30 — LFE-MESSAGES-01 · D40–D46

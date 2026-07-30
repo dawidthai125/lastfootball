@@ -338,9 +338,43 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-TRANSFERS-09 (feat `e6885dc`).  
 **Operacyjne:** Migracja `20260730150000_transfer_fee_parity_helpers.sql` na prod.
 
+### D40 — Fake Production Rule · CLOSED
+
+**Dlaczego:** Atrapy na odblokowanych ekranach niszczą zaufanie i SSOT.  
+**Zasada:** Produkcja nie może udawać realnych spraw / unread / raportów bez faktu domenowego.
+
+### D41 — Brak runtime mocków w modułach odblokowanych · CLOSED
+
+**Dlaczego:** Nav `open` + mock lista = fałszywy SSOT.  
+**Zasada:** Jeśli pozycja menu jest odblokowana, UI nie serwuje hardcoded / `dashboardMock` list produktowych.
+
+### D42 — Messages Are Derived · CLOSED
+
+**Dlaczego:** GDD §21.1a — wiadomość = skutek, nigdy przyczyna.  
+**Zasada:** Inbox wyłącznie derive z istniejących faktów domeny (Thin: E1–E3).
+
+### D43 — One Event → Many Views · CLOSED
+
+**Dlaczego:** Duplikat źródeł → drift Overlay vs skrzynka.  
+**Zasada:** Ten sam `ClubMessagesDto` napędza `/messages` i Overlay powiadomień.
+
+### D44 — UI nie sortuje / nie filtruje wiadomości · CLOSED
+
+**Zasada:** Kolejność i komplet listy = wyłącznie `resolveClubMessages`.
+
+### D45 — `resolveClubMessages` = jedyne źródło danych UI wiadomości · CLOSED
+
+**Zasada:** Zakaz drugiego buildera list / MOCK_NOTIFICATIONS / MessagesPreview.
+
+### D46 — Messages Thin: brak DB / workflow / drugiego procesu ofert · CLOSED
+
+**Zasada:** Brak tabel · migracji · mark-as-read · Accept/Reject w skrzynce · nego/settle poza Transferami.
+
+**Źródło D40–D46:** LFE-MESSAGES-01 (feat `800ed0d`).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D46 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -357,6 +391,7 @@ Każde złamanie D1–D28 / D38 wymaga **AUDIT** i aktualizacji tego pliku + fre
 **LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
 **LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
 **LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
+**LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
 
 ## Powiązania
 
@@ -364,4 +399,4 @@ Każde złamanie D1–D28 / D38 wymaga **AUDIT** i aktualizacji tego pliku + fre
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 · D28
+2026-07-30 — LFE-MESSAGES-01 · D40–D46

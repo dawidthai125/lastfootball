@@ -8,10 +8,26 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`e6885dc`** (LFE-TRANSFERS-09).
+**Domain feature baseline:** **`800ed0d`** (LFE-MESSAGES-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`4b8ab48`** — LFE-TRANSFERS-09 CLOSE (pin)
+**Documentation tip:** _(pin po docs sync)_
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-MESSAGES-01 · CLOSED
+
+### Product
+
+- `resolveClubMessages` derive only (E1–E3) · brak DB / workflow / Accept
+- `/messages` + Overlay = ta sama `ClubMessagesDto` (D43)
+- Usunięte runtime mocki: hardcoded inbox · MessagesPreview · MOCK_NOTIFICATIONS · stały badge
+- Domain tip → **`800ed0d`** · D40–D46 CLOSED
+- CI GREEN · PRODUCTION VERIFIED
+
+### Docs
+
+- Sync MESSAGES · CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · DECISIONS D40–D46 · EPIC_INDEX
 
 ---
 

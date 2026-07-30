@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline e6885dc            # Domain feature baseline TRANSFERS-09
+git log -1 --oneline 800ed0d            # Domain feature baseline MESSAGES-01
+git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
 git log -1 --oneline 9027baf            # Prior Domain LEAGUE-04
 git log -1 --oneline bf86749            # Prior Domain RANKING-01
 git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
@@ -37,13 +38,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `e6885dc` — **LFE-TRANSFERS-09** (fee parity · single live settle)    |
-| Domain message              | `feat(transfers): harden LFE-TRANSFERS-09 TD-01 and TD-02`            |
-| Prior Domain                | `9027baf` — LFE-LEAGUE-04 (Full 22 · double RR)                       |
+| **Domain feature baseline** | `800ed0d` — **LFE-MESSAGES-01** (derived inbox Thin · D40–D46)        |
+| Domain message              | `feat(messages): implement LFE-MESSAGES-01 derived inbox Thin`        |
+| Prior Domain                | `e6885dc` — LFE-TRANSFERS-09                                          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`4b8ab48`** — LFE-TRANSFERS-09 CLOSE (pin)                          |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · TRANSFERS-09 CLOSED · TD-01/TD-02   |
+| **Documentation tip**       | _(pin po docs sync)_                                                  |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · MESSAGES-01 CLOSED · D40–D46        |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -62,6 +63,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Hub (EARLY_CLUB → SEASON) · Night Pitch Office shell
   → Daily Goal Thin (resolveClubDailyGoal · suggestion under Primary)
   → Achievements Thin (resolveClubAchievements · immutable history)
+  → Messages Thin (resolveClubMessages · /messages + Overlay · ta sama DTO)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -72,39 +74,46 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                                                            |
-| ----------------- | -------------------------------------------------------------------------------- |
-| Cash              | `cash_balance`                                                                   |
-| Transfer envelope | `resolveTransferEnvelope`                                                        |
-| Transfer listing  | `players.transfer_listed_at`                                                     |
-| Transfer UI       | `resolveTransferMarket`                                                          |
-| Live listings     | listed `players` (other clubs)                                                   |
-| Pending / Counter | `transfer_offers`                                                                |
-| Opening snapshot  | `opening_amount`                                                                 |
-| Settle amount     | `current_amount`                                                                 |
-| Ask               | `deriveTransferFee` (skill+age only)                                             |
-| Settlement buy    | `completeTransferBuy` (seed \| live)                                             |
-| Settlement sell   | `completeTransferSell` (instant \| live)                                         |
-| Training UI       | `resolveClubTraining`                                                            |
-| Training persist  | RPC `complete_training_session`                                                  |
-| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                                   |
-| Potential         | `players.potential` · `resolvePlayerPotential`                                   |
-| Match development | RPC `apply_match_development` · K_MATCH=5                                        |
-| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                       |
-| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                   |
-| Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                 |
-| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`              |
-| Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny     |
-| Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26  |
-| Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO            |
-| Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                              |
-| Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT        |
-| Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future |
-| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`           |
-| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                        |
-| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                         |
-| Impl notes        | `docs/implementation/`                                                           |
-| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                     |
+| SSOT              | Gdzie                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| Cash              | `cash_balance`                                                                       |
+| Transfer envelope | `resolveTransferEnvelope`                                                            |
+| Transfer listing  | `players.transfer_listed_at`                                                         |
+| Transfer UI       | `resolveTransferMarket`                                                              |
+| Live listings     | listed `players` (other clubs)                                                       |
+| Pending / Counter | `transfer_offers`                                                                    |
+| Opening snapshot  | `opening_amount`                                                                     |
+| Settle amount     | `current_amount`                                                                     |
+| Ask               | `deriveTransferFee` (skill+age only)                                                 |
+| Settlement buy    | `completeTransferBuy` (seed \| live)                                                 |
+| Settlement sell   | `completeTransferSell` (instant \| live)                                             |
+| Training UI       | `resolveClubTraining`                                                                |
+| Training persist  | RPC `complete_training_session`                                                      |
+| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                                       |
+| Potential         | `players.potential` · `resolvePlayerPotential`                                       |
+| Match development | RPC `apply_match_development` · K_MATCH=5                                            |
+| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                           |
+| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                       |
+| Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                     |
+| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`                  |
+| Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny         |
+| Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26      |
+| Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO                |
+| Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                                  |
+| Wiadomości        | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO |
+| Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future     |
+| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`               |
+| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                            |
+| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                             |
+| Impl notes        | `docs/implementation/`                                                               |
+| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                         |
+
+### Messages (kontrakt Thin)
+
+- `resolveClubMessages` = **jedyny** SSOT danych UI wiadomości (D45) — pure derive E1–E3.
+- `/messages` + Overlay = **ta sama** `ClubMessagesDto` (D43); UI **nie** sortuje / nie filtruje (D44).
+- **Nie** DB · migracje · mark-as-read · Accept/Reject · drugi proces ofert (D46); Transfery = SSOT ofert.
+- **NO RUNTIME MOCKS** (D40/D41) — brak MessagesPreview / MOCK_NOTIFICATIONS / stałego badge.
 
 ### Achievements (kontrakt Thin)
 
@@ -129,12 +138,12 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04:** brak nowych migracji schematu tabel (LEAGUE-04 = top-up fixtures).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
 ## Last updated
 
-2026-07-30 — LFE-TRANSFERS-09 CLOSED · Domain `e6885dc` · TD-01/TD-02 CLOSED · D38
+2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d` · D40–D46 CLOSED
