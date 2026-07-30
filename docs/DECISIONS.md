@@ -431,9 +431,61 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D52 · D63–D67:** LFE-SOFTLOCK-01 (feat `46f7caa`).
 
+### D68 — Lifecycle Before Systems · CLOSED
+
+**Dlaczego:** Sponsors/Board/ekonomia bez końca sezonu = systemy bez cyklu.  
+**Zasada:** Najpierw domknięcie lifecycle sezonu (kontrakt → potem kod); dopiero potem systemy zależne.
+
+### D69 — Season End Is An Event Pipeline · CLOSED
+
+**Dlaczego:** Pojedynczy ekran z side-effectami → niedeterminizm i scope creep.  
+**Zasada:** Season End = uporządkowany ciąg zdarzeń o stałej kolejności.
+
+### D70 — Trigger Owns Lifecycle · CLOSED
+
+**Dlaczego:** Ręczne „zamknij sezon” omija SSOT kalendarza.  
+**Zasada:** Tylko trigger 22/22 `played` (mecze ligowe klubu gracza) startuje pipeline.
+
+### D71 — Report Before Consequences · CLOSED
+
+**Dlaczego:** Konsekwencje przed uznaniem niszczą łuk emocjonalny i mieszają hooki.  
+**Zasada:** Raport sezonu **przed** konsekwencjami i przed efektami hooków.
+
+### D72 — Hooks Before Features · CLOSED
+
+**Dlaczego:** Mini-GDD Sponsors/Board w Season End = naruszenie Thin.  
+**Zasada:** Hook = moment · Owner EPIC · cel; bez specyfikacji feature / UX / kwot.
+
+### D73 — Promotion Is Not Part Of Season End Thin · CLOSED
+
+**Dlaczego:** Awans/spadek w pierwszym slice = scope piramidy lig.  
+**Zasada:** Season End Thin **nie** zmienia szczebla ligowego.
+
+### D74 — Documentation Before Lifecycle · CLOSED
+
+**Dlaczego:** Kod lifecycle bez kontraktu → drift vs GDD §10.  
+**Zasada:** Brak IMPLEMENT lifecycle bez zamkniętego GDD-SEASON-END-01.
+
+### D75 — Lifecycle Is Deterministic · CLOSED
+
+**Dlaczego:** RNG zamknięcia / kategorii wyniku = niespójny SSOT.  
+**Zasada:** Ten sam stan wejściowy → ten sam przebieg pipeline; zero RNG zamknięcia.
+
+### D76 — Contract Before Code · CLOSED
+
+**Dlaczego:** PLAN/IMPLEMENT przed kontraktem produktowym.  
+**Zasada:** Kontrakt GDD Thin przed jakimkolwiek PLAN/IMPLEMENT kodu Season End.
+
+### D77 — GDD-SEASON-END-01 Is Season End Thin SSOT · CLOSED
+
+**Dlaczego:** Duplikacja reguł w §10.12/10.13 vs plik EPICu.  
+**Zasada:** SSOT kontraktu Thin = `docs/game-design/GDD-SEASON-END-01.md`; §10.12 / §10.13 / §10.20 = pointer.
+
+**Źródło D68–D77:** GDD-SEASON-END-01 (docs CLOSE).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D51 / D52 / D63–D67 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D77 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -453,11 +505,12 @@ Każde złamanie D1–D28 / D38 / D40–D51 / D52 / D63–D67 wymaga **AUDIT** i
 **LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
 **LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
 **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
+**GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT; brak kodu.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md)
 
 ## Last updated
 
-2026-07-30 — LFE-SOFTLOCK-01 · D52 · D63–D67
+2026-07-30 — GDD-SEASON-END-01 · D68–D77

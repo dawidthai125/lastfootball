@@ -22,7 +22,7 @@
 7. [Rozwój zawodników](#7-rozwój-zawodników) ← **GDD-06**
 8. [Trening](#8-trening) ← **GDD-07**
 9. [Mecze](#9-mecze) ← **GDD-04**
-10. [Liga](#10-liga) ← **GDD-05**
+10. [Liga](#10-liga) ← **GDD-05** · **Season End Thin → [GDD-SEASON-END-01](./GDD-SEASON-END-01.md)**
 11. [Puchary](#11-puchary) ← **GDD-08**
 12. [Transfery](#12-transfery) ← **GDD-09**
 13. [Stadion](#13-stadion) ← **GDD-12**
@@ -3696,6 +3696,9 @@ Konsekwencja słabego sezonu — odczuwalna, ale nie zabijająca motywacji.
 
 ### 10.12 Przerwa między sezonami
 
+> **SSOT Thin (zamknięcie → przerwa → Sezon N+1 bez awansu):** [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md) · §10.20.  
+> Ten podrozdział zachowuje intencję produktową; **kontrakt Thin (IN/OUT · pipeline · hooki)** = plik EPICu.
+
 **Cel**  
 Odetchnąć, celebrować / przeżyć wynik, uniknąć pustki „nie ma co robić”.
 
@@ -3731,6 +3734,8 @@ Odetchnąć, celebrować / przeżyć wynik, uniknąć pustki „nie ma co robić
 ---
 
 ### 10.13 Rozpoczęcie nowego sezonu
+
+> **SSOT Thin:** [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md) (AC-8: co zostaje / co startuje; **bez** awansu/spadku — D73).
 
 **Cel**  
 Świeża tabela, kontynuacja klubu — „nowy rozdział”, nie new game.
@@ -3948,6 +3953,25 @@ Zamknąć zakres shipowalny i ścieżkę skalowania.
 - [ ] Finalne nazwy lig (brand)
 - [x] Decyzja ship: lekki Puchar Krajowy w MVP (§11 / GDD-08)
 - [ ] Exact soft-resolution AFK
+- [x] **Season End Thin** — kontrakt [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md) (D68–D76; awans/spadek OUT Thin)
+
+---
+
+### 10.20 Season End Thin — pointer SSOT
+
+**Status:** GDD-SEASON-END-01 — **CLOSED** (**Season End Thin** — pipeline zamknięcia sezonu; bez awansu/spadku; bez systemów ekonomii; bez kodu)
+
+**SSOT kontraktu Thin:** [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md)
+
+**Sedno (nie kopiować reguł tutaj):**
+
+1. Trigger = 22/22 mecze ligowe klubu gracza zakończone (D70 · D75).
+2. Pipeline: Closed → **Report** → Offseason → (hooks no-op) → Confirm → Season N+1 w **tej samej** lidze (D69 · D71 · D73).
+3. Hooki = wyłącznie moment · Owner EPIC · cel (D72).
+4. Kod lifecycle dopiero po CLOSE docs + osobnym Owner GO (`LFE-SEASON-END-01`) — D74 · D76.
+5. Awans/spadek (§10.9–10.10) pozostaje kierunkiem GDD pełnym; **nie** należy do Thin.
+
+**Zależności:** §3.5 · §10.12–10.13 · §12 · §15.11 · §19 · §21 · §23.
 
 ---
 

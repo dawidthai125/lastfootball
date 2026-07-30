@@ -40,6 +40,7 @@ Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D28
 | P20  | 1× Counter seller→buyer; `opening_amount` / `current_amount`; Accept po Counter = buyer; Single Settlement Path             | LFE-TRANSFERS-08                            |
 | P21  | GDD §26 = SSOT liczb; D18/D20 = SSOT implementacji                                                                          | GDD-§26A/B                                  |
 | P22  | Soft-lock route gate = SoftLockState · nav ≡ route · D52 · D63–D67 · **CLOSED**                                             | LFE-SOFTLOCK-01                             |
+| P23  | Season End Thin = GDD-SEASON-END-01 · D68–D77 · awans OUT · docs before code · **CLOSED**                                   | GDD-SEASON-END-01                           |
 
 ## Engine (trwałe)
 
@@ -51,4 +52,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-30 — LFE-SOFTLOCK-01 · D52 · D63–D67 / P22
+2026-07-30 — GDD-SEASON-END-01 · D68–D77 / P23

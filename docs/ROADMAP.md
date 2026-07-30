@@ -1,167 +1,168 @@
-# Roadmap â Last Football
+# Roadmap — Last Football
 
 ## Cel
 
-Mapa postÄpu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
+Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 
 ## Aktualny stan
 
-**Production Baseline (UI P0):** **`54d0724`** â LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`46f7caa`** â LFE-SOFTLOCK-01 CLOSED (route gate Â· D52 Â· D63âD67).
-**Presentation tip:** **`9fd14fc`** â LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`089b2d3`** — LFE-SOFTLOCK-01 CLOSE (pin)
-SzczegÃ³Åy tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) Â· master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-Â§26A/B Â· LEAGUE-04 Â· Transfers Hardening (09) Â· Messages (01) Â· Club (01) Â· **SoftLock (01)** Â· Training Depth Â· Player Development Â· Academy (01) Â· **Scouting (01)** Â· **GDD-16â¦22** Â· **M2.5 PASS** Â· **LFE-UI-MOTION-01** Â· Night Pitch Office UI P0 Â· Landing/Auth Â· Vercel Production.
+**Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
+**Domain feature baseline:** **`46f7caa`** — LFE-SOFTLOCK-01 CLOSED (route gate · D52 · D63–D67).
+**Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
+**Documentation tip:** _(pin po docs sync)_
+Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
+GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GDD-SEASON-END-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
-## DONE â
+## DONE ✅
 
-| Item                                                      | Notatka                                                                                                                  |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Monorepo + infra                                          | Next, Supabase, Vercel, CI                                                                                               |
-| LFE EPIC-1â¦7                                             | Foundation â Positioning                                                                                                 |
-| LFE Architecture Freeze                                   | PUBLIC API v1                                                                                                            |
-| Gameplay Â· Match AI Â· Match Engine Â· Player Match Data | silnik gameplay                                                                                                          |
-| Asset Pack Â· UI Shell                                    | chrome                                                                                                                   |
-| Live Bridge Â· Canvas Â· Replay Â· Post Match Â· Ratings  | match UI pipeline                                                                                                        |
-| CI Prettier                                               | format gate                                                                                                              |
-| GDD-01â¦15                                                | Â§3âÂ§15 + Â§20 + Â§23                                                                                                   |
-| **GDD-16**                                                | **CLOSED** Â· Â§16 Akademia Thin A (Intake + Promote) Â· docs `4805f7e`                                                  |
-| **GDD-17**                                                | **CLOSED** Â· Â§17 Skauting Information Thin B Â· docs `2595cc9` Â· CI GREEN Â· PRODUCTION VERIFIED                      |
-| **GDD-18**                                                | **CLOSED** Â· Â§18 Ranking Thin (sezonowy ranking klubÃ³w) Â· tip `4dedd71` Â· CI GREEN Â· PRODUCTION VERIFIED           |
-| **GDD-19**                                                | **CLOSED** Â· Â§19 OsiÄgniÄcia Thin (kamienie / historia) Â· tip `2c619ca` Â· CI GREEN Â· PRODUCTION VERIFIED            |
-| **GDD-21**                                                | **CLOSED** Â· Â§21 WiadomoÅci Thin Â· tip `c24efef` Â· content `bf07a44` Â· CI GREEN Â· PRODUCTION VERIFIED              |
-| **GDD-22**                                                | **CLOSED** Â· Â§22 Powiadomienia Thin Â· tip `f871ca8` Â· content `09b85e7` Â· CI GREEN Â· PRODUCTION VERIFIED           |
-| **M2.5**                                                  | **PASS** Â· First Domain Implementation Review Â· po ACADEMY-01                                                          |
-| **GDD-Â§26A**                                             | **CLOSED** Â· Â§26 SSOT liczb Thin (docs)                                                                                |
-| **GDD-Â§26B**                                             | **CLOSED** Â· `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                                            |
-| **LFE-PLATFORM-01** P1âP3                                 | Landing Â· Auth Â· Club Wizard Â· Club DTO                                                                               |
-| **LFE-INFRA-01**                                          | Supabase `anoeimngwptucjdugjme`                                                                                          |
-| **LFE-MATCH-01**                                          | First Match tunnel Â· `first_match_completed_at`                                                                         |
-| **LFE-HUB-01**                                            | EARLY_CLUB Â· `resolveHubPhase` / `resolvePrimaryCta`                                                                    |
-| **LFE-DOCS-01**                                           | Konsolidacja docs AI / handoff                                                                                           |
-| **LFE-LEAGUE-01** Thin A                                  | **CLOSED** Â· fixtures SSOT Â· next match                                                                                |
-| **LFE-LEAGUE-02**                                         | **CLOSED** Â· table derive Â· Hub SEASON Â· `/league` Â· chip                                                            |
-| **LFE-LEAGUE-03**                                         | **CLOSED** Â· `LEAGUE_FIXTURE_COUNT=11` Â· top-up (superseded count by LEAGUE-04)                                        |
-| **LFE-LEAGUE-04**                                         | **CLOSED** Â· `LEAGUE_FIXTURE_COUNT=22` Â· double RR Â· MD1â11 identity Â· feat `9027baf` Â· PRODUCTION VERIFY           |
-| **LFE-ECONOMY-01**                                        | **CLOSED** Â· cash SSOT Â· movements Â· `/finance` Â· SEASON                                                             |
-| **LFE-PLAYERS-01**                                        | **CLOSED** Â· `players` SSOT Â· `resolveClubSquad` Â· D19                                                                |
-| **LFE-PLAYERS-02**                                        | **CLOSED** Â· Player Development Thin Â· `potential` + match growth Â· D22 Â· `cd222ba`                                  |
-| **LFE-ACADEMY-01**                                        | **CLOSED** Â· Academy Thin A Â· Intake + Promote Â· D23 Â· feat `9c6fe86` Â· tip prior `4a516f3` Â· PRODUCTION VERIFY    |
-| **LFE-SCOUTING-01**                                       | **CLOSED** Â· Information Thin Â· `resolveClubScouting` Â· `scout_shortlist` refs Â· feat `93fd6d5` Â· PRODUCTION VERIFY |
-| **LFE-DAILY-01**                                          | **CLOSED** Â· Daily Goal Thin Â· `resolveClubDailyGoal` derive Â· D25 Â· feat `73e1361` Â· PRODUCTION VERIFY             |
-| **LFE-ACHIEVEMENTS-01**                                   | **CLOSED** Â· Information Thin Â· `resolveClubAchievements` Â· D26 Â· feat `3915be9` Â· PRODUCTION VERIFY                |
-| **LFE-RANKING-01**                                        | **CLOSED** Â· Information Thin Â· `resolveClubRanking` Â· D27 Â· feat `bf86749` Â· PRODUCTION VERIFY                     |
-| **LFE-TRANSFERS-01**                                      | **CLOSED** Â· market Thin Â· `resolveTransferMarket` Â· D20                                                              |
-| **LFE-TRANSFERS-02-E1**                                   | **CLOSED** Â· derived envelope (`resolveTransferEnvelope`, ratio 1)                                                      |
-| **LFE-TRANSFERS-02-N1**                                   | **CLOSED** Â· stateless buy negotiation Thin                                                                             |
-| **LFE-TRANSFERS-03**                                      | **CLOSED** Â· derived AI incoming offers                                                                                 |
-| **LFE-TRANSFERS-04**                                      | **CLOSED** Â· player listing (`transfer_listed_at`)                                                                      |
-| **LFE-TRANSFERS-05**                                      | **CLOSED** Â· seller negotiation Thin (Incoming S2)                                                                      |
-| **LFE-TRANSFERS-06**                                      | **CLOSED** Â· Live H2H Instant Buy Thin                                                                                  |
-| **LFE-TRANSFERS-07**                                      | **CLOSED** Â· Live H2H Pending Offers Thin                                                                               |
-| **LFE-TRANSFERS-08**                                      | **CLOSED** Â· Live H2H Counter Offers Thin (1Ã sellerâbuyer)                                                             |
-| **LFE-TRANSFERS-09**                                      | **CLOSED** Â· Hardening TD-01/TD-02 Â· fee parity SQLâTS Â· single live settle Â· D38 Â· feat `e6885dc`                  |
-| **LFE-MESSAGES-01**                                       | **CLOSED** Â· derived inbox Thin Â· `resolveClubMessages` E1âE3 Â· D40âD46 Â· feat `800ed0d` Â· PRODUCTION VERIFY        |
-| **LFE-CLUB-01**                                           | **CLOSED** Â· identity profile Thin Â· `resolveClubProfile` Â· D47âD51 Â· feat `36ba9be` Â· PRODUCTION VERIFY            |
-| **LFE-SOFTLOCK-01**                                       | **CLOSED** Â· generic Route Gate Â· SoftLockState Â· D52 Â· D63âD67 Â· feat `46f7caa` Â· PRODUCTION VERIFY               |
-| **LFE-TRAINING-01**                                       | **CLOSED** Â· team training Thin Â· `resolveClubTraining` Â· D21                                                         |
-| **LFE-TRAINING-02**                                       | **CLOSED** Â· Training Depth Â· skill progression + XI Gate Â· RPC atomic Â· `5e6c2ad`                                   |
-| **LFE-UI-EVOLUTION-01** (AâH)                             | **CLOSED** Â· decision-first Hub Â· Shell Â· Transfers Â· Kick-Off Â· Training Â· Squad Â· Finance (presentation)        |
-| **LFE-UI-EVOLUTION-02**                                   | **CLOSED** Â· daily manager loop Â· Kadra SSOT Â· Mobile Variant A (presentation)                                        |
-| **LFE-DOCS-UX-03**                                        | **CLOSED** Â· UI Presentation Contract (Guide Â§16) Â· Patterns Â· HUB sync Â· postmortem REFERENCE                      |
-| **LFE-ART / WORLD-ART / HIFI / PROTO / PLAYTEST**         | **CLOSED** Â· Visual DNA Â· Style Lock Â· Hi-Fi Â· Proto Â· Playtest â GO impl                                           |
-| **LFE-DOCS-SYNC-01**                                      | **CLOSED** Â· design SSOT + world-art verification w repo                                                                |
-| **LFE-UI-IMPL-01**                                        | **CLOSED** Â· Shell + Hub Night Pitch Office Â· `282cfc9`                                                                |
-| **LFE-UI-IMPL-02**                                        | **CLOSED** Â· Match Path TunnelâPost Â· `769ce4a`                                                                        |
-| **LFE-UI-IMPL-03**                                        | **CLOSED** Â· Core Domains P0 + shared states Â· `d850f0e`                                                               |
-| **LFE-UI-IMPL-04**                                        | **CLOSED** Â· Shell polish Â· nav Â· soft-lock Â· `d9bb5b6`                                                              |
-| **LFE-UI-IMPL-05**                                        | **CLOSED** Â· Match XI / skÅad Â· `47340fe`                                                                              |
-| **LFE-CONTENT-PASS-01**                                   | **CLOSED** Â· `UI_COPY` microcopy Â· `50ddf1a`                                                                           |
-| **LFE-UI-IMPL-06A**                                       | **CLOSED** Â· Desktop Hub layout Â· nav tooltips Â· `00b2c2a`                                                            |
-| **LFE-UI-IMPL-06**                                        | **CLOSED** Â· Live â Post fidelity Â· **Production Baseline** `54d0724`                                                  |
-| **LFE-DOCS-BASELINE-01**                                  | **CLOSED** Â· sync status / baseline / roadmap po UI P0                                                                  |
-| **LFE-LANDING-01**                                        | **CLOSED** Â· marketing home Â· Tunnel hero Â· `ffa20c6`                                                                 |
-| **LFE-BRANDING-01B**                                      | **CLOSED** Â· logo K1+K3 Â· favicons Â· OG Â· `1fbd6b5`                                                                  |
-| **LFE-AUTH-UX-01**                                        | **CLOSED** Â· Login Modal Â· AuthStage `/login` `/register` Â· prior presentation `9dc834a`                              |
-| **LFE-UI-MOTION-01**                                      | **CLOSED** Â· Presentation motion Thin Â· Hub/Match Â· Guide Â§8 Â· **`9fd14fc`** Â· CI GREEN Â· PRODUCTION VERIFIED     |
-| **LFE-HANDOFF-01**                                        | **CLOSED** Â· master handoff AI Â· sync docs                                                                             |
+| Item                                                   | Notatka                                                                                                             |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Monorepo + infra                                       | Next, Supabase, Vercel, CI                                                                                          |
+| LFE EPIC-1…7                                           | Foundation → Positioning                                                                                            |
+| LFE Architecture Freeze                                | PUBLIC API v1                                                                                                       |
+| Gameplay · Match AI · Match Engine · Player Match Data | silnik gameplay                                                                                                     |
+| Asset Pack · UI Shell                                  | chrome                                                                                                              |
+| Live Bridge · Canvas · Replay · Post Match · Ratings   | match UI pipeline                                                                                                   |
+| CI Prettier                                            | format gate                                                                                                         |
+| GDD-01…15                                              | §3–§15 + §20 + §23                                                                                                  |
+| **GDD-16**                                             | **CLOSED** · §16 Akademia Thin A (Intake + Promote) · docs `4805f7e`                                                |
+| **GDD-17**                                             | **CLOSED** · §17 Skauting Information Thin B · docs `2595cc9` · CI GREEN · PRODUCTION VERIFIED                      |
+| **GDD-18**                                             | **CLOSED** · §18 Ranking Thin (sezonowy ranking klubów) · tip `4dedd71` · CI GREEN · PRODUCTION VERIFIED            |
+| **GDD-19**                                             | **CLOSED** · §19 Osiągnięcia Thin (kamienie / historia) · tip `2c619ca` · CI GREEN · PRODUCTION VERIFIED            |
+| **GDD-21**                                             | **CLOSED** · §21 Wiadomości Thin · tip `c24efef` · content `bf07a44` · CI GREEN · PRODUCTION VERIFIED               |
+| **GDD-22**                                             | **CLOSED** · §22 Powiadomienia Thin · tip `f871ca8` · content `09b85e7` · CI GREEN · PRODUCTION VERIFIED            |
+| **M2.5**                                               | **PASS** · First Domain Implementation Review · po ACADEMY-01                                                       |
+| **GDD-§26A**                                           | **CLOSED** · §26 SSOT liczb Thin (docs)                                                                             |
+| **GDD-§26B**                                           | **CLOSED** · `ECONOMY_THIN` + `TRANSFER_FEE` + CURRENCY sync                                                        |
+| **LFE-PLATFORM-01** P1–P3                              | Landing · Auth · Club Wizard · Club DTO                                                                             |
+| **LFE-INFRA-01**                                       | Supabase `anoeimngwptucjdugjme`                                                                                     |
+| **LFE-MATCH-01**                                       | First Match tunnel · `first_match_completed_at`                                                                     |
+| **LFE-HUB-01**                                         | EARLY_CLUB · `resolveHubPhase` / `resolvePrimaryCta`                                                                |
+| **LFE-DOCS-01**                                        | Konsolidacja docs AI / handoff                                                                                      |
+| **LFE-LEAGUE-01** Thin A                               | **CLOSED** · fixtures SSOT · next match                                                                             |
+| **LFE-LEAGUE-02**                                      | **CLOSED** · table derive · Hub SEASON · `/league` · chip                                                           |
+| **LFE-LEAGUE-03**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=11` · top-up (superseded count by LEAGUE-04)                                     |
+| **LFE-LEAGUE-04**                                      | **CLOSED** · `LEAGUE_FIXTURE_COUNT=22` · double RR · MD1–11 identity · feat `9027baf` · PRODUCTION VERIFY           |
+| **LFE-ECONOMY-01**                                     | **CLOSED** · cash SSOT · movements · `/finance` · SEASON                                                            |
+| **LFE-PLAYERS-01**                                     | **CLOSED** · `players` SSOT · `resolveClubSquad` · D19                                                              |
+| **LFE-PLAYERS-02**                                     | **CLOSED** · Player Development Thin · `potential` + match growth · D22 · `cd222ba`                                 |
+| **LFE-ACADEMY-01**                                     | **CLOSED** · Academy Thin A · Intake + Promote · D23 · feat `9c6fe86` · tip prior `4a516f3` · PRODUCTION VERIFY     |
+| **LFE-SCOUTING-01**                                    | **CLOSED** · Information Thin · `resolveClubScouting` · `scout_shortlist` refs · feat `93fd6d5` · PRODUCTION VERIFY |
+| **LFE-DAILY-01**                                       | **CLOSED** · Daily Goal Thin · `resolveClubDailyGoal` derive · D25 · feat `73e1361` · PRODUCTION VERIFY             |
+| **LFE-ACHIEVEMENTS-01**                                | **CLOSED** · Information Thin · `resolveClubAchievements` · D26 · feat `3915be9` · PRODUCTION VERIFY                |
+| **LFE-RANKING-01**                                     | **CLOSED** · Information Thin · `resolveClubRanking` · D27 · feat `bf86749` · PRODUCTION VERIFY                     |
+| **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20                                                            |
+| **LFE-TRANSFERS-02-E1**                                | **CLOSED** · derived envelope (`resolveTransferEnvelope`, ratio 1)                                                  |
+| **LFE-TRANSFERS-02-N1**                                | **CLOSED** · stateless buy negotiation Thin                                                                         |
+| **LFE-TRANSFERS-03**                                   | **CLOSED** · derived AI incoming offers                                                                             |
+| **LFE-TRANSFERS-04**                                   | **CLOSED** · player listing (`transfer_listed_at`)                                                                  |
+| **LFE-TRANSFERS-05**                                   | **CLOSED** · seller negotiation Thin (Incoming S2)                                                                  |
+| **LFE-TRANSFERS-06**                                   | **CLOSED** · Live H2H Instant Buy Thin                                                                              |
+| **LFE-TRANSFERS-07**                                   | **CLOSED** · Live H2H Pending Offers Thin                                                                           |
+| **LFE-TRANSFERS-08**                                   | **CLOSED** · Live H2H Counter Offers Thin (1× seller→buyer)                                                         |
+| **LFE-TRANSFERS-09**                                   | **CLOSED** · Hardening TD-01/TD-02 · fee parity SQL↔TS · single live settle · D38 · feat `e6885dc`                  |
+| **LFE-MESSAGES-01**                                    | **CLOSED** · derived inbox Thin · `resolveClubMessages` E1–E3 · D40–D46 · feat `800ed0d` · PRODUCTION VERIFY        |
+| **LFE-CLUB-01**                                        | **CLOSED** · identity profile Thin · `resolveClubProfile` · D47–D51 · feat `36ba9be` · PRODUCTION VERIFY            |
+| **LFE-SOFTLOCK-01**                                    | **CLOSED** · generic Route Gate · SoftLockState · D52 · D63–D67 · feat `46f7caa` · PRODUCTION VERIFY                |
+| **GDD-SEASON-END-01**                                  | **CLOSED** · Season End Thin kontrakt · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only                           |
+| **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                       |
+| **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                  |
+| **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)          |
+| **LFE-UI-EVOLUTION-02**                                | **CLOSED** · daily manager loop · Kadra SSOT · Mobile Variant A (presentation)                                      |
+| **LFE-DOCS-UX-03**                                     | **CLOSED** · UI Presentation Contract (Guide §16) · Patterns · HUB sync · postmortem REFERENCE                      |
+| **LFE-ART / WORLD-ART / HIFI / PROTO / PLAYTEST**      | **CLOSED** · Visual DNA · Style Lock · Hi-Fi · Proto · Playtest → GO impl                                           |
+| **LFE-DOCS-SYNC-01**                                   | **CLOSED** · design SSOT + world-art verification w repo                                                            |
+| **LFE-UI-IMPL-01**                                     | **CLOSED** · Shell + Hub Night Pitch Office · `282cfc9`                                                             |
+| **LFE-UI-IMPL-02**                                     | **CLOSED** · Match Path Tunnel→Post · `769ce4a`                                                                     |
+| **LFE-UI-IMPL-03**                                     | **CLOSED** · Core Domains P0 + shared states · `d850f0e`                                                            |
+| **LFE-UI-IMPL-04**                                     | **CLOSED** · Shell polish · nav · soft-lock · `d9bb5b6`                                                             |
+| **LFE-UI-IMPL-05**                                     | **CLOSED** · Match XI / skład · `47340fe`                                                                           |
+| **LFE-CONTENT-PASS-01**                                | **CLOSED** · `UI_COPY` microcopy · `50ddf1a`                                                                        |
+| **LFE-UI-IMPL-06A**                                    | **CLOSED** · Desktop Hub layout · nav tooltips · `00b2c2a`                                                          |
+| **LFE-UI-IMPL-06**                                     | **CLOSED** · Live → Post fidelity · **Production Baseline** `54d0724`                                               |
+| **LFE-DOCS-BASELINE-01**                               | **CLOSED** · sync status / baseline / roadmap po UI P0                                                              |
+| **LFE-LANDING-01**                                     | **CLOSED** · marketing home · Tunnel hero · `ffa20c6`                                                               |
+| **LFE-BRANDING-01B**                                   | **CLOSED** · logo K1+K3 · favicons · OG · `1fbd6b5`                                                                 |
+| **LFE-AUTH-UX-01**                                     | **CLOSED** · Login Modal · AuthStage `/login` `/register` · prior presentation `9dc834a`                            |
+| **LFE-UI-MOTION-01**                                   | **CLOSED** · Presentation motion Thin · Hub/Match · Guide §8 · **`9fd14fc`** · CI GREEN · PRODUCTION VERIFIED       |
+| **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                          |
 
-## IN PROGRESS ð
+## IN PROGRESS 🔄
 
 | Item | Notatka |
 | ---- | ------- |
-| â    | Brak    |
+| —    | Brak    |
 
-## PLANNED â¬
+## PLANNED ⬜
 
-| Item                             | ZaleÅ¼noÅÄ                 |
-| -------------------------------- | -------------------------- |
-| ZawÄÅ¼enie LFE PUBLIC exports    | chore                      |
-| Ratings v2                       | bogatsze Player Match Data |
-| KanaÅ push / email (Â§22 Future) | osobny Owner GO            |
+| Item                            | Zależność                  |
+| ------------------------------- | -------------------------- |
+| Zawężenie LFE PUBLIC exports    | chore                      |
+| Ratings v2                      | bogatsze Player Match Data |
+| Kanał push / email (§22 Future) | osobny Owner GO            |
 
 ## FUTURE
 
-| Item                                    | Notatka                       |
-| --------------------------------------- | ----------------------------- |
-| LFE Physics / full Rules                | RESERVED / czÄÅciowe eventy   |
-| ECS storage                             | RESERVED                      |
-| Replay persist / video export           | poza MVP                      |
-| Mobile native                           | poza scope                    |
-| Individual training / XP / attribute DB | poza Thin Depth (D21/D22)     |
-| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)             |
-| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)        |
-| KanaÅ push / email powiadomieÅ          | po GDD-22 Thin Â· osobny EPIC |
+| Item                                    | Notatka                      |
+| --------------------------------------- | ---------------------------- |
+| LFE Physics / full Rules                | RESERVED / częściowe eventy  |
+| ECS storage                             | RESERVED                     |
+| Replay persist / video export           | poza MVP                     |
+| Mobile native                           | poza scope                   |
+| Individual training / XP / attribute DB | poza Thin Depth (D21/D22)    |
+| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)            |
+| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)       |
+| Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC |
 
 ---
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** â brak otwartego EPIC. Kandydaci (nie startowaÄ bez GO): Settings/Â§22 Â· Season End Thin Â· TD-03 P2.  
-Domain tip: SOFTLOCK-01 `46f7caa`; prior CLUB-01 `36ba9be`; Presentation tip: MOTION-01 `9fd14fc`.
+**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): `LFE-SEASON-END-01` (kod) · Settings/§22 · TD-03 P2 · Promotion.  
+Domain tip: SOFTLOCK-01 `46f7caa`; GDD Season End CLOSED; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
-- Design (GDD) prowadzi produkt; implementacja moÅ¼e mieÄ udokumentowane wyjÄtki (First Match przed Hubem; unlock transferÃ³w/treningu po 2 played; dzieÅ treningu = UTC; **kalendarz = 22** / D28).
-- Hub = decyzja (Â§23), nie dashboard.
+- Design (GDD) prowadzi produkt; implementacja może mieć udokumentowane wyjątki (First Match przed Hubem; unlock transferów/treningu po 2 played; dzień treningu = UTC; **kalendarz = 22** / D28).
+- Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
 - Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
-- Terminarz = `fixtures` + `planClubFixtures` + top-up Â· **22** double RR (D15 / D28 / LFE-LEAGUE-04).
-- Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD Â§26**; kod = `ECONOMY_THIN` (Â§26B).
-- Envelope = `resolveTransferEnvelope` (ratio 1 Thin) â nie kolumna DB (E1).
+- Terminarz = `fixtures` + `planClubFixtures` + top-up · **22** double RR (D15 / D28 / LFE-LEAGUE-04).
+- Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26**; kod = `ECONOMY_THIN` (§26B).
+- Envelope = `resolveTransferEnvelope` (ratio 1 Thin) — nie kolumna DB (E1).
 - Buy nego = `resolveNegotiationStep` pure / stateless (N1); settlement `agreedAmount`.
 - Incoming AI = `resolveIncomingOffers` derive C; seller nego S2 (TRANSFERS-05).
 - Listing = `transfer_listed_at`; Incoming tylko listed; shared sell eligibility (TRANSFERS-04).
 - Seller nego = `resolveSellerNegotiationStep` pure; Instant Sell @ 100% ask; settle `completeTransferSell(agreedAmount)`.
-- Live H2H = listed `players` innych klubÃ³w; Instant @ 100% ask; atomowy RPC; `players.id` staÅe (TRANSFERS-06).
+- Live H2H = listed `players` innych klubów; Instant @ 100% ask; atomowy RPC; `players.id` stałe (TRANSFERS-06).
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
-- Counter H2H = 1Ã sellerâbuyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
-- Transfers hardening = fee SQL helpers + parity gate Â· single live settle invoke Â· D38 (TRANSFERS-09 Â· TD-01/TD-02 CLOSED).
-- **Messages Thin** = `resolveClubMessages` derive E1âE3 Â· `/messages` + Overlay = ta sama DTO Â· brak DB/mockÃ³w Â· D40âD46 (MESSAGES-01).
-- **Club Profile Thin** = `resolveClubProfile` Composition Â· identity â  progression Â· brak silnika Â§6 / personelu Â· D47âD51 (CLUB-01).
-- Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed â  runtime; pasma potencjaÅu only.
-- Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive â `ECONOMY_THIN.TRANSFER_FEE` (D20); fee **bez** potential.
-- Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill â¤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
-- Match development = PRIMARY growth Â· RPC `apply_match_development` Â· K_MATCH=5 Â· starters only (D22 / PLAYERS-02).
-- **Academy Thin A** = `academy_track` na `players` Â· `resolveClubAcademy` Â· max 3 perspektywy Â· Promote bez buffa (D23 / ACADEMY-01).
-- **Scouting Thin B** = `resolveClubScouting` Â· `scout_shortlist` **tylko** `(club_id, player_id)` â `players.id` (nie drugi model) Â· shortlista **nie** wpÅywa na AI/rynek/transfery/potencjaÅ/symulacjÄ Â· REUSE market+potential Â· brak scout_score (GDD Â§17 / SCOUTING-01).
-- **Daily Goal Thin** = `resolveClubDailyGoal` derive only Â· Primary CTA nadrzÄdny Â· â  Secondary daily loop Â· brak persist/Quest Engine/ekonomii (GDD Â§20 / DAILY-01 / D25).
-- **Achievements Thin** = `resolveClubAchievements` derive Â· immutable history Â· brak XP/score/ekonomii Â· â  Ranking Â· â  Â§6 (GDD Â§19 / ACHIEVEMENTS-01 / D26).
-- **Â§18 Ranking Thin** = sezonowy ranking klubÃ³w; kod Thin = `resolveClubRanking` (D27); â  Â§6 / Â§10; table = input only.
-- **Â§19 OsiÄgniÄcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); â  Â§6 / Â§18; Â§20 hook â  katalog.
-- **Â§21 WiadomoÅci Thin** = in-app inbox Â· skutek zdarzenia Â· Transfery = SSOT ofert Â· kod Thin = `resolveClubMessages` (D40âD46); Overlay = ta sama DTO; brak DB/mockÃ³w.
-- **Â§22 Powiadomienia Thin** = polityka alertÃ³w Â· zaproszenie â  wymuszenie Â· opt-out â  utrata info (Hub/Inbox/domena) Â· Soft FOMO Â· opt-in Â· dedup; push/email/SDK/quiet hours/kod = Future; Overlay â  osobny SSOT list (reuse Messages DTO).
-- **Â§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
-- **UI P0** = presentation Night Pitch Office (IMPL-01â¦06); **MOTION-01** = shared CSS motion Thin (Guide Â§8); nie zmienia Domain tip.
-- **M2.5 PASS** = standard SSOT FIRST Â· REUSE Â· ZERO DUPLICATE Â· Presentation â  Domain Â· Thin IN/OUT Â· peÅny workflow.
+- Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
+- Transfers hardening = fee SQL helpers + parity gate · single live settle invoke · D38 (TRANSFERS-09 · TD-01/TD-02 CLOSED).
+- **Messages Thin** = `resolveClubMessages` derive E1–E3 · `/messages` + Overlay = ta sama DTO · brak DB/mocków · D40–D46 (MESSAGES-01).
+- **Club Profile Thin** = `resolveClubProfile` Composition · identity ≠ progression · brak silnika §6 / personelu · D47–D51 (CLUB-01).
+- Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed ≠ runtime; pasma potencjału only.
+- Transfery = `resolveTransferMarket` + `transfer_window_open` + `transfer_deals`; fee = derive ← `ECONOMY_THIN.TRANSFER_FEE` (D20); fee **bez** potential.
+- Trening = `resolveClubTraining` + `last_training_on` + `status` **+** `skill` Thin (anti-farm; skill ≤ potential); RPC `complete_training_session`; XI Gate INJURED/SUSPENDED hard; shared `hasPlayedUnlock` (D21 / TRAINING-02).
+- Match development = PRIMARY growth · RPC `apply_match_development` · K_MATCH=5 · starters only (D22 / PLAYERS-02).
+- **Academy Thin A** = `academy_track` na `players` · `resolveClubAcademy` · max 3 perspektywy · Promote bez buffa (D23 / ACADEMY-01).
+- **Scouting Thin B** = `resolveClubScouting` · `scout_shortlist` **tylko** `(club_id, player_id)` → `players.id` (nie drugi model) · shortlista **nie** wpływa na AI/rynek/transfery/potencjał/symulację · REUSE market+potential · brak scout_score (GDD §17 / SCOUTING-01).
+- **Daily Goal Thin** = `resolveClubDailyGoal` derive only · Primary CTA nadrzędny · ≠ Secondary daily loop · brak persist/Quest Engine/ekonomii (GDD §20 / DAILY-01 / D25).
+- **Achievements Thin** = `resolveClubAchievements` derive · immutable history · brak XP/score/ekonomii · ≠ Ranking · ≠ §6 (GDD §19 / ACHIEVEMENTS-01 / D26).
+- **§18 Ranking Thin** = sezonowy ranking klubów; kod Thin = `resolveClubRanking` (D27); ≠ §6 / §10; table = input only.
+- **§19 Osiągnięcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); ≠ §6 / §18; §20 hook ≠ katalog.
+- **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia · Transfery = SSOT ofert · kod Thin = `resolveClubMessages` (D40–D46); Overlay = ta sama DTO; brak DB/mocków.
+- **§22 Powiadomienia Thin** = polityka alertów · zaproszenie ≠ wymuszenie · opt-out ≠ utrata info (Hub/Inbox/domena) · Soft FOMO · opt-in · dedup; push/email/SDK/quiet hours/kod = Future; Overlay ≠ osobny SSOT list (reuse Messages DTO).
+- **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
+- **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); nie zmienia Domain tip.
+- **M2.5 PASS** = standard SSOT FIRST · REUSE · ZERO DUPLICATE · Presentation ≠ Domain · Thin IN/OUT · pełny workflow.
 
-## PowiÄzania
+## Powiązania
 
-[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (status kanoniczny) Â· [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) Â· [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) Â· [`implementation/`](./implementation/)
+[`PROJECT_STATUS.md`](./PROJECT_STATUS.md) (status kanoniczny) · [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md) · [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · [`implementation/`](./implementation/)
 
 ## Last updated
 
-2026-07-30 â LFE-SOFTLOCK-01 CLOSED Â· Domain `46f7caa` Â· D52 Â· D63âD67 CLOSED Â· next Owner GO
+2026-07-30 — GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa` · next Owner GO

@@ -8,12 +8,13 @@ Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.
 
 ## State Machine
 
-| Phase                   | Hub render?                  | Warunek (S1)                                 |
-| ----------------------- | ---------------------------- | -------------------------------------------- |
-| `NEW_CLUB`              | **Nie** — First Match tunnel | `!first_match_completed_at`                  |
-| `EARLY_CLUB`            | **Tak**                      | first match done **i** brak fixtures         |
-| `SEASON`                | **Tak** (ten sam layout)     | first match done **i** `fixtures.length > 0` |
-| `PLAYOFF` / `OFFSEASON` | Future                       | —                                            |
+| Phase        | Hub render?                   | Warunek (S1)                                                                                                                                                                                                |
+| ------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEW_CLUB`   | **Nie** — First Match tunnel  | `!first_match_completed_at`                                                                                                                                                                                 |
+| `EARLY_CLUB` | **Tak**                       | first match done **i** brak fixtures                                                                                                                                                                        |
+| `SEASON`     | **Tak** (ten sam layout)      | first match done **i** `fixtures.length > 0`                                                                                                                                                                |
+| `PLAYOFF`    | Future                        | —                                                                                                                                                                                                           |
+| `OFFSEASON`  | **Kontrakt GDD** · kod Future | Semantyka: po Season End Thin ([`GDD-SEASON-END-01`](../game-design/GDD-SEASON-END-01.md) · D68–D77). `resolveHubPhase` **nie** zwraca jeszcze OFFSEASON — implementacja = `LFE-SEASON-END-01` po Owner GO. |
 
 **Jedyny resolver fazy:** `resolveHubPhase(club, { hasFixtures })`.  
 **Sesja:** `resolveHubSession(phase, nextFixture, lastPlayed)` → `matchday` | `post_match` | `idle`.  

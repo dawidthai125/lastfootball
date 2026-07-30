@@ -23,7 +23,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
 | **Domain baseline**     | **`46f7caa`** — LFE-SOFTLOCK-01 CLOSED        |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`089b2d3`** — LFE-SOFTLOCK-01 CLOSE (pin)   |
+| **Documentation tip**   | _(pin po docs sync)_                          |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -45,6 +45,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-MESSAGES-01**                            | Messages Thin · `resolveClubMessages` · D40–D46 · `800ed0d`      |
 | **LFE-CLUB-01**                                | Club identity Thin · `resolveClubProfile` · D47–D51 · `36ba9be`  |
 | **LFE-SOFTLOCK-01**                            | Route soft-lock gate · SoftLockState · D52 · D63–D67 · `46f7caa` |
+| **GDD-SEASON-END-01**                          | Season End Thin kontrakt · D68–D77 · docs only                   |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -105,4 +106,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **czekaj na
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-SOFTLOCK-01 CLOSED · next Owner GO
+**ACTIVE** · 2026-07-30 — GDD-SEASON-END-01 CLOSED · next Owner GO (`LFE-SEASON-END-01`)

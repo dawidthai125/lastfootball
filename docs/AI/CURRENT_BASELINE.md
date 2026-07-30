@@ -32,21 +32,21 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                               |
-| --------------------------- | --------------------------------------------------------------------- |
-| URL                         | https://lastfootball.vercel.app                                       |
-| Alias                       | https://lastfootball.pl                                               |
-| Branch                      | `main`                                                                |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `46f7caa` — **LFE-SOFTLOCK-01** (generic route gate · D52 · D63–D67)  |
-| Domain message              | `feat(softlock): implement LFE-SOFTLOCK-01 generic route gate`        |
-| Prior Domain                | `36ba9be` — LFE-CLUB-01                                               |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`089b2d3`** — LFE-SOFTLOCK-01 CLOSE (pin)                           |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · SOFTLOCK-01 CLOSED · D52 · D63–D67  |
+| Pole                        | Wartość                                                                                              |
+| --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                                                      |
+| Alias                       | https://lastfootball.pl                                                                              |
+| Branch                      | `main`                                                                                               |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                         |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                     |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                       |
+| **Domain feature baseline** | `46f7caa` — **LFE-SOFTLOCK-01** (generic route gate · D52 · D63–D67)                                 |
+| Domain message              | `feat(softlock): implement LFE-SOFTLOCK-01 generic route gate`                                       |
+| Prior Domain                | `36ba9be` — LFE-CLUB-01                                                                              |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                                      |
+| **Documentation tip**       | _(pin po docs sync)_                                                                                 |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -68,6 +68,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Messages Thin (resolveClubMessages · /messages + Overlay · ta sama DTO)
   → Club identity Thin (resolveClubProfile · /club · D47–D51)
   → Soft-lock route gate (SoftLockRouteGate · SoftLockState · D52 · D63–D67)
+  → Season End Thin GDD CLOSED (GDD-SEASON-END-01 · D68–D77 · kod Future)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -153,8 +154,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · Season End **kod** OUT (GDD Thin CLOSED) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
 ## Last updated
 
-2026-07-30 — LFE-SOFTLOCK-01 CLOSED · Domain `46f7caa` · D52 · D63–D67 CLOSED
+2026-07-30 — GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa`
