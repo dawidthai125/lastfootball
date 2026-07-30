@@ -10,7 +10,7 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `3915be9` (ACHIEVEMENTS-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** CLOSE sync ACHIEVEMENTS (pin follows) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `3915be9` (ACHIEVEMENTS-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
 Następny: **LFE-RANKING-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
 PLAN closed: [`../implementation/LFE-ACHIEVEMENTS-01-PLAN.md`](../implementation/LFE-ACHIEVEMENTS-01-PLAN.md).

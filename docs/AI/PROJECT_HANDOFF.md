@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                    |
 | **Domain feature baseline**     | `3915be9` — **LFE-ACHIEVEMENTS-01** (Information Thin · history)                                                         |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                    |
-| **Documentation tip**           | CLOSE sync LFE-ACHIEVEMENTS-01 (pin follows)                                                                             |
+| **Documentation tip**           | **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin)                                                                          |
 | **Branch**                      | `main`                                                                                                                   |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **ACHIEVEMENTS-01 CLOSED** · DAILY-01 · SCOUTING-01 · ACADEMY-01 · M2.5 · next **RANKING** |
 
@@ -37,7 +37,7 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Achievements `3915be9` · presentation MOTION-01 `9fd14fc` · docs tip CLOSE pin).
+**Prod deploy:** Vercel Production śledzi `main` (Domain Achievements `3915be9` · presentation MOTION-01 `9fd14fc` · docs tip `4fc9c75`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** — zastosowane.  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
@@ -378,7 +378,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                         |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily Goal + **Achievements** |
 | Dokumentacja | **Aktualna** | ACHIEVEMENTS D26 · Domain `3915be9` · Presentation `9fd14fc`                                     |
-| CI           | **GREEN**    | tip feat VERIFIED · docs CLOSE (pin follows)                                                     |
+| CI           | **GREEN**    | tip feat VERIFIED · docs tip `4fc9c75`                                                           |
 | Production   | **GREEN**    | Vercel · Domain ACHIEVEMENTS-01 `3915be9`                                                        |
 
 ---
