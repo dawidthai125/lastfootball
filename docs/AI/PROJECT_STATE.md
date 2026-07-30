@@ -17,11 +17,12 @@
 | D24      | Scouting Information Thin                 | Zamknięte — D24 · LFE-SCOUTING-01                                                        |
 | D25      | Daily Goal Thin                           | Zamknięte — D25 · LFE-DAILY-01                                                           |
 | D26      | Achievements Information Thin             | Zamknięte — D26 · LFE-ACHIEVEMENTS-01                                                    |
+| D27      | Ranking Information Thin                  | Zamknięte — D27 · LFE-RANKING-01                                                         |
 | TD-01/02 | Transfers fee SQL↔TS · double live invoke | Dług P1 — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
 
 ## Następny EPIC
 
-**LFE-RANKING-01** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
+**Full 22-fixture season (opt.)** — **READY FOR AUDIT** (wymaga Owner GO; **nie** startować AUDIT bez GO).
 
 ## Powiązania
 
@@ -29,4 +30,4 @@
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 · D26
+2026-07-30 — LFE-RANKING-01 · D27

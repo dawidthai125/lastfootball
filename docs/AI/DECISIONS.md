@@ -6,7 +6,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 
 ## Kiedy czytać
 
-Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D26, P\*).
+Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D27, P\*).
 
 ## Platform / product (2026)
 
@@ -27,6 +27,7 @@ Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D26
 | P10d | `resolveClubScouting` + `scout_shortlist` refs only · Information Thin · **CLOSED**                                         | LFE-SCOUTING-01 (= D24)                     |
 | P10e | `resolveClubDailyGoal` derive only · Primary > Daily · Information Thin · **CLOSED**                                        | LFE-DAILY-01 (= D25)                        |
 | P10f | `resolveClubAchievements` derive · immutable history · Information Thin · **CLOSED**                                        | LFE-ACHIEVEMENTS-01 (= D26)                 |
+| P10g | `resolveClubRanking` table input · własny DTO · bez ELO/points surface · **CLOSED**                                         | LFE-RANKING-01 (= D27)                      |
 | P11  | `resolveLeagueTable` = jedyne źródło tabeli; Hub `SEASON` via S1; brak standings DB · CLOSED                                | LFE-LEAGUE-02                               |
 | P12  | `cash_balance` + `finance_movements` + `resolveClubFinance` = Finance Thin; stałe §26 · **CLOSED**                          | LFE-ECONOMY-01 (= D18)                      |
 | P13  | `resolveTransferMarket` + window + deals · cash-only · **CLOSED**                                                           | LFE-TRANSFERS-01 (= D20)                    |
@@ -49,4 +50,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 · D26 / P10f
+2026-07-30 — LFE-RANKING-01 · D27 / P10g

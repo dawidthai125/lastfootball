@@ -7,9 +7,9 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`3915be9`** — LFE-ACHIEVEMENTS-01 CLOSED (Information Thin · history).  
+**Domain feature baseline:** **`bf86749`** — LFE-RANKING-01 CLOSED (Information Thin · seasonal).  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-RANKING-01 (pin follows).
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Development · Academy (01) · **Scouting (01)** · **GDD-16…22** · **M2.5 PASS** · **LFE-UI-MOTION-01** · Night Pitch Office UI P0 · Landing/Auth · Vercel Production.
 
@@ -51,6 +51,7 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 | **LFE-SCOUTING-01**                                    | **CLOSED** · Information Thin · `resolveClubScouting` · `scout_shortlist` refs · feat `93fd6d5` · PRODUCTION VERIFY |
 | **LFE-DAILY-01**                                       | **CLOSED** · Daily Goal Thin · `resolveClubDailyGoal` derive · D25 · feat `73e1361` · PRODUCTION VERIFY             |
 | **LFE-ACHIEVEMENTS-01**                                | **CLOSED** · Information Thin · `resolveClubAchievements` · D26 · feat `3915be9` · PRODUCTION VERIFY                |
+| **LFE-RANKING-01**                                     | **CLOSED** · Information Thin · `resolveClubRanking` · D27 · feat `bf86749` · PRODUCTION VERIFY                     |
 | **LFE-TRANSFERS-01**                                   | **CLOSED** · market Thin · `resolveTransferMarket` · D20                                                            |
 | **LFE-TRANSFERS-02-E1**                                | **CLOSED** · derived envelope (`resolveTransferEnvelope`, ratio 1)                                                  |
 | **LFE-TRANSFERS-02-N1**                                | **CLOSED** · stateless buy negotiation Thin                                                                         |
@@ -92,7 +93,6 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 | Item                            | Zależność                        |
 | ------------------------------- | -------------------------------- |
-| LFE-RANKING-01 (kod)            | **READY FOR AUDIT** · po GDD-18  |
 | Full 22-fixture season (opt.)   | po LEAGUE-03 · GDD §10 home+away |
 | Zawężenie LFE PUBLIC exports    | chore                            |
 | Ratings v2                      | bogatsze Player Match Data       |
@@ -115,8 +115,8 @@ GDD-§26A/B · LEAGUE-03 · Transfers Thin · Training Depth · Player Developme
 
 ## Next Recommended EPIC
 
-**LFE-RANKING-01** — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
-Domain tip: ACHIEVEMENTS-01 `3915be9`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip CLOSE pin.
+**Full 22-fixture season (opt.)** — **READY FOR AUDIT** (Owner GO wymagany; **nie rozpoczęty**).  
+Domain tip: RANKING-01 `bf86749`; Presentation tip: MOTION-01 `9fd14fc`; Docs tip CLOSE pin.
 
 ## Decyzje roadmapy
 
@@ -143,7 +143,7 @@ Domain tip: ACHIEVEMENTS-01 `3915be9`; Presentation tip: MOTION-01 `9fd14fc`; Do
 - **Scouting Thin B** = `resolveClubScouting` · `scout_shortlist` **tylko** `(club_id, player_id)` → `players.id` (nie drugi model) · shortlista **nie** wpływa na AI/rynek/transfery/potencjał/symulację · REUSE market+potential · brak scout_score (GDD §17 / SCOUTING-01).
 - **Daily Goal Thin** = `resolveClubDailyGoal` derive only · Primary CTA nadrzędny · ≠ Secondary daily loop · brak persist/Quest Engine/ekonomii (GDD §20 / DAILY-01 / D25).
 - **Achievements Thin** = `resolveClubAchievements` derive · immutable history · brak XP/score/ekonomii · ≠ Ranking · ≠ §6 (GDD §19 / ACHIEVEMENTS-01 / D26).
-- **§18 Ranking Thin** = sezonowy ranking klubów (docs); ≠ §6 / §10 / §17; placeholder `/rankings` ≠ SSOT; kod = Future.
+- **§18 Ranking Thin** = sezonowy ranking klubów; kod Thin = `resolveClubRanking` (D27); ≠ §6 / §10; table = input only.
 - **§19 Osiągnięcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); ≠ §6 / §18; §20 hook ≠ katalog.
 - **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia domenowego (nigdy przyczyna) · Transfery = SSOT ofert · CTA do istniejących ekranów; placeholder `/messages` ≠ SSOT; kod = Future.
 - **§22 Powiadomienia Thin** = polityka alertów · zaproszenie ≠ wymuszenie · opt-out ≠ utrata info (Hub/Inbox/domena) · Soft FOMO · opt-in · dedup; push/email/SDK/quiet hours/kod = Future; Overlay ≠ SSOT.
@@ -157,4 +157,4 @@ Domain tip: ACHIEVEMENTS-01 `3915be9`; Presentation tip: MOTION-01 `9fd14fc`; Do
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 CLOSED · Domain `3915be9` · next **LFE-RANKING-01 READY FOR AUDIT**
+2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749` · next **Full 22-fixture season READY FOR AUDIT**

@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                     |
-| ----------------------- | ----------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED   |
-| **Domain baseline**     | **`3915be9`** — LFE-ACHIEVEMENTS-01 CLOSED      |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED         |
-| **Documentation tip**   | **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin) |
+| Warstwa                 | Hash / EPIC                                   |
+| ----------------------- | --------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
+| **Domain baseline**     | **`3915be9`** — LFE-ACHIEVEMENTS-01 CLOSED    |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
+| **Documentation tip**   | CLOSE sync LFE-RANKING-01 (pin follows)       |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -87,7 +87,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-RANKING-01 READY FOR AUDIT**.
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **Full 22-fixture season READY FOR AUDIT**.
 
 **Kandydat hardening (nie w ROADMAP jako EPIC):** transfers SQL↔TS fee parity / single live RPC invoke — patrz [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -100,4 +100,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **LFE-RANKI
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-ACHIEVEMENTS-01 CLOSED · next LFE-RANKING-01
+**ACTIVE** · 2026-07-30 — LFE-RANKING-01 CLOSED · next Full 22-fixture season

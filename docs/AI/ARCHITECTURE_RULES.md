@@ -34,6 +34,7 @@ supabase/ (Auth + Postgres migrations)
 | Primary CTA Hub    | `resolvePrimaryCta(phase, session, ctx)` wyłącznie           |
 | Daily Goal Hub     | `resolveClubDailyGoal(...)` → `ClubDailyGoalDto \| null`     |
 | Achievements UI    | `resolveClubAchievements(...)` → `ClubAchievementsDto`       |
+| Ranking UI         | `resolveClubRanking(...)` → `ClubRankingDto`                 |
 | Terminarz ligowy   | `fixtures` → `FixtureDto` / `getNextFixture`                 |
 | Saldo kasy         | `clubs.cash_balance`                                         |
 | Historia finansów  | `finance_movements`                                          |
@@ -68,6 +69,13 @@ supabase/ (Auth + Postgres migrations)
 - ≠ `resolveSecondaryCtas` (daily **loop** nawigacji UI Evolution-02).
 - REUSE: Hub session/Primary · fixtures · `last_training_on` + `utcDateString` · unlock treningu.
 - Poza Thin: Quest Engine · persist/claim · streaki · nagrody §26 · inbox/push jako zależność.
+
+## Ranking rules (LFE-RANKING-01 / D27 / GDD §18)
+
+- `/rankings` konsumuje **tylko** `resolveClubRanking()` — sezonowe porównanie klubów.
+- Input = `LeagueTableDto` z `resolveLeagueTable` — **nie** druga logika punktów.
+- DTO/UI **bez** points · W/D/L · bramek · ELO; pasma = enum; copy = `UI_COPY` (D29).
+- ≠ tabela ligowa · ≠ §6 · ≠ Achievements · bieżący sezon only · derive only.
 
 ## Achievements rules (LFE-ACHIEVEMENTS-01 / D26 / GDD §19)
 
@@ -149,4 +157,4 @@ Transfery (głębiej): [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRAN
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 · D26
+2026-07-30 — LFE-RANKING-01 · D27

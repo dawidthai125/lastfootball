@@ -281,9 +281,31 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Źródło:** LFE-ACHIEVEMENTS-01 (feat `3915be9`).  
 **Operacyjne:** Brak nowych migracji.
 
+### D27 — Ranking Information Thin (`resolveClubRanking`) · CLOSED
+
+**Dlaczego:** GDD §18 wymaga opcjonalnej warstwy sezonowego porównania klubów bez ELO, bez redefinicji §6 i bez zastępowania tabeli ligowej (§10).  
+**Zasada:**
+
+| Fakt     | SSOT / kontrakt                                                                |
+| -------- | ------------------------------------------------------------------------------ |
+| UI / API | **tylko** `resolveClubRanking(...)` → `ClubRankingDto`                         |
+| Input    | `LeagueTableDto` z **`resolveLeagueTable`** — wyłącznie input (ZERO DUPLICATE) |
+| Model    | **Derive only** — zakaz tabel rankings / persist / migracji                    |
+| Surface  | Własny DTO/UI — **bez** points · W/D/L · bramek jako głównego surface          |
+| Zakaz    | ELO · Rating Score · XP · nowe metryki · zmiany §6                             |
+| Copy     | Resolver **bez** tekstów UI (D29) — pasma opisuje `UI_COPY`                    |
+| Nav      | `rankings` open od **EARLY_CLUB**                                              |
+| Horyzont | Bieżący sezon only — nie historia                                              |
+| ≠        | `/league` standings · Achievements D26 · Daily D25 · §6                        |
+| LFE      | **zero zmian**                                                                 |
+
+**Poza Thin:** all-time · ranking graczy · global/MP · ELO/§26 liczby · anti-abuse tech.  
+**Źródło:** LFE-RANKING-01 (feat `bf86749`).  
+**Operacyjne:** Brak nowych migracji.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D26 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D27 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -298,6 +320,7 @@ Każde złamanie D1–D26 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 **LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.  
 **LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.  
 **LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
+**LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
 
 ## Powiązania
 
@@ -305,4 +328,4 @@ Każde złamanie D1–D26 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GD
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 · D26
+2026-07-30 — LFE-RANKING-01 · D27

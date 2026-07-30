@@ -8,10 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`3915be9`** (LFE-ACHIEVEMENTS-01).
+**Domain feature baseline:** **`bf86749`** (LFE-RANKING-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin).
+**Documentation tip:** CLOSE sync LFE-RANKING-01 (pin follows).
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-RANKING-01 · CLOSED
+
+### Product
+
+- Ranking Information Thin: `resolveClubRanking` · sezonowe porównanie klubów na `/rankings`
+- Input = `resolveLeagueTable` · własny DTO · bez points/WDL/goals/ELO · pasma via UI_COPY (D29)
+- Domain tip → **`bf86749`** · D27 · brak migracji
+- CI GREEN · PRODUCTION VERIFIED · next **Full 22-fixture season READY FOR AUDIT**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · ARCHITECTURE_RULES · DECISIONS · MODULE_MAP · EPIC_INDEX · QUICK_START
 
 ---
 

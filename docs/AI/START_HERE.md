@@ -20,7 +20,7 @@ Onboarding dla **ChatGPT / Cursor Agent / developera** bez historii czatu i bez 
 | 0b  | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                            | master kontekst sesji      |
 | 1   | **Ten plik**                                                            | mapa + zakazy              |
 | 2   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)                          | produkcja (feature vs tip) |
-| 2b  | [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md)            | D19–D26 + Thin principles  |
+| 2b  | [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md)            | D19–D27 + Thin principles  |
 | 3   | [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)                      | warstwy + SSOT map         |
 | 4   | [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)            | filozofia                  |
 | 5   | [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md)                            | wzorce                     |
@@ -62,7 +62,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
   → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-**Brak EPIC IN PROGRESS:** następny = **LFE-RANKING-01 READY FOR AUDIT** — start wyłącznie od **AUDIT** po **Owner GO**.
+**Brak EPIC IN PROGRESS:** następny = **Full 22-fixture season READY FOR AUDIT** — start wyłącznie od **AUDIT** po **Owner GO**.
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
 

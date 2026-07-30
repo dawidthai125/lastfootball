@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 3915be9            # Domain feature baseline ACHIEVEMENTS-01
+git log -1 --oneline bf86749            # Domain feature baseline RANKING-01
+git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
 git log -1 --oneline 73e1361            # Prior Domain DAILY-01
 git log -1 --oneline 93fd6d5            # Prior Domain SCOUTING-01
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
@@ -34,12 +35,12 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `3915be9` — **LFE-ACHIEVEMENTS-01** (Information Thin · history)      |
-| Domain message              | `feat(achievements): implement LFE-ACHIEVEMENTS-01 Information Thin`  |
+| **Domain feature baseline** | `bf86749` — **LFE-RANKING-01** (Information Thin · seasonal)          |
+| Domain message              | `feat(ranking): implement LFE-RANKING-01 Information Thin`            |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | **`4fc9c75`** — LFE-ACHIEVEMENTS-01 CLOSE (pin)                       |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · ACHIEVEMENTS-01 CLOSED · DAILY-01   |
+| **Documentation tip**       | CLOSE sync LFE-RANKING-01 (pin follows)                               |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · RANKING-01 CLOSED · ACHIEVEMENTS-01 |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -92,7 +93,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`              |
 | Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny     |
 | Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26  |
-| Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT                |
+| Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO            |
 | Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                              |
 | Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT        |
 | Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future |
@@ -125,7 +126,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01:** brak nowych migracji (derive only).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01:** brak nowych migracji (derive only).
 
 ## Not on production
 
@@ -133,4 +134,4 @@ AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · t
 
 ## Last updated
 
-2026-07-30 — LFE-ACHIEVEMENTS-01 CLOSED · Domain `3915be9` · Presentation `9fd14fc`
+2026-07-30 — LFE-RANKING-01 CLOSED · Domain `bf86749` · Presentation `9fd14fc`

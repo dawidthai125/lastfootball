@@ -12,13 +12,13 @@
 
 ## Jak czytać tipy (nie mylić)
 
-| Warstwa                 | SSOT               | Znaczenie                                          |
-| ----------------------- | ------------------ | -------------------------------------------------- |
-| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                              |
-| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Achievements `3915be9`) |
-| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)                 |
-| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                         |
-| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip      |
+| Warstwa                 | SSOT               | Znaczenie                                     |
+| ----------------------- | ------------------ | --------------------------------------------- |
+| Production Baseline     | `CURRENT_BASELINE` | UI P0 tip (`54d0724`)                         |
+| Domain feature baseline | `CURRENT_BASELINE` | Ostatni feat domenowy (np. Ranking `bf86749`) |
+| Presentation tip        | `CURRENT_BASELINE` | Ostatni feat UI po P0 (np. MOTION)            |
+| Documentation tip       | `CURRENT_BASELINE` | Ostatni `docs:` CLOSE sync                    |
+| `git HEAD` / tip `main` | `git log -1`       | Może być nowszy pin/fix niż Documentation tip |
 
 ---
 
@@ -38,7 +38,7 @@
 
 ---
 
-## D19–D26 (skrót)
+## D19–D27 (skrót)
 
 | ID      | Temat                     | Sedno (1 linia)                                                                   |
 | ------- | ------------------------- | --------------------------------------------------------------------------------- |
@@ -50,6 +50,7 @@
 | **D24** | Scouting Information Thin | `resolveClubScouting`; `scout_shortlist` = `(club_id, player_id)` → `players.id`. |
 | **D25** | Daily Goal Thin           | `resolveClubDailyGoal` derive only; Primary > Daily; ≠ Secondary daily loop.      |
 | **D26** | Achievements Thin         | `resolveClubAchievements` derive; immutable history; ≠ XP/score/§6/Ranking.       |
+| **D27** | Ranking Thin              | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -81,4 +82,10 @@
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-ACHIEVEMENTS-01 · D26
+### D27 — kontrakt Ranking (must-know)
+
+- Input = `resolveLeagueTable` → `resolveClubRanking` (mapowanie only).
+- DTO bez points/WDL/goals/ELO; pasma = enum; copy UI = `UI_COPY` (D29).
+- Nav open EARLY_CLUB; bieżący sezon; derive only.
+
+**ACTIVE** · 2026-07-30 — LFE-RANKING-01 · D27

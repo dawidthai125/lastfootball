@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-RANKING-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D27 · Domain tip `bf86749` · next **Full 22-fixture season READY FOR AUDIT**
+- Kontrakt: `resolveClubRanking` table input · własny DTO · bez ELO/points surface · UI_COPY pasma (D29)
+
+### Added (shipped on `main` — LFE-RANKING-01)
+
+- `resolveClubRanking` · `/rankings` UI · nav open EARLY_CLUB · derive from `resolveLeagueTable`
+
 ### Docs (LFE-ACHIEVEMENTS-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D26 · Domain tip `3915be9` · next **LFE-RANKING-01 READY FOR AUDIT**
