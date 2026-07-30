@@ -6,9 +6,10 @@ import { resolveFixtureTopUp } from '@/lib/fixtures/resolve-fixture-top-up';
 import type { FixtureDto } from '@/lib/fixtures/types';
 
 /**
- * Idempotent ensure of full Thin calendar (LEAGUE_FIXTURE_COUNT).
+ * Idempotent ensure of full season calendar (LEAGUE_FIXTURE_COUNT = 22).
  * Empty club → insert full planClubFixtures slate.
  * Partial club → top-up missing matchdays from the same plan (no re-plan, no overwrite).
+ * Existing MD1–11 are never rebuilt (LFE-LEAGUE-04).
  */
 export async function ensureClubFixtures(clubId: string): Promise<FixtureDto[]> {
   const existing = await listClubFixtures(clubId);

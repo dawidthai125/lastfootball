@@ -77,11 +77,20 @@ describe('resolveLeagueTable', () => {
 });
 
 describe('planAiVsAiMatches', () => {
-  it('is deterministic and covers each unordered pair once', () => {
+  it('is deterministic and covers double RR (home+away each pair)', () => {
     const ids = OPPONENT_CATALOG.map((o) => o.id);
     const a = planAiVsAiMatches(ids);
     const b = planAiVsAiMatches(ids);
     expect(a).toEqual(b);
-    expect(a).toHaveLength((11 * 10) / 2);
+    expect(a).toHaveLength(11 * 10);
+    // Each ordered pair appears once
+    const keys = a.map((m) => `${m.homeId}>${m.awayId}`);
+    expect(new Set(keys).size).toBe(keys.length);
+    for (const home of ids) {
+      for (const away of ids) {
+        if (home === away) continue;
+        expect(keys).toContain(`${home}>${away}`);
+      }
+    }
   });
 });

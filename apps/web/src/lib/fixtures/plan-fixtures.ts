@@ -1,5 +1,6 @@
 import {
   LEAGUE_FIXTURE_COUNT,
+  LEAGUE_SINGLE_RR_COUNT,
   pickOpponentsForClub,
   type OpponentClub,
 } from '@/lib/fixtures/opponent-catalog';
@@ -12,19 +13,35 @@ export type PlannedFixture = {
 };
 
 /**
- * Sole pure planner for league fixtures (LFE-LEAGUE-03).
- * Exactly LEAGUE_FIXTURE_COUNT rows. Matchday 1 = upcoming; rest = scheduled.
- * Home/away alternates from club hash. Top-up must reuse this plan — never re-plan.
+ * Sole pure planner for league fixtures (LFE-LEAGUE-04).
+ * Exactly LEAGUE_FIXTURE_COUNT (22) rows — double RR vs catalog AI.
+ * MD1–11 identity matches LEAGUE-03 single RR (top-up / prod safe).
+ * MD12–22 = return legs (!isHome, same opponent). Top-up must reuse this plan.
  */
 export function planClubFixtures(clubId: string): readonly PlannedFixture[] {
-  const opponents = pickOpponentsForClub(clubId, LEAGUE_FIXTURE_COUNT);
+  const n = LEAGUE_SINGLE_RR_COUNT;
+  const opponents = pickOpponentsForClub(clubId, n);
   const homeFirst = (hashBit(clubId) & 1) === 0;
-  return opponents.map((opp: OpponentClub, i) => ({
+
+  const firstLeg: PlannedFixture[] = opponents.map((opp: OpponentClub, i) => ({
     matchday: i + 1,
     opponentClubId: opp.id,
     isHome: homeFirst ? i % 2 === 0 : i % 2 === 1,
     status: i === 0 ? ('upcoming' as const) : ('scheduled' as const),
   }));
+
+  const returnLeg: PlannedFixture[] = firstLeg.map((leg, i) => ({
+    matchday: n + i + 1,
+    opponentClubId: leg.opponentClubId,
+    isHome: !leg.isHome,
+    status: 'scheduled' as const,
+  }));
+
+  const plan = [...firstLeg, ...returnLeg];
+  if (plan.length !== LEAGUE_FIXTURE_COUNT) {
+    throw new Error(`planClubFixtures: expected ${LEAGUE_FIXTURE_COUNT} rows, got ${plan.length}`);
+  }
+  return plan;
 }
 
 function hashBit(id: string): number {

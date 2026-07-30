@@ -9,7 +9,7 @@ export type OpponentClub = {
   readonly shortName: string;
 };
 
-/** Fixed IV-liga style rivals — full catalog = 11 AI (single RR Thin = 11 fixtures). */
+/** Fixed IV-liga style rivals — 11 AI (+ player = 12 clubs / GDD §10). */
 export const OPPONENT_CATALOG: readonly OpponentClub[] = [
   { id: 'opp-wilki-polnocy', name: 'Wilki Północy', shortName: 'WLP' },
   { id: 'opp-stal-brzeg', name: 'Stal Brzeg', shortName: 'STB' },
@@ -24,8 +24,14 @@ export const OPPONENT_CATALOG: readonly OpponentClub[] = [
   { id: 'opp-legia-rzeczna', name: 'Legia Rzeczna', shortName: 'LGR' },
 ] as const;
 
-/** Thin calendar: one league match vs each catalog AI (GDD §10 full season = 22 — Future). */
-export const LEAGUE_FIXTURE_COUNT = 11 as const;
+/** Opponents in one round-robin leg (catalog size). */
+export const LEAGUE_SINGLE_RR_COUNT = OPPONENT_CATALOG.length;
+
+/**
+ * Full season calendar SSOT (LFE-LEAGUE-04): double RR = home+away vs each AI.
+ * GDD §10 — 22 matchdays.
+ */
+export const LEAGUE_FIXTURE_COUNT = 22 as const;
 
 export function getOpponentById(id: string): OpponentClub | null {
   return OPPONENT_CATALOG.find((o) => o.id === id) ?? null;

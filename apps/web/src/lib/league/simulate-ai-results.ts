@@ -1,6 +1,6 @@
 /**
  * Deterministic AI↔AI scores for Thin league table (not Match Engine).
- * Stable for a given player club seed + pair of opponent catalog ids.
+ * Double Round Robin (LFE-LEAGUE-04): each AI pair plays home and away.
  */
 
 export type AiMatchResult = {
@@ -10,12 +10,16 @@ export type AiMatchResult = {
   readonly awayScore: number;
 };
 
-/** All unordered AI pairs as home/away (lower id = home). */
+/**
+ * All ordered AI pairs (home/away both directions) — double RR.
+ * Score seed is per venue (`ai-v2`) so return legs are independent.
+ */
 export function planAiVsAiMatches(aiIds: readonly string[]): readonly AiMatchResult[] {
   const sorted = [...aiIds].sort((a, b) => a.localeCompare(b));
   const out: AiMatchResult[] = [];
   for (let i = 0; i < sorted.length; i += 1) {
-    for (let j = i + 1; j < sorted.length; j += 1) {
+    for (let j = 0; j < sorted.length; j += 1) {
+      if (i === j) continue;
       const homeId = sorted[i]!;
       const awayId = sorted[j]!;
       const { homeScore, awayScore } = scorePair(homeId, awayId);
@@ -26,7 +30,7 @@ export function planAiVsAiMatches(aiIds: readonly string[]): readonly AiMatchRes
 }
 
 function scorePair(homeId: string, awayId: string): { homeScore: number; awayScore: number } {
-  const h = hashSeed(`${homeId}|${awayId}|ai-v1`);
+  const h = hashSeed(`${homeId}|${awayId}|ai-v2`);
   const homeScore = h % 4; // 0–3
   const awayScore = Math.floor(h / 4) % 4;
   return { homeScore, awayScore };

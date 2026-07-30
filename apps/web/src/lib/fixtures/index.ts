@@ -3,6 +3,7 @@ export { mapFixtureRow } from '@/lib/fixtures/map-fixture';
 export {
   OPPONENT_CATALOG,
   LEAGUE_FIXTURE_COUNT,
+  LEAGUE_SINGLE_RR_COUNT,
   getOpponentById,
   requireOpponent,
   pickOpponentsForClub,
