@@ -58,6 +58,22 @@ export const UI_COPY = {
   rankingBandLower: 'Dolna część sezonu',
   rankingPlayerPositionPrefix: 'Twoja pozycja:',
 
+  /** LFE-CLUB-01 — club identity card Thin (no §6 engine / staff) */
+  clubTitle: 'Klub',
+  clubSubtitle: 'Tożsamość i kontekst Twojego klubu',
+  clubOrganizationStarter: 'Klub startowy',
+  clubLinkSquad: 'Kadra',
+  clubLinkFinance: 'Finanse',
+  clubLinkLeague: 'Liga',
+  clubLinkAchievements: 'Osiągnięcia',
+  clubLinkRankings: 'Ranking',
+  clubCashLabel: 'Kasa',
+  clubLeaguePositionLabel: 'Pozycja',
+  clubStadiumLabel: 'Stadion',
+  clubLeagueLabel: 'Liga',
+  clubOrganizationLabel: 'Organizacja',
+  clubLinksLabel: 'Skróty',
+
   softLockUnavailable: 'niedostępne',
   softLockSoon: 'wkrótce',
   softLockReason:

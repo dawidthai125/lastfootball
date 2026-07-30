@@ -5,3 +5,10 @@ export type { ClubDto, ClubWizardDraft } from './types';
 export { CLUB_WIZARD_DRAFT_KEY, STARTER_PACKAGE, isFirstMatchCompleted } from './types';
 export type { CreateClubState } from './action-types';
 export { CREATE_CLUB_INITIAL } from './action-types';
+export {
+  resolveClubProfile,
+  type ClubProfileDto,
+  type ClubProfileLinkDto,
+  type ClubProfileLinkId,
+  type ResolveClubProfileInput,
+} from './resolve-club-profile';
