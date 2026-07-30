@@ -2,7 +2,7 @@
 
 ## Cel
 
-Trwała kadra klubu gracza (Players Thin) + **Player Development Thin** (GDD §7 wycinek): `potential` + wzrost skill z meczu (primary) i treningu (supporting) + **Academy Thin A** (GDD §16): Intake + Promote na tym samym SSOT.
+Trwała kadra klubu gracza (Players Thin) + **Player Development Thin** (GDD §7 wycinek): `potential` + wzrost skill z meczu (primary) i treningu (supporting) + **Academy Thin A** (GDD §16): Intake + Promote na tym samym SSOT + **Scouting Information Thin** (GDD §17): shortlista jako refs do `players.id`.
 
 **UI naming:** ekran `/squad` w produkcie = **Kadra**; **Skład** = XI meczowy (nie label nav `/squad`).  
 Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.6.
@@ -14,6 +14,8 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 | Wiersze           | tabela `players`                                                                  |
 | UI kadry          | **wyłącznie** `resolveClubSquad(club, rows)` → `SquadDto` (senior only)           |
 | UI akademii       | **wyłącznie** `resolveClubAcademy(club, rows, phase)` → `AcademyDto`              |
+| UI skautingu      | **wyłącznie** `resolveClubScouting(...)` → `ScoutingDto`                          |
+| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`               |
 | IO                | `listClubPlayers` (bez `DEPARTED`; obejmuje perspektywy — filtr w resolverach)    |
 | Skill             | `players.skill` (1…99)                                                            |
 | Potential         | `players.potential` (1…99; `potential ≥ skill`) — wariant B: `max(skill, seeded)` |
@@ -49,6 +51,17 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 | Unlock     | soft-lock przed SEASON · open w SEASON                       |
 | Migracja   | `supabase/migrations/20260730120000_academy_track.sql`       |
 
+## Scouting Thin B (LFE-SCOUTING-01)
+
+| Fakt        | Reguła                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------- |
+| Model       | Kandydaci wyłącznie z `players` — zakaz drugiego modelu / hidden players                          |
+| Shortlista  | `scout_shortlist` = relacja `(club_id, player_id)` → `players.id` — **bez** skill/potential/score |
+| Side-effect | Shortlista **nie** wpływa na AI, rynek, transfery, potencjał, symulację                           |
+| REUSE       | `resolveTransferMarket` · potential pasma · Academy senior filters                                |
+| Unlock      | soft-lock przed SEASON · open w SEASON                                                            |
+| Migracja    | `supabase/migrations/20260730140000_scout_shortlist.sql`                                          |
+
 ## Seed
 
 - Create / backfill / testy: `seedClubRoster` / inserts **z** `potential` · `academy_track=false`.
@@ -65,19 +78,19 @@ Talenty · career history · XP · attribute DB · numeric potential w UI · aut
 
 ## UI (presentation)
 
-Ekran `/squad` = decision-first; `/academy` = Intake + lista perspektyw (pasma); Player Card (`/players/[id]`) pokazuje **pasmo** potencjału.  
+Ekran `/squad` = decision-first; `/academy` = Intake + lista perspektyw (pasma); `/scouting` = kandydaci + prywatna shortlista (refs); Player Card (`/players/[id]`) pokazuje **pasmo** potencjału.  
 Post Match: sygnały `+1 umiejętność` (nazwy), bez liczby potential.  
 Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
 
 ## Kod
 
-`lib/squad/*` · `lib/academy/*` · `/squad` · `/academy` · `/players/[id]` · complete fixture / first-match  
-Migracje: `20260729120000_player_potential_development.sql` · `20260730120000_academy_track.sql`
+`lib/squad/*` · `lib/academy/*` · `lib/scouting/*` · `/squad` · `/academy` · `/scouting` · `/players/[id]` · complete fixture / first-match  
+Migracje: `20260729120000_player_potential_development.sql` · `20260730120000_academy_track.sql` · `20260730140000_scout_shortlist.sql`
 
 ## Operacyjne
 
-> Migracje `players.potential` + RPC `apply_match_development` **oraz** `academy_track` / `promoted_at` zastosowane na prod.
+> Migracje `players.potential` + RPC `apply_match_development` **oraz** `academy_track` / `promoted_at` **oraz** `scout_shortlist` zastosowane na prod.
 
 ## Last updated
 
-2026-07-30 — LFE-ACADEMY-01 · D23
+2026-07-30 — LFE-SCOUTING-01

@@ -6,21 +6,20 @@ Jedyny szybki SSOT: **co jest wdrożone na produkcji teraz**.
 
 ## Cztery warstwy baseline
 
-| Pojęcie                     | Znaczenie                                                                                                  |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poniżej                            |
-| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(academy…)` / `feat(players…)` / `feat(training…)` / `feat(transfers…)`) |
-| **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing · Brand · Auth · **Motion**) — **nie** zmienia Domain baseline  |
-| **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                        |
+| Pojęcie                     | Znaczenie                                                                                                 |
+| --------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Production Baseline**     | Oficjalny tip **UI P0** (Night Pitch Office game shell) — hash w tabeli poniżej                           |
+| **Domain feature baseline** | Ostatni commit **domenowy** (`feat(scouting…)` / `feat(academy…)` / `feat(players…)` / `feat(training…)`) |
+| **Presentation tip**        | Ostatni feat prezentacji po UI P0 (Landing · Brand · Auth · **Motion**) — **nie** zmienia Domain baseline |
+| **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
 
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline f871ca8            # Documentation tip GDD-22 CLOSE
-git log -1 --oneline 09b85e7            # GDD-22 content (notifications thin)
-git log -1 --oneline c24efef            # Prior docs tip GDD-21 CLOSE
-git log -1 --oneline bf07a44            # GDD-21 content
-git log -1 --oneline 9c6fe86            # Domain feature baseline ACADEMY-01
+git log -1 --oneline DOCS_CLOSE_TIP     # Documentation tip LFE-SCOUTING-01 CLOSE (pin)
+git log -1 --oneline 93fd6d5            # Domain feature baseline SCOUTING-01
+git log -1 --oneline a29812d            # Build fix (client barrel)
+git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 ```
 
@@ -36,14 +35,12 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)          |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`      |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01        |
-| **Domain feature baseline** | `9c6fe86` — **LFE-ACADEMY-01** (Academy Thin A · Intake + Promote)    |
-| Domain message              | `feat(academy): implement LFE-ACADEMY-01 Thin A intake and promote`   |
+| **Domain feature baseline** | `93fd6d5` — **LFE-SCOUTING-01** (Information Thin · shortlist)        |
+| Domain message              | `feat(scouting): implement LFE-SCOUTING-01 Information Thin`          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`)         |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-22 CLOSED · GDD-21 · ACADEMY-01 |
-
-Documentation tip GDD-22 CLOSE = `f871ca8` (content `09b85e7`). Prior GDD-21 CLOSE = `c24efef`. Domain tip bez zmian (docs-only).
+| **Documentation tip**       | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)               |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · SCOUTING-01 CLOSED · ACADEMY-01     |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -62,6 +59,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Hub (EARLY_CLUB → SEASON) · Night Pitch Office shell
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
+  → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
   → Match Path immersive (chrome ukryty na /match/*)
   → Match development (PRIMARY skill growth · pasma potencjału)
   → Hub/Match presentation motion Thin (enter · press · Goal/Final overlay)
@@ -89,6 +87,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Match development | RPC `apply_match_development` · K_MATCH=5                                        |
 | XI Gate           | `validateStartingXi` / `resolveStartingXi`                                       |
 | Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                   |
+| Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                 |
+| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`              |
 | Ranking (produkt) | GDD §18 Thin (docs) — sezonowy ranking klubów; placeholder ≠ SSOT                |
 | Osiągnięcia       | GDD §19 Thin (docs) — kamienie / historia; placeholder ≠ SSOT                    |
 | Wiadomości        | GDD §21 Thin (docs) — in-app inbox · skutek zdarzenia; placeholder ≠ SSOT        |
@@ -96,17 +96,23 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`           |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                        |
 | Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                         |
-| Impl notes UI     | `docs/implementation/`                                                           |
+| Impl notes        | `docs/implementation/`                                                           |
 | Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                     |
+
+### Shortlista (kontrakt Thin)
+
+- `scout_shortlist` jest **wyłącznie relacją preferencji** `(club_id, player_id)` referencjonującą `players.id`.
+- **Nie** jest drugim modelem zawodnika — brak kolumn skill / potential / score / oceny.
+- Shortlista **nie wpływa** na AI, rynek, transfery, potencjał ani symulację — wyłącznie organizacja pracy menedżera.
 
 ## Operacyjne
 
-> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`).
+> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · full **22** fixtures · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Osiągnięć** · **kod Wiadomości** · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score`.
 
 ## Last updated
 
-2026-07-30 — GDD-22 CLOSED · tip `f871ca8` (Domain `9c6fe86` · Presentation `9fd14fc` · content `09b85e7` · UI P0 `54d0724`)
+2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · Presentation `9fd14fc` · Docs tip `DOCS_CLOSE_TIP` (pin)

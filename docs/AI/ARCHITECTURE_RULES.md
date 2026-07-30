@@ -39,6 +39,8 @@ supabase/ (Auth + Postgres migrations)
 | Kadra (wiersze)    | tabela `players`                                             |
 | Squad UI           | `resolveClubSquad(club, rows)` → `SquadDto` wyłącznie        |
 | Academy UI         | `resolveClubAcademy(club, rows, phase)` → `AcademyDto`       |
+| Scouting UI        | `resolveClubScouting(...)` → `ScoutingDto` wyłącznie         |
+| Shortlist prefs    | `scout_shortlist` `(club_id, player_id)` → `players.id` only |
 | Okno transferów    | `clubs.transfer_window_open`                                 |
 | Transfer market UI | `resolveTransferMarket(...)` → `TransferMarketDto` wyłącznie |
 | Transfer deals     | `transfer_deals` (idempotency + audit)                       |
@@ -53,7 +55,7 @@ supabase/ (Auth + Postgres migrations)
 - Hub dostępny **dopiero** po First Match.
 - Hub = **ekran decyzji**, nie dashboard analytics.
 - Dokładnie **1 Primary CTA**.
-- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse + **Akademia** open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
+- Progressive disclosure — głębokie moduły soft-lock („wkrótce”); Liga + Finanse + **Akademia** + **Skauting** open na `SEASON`; **Transfery** gdy `SEASON` **i** `transfer_window_open`; **Trening** gdy `SEASON` **i** played ≥ 2.
 - EARLY_CLUB: zero mid-season mock (`dashboardMock` / kolejka 12 / Top 4).
 
 ## Players rules (LFE-PLAYERS-01 / D19)
@@ -71,7 +73,15 @@ supabase/ (Auth + Postgres migrations)
 - Jedyny model = `players` + `academy_track` / `promoted_at` — zakaz drugiej tabeli / youth OVR.
 - Intake max 3 perspektyw; Promote bez buffa skill/potential; potential = D22.
 - Squad / Training / Transfers / Match development: **tylko filtr** `academy_track` — zero logiki akademii w tych resolverach.
-- Poza Thin: poziomy akademii · cash-gate · trening akademii · auto-promote · skauting.
+- Poza Thin: poziomy akademii · cash-gate · trening akademii · auto-promote.
+
+## Scouting rules (LFE-SCOUTING-01 / GDD §17 Thin B)
+
+- `/scouting` konsumuje **tylko** `resolveClubScouting()` — porządkuje fakty; **nie** ocenia zawodnika za gracza.
+- Jedyny model zawodnika = `players` (D19). REUSE: `resolveTransferMarket` · potential pasma · filtry Academy/senior.
+- `scout_shortlist` = **wyłącznie** relacja `(club_id, player_id)` → `players.id` — **nie** drugi model zawodnika (brak skill/potential/score).
+- Shortlista = prywatna organizacja pracy menedżera — **zero** wpływu na AI, rynek, transfery, potencjał, symulację.
+- Poza Thin: fog · regiony · misje · koszty · personel · `scout_score` / AI ranking.
 
 ## Transfers rules (LFE-TRANSFERS-01 / D20 + E1/N1)
 

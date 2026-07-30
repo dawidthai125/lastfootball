@@ -35,17 +35,25 @@ Indeks notatek implementacyjnych warstwy UI (Night Pitch Office / Landing / Auth
 | LFE-HANDOFF-01       | `a6f3951`     | Master handoff AI (docs only)               |
 | LFE-TRAINING-02      | `5e6c2ad`     | Training Depth (domain · skill + XI Gate)   |
 | LFE-PLAYERS-02       | `cd222ba`     | Player Development Thin (potential · match) |
+| LFE-ACADEMY-01       | `9c6fe86`     | Academy Thin A (Intake + Promote)           |
+| LFE-SCOUTING-01      | `93fd6d5`     | Scouting Information Thin (shortlist)       |
+
+## W toku / PLAN
+
+| EPIC | Status | Dokument |
+| ---- | ------ | -------- |
+| —    | Brak   | —        |
 
 ## Dokumenty per EPIC
 
-Szukaj: `LFE-UI-IMPL-0N-*.md` · `LFE-CONTENT-PASS-01-*.md` · `LFE-LANDING-01-*.md` · `LFE-BRANDING-01*-*.md` · `LFE-AUTH-UX-01-*.md` · `LFE-DOCS-*-*.md` · `../AI/PROJECT_HANDOFF.md` · [`../platform/TRAINING.md`](../platform/TRAINING.md) · [`../platform/PLAYERS.md`](../platform/PLAYERS.md).
+Szukaj: `LFE-UI-IMPL-0N-*.md` · `LFE-*-PLAN.md` · `LFE-CONTENT-PASS-01-*.md` · `LFE-LANDING-01-*.md` · `LFE-BRANDING-01*-*.md` · `LFE-AUTH-UX-01-*.md` · `LFE-DOCS-*-*.md` · `../AI/PROJECT_HANDOFF.md` · [`../platform/TRAINING.md`](../platform/TRAINING.md) · [`../platform/PLAYERS.md`](../platform/PLAYERS.md).
 
 ## Zasady
 
-- Presentation only względem DTO / resolvers / unlock / settlement (wyjątek: domain EPIC jak TRAINING-02 / PLAYERS-02).
+- Presentation only względem DTO / resolvers / unlock / settlement (wyjątek: domain EPIC jak TRAINING-02 / PLAYERS-02 / ACADEMY-01 / SCOUTING-01).
 - Guide §16 = kontrakt UI.
 - World Art / Visual DNA / Style Lock / branding assets — bez driftu bez Owner GO.
 
 ## Last updated
 
-2026-07-29 — LFE-PLAYERS-02
+2026-07-30 — LFE-SCOUTING-01 CLOSED

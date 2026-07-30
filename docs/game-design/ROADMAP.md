@@ -6,7 +6,7 @@ Plan etapów GDD (Faza 2+).
 
 ## Aktualny stan
 
-GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. Następny = **LFE-SCOUTING-01 READY FOR AUDIT** (Owner GO).
+GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + **GDD-§26B**. §3–§22 (Thin) + §20 + §23 + **§26**. **LFE-SCOUTING-01 CLOSED**. Następny = **LFE-DAILY-01 READY FOR AUDIT** (Owner GO).
 
 ## Completed
 
@@ -46,7 +46,8 @@ GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + 
 
 | Stage           | Zakres                                          |
 | --------------- | ----------------------------------------------- |
-| LFE-SCOUTING-01 | Kod skautingu — **READY FOR AUDIT** (Owner GO)  |
+| LFE-SCOUTING-01 | Kod skautingu — **CLOSED** (`93fd6d5`)          |
+| LFE-DAILY-01    | Daily loop — **READY FOR AUDIT** (Owner GO)     |
 | GDD-17+ / §24+  | Pozostałe szkielety / kanał push Future (Owner) |
 
 ## Future
@@ -73,4 +74,4 @@ GDD-01…15 + **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED** + **GDD-§26A** + 
 
 ## Last updated
 
-2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7` · next LFE-SCOUTING-01 READY FOR AUDIT
+2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · next LFE-DAILY-01 READY FOR AUDIT

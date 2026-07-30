@@ -10,10 +10,10 @@ Faza 2: GDD-01…15 **CLOSED** · **GDD-16…19 · GDD-21 · GDD-22 Thin CLOSED*
 
 **UI P0 implementacja CLOSED** (Night Pitch Office): IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01.  
 **Landing · Branding · Auth UX · MOTION-01 CLOSED** (po UI P0).  
-**Domain tip:** `9c6fe86` (ACADEMY-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `f871ca8` GDD-22 (content `09b85e7`) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
+**Domain tip:** `93fd6d5` (SCOUTING-01) · **Presentation tip:** `9fd14fc` (MOTION-01) · **Documentation tip:** `DOCS_CLOSE_TIP` SCOUTING-01 CLOSE (pin) — patrz [`../AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md).  
 Master handoff: [`../AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md).  
-Następny: **LFE-SCOUTING-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
-PLAN: [`GDD-22-PLAN.md`](./GDD-22-PLAN.md).
+Następny: **LFE-DAILY-01 READY FOR AUDIT** (Owner GO) — **nie rozpoczęty**.  
+PLAN closed: [`../implementation/LFE-SCOUTING-01-PLAN.md`](../implementation/LFE-SCOUTING-01-PLAN.md).
 
 ## Opis działania
 
@@ -112,4 +112,4 @@ PLAN: [`GDD-22-PLAN.md`](./GDD-22-PLAN.md).
 
 ## Last updated
 
-2026-07-30 — GDD-22 Powiadomienia Thin CLOSED · content `09b85e7`
+2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5`

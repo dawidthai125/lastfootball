@@ -8,10 +8,26 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`9c6fe86`** (LFE-ACADEMY-01).  
-**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** `f871ca8` — **GDD-22** (content `09b85e7`).  
+**Domain feature baseline:** **`93fd6d5`** (LFE-SCOUTING-01).
+**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
+**Documentation tip:** `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin).
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-07-30] — LFE-SCOUTING-01 · CLOSED
+
+### Product
+
+- Scouting Information Thin: `resolveClubScouting` · prywatna shortlista · REUSE `resolveTransferMarket` + potential
+- `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` — **nie** drugi model zawodnika
+- Shortlista **nie** wpływa na AI, rynek, transfery, potencjał ani symulację
+- Domain tip → **`93fd6d5`** · migracja `20260730140000_scout_shortlist.sql` na prod
+- CI GREEN · PRODUCTION VERIFIED · next **LFE-DAILY-01 READY FOR AUDIT**
+
+### Docs
+
+- Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · ARCHITECTURE_RULES · PLAYERS · EPIC_INDEX · QUICK_START
 
 ---
 
@@ -23,7 +39,7 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 - Sync CURRENT_BASELINE · HANDOFF · PROJECT_STATUS · ROADMAP · EPIC_INDEX · QUICK_START · game-design
 - Documentation tip → **`f871ca8`** (CLOSE sync; content `09b85e7`)
 - CI GREEN · PRODUCTION VERIFIED · brak zmian kodu aplikacji
-- Next: **LFE-SCOUTING-01 READY FOR AUDIT**
+- Next: **LFE-SCOUTING-01** (później CLOSED)
 
 ---
 

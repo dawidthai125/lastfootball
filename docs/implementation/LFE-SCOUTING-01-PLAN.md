@@ -4,7 +4,7 @@
 **Typ:** implementacja domeny Information Thin (GDD-17 Thin B)  
 **Data:** 2026-07-30  
 **Wejście:** AUDIT PASS · GDD-17 CLOSED · D19 / D20 / D22 / D23 · GDD-21+22 CLOSED (strategia)  
-**Status PLAN:** IMPLEMENT COMPLETE · oczekuje **OWNER VERIFICATION** → COMMIT / PUSH / PRODUCTION VERIFY
+**Status PLAN:** CLOSED · EPIC LFE-SCOUTING-01 FULLY CLOSED (feat `93fd6d5` · PRODUCTION VERIFY PASS · DOCS CLOSE)
 **Baseline wejścia:** Domain `9c6fe86` · Presentation `9fd14fc` · Docs tip `f871ca8` · HEAD `35b7ace`
 
 ---
@@ -231,7 +231,7 @@ resolveClubScouting(input) → ScoutingDto
 - [x] Nav: skauting open SEASON; Hub Primary nienaruszony.
 - [x] Testy: add/remove shortlist bez side-effectów D20/D22/D23.
 - [x] Thin OUT: fog · regiony · misje · koszty · drugi model · drugi system oceny.
-- [ ] Po VERIFY: COMMIT → PUSH → CI GREEN → PRODUCTION VERIFY → DOCS CLOSE.
+- [x] Po VERIFY: COMMIT → PUSH → CI GREEN → PRODUCTION VERIFY → DOCS CLOSE.
 - [x] Brak zmian LFE / Physics; migracja tylko jeśli Owner GO na tabelę preferencji shortlisty.
 
 ---

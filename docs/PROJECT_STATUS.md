@@ -16,37 +16,38 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 ## Aktualny etap
 
-**PRODUCTION VERIFIED · GREEN · GDD-22 CLOSED** (Domain: Academy · Presentation: MOTION-01 · Docs: §22 Powiadomienia Thin)
+**PRODUCTION VERIFIED · GREEN · LFE-SCOUTING-01 CLOSED** (Domain: Scouting · Presentation: MOTION-01)
 
-|                         |                                                               |
-| ----------------------- | ------------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)     |
-| **Domain feature**      | **`9c6fe86`** — **LFE-ACADEMY-01** (Intake + Promote · D23)   |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| **Documentation tip**   | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`) |
-| **Prod**                | https://lastfootball.vercel.app                               |
+|                         |                                                                    |
+| ----------------------- | ------------------------------------------------------------------ |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)          |
+| **Domain feature**      | **`93fd6d5`** — **LFE-SCOUTING-01** (Information Thin · shortlist) |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)           |
+| **Documentation tip**   | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)            |
+| **Prod**                | https://lastfootball.vercel.app                                    |
 
-| Tor               | Stan                                                                                                             |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players Dev · Transfers · Training · **Academy (01)** |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16              |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)              |
-| Design            | GDD-01…**22** Thin · §26 CLOSED · World Art CLOSED · **next: LFE-SCOUTING-01 READY FOR AUDIT**                   |
-| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN · migracja `academy_track` na prod                           |
+| Tor               | Stan                                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Platform          | Onboarding · First Match · Hub SEASON · League · Finance · Players Dev · Transfers · Training · Academy · **Scouting (01)** |
+| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                         |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate (hard INJURED/SUSPENDED)                         |
+| Design            | GDD-01…**22** Thin · §26 CLOSED · World Art CLOSED · **next: LFE-DAILY-01 READY FOR AUDIT**                                 |
+| Infra             | Vercel + Supabase `anoeimngwptucjdugjme` · CI GREEN · migracje `academy_track` + **`scout_shortlist`** na prod              |
 
 ## W trakcie
 
-Brak otwartego EPIC. **GDD-22** CLOSED (content `09b85e7`) · **GDD-21** CLOSED · **M2.5 PASS** · **LFE-ACADEMY-01** CLOSED.  
-**Nie startować** AUDIT LFE-SCOUTING-01 bez Owner GO.
+Brak otwartego EPIC. **LFE-SCOUTING-01** CLOSED (feat `93fd6d5`) · **LFE-ACADEMY-01** CLOSED · **GDD-22** CLOSED · **M2.5 PASS**.  
+**Nie startować** AUDIT LFE-DAILY-01 bez Owner GO.
 
 ## Operacyjne
 
-> Migracje Supabase na prod: training RPC · potential / match development · **`20260730120000_academy_track.sql`** (zastosowane).
+> Migracje Supabase na prod: training RPC · potential / match development · `20260730120000_academy_track.sql` · **`20260730140000_scout_shortlist.sql`** (zastosowane).  
+> `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` — nie drugi model zawodnika; shortlista nie wpływa na AI / rynek / transfery / potencjał / symulację.
 
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-**Rekomendacja:** **LFE-SCOUTING-01** — **READY FOR AUDIT** (po Owner GO).
+**Rekomendacja:** **LFE-DAILY-01** — **READY FOR AUDIT** (po Owner GO).
 
 ## Decyzje
 
@@ -54,4 +55,4 @@ Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](.
 
 ## Last updated
 
-2026-07-30 — GDD-22 CLOSE
+2026-07-30 — LFE-SCOUTING-01 CLOSE

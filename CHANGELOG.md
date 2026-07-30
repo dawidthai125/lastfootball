@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-SCOUTING-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · Domain tip `93fd6d5` · next **LFE-DAILY-01 READY FOR AUDIT**
+- Kontrakt: `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id`; shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację
+
+### Added (shipped on `main` — LFE-SCOUTING-01)
+
+- `resolveClubScouting` · `scout_shortlist` · `/scouting` UI · REUSE market + potential · private shortlist
+
 ### Docs (GDD-22 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · tip `f871ca8` · content `09b85e7` · next **LFE-SCOUTING-01 READY FOR AUDIT**

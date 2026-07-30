@@ -10,15 +10,15 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                               |
-| ------------------- | ------------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
-| Domain baseline     | **`9c6fe86`** — LFE-ACADEMY-01 (Academy Thin A · D23)         |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| Documentation tip   | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`) |
-| Prod                | https://lastfootball.vercel.app                               |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
+|                     |                                                                |
+| ------------------- | -------------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                  |
+| Domain baseline     | **`93fd6d5`** — LFE-SCOUTING-01 (Information Thin · shortlist) |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)       |
+| Documentation tip   | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)        |
+| Prod                | https://lastfootball.vercel.app                                |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                   |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                 |
 
 ## Pipeline (jedyny)
 
@@ -32,7 +32,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 1. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**
 2. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**
-3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, …)
+3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, `resolveClubScouting`, …)
 4. Match mutacje tylko LFE `CommandBus` / session
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
 6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
@@ -49,4 +49,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — GDD-22 CLOSED · next LFE-SCOUTING-01 READY FOR AUDIT
+**ACTIVE** · 2026-07-30 — LFE-SCOUTING-01 CLOSED · next LFE-DAILY-01 READY FOR AUDIT

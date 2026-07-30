@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                           |
-| ------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + Academy + MOTION-01 + GDD-16…**22**                                                       |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                             |
-| **Domain feature baseline**     | `9c6fe86` — **LFE-ACADEMY-01** (Intake + Promote · D23)                                           |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                             |
-| **Documentation tip**           | `f871ca8` — **GDD-22** Powiadomienia Thin (content `09b85e7`)                                     |
-| **Branch**                      | `main`                                                                                            |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **GDD-22 CLOSED** · GDD-21 · M2.5 PASS · next **SCOUTING-01 AUDIT** |
+| Pole                            | Wartość                                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + Academy + **Scouting** + MOTION-01 + GDD-16…**22**                                   |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                        |
+| **Domain feature baseline**     | `93fd6d5` — **LFE-SCOUTING-01** (Information Thin · shortlist)                               |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                        |
+| **Documentation tip**           | `DOCS_CLOSE_TIP` — **LFE-SCOUTING-01** CLOSE sync (pin)                                      |
+| **Branch**                      | `main`                                                                                       |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **SCOUTING-01 CLOSED** · ACADEMY-01 · M2.5 · next **DAILY-01** |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -30,16 +30,16 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline f871ca8            # Documentation tip GDD-22 CLOSE
-git log -1 --oneline 09b85e7            # GDD-22 content
-git log -1 --oneline c24efef            # Prior docs tip GDD-21 CLOSE
-git log -1 --oneline 9c6fe86            # Domain ACADEMY-01
+git log -1 --oneline DOCS_CLOSE_TIP     # Documentation tip SCOUTING-01 CLOSE (pin)
+git log -1 --oneline 93fd6d5            # Domain SCOUTING-01
+git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain Academy `9c6fe86` · presentation MOTION-01 `9fd14fc` · docs tip GDD-22 `f871ca8` · content `09b85e7`). Domain bez zmian w GDD-22 (docs-only).
+**Prod deploy:** Vercel Production śledzi `main` (Domain Scouting `93fd6d5` · presentation MOTION-01 `9fd14fc` · docs tip CLOSE pin).
 
-**Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** — zastosowane.
+**Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** — zastosowane.  
+`scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
 
 ---
 
@@ -47,23 +47,24 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 
 ### Platforma / gameplay Thin
 
-| EPIC                                           | Skrót                                                                     |
-| ---------------------------------------------- | ------------------------------------------------------------------------- |
-| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                         |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela derive · 11 meczów Thin                                 |
-| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                              |
-| LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22)      |
-| **LFE-ACADEMY-01**                             | **Academy Thin A** · Intake + Promote · `academy_track` (D23) · `9c6fe86` |
-| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)         |
-| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                        |
-| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                          |
-| **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                   |
-| **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                          |
-| **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                |
-| **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                |
-| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                   |
-| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · tip `f871ca8`                |
-| **M2.5**                                       | **PASS** · First Domain Implementation Review                             |
+| EPIC                                           | Skrót                                                                              |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                                  |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela derive · 11 meczów Thin                                          |
+| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                                       |
+| LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22)               |
+| **LFE-ACADEMY-01**                             | **Academy Thin A** · Intake + Promote · `academy_track` (D23) · `9c6fe86`          |
+| **LFE-SCOUTING-01**                            | **Scouting Information Thin** · `resolveClubScouting` · shortlist refs · `93fd6d5` |
+| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)                  |
+| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                                 |
+| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                                   |
+| **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                            |
+| **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                                   |
+| **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                         |
+| **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                         |
+| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                            |
+| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · tip `f871ca8`                         |
+| **M2.5**                                       | **PASS** · First Domain Implementation Review                                      |
 
 ### Silnik / Match UI
 
@@ -205,16 +206,17 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 - Transfery: listing · Instant Buy/Sell · Pending · 1× Counter · envelope ratio 1
 - Trening drużynowy **Depth**: status + skill Thin (anti-farm; ≤ potential) · XI Gate · feedback sesji
 - **Akademia Thin A**: Intake + Promote · `/academy` · `academy_track` · unlock SEASON
+- **Skauting Thin B**: `/scouting` · `resolveClubScouting` · prywatna shortlista (refs only) · unlock SEASON
 - Match development (PRIMARY): +1 / K_MATCH=5 / starters · Post Match signals
 - Match Live + Canvas + Replay + Post (immersive chrome na `/match/*`)
 
 ### Co jest Thin (świadome limity)
 
-11 fixtures ≠ 22 · brak XP / attribute DB · **brak kodu Skautingu** (GDD §17 Thin B = docs only) · **brak kodu Rankingu** (GDD §18 Thin = docs only) · **brak kodu Osiągnięć** (GDD §19 Thin = docs only) · **brak kodu Wiadomości** (GDD §21 Thin = docs only) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR.
+11 fixtures ≠ 22 · brak XP / attribute DB · **brak kodu Rankingu** (GDD §18 Thin = docs only) · **brak kodu Osiągnięć** (GDD §19 Thin = docs only) · **brak kodu Wiadomości** (GDD §21 Thin = docs only) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors UI niepełne · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score.
 
 ### Planowane (Owner wybiera)
 
-**LFE-SCOUTING-01** READY FOR AUDIT · potem LFE-DAILY / ACHIEVEMENTS / RANKING (kod).
+**LFE-DAILY-01** READY FOR AUDIT · potem LFE-ACHIEVEMENTS / RANKING (kod).
 
 ---
 
@@ -230,6 +232,7 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 | **Match**     | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post · **MOTION-01** Goal/Final overlay |
 | **Squad**     | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential            |
 | **Academy**   | CLOSED **LFE-ACADEMY-01** · `resolveClubAcademy` · Intake/Promote · D23 · `9c6fe86`       |
+| **Scouting**  | CLOSED **LFE-SCOUTING-01** · `resolveClubScouting` · shortlist refs · `93fd6d5`           |
 | **Training**  | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)                   |
 | **Transfers** | CLOSED Thin 01–08 + presentation                                                          |
 | **Finance**   | CLOSED Thin + presentation                                                                |
@@ -241,14 +244,14 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED**:
 
-| #   | EPIC / temat                          | Priorytet | Notatka                        |
-| --- | ------------------------------------- | --------- | ------------------------------ |
-| 1   | **LFE-SCOUTING-01** (kod)             | **P0**    | READY FOR AUDIT · po Owner GO  |
-| 2   | LFE-DAILY-01 / ACHIEVEMENTS / RANKING | P1        | Kolejność strategii hybrydowej |
-| 3   | Full 22-fixture season                | P2        | Wymaga decyzji vs Thin 11      |
-| 4   | Transfers hardening                   | P2        | Tech debt                      |
-| 5   | Ratings v2 · LFE PUBLIC trim          | P3        | Chore / depth                  |
-| 6   | Kanał push / email (§22 Future)       | P3        | Po osobnym Owner GO            |
+| #   | EPIC / temat                    | Priorytet | Notatka                        |
+| --- | ------------------------------- | --------- | ------------------------------ |
+| 1   | **LFE-DAILY-01** (kod)          | **P0**    | READY FOR AUDIT · po Owner GO  |
+| 2   | LFE-ACHIEVEMENTS-01 / RANKING   | P1        | Kolejność strategii hybrydowej |
+| 3   | Full 22-fixture season          | P2        | Wymaga decyzji vs Thin 11      |
+| 4   | Transfers hardening             | P2        | Tech debt                      |
+| 5   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth                  |
+| 6   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO            |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -256,11 +259,11 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 10. Rekomendowany następny EPIC
 
-### **LFE-SCOUTING-01 — Skauting (kod)**
+### **LFE-DAILY-01 — Daily loop (kod)**
 
-**Uzasadnienie:** GDD-21+22 FULLY CLOSED (`09b85e7`). Strategia: AUDIT kodu skautingu na bazie GDD §17 Thin B.
+**Uzasadnienie:** LFE-SCOUTING-01 FULLY CLOSED (`93fd6d5`). Strategia: następny Thin kod = Daily.
 
-**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT LFE-SCOUTING-01 — bez Owner GO.
+**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT LFE-DAILY-01 — bez Owner GO.
 
 **Nie zaczynaj** bez **Owner GO**.
 ---
@@ -315,16 +318,17 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
 - `LEAGUE_FIXTURE_COUNT=11` ≠ GDD home+away 22.
-- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · **kod Skautingu** · **kod Rankingu** · **kod Osiągnięć** · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR.
-- Domain tip = ACADEMY-01 (`9c6fe86`); Presentation tip = MOTION-01 (`9fd14fc`); prior tip `4a516f3`; UI P0 = `54d0724`.
+- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · **kod Rankingu** · **kod Osiągnięć** · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
+- Domain tip = SCOUTING-01 (`93fd6d5`); Presentation tip = MOTION-01 (`9fd14fc`); prior Domain ACADEMY `9c6fe86`; UI P0 = `54d0724`.
 - Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
 - Ranking Thin (GDD-18): sezonowy ranking klubów · docs only · placeholder `/rankings` ≠ SSOT.
 - Osiągnięcia Thin (GDD-19): kamienie / historia · docs only · placeholder `/achievements` ≠ SSOT.
 - Academy Thin A (D23): `academy_track` · `resolveClubAcademy` · max 3 · PRODUCTION VERIFIED.
+- Scouting Thin B: `resolveClubScouting` · `scout_shortlist` refs only · shortlista ≠ świat gry · PRODUCTION VERIFIED.
 - Sekrety `.env` — nigdy w git.
 - Force-push / rewrite `main` — zakazane.
 - Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
-- Migracje Supabase na prod: training · potential/match dev · **academy_track** — zastosowane.
+- Migracje Supabase na prod: training · potential/match dev · **academy_track** · **scout_shortlist** — zastosowane.
 
 ---
 
@@ -354,16 +358,16 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## 15. Current Project Health
 
-| Obszar       | Ocena        | Komentarz                                                    |
-| ------------ | ------------ | ------------------------------------------------------------ |
-| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                    |
-| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                               |
-| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                  |
-| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                     |
-| Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + **Academy**    |
-| Dokumentacja | **Aktualna** | ACADEMY-01 CLOSE · Domain `9c6fe86` · Presentation `9fd14fc` |
-| CI           | **GREEN**    | tip `4a516f3` VERIFIED · docs CLOSE na kolejnym tipie        |
-| Production   | **GREEN**    | Vercel · Domain ACADEMY-01 `9c6fe86`                         |
+| Obszar       | Ocena        | Komentarz                                                            |
+| ------------ | ------------ | -------------------------------------------------------------------- |
+| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                            |
+| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                                       |
+| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                          |
+| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                             |
+| Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + **Scouting** |
+| Dokumentacja | **Aktualna** | SCOUTING-01 CLOSE · Domain `93fd6d5` · Presentation `9fd14fc`        |
+| CI           | **GREEN**    | tip feat fix VERIFIED · docs CLOSE na kolejnym tipie                 |
+| Production   | **GREEN**    | Vercel · Domain SCOUTING-01 `93fd6d5`                                |
 
 ---
 
@@ -380,4 +384,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-30 — GDD-22 CLOSED · content `09b85e7` · tip `f871ca8` · Domain `9c6fe86` · next **LFE-SCOUTING-01 READY FOR AUDIT**
+2026-07-30 — LFE-SCOUTING-01 CLOSED · Domain `93fd6d5` · next **LFE-DAILY-01 READY FOR AUDIT**
