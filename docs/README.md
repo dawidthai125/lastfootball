@@ -9,7 +9,7 @@ Indeks dokumentacji. **Punkt startowy:** root [`AGENTS.md`](../AGENTS.md) → [`
 | Warstwa                     | Stan                                                                                                                                         |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Production Baseline**     | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) — `54d0724` (LFE-UI-IMPL-06 · UI P0)                                                    |
-| **Domain feature baseline** | `3915be9` — LFE-ACHIEVEMENTS-01 (Information Thin · history)                                                                                 |
+| **Domain feature baseline** | `bf86749` — LFE-RANKING-01 (Information Thin · seasonal)                                                                                     |
 | **Presentation tip**        | `9fd14fc` — LFE-UI-MOTION-01 (Hub/Match motion Thin)                                                                                         |
 | **Documentation tip**       | **`98a3d81`** — LFE-RANKING-01 CLOSE (pin)                                                                                                   |
 | **Master handoff**          | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                                                                                           |
