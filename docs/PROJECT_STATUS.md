@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity) |
 | **Domain feature**      | **`9027baf`** — **LFE-LEAGUE-04** (Full 22 · double RR)   |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)  |
-| **Documentation tip**   | CLOSE sync LFE-LEAGUE-04 (pin follows)                    |
+| **Documentation tip**   | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)                 |
 | **Prod**                | https://lastfootball.vercel.app                           |
 
 | Tor               | Stan                                                                                                                                            |

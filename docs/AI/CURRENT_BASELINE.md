@@ -40,7 +40,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Domain message              | `feat(league): implement LFE-LEAGUE-04 full 22-fixture double RR`     |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin) |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`       |
-| **Documentation tip**       | CLOSE sync LFE-LEAGUE-04 (pin follows)                                |
+| **Documentation tip**       | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)                             |
 | Status                      | **PRODUCTION VERIFIED · GREEN** · LEAGUE-04 CLOSED · RANKING-01       |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).

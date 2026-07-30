@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                |
 | **Domain feature baseline**     | `9027baf` — **LFE-LEAGUE-04** (Full 22 · double RR)                                                                  |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                |
-| **Documentation tip**           | CLOSE sync LFE-LEAGUE-04 (pin follows)                                                                               |
+| **Documentation tip**           | **`086a2ac`** — LFE-LEAGUE-04 CLOSE (pin)                                                                            |
 | **Branch**                      | `main`                                                                                                               |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **LEAGUE-04 CLOSED** · RANKING-01 · ACHIEVEMENTS · M2.5 · next **Transfers hardening** |
 
@@ -39,7 +39,7 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain League 22 `9027baf` · presentation MOTION-01 `9fd14fc` · docs tip CLOSE pin).
+**Prod deploy:** Vercel Production śledzi `main` (Domain League 22 `9027baf` · presentation MOTION-01 `9fd14fc` · docs tip `086a2ac`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** — zastosowane.  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.
@@ -386,7 +386,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                              |
 | Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + **Ranking** |
 | Dokumentacja | **Aktualna** | LEAGUE-04 D28 · Domain `9027baf` · Presentation `9fd14fc`                                             |
-| CI           | **GREEN**    | tip feat VERIFIED · docs CLOSE (pin follows)                                                          |
+| CI           | **GREEN**    | tip feat VERIFIED · docs tip `086a2ac`                                                                |
 | Production   | **GREEN**    | Vercel · Domain LEAGUE-04 `9027baf`                                                                   |
 
 ---
