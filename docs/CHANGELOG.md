@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`82a164d`** (LFE-STADIUM-01).
+**Domain feature baseline:** **`9424dd8`** (LFE-TRANSFERS-10).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`26105a7`** — LFE-STADIUM-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-TRANSFERS-10 / TD-03+ · CLOSED
+
+### Product
+
+- Organizational split: `actions.ts` barrel → `actions-seed` / `actions-listing` / `actions-live-instant` / `actions-live-offers`.
+- Sole `displayPos` in `lib/transfers/display-pos.ts` (LO/ŚO → OB).
+- Zero market semantics / SQL / DTO / RPC / UI / Finance / Match Engine change.
+- Domain tip → **`9424dd8`** · D116–D118 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji).
+
+### Docs
+
+- Sync SSOT TRANSFERS-10 CLOSE · HANDOFF · baseline · status · roadmap · next **Owner GO → Zawężenie LFE PUBLIC exports**.
 
 ## [2026-07-31] — LFE-STADIUM-01 · CLOSED
 
@@ -913,4 +926,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-25 — AI-DOCS-HYGIENE-01
+2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8`

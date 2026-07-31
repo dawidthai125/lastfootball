@@ -10,16 +10,16 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                                       |
-| ------------------- | --------------------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                         |
-| Domain baseline     | **`82a164d`** — LFE-STADIUM-01 (Stadium Information Thin · D109–D115) |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)              |
-| Documentation tip   | **`26105a7`** — LFE-STADIUM-01 DOCS CLOSE (pin)                       |
-| tip `main`          | po pin CLOSE                                                          |
-| Prod                | https://lastfootball.vercel.app                                       |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                          |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                        |
+|                     |                                                          |
+| ------------------- | -------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
+| Domain baseline     | **`9424dd8`** — LFE-TRANSFERS-10 (TD-03+ · D116–D118)    |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
+| Documentation tip   | CLOSE sync — tip pin follows                             |
+| tip `main`          | po pin CLOSE                                             |
+| Prod                | https://lastfootball.vercel.app                          |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
 
 ## Pipeline (jedyny)
 
@@ -30,7 +30,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** `TD-03+` (transfers P2).
+**Następny EPIC (kolejka Ownera):** `Zawężenie LFE PUBLIC exports`.
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
 
 ## Twarde zasady
@@ -54,4 +54,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 CLOSED · Domain `82a164d` · next Owner GO → TD-03+
+**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8` · next Owner GO → Zawężenie LFE PUBLIC exports

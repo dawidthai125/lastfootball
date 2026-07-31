@@ -698,7 +698,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Nowe warstwy orkiestracji przy TD-03+ = scope creep i ryzyko drugiej ścieżki settle.  
 **Zasada:** Brak Dispatcher / Registry / Service Locator; Single Settlement Path bez zmian; shared guards tylko przy realnej deduplikacji.
 
-**Źródło D116–D118:** LFE-TRANSFERS-10 / TD-03+ ([`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md)).
+**Źródło D116–D118:** LFE-TRANSFERS-10 / TD-03+ · feat **`9424dd8`** · PLAN [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · PRODUCTION VERIFY PASS.
 
 ## Najważniejsze decyzje (meta)
 
@@ -728,7 +728,7 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D118 wymaga **AUDIT** i aktu
 **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
 **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
 **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
-**LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC.
+**LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
 
 ## Powiązania
 
@@ -736,4 +736,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D118 wymaga **AUDIT** i aktu
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 IMPLEMENT · D116–D118 · TD-03+
+2026-07-31 — LFE-TRANSFERS-10 CLOSED · D116–D118 · feat `9424dd8` · PRODUCTION VERIFY

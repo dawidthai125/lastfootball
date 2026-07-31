@@ -219,4 +219,4 @@
 - Brak Dispatcher / Registry / Service Locator · Single Settlement Path nienaruszony.
 - SSOT PLAN = `implementation/LFE-TRANSFERS-10-PLAN.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 IMPLEMENT · D1–D118 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 CLOSED · D1–D118 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

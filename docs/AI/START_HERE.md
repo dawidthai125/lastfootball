@@ -104,4 +104,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) �
 
 ## Last updated
 
-2026-07-31 — LFE-STADIUM-01 CLOSED · next Owner GO → TD-03+
+2026-07-31 — LFE-TRANSFERS-10 CLOSED · next Owner GO → Zawężenie LFE PUBLIC exports

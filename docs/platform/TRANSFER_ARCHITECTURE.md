@@ -16,7 +16,7 @@ AUDIT / PLAN / IMPLEMENT EPIC-ów transferowych; onboarding przed zmianą settle
 ## Status
 
 **ACTIVE** · Domain hardening **`e6885dc`** (LFE-TRANSFERS-09 CLOSED) · feature market **`9b1c575`** (LFE-TRANSFERS-08)  
-**LFE-TRANSFERS-10 / TD-03+:** CLOSED draft (organizational split + `displayPos` sole helper · D116–D118) — feat hash przy COMMIT
+**LFE-TRANSFERS-10 / TD-03+:** **CLOSED** · feat **`9424dd8`** · D116–D118 · PLAN [`../implementation/LFE-TRANSFERS-10-PLAN.md`](../implementation/LFE-TRANSFERS-10-PLAN.md) · PRODUCTION VERIFY PASS
 
 ---
 
@@ -105,14 +105,14 @@ Presety: **90 / 95 / 100 / 110%** ask (`deriveTransferFee`).
 
 ## Świadome kompromisy / dług
 
-| ID     | Priorytet | Temat                                                      | Status                                    |
-| ------ | --------- | ---------------------------------------------------------- | ----------------------------------------- |
-| TD-01  | P1        | Fee + allow-list SQL ↔ TS drift                            | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
-| TD-02  | P1        | Double-invoke live RPC (sell+buy)                          | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
-| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4 (stub Accept usunięty) | **CLOSED** · LFE-TRANSFERS-10 (D116–D118) |
+| ID     | Priorytet | Temat                                                      | Status                                                |
+| ------ | --------- | ---------------------------------------------------------- | ----------------------------------------------------- |
+| TD-01  | P1        | Fee + allow-list SQL ↔ TS drift                            | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`)             |
+| TD-02  | P1        | Double-invoke live RPC (sell+buy)                          | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`)             |
+| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4 (stub Accept usunięty) | **CLOSED** · LFE-TRANSFERS-10 (`9424dd8` · D116–D118) |
 
 **Poza Thin:** escrow · timeout · AI H2H · 2+ counters · buyer Counter · custom ask · `completeLiveTransfer()`.
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 / TD-03+ CLOSED draft · D116–D118 · actions barrel + displayPos sole helper
+2026-07-31 — LFE-TRANSFERS-10 / TD-03+ CLOSED · feat `9424dd8` · D116–D118

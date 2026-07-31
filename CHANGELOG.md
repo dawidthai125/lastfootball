@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-TRANSFERS-10 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D116–D118 · Domain tip `9424dd8` · next **Owner GO → Zawężenie LFE PUBLIC exports**
+- Kontrakt: actions organizational split · `displayPos` sole helper · Single Settlement Path nienaruszony
+
+### Added (shipped on `main` — LFE-TRANSFERS-10)
+
+- Transfer actions modules + barrel · `display-pos.ts` · TD-03+ CLOSED
+
 ### Docs (LFE-STADIUM-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D109–D115 · Domain tip `82a164d` · next **Owner GO → TD-03+**

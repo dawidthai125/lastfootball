@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`82a164d`** — LFE-STADIUM-01 CLOSED (Stadium Information Thin · D109–D115).
+**Domain feature baseline:** **`9424dd8`** — LFE-TRANSFERS-10 CLOSED (TD-03+ · D116–D118).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`26105a7`** — LFE-STADIUM-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · **GDD-STADIUM-01** · **LFE-STADIUM-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -76,6 +76,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · Seas
 | **LFE-BOARD-01**                                       | **CLOSED** · Board Information Thin · `resolveClubBoard` · H-BOARD · D102–D108 · feat `75c190d` · PRODUCTION VERIFY      |
 | **GDD-STADIUM-01**                                     | **CLOSED** · Stadium Thin kontrakt · D109–D115 · SSOT `GDD-STADIUM-01.md`                                                |
 | **LFE-STADIUM-01**                                     | **CLOSED** · Stadium Information Thin · `resolveClubStadium` · D109–D115 · feat `82a164d` · PRODUCTION VERIFY            |
+| **LFE-TRANSFERS-10** / **TD-03+**                      | **CLOSED** · actions split · `displayPos` sole · D116–D118 · feat `9424dd8` · PRODUCTION VERIFY                          |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                            |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                       |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)               |
@@ -106,12 +107,11 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · Seas
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                  |
-| ------------------------------- | -------------------------- |
-| **TD-03+**                      | Owner GO · transfers P2    |
-| Zawężenie LFE PUBLIC exports    | chore                      |
-| Ratings v2                      | bogatsze Player Match Data |
-| Kanał push / email (§22 Future) | osobny Owner GO            |
+| Item                             | Zależność                  |
+| -------------------------------- | -------------------------- |
+| **Zawężenie LFE PUBLIC exports** | Owner GO · chore           |
+| Ratings v2                       | bogatsze Player Match Data |
+| Kanał push / email (§22 Future)  | osobny Owner GO            |
 
 ## FUTURE
 
@@ -134,22 +134,23 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · Seas
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. **Następny aktywny:** **`TD-03+`**.
+**Czekaj na Owner GO** — brak otwartego EPIC. **Następny aktywny:** **`Zawężenie LFE PUBLIC exports`**.
 
 ### Oficjalna kolejność (2026-07-31)
 
-Kolejka domain soft-lock **Sponsors → Board → Stadium** = **CLOSED**.
+Kolejka domain soft-lock **Sponsors → Board → Stadium** = **CLOSED**.  
+**TD-03+ / LFE-TRANSFERS-10** = **CLOSED**.
 
 ```
-TD-03+
+Zawężenie LFE PUBLIC exports
 ```
 
-| EPIC       | Notatka                             |
-| ---------- | ----------------------------------- |
-| **TD-03+** | Transfers P2 · actions / displayPos |
+| EPIC                             | Notatka                     |
+| -------------------------------- | --------------------------- |
+| **Zawężenie LFE PUBLIC exports** | chore · mniej eksportów LFE |
 
-**Alternatywy:** Ratings v2 · Settings/§22 · LFE PUBLIC trim.  
-Domain tip: STADIUM-01 `82a164d`; Presentation tip: MOTION-01 `9fd14fc`.
+**Alternatywy:** Ratings v2 · Settings/§22.  
+Domain tip: TRANSFERS-10 `9424dd8`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -169,6 +170,7 @@ Domain tip: STADIUM-01 `82a164d`; Presentation tip: MOTION-01 `9fd14fc`.
 - Pending H2H = `transfer_offers`; NEGOTIATION_THIN presets; Accept/Instant/Unlist supersede; brak escrow/timeout; settle tylko buy/sell (TRANSFERS-07).
 - Counter H2H = 1× seller→buyer; `opening_amount` immutable; settle @ `current_amount`; Accept po Counter = buyer (TRANSFERS-08).
 - Transfers hardening = fee SQL helpers + parity gate · single live settle invoke · D38 (TRANSFERS-09 · TD-01/TD-02 CLOSED).
+- **Transfers TD-03+** = actions organizational split · `displayPos` sole helper · D116–D118 (TRANSFERS-10 · feat `9424dd8`).
 - **Messages Thin** = `resolveClubMessages` derive E1–E3 · `/messages` + Overlay = ta sama DTO · brak DB/mocków · D40–D46 (MESSAGES-01).
 - **Club Profile Thin** = `resolveClubProfile` Composition · identity ≠ progression · brak silnika §6 / personelu · D47–D51 (CLUB-01).
 - Kadra = `players` (+ `potential`); UI tylko przez `resolveClubSquad` (D19/D22); seed ≠ runtime; pasma potencjału only.
@@ -193,4 +195,4 @@ Domain tip: STADIUM-01 `82a164d`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Last updated
 
-2026-07-31 — LFE-STADIUM-01 CLOSED · Domain `82a164d` · next Owner GO → TD-03+
+2026-07-31 — LFE-TRANSFERS-10 / TD-03+ CLOSED · Domain `9424dd8` · next Owner GO → Zawężenie LFE PUBLIC exports
