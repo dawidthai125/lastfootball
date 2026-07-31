@@ -48,7 +48,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Prior Domain                | `fa06c53` — LFE-PROMOTION-01                                                   |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)          |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                |
-| **Documentation tip**       | CLOSE sync — tip pin follows                                                   |
+| **Documentation tip**       | **`a77f4c8`** — LFE-SPONSORS-01 DOCS CLOSE (pin)                               |
 | Status                      | **PRODUCTION VERIFIED · CI GREEN** · SPONSORS-01 CLOSED · Domain tip `17eb8ba` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).

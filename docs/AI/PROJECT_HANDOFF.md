@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                  |
 | **Domain feature baseline**     | `17eb8ba` — **LFE-SPONSORS-01** (Sponsors Thin · D95–D101)                                                                             |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                  |
-| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                           |
-| **tip `main`**                  | after SPONSORS CLOSE                                                                                                                   |
+| **Documentation tip**           | **`a77f4c8`** — LFE-SPONSORS-01 DOCS CLOSE (pin)                                                                                       |
+| **tip `main`**                  | after SPONSORS CLOSE pin                                                                                                               |
 | **Branch**                      | `main`                                                                                                                                 |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-SPONSORS-01 FULLY CLOSED** · D1–D101 · next **Owner GO → LFE-BOARD-01**                         |
 
