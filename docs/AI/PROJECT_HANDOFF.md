@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                    |
 | **Domain feature baseline**     | `82a164d` — **LFE-STADIUM-01** (Stadium Information Thin · D109–D115)                                                                                    |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                    |
-| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                                             |
-| **tip `main`**                  | after STADIUM CLOSE                                                                                                                                      |
+| **Documentation tip**           | **`26105a7`** — LFE-STADIUM-01 DOCS CLOSE (pin)                                                                                                          |
+| **tip `main`**                  | after STADIUM CLOSE pin                                                                                                                                  |
 | **Branch**                      | `main`                                                                                                                                                   |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-STADIUM-01 FULLY CLOSED** · D1–D115 · next **Owner GO → TD-03+**                                                  |
 
