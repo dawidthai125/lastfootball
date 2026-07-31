@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                       |
 | **Domain feature baseline**     | `fa06c53` — **LFE-PROMOTION-01** (Promotion Thin · D88–D94)                                                                 |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                       |
-| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                |
+| **Documentation tip**           | **`42c6d7f`** — LFE-PROMOTION-01 DOCS CLOSE (pin)                                                                           |
 | **tip `main`**                  | after PROMOTION CLOSE                                                                                                       |
 | **Branch**                      | `main`                                                                                                                      |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-PROMOTION-01 FULLY CLOSED** · D1–D94 · next **Owner GO** (roadmapa §10)              |
