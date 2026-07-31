@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D94):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
+**Pełny rejestr D\* (D1–D101):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -40,64 +40,71 @@
 
 ## D19–D28 · D38 · D40–D46 (skrót)
 
-| ID      | Temat                      | Sedno (1 linia)                                                                   |
-| ------- | -------------------------- | --------------------------------------------------------------------------------- |
-| **D19** | Players SSOT               | Jedyna tabela kadry = `players`; UI = `resolveClubSquad`; seed ≠ runtime.         |
-| **D20** | Transfers Thin             | Rynek = `resolveTransferMarket`; settle tylko buy/sell; fee = derive.             |
-| **D21** | Training Thin + Depth      | `resolveClubTraining`; status + skill ≤ potential; RPC sesji; XI Gate.            |
-| **D22** | Potential / match growth   | `players.potential`; UI = pasma only; match PRIMARY; trening SUPPORTING.          |
-| **D23** | Academy Thin A             | `academy_track` / `promoted_at` na `players`; max 3; `resolveClubAcademy`.        |
-| **D24** | Scouting Information Thin  | `resolveClubScouting`; `scout_shortlist` = `(club_id, player_id)` → `players.id`. |
-| **D25** | Daily Goal Thin            | `resolveClubDailyGoal` derive only; Primary > Daily; ≠ Secondary daily loop.      |
-| **D26** | Achievements Thin          | `resolveClubAchievements` derive; immutable history; ≠ XP/score/§6/Ranking.       |
-| **D27** | Ranking Thin               | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
-| **D28** | League calendar 22         | `LEAGUE_FIXTURE_COUNT=22` double RR; MD1–11 identity; AI↔AI double RR.            |
-| **D38** | Transfer public API        | Buy/Sell only · fee SQL helpers · 1× live settle · TRANSFERS-09.                  |
-| **D47** | Club = Identity            | `/club` tożsamość ≠ progresja §6.                                                 |
-| **D48** | Profile Composition        | `ClubProfileDto` = compose faktów; zero drugiego modelu.                          |
-| **D49** | No Staff on Club           | Brak personelu Future na `/club`.                                                 |
-| **D50** | View presentation only     | `ClubProfileView` bez logiki biznesowej.                                          |
-| **D51** | One club profile resolver  | `resolveClubProfile` = sole DTO `/club`.                                          |
-| **D52** | Soft lock ≠ Fake Prod      | Soft-lock surface nigdy nie leakuje atrap / Fake Production.                      |
-| **D63** | Route ≡ Nav access         | Deep-link access = `resolveNavAccess` / `isModuleSoftLocked`.                     |
-| **D64** | No Placeholder as lock     | PlaceholderPage ≠ mechanizm soft-lock.                                            |
-| **D65** | SoftLockState canonical    | Locked route surface = `SoftLockState`.                                           |
-| **D66** | Generic route gate         | Jeden gate; nowy lock = `FLAT_NAV` + unlock — bez edycji gate.                    |
-| **D67** | Transparent gate           | Poza `FLAT_NAV` = pass-through; zero logiki domenowej w gate.                     |
-| **D68** | Lifecycle before systems   | Najpierw koniec sezonu (kontrakt/kod); potem Sponsors/Board/….                    |
-| **D69** | SE = event pipeline        | Season End = ciąg zdarzeń, nie ekran z side-effectami.                            |
-| **D70** | Trigger owns lifecycle     | Start pipeline tylko przy 22/22 played klubu gracza.                              |
-| **D71** | Report before consequences | Raport przed konsekwencjami / hookami.                                            |
-| **D72** | Hooks before features      | Hook = moment · Owner · cel; bez feature spec.                                    |
-| **D73** | No promotion in SE Thin    | Thin nie zmienia szczebla ligowego.                                               |
-| **D74** | Docs before lifecycle      | Brak kodu SE bez zamkniętego GDD-SEASON-END-01.                                   |
-| **D75** | Lifecycle deterministic    | Zero RNG zamknięcia; ten sam input → ten sam pipeline.                            |
-| **D76** | Contract before code       | Kontrakt GDD przed PLAN/IMPLEMENT kodu SE.                                        |
-| **D77** | SE Thin SSOT file          | SSOT = `GDD-SEASON-END-01.md`; §10 = pointer.                                     |
-| **D78** | Season Closed idempotent   | `season_phase=offseason` raz / przebieg 22; idempotent.                           |
-| **D79** | Offseason unlock parity    | OFFSEASON soft-lock = SEASON (Sponsors/Board/Stadium locked).                     |
-| **D80** | Sole planner               | N+1 tylko przez `planClubFixtures` (zero drugiego terminarza).                    |
-| **D81** | Report pure resolve        | `resolveSeasonReport` z tabeli; Information Thin.                                 |
-| **D82** | Confirm before N+1         | Auto start nowego sezonu zakazany.                                                |
-| **D83** | Hooks no-op in Thin        | `onSeasonEnd` no-op; brak age++/Sponsors/Board.                                   |
-| **D84** | Report = existing facts    | Highlighty tylko z faktów domeny.                                                 |
-| **D85** | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
-| **D86** | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
-| **D87** | Offseason persists         | `season_phase` SSOT do Confirm; AC-10/11.                                         |
-| **D88** | League tier club SSOT      | `league_tier` → ClubDto; etykiety tylko `resolveLeagueTierLabel`.                 |
-| **D89** | Promotion outcome derived  | Pure z tabeli + tier; zero RNG.                                                   |
-| **D90** | Single tier mutation       | Mutacja tier tylko w Confirm N+1.                                                 |
-| **D91** | Report before persist tier | Outcome w raporcie OFFSEASON; persist przy Confirm.                               |
-| **D92** | Same opponent world Thin   | Tier + etykiety only; skład ligi / AI bez zmian.                                  |
-| **D93** | Floor IV · ceiling I       | Brak spadku z IV; brak awansu z I.                                                |
-| **D94** | No playoffs Thin           | Baraże OUT.                                                                       |
-| **D40** | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
-| **D41** | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
-| **D42** | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
-| **D43** | One Event → Many Views     | `/messages` + Overlay = ta sama `ClubMessagesDto`.                                |
-| **D44** | UI nie sortuje/filtruje    | Kolejność wyłącznie w `resolveClubMessages`.                                      |
-| **D45** | One resolver               | `resolveClubMessages` = jedyne źródło danych UI.                                  |
-| **D46** | Messages Thin scope        | Brak DB / workflow / Accept w skrzynce / drugiego procesu ofert.                  |
+| ID       | Temat                      | Sedno (1 linia)                                                                   |
+| -------- | -------------------------- | --------------------------------------------------------------------------------- |
+| **D19**  | Players SSOT               | Jedyna tabela kadry = `players`; UI = `resolveClubSquad`; seed ≠ runtime.         |
+| **D20**  | Transfers Thin             | Rynek = `resolveTransferMarket`; settle tylko buy/sell; fee = derive.             |
+| **D21**  | Training Thin + Depth      | `resolveClubTraining`; status + skill ≤ potential; RPC sesji; XI Gate.            |
+| **D22**  | Potential / match growth   | `players.potential`; UI = pasma only; match PRIMARY; trening SUPPORTING.          |
+| **D23**  | Academy Thin A             | `academy_track` / `promoted_at` na `players`; max 3; `resolveClubAcademy`.        |
+| **D24**  | Scouting Information Thin  | `resolveClubScouting`; `scout_shortlist` = `(club_id, player_id)` → `players.id`. |
+| **D25**  | Daily Goal Thin            | `resolveClubDailyGoal` derive only; Primary > Daily; ≠ Secondary daily loop.      |
+| **D26**  | Achievements Thin          | `resolveClubAchievements` derive; immutable history; ≠ XP/score/§6/Ranking.       |
+| **D27**  | Ranking Thin               | `resolveClubRanking` z table input; własny DTO; ≠ league columns/ELO/§6.          |
+| **D28**  | League calendar 22         | `LEAGUE_FIXTURE_COUNT=22` double RR; MD1–11 identity; AI↔AI double RR.            |
+| **D38**  | Transfer public API        | Buy/Sell only · fee SQL helpers · 1× live settle · TRANSFERS-09.                  |
+| **D47**  | Club = Identity            | `/club` tożsamość ≠ progresja §6.                                                 |
+| **D48**  | Profile Composition        | `ClubProfileDto` = compose faktów; zero drugiego modelu.                          |
+| **D49**  | No Staff on Club           | Brak personelu Future na `/club`.                                                 |
+| **D50**  | View presentation only     | `ClubProfileView` bez logiki biznesowej.                                          |
+| **D51**  | One club profile resolver  | `resolveClubProfile` = sole DTO `/club`.                                          |
+| **D52**  | Soft lock ≠ Fake Prod      | Soft-lock surface nigdy nie leakuje atrap / Fake Production.                      |
+| **D63**  | Route ≡ Nav access         | Deep-link access = `resolveNavAccess` / `isModuleSoftLocked`.                     |
+| **D64**  | No Placeholder as lock     | PlaceholderPage ≠ mechanizm soft-lock.                                            |
+| **D65**  | SoftLockState canonical    | Locked route surface = `SoftLockState`.                                           |
+| **D66**  | Generic route gate         | Jeden gate; nowy lock = `FLAT_NAV` + unlock — bez edycji gate.                    |
+| **D67**  | Transparent gate           | Poza `FLAT_NAV` = pass-through; zero logiki domenowej w gate.                     |
+| **D68**  | Lifecycle before systems   | Najpierw koniec sezonu (kontrakt/kod); potem Sponsors/Board/….                    |
+| **D69**  | SE = event pipeline        | Season End = ciąg zdarzeń, nie ekran z side-effectami.                            |
+| **D70**  | Trigger owns lifecycle     | Start pipeline tylko przy 22/22 played klubu gracza.                              |
+| **D71**  | Report before consequences | Raport przed konsekwencjami / hookami.                                            |
+| **D72**  | Hooks before features      | Hook = moment · Owner · cel; bez feature spec.                                    |
+| **D73**  | No promotion in SE Thin    | Thin nie zmienia szczebla ligowego.                                               |
+| **D74**  | Docs before lifecycle      | Brak kodu SE bez zamkniętego GDD-SEASON-END-01.                                   |
+| **D75**  | Lifecycle deterministic    | Zero RNG zamknięcia; ten sam input → ten sam pipeline.                            |
+| **D76**  | Contract before code       | Kontrakt GDD przed PLAN/IMPLEMENT kodu SE.                                        |
+| **D77**  | SE Thin SSOT file          | SSOT = `GDD-SEASON-END-01.md`; §10 = pointer.                                     |
+| **D78**  | Season Closed idempotent   | `season_phase=offseason` raz / przebieg 22; idempotent.                           |
+| **D79**  | Offseason unlock parity    | OFFSEASON soft-lock = SEASON (Board/Stadium locked; Sponsors → D99).              |
+| **D80**  | Sole planner               | N+1 tylko przez `planClubFixtures` (zero drugiego terminarza).                    |
+| **D81**  | Report pure resolve        | `resolveSeasonReport` z tabeli; Information Thin.                                 |
+| **D82**  | Confirm before N+1         | Auto start nowego sezonu zakazany.                                                |
+| **D83**  | Hooks no-op in Thin        | `onSeasonEnd` no-op age++; Sponsors wired in Confirm (D95+); Board still OUT.     |
+| **D84**  | Report = existing facts    | Highlighty tylko z faktów domeny.                                                 |
+| **D85**  | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
+| **D86**  | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
+| **D87**  | Offseason persists         | `season_phase` SSOT do Confirm; AC-10/11.                                         |
+| **D88**  | League tier club SSOT      | `league_tier` → ClubDto; etykiety tylko `resolveLeagueTierLabel`.                 |
+| **D89**  | Promotion outcome derived  | Pure z tabeli + tier; zero RNG.                                                   |
+| **D90**  | Single tier mutation       | Mutacja tier tylko w Confirm N+1.                                                 |
+| **D91**  | Report before persist tier | Outcome w raporcie OFFSEASON; persist przy Confirm.                               |
+| **D92**  | Same opponent world Thin   | Tier + etykiety only; skład ligi / AI bez zmian.                                  |
+| **D93**  | Floor IV · ceiling I       | Brak spadku z IV; brak awansu z I.                                                |
+| **D94**  | No playoffs Thin           | Baraże OUT.                                                                       |
+| **D95**  | One Base Sponsor Contract  | 1 kontrakt / klub; SSOT = `club_sponsor_contracts`.                               |
+| **D96**  | Sponsors UI Sole Resolver  | UI tylko `resolveClubSponsors`.                                                   |
+| **D97**  | Sponsor Cash Via Ledger    | Payout/bonus → `cash_balance` + `finance_movements` only.                         |
+| **D98**  | H-SPONSORS Non-Blocking    | Confirm Primary; renewal secondary; auto-renew przy Confirm.                      |
+| **D99**  | Soft Unlock Sponsors Only  | `/sponsors` open SEASON+OFFSEASON; Board/Stadium locked.                          |
+| **D100** | No Marketplace No Quest    | Brak marketplace / nego / Quest Engine / mid-season change.                       |
+| **D101** | Flat Renewal Band Thin     | Auto-renew = te same brand + kwoty Thin.                                          |
+| **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
+| **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
+| **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
+| **D43**  | One Event → Many Views     | `/messages` + Overlay = ta sama `ClubMessagesDto`.                                |
+| **D44**  | UI nie sortuje/filtruje    | Kolejność wyłącznie w `resolveClubMessages`.                                      |
+| **D45**  | One resolver               | `resolveClubMessages` = jedyne źródło danych UI.                                  |
+| **D46**  | Messages Thin scope        | Brak DB / workflow / Accept w skrzynce / drugiego procesu ofert.                  |
 
 ### D24 — kontrakt shortlisty (must-know)
 
@@ -168,4 +175,11 @@
 - Thin: ten sam świat AI (D92) · floor IV / ceiling I · baraże OUT.
 - SSOT Thin = `GDD-PROMOTION-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 CLOSED · D1–D94 · Domain `fa06c53` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D95–D101 — kontrakt Sponsors Thin (must-know)
+
+- `club_sponsor_contracts` = SSOT kontraktu · UI tylko `resolveClubSponsors`.
+- Cash wyłącznie finance ledger · base payout raz w `confirmStartNextSeason`.
+- Confirm Primary · renewal secondary · flat auto-renew · Board/Stadium locked.
+- SSOT Thin = `GDD-SPONSORS-01.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-SPONSORS-01 IMPLEMENT · D1–D101 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

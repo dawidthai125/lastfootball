@@ -85,8 +85,10 @@ describe('LFE-SEASON-END-01 hub phase + unlock (D79)', () => {
     expect(resolveHubPhase(off, { hasFixtures: false })).toBe('OFFSEASON');
   });
 
-  it('OFFSEASON soft-locks sponsors/board/stadium like SEASON', () => {
-    for (const id of ['sponsors', 'board', 'stadium'] as const) {
+  it('OFFSEASON unlock parity with SEASON (D79 · D99 sponsors open; board/stadium locked)', () => {
+    expect(resolveNavAccess('sponsors', 'OFFSEASON')).toBe('open');
+    expect(resolveNavAccess('sponsors', 'SEASON')).toBe('open');
+    for (const id of ['board', 'stadium'] as const) {
       expect(resolveNavAccess(id, 'OFFSEASON')).toBe('soft_locked');
       expect(resolveNavAccess(id, 'SEASON')).toBe('soft_locked');
     }

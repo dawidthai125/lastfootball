@@ -572,9 +572,46 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D88–D94:** GDD-PROMOTION-01 / LFE-PROMOTION-01 (feat `fa06c53`).
 
+### D95 — One Base Sponsor Contract · CLOSED
+
+**Dlaczego:** Multi-slot / marketplace = poza Thin.  
+**Zasada:** Dokładnie jeden aktywny kontrakt na klub; SSOT = `club_sponsor_contracts`.
+
+### D96 — Sponsors UI Sole Resolver · CLOSED
+
+**Dlaczego:** Ad-hoc UI z wierszy DB = drift.  
+**Zasada:** UI Sponsors wyłącznie przez `resolveClubSponsors`.
+
+### D97 — Sponsor Cash Via Finance Ledger · CLOSED
+
+**Dlaczego:** Drugi wallet niszczy D18.  
+**Zasada:** Payout/bonus → `cash_balance` + `finance_movements` only.
+
+### D98 — H-SPONSORS Non-Blocking · CLOSED
+
+**Dlaczego:** Renewal jako Primary blokuje lifecycle.  
+**Zasada:** Confirm N+1 = Primary; renewal = secondary; auto-renew przy Confirm gdy brak Accept.
+
+### D99 — Soft Unlock Sponsors Only · CLOSED
+
+**Dlaczego:** Unlock Board/Stadium „przy okazji”.  
+**Zasada:** `/sponsors` open SEASON+OFFSEASON; Board/Stadium remain soft-locked.
+
+### D100 — No Marketplace No Quest · CLOSED
+
+**Dlaczego:** Scope creep §15 Future.  
+**Zasada:** Brak marketplace, negocjacji, Quest Engine, mid-season change.
+
+### D101 — Flat Renewal Band Thin · CLOSED
+
+**Dlaczego:** Prestiż §6 nie istnieje w Thin.  
+**Zasada:** Auto-renew / Accept zachowują ten sam brand i kwoty Thin.
+
+**Źródło D95–D101:** GDD-SPONSORS-01 / LFE-SPONSORS-01.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D94 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D101 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -597,11 +634,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D94 wymaga **AUDIT** i aktua
 **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
 **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
+**GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md)
 
 ## Last updated
 
-2026-07-31 — LFE-PROMOTION-01 CLOSED · D88–D94 · feat `fa06c53`
+2026-07-31 — LFE-SPONSORS-01 · D95–D101

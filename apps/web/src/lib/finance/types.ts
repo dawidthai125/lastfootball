@@ -14,6 +14,9 @@ export const ECONOMY_THIN = {
    * Thin: 1.0 → envelope === cash. Sole consumer: resolveTransferEnvelope().
    */
   ENVELOPE_RATIO: 1,
+  /** LFE-SPONSORS-01 Thin (GDD-SPONSORS-01 · D95–D101). */
+  SPONSOR_BASE: 15_000,
+  SPONSOR_BONUS: 10_000,
   /** Shared transfer-fee coefficients — consumed only by deriveTransferFee (D20). */
   TRANSFER_FEE: {
     SKILL_MULT: 2_000,
@@ -24,7 +27,8 @@ export const ECONOMY_THIN = {
   },
 } as const;
 
-export type FinanceMovementCategory = 'starter' | 'match_reward' | 'transfer_buy' | 'transfer_sell';
+export type FinanceMovementCategory =
+  'starter' | 'match_reward' | 'transfer_buy' | 'transfer_sell' | 'sponsor_base' | 'sponsor_bonus';
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

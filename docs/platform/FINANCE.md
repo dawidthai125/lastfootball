@@ -20,18 +20,20 @@ Kasa klubu i historia ruchów (Finance Thin).
 
 - Seed `STARTER_CASH` przy create club.
 - Nagroda W/D/L tylko przy pierwszym `fixture` → `played`.
-- Kategorie m.in. `starter`, `match_reward`, `transfer_buy`, `transfer_sell`.
+- Kategorie m.in. `starter`, `match_reward`, `transfer_buy`, `transfer_sell`, `sponsor_base`, `sponsor_bonus`.
 - **§26 = SSOT liczb**; **D18 = SSOT implementacji**.
 - Envelope Thin (E1): `ENVELOPE_RATIO = 1` → envelope === cash; jedyny wzór w `resolveTransferEnvelope`.
+- Sponsors Thin (LFE-SPONSORS-01): payout/bonus wyłącznie przez ten ledger (D97); kontrakt = `club_sponsor_contracts`.
 
 ## Decyzje
 
 D18 — [`../DECISIONS.md`](../DECISIONS.md). GDD §26 — [`../game-design/GAME_DESIGN_DOCUMENT.md`](../game-design/GAME_DESIGN_DOCUMENT.md).  
-Envelope: LFE-TRANSFERS-02-E1 / D20.
+Envelope: LFE-TRANSFERS-02-E1 / D20.  
+Sponsors: D95–D101 · [`../game-design/GDD-SPONSORS-01.md`](../game-design/GDD-SPONSORS-01.md).
 
 ## Poza Thin
 
-Pensje, bilety, sponsorzy, ratio ≠ 1, negotiation, suwak alokacji.
+Pensje, bilety, ratio ≠ 1, negotiation, suwak alokacji, marketplace sponsorów.
 
 ## UI (presentation)
 
@@ -40,8 +42,8 @@ Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUID
 
 ## Kod
 
-`lib/finance/*` · `/finance`
+`lib/finance/*` · `/finance` · sponsors IO w `lib/sponsors/*`
 
 ## Last updated
 
-2026-07-26 — LFE-DOCS-UX-03
+2026-07-31 — LFE-SPONSORS-01

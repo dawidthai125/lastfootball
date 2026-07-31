@@ -305,6 +305,65 @@ export type Database = {
           },
         ];
       };
+      club_sponsor_contracts: {
+        Row: {
+          id: string;
+          club_id: string;
+          brand_key: string;
+          brand_name: string;
+          season_number: number;
+          base_amount: number;
+          bonus_amount: number;
+          goal_kind: string;
+          goal_target: number;
+          bonus_claimed_at: string | null;
+          base_paid_season_number: number | null;
+          renewal_accepted_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          club_id: string;
+          brand_key?: string;
+          brand_name?: string;
+          season_number?: number;
+          base_amount: number;
+          bonus_amount: number;
+          goal_kind?: string;
+          goal_target?: number;
+          bonus_claimed_at?: string | null;
+          base_paid_season_number?: number | null;
+          renewal_accepted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          brand_key?: string;
+          brand_name?: string;
+          season_number?: number;
+          base_amount?: number;
+          bonus_amount?: number;
+          goal_kind?: string;
+          goal_target?: number;
+          bonus_claimed_at?: string | null;
+          base_paid_season_number?: number | null;
+          renewal_accepted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'club_sponsor_contracts_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: true;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       fixtures: {
         Row: {
           id: string;

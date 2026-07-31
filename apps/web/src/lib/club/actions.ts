@@ -8,6 +8,7 @@ import type { CreateClubState } from '@/lib/club/action-types';
 import { validateClubIdentity } from '@/lib/club/validation';
 import { env } from '@/config/env';
 import { ECONOMY_THIN } from '@/lib/finance';
+import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { createClient } from '@/lib/supabase/server';
 
@@ -83,6 +84,10 @@ export async function createClub(
       amount: ECONOMY_THIN.STARTER_CASH,
     } as never);
     await supabase.from('players').insert(buildStarterPlayerInserts(clubId) as never);
+    // LFE-SPONSORS-01: seed Thin contract · no base payout at create (Owner LOCK 2).
+    await supabase
+      .from('club_sponsor_contracts')
+      .insert(buildStarterSponsorContractInsert(clubId, 1) as never);
   }
 
   // Clear legacy smoke/dev metadata flag if present

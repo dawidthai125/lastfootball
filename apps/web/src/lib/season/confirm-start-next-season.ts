@@ -13,14 +13,16 @@ import {
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import type { ConfirmStartNextSeasonState } from '@/lib/season/action-types';
 import { onSeasonEnd } from '@/lib/squad/season-age';
+import { renewSponsorAndPayBase } from '@/lib/sponsors/actions';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 
 /**
  * Confirm N+1 (D82 · D85) — sole path into Season N+1.
  * Sole league_tier mutation (D90): derive outcome → applyLeagueTierOutcome → persist.
+ * H-SPONSORS (D98 · D101): flat renew (manual Accept or auto) → base payout once (Owner LOCK 2).
  * Clears slate → planClubFixtures reseed (D80) → season++ · in_season.
- * Hooks = no-op only (D83). AI catalog unchanged (D92).
+ * Hooks = no-op only for age (D83). AI catalog unchanged (D92).
  */
 export async function confirmStartNextSeason(
   _prev: ConfirmStartNextSeasonState,
@@ -42,7 +44,7 @@ export async function confirmStartNextSeason(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, name, short_name, season_number, season_phase, league_tier')
+    .select('id, name, short_name, season_number, season_phase, league_tier, cash_balance')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -57,6 +59,7 @@ export async function confirmStartNextSeason(
     season_number: number;
     season_phase: string;
     league_tier: string | null;
+    cash_balance: number;
   };
 
   if (row.season_phase !== 'offseason') {
@@ -83,6 +86,16 @@ export async function confirmStartNextSeason(
     ? resolvePromotionOutcome(playerRow.position, table.rows.length, currentTier)
     : { kind: 'stay' as const, label: '' };
   const nextTier = applyLeagueTierOutcome(currentTier, outcome.kind);
+
+  // H-SPONSORS: renew (Accept or auto — same flat Thin) → base payout once (Owner LOCK 2 · 8).
+  const sponsor = await renewSponsorAndPayBase({
+    clubId,
+    nextSeason,
+    currentCash: row.cash_balance ?? 0,
+  });
+  if (!sponsor.ok) {
+    return { error: sponsor.error };
+  }
 
   const { error: delErr } = await supabase.from('fixtures').delete().eq('club_id', clubId);
   if (delErr) {
@@ -118,7 +131,7 @@ export async function confirmStartNextSeason(
     return { error: 'Nie udało się otworzyć nowego sezonu.' };
   }
 
-  // H-AGE / Sponsors / Board — Thin no-op (D83).
+  // H-AGE / Board — Thin no-op (D83).
   onSeasonEnd(clubId);
 
   revalidatePath('/', 'layout');

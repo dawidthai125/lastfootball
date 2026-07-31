@@ -5737,6 +5737,8 @@ Zmapować §11 na wpływy kasy.
 
 ### 14.8 Sponsorzy (MVP vs Future)
 
+> **Thin SSOT:** [`GDD-SPONSORS-01.md`](./GDD-SPONSORS-01.md) · D95–D101. Ten podrozdział = kierunek GDD-11; kontrakt Thin = plik EPICu.
+
 **Cel**  
 Prosty zastrzyk stabilności w MVP; głębokość w §15.
 
@@ -6062,7 +6064,10 @@ Shipowalny model + miejsce na §26 i §15.
 
 ## 15. Sponsorzy
 
-**Status rozdziału:** GDD-11 — opracowany (**sponsoring MVP**; bez algorytmów, formuł, kwot — liczby → §26)
+> **SSOT Thin (1 kontrakt · ledger · H-SPONSORS):** [`GDD-SPONSORS-01.md`](./GDD-SPONSORS-01.md) · D95–D101.  
+> Ten rozdział zachowuje kierunek pełnego GDD-11; **kontrakt Thin** = plik EPICu.
+
+**Status rozdziału:** GDD-11 — opracowany (**sponsoring MVP**; bez algorytmów, formuł, kwot — liczby → §26 / Thin `ECONOMY_THIN`)
 
 **Cel rozdziału**  
 Dać stabilne, uzupełniające źródło dochodu i lekki cel sezonowy — spójne z kasą (§14), kalendarzem (§10–§11) i bez presji codziennego logowania.
@@ -6365,6 +6370,8 @@ Sponsor wspiera odczucie instytucji, nie OVR zawodników.
 ---
 
 ### 15.11 Odnowienie umowy
+
+> **Thin:** H-SPONSORS · Accept secondary · auto-renew flat przy Confirm · [`GDD-SPONSORS-01.md`](./GDD-SPONSORS-01.md) · D98 · D101. Poniżej = pełny GDD-11 (prestiż / rotacja brandów = Future).
 
 **Cel**  
 Rytuał międzysezonowy bez tarcia.

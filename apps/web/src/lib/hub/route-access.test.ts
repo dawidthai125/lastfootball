@@ -49,9 +49,11 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
     }
   });
 
-  it('permanent locks soft-lock on SEASON and OFFSEASON (sponsors / board / stadium · D79)', () => {
+  it('opens sponsors on SEASON/OFFSEASON; board/stadium remain soft-locked (D99)', () => {
     for (const phase of ['SEASON', 'OFFSEASON'] as const) {
-      for (const href of ['/sponsors', '/board', '/stadium'] as const) {
+      expect(resolveRouteNavAccess('/sponsors', phase)).toBe('open');
+      expect(isRouteSoftLocked('/sponsors', phase)).toBe(false);
+      for (const href of ['/board', '/stadium'] as const) {
         expect(resolveRouteNavAccess(href, phase)).toBe('soft_locked');
         expect(isRouteSoftLocked(href, phase)).toBe(true);
       }
@@ -74,5 +76,11 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
       expect(src).not.toContain('42 500');
       expect(src).not.toContain('450 000');
     }
+  });
+
+  it('sponsors page uses resolveClubSponsors (D96)', () => {
+    const src = readFileSync(join(webRoot, 'app/(game)/sponsors/page.tsx'), 'utf8');
+    expect(src).toContain('resolveClubSponsors');
+    expect(src).toContain('SponsorsView');
   });
 });

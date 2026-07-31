@@ -15,6 +15,8 @@ describe('ECONOMY_THIN constants', () => {
     expect(ECONOMY_THIN.REWARD_LOSS).toBe(1_000);
     expect(ECONOMY_THIN.CURRENCY).toBe('EUR');
     expect(ECONOMY_THIN.ENVELOPE_RATIO).toBe(1);
+    expect(ECONOMY_THIN.SPONSOR_BASE).toBe(15_000);
+    expect(ECONOMY_THIN.SPONSOR_BONUS).toBe(10_000);
   });
 
   it('exposes shared TRANSFER_FEE coefficients (GDD §26)', () => {

@@ -14,8 +14,15 @@ const EARLY_CLUB_OPEN = new Set([
   'status',
 ]);
 
-/** SEASON unlocks Liga + Finanse + Akademia on top of EARLY_CLUB opens. Transfers need window flag. */
-const SEASON_OPEN = new Set([...EARLY_CLUB_OPEN, 'league', 'finance', 'academy', 'scouting']);
+/** SEASON unlocks Liga + Finanse + Akademia + Sponsors. Transfers need window flag. Board/Stadium stay locked (D99). */
+const SEASON_OPEN = new Set([
+  ...EARLY_CLUB_OPEN,
+  'league',
+  'finance',
+  'academy',
+  'scouting',
+  'sponsors',
+]);
 
 export type NavAccessContext = {
   readonly transferWindowOpen?: boolean;
@@ -38,7 +45,7 @@ export function resolveNavAccess(
   if (phase === 'EARLY_CLUB') {
     return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
-  // SEASON + OFFSEASON share unlock parity (D79) — Sponsors/Board/Stadium stay soft-locked.
+  // SEASON + OFFSEASON share unlock parity (D79) — Board/Stadium stay soft-locked (D99).
   if (phase === 'SEASON' || phase === 'OFFSEASON') {
     if (itemId === 'transfers') {
       return ctx.transferWindowOpen ? 'open' : 'soft_locked';
