@@ -1,4 +1,4 @@
-﻿# PROJECT HANDOFF — Last Football
+# PROJECT HANDOFF — Last Football
 
 **EPIC:** AI-HANDOFF-02 (docs-only · cold start)  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                    |
 | **Domain feature baseline**     | `ce00327` — **LFE-PUBLIC-API-01** (root PUBLIC · `/testing` · D119–D121)                                                                                                 |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                    |
-| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                                                             |
-| **tip `main`**                  | after PUBLIC-API-01 CLOSE                                                                                                                                                |
+| **Documentation tip**           | **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin)                                                                                                                       |
+| **tip `main`**                  | after PUBLIC-API-01 CLOSE pin `7485366`                                                                                                                                  |
 | **Branch**                      | `main`                                                                                                                                                                   |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-PUBLIC-API-01 FULLY CLOSED** · D1–D121 · next **Owner GO → Ratings v2**                                                           |
 
