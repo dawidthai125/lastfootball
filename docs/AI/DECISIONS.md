@@ -6,7 +6,7 @@ Szybki indeks decyzji dla Agenta. Pełna lista historyczna: [`../DECISIONS.md`](
 
 ## Kiedy czytać
 
-Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (D18–D28, P\*).
+Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (**D1–D87**, P\*). SSOT: [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Platform / product (2026)
 
@@ -53,4 +53,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-31 — LFE-SEASON-END-01 · D78–D87 / P24
+2026-07-31 — AI HANDOFF · D1–D87 / P24 · kolejka Promotion→…→Stadium

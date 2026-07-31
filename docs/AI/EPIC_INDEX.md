@@ -94,7 +94,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **czekaj na Owner GO** (Sponsors/Board · Promotion · Settings).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** PROMOTION → SPONSORS → BOARD → STADIUM (po Owner GO).
 
 **TD-03+ (P2):** transfers actions / displayPos — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -107,4 +107,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **rekomendacja:** **czekaj na
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-SEASON-END-01 CLOSED · next Owner GO
+**ACTIVE** · 2026-07-31 — AI HANDOFF · next Owner GO → LFE-PROMOTION-01

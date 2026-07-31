@@ -23,7 +23,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)         |
 | **Domain feature**      | **`024e827`** — **LFE-SEASON-END-01** (Season End Thin · D78–D87) |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)          |
-| **Documentation tip**   | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                       |
+| **Documentation tip**   | AI HANDOFF sync (pin follows)                                     |
 | **Prod**                | https://lastfootball.vercel.app                                   |
 
 | Tor               | Stan                                                                                                                                                                                         |
@@ -47,7 +47,7 @@ Brak otwartego EPIC. **LFE-SEASON-END-01** CLOSED · D78–D87 · Domain tip `02
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · rekomendacja w [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §10.  
-**Rekomendacja:** **czekaj na Owner GO** (kandydaci: Sponsors/Board · Promotion · Settings/§22 · TD-03 P2).
+**Rekomendacja:** **czekaj na Owner GO** — kolejka: **LFE-PROMOTION-01 → LFE-SPONSORS-01 → LFE-BOARD-01 → LFE-STADIUM-01**.
 
 ## Decyzje
 
@@ -56,4 +56,4 @@ Season End Thin SSOT: [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEA
 
 ## Last updated
 
-2026-07-31 — LFE-SEASON-END-01 CLOSE · `024e827`
+2026-07-31 — AI HANDOFF · Domain `024e827`

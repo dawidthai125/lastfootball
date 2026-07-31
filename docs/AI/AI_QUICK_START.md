@@ -15,7 +15,8 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
 | Domain baseline     | **`024e827`** — LFE-SEASON-END-01 (Season End Thin · D78–D87) |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| Documentation tip   | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                   |
+| Documentation tip   | AI HANDOFF sync (pin follows)                                 |
+| tip `main`          | po pin handoffu (było `020cd08`)                              |
 | Prod                | https://lastfootball.vercel.app                               |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
@@ -28,6 +29,9 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 ```
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
+
+**Następny EPIC (kolejka Ownera):** `LFE-PROMOTION-01` → `LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01`.
+Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
 
 ## Twarde zasady
 
@@ -50,4 +54,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — GDD-SEASON-END-01 CLOSED · next Owner GO
+**ACTIVE** · 2026-07-31 — AI HANDOFF · Domain `024e827` · next Owner GO → PROMOTION-01

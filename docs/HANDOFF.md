@@ -24,13 +24,18 @@
 ## Pipeline
 
 ```
-AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH → CI → CLOSE
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
+  → PRODUCTION VERIFY → DOCS SYNC → EPIC CLOSE
 ```
+
+## Następny EPIC (po Owner GO)
+
+`LFE-PROMOTION-01` → `LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
 
 ## Twarde (skrót)
 
-Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED.
+Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D87 · ZERO Fake Production.
 
 ## Last updated
 
-2026-07-29 — LFE-PLAYERS-02
+2026-07-31 — AI HANDOFF

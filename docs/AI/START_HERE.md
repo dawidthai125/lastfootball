@@ -49,6 +49,8 @@ Opcjonalnie: [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) (status SSOT) · [`P
 | Match Live / Canvas / Replay  | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                                                                                                                                 |
 | Silnik LFE                    | [`../lfe/README.md`](../lfe/README.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md)                                                                                  |
 | Produkt / GDD                 | [`../game-design/README.md`](../game-design/README.md)                                                                                                                                       |
+| Soft-lock / Sponsors/Board    | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §9 · D52 · D63–D67 · D79                                                                                                                        |
+| Season End                    | [`../game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) · D68–D87 · HUB.md                                                                                              |
 | Release                       | [`../RELEASE_PROCESS.md`](../RELEASE_PROCESS.md)                                                                                                                                             |
 
 Indeks: [`../README.md`](../README.md).
@@ -62,7 +64,9 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
   → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-**Brak EPIC IN PROGRESS:** następny = **Transfers hardening READY FOR AUDIT** — start wyłącznie od **AUDIT** po **Owner GO**.
+**Brak EPIC IN PROGRESS.** Oficjalna kolejka (po **Owner GO**, start od **AUDIT**):
+`LFE-PROMOTION-01` → `LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01`.
+Szczegóły: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13 · [`../ROADMAP.md`](../ROADMAP.md).
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
 
@@ -100,4 +104,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) �
 
 ## Last updated
 
-2026-07-30 — AI-DOCS-HARDENING-01
+2026-07-31 — AI HANDOFF · kolejka Promotion→Sponsors→Board→Stadium

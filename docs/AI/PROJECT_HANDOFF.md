@@ -1,9 +1,9 @@
 # PROJECT HANDOFF — Last Football
 
-**EPIC:** LFE-HANDOFF-01  
+**EPIC:** AI-HANDOFF-02 (docs-only · cold start)  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
 **Status:** ACTIVE — master handoff dla nowej sesji ChatGPT / Cursor  
-**Data:** 2026-07-30
+**Data:** 2026-07-31
 
 > **Cel:** cold start nowej sesji AI w **&lt; 5 minut** — wyłącznie z `docs/` + kodu.  
 > **Nie** zastępuje SSOT statusu / baseline / listy EPIC — **łączy** je w jeden dokument startowy.  
@@ -19,13 +19,14 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                           |
 | **Domain feature baseline**     | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                                   |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                           |
-| **Documentation tip**           | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                                                                     |
+| **Documentation tip**           | AI HANDOFF sync (pin follows)                                                                                   |
+| **tip `main`**                  | po CLOSE tego handoffu (pin)                                                                                    |
 | **Branch**                      | `main`                                                                                                          |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **LFE-SEASON-END-01 CLOSED** · D78–D87 · Domain tip `024e827` · next **Owner GO** |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-SEASON-END-01 FULLY CLOSED** · D1–D87 · next **Owner GO** (roadmapa §10) |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
-| **CI Status** | GREEN wymagane na tip `main` po FIX CLOSE (Format · Typecheck · Lint · Test · Build) |
+| **CI Status** | GREEN wymagane na tip `main` (Format · Typecheck · Lint · Test · Build) |
 
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
@@ -150,9 +151,10 @@ LFE-DOCS-01 · DOCS-UX-03 · DOCS-SYNC-01 · DOCS-BASELINE-01 · **LFE-HANDOFF-0
 | Skauting        | `resolveClubScouting` · `scout_shortlist` `(club_id, player_id)` → `players.id` · D24           |
 | Daily Goal      | `resolveClubDailyGoal` · derive only · Primary CTA nadrzędny · D25                              |
 | Trening         | `resolveClubTraining` · `last_training_on` · skill Thin ≤ potential · XI Gate · senior filter   |
-| Hub             | `resolveHubPhase` · `resolvePrimaryCta`                                                         |
+| Hub             | `resolveHubPhase` · `resolvePrimaryCta` · OFFSEASON (D79)                                       |
+| Season End      | `season_phase` / `season_number` · `resolveSeasonReport` · `confirmStartNextSeason` · D68–D87   |
 | UI presentation | `UI_DESIGN_GUIDE.md` §16 · `UI_COPY`                                                            |
-| Produkt         | GDD                                                                                             |
+| Produkt         | GDD · `GDD-SEASON-END-01.md` (kontrakt Thin)                                                    |
 | Obraz           | Visual DNA · Style Lock · World Art registry                                                    |
 
 ### Najważniejsze katalogi
@@ -218,160 +220,223 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 ## 7. Gameplay
 
+### Pętla gracza (klub → koniec sezonu → N+1)
+
+1. **Auth / Landing** → rejestracja / login
+2. **Club Wizard** → tożsamość klubu
+3. **First Match** (Tunnel → … → Post) → `first_match_completed_at` → Hub
+4. **EARLY_CLUB** → seed **22** fixtures → **SEASON**
+5. **Matchday loop:** Hub Primary → Match Path → wynik → finanse / development / trening / transfery (gdy odblokowane) · akademia / skauting · daily goal · ranking / osiągnięcia / wiadomości
+6. Po **22/22 played** → **Season Closed** → **OFFSEASON** (persist `season_phase`) · raport read-only · soft-lock Sponsors/Board/Stadium
+7. **Confirm N+1** → clear slate · `planClubFixtures` · `season_number++` · powrót **SEASON** (ta sama liga · D73)
+
 ### Co działa (Thin Slice na produkcji)
 
-- Onboarding → Club Wizard → First Match (Tunnel → VS → Pre → XI → Live → Post) → Welcome LF → Hub
-- Hub EARLY_CLUB → SEASON · Primary CTA · soft-locks
-- Liga (11 fixtures) · tabela derive · Terminarz
-- Finanse (cash + movements)
-- Kadra / Squad (+ pasma potencjału)
-- Transfery: listing · Instant Buy/Sell · Pending · 1× Counter · envelope ratio 1
-- Trening drużynowy **Depth**: status + skill Thin (anti-farm; ≤ potential) · XI Gate · feedback sesji
-- **Akademia Thin A**: Intake + Promote · `/academy` · `academy_track` · unlock SEASON
-- **Skauting Thin B**: `/scouting` · `resolveClubScouting` · prywatna shortlista (refs only) · unlock SEASON
-- **Daily Goal Thin**: Hub · `resolveClubDailyGoal` · sugestia pod Primary · derive only
-- **Achievements Thin**: `/achievements` · `resolveClubAchievements` · historia kamieni · derive only
-- **Ranking Thin**: `/rankings` · `resolveClubRanking` · sezonowe porównanie · table input only
-- **League 22**: `planClubFixtures` · double RR · top-up MD12–22
-- Match development (PRIMARY): +1 / K_MATCH=5 / starters · Post Match signals
-- Match Live + Canvas + Replay + Post (immersive chrome na `/match/*`)
+- Onboarding → Club Wizard → First Match → Welcome LF → Hub
+- Hub EARLY_CLUB / SEASON / **OFFSEASON** · Primary CTA · SoftLockRouteGate
+- Liga **22** · tabela derive · Terminarz · Season End Thin (raport + Confirm)
+- Finanse · Kadra · Transfery 01–09 · Trening Depth · Akademia · Skauting · Daily · Achievements · Ranking · Messages · Club profile
+- Match Live + Canvas + Replay + Post · match development PRIMARY
 
 ### Co jest Thin (świadome limity)
 
-kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · brak XP / attribute DB · Ranking Thin kod = RANKING-01 (bez ELO/points surface) · Osiągnięcia Thin kod = ACHIEVEMENTS-01 (bez XP/score) · Messages Thin = derive (D40–D46) · **brak kanału push** (GDD §22 Thin = polityka only) · brak auto season-end age++ · envelope ratio = 1 · 1× Counter · brak escrow/timeout/AI pending · brak Physics · Board/Sponsors/Stadium **domena OUT** (soft-lock SoftLockState · D52 · bez Fake Production) · trening bez cash cost / kontuzji treningowych / timezone gracza · potential w UI tylko jako **pasmo** · akademia bez poziomów/cash-gate/youth OVR · skauting bez fog/regionów/misji/kosztów/scout_score · Daily Goal bez persist/Quest Engine/nagród.
+kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · brak XP / attribute DB · Ranking bez ELO/points surface · Achievements bez XP/score · Messages = derive · **brak kanału push** · brak auto age++ · brak Physics · Board/Sponsors/Stadium **domena OUT** (soft-lock · D52) · brak Promotion w Thin (D73) · akademia/skauting limity Thin · Daily bez Quest Engine.
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** (Sponsors/Board · Promotion · Settings/§22 · TD-03 P2 — nie startować bez GO).
+**Czekaj na Owner GO** — oficjalna kolejka: **LFE-PROMOTION-01 → LFE-SPONSORS-01 → LFE-BOARD-01 → LFE-STADIUM-01** (patrz §10).
 
 ---
 
 ## 8. UI (stan ekranów)
 
-| Obszar           | Stan                                                                                      |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| **Landing**      | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal)               |
-| **Branding**     | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                                   |
-| **Login**        | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage                           |
-| **Register**     | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only                         |
-| **Hub**          | CLOSED UI P0 · decision-first · **MOTION-01** enter/press · Night Pitch Office            |
-| **Match**        | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post · **MOTION-01** Goal/Final overlay |
-| **Squad**        | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential            |
-| **Academy**      | CLOSED **LFE-ACADEMY-01** · `resolveClubAcademy` · Intake/Promote · D23 · `9c6fe86`       |
-| **Scouting**     | CLOSED **LFE-SCOUTING-01** · `resolveClubScouting` · shortlist refs · `93fd6d5`           |
-| **Daily Goal**   | CLOSED **LFE-DAILY-01** · `resolveClubDailyGoal` · derive · `73e1361`                     |
-| **Achievements** | CLOSED **LFE-ACHIEVEMENTS-01** · `resolveClubAchievements` · history · `3915be9`          |
-| **Ranking**      | CLOSED **LFE-RANKING-01** · `resolveClubRanking` · seasonal · `bf86749`                   |
-| **Training**     | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)                   |
-| **Transfers**    | CLOSED Thin 01–**09** (hardening TD-01/02) + presentation                                 |
-| **Finance**      | CLOSED Thin + presentation                                                                |
-| **Motion**       | CLOSED **LFE-UI-MOTION-01** · shared `motion.css` · Guide §8 · `9fd14fc`                  |
-| **SoftLock**     | CLOSED **LFE-SOFTLOCK-01** · Route Gate · SoftLockState · D52 · D63–D67 · `46f7caa`       |
-| **Season End**   | CLOSED **GDD-SEASON-END-01** · kontrakt Thin · D68–D77 · kod = Future                     |
+| Obszar           | Stan                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| **Landing**      | CLOSED · LFE-LANDING-01 · Tunnel hero · CTAs (Załóż klub / Zaloguj → modal)                 |
+| **Branding**     | CLOSED · LFE-BRANDING-01B · logo system w chrome + meta                                     |
+| **Login**        | CLOSED · LFE-AUTH-UX-01 · Modal na Landing + `/login` AuthStage                             |
+| **Register**     | CLOSED · AuthStage · CTA „Rozpocznij karierę” · presentation only                           |
+| **Hub**          | CLOSED UI P0 · decision-first · **MOTION-01** enter/press · Night Pitch Office              |
+| **Match**        | CLOSED IMPL-02/05/06 · Path immersive · XI · Live/Post · **MOTION-01** Goal/Final overlay   |
+| **Squad**        | CLOSED IMPL-03/05 + PLAYERS-02 · resolver `resolveClubSquad` · pasma potential              |
+| **Academy**      | CLOSED **LFE-ACADEMY-01** · `resolveClubAcademy` · Intake/Promote · D23 · `9c6fe86`         |
+| **Scouting**     | CLOSED **LFE-SCOUTING-01** · `resolveClubScouting` · shortlist refs · `93fd6d5`             |
+| **Daily Goal**   | CLOSED **LFE-DAILY-01** · `resolveClubDailyGoal` · derive · `73e1361`                       |
+| **Achievements** | CLOSED **LFE-ACHIEVEMENTS-01** · `resolveClubAchievements` · history · `3915be9`            |
+| **Ranking**      | CLOSED **LFE-RANKING-01** · `resolveClubRanking` · seasonal · `bf86749`                     |
+| **Training**     | CLOSED TRAINING-01/02 · Depth skill + XI Gate · ceiling potential (D22)                     |
+| **Transfers**    | CLOSED Thin 01–**09** (hardening TD-01/02) + presentation                                   |
+| **Finance**      | CLOSED Thin + presentation                                                                  |
+| **Motion**       | CLOSED **LFE-UI-MOTION-01** · shared `motion.css` · Guide §8 · `9fd14fc`                    |
+| **SoftLock**     | CLOSED **LFE-SOFTLOCK-01** · Route Gate · SoftLockState · D52 · D63–D67 · `46f7caa`         |
+| **Season End**   | CLOSED **GDD + LFE-SEASON-END-01** · OFFSEASON · raport · Confirm N+1 · D68–D87 · `024e827` |
 
 ---
 
-## 9. Otwarte EPICi (priorytet)
+## 9. Soft-locki aktywne (nav / route)
 
-Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED**:
+Access SSOT: `resolveNavAccess` / `isModuleSoftLocked` · gate: `SoftLockRouteGate` · surface: `SoftLockState` (D52 · D63–D67).  
+**OFFSEASON** = parity unlock z **SEASON** (D79).
 
-| #   | EPIC / temat                    | Priorytet | Notatka                            |
-| --- | ------------------------------- | --------- | ---------------------------------- |
-| 1   | Sponsors / Board Thin           | P1        | Po Season End · H-SPONSORS/H-BOARD |
-| 2   | Promotion / awans-spadek        | P2        | Po SE kod · D73                    |
-| 3   | TD-03+ transfers cleanup (P2)   | P2        | Po osobnym Owner GO                |
-| 4   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth                      |
-| 5   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO                |
+| Moduł / trasa      | Stan soft-lock                   | Dlaczego                                     | Odblokuje (Owner EPIC) |
+| ------------------ | -------------------------------- | -------------------------------------------- | ---------------------- |
+| `/sponsors`        | **locked** (SEASON + OFFSEASON)  | Brak domeny Sponsors · zakaz Fake Production | **LFE-SPONSORS-01**    |
+| `/board`           | **locked**                       | Brak domeny Board                            | **LFE-BOARD-01**       |
+| `/stadium`         | **locked**                       | Brak domeny Stadium depth                    | **LFE-STADIUM-01**     |
+| `/transfers`       | locked gdy `!transferWindowOpen` | Okno po progach meczów (Thin)                | (już w Transfers)      |
+| `/training`        | locked gdy `!trainingUnlocked`   | Po progach played (Thin)                     | (już w Training)       |
+| Liga / Finanse / … | locked na EARLY_CLUB / NEW_CLUB  | Progressive disclosure Hub                   | First Match + fixtures |
+| Promotion UI       | **brak** (nie w produkcie Thin)  | D73 — awans OUT Season End Thin              | **LFE-PROMOTION-01**   |
+
+---
+
+## 10. Roadmapa oficjalna (kolejność Ownera · 2026-07-31)
+
+Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDIT).
+
+```
+LFE-PROMOTION-01
+  ↓
+LFE-SPONSORS-01
+  ↓
+LFE-BOARD-01
+  ↓
+LFE-STADIUM-01
+```
+
+| #   | EPIC                 | Notatka                                           |
+| --- | -------------------- | ------------------------------------------------- |
+| 1   | **LFE-PROMOTION-01** | Awans/spadek — **poza** Season End Thin (D73)     |
+| 2   | **LFE-SPONSORS-01**  | H-SPONSORS · po lifecycle · soft-lock `/sponsors` |
+| 3   | **LFE-BOARD-01**     | H-BOARD · soft-lock `/board`                      |
+| 4   | **LFE-STADIUM-01**   | Soft-lock `/stadium` · depth stadionu             |
+
+**Równolegle / później (nie w kolejce powyżej):** TD-03+ transfers P2 · Settings/§22 push · Ratings v2 · LFE PUBLIC trim.
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ---
 
-## 10. Rekomendowany następny EPIC
+## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO**
+### **Czekaj na Owner GO → domyślnie `LFE-PROMOTION-01`**
 
-**Uzasadnienie:** LFE-SEASON-END-01 CLOSED (D78–D87 · `024e827`) · SoftLock CLOSED · brak otwartego EPIC. Następni kandydaci: Sponsors/Board · Promotion.
+**Uzasadnienie:** Season End Thin (GDD+kod) CLOSED · D68–D87 · Domain `024e827`. Oficjalna kolejka: Promotion → Sponsors → Board → Stadium.
 
-**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO.
+**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production w soft-lockach · drugi planner terminarza · age++ feature bez EPIC.
 
 **Nie zaczynaj** kolejnego EPIC bez **Owner GO**.
----
-
-## 11. Onboarding dla nowego AI
-
-### Kolejność (obowiązkowa)
-
-| #   | Dokument                                                     | Po co                                     |
-| --- | ------------------------------------------------------------ | ----------------------------------------- |
-| 0   | [`AI_QUICK_START.md`](./AI_QUICK_START.md)                   | 1 ekran                                   |
-| 1   | **Ten plik** (`PROJECT_HANDOFF.md`)                          | pełny kontekst sesji                      |
-| 2   | [`START_HERE.md`](./START_HERE.md)                           | mapa + zakazy                             |
-| 3   | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               | hashe Production / Domain / tip           |
-| 4   | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               | status SSOT                               |
-| 5   | [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)           | warstwy                                   |
-| 6   | [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) | filozofia                                 |
-| 7   | [`COMMON_PATTERNS.md`](./COMMON_PATTERNS.md)                 | wzorce                                    |
-| 8   | [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md)                     | pipeline + Owner GO                       |
-| 9   | [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md)             | CI / commit                               |
-| 10  | Task-specific                                                | `MODULE_MAP` · platform · Guide §16 · GDD |
-
-**Cursor:** start od root [`AGENTS.md`](../../AGENTS.md).
-
-### Na co uważać
-
-- Nie polegaj na historii czatu — tylko `docs/` + kod.
-- Nie commituj / nie pushuj bez **Owner GO**.
-- UI EPIC ≠ zmiana resolverów / DTO / unlock.
-- Nie edytuj World Art / DNA / tokenów / brand SVG „przy okazji”.
-- Transfery: Single Settlement Path.
-- Match: mutacje tylko CommandBus / session API.
 
 ---
 
-## 12. Owner Decisions (nienaruszalne)
+## 12. NOWA SESJA AI (ChatGPT)
+
+### Od czego zacząć
+
+1. [`AI_QUICK_START.md`](./AI_QUICK_START.md) — 1 ekran
+2. **Ten plik** — kontekst sesji
+3. [`START_HERE.md`](./START_HERE.md) — mapa + zakazy
+4. [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) — hashe
+5. [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../ROADMAP.md`](../ROADMAP.md)
+6. [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) — skrót D\*
+7. Task-specific: GDD / platform / `MODULE_MAP` dopiero po Owner GO na EPIC
+
+### Czego nie wolno
+
+- Polegać na historii czatu — tylko **`docs/` + kod**.
+- Commit / push / IMPLEMENT bez **Owner Approval Gate**.
+- Scope creep poza Thin IN/OUT EPICu.
+- Fake Production / runtime mocki / atrapy w soft-lockach.
+- Duplikować resolvery / settlement / planner fixtures.
+- Łamać **Contract First** (GDD/kontrakt przed kodem, gdy wymagane).
+
+### Obowiązujący workflow
+
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH
+  → CI → PRODUCTION VERIFY → DOCS SYNC → EPIC CLOSE → FINAL DOCS VERIFY
+```
+
+### SSOT (nie kopiuj między plikami)
+
+| Fakt                | Dokument                                                                     |
+| ------------------- | ---------------------------------------------------------------------------- |
+| Hashe / tipy        | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)                               |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                               |
+| Lista EPIC          | [`../ROADMAP.md`](../ROADMAP.md)                                             |
+| Decyzje D\* pełne   | [`../DECISIONS.md`](../DECISIONS.md)                                         |
+| Skrót D\*           | [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md)                 |
+| Season End kontrakt | [`../game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) |
+
+### Zasady nienegocjowalne
+
+**SSOT FIRST** · **Contract First** · **Reuse First** · **ZERO DUPLICATE LOGIC** · **ZERO Fake Production** · **ZERO Scope Creep** · **Owner Approval Gate** · **Presentation ≠ Domain** · **Information Thin** · **RESOLVER FIRST**.
+
+---
+
+## 13. NOWY AGENT CURSOR
+
+### Jak zacząć
+
+1. Root [`AGENTS.md`](../../AGENTS.md)
+2. [`AI_QUICK_START.md`](./AI_QUICK_START.md) → **ten handoff** → [`START_HERE.md`](./START_HERE.md)
+3. [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`ENGINEERING_GUIDE.md`](./ENGINEERING_GUIDE.md)
+4. Po Owner GO na EPIC: kontrakt GDD/PLAN + `MODULE_MAP` + kod wejścia
+
+### Czego nie implementować bez Owner GO
+
+- Żadnego nowego EPICu z kolejki Promotion / Sponsors / Board / Stadium.
+- age++ jako feature · ekonomia sponsorów · ocena zarządu · awans ligowy.
+- Drugiego `planClubFixtures` / standings DB / Fake Production w `/sponsors|board|stadium`.
+- Commitów i pushy „przy okazji”.
+
+### Każda większa funkcjonalność = pełny pipeline
+
+```
+AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH
+  → PRODUCTION VERIFY → DOCS SYNC → EPIC CLOSE
+```
+
+Role: Owner (ChatGPT) = Technical Product Owner / GO / HOLD.  
+Cursor Agent = Senior Engineer — wykonuje po GO; docs+code SSOT; bez historii czatu.
+
+### Na co uważać (Cursor)
+
+- Prettier CI gate przed merge/`main`.
+- Migracje Supabase tylko gdy EPIC wymaga i Owner GO.
+- UI presentation EPIC ≠ zmiana DTO/unlock/resolver bez domain GO.
+- Soft-lock: reuse `SoftLockRouteGate` / `SoftLockState` (D66) — nie PlaceholderPage.
+
+---
+
+## 14. Owner Decisions (nienaruszalne)
 
 1. **Owner GO** przed IMPLEMENT (kod) / COMMIT / PUSH / CLOSE.
-2. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**.
-3. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**.
+2. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC** · **Contract First**.
+3. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME** · **ZERO Fake Production**.
 4. **Single Settlement Path** — tylko `completeTransferBuy` / `completeTransferSell`.
 5. Hub = decyzja · First Match przed Hubem · `first_match_completed_at`.
 6. Canvas / Replay **nigdy** nie wołają Engine i nie mutują `MatchState`.
 7. UI presentation → Guide §16; bez driftu DNA / Style Lock.
 8. Branding K1+K3 i World Art — zmiana tylko osobnym EPIC + GO.
 9. §26 = SSOT liczb Thin; D18/D20 = SSOT implementacji economy/transfers.
-10. Kalendarz **22** fixtures (D28) — Season End GDD Thin CLOSED; kod / awans tylko osobnym Owner GO.
+10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Promotion tylko **LFE-PROMOTION-01** (D73).
+11. Decyzje **D1–D87** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
 
-## 13. Known Constraints
+## 15. Known Constraints
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
-- `LEAGUE_FIXTURE_COUNT=22` · double RR · D28 · PRODUCTION VERIFIED (`9027baf`).
-- Transfers hardening: TD-01/TD-02 CLOSED · D38 · PRODUCTION VERIFIED (`e6885dc`) · parity gate Vitest.
-- Messages Thin: D40–D46 CLOSED · PRODUCTION VERIFIED (`800ed0d`) · `resolveClubMessages` · Overlay = ta sama DTO · brak runtime mocków.
-- Club Profile Thin: D47–D51 CLOSED · PRODUCTION VERIFIED (`36ba9be`) · `resolveClubProfile` · brak silnika §6 / personelu.
-- Brak: AI clubs · 2+ counters · buyer Counter · escrow · timeout · Physics · individual training · XP / attribute DB · Ranking ELO/points-as-surface · Achievements XP/score/ekonomii · Messages DB/mark-as-read · §6 numeric engine / club staff UI · auto age++ · envelope ≠ 1 · full Board/Sponsors · numeric potential UI · academy levels / youth OVR · scout fog/misje/koszty/scout_score.
-- Domain tip = SOFTLOCK-01 (`46f7caa`); prior CLUB-01 `36ba9be`; prior MESSAGES-01 `800ed0d`; prior TRANSFERS-09 `e6885dc`; prior LEAGUE-04 `9027baf`; prior RANKING `bf86749`; Presentation tip = MOTION-01 (`9fd14fc`); prior ACHIEVEMENTS `3915be9` · DAILY `73e1361` · SCOUTING `93fd6d5`; UI P0 = `54d0724`.
-- Motion Thin: CSS-only · Hub/Match only · Guide §8 — bez Landing/nav/routes/Live tick.
-- Ranking Thin (GDD-18 / D27): `resolveClubRanking` · table input · Information Thin · PRODUCTION VERIFIED (`bf86749`).
-- Osiągnięcia Thin (GDD-19 / D26): `resolveClubAchievements` · Information Thin · immutable history · PRODUCTION VERIFIED.
-- Academy Thin A (D23): `academy_track` · `resolveClubAcademy` · max 3 · PRODUCTION VERIFIED.
-- Scouting Thin B: `resolveClubScouting` · `scout_shortlist` refs only · shortlista ≠ świat gry · PRODUCTION VERIFIED.
-- Daily Goal Thin (D25): `resolveClubDailyGoal` derive only · Primary > Daily · ≠ Secondary daily loop · PRODUCTION VERIFIED.
-- Achievements Thin (D26): `resolveClubAchievements` derive · immutable history · ≠ Ranking/Daily/§6 · PRODUCTION VERIFIED.
-- Ranking Thin (D27): `resolveClubRanking` table input · własny DTO · bez ELO/points surface · PRODUCTION VERIFIED.
-- League calendar (D28): `LEAGUE_FIXTURE_COUNT=22` · double RR · top-up MD12–22 · PRODUCTION VERIFIED (`9027baf`).
-- Messages Thin (D40–D46): `resolveClubMessages` · E1–E3 · `/messages` + Overlay · PRODUCTION VERIFIED (`800ed0d`).
-- Club Profile Thin (D47–D51): `resolveClubProfile` · `/club` · PRODUCTION VERIFIED (`36ba9be`).
-- Sekrety `.env` — nigdy w git.
-- Force-push / rewrite `main` — zakazane.
-- Node 20 deprecation warning w GHA — informacyjny, nie blokuje CI.
-- Migracje Supabase na prod: training · potential/match dev · **academy_track** · **scout_shortlist** · fee helpers — zastosowane; **MESSAGES = brak migracji**.
+- Domain tip = **SEASON-END-01** (`024e827`); prior SoftLock `46f7caa`; Presentation MOTION `9fd14fc`; UI P0 `54d0724`.
+- Soft-lock permanentny: `/sponsors` · `/board` · `/stadium` do EPICów Sponsors/Board/Stadium.
+- Brak: AI clubs · escrow · timeout · Physics · XP/attribute DB · Ranking ELO · Achievements XP · Messages DB · §6 engine · auto age++ · full Board/Sponsors · Promotion w Thin.
+- Migracje prod: training · potential · academy_track · scout_shortlist · fee helpers · **season_number/season_phase**; Messages/Club/SoftLock = brak migracji.
+- Sekrety `.env` — nigdy w git · Force-push `main` — zakaz.
 
 ---
 
-## 14. Quality Gates (workflow)
+## 16. Quality Gates (workflow)
 
 ```
 AUDIT → (RCA jeśli regresja) → PLAN → OWNER GO → IMPLEMENT → VERIFY
@@ -396,18 +461,18 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ---
 
-## 15. Current Project Health
+## 17. Current Project Health
 
-| Obszar       | Ocena        | Komentarz                                                                                                        |
-| ------------ | ------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany                                                                        |
-| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                                                                                   |
-| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                                      |
-| UX           | **Dobry**    | Front door zamknięty; Hub decision-first                                                                         |
-| Gameplay     | **Thin+**    | Pętla sezonu + Training + Match development + Academy + Scouting + Daily + Achievements + Ranking + **Messages** |
-| Dokumentacja | **Aktualna** | GDD-SEASON-END-01 D68–D77 · Domain tip SOFTLOCK `46f7caa` · Presentation `9fd14fc`                               |
-| CI           | **GREEN**    | tip feat VERIFIED                                                                                                |
-| Production   | **GREEN**    | Vercel · Domain SOFTLOCK-01 `46f7caa` · brak migracji                                                            |
+| Obszar       | Ocena        | Komentarz                                                                                          |
+| ------------ | ------------ | -------------------------------------------------------------------------------------------------- |
+| Architektura | **Silna**    | Warstwy jasne · resolvery · LFE izolowany · Season lifecycle Thin                                  |
+| Kod          | **Dobry**    | Thin Slice spójny · CI zielone                                                                     |
+| UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                        |
+| UX           | **Dobry**    | Hub decision-first · SoftLock · OFFSEASON CTA                                                      |
+| Gameplay     | **Thin+**    | Pełna pętla sezonu 22 + N+1 Confirm · Training · Transfers · Academy · Scouting · Info Thin layers |
+| Dokumentacja | **Aktualna** | AI HANDOFF · Domain tip SEASON-END `024e827` · D1–D87                                              |
+| CI           | **GREEN**    | tip `main` VERIFIED                                                                                |
+| Production   | **GREEN**    | Vercel · Domain `024e827` · migracja season_phase                                                  |
 
 ---
 
@@ -416,7 +481,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | Dokument                                                     | Rola                                     |
 | ------------------------------------------------------------ | ---------------------------------------- |
 | [`AI_QUICK_START.md`](./AI_QUICK_START.md)                   | 1 ekran                                  |
-| [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) | skrót D19–D28 + Thin principles          |
+| [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md) | skrót D\* + Thin principles              |
 | [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md)               | **SSOT hashy**                           |
 | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               | **SSOT statusu**                         |
 | [`../ROADMAP.md`](../ROADMAP.md)                             | **SSOT listy EPIC**                      |
@@ -425,4 +490,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-31 — LFE-SEASON-END-01 CLOSED · Domain tip `024e827`
+2026-07-31 — AI HANDOFF · Domain `024e827` · kolejka Promotion → Sponsors → Board → Stadium

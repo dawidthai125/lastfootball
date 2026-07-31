@@ -10,10 +10,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`024e827`** (LFE-SEASON-END-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)
+**Documentation tip:** AI HANDOFF sync (pin follows)
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — AI HANDOFF · docs-only
+
+### Docs
+
+- Cold-start sync: HANDOFF §12–§13 · Quick Start · START_HERE · baseline · status · roadmap kolejka **PROMOTION → SPONSORS → BOARD → STADIUM**.
+- Soft-locki aktywne udokumentowane · pętla gameplay klub→sezon→N+1 · D1–D87 pointer SSOT.
+- Domain tip bez zmian: `024e827` · zero kodu / migracji.
 
 ## [2026-07-31] — LFE-SEASON-END-01 · CLOSED
 

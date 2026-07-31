@@ -33,21 +33,22 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                                                     |
-| --------------------------- | ------------------------------------------------------------------------------------------- |
-| URL                         | https://lastfootball.vercel.app                                                             |
-| Alias                       | https://lastfootball.pl                                                                     |
-| Branch                      | `main`                                                                                      |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                            |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                              |
-| **Domain feature baseline** | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                               |
-| Domain message              | `feat(season): implement LFE-SEASON-END-01 Season End Thin lifecycle`                       |
-| Prior Domain                | `46f7caa` — LFE-SOFTLOCK-01                                                                 |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                       |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                             |
-| **Documentation tip**       | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                                                 |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · LFE-SEASON-END-01 CLOSED · D78–D87 · Domain tip `024e827` |
+| Pole                        | Wartość                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------ |
+| URL                         | https://lastfootball.vercel.app                                                            |
+| Alias                       | https://lastfootball.pl                                                                    |
+| Branch                      | `main`                                                                                     |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                               |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                           |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                             |
+| **Domain feature baseline** | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                              |
+| Domain message              | `feat(season): implement LFE-SEASON-END-01 Season End Thin lifecycle`                      |
+| Prior Domain                | `46f7caa` — LFE-SOFTLOCK-01                                                                |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                      |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                            |
+| **Documentation tip**       | AI HANDOFF sync (pin follows)                                                              |
+| tip `main` (pre-handoff)    | `020cd08` — SEASON-END docs style                                                          |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · SEASON-END CLOSED · AI HANDOFF · Domain tip `024e827` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -157,4 +158,4 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · Promotion / relegation · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
-2026-07-31 — LFE-SEASON-END-01 CLOSED · Domain tip `024e827`
+2026-07-31 — AI HANDOFF · Domain tip `024e827` · kolejka Promotion→…→Stadium

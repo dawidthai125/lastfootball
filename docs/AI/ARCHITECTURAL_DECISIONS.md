@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\*:** [`../DECISIONS.md`](../DECISIONS.md)  
+**Pełny rejestr D\* (D1–D87):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -154,4 +154,4 @@
 - Unlock OFFSEASON = SEASON · raport read-only z faktów · Confirm jedyna ścieżka N+1.
 - `season_phase` persist (AC-10) · po N+1 raport nie wraca (AC-11) · hooki no-op.
 
-**ACTIVE** · 2026-07-31 — LFE-SEASON-END-01 · D78–D87 · Domain tip `024e827`
+**ACTIVE** · 2026-07-31 — AI HANDOFF · D1–D87 obowiązują · Domain tip `024e827` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

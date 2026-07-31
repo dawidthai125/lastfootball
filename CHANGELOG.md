@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (AI HANDOFF)
+
+- Cold-start docs sync · kolejka Promotion→Sponsors→Board→Stadium · HANDOFF §12–§13
+
 ### Docs (LFE-SEASON-END-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D78–D87 · Domain tip `024e827` · next **Owner GO**
