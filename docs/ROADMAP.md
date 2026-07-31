@@ -9,7 +9,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
 **Domain feature baseline:** **`75c190d`** — LFE-BOARD-01 CLOSED (Board Information Thin · D102–D108).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** CLOSE sync — tip pin follows
+**Documentation tip:** **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-SEASON-END-01 · LFE-SEASON-END-01 · GDD-PROMOTION-01 · LFE-PROMOTION-01 · GDD-SPONSORS-01 · LFE-SPONSORS-01 · **GDD-BOARD-01** · **LFE-BOARD-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
