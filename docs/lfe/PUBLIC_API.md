@@ -8,10 +8,11 @@ Szybki skrót warstw API. **Pełny kontrakt freeze:** [LFE_ARCHITECTURE_FREEZE.m
 ## Aktualny stan
 
 - Kontrakt PUBLIC API v1 **zamrożony** (freeze) · **root barrel = PUBLIC only** (LFE-PUBLIC-API-01 · D119–D121).
-- Pakiet: `0.9.1-match-ai01` (SemVer bump = Owner przy COMMIT).
+- Pakiet: `0.9.1-match-ai01` (SemVer bez bump przy CLOSE).
 - Entry: `@lastfootball/lfe` → `src/index.ts` (PUBLIC).
 - Testing: `@lastfootball/lfe/testing` → `src/testing.ts` (**barrel only**).
 - `/advanced` — **nie** zaimplementowane (defer).
+- Feat CLOSE: **`ce00327`** · D119–D121.
 
 ## Opis działania
 
@@ -73,4 +74,4 @@ Canvas / Replay / LiveMatchRuntime / Post Match → [`../web/MATCH_UI_PIPELINE.m
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 · root PUBLIC only · `/testing` T2
+2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · root PUBLIC only · `/testing` T2

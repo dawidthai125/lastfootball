@@ -365,28 +365,25 @@ Internal modules remain non-exported path imports inside the package only.
 
 ## 15. Freeze checklist
 
-| Item                               | Status                               |
-| ---------------------------------- | ------------------------------------ |
-| EPIC-1…7 complete                  | ✅                                   |
-| AUDIT-01…03 complete               | ✅                                   |
-| `createMatch` sole official entry  | ✅ (contract)                        |
-| `MatchSession` sole public façade  | ✅ (contract)                        |
-| `getWorld` → ADVANCED              | ✅                                   |
-| Domain factories transitional note | ✅                                   |
-| EXPERIMENTAL category              | ✅                                   |
-| Gameplay / Physics / AI excluded   | ✅                                   |
-| Code narrowed to match freeze      | ❌ deferred (docs-only finalization) |
+| Item                               | Status                           |
+| ---------------------------------- | -------------------------------- |
+| EPIC-1…7 complete                  | ✅                               |
+| AUDIT-01…03 complete               | ✅                               |
+| `createMatch` sole official entry  | ✅ (contract)                    |
+| `MatchSession` sole public façade  | ✅ (contract)                    |
+| `getWorld` → ADVANCED              | ✅                               |
+| Domain factories transitional note | ✅                               |
+| EXPERIMENTAL category              | ✅                               |
+| Gameplay / Physics / AI excluded   | ✅                               |
+| Code narrowed to match freeze      | ✅ LFE-PUBLIC-API-01 (`ce00327`) |
 
 ---
 
 ## 16. Architecture ready?
 
-**YES** — for **architectural freeze** (contract).
+**YES** — for **architectural freeze** (contract) **and** root barrel alignment (PUBLIC-API-01).
 
-Implementation alignment of `src/index.ts` with this document is a **follow-up packaging task**, not a blocker to declare the freeze document final.
-
-**Recommendation:** **FREEZE** (documentation contract).  
-Optional later: `REQUIRES CHANGES` only if Owner rejects transitional factories or wants `getWorld` removed from the façade type entirely before freeze.
+**Recommendation:** **FREEZE** remains authoritative. Optional later: `@lastfootball/lfe/advanced` only on Owner GO.
 
 ---
 

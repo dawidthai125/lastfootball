@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-PUBLIC-API-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D119–D121 · Domain tip `ce00327` · next **Owner GO → Ratings v2**
+- Kontrakt: root PUBLIC only · `/testing` barrel · `/advanced` defer · SemVer bez bump (`0.9.1-match-ai01`)
+
+### Added (shipped on `main` — LFE-PUBLIC-API-01)
+
+- LFE PUBLIC allowlist + gate · `testing.ts` barrel · package `exports["./testing"]` · TD surface cleanup CLOSED
+
 ### Docs (LFE-TRANSFERS-10 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D116–D118 · Domain tip `9424dd8` · next **Owner GO → Zawężenie LFE PUBLIC exports**

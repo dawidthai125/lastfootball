@@ -6,14 +6,14 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Aktualny stan
 
-|                         |                                                          |
-| ----------------------- | -------------------------------------------------------- |
-| **Package**             | `0.9.1-match-ai01`                                       |
-| **EPIC-1…7**            | ✅ DONE (na `main`)                                      |
-| **Gameplay Foundation** | ✅ DONE                                                  |
-| **Match AI**            | ✅ DONE                                                  |
-| **Match Engine**        | ✅ DONE                                                  |
-| **Architecture Freeze** | APPROVED · root barrel = PUBLIC only (LFE-PUBLIC-API-01) |
+|                         |                                                                          |
+| ----------------------- | ------------------------------------------------------------------------ |
+| **Package**             | `0.9.1-match-ai01`                                                       |
+| **EPIC-1…7**            | ✅ DONE (na `main`)                                                      |
+| **Gameplay Foundation** | ✅ DONE                                                                  |
+| **Match AI**            | ✅ DONE                                                                  |
+| **Match Engine**        | ✅ DONE                                                                  |
+| **Architecture Freeze** | APPROVED · root = PUBLIC only · **LFE-PUBLIC-API-01 CLOSED** (`ce00327`) |
 
 > Ten plik = **tylko silnik LFE**. Platforma (First Match / Hub) → [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../platform/`](../platform/).
 
@@ -48,9 +48,9 @@ Status implementacji EPIC-ów i modułów silnika.
 
 - Web match pipeline (Canvas / Replay / Post Match / Live Bridge / **Player Ratings**) — **DONE**
 - Physics / pełne Rules — **FUTURE** (Owner GO)
-- Subpath exports `advanced` — **PLANNED** (defer po PUBLIC-API-01)
-- Ratings v2 (assists / minutes) — FUTURE
-- Zawężenie public `index.ts` do freeze — **DONE** (LFE-PUBLIC-API-01 · `/testing` T2)
+- Subpath exports `advanced` — **PLANNED** (Owner GO)
+- Ratings v2 (assists / minutes) — **PLANNED** (next recommended)
+- Zawężenie public `index.ts` do freeze — **DONE** (LFE-PUBLIC-API-01 · feat `ce00327`)
 
 ## Najważniejsze decyzje
 
@@ -58,6 +58,7 @@ Status implementacji EPIC-ów i modułów silnika.
 - Player attribution = deterministyczna (`attribute-player.ts`), **bez** dodatkowego RNG.
 - Nie startować Physics bez Owner GO.
 - Canvas / Replay / Post Match żyją w **`apps/web`**, nie w LFE.
+- App → `@lastfootball/lfe` only · harness → `/testing` (D119–D121).
 
 ## Powiązania
 
@@ -65,4 +66,4 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 · root PUBLIC · `/testing` barrel
+2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · D119–D121

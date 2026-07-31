@@ -13,16 +13,16 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                             |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers **10** + Season End + Promotion + Sponsors + Board + Stadium + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                               |
-| **Domain feature baseline**     | `9424dd8` — **LFE-TRANSFERS-10** (TD-03+ · actions split · displayPos · D116–D118)                                                                  |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                               |
-| **Documentation tip**           | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)                                                                                                   |
-| **tip `main`**                  | after TRANSFERS-10 CLOSE pin `e77f1a4`                                                                                                              |
-| **Branch**                      | `main`                                                                                                                                              |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-TRANSFERS-10 FULLY CLOSED** · D1–D118 · next **Owner GO → Zawężenie LFE PUBLIC exports**                     |
+| Pole                            | Wartość                                                                                                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC surface** + GDD-16…**22** + MOTION-01 |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                    |
+| **Domain feature baseline**     | `ce00327` — **LFE-PUBLIC-API-01** (root PUBLIC · `/testing` · D119–D121)                                                                                                 |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                    |
+| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                                                             |
+| **tip `main`**                  | after PUBLIC-API-01 CLOSE                                                                                                                                                |
+| **Branch**                      | `main`                                                                                                                                                                   |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-PUBLIC-API-01 FULLY CLOSED** · D1–D121 · next **Owner GO → Ratings v2**                                                           |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -31,7 +31,8 @@
 ```bash
 git log -1 --oneline                    # tip (docs / presentation)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 9424dd8            # Domain TRANSFERS-10
+git log -1 --oneline ce00327            # Domain PUBLIC-API-01
+git log -1 --oneline 9424dd8            # Prior Domain TRANSFERS-10
 git log -1 --oneline 82a164d            # Prior Domain STADIUM-01
 git log -1 --oneline 75c190d            # Prior Domain BOARD-01
 git log -1 --oneline 17eb8ba            # Prior Domain SPONSORS-01
@@ -50,16 +51,17 @@ git log -1 --oneline 9c6fe86            # Prior Domain ACADEMY-01
 git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 ```
 
-**Prod deploy:** Vercel Production śledzi `main` (Domain TRANSFERS-10 `9424dd8` · presentation MOTION-01 `9fd14fc`).
+**Prod deploy:** Vercel Production śledzi `main` (Domain PUBLIC-API-01 `ce00327` · presentation MOTION-01 `9fd14fc`).
 
 **Operacyjne:** Migracje Supabase na prod: training · potential/match dev · **`academy_track`** · **`scout_shortlist`** · **fee parity helpers** · **`season_number` / `season_phase`** · **`league_tier`** · **`club_sponsor_contracts`** (SPONSORS-01) — zastosowane.  
-**LFE-SOFTLOCK-01 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-BOARD-01 / LFE-STADIUM-01 / LFE-TRANSFERS-10:** brak migracji (gate / derive / org refactor only).  
+**LFE-SOFTLOCK-01 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-BOARD-01 / LFE-STADIUM-01 / LFE-TRANSFERS-10 / LFE-PUBLIC-API-01:** brak migracji (gate / derive / org refactor / package surface only).  
 `scout_shortlist` = wyłącznie `(club_id, player_id)` → `players.id` (nie drugi model); shortlista bez wpływu na AI/rynek/transfery/potencjał/symulację.  
 Promotion Thin: etykiety + szczebel; **skład ligi / siła AI bez zmian** (D92).  
 Sponsors Thin: 1 kontrakt · finance ledger · H-SPONSORS non-blocking (D95–D101).  
 Board Thin: `resolveClubBoard` · Information Thin · no persist · H-BOARD non-blocking (D102–D108).  
 Stadium Thin: `resolveClubStadium` · Information Thin · no persist · no Ticket Economy · no Match Engine (D109–D115).  
-Transfers-10 / TD-03+: actions organizational split + `displayPos` sole helper · D116–D118 · Single Settlement Path nienaruszony.
+Transfers-10 / TD-03+: actions organizational split + `displayPos` sole helper · D116–D118 · Single Settlement Path nienaruszony.  
+**LFE-PUBLIC-API-01:** root `@lastfootball/lfe` = Freeze PUBLIC only · `@lastfootball/lfe/testing` barrel · `/advanced` defer · D119–D121 · feat `ce00327`.
 
 ---
 
@@ -82,6 +84,7 @@ Transfers-10 / TD-03+: actions organizational split + `displayPos` sole helper �
 | LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)                      |
 | **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`          |
 | **LFE-TRANSFERS-10**                           | **TD-03+** · actions split · `displayPos` sole · D116–D118 · `9424dd8`                 |
+| **LFE-PUBLIC-API-01**                          | **Package Surface** · root PUBLIC · `/testing` barrel · D119–D121 · `ce00327`          |
 | **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`                  |
 | **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                    |
 | **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`                   |
@@ -265,7 +268,7 @@ kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · P
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** — oficjalna kolejka domain (Promotion→…→Stadium) **wyczerpana**; **TD-03+ / LFE-TRANSFERS-10 CLOSED**. Rekomendacja ROADMAP: **Zawężenie LFE PUBLIC exports** (patrz §10).
+**Czekaj na Owner GO** — oficjalna kolejka domain (Promotion→…→Stadium) **wyczerpana**; **TD-03+ / LFE-TRANSFERS-10 CLOSED**; **LFE-PUBLIC-API-01 CLOSED**. Rekomendacja ROADMAP: **Ratings v2** (patrz §10).
 
 ---
 
@@ -319,17 +322,18 @@ Access SSOT: `resolveNavAccess` / `isModuleSoftLocked` · gate: `SoftLockRouteGa
 Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDIT).
 
 Oficjalna kolejka domain **Promotion → Sponsors → Board → Stadium** = **CLOSED / wyczerpana**.  
-**TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).
+**TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).  
+**LFE-PUBLIC-API-01** = **CLOSED** (`ce00327` · D119–D121).
 
 ```
-Zawężenie LFE PUBLIC exports
+Ratings v2
 ```
 
-| #   | EPIC                             | Notatka                     |
-| --- | -------------------------------- | --------------------------- |
-| 1   | **Zawężenie LFE PUBLIC exports** | chore · mniej eksportów LFE |
+| #   | EPIC           | Notatka                              |
+| --- | -------------- | ------------------------------------ |
+| 1   | **Ratings v2** | bogatsze Player Match Data (assists) |
 
-**Alternatywy PLANNED:** Ratings v2 · §22 push/email · multi-tier AI (poza D92).
+**Alternatywy PLANNED:** §22 push/email · `/advanced` LFE · multi-tier AI (poza D92).
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -337,11 +341,11 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO → `Zawężenie LFE PUBLIC exports`**
+### **Czekaj na Owner GO → `Ratings v2`**
 
-**Uzasadnienie:** LFE-TRANSFERS-10 / TD-03+ CLOSED · D116–D118 · Domain `9424dd8`. ROADMAP PLANNED: następny wpis = zawężenie PUBLIC exports (chore).
+**Uzasadnienie:** LFE-PUBLIC-API-01 CLOSED · D119–D121 · Domain `ce00327`. ROADMAP PLANNED: następny wpis = Ratings v2.
 
-**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · drugi planner terminarza · age++ / Ticket Economy / Stadium expand bez EPIC · multi-tier AI bez EPIC · druga ścieżka settle.
+**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · drugi planner terminarza · age++ / Ticket Economy / Stadium expand bez EPIC · multi-tier AI bez EPIC · druga ścieżka settle · `/advanced` bez EPIC.
 
 **Nie zaczynaj** kolejnego EPIC bez **Owner GO**.
 
@@ -403,7 +407,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH
 
 ### Czego nie implementować bez Owner GO
 
-- Żadnego nowego EPICu (PUBLIC trim / Ratings / §22) bez Owner GO.
+- Żadnego nowego EPICu (Ratings / §22 / `/advanced`) bez Owner GO.
 - age++ · Ticket Economy · Stadium expand · Prestige/Quest · multi-tier AI catalogs.
 - Drugiego `planClubFixtures` / standings DB / Fake Production.
 - Commitów i pushy „przy okazji”.
@@ -438,18 +442,18 @@ Cursor Agent = Senior Engineer — wykonuje po GO; docs+code SSOT; bez historii 
 7. UI presentation → Guide §16; bez driftu DNA / Style Lock.
 8. Branding K1+K3 i World Art — zmiana tylko osobnym EPIC + GO.
 9. §26 = SSOT liczb Thin; D18/D20 = SSOT implementacji economy/transfers.
-10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Promotion Thin CLOSED (D88–D94) · Sponsors Thin CLOSED (D95–D101) · Board Thin CLOSED (D102–D108) · Stadium Thin CLOSED (D109–D115) · Transfers-10 / TD-03+ CLOSED (D116–D118).
-11. Decyzje **D1–D118** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
+10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Promotion Thin CLOSED (D88–D94) · Sponsors Thin CLOSED (D95–D101) · Board Thin CLOSED (D102–D108) · Stadium Thin CLOSED (D109–D115) · Transfers-10 / TD-03+ CLOSED (D116–D118) · LFE PUBLIC surface CLOSED (D119–D121).
+11. Decyzje **D1–D121** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
 
 ## 15. Known Constraints
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
-- Domain tip = **TRANSFERS-10** (`9424dd8`); prior STADIUM `82a164d`; Presentation MOTION `9fd14fc`; UI P0 `54d0724`.
+- Domain tip = **PUBLIC-API-01** (`ce00327`); prior TRANSFERS-10 `9424dd8`; Presentation MOTION `9fd14fc`; UI P0 `54d0724`.
 - Soft-lock Sponsors/Board/Stadium = **open** (D99/D105/D111); windowed: transfers/training.
-- Brak: AI clubs · escrow · timeout · Physics · XP/attribute DB · Ranking ELO · Achievements XP · Messages DB · §6 engine · auto age++ · Stadium Ticket/expand · Board Prestige/Quest · sponsor marketplace · multi-tier AI / baraże · `completeLiveTransfer()`.
-- Migracje prod: training · potential · academy_track · scout_shortlist · fee helpers · season_number/season_phase · league_tier · **club_sponsor_contracts**; Messages/Club/SoftLock/Board/Stadium/TRANSFERS-10 = brak migracji.
+- Brak: AI clubs · escrow · timeout · Physics · XP/attribute DB · Ranking ELO · Achievements XP · Messages DB · §6 engine · auto age++ · Stadium Ticket/expand · Board Prestige/Quest · sponsor marketplace · multi-tier AI / baraże · `completeLiveTransfer()` · `@lastfootball/lfe/advanced`.
+- Migracje prod: training · potential · academy_track · scout_shortlist · fee helpers · season_number/season_phase · league_tier · **club_sponsor_contracts**; Messages/Club/SoftLock/Board/Stadium/TRANSFERS-10/PUBLIC-API-01 = brak migracji.
 - Sekrety `.env` — nigdy w git · Force-push `main` — zakaz.
 
 ---
@@ -488,9 +492,9 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                        |
 | UX           | **Dobry**    | Hub decision-first · SoftLock · OFFSEASON CTA                                                      |
 | Gameplay     | **Thin+**    | Pełna pętla sezonu 22 + N+1 Confirm · Training · Transfers · Academy · Scouting · Info Thin layers |
-| Dokumentacja | **Aktualna** | TRANSFERS-10 CLOSE · Domain tip `9424dd8` · D1–D118                                                |
+| Dokumentacja | **Aktualna** | PUBLIC-API-01 CLOSE · Domain tip `ce00327` · D1–D121                                               |
 | CI           | **GREEN**    | tip `main` VERIFIED                                                                                |
-| Production   | **GREEN**    | Vercel · Domain `9424dd8` · brak migracji TRANSFERS-10                                             |
+| Production   | **GREEN**    | Vercel · Domain `ce00327` · brak migracji PUBLIC-API-01                                            |
 
 ---
 
@@ -508,4 +512,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 / TD-03+ CLOSED · Domain `9424dd8` · next Owner GO → Zawężenie LFE PUBLIC exports
+2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · Domain `ce00327` · next Owner GO → Ratings v2

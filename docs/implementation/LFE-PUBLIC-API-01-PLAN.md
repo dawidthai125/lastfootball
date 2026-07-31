@@ -4,7 +4,8 @@
 **Typ:** Package / architecture chore · **bez** semantyki silnika  
 **Data:** 2026-07-31  
 **Wejście:** AUDIT COMPLETE · Owner **GO PLAN** · Owner **GO IMPLEMENT**  
-**Status PLAN:** CLOSED (kontrakt IMPLEMENT) · D119–D121  
+**Status PLAN:** FULLY CLOSED · feat `ce00327` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE  
+**Domain feat:** `ce00327`  
 **Baseline wejścia:** tip `799fd8d` · Domain `9424dd8` · Docs pin `e77f1a4` · D1–D118  
 **SSOT kontraktu:** [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
@@ -42,4 +43,4 @@ M0 Contract · M1 Allowlist · M2 testing · M3 Root cleanup · M4 Docs · M5 Re
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 PLAN CLOSED · Owner GO IMPLEMENT · D119–D121
+2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · D119–D121 · PRODUCTION VERIFY · DOCS CLOSE

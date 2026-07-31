@@ -715,7 +715,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Harness / Vitest potrzebuje simulation/SM/AI bez zaśmiecania PUBLIC.  
 **Zasada:** `@lastfootball/lfe/testing` = wyłącznie barrel re-export · zero logiki · Web nie importuje `/testing`. `/advanced` poza zakresem LFE-PUBLIC-API-01.
 
-**Źródło D119–D121:** LFE-PUBLIC-API-01 ([`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md)).
+**Źródło D119–D121:** LFE-PUBLIC-API-01 · feat **`ce00327`** · PLAN [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
 ## Najważniejsze decyzje (meta)
 
@@ -746,7 +746,7 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D121 wymaga **AUDIT** i aktu
 **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
 **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
 **LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
-**LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer.
+**LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
 
 ## Powiązania
 
@@ -754,4 +754,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D121 wymaga **AUDIT** i aktu
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 IMPLEMENT · D119–D121
+2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · D119–D121

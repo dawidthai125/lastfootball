@@ -30,12 +30,12 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
 
 ## Następny EPIC (po Owner GO)
 
-`Zawężenie LFE PUBLIC exports` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
+`Ratings v2` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
 
 ## Twarde (skrót)
 
-Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D118 · ZERO Fake Production.
+Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D121 · LFE PUBLIC only · ZERO Fake Production.
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8`
+2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327`

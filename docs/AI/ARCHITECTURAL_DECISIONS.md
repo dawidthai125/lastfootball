@@ -228,4 +228,4 @@
 - `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
 - SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 IMPLEMENT · D1–D121 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · D1–D121 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

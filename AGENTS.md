@@ -27,6 +27,7 @@ Last Football is built so a new agent session can work from **`docs/` + code alo
 - **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED != RUNTIME**.
 - **Single Settlement Path** (transfers): only `completeTransferBuy` / `completeTransferSell`.
 - Match mutations only via LFE `CommandBus` / session API.
+- App code imports `@lastfootball/lfe` (PUBLIC) — **nie** `@lastfootball/lfe/testing`.
 - Canvas / Replay never call Engine or mutate `MatchState`.
 - Hub is a **decision screen**, not a mid-season dashboard.
 - First Hub unlock: `clubs.first_match_completed_at`.
@@ -50,9 +51,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** `Zawężenie LFE PUBLIC exports` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
-- Decyzje **D1–D118:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
+- **Następny EPIC (po Owner GO):** `Ratings v2` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Decyzje **D1–D121:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8` · D1–D118
+2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327` · D1–D121

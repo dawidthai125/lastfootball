@@ -8,12 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`9424dd8`** (LFE-TRANSFERS-10).
+**Domain feature baseline:** **`ce00327`** (LFE-PUBLIC-API-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-PUBLIC-API-01 · CLOSED
+
+### Product
+
+- Root `@lastfootball/lfe` = Freeze PUBLIC only (allowlist + gate test).
+- `@lastfootball/lfe/testing` barrel only · `/advanced` defer · version `0.9.1-match-ai01` (bez bump).
+- Domain tip → **`ce00327`** · D119–D121 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji).
+
+### Docs
+
+- Sync SSOT PUBLIC-API-01 CLOSE · HANDOFF · baseline · status · roadmap · next **Owner GO → Ratings v2**.
 
 ## [2026-07-31] — LFE-TRANSFERS-10 / TD-03+ · CLOSED
 
@@ -926,4 +938,4 @@ Root [`CHANGELOG.md`](../CHANGELOG.md) · [`PROJECT_STATUS.md`](./PROJECT_STATUS
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8`
+2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327`

@@ -13,9 +13,9 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                          |
 | ------------------- | -------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`9424dd8`** — LFE-TRANSFERS-10 (TD-03+ · D116–D118)    |
+| Domain baseline     | **`ce00327`** — LFE-PUBLIC-API-01 (PUBLIC · D119–D121)   |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)        |
+| Documentation tip   | CLOSE sync — tip pin follows                             |
 | tip `main`          | po pin CLOSE                                             |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
@@ -30,7 +30,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** `Zawężenie LFE PUBLIC exports`.
+**Następny EPIC (kolejka Ownera):** `Ratings v2` (alternatywa: §22 push/email).
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
 
 ## Twarde zasady
@@ -38,7 +38,7 @@ Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
 1. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**
 2. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**
 3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubStadium`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `planClubFixtures`, …)
-4. Match mutacje tylko LFE `CommandBus` / session
+4. Match mutacje tylko LFE `CommandBus` / session · app importuje `@lastfootball/lfe` (PUBLIC), **nie** `/testing`
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
 6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
 
@@ -54,4 +54,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 CLOSED · Domain `9424dd8` · next Owner GO → Zawężenie LFE PUBLIC exports
+**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327` · next Owner GO → Ratings v2

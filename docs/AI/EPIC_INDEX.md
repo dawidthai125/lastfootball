@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                       |
-| ----------------------- | ------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED     |
-| **Domain baseline**     | **`9424dd8`** — LFE-TRANSFERS-10 CLOSED           |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED           |
-| **Documentation tip**   | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin) |
+| Warstwa                 | Hash / EPIC                                   |
+| ----------------------- | --------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
+| **Domain baseline**     | **`ce00327`** — LFE-PUBLIC-API-01 CLOSED      |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
+| **Documentation tip**   | CLOSE sync — tip pin follows                  |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -56,6 +56,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **GDD-STADIUM-01**                             | Stadium Thin kontrakt · D109–D115 · docs                         |
 | **LFE-STADIUM-01**                             | Stadium Information Thin · D109–D115 · `82a164d`                 |
 | **LFE-TRANSFERS-10** / **TD-03+**              | actions split · displayPos sole · D116–D118 · `9424dd8`          |
+| **LFE-PUBLIC-API-01**                          | root PUBLIC · `/testing` barrel · D119–D121 · `ce00327`          |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -103,17 +104,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Zawężenie LFE PUBLIC exports (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Ratings v2 (po Owner GO).
 
-**Alternatywy:** Ratings v2 · §22 push/email.
+**Alternatywy:** §22 push/email · `/advanced`.
 
 ## Naming
 
-- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`
+- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`, `LFE-PUBLIC-API-*`
 - Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`, `GDD-18`, `GDD-19`, `GDD-21`, `GDD-22`
 - UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`, `LFE-UI-MOTION-*`
-- Engine: EPIC-1…7
+- Engine: EPIC-1…7 · `LFE-PUBLIC-API-*`
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 CLOSED · next Owner GO → Zawężenie LFE PUBLIC exports
+**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 CLOSED · next Owner GO → Ratings v2
