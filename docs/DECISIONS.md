@@ -607,7 +607,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Prestiż §6 nie istnieje w Thin.  
 **Zasada:** Auto-renew / Accept zachowują ten sam brand i kwoty Thin.
 
-**Źródło D95–D101:** GDD-SPONSORS-01 / LFE-SPONSORS-01.
+**Źródło D95–D101:** GDD-SPONSORS-01 / LFE-SPONSORS-01 (feat `17eb8ba`).
 
 ## Najważniejsze decyzje (meta)
 
@@ -634,7 +634,7 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D101 wymaga **AUDIT** i aktu
 **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
 **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
-**GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking.
+**GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
 
 ## Powiązania
 
@@ -642,4 +642,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D101 wymaga **AUDIT** i aktu
 
 ## Last updated
 
-2026-07-31 — LFE-SPONSORS-01 · D95–D101
+2026-07-31 — LFE-SPONSORS-01 CLOSED · D95–D101 · feat `17eb8ba`

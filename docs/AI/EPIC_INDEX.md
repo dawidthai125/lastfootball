@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                       |
-| ----------------------- | ------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED     |
-| **Domain baseline**     | **`fa06c53`** — LFE-PROMOTION-01 CLOSED           |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED           |
-| **Documentation tip**   | **`42c6d7f`** — LFE-PROMOTION-01 DOCS CLOSE (pin) |
+| Warstwa                 | Hash / EPIC                                   |
+| ----------------------- | --------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
+| **Domain baseline**     | **`17eb8ba`** — LFE-SPONSORS-01 CLOSED        |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
+| **Documentation tip**   | CLOSE sync — tip pin follows                  |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -49,6 +49,8 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-SEASON-END-01**                          | Season End Thin lifecycle · D78–D87 · `024e827`                  |
 | **GDD-PROMOTION-01**                           | Promotion Thin kontrakt · D88–D94 · docs                         |
 | **LFE-PROMOTION-01**                           | Promotion Thin · `league_tier` · D88–D94 · `fa06c53`             |
+| **GDD-SPONSORS-01**                            | Sponsors Thin kontrakt · D95–D101 · docs                         |
+| **LFE-SPONSORS-01**                            | Sponsors Thin · ledger · H-SPONSORS · D95–D101 · `17eb8ba`       |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -96,7 +98,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** SPONSORS → BOARD → STADIUM (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** BOARD → STADIUM (po Owner GO).
 
 **TD-03+ (P2):** transfers actions / displayPos — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -109,4 +111,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** SPONSORS → BOA
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 CLOSED · next Owner GO → LFE-SPONSORS-01
+**ACTIVE** · 2026-07-31 — LFE-SPONSORS-01 CLOSED · next Owner GO → LFE-BOARD-01

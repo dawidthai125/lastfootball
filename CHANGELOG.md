@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-SPONSORS-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D95–D101 · Domain tip `17eb8ba` · next **Owner GO → BOARD-01**
+- Kontrakt: `club_sponsor_contracts` · ledger · H-SPONSORS non-blocking · Confirm base payout
+
+### Added (shipped on `main` — LFE-SPONSORS-01)
+
+- Sponsors Thin · `resolveClubSponsors` · claim/renew · Confirm N+1 base payout · unlock `/sponsors`
+
 ### Docs (LFE-PROMOTION-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D88–D94 · Domain tip `fa06c53` · next **Owner GO → SPONSORS-01**

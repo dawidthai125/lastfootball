@@ -182,4 +182,4 @@
 - Confirm Primary · renewal secondary · flat auto-renew · Board/Stadium locked.
 - SSOT Thin = `GDD-SPONSORS-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-SPONSORS-01 IMPLEMENT · D1–D101 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-SPONSORS-01 CLOSED · D1–D101 · Domain `17eb8ba` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`fa06c53`** (LFE-PROMOTION-01).
+**Domain feature baseline:** **`17eb8ba`** (LFE-SPONSORS-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`42c6d7f`** — LFE-PROMOTION-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-SPONSORS-01 · CLOSED
+
+### Product
+
+- Sponsors Thin: `club_sponsor_contracts` · `resolveClubSponsors` · claim bonus · H-SPONSORS renewal.
+- Base payout raz w `confirmStartNextSeason` · finance ledger only (`sponsor_base` / `sponsor_bonus`).
+- `/sponsors` open SEASON+OFFSEASON (D99) · Board/Stadium locked · Confirm Primary (D98).
+- Domain tip → **`17eb8ba`** · D95–D101 CLOSED · CI GREEN · PRODUCTION VERIFIED (+ migracja).
+
+### Docs
+
+- Sync SSOT Sponsors CLOSE · HANDOFF · baseline · status · roadmap · kolejka **BOARD → STADIUM**.
 
 ## [2026-07-31] — LFE-PROMOTION-01 · CLOSED
 

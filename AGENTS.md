@@ -50,9 +50,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** `LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
-- Decyzje **D1–D94:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
+- **Następny EPIC (po Owner GO):** `LFE-BOARD-01` → `LFE-STADIUM-01` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Decyzje **D1–D101:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-07-31 — LFE-PROMOTION-01 CLOSED · Domain `fa06c53` · D1–D94
+2026-07-31 — LFE-SPONSORS-01 CLOSED · Domain `17eb8ba` · D1–D101

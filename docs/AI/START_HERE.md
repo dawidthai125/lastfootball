@@ -65,7 +65,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 ```
 
 **Brak EPIC IN PROGRESS.** Oficjalna kolejka (po **Owner GO**, start od **AUDIT**):
-`LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01`.
+`LFE-BOARD-01` → `LFE-STADIUM-01`.
 Szczegóły: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13 · [`../ROADMAP.md`](../ROADMAP.md).
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
@@ -104,4 +104,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) �
 
 ## Last updated
 
-2026-07-31 — LFE-PROMOTION-01 CLOSED · kolejka Sponsors→Board→Stadium
+2026-07-31 — LFE-SPONSORS-01 CLOSED · kolejka Board→Stadium

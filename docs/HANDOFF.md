@@ -30,12 +30,12 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
 
 ## Następny EPIC (po Owner GO)
 
-`LFE-SPONSORS-01` → `LFE-BOARD-01` → `LFE-STADIUM-01` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
+`LFE-BOARD-01` → `LFE-STADIUM-01` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
 
 ## Twarde (skrót)
 
-Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D94 · ZERO Fake Production.
+Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D101 · ZERO Fake Production.
 
 ## Last updated
 
-2026-07-31 — LFE-PROMOTION-01 CLOSED · Domain `fa06c53`
+2026-07-31 — LFE-SPONSORS-01 CLOSED · Domain `17eb8ba`
