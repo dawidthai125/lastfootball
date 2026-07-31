@@ -22,11 +22,12 @@ export const UI_COPY = {
   seasonReportEyebrow: 'Sezon zamknięty',
   seasonReportTitle: 'Raport sezonu',
   seasonReportSubtitle: 'Podsumowanie faktów z tabeli ligowej',
-  seasonReportConfirmHint: 'Potwierdź, gdy będziesz gotów na nowy sezon w tej samej lidze.',
+  seasonReportConfirmHint: 'Potwierdź, gdy będziesz gotów na nowy sezon.',
   seasonReportPosition: 'Pozycja',
   seasonReportRecord: 'Bilans',
   seasonReportPoints: 'Punkty',
   seasonReportZone: 'Strefa',
+  seasonReportOutcome: 'Wynik ligowy',
   seasonReportHighlights: 'Wyróżnienia',
 
   /** LFE-DAILY-01 — Daily Goal Thin (suggestion only; not Primary) */

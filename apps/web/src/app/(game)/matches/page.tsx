@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { FixturesView } from '@/components/fixtures/FixturesView';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { STARTER_PACKAGE } from '@/lib/club/types';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { ensureClubFixtures, toUiFixture } from '@/lib/fixtures';
 
 export default async function MatchesPage() {
@@ -17,7 +17,7 @@ export default async function MatchesPage() {
       fixtures={ui}
       clubName={club.name}
       clubShortName={club.shortName}
-      leagueLabel={STARTER_PACKAGE.league}
+      leagueLabel={resolveLeagueTierLabel(club.leagueTier)}
     />
   );
 }

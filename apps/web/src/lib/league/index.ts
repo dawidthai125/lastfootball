@@ -6,3 +6,11 @@ export {
   resolvePlayerLeaguePositionLabel,
 } from '@/lib/league/resolve-league-table';
 export { planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
+export type { LeagueTier, PromotionOutcome, PromotionOutcomeKind } from '@/lib/league/league-tier';
+export {
+  LEAGUE_TIERS_ASC,
+  applyLeagueTierOutcome,
+  parseLeagueTier,
+  resolveLeagueTierLabel,
+  resolvePromotionOutcome,
+} from '@/lib/league/league-tier';

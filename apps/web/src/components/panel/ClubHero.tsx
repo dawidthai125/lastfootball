@@ -3,9 +3,10 @@
 import Link from 'next/link';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
-import { useClubIdentity } from '@/components/club/ClubProvider';
+import { useClub, useClubIdentity } from '@/components/club/ClubProvider';
 import { sessionChrome, dashboardMock } from '@/data/mock';
 import { STARTER_PACKAGE } from '@/lib/club/types';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 
 type ClubHeroProps = {
   club?: typeof dashboardMock.club;
@@ -16,13 +17,16 @@ export function ClubHero({
   club = dashboardMock.club,
   season = sessionChrome.season,
 }: ClubHeroProps) {
+  const liveClub = useClub();
   const live = useClubIdentity({
     name: club.name,
     shortName: club.shortName,
   });
 
   const stadium = live.isLive ? STARTER_PACKAGE.stadiumLabel(live.name) : club.stadium;
-  const division = live.isLive ? STARTER_PACKAGE.league : club.division;
+  const division = live.isLive
+    ? resolveLeagueTierLabel(liveClub?.leagueTier ?? 'iv')
+    : club.division;
 
   return (
     <AtmosphereLayer

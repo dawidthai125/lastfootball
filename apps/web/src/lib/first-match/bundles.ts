@@ -2,9 +2,11 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 export function buildFirstFixture(club: ClubDto): Fixture {
+  const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
   return {
     id: FIRST_MATCH_ID,
     day: 1,
@@ -12,7 +14,7 @@ export function buildFirstFixture(club: ClubDto): Fixture {
     dateLabel: 'Dzień 1',
     kickoff: 'Teraz',
     competition: 'friendly',
-    competitionLabel: `${STARTER_PACKAGE.league} · mecz inauguracyjny`,
+    competitionLabel: `${leagueLabel} · mecz inauguracyjny`,
     opponent: FIRST_MATCH_BOT.name,
     opponentShort: FIRST_MATCH_BOT.shortName,
     home: true,
@@ -54,7 +56,7 @@ export function buildFirstPreMatchBundle(
     },
     stakes: [
       { id: 'first', label: 'Pierwszy mecz', value: 'Inauguracja klubu' },
-      { id: 'league', label: 'Kontekst', value: STARTER_PACKAGE.league },
+      { id: 'league', label: 'Kontekst', value: resolveLeagueTierLabel(club.leagueTier) },
       { id: 'home', label: 'Stadion', value: STARTER_PACKAGE.stadiumLabel(club.name) },
     ],
     h2h: [],

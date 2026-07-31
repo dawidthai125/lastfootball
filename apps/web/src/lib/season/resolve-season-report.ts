@@ -1,3 +1,5 @@
+import type { LeagueTier } from '@/lib/league/league-tier';
+import { resolvePromotionOutcome } from '@/lib/league/league-tier';
 import type { LeagueTableDto } from '@/lib/league/types';
 import {
   formatSeasonLabel,
@@ -15,17 +17,19 @@ const ZONE_LABEL: Record<SeasonResultZone, string> = {
 
 /**
  * Information Thin season report — pure derive from league table (D81 · D84 · D86).
- * Read-only: no mutations, no Fake Production, no promotion language (D73).
+ * Promotion outcome derived only — no mutations (D89 · D91).
  */
 export function resolveSeasonReport(
   table: LeagueTableDto,
   seasonNumber: number,
+  leagueTier: LeagueTier,
 ): SeasonReportDto | null {
   const player = table.rows.find((r) => r.isPlayer);
   if (!player) return null;
 
   const zone = resolveResultZone(player.position, table.rows.length);
   const highlights = buildHighlights(player, zone);
+  const promotion = resolvePromotionOutcome(player.position, table.rows.length, leagueTier);
 
   return {
     seasonNumber,
@@ -44,6 +48,8 @@ export function resolveSeasonReport(
     zone,
     zoneLabel: ZONE_LABEL[zone],
     highlights,
+    promotionKind: promotion.kind,
+    promotionLabel: promotion.label,
   };
 }
 

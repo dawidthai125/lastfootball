@@ -535,9 +535,46 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D78–D87:** LFE-SEASON-END-01 (feat `024e827`).
 
+### D88 — League Tier Is Club SSOT · CLOSED
+
+**Dlaczego:** Hardcoded „IV liga” uniemożliwia awans jako fakt domenowy.  
+**Zasada:** Szczebel = `clubs.league_tier` → `ClubDto.leagueTier`; UI etykiet tylko przez `resolveLeagueTierLabel`.
+
+### D89 — Promotion Outcome Is Derived · CLOSED
+
+**Dlaczego:** RNG / ręczny awans niszczy SSOT tabeli.  
+**Zasada:** `resolvePromotionOutcome(table, tier)` = pure derive; zero RNG.
+
+### D90 — Single Tier Mutation Point · CLOSED
+
+**Dlaczego:** Mutacja tier w close/report/UI = drift lifecycle.  
+**Zasada:** Jedyna mutacja `league_tier` = ścieżka `confirmStartNextSeason` (po OFFSEASON).
+
+### D91 — Report Shows Outcome Before Persist · CLOSED
+
+**Dlaczego:** Konsekwencje przed uznaniem łamią D71.  
+**Zasada:** Raport OFFSEASON pokazuje outcome z derive; persist tier dopiero przy Confirm.
+
+### D92 — Thin Same Opponent World · CLOSED
+
+**Dlaczego:** Pełna piramida AI = scope poza Thin.  
+**Zasada:** Promotion Thin zmienia wyłącznie szczebel klubu i etykiety; skład ligi i siła AI bez zmian.
+
+### D93 — Floor And Ceiling · CLOSED
+
+**Dlaczego:** Spadek z IV / awans z I bez reguły = niespójny świat.  
+**Zasada:** Liga IV = brak spadku; Liga I = brak awansu (mistrz/wicemistrz = etykieta stay).
+
+### D94 — No Playoffs In Thin · CLOSED
+
+**Dlaczego:** Baraże komplikują kalendarz i UX poza Thin.  
+**Zasada:** Awans/spadek wyłącznie automatyczny z miejsc 1–2 / 11–12; baraże OUT.
+
+**Źródło D88–D94:** GDD-PROMOTION-01 / LFE-PROMOTION-01.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D87 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D94 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -559,11 +596,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D87 wymaga **AUDIT** i aktua
 **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
 **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
+**GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md)
 
 ## Last updated
 
-2026-07-31 — LFE-SEASON-END-01 · D78–D87 · feat `024e827`
+2026-07-31 — LFE-PROMOTION-01 · D88–D94

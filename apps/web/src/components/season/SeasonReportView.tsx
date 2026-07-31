@@ -4,14 +4,15 @@ import { UI_COPY } from '@/lib/ui/copy';
 import './season-report.css';
 
 /**
- * Season report — Information Thin · read-only (D81 · D84 · D86).
- * Facts only from resolveSeasonReport; no mutations, no Fake Production, no promotion.
+ * Season report — Information Thin · read-only (D81 · D84 · D86 · D91).
+ * Facts only from resolveSeasonReport; no mutations, no Fake Production.
+ * Promotion outcome = derived label only (persist at Confirm · D90).
  */
 export function SeasonReportView({ report }: { report: SeasonReportDto }) {
   return (
     <section
       className="lf-season-report"
-      data-lf-impl="LFE-SEASON-END-01"
+      data-lf-impl="LFE-PROMOTION-01"
       aria-label={UI_COPY.seasonReportTitle}
     >
       <header className="lf-season-report__header">
@@ -43,6 +44,10 @@ export function SeasonReportView({ report }: { report: SeasonReportDto }) {
         <div>
           <dt>{UI_COPY.seasonReportZone}</dt>
           <dd>{report.zoneLabel}</dd>
+        </div>
+        <div>
+          <dt>{UI_COPY.seasonReportOutcome}</dt>
+          <dd>{report.promotionLabel}</dd>
         </div>
       </dl>
 

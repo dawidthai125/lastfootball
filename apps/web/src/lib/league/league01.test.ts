@@ -9,7 +9,7 @@ import {
 } from '@/lib/league/resolve-league-table';
 import { planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
 
-const club = { id: 'club-aaa', name: 'Alpha FC', shortName: 'AFC' };
+const club = { id: 'club-aaa', name: 'Alpha FC', shortName: 'AFC', leagueTier: 'iv' as const };
 
 function played(
   partial: Partial<FixtureDto> & Pick<FixtureDto, 'opponentClubId' | 'homeScore' | 'awayScore'>,

@@ -1,7 +1,7 @@
-import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveLeagueMembers } from '@/lib/league/league-members';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
 import {
   LEAGUE_POINTS,
@@ -25,9 +25,12 @@ type Acc = {
 /**
  * Sole league table SSOT for product UI (LFE-LEAGUE-02).
  * Player results from fixtures; AI↔AI from deterministic derive — no standings DB.
+ * League label from club.leagueTier (LFE-PROMOTION-01 · D88).
  */
 export function resolveLeagueTable(
-  club: Pick<ClubDto, 'id' | 'name' | 'shortName'> & { readonly seasonNumber?: number },
+  club: Pick<ClubDto, 'id' | 'name' | 'shortName' | 'leagueTier'> & {
+    readonly seasonNumber?: number;
+  },
   fixtures: readonly FixtureDto[],
 ): LeagueTableDto {
   const members = resolveLeagueMembers(club);
@@ -78,7 +81,7 @@ export function resolveLeagueTable(
   }));
 
   return {
-    leagueLabel: STARTER_PACKAGE.league,
+    leagueLabel: resolveLeagueTierLabel(club.leagueTier),
     seasonLabel: formatSeasonLabel(club.seasonNumber ?? 1),
     rows,
   };

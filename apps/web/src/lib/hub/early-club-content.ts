@@ -2,6 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import { FIRST_MATCH_BOT } from '@/lib/first-match/constants';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { formatSeasonLabel } from '@/lib/season/types';
 
 export type LastMatchStripModel = {
@@ -72,7 +73,7 @@ export function buildLightStatus(
 ): HubLightStatus {
   const dayLabel = nextFixture ? `Kolejka ${nextFixture.matchday}` : 'Dzień 1';
   return {
-    league: STARTER_PACKAGE.league,
+    league: resolveLeagueTierLabel(club.leagueTier),
     stadium: STARTER_PACKAGE.stadiumLabel(club.name),
     dayLabel,
     seasonLabel: formatSeasonLabel(club.seasonNumber),

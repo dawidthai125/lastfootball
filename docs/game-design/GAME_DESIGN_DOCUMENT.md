@@ -3594,6 +3594,9 @@ Deterministyczny, sprawiedliwy i komunikowalny porządek przy remisie punktowym.
 
 ### 10.9 Awanse
 
+> **SSOT Thin (awans/spadek szczebla):** [`GDD-PROMOTION-01.md`](./GDD-PROMOTION-01.md) · §10.21 · D88–D94.  
+> Ten podrozdział zachowuje kierunek pełnego GDD; **kontrakt Thin** = plik EPICu.
+
 **Cel**  
 Najsilniejsza nagroda sezonowa w lidze: wejście poziom wyżej.
 
@@ -3603,6 +3606,7 @@ Najsilniejsza nagroda sezonowa w lidze: wejście poziom wyżej.
 2. Liga I: miejsce 1 = **Mistrz**; miejsce 2 = wicemistrz (bez awansu wyżej w MVP).
 3. Ekran awansu: herb, nowa liga, krótki beat celebracji → most do przerwy / nowego sezonu.
 4. Soft landing: awans nie wymaga „idealnego składu” — klub startuje w nowej lidze z tą samą tożsamością.
+5. **Thin (D92):** zmiana szczebla + etykiet; skład ligi / siła AI bez zmian do Future.
 
 **Decyzje gracza**
 
@@ -3627,6 +3631,8 @@ Najsilniejsza nagroda sezonowa w lidze: wejście poziom wyżej.
 
 ### 10.10 Spadki
 
+> **SSOT Thin:** [`GDD-PROMOTION-01.md`](./GDD-PROMOTION-01.md) · §10.21 · D88–D94.
+
 **Cel**  
 Konsekwencja słabego sezonu — odczuwalna, ale nie zabijająca motywacji.
 
@@ -3636,6 +3642,7 @@ Konsekwencja słabego sezonu — odczuwalna, ale nie zabijająca motywacji.
 2. Liga IV: **brak spadku** (podłoga świata MVP) — walka o honor / uniknięcie ostatniego miejsca jako motyw narracyjny.
 3. Ekran spadku: empatyczny ton („Nowy start poziom niżej”), 1–2 highlighty do poprawy — bez shame spiral.
 4. Sezon po spadku: ten sam format; prestiż/odczucie trudności niższe.
+5. **Thin (D92):** jak awans — etykieta szczebla; bez osobnego świata AI.
 
 **Decyzje gracza**
 
@@ -3954,6 +3961,7 @@ Zamknąć zakres shipowalny i ścieżkę skalowania.
 - [x] Decyzja ship: lekki Puchar Krajowy w MVP (§11 / GDD-08)
 - [ ] Exact soft-resolution AFK
 - [x] **Season End Thin** — kontrakt [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md) (D68–D76; awans/spadek OUT Thin)
+- [x] **Promotion Thin** — kontrakt [`GDD-PROMOTION-01.md`](./GDD-PROMOTION-01.md) (D88–D94; szczebel + etykiety; AI world unchanged)
 
 ---
 
@@ -3969,9 +3977,28 @@ Zamknąć zakres shipowalny i ścieżkę skalowania.
 2. Pipeline: Closed → **Report** → Offseason → (hooks no-op) → Confirm → Season N+1 w **tej samej** lidze (D69 · D71 · D73).
 3. Hooki = wyłącznie moment · Owner EPIC · cel (D72).
 4. Kod lifecycle dopiero po CLOSE docs + osobnym Owner GO (`LFE-SEASON-END-01`) — D74 · D76.
-5. Awans/spadek (§10.9–10.10) pozostaje kierunkiem GDD pełnym; **nie** należy do Thin.
+5. Awans/spadek (§10.9–10.10) w Season End Thin = OUT (D73); osobny kontrakt → §10.21 / `GDD-PROMOTION-01`.
 
 **Zależności:** §3.5 · §10.12–10.13 · §12 · §15.11 · §19 · §21 · §23.
+
+---
+
+### 10.21 Promotion Thin — pointer SSOT
+
+**Status:** GDD-PROMOTION-01 — **CLOSED** (**Promotion Thin** — szczebel ligowy + outcome; bez multi-tier AI; bez baraży)
+
+**SSOT kontraktu Thin:** [`GDD-PROMOTION-01.md`](./GDD-PROMOTION-01.md)
+
+**Sedno (nie kopiować reguł tutaj):**
+
+1. Szczebel = SSOT klubu (`league_tier`) · D88.
+2. Outcome = pure derive z tabeli · D89; raport przed persist · D91.
+3. Jedyna mutacja tier = Confirm N+1 · D90.
+4. Thin: etykiety tylko; skład ligi / siła AI bez zmian · D92.
+5. Floor IV / ceiling I · D93; baraże OUT · D94.
+6. Kod: `LFE-PROMOTION-01` po Owner GO.
+
+**Zależności:** §10.9–10.10 · §10.20 · H-PROMOTION · D80 · D85.
 
 ---
 

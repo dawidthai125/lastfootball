@@ -23,6 +23,7 @@ function club(partial?: Partial<ClubDto>): ClubDto {
     lastTrainingOn: null,
     seasonNumber: 1,
     seasonPhase: 'in_season',
+    leagueTier: 'iv',
     ...partial,
   };
 }
@@ -100,20 +101,22 @@ describe('LFE-SEASON-END-01 hub phase + unlock (D79)', () => {
   });
 });
 
-describe('LFE-SEASON-END-01 resolveSeasonReport (D84 · D86)', () => {
-  it('derives report from league table facts only', () => {
+describe('LFE-SEASON-END-01 resolveSeasonReport (D84 · D86 · D91)', () => {
+  it('derives report from league table facts and promotion outcome', () => {
     const c = club({ seasonNumber: 1 });
     const fixtures = seasonFixtures();
     const table = resolveLeagueTable(c, fixtures);
-    const report = resolveSeasonReport(table, 1);
+    const report = resolveSeasonReport(table, 1, c.leagueTier);
     expect(report).not.toBeNull();
     expect(report!.seasonLabel).toBe('Sezon 1');
     expect(report!.leagueLabel).toBe(table.leagueLabel);
     expect(report!.played).toBe(22);
     expect(report!.highlights.length).toBeGreaterThan(0);
     expect(report!.highlights.length).toBeLessThanOrEqual(3);
+    expect(report!.promotionKind).toBeTruthy();
+    expect(report!.promotionLabel.length).toBeGreaterThan(0);
     const blob = JSON.stringify(report);
-    expect(blob).not.toMatch(/Awans|Spadek|€|sponsor|Fake/i);
+    expect(blob).not.toMatch(/€|sponsor|Fake/i);
   });
 
   it('uses dynamic season label for season N', () => {

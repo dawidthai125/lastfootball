@@ -28,6 +28,7 @@ function club(partial?: Partial<ClubDto>): ClubDto {
     lastTrainingOn: null,
     seasonNumber: 1,
     seasonPhase: 'in_season',
+    leagueTier: 'iv',
     ...partial,
   };
 }

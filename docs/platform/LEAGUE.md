@@ -41,12 +41,14 @@ GDD §10: **22** fixtures (home+away) — **CLOSED** w kodzie (LFE-LEAGUE-04).
 
 ## Poza Thin
 
-Season End · awans/spadek runtime · 1 mecz/dzień · soft backlog · standings DB · playoff.
+Season End lifecycle (DONE) · awans/spadek AI multi-tier · 1 mecz/dzień · soft backlog · standings DB · playoff.
+
+Promotion Thin (LFE-PROMOTION-01): `clubs.league_tier` + `resolveLeagueTierLabel` / `resolvePromotionOutcome` / `applyLeagueTierOutcome` — etykiety + Confirm mutation; AI catalog unchanged (D92).
 
 ## Kod
 
-`lib/fixtures/*` · `lib/league/*`
+`lib/fixtures/*` · `lib/league/*` (w tym `league-tier.ts`)
 
 ## Last updated
 
-2026-07-30 — LFE-LEAGUE-04 CLOSE
+2026-07-31 — LFE-PROMOTION-01 Thin

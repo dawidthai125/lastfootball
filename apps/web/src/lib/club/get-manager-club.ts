@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { env } from '@/config/env';
 import type { ClubDto } from '@/lib/club/types';
+import { parseLeagueTier } from '@/lib/league/league-tier';
 
 type ClubRow = {
   id: string;
@@ -17,6 +18,7 @@ type ClubRow = {
   last_training_on: string | null;
   season_number: number | null;
   season_phase: string | null;
+  league_tier: string | null;
 };
 
 function mapClub(row: ClubRow): ClubDto {
@@ -36,6 +38,7 @@ function mapClub(row: ClubRow): ClubDto {
     lastTrainingOn: row.last_training_on ?? null,
     seasonNumber: Math.max(1, Math.trunc(row.season_number ?? 1)),
     seasonPhase: phase,
+    leagueTier: parseLeagueTier(row.league_tier),
   };
 }
 
@@ -51,7 +54,7 @@ export async function getManagerClub(): Promise<ClubDto | null> {
   const { data, error } = await supabase
     .from('clubs')
     .select(
-      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance, transfer_window_open, last_training_on, season_number, season_phase',
+      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance, transfer_window_open, last_training_on, season_number, season_phase, league_tier',
     )
     .eq('owner_id', user.id)
     .maybeSingle();

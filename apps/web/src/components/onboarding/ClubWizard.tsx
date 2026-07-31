@@ -17,8 +17,11 @@ import {
   CLUB_WIZARD_DRAFT_KEY,
   type ClubWizardDraft,
 } from '@/lib/club';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 
 import '@/components/onboarding/club-wizard.css';
+
+const STARTER_LEAGUE_LABEL = resolveLeagueTierLabel('iv');
 
 const STEPS = [
   { id: 1, label: 'Nazwa' },
@@ -309,7 +312,7 @@ export function ClubWizard() {
                 <div>
                   <p className="lf-wizard__reveal-name">{name}</p>
                   <p className="lf-wizard__reveal-meta">
-                    {shortName} · {STARTER_PACKAGE.league}
+                    {shortName} · {STARTER_LEAGUE_LABEL}
                   </p>
                 </div>
               </div>
@@ -331,7 +334,7 @@ export function ClubWizard() {
                 </li>
                 <li>
                   <strong>Liga</strong>
-                  <span>{STARTER_PACKAGE.league} — przypisanie startowe</span>
+                  <span>{STARTER_LEAGUE_LABEL} — przypisanie startowe</span>
                 </li>
               </ul>
 

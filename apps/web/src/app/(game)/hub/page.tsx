@@ -44,7 +44,8 @@ export default async function HubPage() {
   const lastPlayed = (await getLastPlayedFixture(club.id)) ?? null;
   const table = resolveLeagueTable(club, fixtures);
   const leaguePositionLabel = hasFixtures ? resolvePlayerLeaguePositionLabel(table) : null;
-  const seasonReport = phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber) : null;
+  const seasonReport =
+    phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber, club.leagueTier) : null;
 
   const movements = await listClubFinanceMovements(club.id, 5);
   const finance = resolveClubFinance(club, movements);

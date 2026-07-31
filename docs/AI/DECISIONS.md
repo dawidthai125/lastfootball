@@ -42,6 +42,7 @@ Przed PLAN / IMPLEMENT — sprawdź, czy decyzja Ownera już istnieje (**D1–D8
 | P22  | Soft-lock route gate = SoftLockState · nav ≡ route · D52 · D63–D67 · **CLOSED**                                             | LFE-SOFTLOCK-01                             |
 | P23  | Season End Thin = GDD-SEASON-END-01 · D68–D77 · awans OUT · docs before code · **CLOSED**                                   | GDD-SEASON-END-01                           |
 | P24  | Season End Thin **kod** = LFE-SEASON-END-01 · D78–D87 · OFFSEASON persist · Confirm N+1 · **CLOSED**                        | LFE-SEASON-END-01                           |
+| P25  | Promotion Thin = `league_tier` · outcome derive · Confirm mutation · D88–D94 · **CLOSED**                                   | LFE-PROMOTION-01                            |
 
 ## Engine (trwałe)
 
@@ -53,4 +54,4 @@ Patrz D1–D10 w [`../DECISIONS.md`](../DECISIONS.md): monorepo LFE izolowany, `
 
 ## Last updated
 
-2026-07-31 — AI HANDOFF · D1–D87 / P24 · kolejka Promotion→…→Stadium
+2026-07-31 — LFE-PROMOTION-01 · D1–D94 / P25

@@ -1,3 +1,5 @@
+import type { LeagueTier } from '@/lib/league/league-tier';
+
 export type ClubDto = {
   id: string;
   ownerId: string;
@@ -25,6 +27,8 @@ export type ClubDto = {
    * `offseason` persists until Confirm N+1 (D85).
    */
   seasonPhase: 'in_season' | 'offseason';
+  /** League rung SSOT (LFE-PROMOTION-01 · D88). */
+  leagueTier: LeagueTier;
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {
@@ -42,8 +46,11 @@ export type ClubWizardDraft = {
 
 export const CLUB_WIZARD_DRAFT_KEY = 'lf.club.wizard.draft.v1';
 
+/**
+ * Onboarding presentation package (stadium / squad / coach).
+ * League label runtime SSOT = `resolveLeagueTierLabel` (D88) — not this object.
+ */
 export const STARTER_PACKAGE = {
-  league: 'IV liga',
   stadiumLabel: (clubName: string) => `Arena ${clubName}`,
   stadiumCapacity: '4 200 miejsc',
   squad: 'XI + ławka (skład startowy)',

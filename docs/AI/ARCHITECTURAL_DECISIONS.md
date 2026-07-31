@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D87):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
+**Pełny rejestr D\* (D1–D94):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -84,6 +84,13 @@
 | **D85** | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
 | **D86** | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
 | **D87** | Offseason persists         | `season_phase` SSOT do Confirm; AC-10/11.                                         |
+| **D88** | League tier club SSOT      | `league_tier` → ClubDto; etykiety tylko `resolveLeagueTierLabel`.                 |
+| **D89** | Promotion outcome derived  | Pure z tabeli + tier; zero RNG.                                                   |
+| **D90** | Single tier mutation       | Mutacja tier tylko w Confirm N+1.                                                 |
+| **D91** | Report before persist tier | Outcome w raporcie OFFSEASON; persist przy Confirm.                               |
+| **D92** | Same opponent world Thin   | Tier + etykiety only; skład ligi / AI bez zmian.                                  |
+| **D93** | Floor IV · ceiling I       | Brak spadku z IV; brak awansu z I.                                                |
+| **D94** | No playoffs Thin           | Baraże OUT.                                                                       |
 | **D40** | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41** | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42** | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -154,4 +161,11 @@
 - Unlock OFFSEASON = SEASON · raport read-only z faktów · Confirm jedyna ścieżka N+1.
 - `season_phase` persist (AC-10) · po N+1 raport nie wraca (AC-11) · hooki no-op.
 
-**ACTIVE** · 2026-07-31 — AI HANDOFF · D1–D87 obowiązują · Domain tip `024e827` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D88–D94 — kontrakt Promotion Thin (must-know)
+
+- `league_tier` = SSOT szczebla · etykiety tylko `resolveLeagueTierLabel`.
+- Outcome pure · raport przed persist · mutacja tier tylko Confirm N+1.
+- Thin: ten sam świat AI (D92) · floor IV / ceiling I · baraże OUT.
+- SSOT Thin = `GDD-PROMOTION-01.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 · D1–D94 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

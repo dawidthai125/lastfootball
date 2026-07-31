@@ -1,3 +1,4 @@
+import type { PromotionOutcomeKind } from '@/lib/league/league-tier';
 import { LEAGUE_FIXTURE_COUNT } from '@/lib/fixtures/opponent-catalog';
 import { countPlayedInList } from '@/lib/fixtures/played-unlock';
 
@@ -27,6 +28,9 @@ export type SeasonReportDto = {
   readonly zone: SeasonResultZone;
   readonly zoneLabel: string;
   readonly highlights: readonly SeasonReportHighlight[];
+  /** Promotion Thin outcome (D89 · D91) — derive only; no persist. */
+  readonly promotionKind: PromotionOutcomeKind;
+  readonly promotionLabel: string;
 };
 
 /** Format product season label from season number. */

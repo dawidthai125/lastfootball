@@ -1,5 +1,6 @@
 import { STARTER_PACKAGE, type ClubDto } from '@/lib/club/types';
 import { formatMoney } from '@/lib/finance/format-money';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { resolvePlayerLeaguePositionLabel, type LeagueTableDto } from '@/lib/league';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -65,7 +66,7 @@ export function resolveClubProfile(input: ResolveClubProfileInput): ClubProfileD
       secondaryColor: club.secondaryColor,
     },
     starter: {
-      leagueLabel: STARTER_PACKAGE.league,
+      leagueLabel: resolveLeagueTierLabel(club.leagueTier),
       stadiumLabel: STARTER_PACKAGE.stadiumLabel(club.name),
       stadiumCapacityLabel: STARTER_PACKAGE.stadiumCapacity,
     },

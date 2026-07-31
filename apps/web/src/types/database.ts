@@ -22,6 +22,9 @@ export type Database = {
           cash_balance: number;
           transfer_window_open: boolean;
           last_training_on: string | null;
+          season_number: number;
+          season_phase: string;
+          league_tier: string;
         };
         Insert: {
           id?: string;
@@ -36,6 +39,9 @@ export type Database = {
           cash_balance?: number;
           transfer_window_open?: boolean;
           last_training_on?: string | null;
+          season_number?: number;
+          season_phase?: string;
+          league_tier?: string;
         };
         Update: {
           id?: string;
@@ -50,6 +56,9 @@ export type Database = {
           cash_balance?: number;
           transfer_window_open?: boolean;
           last_training_on?: string | null;
+          season_number?: number;
+          season_phase?: string;
+          league_tier?: string;
         };
         Relationships: [];
       };

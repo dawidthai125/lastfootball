@@ -5,14 +5,22 @@ import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
 import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
+import {
+  applyLeagueTierOutcome,
+  parseLeagueTier,
+  resolvePromotionOutcome,
+} from '@/lib/league/league-tier';
+import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import type { ConfirmStartNextSeasonState } from '@/lib/season/action-types';
 import { onSeasonEnd } from '@/lib/squad/season-age';
 import { createClient } from '@/lib/supabase/server';
+import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 
 /**
  * Confirm N+1 (D82 · D85) — sole path into Season N+1.
- * Clears slate → planClubFixtures reseed (D80) → season++ · in_season · same league (D73).
- * Hooks = no-op only (D83).
+ * Sole league_tier mutation (D90): derive outcome → applyLeagueTierOutcome → persist.
+ * Clears slate → planClubFixtures reseed (D80) → season++ · in_season.
+ * Hooks = no-op only (D83). AI catalog unchanged (D92).
  */
 export async function confirmStartNextSeason(
   _prev: ConfirmStartNextSeasonState,
@@ -34,7 +42,7 @@ export async function confirmStartNextSeason(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, season_number, season_phase')
+    .select('id, name, short_name, season_number, season_phase, league_tier')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -44,8 +52,11 @@ export async function confirmStartNextSeason(
 
   const row = club as {
     id: string;
+    name: string;
+    short_name: string;
     season_number: number;
     season_phase: string;
+    league_tier: string | null;
   };
 
   if (row.season_phase !== 'offseason') {
@@ -54,6 +65,24 @@ export async function confirmStartNextSeason(
 
   const clubId = row.id;
   const nextSeason = Math.max(1, Math.trunc(row.season_number ?? 1)) + 1;
+  const currentTier = parseLeagueTier(row.league_tier);
+
+  const fixtures = await listClubFixtures(clubId);
+  const table = resolveLeagueTable(
+    {
+      id: clubId,
+      name: row.name,
+      shortName: row.short_name,
+      leagueTier: currentTier,
+      seasonNumber: row.season_number,
+    },
+    fixtures,
+  );
+  const playerRow = table.rows.find((r) => r.isPlayer);
+  const outcome = playerRow
+    ? resolvePromotionOutcome(playerRow.position, table.rows.length, currentTier)
+    : { kind: 'stay' as const, label: '' };
+  const nextTier = applyLeagueTierOutcome(currentTier, outcome.kind);
 
   const { error: delErr } = await supabase.from('fixtures').delete().eq('club_id', clubId);
   if (delErr) {
@@ -80,6 +109,7 @@ export async function confirmStartNextSeason(
     .update({
       season_number: nextSeason,
       season_phase: 'in_season',
+      league_tier: nextTier,
     } as never)
     .eq('id', clubId)
     .eq('season_phase', 'offseason');

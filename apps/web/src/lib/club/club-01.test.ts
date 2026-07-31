@@ -4,7 +4,7 @@ import { resolveClubProfile } from '@/lib/club/resolve-club-profile';
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import { formatMoney } from '@/lib/finance/format-money';
-import { resolveLeagueTable } from '@/lib/league';
+import { resolveLeagueTable, resolveLeagueTierLabel } from '@/lib/league';
 import { UI_COPY } from '@/lib/ui/copy';
 
 function clubFixture(overrides: Partial<ClubDto> = {}): ClubDto {
@@ -23,6 +23,7 @@ function clubFixture(overrides: Partial<ClubDto> = {}): ClubDto {
     lastTrainingOn: null,
     seasonNumber: 1,
     seasonPhase: 'in_season',
+    leagueTier: 'iv',
     ...overrides,
   };
 }
@@ -42,12 +43,12 @@ describe('resolveClubProfile (LFE-CLUB-01)', () => {
     });
   });
 
-  it('reuses STARTER_PACKAGE for league and stadium', () => {
+  it('reuses resolveLeagueTierLabel and STARTER_PACKAGE for stadium', () => {
     const club = clubFixture({ name: 'Orzeł Test' });
     const table = resolveLeagueTable(club, []);
     const dto = resolveClubProfile({ club, table });
 
-    expect(dto.starter.leagueLabel).toBe(STARTER_PACKAGE.league);
+    expect(dto.starter.leagueLabel).toBe(resolveLeagueTierLabel('iv'));
     expect(dto.starter.stadiumLabel).toBe(STARTER_PACKAGE.stadiumLabel('Orzeł Test'));
     expect(dto.starter.stadiumCapacityLabel).toBe(STARTER_PACKAGE.stadiumCapacity);
   });

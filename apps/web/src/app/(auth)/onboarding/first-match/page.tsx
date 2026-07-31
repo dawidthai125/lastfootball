@@ -7,7 +7,7 @@ import { LandingCta } from '@/components/landing/LandingCta';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { FIRST_MATCH_BOT, FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
-import { STARTER_PACKAGE } from '@/lib/club/types';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 
 import '@/components/onboarding/first-match-flow.css';
 
@@ -39,7 +39,7 @@ export default async function FirstMatchIntroPage() {
       <h1 className="lf-landing__title">{club.name}</h1>
       <p className="lf-fm__lead">
         Twój klub jest gotowy. Przed tobą mecz inauguracyjny przeciwko{' '}
-        <strong>{FIRST_MATCH_BOT.name}</strong> — {STARTER_PACKAGE.league}.
+        <strong>{FIRST_MATCH_BOT.name}</strong> — {resolveLeagueTierLabel(club.leagueTier)}.
       </p>
       <p className="lf-fm__sub">
         Ustaw się na ławce, wyjdź na boisko i domknij pierwszy gwizdek w historii klubu.

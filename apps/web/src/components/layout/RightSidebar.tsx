@@ -2,8 +2,8 @@
 
 import { ClubCrest } from '@/components/assets';
 import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
-import { STARTER_PACKAGE } from '@/lib/club/types';
 import { resolveHubPhase, type HubPhase } from '@/lib/hub';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 
 function phaseLabel(phase: HubPhase): string {
   if (phase === 'SEASON') return 'Sezon';
@@ -39,10 +39,11 @@ export function RightSidebar() {
     );
   }
 
+  const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
   const contextLine =
-    phase === 'SEASON'
-      ? `${STARTER_PACKAGE.league} · prowadzisz sezon`
-      : `${STARTER_PACKAGE.league} · poznaj skład i wróć na boisko`;
+    phase === 'SEASON' || phase === 'OFFSEASON'
+      ? `${leagueLabel} · prowadzisz sezon`
+      : `${leagueLabel} · poznaj skład i wróć na boisko`;
 
   return (
     <aside

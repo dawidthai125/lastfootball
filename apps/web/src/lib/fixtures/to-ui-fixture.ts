@@ -2,6 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
@@ -10,6 +11,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     dto.status === 'played' && dto.homeScore != null && dto.awayScore != null
       ? `${dto.homeScore}:${dto.awayScore}`
       : undefined;
+  const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
 
   return {
     id: dto.id,
@@ -18,7 +20,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     dateLabel: `Kolejka ${dto.matchday}`,
     kickoff: dto.status === 'upcoming' ? 'Teraz' : undefined,
     competition: 'league',
-    competitionLabel: `${STARTER_PACKAGE.league} · kolejka ${dto.matchday}`,
+    competitionLabel: `${leagueLabel} · kolejka ${dto.matchday}`,
     opponent: dto.opponent.name,
     opponentShort: dto.opponent.shortName,
     opponentClubId: dto.opponentClubId,
@@ -77,7 +79,7 @@ export function buildLeaguePreMatchBundle(
       points: 0,
     },
     stakes: [
-      { id: 'league', label: 'Rozgrywki', value: STARTER_PACKAGE.league },
+      { id: 'league', label: 'Rozgrywki', value: resolveLeagueTierLabel(club.leagueTier) },
       { id: 'md', label: 'Kolejka', value: String(dto.matchday) },
       {
         id: 'venue',
