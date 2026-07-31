@@ -74,6 +74,16 @@
 | **D75** | Lifecycle deterministic    | Zero RNG zamknięcia; ten sam input → ten sam pipeline.                            |
 | **D76** | Contract before code       | Kontrakt GDD przed PLAN/IMPLEMENT kodu SE.                                        |
 | **D77** | SE Thin SSOT file          | SSOT = `GDD-SEASON-END-01.md`; §10 = pointer.                                     |
+| **D78** | Season Closed idempotent   | `season_phase=offseason` raz / przebieg 22; idempotent.                           |
+| **D79** | Offseason unlock parity    | OFFSEASON soft-lock = SEASON (Sponsors/Board/Stadium locked).                     |
+| **D80** | Sole planner               | N+1 tylko przez `planClubFixtures` (zero drugiego terminarza).                    |
+| **D81** | Report pure resolve        | `resolveSeasonReport` z tabeli; Information Thin.                                 |
+| **D82** | Confirm before N+1         | Auto start nowego sezonu zakazany.                                                |
+| **D83** | Hooks no-op in Thin        | `onSeasonEnd` no-op; brak age++/Sponsors/Board.                                   |
+| **D84** | Report = existing facts    | Highlighty tylko z faktów domeny.                                                 |
+| **D85** | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
+| **D86** | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
+| **D87** | Offseason persists         | `season_phase` SSOT do Confirm; AC-10/11.                                         |
 | **D40** | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41** | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42** | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -138,4 +148,10 @@
 - Hooki ≠ features · **brak awansu/spadku w Thin** · docs/kontrakt przed kodem · determinizm.
 - SSOT Thin = `GDD-SEASON-END-01.md` (D77).
 
-**ACTIVE** · 2026-07-30 — GDD-SEASON-END-01 · D68–D77
+### D78–D87 — kontrakt Season End Thin **kod** (must-know)
+
+- Trigger 22/22 → Closed → Report → OFFSEASON → Confirm → N+1 (`planClubFixtures`).
+- Unlock OFFSEASON = SEASON · raport read-only z faktów · Confirm jedyna ścieżka N+1.
+- `season_phase` persist (AC-10) · po N+1 raport nie wraca (AC-11) · hooki no-op.
+
+**ACTIVE** · 2026-07-31 — LFE-SEASON-END-01 · D78–D87 · Domain tip `024e827`

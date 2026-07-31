@@ -14,7 +14,7 @@ Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.
 | `EARLY_CLUB` | **Tak**                       | first match done **i** brak fixtures                                                                                                                                                                        |
 | `SEASON`     | **Tak** (ten sam layout)      | first match done **i** `fixtures.length > 0`                                                                                                                                                                |
 | `PLAYOFF`    | Future                        | —                                                                                                                                                                                                           |
-| `OFFSEASON`  | **Kontrakt GDD** · kod Future | Semantyka: po Season End Thin ([`GDD-SEASON-END-01`](../game-design/GDD-SEASON-END-01.md) · D68–D77). `resolveHubPhase` **nie** zwraca jeszcze OFFSEASON — implementacja = `LFE-SEASON-END-01` po Owner GO. |
+| `OFFSEASON`  | **Tak** (raport + Confirm)    | `club.seasonPhase === 'offseason'` (LFE-SEASON-END-01 · D78–D87). Raport read-only · 1 Primary CTA Confirm N+1 · unlock parity SEASON (D79). |
 
 **Jedyny resolver fazy:** `resolveHubPhase(club, { hasFixtures })`.  
 **Sesja:** `resolveHubSession(phase, nextFixture, lastPlayed)` → `matchday` | `post_match` | `idle`.  
@@ -40,6 +40,7 @@ Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02 · L
 | ------------------------------- | ---------------- | ------------- |
 | `matchday` + `nextFixture`      | Przygotuj mecz   | `/match/{id}` |
 | Fallback (idle / brak upcoming) | **Zobacz kadrę** | `/squad`      |
+| `OFFSEASON`                       | **Przygotuj sezon** (Confirm N+1) | form → `confirmStartNextSeason` |
 
 ### Daily Goal Thin (LFE-DAILY-01 / D25 / GDD §20)
 

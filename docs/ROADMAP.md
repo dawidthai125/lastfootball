@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`46f7caa`** — LFE-SOFTLOCK-01 CLOSED (route gate · D52 · D63–D67).
+**Domain feature baseline:** **`024e827`** — LFE-SEASON-END-01 CLOSED (Season End Thin · D78–D87).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`046dbb6`** — GDD-SEASON-END-01 CLOSE (pin)
+**Documentation tip:** CLOSE sync LFE-SEASON-END-01 (pin follows)
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GDD-SEASON-END-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GDD-SEASON-END-01** · **LFE-SEASON-END-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -67,6 +67,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 | **LFE-CLUB-01**                                        | **CLOSED** · identity profile Thin · `resolveClubProfile` · D47–D51 · feat `36ba9be` · PRODUCTION VERIFY            |
 | **LFE-SOFTLOCK-01**                                    | **CLOSED** · generic Route Gate · SoftLockState · D52 · D63–D67 · feat `46f7caa` · PRODUCTION VERIFY                |
 | **GDD-SEASON-END-01**                                  | **CLOSED** · Season End Thin kontrakt · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only                           |
+| **LFE-SEASON-END-01**                                  | **CLOSED** · Season End Thin lifecycle · OFFSEASON · report · Confirm N+1 · D78–D87 · feat `024e827` · PRODUCTION VERIFY |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                       |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                  |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)          |
@@ -120,8 +121,8 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): `LFE-SEASON-END-01` (kod) · Settings/§22 · TD-03 P2 · Promotion.  
-Domain tip: SOFTLOCK-01 `46f7caa`; GDD Season End CLOSED; Presentation tip: MOTION-01 `9fd14fc`.
+**Czekaj na Owner GO** — brak otwartego EPIC. Kandydaci (nie startować bez GO): Sponsors/Board · Promotion · Settings/§22 · TD-03 P2.  
+Domain tip: SEASON-END-01 `024e827`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -165,4 +166,4 @@ Domain tip: SOFTLOCK-01 `46f7caa`; GDD Season End CLOSED; Presentation tip: MOTI
 
 ## Last updated
 
-2026-07-30 — GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa` · next Owner GO
+2026-07-31 — LFE-SEASON-END-01 CLOSED · `024e827`

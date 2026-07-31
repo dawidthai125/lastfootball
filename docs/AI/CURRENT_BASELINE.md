@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 46f7caa            # Domain feature baseline SOFTLOCK-01
+git log -1 --oneline 024e827            # Domain feature baseline SEASON-END-01
+git log -1 --oneline 46f7caa            # Prior Domain SOFTLOCK-01
 git log -1 --oneline 36ba9be            # Prior Domain CLUB-01
 git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
 git log -1 --oneline e6885dc            # Prior Domain TRANSFERS-09
@@ -40,13 +41,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                         |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                     |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                       |
-| **Domain feature baseline** | `46f7caa` — **LFE-SOFTLOCK-01** (generic route gate · D52 · D63–D67)                                 |
-| Domain message              | `feat(softlock): implement LFE-SOFTLOCK-01 generic route gate`                                       |
-| Prior Domain                | `36ba9be` — LFE-CLUB-01                                                                              |
+| **Domain feature baseline** | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                          |
+| Domain message              | `feat(season): implement LFE-SEASON-END-01 Season End Thin lifecycle`                                |
+| Prior Domain                | `46f7caa` — LFE-SOFTLOCK-01                                                                          |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                                      |
-| **Documentation tip**       | **`046dbb6`** — GDD-SEASON-END-01 CLOSE (pin)                                                        |
-| Status                      | **PRODUCTION VERIFIED · GREEN** · GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa` |
+| **Documentation tip**       | CLOSE sync LFE-SEASON-END-01 (pin follows)                                                           |
+| Status                      | **PRODUCTION VERIFIED · GREEN** · LFE-SEASON-END-01 CLOSED · D78–D87 · Domain tip `024e827`           |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -154,8 +155,6 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · Season End **kod** OUT (GDD Thin CLOSED) · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · Promotion / relegation · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
-## Last updated
-
-2026-07-30 — GDD-SEASON-END-01 CLOSED · D68–D77 · Domain tip SOFTLOCK `46f7caa`
+2026-07-31 — LFE-SEASON-END-01 CLOSED · Domain tip `024e827`

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-SEASON-END-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D78–D87 · Domain tip `024e827` · next **Owner GO**
+- Kontrakt kodu: OFFSEASON persist · report read-only · Confirm N+1 · `planClubFixtures` only
+
+### Added (shipped on `main` — LFE-SEASON-END-01)
+
+- Season End Thin lifecycle · `season_number` / `season_phase` · `resolveSeasonReport` · Confirm N+1
+
 ### Docs (LFE-LEAGUE-04 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D28 · Domain tip `9027baf` · next **Transfers hardening READY FOR AUDIT**

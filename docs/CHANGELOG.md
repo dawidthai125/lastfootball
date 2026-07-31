@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`46f7caa`** (LFE-SOFTLOCK-01).
+**Domain feature baseline:** **`024e827`** (LFE-SEASON-END-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`046dbb6`** — GDD-SEASON-END-01 CLOSE (pin)
+**Documentation tip:** CLOSE sync LFE-SEASON-END-01 (pin follows)
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-SEASON-END-01 · CLOSED
+
+### Product
+
+- Lifecycle Thin: trigger 22/22 → Season Closed → `OFFSEASON` → raport read-only → Confirm N+1.
+- Persist `clubs.season_number` / `season_phase` (AC-10/11) · reseed wyłącznie `planClubFixtures` (D80).
+- Unlock OFFSEASON = SEASON parity (D79) · hooki no-op (D83) · brak Promotion/Sponsors/Board/age++.
+- Domain tip → **`024e827`** · style Prettier **`06fd86b`** · D78–D87 CLOSED.
+
+### Docs
+
+- Sync SSOT Season End kod (CLOSE; tip pin follows).
 
 ## [2026-07-30] — GDD-SEASON-END-01 · CLOSED
 

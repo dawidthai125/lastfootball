@@ -483,9 +483,62 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D68–D77:** GDD-SEASON-END-01 (docs CLOSE).
 
+### D78 — Season Closed Is An Idempotent Domain Fact · CLOSED
+
+**Dlaczego:** Podwójne zamknięcie / UI-only close → drift lifecycle.  
+**Zasada:** Season Closed = jeden fakt domeny (`season_phase=offseason`) na przebieg 22; idempotentny zapis.
+
+### D79 — Offseason Unlock Parity With Season · CLOSED
+
+**Dlaczego:** Fallthrough `return 'open'` odblokowałby Sponsors/Board/Stadium.  
+**Zasada:** Soft-lock nav OFFSEASON = parity z SEASON (D52 · SoftLockRouteGate).
+
+### D80 — Sole Calendar Planner Remains planClubFixtures · CLOSED
+
+**Dlaczego:** Drugi planner = ZERO DUPLICATE / drift vs D28.  
+**Zasada:** Season N+1 reseed **wyłącznie** przez istniejący `planClubFixtures` (+ clear slate).
+
+### D81 — Season Report Is Pure Resolve · CLOSED
+
+**Dlaczego:** Raport z atrap / osobnego standings DB = Fake Production.  
+**Zasada:** Raport = pure `resolveSeasonReport` z tabeli ligowej (I10 · Information Thin).
+
+### D82 — New Season Starts Only After Player Confirm · CLOSED
+
+**Dlaczego:** Auto N+1 bez uznania łamie D71 / player agency.  
+**Zasada:** Start Season N+1 tylko po świadomym Confirm gracza.
+
+### D83 — Season End Hooks Are No-Op In Thin · CLOSED
+
+**Dlaczego:** age++ / Sponsors / Board w lifecycle = scope systems (D68 · D72).  
+**Zasada:** Hooki w LFE-SEASON-END-01 = no-op (`onSeasonEnd`); feature = osobny Owner EPIC.
+
+### D84 — Season Report Uses Existing Facts Only · CLOSED
+
+**Dlaczego:** Narracja bez faktów domeny = Fake Production.  
+**Zasada:** Raport / highlighty wyłącznie z istniejących faktów (tabela · bilans · strefa).
+
+### D85 — Confirm Is The Sole Path To Season N+1 · CLOSED
+
+**Dlaczego:** Alternatywne ścieżki N+1 omijają pipeline.  
+**Zasada:** Jedyna mutacja do N+1 = `confirmStartNextSeason` (po OFFSEASON).
+
+### D86 — Season Report Is Read-Only · CLOSED
+
+**Dlaczego:** Mutacje w raporcie mieszają uznanie z konsekwencjami.  
+**Zasada:** `SeasonReportView` = presentation read-only; Confirm = osobna akcja.
+
+### D87 — Offseason Phase Persists Until Confirm · CLOSED
+
+**Dlaczego:** Faza tylko w pamięci sesji → regres AC-10/11 po refresh.  
+**Zasada:** `clubs.season_phase=offseason` trzyma OFFSEASON + raport do Confirm; po N+1 `in_season` ⇒ raport nie wraca (AC-10 · AC-11).
+
+**Źródło D78–D87:** LFE-SEASON-END-01 (feat `024e827`).
+
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D77 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D87 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -505,7 +558,8 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D77 wymaga **AUDIT** i aktua
 **LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
 **LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
 **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
-**GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT; brak kodu.
+**GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
+**LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
 
 ## Powiązania
 
@@ -513,4 +567,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D77 wymaga **AUDIT** i aktua
 
 ## Last updated
 
-2026-07-30 — GDD-SEASON-END-01 · D68–D77
+2026-07-31 — LFE-SEASON-END-01 · D78–D87 · feat `024e827`

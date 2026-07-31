@@ -13,9 +13,9 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                              |
 | ------------------- | ------------------------------------------------------------ |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                |
-| Domain baseline     | **`46f7caa`** — LFE-SOFTLOCK-01 (route gate · D52 · D63–D67) |
+| Domain baseline     | **`024e827`** — LFE-SEASON-END-01 (Season End Thin · D78–D87) |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)     |
-| Documentation tip   | **`046dbb6`** — GDD-SEASON-END-01 CLOSE (pin)                |
+| Documentation tip   | CLOSE sync LFE-SEASON-END-01 (pin follows)                   |
 | Prod                | https://lastfootball.vercel.app                              |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                 |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)               |
@@ -33,7 +33,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 1. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**
 2. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**
-3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `planClubFixtures`, …)
+3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `planClubFixtures`, …)
 4. Match mutacje tylko LFE `CommandBus` / session
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
 6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
