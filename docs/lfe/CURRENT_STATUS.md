@@ -6,14 +6,14 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Aktualny stan
 
-|                         |                                                      |
-| ----------------------- | ---------------------------------------------------- |
-| **Package**             | `0.9.1-match-ai01`                                   |
-| **EPIC-1…7**            | ✅ DONE (na `main`)                                  |
-| **Gameplay Foundation** | ✅ DONE                                              |
-| **Match AI**            | ✅ DONE                                              |
-| **Match Engine**        | ✅ DONE                                              |
-| **Architecture Freeze** | APPROVED (kontrakt v1; `index.ts` nadal over-export) |
+|                         |                                                          |
+| ----------------------- | -------------------------------------------------------- |
+| **Package**             | `0.9.1-match-ai01`                                       |
+| **EPIC-1…7**            | ✅ DONE (na `main`)                                      |
+| **Gameplay Foundation** | ✅ DONE                                                  |
+| **Match AI**            | ✅ DONE                                                  |
+| **Match Engine**        | ✅ DONE                                                  |
+| **Architecture Freeze** | APPROVED · root barrel = PUBLIC only (LFE-PUBLIC-API-01) |
 
 > Ten plik = **tylko silnik LFE**. Platforma (First Match / Hub) → [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`../platform/`](../platform/).
 
@@ -46,11 +46,11 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Następne (poza silnikiem / LFE)
 
-- Web match pipeline (Canvas / Replay / Post Match / Live Bridge / **Player Ratings**) — **DONE** (Ratings: local pending commit)
+- Web match pipeline (Canvas / Replay / Post Match / Live Bridge / **Player Ratings**) — **DONE**
 - Physics / pełne Rules — **FUTURE** (Owner GO)
-- Zawężenie public `index.ts` do freeze
-- Subpath exports `advanced` / `testing`
+- Subpath exports `advanced` — **PLANNED** (defer po PUBLIC-API-01)
 - Ratings v2 (assists / minutes) — FUTURE
+- Zawężenie public `index.ts` do freeze — **DONE** (LFE-PUBLIC-API-01 · `/testing` T2)
 
 ## Najważniejsze decyzje
 
@@ -65,4 +65,4 @@ Status implementacji EPIC-ów i modułów silnika.
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-RATINGS-01
+2026-07-31 — LFE-PUBLIC-API-01 · root PUBLIC · `/testing` barrel

@@ -7,7 +7,7 @@ import {
   createMatch,
   createPlayer,
   createSubstitutePlayerCommand,
-} from '../../index';
+} from '../../testing';
 import { attributePlayerForEvent } from './attribute-player';
 
 function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {

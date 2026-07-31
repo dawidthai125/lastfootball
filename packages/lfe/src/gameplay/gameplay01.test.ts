@@ -8,7 +8,7 @@ import {
   createSetPressingCommand,
   createSubstitutePlayerCommand,
   GAMEPLAY_MATCH_EVENTS,
-} from '../index';
+} from '../testing';
 
 describe('GAMEPLAY-01 foundation', () => {
   function session() {

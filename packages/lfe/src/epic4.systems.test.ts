@@ -10,7 +10,7 @@ import {
   createSimulation,
   createSystemRegistry,
   createTeam,
-} from './index';
+} from './testing';
 
 describe('EPIC-4 simulation systems', () => {
   it('orders builtin systems by explicit priority, not registration order', () => {

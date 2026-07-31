@@ -7,62 +7,52 @@ Szybki skrót warstw API. **Pełny kontrakt freeze:** [LFE_ARCHITECTURE_FREEZE.m
 
 ## Aktualny stan
 
-- Kontrakt PUBLIC API v1 **zamrożony** (freeze).
-- Pakiet: `0.9.1-match-ai01`.
-- `packages/lfe/src/index.ts` **przeeksponowany** (dług) — app powinna preferować `createMatch` + typy/komendy z kontraktu.
-- Eksporty **AI / Match Engine / gameplay** istnieją w barrelu jako rozszerzenie po MATCH-AI/ENGINE — nie były częścią freeze v1 jako „zalecane PUBLIC”.
+- Kontrakt PUBLIC API v1 **zamrożony** (freeze) · **root barrel = PUBLIC only** (LFE-PUBLIC-API-01 · D119–D121).
+- Pakiet: `0.9.1-match-ai01` (SemVer bump = Owner przy COMMIT).
+- Entry: `@lastfootball/lfe` → `src/index.ts` (PUBLIC).
+- Testing: `@lastfootball/lfe/testing` → `src/testing.ts` (**barrel only**).
+- `/advanced` — **nie** zaimplementowane (defer).
 
 ## Opis działania
 
-### PUBLIC (zalecane dla app)
+### PUBLIC (zalecane dla app) — root
 
 - `createMatch`, `MatchSession`, `MatchSessionConfig`, `SessionStatus`
 - `MatchInput`, `MatchResult`, `MatchEvent`
-- Status: `getEngineStatus`, `LFE_VERSION`, …
-- Domain **types** + **transitional** factories
-- Thin command types + factories (w tym taktyczne)
-- Spatial read: `getSpatialState`, `MatchSpatialState`, `Position`, …
+- Status: `getEngineStatus`, `LFE_VERSION`, `LFE_STATUS`, …
+- Domain **types** + **transitional** factories (`createPlayer`, `createLineup`, `createBench`, …)
+- Thin command types + factories (**lifecycle + tactical**)
+- Events: `EngineEvent`, `EngineEventType`, `GAMEPLAY_MATCH_EVENTS` (Production MUST)
+- Spatial read: `getSpatialState` via session · `MatchSpatialState`, `createMatchSpatialState`, `findSpatialPlayer`, `Position`, …
 - `LfeConfig`, `DeepPartial`, `DEFAULT_LFE_CONFIG`, `LogLevel`
-- `GAMEPLAY_MATCH_EVENTS`, `import { gameplay } from '@lastfootball/lfe'`
+- Allowlist gate: `src/public-allowlist.ts` + `public-api01.test.ts` (CI; not an app import)
 
 **Metody sesji:** `start/pause/resume/stop/dispose`, `dispatch`, `step/run`, `getMatchState`, `getSpatialState`, `getEvents`, `snapshots` / `latestSnapshot`
 
-### Rozszerzenia barrel (używane przez Engine wewnętrznie / testy)
+**App UI:** nie wołaj `simulateMatchTick` / `decide*` / `createSimulation` — tylko przez `MatchSession` (+ PUBLIC command factories).
 
-| Obszar       | Eksporty (skrót)                                                                |
-| ------------ | ------------------------------------------------------------------------------- |
-| Match Engine | `simulateMatchTick`, `advanceMatchClock`, `DISPLAY_MINUTES_PER_HALF`, typy tick |
-| Match AI     | `buildMatchAiContext`, `decidePossession*`, `decideAction*`, typy decyzji       |
-| Gameplay     | namespace `gameplay`                                                            |
+### TESTING — `@lastfootball/lfe/testing`
 
-**App UI:** nie wołaj `simulateMatchTick` / `decide*` bezpośrednio — tylko przez `MatchSession`.
+Simulation harness · systems · SM tables · command bus wiring · core factories · replay helpers · positioning unit math · domain heavy builders · session internals · **AI/Engine tick re-exports for Vitest only**.
+
+**Web / produkcja:** **zakaz** importu `/testing`.
 
 ### ADVANCED
 
-- `getWorld()`, `context()` / `MatchSessionContext`
-- World/runtime **types**, formation layout helpers, `Vec2`, …
-
-### TESTING
-
-- `createSimulation`, systems, SM tables/`apply*`, bus wiring, `resetCommandIdSeq`, …
+Freeze §4 — **poza root**; subpath `/advanced` **nie** w tym EPICu.
 
 ### INTERNAL
 
-- Implementacje simulation/core/commands/SM/session/engine resolve
+Implementacje simulation/core/commands/SM/session/engine resolve — relative imports wewnątrz pakietu.
 
 ### DEPRECATED
 
-- `MatchHandle`, `session.ts` shim, `Seed`/`ClockState`, `runToEnd`
+- `MatchHandle` — tylko na `/testing` (nie root)
+- `runToEnd` / legacy shims — jak Freeze §7
 
-### RESERVED (nadal stub)
+### RESERVED
 
-- `physics/`, `rules/`, `ecs/`, `utils/`
-
-> **Uwaga:** katalog `ai/` był RESERVED w freeze; **MATCH-AI-01** dodał działający moduł. Traktuj jako zaimplementowane rozszerzenie — aktualizacja freeze wymaga AUDIT + Owner GO.
-
-### EXPERIMENTAL
-
-- Wszystko oznaczone jako eksperyment — brak stabilności
+- `physics/`, `rules/`, `ecs/`, `utils/` stubs
 
 ## Web API (nie LFE)
 
@@ -71,13 +61,16 @@ Canvas / Replay / LiveMatchRuntime / Post Match → [`../web/MATCH_UI_PIPELINE.m
 ## Najważniejsze decyzje
 
 - Oficjalny entry = tylko `createMatch`.
+- Root = Freeze PUBLIC only (D119).
+- `EngineEvent` + tactical factories = PUBLIC (D120).
+- `/testing` = barrel only (D121).
 - Factories domain = transitional.
 - Nie promuj TESTING → PUBLIC bez AUDIT.
 
 ## Powiązania
 
-[LFE_ARCHITECTURE_FREEZE.md](./LFE_ARCHITECTURE_FREEZE.md) · [GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [`../DECISIONS.md`](../DECISIONS.md)
+[LFE_ARCHITECTURE_FREEZE.md](./LFE_ARCHITECTURE_FREEZE.md) · [GAMEPLAY_MATCH_STACK.md](./GAMEPLAY_MATCH_STACK.md) · [`../DECISIONS.md`](../DECISIONS.md) · [`../implementation/LFE-PUBLIC-API-01-PLAN.md`](../implementation/LFE-PUBLIC-API-01-PLAN.md)
 
 ## Last updated
 
-2026-07-23 — LFE-DOCS-SYNC-01
+2026-07-31 — LFE-PUBLIC-API-01 · root PUBLIC only · `/testing` T2

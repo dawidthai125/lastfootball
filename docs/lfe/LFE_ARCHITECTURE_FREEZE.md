@@ -136,14 +136,35 @@ Future direction: thinner app input (IDs, formation codes, shirt numbers) → en
 
 ### 3.6 Commands (thin PUBLIC)
 
-| Export                                                                                                                                                                                         | Role                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `Command`, `CommandResult`, `CommandSource`                                                                                                                                                    | Minimal dispatch contract |
-| `MatchCommand`, `MatchCommandType`                                                                                                                                                             | Match command union       |
-| `StartMatchCommand`, `KickoffCommand`, `PauseMatchCommand`, `ResumeMatchCommand`, `EndMatchCommand`, `AbandonMatchCommand`, `DeclareWalkoverCommand`                                           | Typed commands            |
-| `createStartMatchCommand`, `createKickoffCommand`, `createPauseMatchCommand`, `createResumeMatchCommand`, `createEndMatchCommand`, `createAbandonMatchCommand`, `createDeclareWalkoverCommand` | Factories for UI/AI/tests |
+| Export                                                                                                                                                                                                                                        | Role                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `Command`, `CommandResult`, `CommandSource`                                                                                                                                                                                                   | Minimal dispatch contract    |
+| `MatchCommand`, `MatchCommandType`                                                                                                                                                                                                            | Match command union          |
+| `StartMatchCommand`, `KickoffCommand`, `PauseMatchCommand`, `ResumeMatchCommand`, `EndMatchCommand`, `AbandonMatchCommand`, `DeclareWalkoverCommand`                                                                                          | Typed commands               |
+| `createStartMatchCommand`, `createKickoffCommand`, `createPauseMatchCommand`, `createResumeMatchCommand`, `createEndMatchCommand`, `createAbandonMatchCommand`, `createDeclareWalkoverCommand`                                                | Factories for UI/AI/tests    |
+| `TacticalCommand`, `TacticalCommandType`                                                                                                                                                                                                      | Tactical command union       |
+| `ChangeTacticsCommand`, `SubstitutePlayerCommand`, `SetPressingCommand`, `SetTempoCommand`, `SetWidthCommand`, `SetMentalityCommand`, `SetPlayerInstructionCommand`, `ChangeFormationCommand`                                                 | Typed tactical commands      |
+| `createChangeTacticsCommand`, `createSubstitutePlayerCommand`, `createSetPressingCommand`, `createSetTempoCommand`, `createSetWidthCommand`, `createSetMentalityCommand`, `createSetPlayerInstructionCommand`, `createChangeFormationCommand` | Tactical factories (UI Live) |
 
 Session shortcuts (`start` / `pause` / `resume`) wrap the same command path.
+
+### 3.6A Events (PUBLIC — Production MUST · LFE-PUBLIC-API-01)
+
+| Export                           | Role                                        |
+| -------------------------------- | ------------------------------------------- |
+| `EngineEvent`, `EngineEventType` | Match event stream for Live / Canvas / Post |
+| `GameplayMatchEventType`         | Gameplay event type alias                   |
+| `GAMEPLAY_MATCH_EVENTS`          | Const set of gameplay event names           |
+
+> **D120:** Promoted from ADVANCED — required by production match UI pipeline (`apps/web`). Not a license to import EventBus factories from PUBLIC.
+
+### 3.6B Domain tactics type (PUBLIC read model)
+
+| Export         | Role                                       |
+| -------------- | ------------------------------------------ |
+| `MatchTactics` | Tactics slice on match read/setup language |
+
+> Factory `createMatchTactics` / `DEFAULT_MATCH_TACTICS` remain **TESTING** (harness), not root PUBLIC.
 
 ### 3.7 Spatial read (PUBLIC)
 
@@ -173,7 +194,7 @@ For debug, tooling, replay UIs, and deep inspection — **not required** for MVP
 | Session deep inspect                | `MatchSession.context()`, `MatchSessionContext`, `MatchSession.getWorld()`                                                                                                                                                                                                  |
 | World                               | `WorldState`, `MatchMeta`, `WorldSettings`                                                                                                                                                                                                                                  |
 | Replay types                        | `ReplaySnapshot` (when imported directly)                                                                                                                                                                                                                                   |
-| Runtime types (no factories)        | `GameClock`, `TimeController`, `EventBus`, `EngineEvent`, `EngineEventType`, `Scheduler`, `ScheduledJob`, `ScheduledJobId`, `Rng`, `RngState`, `Logger`, `LogRecord`                                                                                                        |
+| Runtime types (no factories)        | `GameClock`, `TimeController`, `EventBus`, `Scheduler`, `ScheduledJob`, `ScheduledJobId`, `Rng`, `RngState`, `Logger`, `LogRecord` (**`EngineEvent` / `EngineEventType` → PUBLIC §3.6A**)                                                                                   |
 | Lifecycle **read** types            | `MatchLifecycleState`, `MatchLifecycleEventType`                                                                                                                                                                                                                            |
 | Phase helpers                       | `isTerminalPhase`, `isPlayPhase`, `MATCH_PHASES`, `isTerminalLifecycleState`, `isPlayLifecycleState`                                                                                                                                                                        |
 | Positioning (tactics editors / viz) | `pitchCoordinates`, `PitchCoordinates`, `HomeSide`, `AwaySide`, `sideOrientation`, `centreSpotPosition`, `buildFormationLayout`, `occupyFormationLayout`, `FormationLayout`, `FormationLayoutSlot`, `OccupiedSlot`, `createKickoffSpawnPoints`, `SpawnPoint`, `SpawnPoints` |
@@ -191,16 +212,16 @@ For Vitest / CI / EPIC harness only. **No production app imports.**
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Simulation harness    | `createSimulation`, `Simulation`, `SimulationOptions`                                                                                                                                                                                                                                                                                                              |
 | Systems               | `createSystemRegistry`, `SystemRegistry`, `SystemFn`, `SimulationSystem`, `SystemContext`, `LifecycleFacts`, `SystemPriority`, `compareSystemPriority`, priority types, `createSimulationPipeline`, `SimulationPipeline`, `createBuiltinSystems`, `createClockSystem`, `createSchedulerSystem`, `createLifecycleSystem`, `createEventSystem`, `createReplaySystem` |
-| Commands (wiring)     | `createCommandBus`, `createCommandRegistry`, `CommandBus`, `CommandRegistry`, `CommandHandler`, `CommandValidator`, `CommandContext`, `ValidationError`, `nextCommandId`, `resetCommandIdSeq`, `registerMatchCommands`, `MATCH_COMMAND_HANDLERS`                                                                                                                   |
+| Commands (wiring)     | `createCommandBus`, `createCommandRegistry`, `CommandBus`, `CommandRegistry`, `CommandHandler`, `CommandValidator`, `CommandContext`, `ValidationError`, `nextCommandId`, `resetCommandIdSeq`, `registerMatchCommands`, `MATCH_COMMAND_HANDLERS`, `TACTICAL_COMMAND_HANDLERS`                                                                                      |
 | State machine         | `applyLifecycleEvent`, `canApplyLifecycleEvent`, `nextLifecycleState`, `getAllowedEvents`, `getStateDefinition`, `transitionMatchState`, `defaultLifecycleContext`, `STATE_DEFINITIONS`, `TRANSITION_RULES`, `MATCH_LIFECYCLE_STATES`, `MATCH_LIFECYCLE_EVENTS`, lifecycle result/definition types                                                                 |
 | Core factories        | `createGameClock`, `createTimeController`, `createTickEngine`, `createLogger`, `createEventBus`, `createScheduler`, `createRng`, `createInitialWorldState`, `TickEngine`, `TickPhases`, `ClockSnapshot`                                                                                                                                                            |
 | Replay helpers        | `captureSnapshot`, `cloneWorld`, `createSnapshotBuffer`, `SnapshotBuffer`                                                                                                                                                                                                                                                                                          |
 | Config helpers        | `resolveConfig`, `tickDurationMs`                                                                                                                                                                                                                                                                                                                                  |
 | Positioning unit math | `createPitchGrid`, `cellAt`, `cellCenter`, `sameCell`, `PitchGrid`, `GridCell`, `createZones`, `pointInZone`, `zonesContaining`, `longitudinalThird`, `PitchZone`, `PitchZoneId`, `distanceCalculator`, `DistanceCalculator`, `position`                                                                                                                           |
-| Domain heavy builders | `createMatchModel`, `withMatchState`, `createMatchState`, `createBall`, `createPitch`, `createGoals`, `createScore`, `createMatchClock`, `createReferee`, `createWeather`, `createStadium`, `emptyStatistics`, `ZERO_SCORE`                                                                                                                                        |
+| Domain heavy builders | `createMatchModel`, `withMatchState`, `createMatchState`, `createBall`, `createPitch`, `createGoals`, `createScore`, `createMatchClock`, `createReferee`, `createWeather`, `createStadium`, `emptyStatistics`, `ZERO_SCORE`, `createMatchTactics`, `DEFAULT_MATCH_TACTICS`                                                                                         |
 | Session internals     | `SESSION_TRANSITIONS`, `createSessionLifecycle`, `isSessionActive`, `buildMatchFromConfig`                                                                                                                                                                                                                                                                         |
 
-**Target entry:** `@lastfootball/lfe/testing` (future packaging; not required to exist before gameplay EPICs start).
+**Target entry:** `@lastfootball/lfe/testing` — **implemented** (LFE-PUBLIC-API-01 · T2). Barrel only · no logic. AI/Engine tick symbols used by harness may be re-exported here for tests; they remain **INTERNAL** for app code.
 
 ---
 

@@ -8,7 +8,7 @@ import {
   createSimulation,
   createStartMatchCommand,
   resetCommandIdSeq,
-} from './index';
+} from './testing';
 
 describe('EPIC-5 match commands', () => {
   beforeEach(() => {

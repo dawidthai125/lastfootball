@@ -6,7 +6,7 @@ import {
   createLineup,
   createMatch,
   createPlayer,
-} from '../../index';
+} from '../../testing';
 
 function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
   const homeIds = Array.from({ length: 11 }, (_, i) => `h${i}`);

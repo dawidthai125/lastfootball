@@ -700,9 +700,26 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D116–D118:** LFE-TRANSFERS-10 / TD-03+ · feat **`9424dd8`** · PLAN [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · PRODUCTION VERIFY PASS.
 
+### D119 — LFE Root Barrel = Freeze PUBLIC Only · CLOSED
+
+**Dlaczego:** `index.ts` over-export = drift vs Architecture Freeze.  
+**Zasada:** Root `@lastfootball/lfe` eksportuje wyłącznie Freeze PUBLIC Contract (po korekcie Production MUST).
+
+### D120 — EngineEvent + Tactical Factories Are PUBLIC · CLOSED
+
+**Dlaczego:** Produkcyjny match UI (Live / Canvas / Post) wymaga `EngineEvent` i tactical command factories.  
+**Zasada:** Te symbole są PUBLIC (Freeze §3.6 / §3.6A); nie wracają do ADVANCED bez migracji Web.
+
+### D121 — LFE Testing Subpath Barrel Only · CLOSED
+
+**Dlaczego:** Harness / Vitest potrzebuje simulation/SM/AI bez zaśmiecania PUBLIC.  
+**Zasada:** `@lastfootball/lfe/testing` = wyłącznie barrel re-export · zero logiki · Web nie importuje `/testing`. `/advanced` poza zakresem LFE-PUBLIC-API-01.
+
+**Źródło D119–D121:** LFE-PUBLIC-API-01 ([`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md)).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D118 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D121 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -729,11 +746,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D118 wymaga **AUDIT** i aktu
 **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
 **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
 **LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
+**LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md)
 
 ## Last updated
 
-2026-07-31 — LFE-TRANSFERS-10 CLOSED · D116–D118 · feat `9424dd8` · PRODUCTION VERIFY
+2026-07-31 — LFE-PUBLIC-API-01 IMPLEMENT · D119–D121

@@ -8,7 +8,7 @@ import {
   createPauseMatchCommand,
   createPlayer,
   type MatchSessionConfig,
-} from './index';
+} from './testing';
 
 function minimalConfig(seed = 42): MatchSessionConfig {
   const homePlayers = Array.from({ length: 14 }, (_, i) =>

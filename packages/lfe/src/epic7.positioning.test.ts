@@ -19,9 +19,9 @@ import {
   pitchCoordinates,
   position,
   zonesContaining,
-} from './index';
-import type { MatchSessionConfig } from './index';
-import { createBench } from './index';
+} from './testing';
+import type { MatchSessionConfig } from './testing';
+import { createBench } from './testing';
 
 function lineupPlayers(side: 'home' | 'away', teamId: string) {
   return Array.from({ length: 11 }, (_, i) =>

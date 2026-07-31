@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D118):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D121):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -115,6 +115,9 @@
 | **D116** | Transfer Actions Org Split | `actions.ts` → `actions-*.ts` + barrel; Public API bez zmian.                     |
 | **D117** | Transfer displayPos Sole   | Jedyna `displayPos` w `lib/transfers/display-pos.ts`.                             |
 | **D118** | No Transfer Dispatcher     | Brak Dispatcher / Registry / Service Locator; SSP bez zmian.                      |
+| **D119** | LFE Root = Freeze PUBLIC   | Root barrel wyłącznie PUBLIC Contract.                                            |
+| **D120** | EngineEvent PUBLIC MUST    | `EngineEvent` + tactical factories = PUBLIC (prod UI).                            |
+| **D121** | LFE Testing Barrel Only    | `/testing` = re-export only · Web nie importuje · `/advanced` OUT.                |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -219,4 +222,10 @@
 - Brak Dispatcher / Registry / Service Locator · Single Settlement Path nienaruszony.
 - SSOT PLAN = `implementation/LFE-TRANSFERS-10-PLAN.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 CLOSED · D1–D118 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D119–D121 — kontrakt LFE PUBLIC surface (must-know)
+
+- Root `@lastfootball/lfe` = Freeze PUBLIC only · `EngineEvent` + tactical factories PUBLIC.
+- `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
+- SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 IMPLEMENT · D1–D121 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

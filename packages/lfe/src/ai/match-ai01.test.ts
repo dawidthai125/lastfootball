@@ -15,7 +15,7 @@ import {
   decidePossession,
   formationAggressiveness,
   scorePhaseModifier,
-} from '../index';
+} from '../testing';
 
 function roster(side: 'home' | 'away', teamId: string, prefix: string) {
   const ids = Array.from({ length: 11 }, (_, i) => `${prefix}${i}`);
