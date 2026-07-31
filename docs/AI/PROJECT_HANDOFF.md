@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                           |
 | **Domain feature baseline**     | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                                   |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                           |
-| **Documentation tip**           | AI HANDOFF sync (pin follows)                                                                                   |
-| **tip `main`**                  | po CLOSE tego handoffu (pin)                                                                                    |
+| **Documentation tip**           | **`9768a8f`** — AI HANDOFF CLOSE (pin)                                                                          |
+| **tip `main`**                  | after pin (content tip `9768a8f`)                                                                               |
 | **Branch**                      | `main`                                                                                                          |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-SEASON-END-01 FULLY CLOSED** · D1–D87 · next **Owner GO** (roadmapa §10) |
 
