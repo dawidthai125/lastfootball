@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Pole                            | Wartość                                                                                                                                        |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 09 + Season End + Promotion + Sponsors + **Board Thin** + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                           |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                          |
 | **Domain feature baseline**     | `75c190d` — **LFE-BOARD-01** (Board Information Thin · D102–D108)                                                                              |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                           |
-| **Documentation tip**           | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                                                                                                                    |
-| **tip `main`**                  | after BOARD CLOSE pin                                                                                                                               |
-| **Branch**                      | `main`                                                                                                                                          |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                          |
+| **Documentation tip**           | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                                                                                                  |
+| **tip `main`**                  | after BOARD CLOSE pin                                                                                                                          |
+| **Branch**                      | `main`                                                                                                                                         |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-BOARD-01 FULLY CLOSED** · D1–D108 · next **Owner GO → LFE-STADIUM-01**                                  |
 
 | **Production URL** | https://lastfootball.vercel.app |
@@ -477,7 +477,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                        |
 | UX           | **Dobry**    | Hub decision-first · SoftLock · OFFSEASON CTA                                                      |
 | Gameplay     | **Thin+**    | Pełna pętla sezonu 22 + N+1 Confirm · Training · Transfers · Academy · Scouting · Info Thin layers |
-| Dokumentacja | **Aktualna** | BOARD CLOSE · Domain tip `75c190d` · D1–D108                                                        |
+| Dokumentacja | **Aktualna** | BOARD CLOSE · Domain tip `75c190d` · D1–D108                                                       |
 | CI           | **GREEN**    | tip `main` VERIFIED                                                                                |
 | Production   | **GREEN**    | Vercel · Domain `75c190d` · brak migracji Board                                                    |
 

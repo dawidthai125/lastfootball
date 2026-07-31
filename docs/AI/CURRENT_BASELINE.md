@@ -36,21 +36,21 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                                        |
-| --------------------------- | ------------------------------------------------------------------------------ |
-| URL                         | https://lastfootball.vercel.app                                                |
-| Alias                       | https://lastfootball.pl                                                        |
-| Branch                      | `main`                                                                         |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                   |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`               |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                 |
-| **Domain feature baseline** | `75c190d` — **LFE-BOARD-01** (Board Information Thin · D102–D108)              |
-| Domain message              | `feat(board): implement LFE-BOARD-01 Board Information Thin`                   |
-| Prior Domain                | `17eb8ba` — LFE-SPONSORS-01                                                    |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)          |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                |
-| **Documentation tip**       | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                                                   |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · BOARD-01 CLOSED · Domain tip `75c190d`    |
+| Pole                        | Wartość                                                                     |
+| --------------------------- | --------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                             |
+| Alias                       | https://lastfootball.pl                                                     |
+| Branch                      | `main`                                                                      |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`            |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01              |
+| **Domain feature baseline** | `75c190d` — **LFE-BOARD-01** (Board Information Thin · D102–D108)           |
+| Domain message              | `feat(board): implement LFE-BOARD-01 Board Information Thin`                |
+| Prior Domain                | `17eb8ba` — LFE-SPONSORS-01                                                 |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)       |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`             |
+| **Documentation tip**       | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                               |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · BOARD-01 CLOSED · Domain tip `75c190d` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
