@@ -38,9 +38,7 @@ export function formatSeasonLabel(seasonNumber: number): string {
  * Trigger owns lifecycle (D70 · D75): exactly 22 league fixtures, all played.
  * AI↔AI does not count — player club fixtures only.
  */
-export function isSeasonCompleteTrigger(
-  fixtures: readonly { readonly status: string }[],
-): boolean {
+export function isSeasonCompleteTrigger(fixtures: readonly { readonly status: string }[]): boolean {
   if (fixtures.length !== LEAGUE_FIXTURE_COUNT) return false;
   return countPlayedInList(fixtures) === LEAGUE_FIXTURE_COUNT;
 }

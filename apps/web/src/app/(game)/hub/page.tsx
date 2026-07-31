@@ -40,13 +40,11 @@ export default async function HubPage() {
   const phase = resolveHubPhase(club, { hasFixtures });
   if (phase === 'NEW_CLUB') redirect(FIRST_MATCH_PATHS.intro);
 
-  const nextFixture =
-    phase === 'OFFSEASON' ? null : ((await getNextFixture(club.id)) ?? null);
+  const nextFixture = phase === 'OFFSEASON' ? null : ((await getNextFixture(club.id)) ?? null);
   const lastPlayed = (await getLastPlayedFixture(club.id)) ?? null;
   const table = resolveLeagueTable(club, fixtures);
   const leaguePositionLabel = hasFixtures ? resolvePlayerLeaguePositionLabel(table) : null;
-  const seasonReport =
-    phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber) : null;
+  const seasonReport = phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber) : null;
 
   const movements = await listClubFinanceMovements(club.id, 5);
   const finance = resolveClubFinance(club, movements);

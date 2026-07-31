@@ -5,11 +5,7 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import { LEAGUE_FIXTURE_COUNT, OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
 import { resolveNavAccess, resolveHubPhase, resolvePrimaryCta } from '@/lib/hub';
 import { resolveLeagueTable } from '@/lib/league';
-import {
-  formatSeasonLabel,
-  isSeasonCompleteTrigger,
-  resolveSeasonReport,
-} from '@/lib/season';
+import { formatSeasonLabel, isSeasonCompleteTrigger, resolveSeasonReport } from '@/lib/season';
 
 function club(partial?: Partial<ClubDto>): ClubDto {
   return {
