@@ -13,15 +13,15 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                           |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Pole                            | Wartość                                                                                                         |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 09 + **Season End Thin** + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                             |
-| **Domain feature baseline**     | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                                      |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                             |
-| **Documentation tip**           | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                                                                        |
-| **Branch**                      | `main`                                                                                                            |
-| **Status**                      | PRODUCTION VERIFIED · GREEN · **LFE-SEASON-END-01 CLOSED** · D78–D87 · Domain tip `024e827` · next **Owner GO**   |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                           |
+| **Domain feature baseline**     | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                                   |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                           |
+| **Documentation tip**           | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                                                                     |
+| **Branch**                      | `main`                                                                                                          |
+| **Status**                      | PRODUCTION VERIFIED · GREEN · **LFE-SEASON-END-01 CLOSED** · D78–D87 · Domain tip `024e827` · next **Owner GO** |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -56,34 +56,34 @@ git log -1 --oneline 9fd14fc            # LFE-UI-MOTION-01 presentation tip
 
 ### Platforma / gameplay Thin
 
-| EPIC                                           | Skrót                                                                              |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
-| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                                  |
-| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                                               |
-| **LFE-LEAGUE-04**                              | **Full 22** · double RR · top-up MD12–22 · D28 · `9027baf`                         |
-| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                                       |
-| LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22)               |
-| **LFE-ACADEMY-01**                             | **Academy Thin A** · Intake + Promote · `academy_track` (D23) · `9c6fe86`          |
-| **LFE-SCOUTING-01**                            | **Scouting Information Thin** · `resolveClubScouting` · shortlist refs · `93fd6d5` |
-| **LFE-DAILY-01**                               | **Daily Goal Thin** · `resolveClubDailyGoal` derive · D25 · `73e1361`              |
-| **LFE-ACHIEVEMENTS-01**                        | **Achievements Information Thin** · `resolveClubAchievements` · D26 · `3915be9`    |
-| **LFE-RANKING-01**                             | **Ranking Information Thin** · `resolveClubRanking` · D27 · `bf86749`              |
-| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)                  |
-| **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`      |
-| **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`              |
-| **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                |
-| **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`               |
-| **GDD-SEASON-END-01**                          | **Season End Thin** · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only            |
+| EPIC                                           | Skrót                                                                                  |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------- |
+| LFE-PLATFORM-01 · INFRA-01 · MATCH-01 · HUB-01 | Auth · klub · First Match · Hub EARLY_CLUB/SEASON                                      |
+| LFE-LEAGUE-01…03                               | Fixtures · tabela · Thin 11 (pre-04)                                                   |
+| **LFE-LEAGUE-04**                              | **Full 22** · double RR · top-up MD12–22 · D28 · `9027baf`                             |
+| LFE-ECONOMY-01                                 | Cash Thin · `/finance` (D18)                                                           |
+| LFE-PLAYERS-01 · **LFE-PLAYERS-02**            | Kadra `players` + **Development Thin** (potential · match) (D19/D22)                   |
+| **LFE-ACADEMY-01**                             | **Academy Thin A** · Intake + Promote · `academy_track` (D23) · `9c6fe86`              |
+| **LFE-SCOUTING-01**                            | **Scouting Information Thin** · `resolveClubScouting` · shortlist refs · `93fd6d5`     |
+| **LFE-DAILY-01**                               | **Daily Goal Thin** · `resolveClubDailyGoal` derive · D25 · `73e1361`                  |
+| **LFE-ACHIEVEMENTS-01**                        | **Achievements Information Thin** · `resolveClubAchievements` · D26 · `3915be9`        |
+| **LFE-RANKING-01**                             | **Ranking Information Thin** · `resolveClubRanking` · D27 · `bf86749`                  |
+| LFE-TRANSFERS-01…08                            | Rynek → listing → nego → Instant → Pending → **1× Counter** (D20)                      |
+| **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`          |
+| **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`                  |
+| **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                    |
+| **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`                   |
+| **GDD-SEASON-END-01**                          | **Season End Thin** · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only                |
 | **LFE-SEASON-END-01**                          | **Season End Thin lifecycle** · OFFSEASON · report · Confirm N+1 · D78–D87 · `024e827` |
-| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                                 |
-| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                                   |
-| **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                            |
-| **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                                   |
-| **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                         |
-| **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                         |
-| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                            |
-| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · tip `f871ca8`                         |
-| **M2.5**                                       | **PASS** · First Domain Implementation Review                                      |
+| LFE-TRAINING-01 · LFE-TRAINING-02              | Trening Thin + Depth (skill · XI Gate · RPC) (D21)                                     |
+| GDD-§26A / §26B                                | SSOT liczb + sync `ECONOMY_THIN`                                                       |
+| **GDD-16**                                     | **Akademia Thin A** (Intake + Promote) · docs `4805f7e`                                |
+| **GDD-17**                                     | **Skauting Information Thin B** · docs `2595cc9`                                       |
+| **GDD-18**                                     | **Ranking Thin** (sezonowy ranking klubów) · tip `4dedd71`                             |
+| **GDD-19**                                     | **Osiągnięcia Thin** (kamienie / historia) · tip `2c619ca`                             |
+| **GDD-21**                                     | **Wiadomości Thin** · content `bf07a44` · tip `c24efef`                                |
+| **GDD-22**                                     | **Powiadomienia Thin** · content `09b85e7` · tip `f871ca8`                             |
+| **M2.5**                                       | **PASS** · First Domain Implementation Review                                          |
 
 ### Silnik / Match UI
 
@@ -275,13 +275,13 @@ kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · b
 
 Brak EPIC **IN PROGRESS**. Kandydaci **PLANNED**:
 
-| #   | EPIC / temat                    | Priorytet | Notatka                  |
-| --- | ------------------------------- | --------- | ------------------------ |
+| #   | EPIC / temat                    | Priorytet | Notatka                            |
+| --- | ------------------------------- | --------- | ---------------------------------- |
 | 1   | Sponsors / Board Thin           | P1        | Po Season End · H-SPONSORS/H-BOARD |
-| 2   | Promotion / awans-spadek        | P2        | Po SE kod · D73          |
-| 3   | TD-03+ transfers cleanup (P2)   | P2        | Po osobnym Owner GO      |
-| 4   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth            |
-| 5   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO      |
+| 2   | Promotion / awans-spadek        | P2        | Po SE kod · D73                    |
+| 3   | TD-03+ transfers cleanup (P2)   | P2        | Po osobnym Owner GO                |
+| 4   | Ratings v2 · LFE PUBLIC trim    | P3        | Chore / depth                      |
+| 5   | Kanał push / email (§22 Future) | P3        | Po osobnym Owner GO                |
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 

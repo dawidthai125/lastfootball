@@ -8,13 +8,13 @@ Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.
 
 ## State Machine
 
-| Phase        | Hub render?                   | Warunek (S1)                                                                                                                                                                                                |
-| ------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NEW_CLUB`   | **Nie** — First Match tunnel  | `!first_match_completed_at`                                                                                                                                                                                 |
-| `EARLY_CLUB` | **Tak**                       | first match done **i** brak fixtures                                                                                                                                                                        |
-| `SEASON`     | **Tak** (ten sam layout)      | first match done **i** `fixtures.length > 0`                                                                                                                                                                |
-| `PLAYOFF`    | Future                        | —                                                                                                                                                                                                           |
-| `OFFSEASON`  | **Tak** (raport + Confirm)    | `club.seasonPhase === 'offseason'` (LFE-SEASON-END-01 · D78–D87). Raport read-only · 1 Primary CTA Confirm N+1 · unlock parity SEASON (D79). |
+| Phase        | Hub render?                  | Warunek (S1)                                                                                                                                 |
+| ------------ | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEW_CLUB`   | **Nie** — First Match tunnel | `!first_match_completed_at`                                                                                                                  |
+| `EARLY_CLUB` | **Tak**                      | first match done **i** brak fixtures                                                                                                         |
+| `SEASON`     | **Tak** (ten sam layout)     | first match done **i** `fixtures.length > 0`                                                                                                 |
+| `PLAYOFF`    | Future                       | —                                                                                                                                            |
+| `OFFSEASON`  | **Tak** (raport + Confirm)   | `club.seasonPhase === 'offseason'` (LFE-SEASON-END-01 · D78–D87). Raport read-only · 1 Primary CTA Confirm N+1 · unlock parity SEASON (D79). |
 
 **Jedyny resolver fazy:** `resolveHubPhase(club, { hasFixtures })`.  
 **Sesja:** `resolveHubSession(phase, nextFixture, lastPlayed)` → `matchday` | `post_match` | `idle`.  
@@ -36,11 +36,11 @@ Jeden layout (`EarlyClubHub`) — decision-first (LFE-UI-EVOLUTION-01A / 02 · L
 
 ### Primary CTA
 
-| Warunek                         | Label            | href          |
-| ------------------------------- | ---------------- | ------------- |
-| `matchday` + `nextFixture`      | Przygotuj mecz   | `/match/{id}` |
-| Fallback (idle / brak upcoming) | **Zobacz kadrę** | `/squad`      |
-| `OFFSEASON`                       | **Przygotuj sezon** (Confirm N+1) | form → `confirmStartNextSeason` |
+| Warunek                         | Label                             | href                            |
+| ------------------------------- | --------------------------------- | ------------------------------- |
+| `matchday` + `nextFixture`      | Przygotuj mecz                    | `/match/{id}`                   |
+| Fallback (idle / brak upcoming) | **Zobacz kadrę**                  | `/squad`                        |
+| `OFFSEASON`                     | **Przygotuj sezon** (Confirm N+1) | form → `confirmStartNextSeason` |
 
 ### Daily Goal Thin (LFE-DAILY-01 / D25 / GDD §20)
 

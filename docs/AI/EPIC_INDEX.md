@@ -21,9 +21,9 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                   |
 | ----------------------- | --------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`024e827`** — LFE-SEASON-END-01 CLOSED       |
+| **Domain baseline**     | **`024e827`** — LFE-SEASON-END-01 CLOSED      |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)    |
+| **Documentation tip**   | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)   |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -46,7 +46,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-CLUB-01**                                | Club identity Thin · `resolveClubProfile` · D47–D51 · `36ba9be`  |
 | **LFE-SOFTLOCK-01**                            | Route soft-lock gate · SoftLockState · D52 · D63–D67 · `46f7caa` |
 | **GDD-SEASON-END-01**                          | Season End Thin kontrakt · D68–D77 · docs only                   |
-| **LFE-SEASON-END-01**                          | Season End Thin lifecycle · D78–D87 · `024e827`                   |
+| **LFE-SEASON-END-01**                          | Season End Thin lifecycle · D78–D87 · `024e827`                  |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 

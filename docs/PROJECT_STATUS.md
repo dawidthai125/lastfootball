@@ -18,21 +18,21 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 **PRODUCTION VERIFIED · GREEN · LFE-SEASON-END-01 CLOSED** (Season End Thin lifecycle · Domain tip `024e827`)
 
-|                         |                                                                  |
-| ----------------------- | ---------------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)        |
+|                         |                                                                   |
+| ----------------------- | ----------------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)         |
 | **Domain feature**      | **`024e827`** — **LFE-SEASON-END-01** (Season End Thin · D78–D87) |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)         |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)          |
 | **Documentation tip**   | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                       |
-| **Prod**                | https://lastfootball.vercel.app                                  |
+| **Prod**                | https://lastfootball.vercel.app                                   |
 
-| Tor               | Stan                                                                                                                                                                        |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tor               | Stan                                                                                                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Platform          | Onboarding · First Match · Hub · League 22 · **Season End** · Finance · Players · Transfers 09 · Messages · Club · SoftLock · Training · Academy · Scouting · Daily · Achievements · Ranking |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                                                                         |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate                                                                                                  |
-| Design            | GDD-01…**22** Thin · **GDD-SEASON-END-01** + **LFE-SEASON-END-01** CLOSED (D68–D87) · §26 CLOSED · World Art CLOSED · **next: Owner GO**                                   |
-| Infra             | Vercel + Supabase · CI GREEN · migracja `season_number` / `season_phase`                                                                                                    |
+| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                                                                                          |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · Match Path immersive · XI Gate                                                                                                                   |
+| Design            | GDD-01…**22** Thin · **GDD-SEASON-END-01** + **LFE-SEASON-END-01** CLOSED (D68–D87) · §26 CLOSED · World Art CLOSED · **next: Owner GO**                                                     |
+| Infra             | Vercel + Supabase · CI GREEN · migracja `season_number` / `season_phase`                                                                                                                     |
 
 ## W trakcie
 

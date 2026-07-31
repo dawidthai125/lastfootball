@@ -535,7 +535,6 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D78–D87:** LFE-SEASON-END-01 (feat `024e827`).
 
-
 ## Najważniejsze decyzje (meta)
 
 Każde złamanie D1–D28 / D38 / D40–D52 / D63–D87 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
