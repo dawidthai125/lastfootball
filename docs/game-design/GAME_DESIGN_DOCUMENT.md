@@ -1169,6 +1169,9 @@ Przewidzieć awarie UX, by gracz nigdy nie utknął bez CTA i bez utraty klubu �
 
 ## 6. Rozwój klubu
 
+> **Board Thin (Information · H-BOARD):** [`GDD-BOARD-01.md`](./GDD-BOARD-01.md) · D102–D108 — bez silnika Prestige/Reputacja.  
+> Ten rozdział = kierunek §6; Board Thin **nie** implementuje metryk numerycznych.
+
 **Status rozdziału:** GDD-13 — opracowany (**rozwój klubu MVP — filozofia i doświadczenie gracza**; bez liczb, progów, wzorów i balansu — → §26)
 
 **Cel rozdziału**  
@@ -8285,6 +8288,9 @@ Granica monetyzacji.
 ---
 
 ## 21. Wiadomości
+
+> **Board Thin:** ton Zarządu na `/board` = [`GDD-BOARD-01.md`](./GDD-BOARD-01.md) (Information Thin · D102–D108).  
+> §21 pozostaje SSOT skrzynki; Board **nie** jest drugim inboxem.
 
 **Status rozdziału:** GDD-21 — opracowany (**Wiadomości Thin** — in-app inbox · typy · limit · CTA do istniejących ekranów; bez push, email, AI, DB, kodu i liczb)
 

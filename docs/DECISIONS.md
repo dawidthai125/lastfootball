@@ -609,9 +609,46 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D95–D101:** GDD-SPONSORS-01 / LFE-SPONSORS-01 (feat `17eb8ba`).
 
+### D102 — Board UI Sole Resolver · CLOSED
+
+**Dlaczego:** Ad-hoc UI / stub bez DTO = drift.  
+**Zasada:** UI Board wyłącznie przez `resolveClubBoard`.
+
+### D103 — Board Information Thin · CLOSED
+
+**Dlaczego:** Mutacje z `/board` tworzą system zarządzania.  
+**Zasada:** Pure derive · zero zapisu stanu Board · zero Server Actions Board.
+
+### D104 — H-BOARD Non-Blocking · CLOSED
+
+**Dlaczego:** Board jako Primary blokuje lifecycle.  
+**Zasada:** Confirm N+1 = Primary; Board = Information Thin (secondary / nav).
+
+### D105 — Soft Unlock Board Only · CLOSED
+
+**Dlaczego:** Unlock Stadium „przy okazji”.  
+**Zasada:** `/board` open SEASON+OFFSEASON; `/stadium` remain soft-locked. (D99: Sponsors already open.)
+
+### D106 — No Prestige Engine · CLOSED
+
+**Dlaczego:** Silnik §6 Prestige/Reputacja = poza Thin.  
+**Zasada:** Brak numeric Prestige/Reputation; Board nie liczy §6.
+
+### D107 — No Quest No Club Mgmt · CLOSED
+
+**Dlaczego:** Quest / zarządzanie klubem = scope creep.  
+**Zasada:** Brak Quest Engine · brak systemu zarządzania klubem z Board.
+
+### D108 — Derive From Season Facts · CLOSED
+
+**Dlaczego:** RNG / osobny score Board.  
+**Zasada:** Wejście = tabela + `resolveSeasonReport` (+ phase); zero RNG.
+
+**Źródło D102–D108:** GDD-BOARD-01 / LFE-BOARD-01.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D101 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D108 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -635,11 +672,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D101 wymaga **AUDIT** i aktu
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
 **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
 **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
+**GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md)
 
 ## Last updated
 
-2026-07-31 — LFE-SPONSORS-01 CLOSED · D95–D101 · feat `17eb8ba`
+2026-07-31 — LFE-BOARD-01 · D102–D108

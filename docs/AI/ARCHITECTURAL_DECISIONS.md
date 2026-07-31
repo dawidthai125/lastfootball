@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D101):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.  
+**Pełny rejestr D\* (D1–D108):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -79,7 +79,7 @@
 | **D80**  | Sole planner               | N+1 tylko przez `planClubFixtures` (zero drugiego terminarza).                    |
 | **D81**  | Report pure resolve        | `resolveSeasonReport` z tabeli; Information Thin.                                 |
 | **D82**  | Confirm before N+1         | Auto start nowego sezonu zakazany.                                                |
-| **D83**  | Hooks no-op in Thin        | `onSeasonEnd` no-op age++; Sponsors wired in Confirm (D95+); Board still OUT.     |
+| **D83**  | Hooks no-op in Thin        | `onSeasonEnd` no-op age++; Sponsors+Board wired as info/Confirm; age still OUT.   |
 | **D84**  | Report = existing facts    | Highlighty tylko z faktów domeny.                                                 |
 | **D85**  | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
 | **D86**  | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
@@ -95,9 +95,16 @@
 | **D96**  | Sponsors UI Sole Resolver  | UI tylko `resolveClubSponsors`.                                                   |
 | **D97**  | Sponsor Cash Via Ledger    | Payout/bonus → `cash_balance` + `finance_movements` only.                         |
 | **D98**  | H-SPONSORS Non-Blocking    | Confirm Primary; renewal secondary; auto-renew przy Confirm.                      |
-| **D99**  | Soft Unlock Sponsors Only  | `/sponsors` open SEASON+OFFSEASON; Board/Stadium locked.                          |
+| **D99**  | Soft Unlock Sponsors Only  | `/sponsors` open; Board later D105; Stadium locked.                               |
 | **D100** | No Marketplace No Quest    | Brak marketplace / nego / Quest Engine / mid-season change.                       |
 | **D101** | Flat Renewal Band Thin     | Auto-renew = te same brand + kwoty Thin.                                          |
+| **D102** | Board UI Sole Resolver     | UI tylko `resolveClubBoard`.                                                      |
+| **D103** | Board Information Thin     | Pure derive · zero persist / mutacji Board.                                       |
+| **D104** | H-BOARD Non-Blocking       | Confirm Primary; Board = info.                                                    |
+| **D105** | Soft Unlock Board Only     | `/board` open SEASON+OFFSEASON; Stadium locked.                                   |
+| **D106** | No Prestige Engine         | Brak silnika Prestige/Reputacja.                                                  |
+| **D107** | No Quest No Club Mgmt      | Brak Quest Engine · brak zarządzania klubem.                                      |
+| **D108** | Derive From Season Facts   | Tabela + report · zero RNG.                                                       |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -179,7 +186,14 @@
 
 - `club_sponsor_contracts` = SSOT kontraktu · UI tylko `resolveClubSponsors`.
 - Cash wyłącznie finance ledger · base payout raz w `confirmStartNextSeason`.
-- Confirm Primary · renewal secondary · flat auto-renew · Board/Stadium locked.
+- Confirm Primary · renewal secondary · flat auto-renew · Stadium locked (Board → D105).
 - SSOT Thin = `GDD-SPONSORS-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-SPONSORS-01 CLOSED · D1–D101 · Domain `17eb8ba` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D102–D108 — kontrakt Board Thin (must-know)
+
+- UI tylko `resolveClubBoard` · Information Thin · zero migracji / persist / actions.
+- Expectation opisowe · standing.trend · tone positive/neutral/concern.
+- Confirm Primary · `/board` open · Stadium locked · no Prestige/Quest/club mgmt.
+- SSOT Thin = `GDD-BOARD-01.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-BOARD-01 IMPLEMENT · D1–D108 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

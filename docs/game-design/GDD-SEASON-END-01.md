@@ -217,15 +217,15 @@ Kolejność **zamrożona**. Żadnego przestawiania Report za konsekwencje.
 Każdy hook opisany **wyłącznie** jako: **moment · Owner EPIC · cel**.  
 Bez UX, bez kwot, bez schematu, bez kryteriów implementacji.
 
-| ID                    | Moment (pipeline)                                  | Owner EPIC                                       | Cel                                                                        |
-| --------------------- | -------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------- |
-| **H-SPONSORS**        | Po **Report**, w oknie Offseason (krok 5)          | `LFE-SPONSORS-01` (po Season End w kodzie + §15) | Umożliwić odnowienie / cykl umowy sponsorskiejej bez blokowania lifecycle. |
-| **H-BOARD**           | Po **Report** (krok 5)                             | `LFE-BOARD-01` (po GDD Board)                    | Umożliwić ocenę / cele władz względem wyniku sezonu.                       |
-| **H-AGE**             | Przy **New Season** (krok 7) lub tuż przed nim     | osobny EPIC kariery / age Thin                   | Umożliwić sezonowy przyrost wieku zawodników.                              |
-| **H-TRANSFER-WINDOW** | Offseason (krok 4–5)                               | rozszerzenie Transfers / okna §12                | Umożliwić główne okno międzysezonowe.                                      |
-| **H-ACHIEVE**         | Po **Report** (krok 3–5)                           | opcjonalne wzbogacenie `LFE-ACHIEVEMENTS-*`      | Umożliwić kamienie sezonowe jako derive z faktu zamknięcia.                |
-| **H-MSG**             | Po **Report** (krok 3–5)                           | opcjonalne wzbogacenie Messages                  | Umożliwić komunikat skutkowy (ton uznania / soft landing).                 |
-| **H-PROMOTION**       | **Poza** Season End Thin — po domknięciu lifecycle | `LFE-PROMOTION-01` / Season End Depth            | Umożliwić awans/spadek szczebla; **zakaz** w tym kontrakcie (D73).         |
+| ID                    | Moment (pipeline)                                  | Owner EPIC                                              | Cel                                                                            |
+| --------------------- | -------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **H-SPONSORS**        | Po **Report**, w oknie Offseason (krok 5)          | `LFE-SPONSORS-01` (po Season End w kodzie + §15)        | Umożliwić odnowienie / cykl umowy sponsorskiejej bez blokowania lifecycle.     |
+| **H-BOARD**           | Po **Report** (krok 5)                             | `LFE-BOARD-01` · [`GDD-BOARD-01.md`](./GDD-BOARD-01.md) | Umożliwić ocenę / oczekiwania władz względem wyniku sezonu (Information Thin). |
+| **H-AGE**             | Przy **New Season** (krok 7) lub tuż przed nim     | osobny EPIC kariery / age Thin                          | Umożliwić sezonowy przyrost wieku zawodników.                                  |
+| **H-TRANSFER-WINDOW** | Offseason (krok 4–5)                               | rozszerzenie Transfers / okna §12                       | Umożliwić główne okno międzysezonowe.                                          |
+| **H-ACHIEVE**         | Po **Report** (krok 3–5)                           | opcjonalne wzbogacenie `LFE-ACHIEVEMENTS-*`             | Umożliwić kamienie sezonowe jako derive z faktu zamknięcia.                    |
+| **H-MSG**             | Po **Report** (krok 3–5)                           | opcjonalne wzbogacenie Messages                         | Umożliwić komunikat skutkowy (ton uznania / soft landing).                     |
+| **H-PROMOTION**       | **Poza** Season End Thin — po domknięciu lifecycle | `LFE-PROMOTION-01` / Season End Depth                   | Umożliwić awans/spadek szczebla; **zakaz** w tym kontrakcie (D73).             |
 
 **Zasada:** dopóki Owner EPIC nie jest CLOSED, hook w produkcie Thin = **no-op** (brak feature, brak atrap).
 

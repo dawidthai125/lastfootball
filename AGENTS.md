@@ -30,7 +30,7 @@ Last Football is built so a new agent session can work from **`docs/` + code alo
 - Canvas / Replay never call Engine or mutate `MatchState`.
 - Hub is a **decision screen**, not a mid-season dashboard.
 - First Hub unlock: `clubs.first_match_completed_at`.
-- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubSquad`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `resolveTransferMarket`, `resolveClubTraining`, `planClubFixtures`, …).
+- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubSquad`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `resolveTransferMarket`, `resolveClubTraining`, `planClubFixtures`, …).
 - UI presentation EPICs: follow [`docs/game-design/UI_DESIGN_GUIDE.md`](docs/game-design/UI_DESIGN_GUIDE.md) §16 (Presentation Contract); do not change resolvers/DTO/unlock without a domain Owner GO.
 - **Presentation ≠ Domain** · **Information Thin** (skauting porządkuje, nie decyduje) — skrót: [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 

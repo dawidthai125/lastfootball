@@ -149,17 +149,20 @@ describe('hub nav unlock', () => {
     expect(resolveNavAccess('league', 'EARLY_CLUB')).toBe('soft_locked');
   });
 
-  it('opens Finanse + Sponsors on SEASON; Transfery need window flag; Training needs unlock; Academy + Scouting open', () => {
+  it('opens Finanse + Sponsors + Board on SEASON; Stadium locked; Transfery need window; Training needs unlock', () => {
     expect(resolveNavAccess('finance', 'SEASON')).toBe('open');
     expect(resolveNavAccess('sponsors', 'SEASON')).toBe('open');
     expect(resolveNavAccess('sponsors', 'OFFSEASON')).toBe('open');
-    expect(resolveNavAccess('board', 'SEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('board', 'SEASON')).toBe('open');
+    expect(resolveNavAccess('board', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('stadium', 'SEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('stadium', 'OFFSEASON')).toBe('soft_locked');
     expect(resolveNavAccess('academy', 'SEASON')).toBe('open');
     expect(resolveNavAccess('scouting', 'SEASON')).toBe('open');
     expect(resolveNavAccess('academy', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('scouting', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('sponsors', 'EARLY_CLUB')).toBe('soft_locked');
+    expect(resolveNavAccess('board', 'EARLY_CLUB')).toBe('soft_locked');
     expect(resolveNavAccess('training', 'SEASON')).toBe('soft_locked');
     expect(resolveNavAccess('training', 'SEASON', { trainingUnlocked: true })).toBe('open');
     expect(resolveNavAccess('transfers', 'SEASON')).toBe('soft_locked');

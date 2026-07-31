@@ -49,14 +49,14 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
     }
   });
 
-  it('opens sponsors on SEASON/OFFSEASON; board/stadium remain soft-locked (D99)', () => {
+  it('opens sponsors + board on SEASON/OFFSEASON; stadium remains soft-locked (D99 · D105)', () => {
     for (const phase of ['SEASON', 'OFFSEASON'] as const) {
       expect(resolveRouteNavAccess('/sponsors', phase)).toBe('open');
+      expect(resolveRouteNavAccess('/board', phase)).toBe('open');
       expect(isRouteSoftLocked('/sponsors', phase)).toBe(false);
-      for (const href of ['/board', '/stadium'] as const) {
-        expect(resolveRouteNavAccess(href, phase)).toBe('soft_locked');
-        expect(isRouteSoftLocked(href, phase)).toBe(true);
-      }
+      expect(isRouteSoftLocked('/board', phase)).toBe(false);
+      expect(resolveRouteNavAccess('/stadium', phase)).toBe('soft_locked');
+      expect(isRouteSoftLocked('/stadium', phase)).toBe(true);
     }
   });
 
@@ -76,6 +76,15 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
       expect(src).not.toContain('42 500');
       expect(src).not.toContain('450 000');
     }
+  });
+
+  it('board page uses resolveClubBoard (D102) without Board persist actions', () => {
+    const src = readFileSync(join(webRoot, 'app/(game)/board/page.tsx'), 'utf8');
+    expect(src).toContain('resolveClubBoard');
+    expect(src).toContain('BoardView');
+    expect(src).not.toMatch(/^['"]use server['"]/m);
+    expect(src).not.toContain('club_board');
+    expect(src).not.toMatch(/claimBoard|acceptBoard|saveBoard/i);
   });
 
   it('sponsors page uses resolveClubSponsors (D96)', () => {
