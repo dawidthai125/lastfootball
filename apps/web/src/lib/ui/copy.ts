@@ -16,6 +16,18 @@ export const UI_COPY = {
   goToMatch: 'Idź do meczu',
   playMatch: 'Zagraj mecz',
   playFirstMatch: 'Rozpocznij pierwszy mecz',
+  prepareNextSeason: 'Przygotuj sezon',
+
+  /** LFE-SEASON-END-01 — Season report Information Thin (read-only) */
+  seasonReportEyebrow: 'Sezon zamknięty',
+  seasonReportTitle: 'Raport sezonu',
+  seasonReportSubtitle: 'Podsumowanie faktów z tabeli ligowej',
+  seasonReportConfirmHint: 'Potwierdź, gdy będziesz gotów na nowy sezon w tej samej lidze.',
+  seasonReportPosition: 'Pozycja',
+  seasonReportRecord: 'Bilans',
+  seasonReportPoints: 'Punkty',
+  seasonReportZone: 'Strefa',
+  seasonReportHighlights: 'Wyróżnienia',
 
   /** LFE-DAILY-01 — Daily Goal Thin (suggestion only; not Primary) */
   dailyGoalEyebrow: 'Dziś warto',

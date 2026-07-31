@@ -19,6 +19,16 @@ export function resolvePrimaryCta(
   session: HubSession,
   ctx: HubCtaContext = { nextFixture: null },
 ): HubCta {
+  // Offseason: exactly one Primary CTA — Confirm N+1 is the sole transition (D85).
+  if (phase === 'OFFSEASON') {
+    return {
+      id: 'prepare-next-season',
+      label: UI_COPY.prepareNextSeason,
+      href: '/hub',
+      access: 'open',
+    };
+  }
+
   if (DECISION_PHASES.has(phase) && session === 'matchday' && ctx.nextFixture) {
     return {
       id: 'play-next-match',

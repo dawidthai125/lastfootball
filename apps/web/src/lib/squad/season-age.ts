@@ -33,10 +33,10 @@ export function applySeasonAgeEffects(
 }
 
 /**
- * Product hook placeholder — call only from a future real season-end pipeline.
- * Currently a no-op document of intent (does not mutate DB).
+ * Product hook — wired from Confirm N+1 (LFE-SEASON-END-01 · D83).
+ * Thin no-op: does not mutate DB / age / economy until Owner EPIC.
  */
 export function onSeasonEnd(_clubId: string): void {
-  // Hook only — Owner lock: no automatic age++ in LFE-PLAYERS-02.
+  // Hook only — Owner lock: no automatic age++ in Thin.
   void _clubId;
 }

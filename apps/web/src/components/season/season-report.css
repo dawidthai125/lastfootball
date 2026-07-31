@@ -1,0 +1,68 @@
+/* LFE-SEASON-END-01 — Season report Information Thin (presentation only). */
+
+.lf-season-report {
+  margin: var(--lf-space-4, 1rem) 0;
+  padding: var(--lf-space-4, 1rem) 0;
+  border-top: var(--lf-border-width-hair, 1px) solid var(--lf-color-border, rgba(0, 0, 0, 0.12));
+}
+
+.lf-season-report__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lf-color-text-muted, #6b7280);
+}
+
+.lf-season-report__title {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--lf-color-text, #111);
+}
+
+.lf-season-report__subtitle,
+.lf-season-report__hint,
+.lf-season-report__confirm-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--lf-color-text-muted, #6b7280);
+}
+
+.lf-season-report__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.25rem;
+  margin: 1rem 0 0;
+}
+
+.lf-season-report__facts dt {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--lf-color-text-muted, #6b7280);
+}
+
+.lf-season-report__facts dd {
+  margin: 0.15rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.lf-season-report__highlights {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--lf-color-text, #111);
+}
+
+.lf-hub__confirm-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--lf-color-danger, #b91c1c);
+}
+
+@media (min-width: 640px) {
+  .lf-season-report__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

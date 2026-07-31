@@ -21,6 +21,8 @@ function clubFixture(overrides: Partial<ClubDto> = {}): ClubDto {
     cashBalance: 100_000,
     transferWindowOpen: false,
     lastTrainingOn: null,
+    seasonNumber: 1,
+    seasonPhase: 'in_season',
     ...overrides,
   };
 }

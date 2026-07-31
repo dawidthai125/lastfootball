@@ -49,10 +49,12 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
     }
   });
 
-  it('permanent locks soft-lock on SEASON (sponsors / board / stadium)', () => {
-    for (const href of ['/sponsors', '/board', '/stadium'] as const) {
-      expect(resolveRouteNavAccess(href, 'SEASON')).toBe('soft_locked');
-      expect(isRouteSoftLocked(href, 'SEASON')).toBe(true);
+  it('permanent locks soft-lock on SEASON and OFFSEASON (sponsors / board / stadium · D79)', () => {
+    for (const phase of ['SEASON', 'OFFSEASON'] as const) {
+      for (const href of ['/sponsors', '/board', '/stadium'] as const) {
+        expect(resolveRouteNavAccess(href, phase)).toBe('soft_locked');
+        expect(isRouteSoftLocked(href, phase)).toBe(true);
+      }
     }
   });
 

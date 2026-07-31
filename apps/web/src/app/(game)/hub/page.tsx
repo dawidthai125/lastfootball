@@ -15,28 +15,43 @@ import { resolveCashChipLabel, resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { resolveHubPhase } from '@/lib/hub';
 import { resolveLeagueTable, resolvePlayerLeaguePositionLabel } from '@/lib/league';
+import { closeSeasonIfComplete, resolveSeasonReport } from '@/lib/season';
 import { TRAINING_THIN } from '@/lib/training';
 
 /**
- * Hub / Panel menedżera — decision screen (EARLY_CLUB / SEASON) + fixtures / finance SSOT.
+ * Hub / Panel menedżera — decision screen (EARLY_CLUB / SEASON / OFFSEASON).
  */
 export default async function HubPage() {
-  const club = await getManagerClub();
+  let club = await getManagerClub();
   if (!club) redirect('/welcome');
 
-  const fixtures = await ensureClubFixtures(club.id);
+  let fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
+
+  // Recovery path: trigger met but phase not yet closed (AC-10 consistency).
+  if (club.seasonPhase === 'in_season') {
+    const closed = await closeSeasonIfComplete(club.id, fixtures);
+    if (closed) {
+      club = (await getManagerClub()) ?? club;
+      fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
+    }
+  }
+
   const hasFixtures = fixtures.length > 0;
   const phase = resolveHubPhase(club, { hasFixtures });
   if (phase === 'NEW_CLUB') redirect(FIRST_MATCH_PATHS.intro);
 
-  const nextFixture = (await getNextFixture(club.id)) ?? null;
+  const nextFixture =
+    phase === 'OFFSEASON' ? null : ((await getNextFixture(club.id)) ?? null);
   const lastPlayed = (await getLastPlayedFixture(club.id)) ?? null;
   const table = resolveLeagueTable(club, fixtures);
   const leaguePositionLabel = hasFixtures ? resolvePlayerLeaguePositionLabel(table) : null;
+  const seasonReport =
+    phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber) : null;
 
   const movements = await listClubFinanceMovements(club.id, 5);
   const finance = resolveClubFinance(club, movements);
-  const cashLabel = phase === 'SEASON' ? resolveCashChipLabel(finance) : null;
+  const cashLabel =
+    phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const trainingUnlocked = hasPlayedUnlock(
     countPlayedInList(fixtures),
     TRAINING_THIN.UNLOCK_AFTER_PLAYED,
@@ -52,6 +67,7 @@ export default async function HubPage() {
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
       todayUtc={utcDateString()}
+      seasonReport={seasonReport}
     />
   );
 }

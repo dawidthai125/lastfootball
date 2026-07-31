@@ -2,6 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import { FIRST_MATCH_BOT } from '@/lib/first-match/constants';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { formatSeasonLabel } from '@/lib/season/types';
 
 export type LastMatchStripModel = {
   readonly title: string;
@@ -74,7 +75,7 @@ export function buildLightStatus(
     league: STARTER_PACKAGE.league,
     stadium: STARTER_PACKAGE.stadiumLabel(club.name),
     dayLabel,
-    seasonLabel: 'Sezon 1',
+    seasonLabel: formatSeasonLabel(club.seasonNumber),
     clubLevelLabel: 'Klub startowy',
     leaguePositionLabel,
     cashLabel,

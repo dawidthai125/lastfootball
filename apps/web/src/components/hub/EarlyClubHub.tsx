@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
+import { ConfirmStartSeasonButton } from '@/components/season/ConfirmStartSeasonButton';
+import { SeasonReportView } from '@/components/season/SeasonReportView';
 import type { ClubDto } from '@/lib/club/types';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
@@ -18,12 +20,13 @@ import {
   type HubCta,
   type HubSession,
 } from '@/lib/hub';
+import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './hub-decision.css';
 
 /**
- * Decision Hub — LFE-UI-IMPL-01 / Hi-Fi HF-HUB-01|02|04 · LFE-DAILY-01.
+ * Decision Hub — LFE-UI-IMPL-01 / Hi-Fi HF-HUB-01|02|04 · LFE-DAILY-01 · LFE-SEASON-END-01.
  * Hero → Decision → Primary → Daily Goal (suggestion) → Secondary≤5 → Context.
  * Unlock via resolveNavAccess — no new domain rules.
  */
@@ -36,6 +39,7 @@ export function EarlyClubHub({
   cashLabel = null,
   trainingUnlocked = false,
   todayUtc = utcDateString(),
+  seasonReport = null,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -46,6 +50,8 @@ export function EarlyClubHub({
   trainingUnlocked?: boolean;
   /** Injected UTC day for Daily Goal determinism (tests / page). */
   todayUtc?: string;
+  /** Offseason read-only report (D84 · D86); null outside OFFSEASON. */
+  seasonReport?: SeasonReportDto | null;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -72,15 +78,30 @@ export function EarlyClubHub({
   }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
-  const message = buildWelcomeMessage(club, nextFixture);
-  const event = resolveDecisionEvent({
-    club,
-    session,
-    nextFixture,
-    lastMatch,
-    dayLabel: status.dayLabel,
-    league: status.league,
-  });
+  const message =
+    phase === 'OFFSEASON'
+      ? {
+          from: 'Zarząd',
+          subject: `${status.seasonLabel} zamknięty`,
+          body: 'Sezon ligowy dobiegł końca. Przejrzyj raport i potwierdź start kolejnego sezonu w tej samej lidze.',
+        }
+      : buildWelcomeMessage(club, nextFixture);
+  const event =
+    phase === 'OFFSEASON'
+      ? {
+          eyebrow: 'Przerwa międzysezonowa',
+          title: 'Sezon zakończony',
+          meta: `${status.league} · ${status.seasonLabel}`,
+          detail: 'Brak meczów ligowych do czasu potwierdzenia nowego sezonu.',
+        }
+      : resolveDecisionEvent({
+          club,
+          session,
+          nextFixture,
+          lastMatch,
+          dayLabel: status.dayLabel,
+          league: status.league,
+        });
 
   return (
     <div
@@ -89,6 +110,7 @@ export function EarlyClubHub({
       data-hub-session={session}
       data-lf-impl="LFE-UI-IMPL-06A"
       data-lf-daily="LFE-DAILY-01"
+      data-lf-season={phase === 'OFFSEASON' ? 'LFE-SEASON-END-01' : undefined}
     >
       <LocationHero session={session} />
 
@@ -104,7 +126,13 @@ export function EarlyClubHub({
           {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
         </AtmosphereLayer>
 
-        <PrimaryCta cta={primary} />
+        {seasonReport ? <SeasonReportView report={seasonReport} /> : null}
+
+        {phase === 'OFFSEASON' && primary.id === 'prepare-next-season' ? (
+          <ConfirmStartSeasonButton label={primary.label} />
+        ) : (
+          <PrimaryCta cta={primary} />
+        )}
         <DailyGoalSuggestion goal={dailyGoal} />
       </div>
 

@@ -38,7 +38,8 @@ export function resolveNavAccess(
   if (phase === 'EARLY_CLUB') {
     return EARLY_CLUB_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
-  if (phase === 'SEASON') {
+  // SEASON + OFFSEASON share unlock parity (D79) — Sponsors/Board/Stadium stay soft-locked.
+  if (phase === 'SEASON' || phase === 'OFFSEASON') {
     if (itemId === 'transfers') {
       return ctx.transferWindowOpen ? 'open' : 'soft_locked';
     }
@@ -47,7 +48,8 @@ export function resolveNavAccess(
     }
     return SEASON_OPEN.has(itemId) ? 'open' : 'soft_locked';
   }
-  return 'open';
+  // PLAYOFF / unknown: fail closed (soft-lock), never all-open.
+  return 'soft_locked';
 }
 
 export function isModuleSoftLocked(

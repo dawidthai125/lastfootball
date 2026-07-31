@@ -26,6 +26,8 @@ function club(partial?: Partial<ClubDto>): ClubDto {
     cashBalance: 100_000,
     transferWindowOpen: false,
     lastTrainingOn: null,
+    seasonNumber: 1,
+    seasonPhase: 'in_season',
     ...partial,
   };
 }
@@ -64,6 +66,14 @@ describe('hub resolveHubPhase', () => {
 
   it('returns SEASON when first match done and fixtures exist (S1)', () => {
     expect(resolveHubPhase(afterFirst, { hasFixtures: true })).toBe('SEASON');
+  });
+
+  it('returns OFFSEASON when seasonPhase is offseason (LFE-SEASON-END-01)', () => {
+    const off = club({
+      firstMatchCompletedAt: '2026-07-24T12:00:00.000Z',
+      seasonPhase: 'offseason',
+    });
+    expect(resolveHubPhase(off, { hasFixtures: true })).toBe('OFFSEASON');
   });
 });
 

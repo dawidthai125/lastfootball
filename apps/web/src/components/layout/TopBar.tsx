@@ -12,6 +12,7 @@ import { resolveHubPhase } from '@/lib/hub';
 
 function phaseLabel(phase: ReturnType<typeof resolveHubPhase>): string {
   if (phase === 'SEASON') return 'Sezon';
+  if (phase === 'OFFSEASON') return 'Przerwa';
   if (phase === 'EARLY_CLUB' || phase === 'NEW_CLUB') return 'Start';
   return 'Klub';
 }

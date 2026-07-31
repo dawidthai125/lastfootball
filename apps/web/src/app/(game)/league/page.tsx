@@ -15,7 +15,7 @@ export default async function LeaguePage() {
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 
-  const fixtures = await ensureClubFixtures(club.id);
+  const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const table = resolveLeagueTable(club, fixtures);
 
   return (

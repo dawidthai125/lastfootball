@@ -7,6 +7,7 @@ import { resolveHubPhase, type HubPhase } from '@/lib/hub';
 
 function phaseLabel(phase: HubPhase): string {
   if (phase === 'SEASON') return 'Sezon';
+  if (phase === 'OFFSEASON') return 'Przerwa';
   if (phase === 'EARLY_CLUB' || phase === 'NEW_CLUB') return 'Start';
   return 'Klub';
 }
@@ -18,7 +19,8 @@ export function RightSidebar() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const phase = resolveHubPhase(club, { hasFixtures });
-  const decision = phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON';
+  const decision =
+    phase === 'EARLY_CLUB' || phase === 'NEW_CLUB' || phase === 'SEASON' || phase === 'OFFSEASON';
 
   if (!decision || !club) {
     return (

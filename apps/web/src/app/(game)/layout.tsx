@@ -23,7 +23,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
   let messages: ClubMessagesDto = EMPTY_MESSAGES;
 
   if (club && isFirstMatchCompleted(club)) {
-    const fixtures = await ensureClubFixtures(club.id);
+    const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
     hasFixtures = fixtures.length > 0;
     const playedCount = countPlayedInList(fixtures);
     trainingUnlocked = hasPlayedUnlock(playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);

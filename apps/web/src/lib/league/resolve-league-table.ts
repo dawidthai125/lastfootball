@@ -9,6 +9,7 @@ import {
   type LeagueTableDto,
   type LeagueTableRowDto,
 } from '@/lib/league/types';
+import { formatSeasonLabel } from '@/lib/season/types';
 
 type Acc = {
   member: LeagueMember;
@@ -26,7 +27,7 @@ type Acc = {
  * Player results from fixtures; AI↔AI from deterministic derive — no standings DB.
  */
 export function resolveLeagueTable(
-  club: Pick<ClubDto, 'id' | 'name' | 'shortName'>,
+  club: Pick<ClubDto, 'id' | 'name' | 'shortName'> & { readonly seasonNumber?: number },
   fixtures: readonly FixtureDto[],
 ): LeagueTableDto {
   const members = resolveLeagueMembers(club);
@@ -78,7 +79,7 @@ export function resolveLeagueTable(
 
   return {
     leagueLabel: STARTER_PACKAGE.league,
-    seasonLabel: 'Sezon 1',
+    seasonLabel: formatSeasonLabel(club.seasonNumber ?? 1),
     rows,
   };
 }

@@ -9,7 +9,7 @@ export default async function MatchesPage() {
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 
-  const fixtures = await ensureClubFixtures(club.id);
+  const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const ui = fixtures.map((f) => toUiFixture(f, club));
 
   return (

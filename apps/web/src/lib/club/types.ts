@@ -18,6 +18,13 @@ export type ClubDto = {
    * or null if never trained (LFE-TRAINING-01).
    */
   lastTrainingOn: string | null;
+  /** Current season index, 1-based (LFE-SEASON-END-01). */
+  seasonNumber: number;
+  /**
+   * Season lifecycle phase SSOT (LFE-SEASON-END-01 · AC-10).
+   * `offseason` persists until Confirm N+1 (D85).
+   */
+  seasonPhase: 'in_season' | 'offseason';
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {

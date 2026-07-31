@@ -32,12 +32,14 @@ export type HubCtaContext = {
 /**
  * Sole resolver for Hub phase.
  * S1 (LFE-LEAGUE-02): first match + fixtures → SEASON; first match + no fixtures → EARLY_CLUB.
+ * LFE-SEASON-END-01: seasonPhase offseason → OFFSEASON (AC-10 persist).
  */
 export function resolveHubPhase(
   club: ClubDto | null | undefined,
   ctx: HubPhaseContext = {},
 ): HubPhase {
   if (!club || !isFirstMatchCompleted(club)) return 'NEW_CLUB';
+  if (club.seasonPhase === 'offseason') return 'OFFSEASON';
   if (ctx.hasFixtures) return 'SEASON';
   return 'EARLY_CLUB';
 }

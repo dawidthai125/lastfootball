@@ -6,8 +6,10 @@ import { redirect } from 'next/navigation';
 import { env } from '@/config/env';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
+import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
 
@@ -155,6 +157,10 @@ export async function completeFixture(
 
   // Also open window if already played earlier and threshold now met (idempotent).
   await ensureTransferWindow(supabase, clubId);
+
+  // Season End Thin: after MD22 → Season Closed → OFFSEASON (D70 · D78).
+  const fixtures = await listClubFixtures(clubId);
+  await closeSeasonIfComplete(clubId, fixtures);
 
   revalidatePath('/', 'layout');
   redirect('/hub');
