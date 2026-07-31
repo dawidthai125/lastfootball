@@ -1,4 +1,4 @@
-# Changelog (docs SSOT index)
+﻿# Changelog (docs SSOT index)
 
 ## Cel dokumentu
 
@@ -10,7 +10,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`9424dd8`** (LFE-TRANSFERS-10).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** CLOSE sync — tip pin follows
+**Documentation tip:** **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---

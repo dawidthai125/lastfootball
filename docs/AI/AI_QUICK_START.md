@@ -1,4 +1,4 @@
-# AI — Quick Start (1 ekran)
+﻿# AI — Quick Start (1 ekran)
 
 ## Cel
 
@@ -15,7 +15,7 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
 | Domain baseline     | **`9424dd8`** — LFE-TRANSFERS-10 (TD-03+ · D116–D118)    |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | CLOSE sync — tip pin follows                             |
+| Documentation tip   | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)        |
 | tip `main`          | po pin CLOSE                                             |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |

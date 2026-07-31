@@ -1,4 +1,4 @@
-# PROJECT HANDOFF — Last Football
+﻿# PROJECT HANDOFF — Last Football
 
 **EPIC:** AI-HANDOFF-02 (docs-only · cold start)  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                               |
 | **Domain feature baseline**     | `9424dd8` — **LFE-TRANSFERS-10** (TD-03+ · actions split · displayPos · D116–D118)                                                                  |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                               |
-| **Documentation tip**           | CLOSE sync — tip pin follows                                                                                                                        |
-| **tip `main`**                  | after TRANSFERS-10 CLOSE                                                                                                                            |
+| **Documentation tip**           | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)                                                                                                   |
+| **tip `main`**                  | after TRANSFERS-10 CLOSE pin `e77f1a4`                                                                                                              |
 | **Branch**                      | `main`                                                                                                                                              |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-TRANSFERS-10 FULLY CLOSED** · D1–D118 · next **Owner GO → Zawężenie LFE PUBLIC exports**                     |
 

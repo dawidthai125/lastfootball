@@ -1,4 +1,4 @@
-# AI — Current Baseline (Production)
+﻿# AI — Current Baseline (Production)
 
 ## Cel
 
@@ -51,7 +51,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | Prior Domain                | `82a164d` — LFE-STADIUM-01                                                         |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)              |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                    |
-| **Documentation tip**       | CLOSE sync — tip pin follows                                                       |
+| **Documentation tip**       | **`e77f1a4`** — LFE-TRANSFERS-10 DOCS CLOSE (pin)                                  |
 | Status                      | **PRODUCTION VERIFIED · CI GREEN** · TRANSFERS-10 CLOSED · Domain tip `9424dd8`    |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
