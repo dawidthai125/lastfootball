@@ -30,7 +30,7 @@ lastfootball/
 | Hub           | `resolveHubPhase` / `resolvePrimaryCta` / **`resolveClubDailyGoal`** | `lib/hub/`                       | [`platform/HUB.md`](../platform/HUB.md) · D25                                                                            |
 | Osiągnięcia   | **`resolveClubAchievements`**                                        | `lib/achievements/`              | GDD §19 · D26                                                                                                            |
 | Ranking       | **`resolveClubRanking`**                                             | `lib/ranking/`                   | GDD §18 · D27 · input = `resolveLeagueTable`                                                                             |
-| Liga          | `resolveLeagueTable`                                                 | `lib/league/`, `lib/fixtures/`   | [`platform/LEAGUE.md`](../platform/LEAGUE.md)                                                                            |
+| Liga          | `resolveLeagueTable` · `resolveLeagueTierLabel` / promotion outcome  | `lib/league/` · `lib/fixtures/`  | [`platform/LEAGUE.md`](../platform/LEAGUE.md) · [`GDD-PROMOTION-01`](../game-design/GDD-PROMOTION-01.md)                 |
 | Finanse       | `resolveClubFinance`                                                 | `lib/finance/`                   | [`platform/FINANCE.md`](../platform/FINANCE.md)                                                                          |
 | Kadra         | `resolveClubSquad`                                                   | `lib/squad/`                     | [`platform/PLAYERS.md`](../platform/PLAYERS.md)                                                                          |
 | Akademia      | `resolveClubAcademy`                                                 | `lib/academy/`                   | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Academy Thin A)                                                         |
@@ -82,4 +82,4 @@ Freeze: [`../lfe/LFE_ARCHITECTURE_FREEZE.md`](../lfe/LFE_ARCHITECTURE_FREEZE.md)
 
 ## Status
 
-**ACTIVE** · 2026-07-30 — LFE-LEAGUE-04 (D28)
+**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 CLOSED · Domain `fa06c53`

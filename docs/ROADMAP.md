@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`024e827`** — LFE-SEASON-END-01 CLOSED (Season End Thin · D78–D87).
+**Domain feature baseline:** **`fa06c53`** — LFE-PROMOTION-01 CLOSED (Promotion Thin · D88–D94).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`9768a8f`** — AI HANDOFF CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GDD-SEASON-END-01** · **LFE-SEASON-END-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-SEASON-END-01 · LFE-SEASON-END-01 · **GDD-PROMOTION-01** · **LFE-PROMOTION-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -68,6 +68,8 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 | **LFE-SOFTLOCK-01**                                    | **CLOSED** · generic Route Gate · SoftLockState · D52 · D63–D67 · feat `46f7caa` · PRODUCTION VERIFY                     |
 | **GDD-SEASON-END-01**                                  | **CLOSED** · Season End Thin kontrakt · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only                                |
 | **LFE-SEASON-END-01**                                  | **CLOSED** · Season End Thin lifecycle · OFFSEASON · report · Confirm N+1 · D78–D87 · feat `024e827` · PRODUCTION VERIFY |
+| **GDD-PROMOTION-01**                                   | **CLOSED** · Promotion Thin kontrakt · D88–D94 · SSOT `GDD-PROMOTION-01.md`                                              |
+| **LFE-PROMOTION-01**                                   | **CLOSED** · Promotion Thin · `league_tier` · outcome · Confirm mutation · D88–D94 · feat `fa06c53` · PRODUCTION VERIFY  |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                            |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                       |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)               |
@@ -100,8 +102,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 
 | Item                            | Zależność                  |
 | ------------------------------- | -------------------------- |
-| **LFE-PROMOTION-01**            | Owner GO · po Season End   |
-| **LFE-SPONSORS-01**             | Owner GO · po Promotion*   |
+| **LFE-SPONSORS-01**             | Owner GO · po Promotion    |
 | **LFE-BOARD-01**                | Owner GO · po Sponsors*    |
 | **LFE-STADIUM-01**              | Owner GO · po Board*       |
 | Zawężenie LFE PUBLIC exports    | chore                      |
@@ -110,16 +111,17 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 
 ## FUTURE
 
-| Item                                    | Notatka                      |
-| --------------------------------------- | ---------------------------- |
-| LFE Physics / full Rules                | RESERVED / częściowe eventy  |
-| ECS storage                             | RESERVED                     |
-| Replay persist / video export           | poza MVP                     |
-| Mobile native                           | poza scope                   |
-| Individual training / XP / attribute DB | poza Thin Depth (D21/D22)    |
-| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)            |
-| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)       |
-| Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC |
+| Item                                    | Notatka                       |
+| --------------------------------------- | ----------------------------- |
+| LFE Physics / full Rules                | RESERVED / częściowe eventy   |
+| ECS storage                             | RESERVED                      |
+| Replay persist / video export           | poza MVP                      |
+| Mobile native                           | poza scope                    |
+| Individual training / XP / attribute DB | poza Thin Depth (D21/D22)     |
+| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)             |
+| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)        |
+| Multi-tier AI catalogs / baraże         | poza Promotion Thin (D92/D94) |
+| Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC  |
 
 ---
 
@@ -130,8 +132,6 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · **GD
 ### Oficjalna kolejność (2026-07-31)
 
 ```
-LFE-PROMOTION-01
-  ↓
 LFE-SPONSORS-01
   ↓
 LFE-BOARD-01
@@ -139,15 +139,14 @@ LFE-BOARD-01
 LFE-STADIUM-01
 ```
 
-| EPIC                 | Notatka                                   |
-| -------------------- | ----------------------------------------- |
-| **LFE-PROMOTION-01** | Awans/spadek — poza Season End Thin (D73) |
-| **LFE-SPONSORS-01**  | H-SPONSORS · soft-lock `/sponsors`        |
-| **LFE-BOARD-01**     | H-BOARD · soft-lock `/board`              |
-| **LFE-STADIUM-01**   | Soft-lock `/stadium`                      |
+| EPIC                | Notatka                            |
+| ------------------- | ---------------------------------- |
+| **LFE-SPONSORS-01** | H-SPONSORS · soft-lock `/sponsors` |
+| **LFE-BOARD-01**    | H-BOARD · soft-lock `/board`       |
+| **LFE-STADIUM-01**  | Soft-lock `/stadium`               |
 
 **Później / równolegle:** TD-03+ · Settings/§22 · Ratings v2.  
-Domain tip: SEASON-END-01 `024e827`; Presentation tip: MOTION-01 `9fd14fc`.
+Domain tip: PROMOTION-01 `fa06c53`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 
@@ -191,4 +190,4 @@ Domain tip: SEASON-END-01 `024e827`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Last updated
 
-2026-07-31 — AI HANDOFF · kolejka Promotion→Sponsors→Board→Stadium
+2026-07-31 — LFE-PROMOTION-01 CLOSED · kolejka Sponsors→Board→Stadium

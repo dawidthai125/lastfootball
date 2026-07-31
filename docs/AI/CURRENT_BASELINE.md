@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 024e827            # Domain feature baseline SEASON-END-01
+git log -1 --oneline fa06c53            # Domain feature baseline PROMOTION-01
+git log -1 --oneline 024e827            # Prior Domain SEASON-END-01
 git log -1 --oneline 46f7caa            # Prior Domain SOFTLOCK-01
 git log -1 --oneline 36ba9be            # Prior Domain CLUB-01
 git log -1 --oneline 800ed0d            # Prior Domain MESSAGES-01
@@ -33,22 +34,21 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| URL                         | https://lastfootball.vercel.app                                                            |
-| Alias                       | https://lastfootball.pl                                                                    |
-| Branch                      | `main`                                                                                     |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                               |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                           |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                             |
-| **Domain feature baseline** | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                              |
-| Domain message              | `feat(season): implement LFE-SEASON-END-01 Season End Thin lifecycle`                      |
-| Prior Domain                | `46f7caa` — LFE-SOFTLOCK-01                                                                |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                      |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                            |
-| **Documentation tip**       | **`9768a8f`** — AI HANDOFF CLOSE (pin)                                                     |
-| tip `main` (pre-handoff)    | `020cd08` — SEASON-END docs style                                                          |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · SEASON-END CLOSED · AI HANDOFF · Domain tip `024e827` |
+| Pole                        | Wartość                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                                 |
+| Alias                       | https://lastfootball.pl                                                         |
+| Branch                      | `main`                                                                          |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                    |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                  |
+| **Domain feature baseline** | `fa06c53` — **LFE-PROMOTION-01** (Promotion Thin · D88–D94)                     |
+| Domain message              | `feat(league): implement LFE-PROMOTION-01 Promotion Thin`                       |
+| Prior Domain                | `024e827` — LFE-SEASON-END-01                                                   |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)           |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                 |
+| **Documentation tip**       | **CLOSE sync** — tip pin follows this CLOSE                                     |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · PROMOTION-01 CLOSED · Domain tip `fa06c53` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -110,6 +110,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Klub (profil)     | `resolveClubProfile` — identity Thin · D47–D51 · `/club` sole DTO                    |
 | Wiadomości        | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO |
 | Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future     |
+| Season End        | `season_phase` / `season_number` · `resolveSeasonReport` · Confirm N+1 · D78–D87     |
+| Promotion         | `league_tier` · `resolveLeagueTierLabel` · outcome · Confirm apply · D88–D94         |
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`               |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                            |
 | Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                             |
@@ -151,11 +153,11 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Operacyjne
 
-> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09).  
+> Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01).  
 > **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · Promotion / relegation · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Sponsors UI full) · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
-2026-07-31 — AI HANDOFF · Domain tip `024e827` · kolejka Promotion→…→Stadium
+2026-07-31 — LFE-PROMOTION-01 CLOSED · Domain tip `fa06c53` · kolejka Sponsors→Board→Stadium

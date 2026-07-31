@@ -168,4 +168,4 @@
 - Thin: ten sam świat AI (D92) · floor IV / ceiling I · baraże OUT.
 - SSOT Thin = `GDD-PROMOTION-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 · D1–D94 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-PROMOTION-01 CLOSED · D1–D94 · Domain `fa06c53` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

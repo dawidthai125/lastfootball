@@ -570,7 +570,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Baraże komplikują kalendarz i UX poza Thin.  
 **Zasada:** Awans/spadek wyłącznie automatyczny z miejsc 1–2 / 11–12; baraże OUT.
 
-**Źródło D88–D94:** GDD-PROMOTION-01 / LFE-PROMOTION-01.
+**Źródło D88–D94:** GDD-PROMOTION-01 / LFE-PROMOTION-01 (feat `fa06c53`).
 
 ## Najważniejsze decyzje (meta)
 
@@ -596,7 +596,7 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D94 wymaga **AUDIT** i aktua
 **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
 **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
-**GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world.
+**GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
 
 ## Powiązania
 
@@ -604,4 +604,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D94 wymaga **AUDIT** i aktua
 
 ## Last updated
 
-2026-07-31 — LFE-PROMOTION-01 · D88–D94
+2026-07-31 — LFE-PROMOTION-01 CLOSED · D88–D94 · feat `fa06c53`

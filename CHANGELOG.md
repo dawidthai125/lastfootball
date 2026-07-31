@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-PROMOTION-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D88–D94 · Domain tip `fa06c53` · next **Owner GO → SPONSORS-01**
+- Kontrakt: `league_tier` · outcome derive · Confirm mutation · same AI world (D92)
+
+### Added (shipped on `main` — LFE-PROMOTION-01)
+
+- Promotion Thin · `clubs.league_tier` · season report outcome · Confirm N+1 tier apply
+
 ### Docs (AI HANDOFF)
 
 - Cold-start docs sync · kolejka Promotion→Sponsors→Board→Stadium · HANDOFF §12–§13

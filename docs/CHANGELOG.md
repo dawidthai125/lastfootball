@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`024e827`** (LFE-SEASON-END-01).
+**Domain feature baseline:** **`fa06c53`** (LFE-PROMOTION-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`9768a8f`** — AI HANDOFF CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-PROMOTION-01 · CLOSED
+
+### Product
+
+- Promotion Thin: `clubs.league_tier` · `resolveLeagueTierLabel` · `resolvePromotionOutcome` · `applyLeagueTierOutcome`.
+- Raport OFFSEASON = outcome derive (D91); mutacja tier tylko Confirm N+1 (D90).
+- Same AI opponent world (D92) · floor IV / ceiling I (D93) · baraże OUT (D94).
+- Domain tip → **`fa06c53`** · D88–D94 CLOSED · CI GREEN · PRODUCTION VERIFIED (+ migracja).
+
+### Docs
+
+- Sync SSOT Promotion CLOSE · HANDOFF · baseline · status · roadmap · kolejka **SPONSORS → BOARD → STADIUM**.
 
 ## [2026-07-31] — AI HANDOFF · docs-only
 
@@ -21,7 +34,7 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 - Cold-start sync: HANDOFF §12–§13 · Quick Start · START_HERE · baseline · status · roadmap kolejka **PROMOTION → SPONSORS → BOARD → STADIUM**.
 - Soft-locki aktywne udokumentowane · pętla gameplay klub→sezon→N+1 · D1–D87 pointer SSOT.
-- Domain tip bez zmian: `024e827` · zero kodu / migracji.
+- Domain tip bez zmian: `024e827` · zero kodu / migracji (superseded by PROMOTION-01).
 
 ## [2026-07-31] — LFE-SEASON-END-01 · CLOSED
 
