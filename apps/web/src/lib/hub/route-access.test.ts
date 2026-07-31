@@ -49,14 +49,14 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
     }
   });
 
-  it('opens sponsors + board on SEASON/OFFSEASON; stadium remains soft-locked (D99 · D105)', () => {
+  it('opens sponsors + board + stadium on SEASON/OFFSEASON (D99 · D105 · D111)', () => {
     for (const phase of ['SEASON', 'OFFSEASON'] as const) {
       expect(resolveRouteNavAccess('/sponsors', phase)).toBe('open');
       expect(resolveRouteNavAccess('/board', phase)).toBe('open');
+      expect(resolveRouteNavAccess('/stadium', phase)).toBe('open');
       expect(isRouteSoftLocked('/sponsors', phase)).toBe(false);
       expect(isRouteSoftLocked('/board', phase)).toBe(false);
-      expect(resolveRouteNavAccess('/stadium', phase)).toBe('soft_locked');
-      expect(isRouteSoftLocked('/stadium', phase)).toBe(true);
+      expect(isRouteSoftLocked('/stadium', phase)).toBe(false);
     }
   });
 
@@ -85,6 +85,16 @@ describe('route-access (LFE-SOFTLOCK-01)', () => {
     expect(src).not.toMatch(/^['"]use server['"]/m);
     expect(src).not.toContain('club_board');
     expect(src).not.toMatch(/claimBoard|acceptBoard|saveBoard/i);
+  });
+
+  it('stadium page uses resolveClubStadium (D109) without persist / tickets', () => {
+    const src = readFileSync(join(webRoot, 'app/(game)/stadium/page.tsx'), 'utf8');
+    expect(src).toContain('resolveClubStadium');
+    expect(src).toContain('StadiumView');
+    expect(src).not.toMatch(/^['"]use server['"]/m);
+    expect(src).not.toContain('club_stadium');
+    expect(src).not.toContain('ticket_income');
+    expect(src).not.toMatch(/claimStadium|upgradeStadium|saveStadium/i);
   });
 
   it('sponsors page uses resolveClubSponsors (D96)', () => {

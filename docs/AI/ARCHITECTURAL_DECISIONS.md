@@ -105,6 +105,13 @@
 | **D106** | No Prestige Engine         | Brak silnika Prestige/Reputacja.                                                  |
 | **D107** | No Quest No Club Mgmt      | Brak Quest Engine · brak zarządzania klubem.                                      |
 | **D108** | Derive From Season Facts   | Tabela + report · zero RNG.                                                       |
+| **D109** | Stadium UI Sole Resolver   | UI tylko `resolveClubStadium`.                                                    |
+| **D110** | Stadium Information Thin   | Pure derive · zero persist / mutacji Stadium.                                     |
+| **D111** | Soft Unlock Stadium Only   | `/stadium` open SEASON+OFFSEASON.                                                 |
+| **D112** | No Ticket Economy Thin     | Brak biletów → kasa · brak nowych finance categories.                             |
+| **D113** | Qualitative Attendance     | Pasmo jakościowe · unknown bez home · zero RNG.                                   |
+| **D114** | Starter Package Facts      | Nazwa + pojemność = `STARTER_PACKAGE`.                                            |
+| **D115** | No Match Engine Coupling   | Zero wpływu na LFE Match / PreMatch / Canvas.                                     |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -193,7 +200,14 @@
 
 - UI tylko `resolveClubBoard` · Information Thin · zero migracji / persist / actions.
 - Expectation opisowe · standing.trend · tone positive/neutral/concern.
-- Confirm Primary · `/board` open · Stadium locked · no Prestige/Quest/club mgmt.
+- Confirm Primary · `/board` open · no Prestige/Quest/club mgmt.
 - SSOT Thin = `GDD-BOARD-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-BOARD-01 CLOSED · D1–D108 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D109–D115 — kontrakt Stadium Thin (must-know)
+
+- UI tylko `resolveClubStadium` · Information Thin · zero migracji / persist / tickets.
+- Attendance jakościowe · `unknown` bez home · `STARTER_PACKAGE` facts.
+- `/stadium` open · Confirm Primary · zero Match Engine / PreMatch.
+- SSOT Thin = `GDD-STADIUM-01.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 IMPLEMENT · D1–D115 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

@@ -5052,6 +5052,8 @@ Shipowalny rynek + ścieżka głębi.
 
 **Status rozdziału:** GDD-12 — opracowany (**stadion MVP — obiekt statyczny**; bez algorytmów, formuł, kwot biletowych — liczby → §26 / content)
 
+> **Stadium Thin (Information):** [`GDD-STADIUM-01.md`](./GDD-STADIUM-01.md) · D109–D115 — karta domu · frekwencja jakościowa · bez Ticket Economy / Match Engine.
+
 **Cel rozdziału**  
 Dać klubowi czytelny **dom**: nazwa, pojemność, lekka frekwencja i bilety zasilające kasę (§14) — bez budowania infrastruktury w MVP.
 

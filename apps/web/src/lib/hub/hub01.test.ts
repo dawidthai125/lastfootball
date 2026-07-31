@@ -155,8 +155,8 @@ describe('hub nav unlock', () => {
     expect(resolveNavAccess('sponsors', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('board', 'SEASON')).toBe('open');
     expect(resolveNavAccess('board', 'OFFSEASON')).toBe('open');
-    expect(resolveNavAccess('stadium', 'SEASON')).toBe('soft_locked');
-    expect(resolveNavAccess('stadium', 'OFFSEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('stadium', 'SEASON')).toBe('open');
+    expect(resolveNavAccess('stadium', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('academy', 'SEASON')).toBe('open');
     expect(resolveNavAccess('scouting', 'SEASON')).toBe('open');
     expect(resolveNavAccess('academy', 'EARLY_CLUB')).toBe('soft_locked');

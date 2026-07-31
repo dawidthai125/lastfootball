@@ -30,7 +30,7 @@ Last Football is built so a new agent session can work from **`docs/` + code alo
 - Canvas / Replay never call Engine or mutate `MatchState`.
 - Hub is a **decision screen**, not a mid-season dashboard.
 - First Hub unlock: `clubs.first_match_completed_at`.
-- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubSquad`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `resolveTransferMarket`, `resolveClubTraining`, `planClubFixtures`, …).
+- Domain UI only via resolvers (`resolveLeagueTable`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubStadium`, `resolveClubSquad`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `resolveTransferMarket`, `resolveClubTraining`, `planClubFixtures`, …).
 - UI presentation EPICs: follow [`docs/game-design/UI_DESIGN_GUIDE.md`](docs/game-design/UI_DESIGN_GUIDE.md) §16 (Presentation Contract); do not change resolvers/DTO/unlock without a domain Owner GO.
 - **Presentation ≠ Domain** · **Information Thin** (skauting porządkuje, nie decyduje) — skrót: [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
@@ -51,8 +51,8 @@ Nie kopiuj hashy tutaj na sztywno.
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
 - **Następny EPIC (po Owner GO):** `LFE-STADIUM-01` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
-- Decyzje **D1–D108:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
+- Decyzje **D1–D115:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-07-31 — LFE-BOARD-01 CLOSED · Domain `75c190d` · D1–D108
+2026-07-31 — LFE-STADIUM-01 IMPLEMENT · D1–D115

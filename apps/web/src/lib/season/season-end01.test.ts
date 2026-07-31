@@ -85,13 +85,13 @@ describe('LFE-SEASON-END-01 hub phase + unlock (D79)', () => {
     expect(resolveHubPhase(off, { hasFixtures: false })).toBe('OFFSEASON');
   });
 
-  it('OFFSEASON unlock parity with SEASON (D79 · D99 sponsors · D105 board open; stadium locked)', () => {
+  it('OFFSEASON unlock parity with SEASON (D79 · D99 · D105 · D111 stadium open)', () => {
     expect(resolveNavAccess('sponsors', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('sponsors', 'SEASON')).toBe('open');
     expect(resolveNavAccess('board', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('board', 'SEASON')).toBe('open');
-    expect(resolveNavAccess('stadium', 'OFFSEASON')).toBe('soft_locked');
-    expect(resolveNavAccess('stadium', 'SEASON')).toBe('soft_locked');
+    expect(resolveNavAccess('stadium', 'OFFSEASON')).toBe('open');
+    expect(resolveNavAccess('stadium', 'SEASON')).toBe('open');
     expect(resolveNavAccess('league', 'OFFSEASON')).toBe('open');
     expect(resolveNavAccess('finance', 'OFFSEASON')).toBe('open');
   });

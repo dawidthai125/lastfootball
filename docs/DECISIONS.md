@@ -646,9 +646,46 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D102–D108:** GDD-BOARD-01 / LFE-BOARD-01 (feat `75c190d`).
 
+### D109 — Stadium UI Sole Resolver · CLOSED
+
+**Dlaczego:** Stub / ad-hoc UI bez DTO = drift i Fake Production.  
+**Zasada:** UI Stadium wyłącznie przez `resolveClubStadium`.
+
+### D110 — Stadium Information Thin · CLOSED
+
+**Dlaczego:** Mutacje / persist tworzą system infrastruktury.  
+**Zasada:** Pure derive · zero zapisu stanu Stadium · zero Server Actions Stadium.
+
+### D111 — Soft Unlock Stadium Only · CLOSED
+
+**Dlaczego:** Unlock „przy okazji” innych domen.  
+**Zasada:** `/stadium` open SEASON+OFFSEASON; Sponsors/Board bez zmian (D99/D105).
+
+### D112 — No Ticket Economy Thin · CLOSED
+
+**Dlaczego:** Bilety → kasa = osobny tor ekonomii (§14.9 / §26 Future).  
+**Zasada:** Brak Ticket Economy · brak nowych kategorii `finance_movements`.
+
+### D113 — Qualitative Attendance Only · CLOSED
+
+**Dlaczego:** Liczbowa frekwencja / RNG = Fake Production lub silnik.  
+**Zasada:** Pasmo jakościowe; brak home played → `unknown`; zero % pojemności.
+
+### D114 — Starter Package Stadium Facts · CLOSED
+
+**Dlaczego:** Drugi preset nazwy/pojemności = drift vs Club.  
+**Zasada:** Nazwa + pojemność wyłącznie z `STARTER_PACKAGE`.
+
+### D115 — No Match Engine Coupling · CLOSED
+
+**Dlaczego:** LFE `Stadium` / Canvas ≠ produkt `/stadium`.  
+**Zasada:** Zero wpływu na Match Engine, wynik meczu, PreMatch UI, Canvas.
+
+**Źródło D109–D115:** GDD-STADIUM-01 / LFE-STADIUM-01.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D108 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D115 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -673,11 +710,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D108 wymaga **AUDIT** i aktu
 **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
 **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
 **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
+**GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md)
 
 ## Last updated
 
-2026-07-31 — LFE-BOARD-01 CLOSED · D102–D108 · feat `75c190d`
+2026-07-31 — LFE-STADIUM-01 · D109–D115
