@@ -644,7 +644,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** RNG / osobny score Board.  
 **Zasada:** Wejście = tabela + `resolveSeasonReport` (+ phase); zero RNG.
 
-**Źródło D102–D108:** GDD-BOARD-01 / LFE-BOARD-01.
+**Źródło D102–D108:** GDD-BOARD-01 / LFE-BOARD-01 (feat `75c190d`).
 
 ## Najważniejsze decyzje (meta)
 
@@ -672,7 +672,7 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D108 wymaga **AUDIT** i aktu
 **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
 **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
 **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
-**GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking.
+**GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
 
 ## Powiązania
 
@@ -680,4 +680,4 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D108 wymaga **AUDIT** i aktu
 
 ## Last updated
 
-2026-07-31 — LFE-BOARD-01 · D102–D108
+2026-07-31 — LFE-BOARD-01 CLOSED · D102–D108 · feat `75c190d`

@@ -8,12 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`17eb8ba`** (LFE-SPONSORS-01).
+**Domain feature baseline:** **`75c190d`** (LFE-BOARD-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`a77f4c8`** — LFE-SPONSORS-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-BOARD-01 · CLOSED
+
+### Product
+
+- Board Information Thin: `resolveClubBoard` · BoardView · H-BOARD non-blocking.
+- Pure derive · zero persist · `/board` open SEASON+OFFSEASON (D105) · Stadium locked · Confirm Primary (D104).
+- Domain tip → **`75c190d`** · D102–D108 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji).
+
+### Docs
+
+- Sync SSOT Board CLOSE · HANDOFF · baseline · status · roadmap · kolejka **STADIUM**.
 
 ## [2026-07-31] — LFE-SPONSORS-01 · CLOSED
 

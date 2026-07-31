@@ -7,11 +7,11 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`17eb8ba`** — LFE-SPONSORS-01 CLOSED (Sponsors Thin · D95–D101).
+**Domain feature baseline:** **`75c190d`** — LFE-BOARD-01 CLOSED (Board Information Thin · D102–D108).
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`a77f4c8`** — LFE-SPONSORS-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-SEASON-END-01 · LFE-SEASON-END-01 · GDD-PROMOTION-01 · LFE-PROMOTION-01 · **GDD-SPONSORS-01** · **LFE-SPONSORS-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-SEASON-END-01 · LFE-SEASON-END-01 · GDD-PROMOTION-01 · LFE-PROMOTION-01 · GDD-SPONSORS-01 · LFE-SPONSORS-01 · **GDD-BOARD-01** · **LFE-BOARD-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -72,6 +72,8 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-
 | **LFE-PROMOTION-01**                                   | **CLOSED** · Promotion Thin · `league_tier` · outcome · Confirm mutation · D88–D94 · feat `fa06c53` · PRODUCTION VERIFY  |
 | **GDD-SPONSORS-01**                                    | **CLOSED** · Sponsors Thin kontrakt · D95–D101 · SSOT `GDD-SPONSORS-01.md`                                               |
 | **LFE-SPONSORS-01**                                    | **CLOSED** · Sponsors Thin · ledger · H-SPONSORS · D95–D101 · feat `17eb8ba` · PRODUCTION VERIFY                         |
+| **GDD-BOARD-01**                                       | **CLOSED** · Board Thin kontrakt · D102–D108 · SSOT `GDD-BOARD-01.md`                                                    |
+| **LFE-BOARD-01**                                       | **CLOSED** · Board Information Thin · `resolveClubBoard` · H-BOARD · D102–D108 · feat `75c190d` · PRODUCTION VERIFY      |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                            |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                       |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)               |
@@ -104,7 +106,6 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-
 
 | Item                            | Zależność                  |
 | ------------------------------- | -------------------------- |
-| **LFE-BOARD-01**                | Owner GO · po Sponsors     |
 | **LFE-STADIUM-01**              | Owner GO · po Board        |
 | Zawężenie LFE PUBLIC exports    | chore                      |
 | Ratings v2                      | bogatsze Player Match Data |
@@ -123,29 +124,27 @@ GDD-§26A/B · LEAGUE-04 · Transfers 09 · Messages · Club · SoftLock · GDD-
 | Messages DB / mark-as-read / Accept     | poza Thin derive (D46)        |
 | Multi-tier AI catalogs / baraże         | poza Promotion Thin (D92/D94) |
 | Sponsor marketplace / nego / Quest      | poza Sponsors Thin (D100)     |
+| Board Prestige / Quest / club mgmt      | poza Board Thin (D106–D107)   |
 | Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC  |
 
 ---
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. **Następny aktywny:** **`LFE-BOARD-01`**.
+**Czekaj na Owner GO** — brak otwartego EPIC. **Następny aktywny:** **`LFE-STADIUM-01`**.
 
 ### Oficjalna kolejność (2026-07-31)
 
 ```
-LFE-BOARD-01
-  ↓
 LFE-STADIUM-01
 ```
 
-| EPIC               | Notatka                      |
-| ------------------ | ---------------------------- |
-| **LFE-BOARD-01**   | H-BOARD · soft-lock `/board` |
-| **LFE-STADIUM-01** | Soft-lock `/stadium`         |
+| EPIC               | Notatka              |
+| ------------------ | -------------------- |
+| **LFE-STADIUM-01** | Soft-lock `/stadium` |
 
 **Później / równolegle:** TD-03+ · Settings/§22 · Ratings v2.  
-Domain tip: SPONSORS-01 `17eb8ba`; Presentation tip: MOTION-01 `9fd14fc`.
+Domain tip: BOARD-01 `75c190d`; Presentation tip: MOTION-01 `9fd14fc`.
 
 ## Decyzje roadmapy
 

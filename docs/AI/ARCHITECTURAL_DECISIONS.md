@@ -196,4 +196,4 @@
 - Confirm Primary · `/board` open · Stadium locked · no Prestige/Quest/club mgmt.
 - SSOT Thin = `GDD-BOARD-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-BOARD-01 IMPLEMENT · D1–D108 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-BOARD-01 CLOSED · D1–D108 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

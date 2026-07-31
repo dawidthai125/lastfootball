@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-BOARD-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D102–D108 · Domain tip `75c190d` · next **Owner GO → STADIUM-01**
+- Kontrakt: `resolveClubBoard` · Information Thin · no persist · H-BOARD non-blocking · unlock `/board`
+
+### Added (shipped on `main` — LFE-BOARD-01)
+
+- Board Information Thin · `resolveClubBoard` · BoardView · unlock `/board` SEASON+OFFSEASON
+
 ### Docs (LFE-SPONSORS-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D95–D101 · Domain tip `17eb8ba` · next **Owner GO → BOARD-01**

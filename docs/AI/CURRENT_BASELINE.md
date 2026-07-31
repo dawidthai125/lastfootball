@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 17eb8ba            # Domain feature baseline SPONSORS-01
+git log -1 --oneline 75c190d            # Domain feature baseline BOARD-01
+git log -1 --oneline 17eb8ba            # Prior Domain SPONSORS-01
 git log -1 --oneline fa06c53            # Prior Domain PROMOTION-01
 git log -1 --oneline 024e827            # Prior Domain SEASON-END-01
 git log -1 --oneline 46f7caa            # Prior Domain SOFTLOCK-01
@@ -43,13 +44,13 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                   |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`               |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                 |
-| **Domain feature baseline** | `17eb8ba` — **LFE-SPONSORS-01** (Sponsors Thin · D95–D101)                     |
-| Domain message              | `feat(sponsors): implement LFE-SPONSORS-01 Sponsors Thin`                      |
-| Prior Domain                | `fa06c53` — LFE-PROMOTION-01                                                   |
+| **Domain feature baseline** | `75c190d` — **LFE-BOARD-01** (Board Information Thin · D102–D108)              |
+| Domain message              | `feat(board): implement LFE-BOARD-01 Board Information Thin`                   |
+| Prior Domain                | `17eb8ba` — LFE-SPONSORS-01                                                    |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)          |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                |
-| **Documentation tip**       | **`a77f4c8`** — LFE-SPONSORS-01 DOCS CLOSE (pin)                               |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · SPONSORS-01 CLOSED · Domain tip `17eb8ba` |
+| **Documentation tip**       | CLOSE sync — tip pin follows                                                   |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · BOARD-01 CLOSED · Domain tip `75c190d`    |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -73,6 +74,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Soft-lock route gate (SoftLockRouteGate · SoftLockState · D52 · D63–D67)
   → Season End Thin (GDD-SEASON-END-01 · D68–D87) · Promotion Thin (D88–D94)
   → Sponsors Thin (resolveClubSponsors · H-SPONSORS · D95–D101)
+  → Board Thin (resolveClubBoard · H-BOARD · D102–D108)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -115,6 +117,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Season End        | `season_phase` / `season_number` · `resolveSeasonReport` · Confirm N+1 · D78–D87     |
 | Promotion         | `league_tier` · `resolveLeagueTierLabel` · outcome · Confirm apply · D88–D94         |
 | Sponsors          | `club_sponsor_contracts` · `resolveClubSponsors` · ledger · H-SPONSORS · D95–D101    |
+| Board             | `resolveClubBoard` — Information Thin · no persist · H-BOARD · D102–D108             |
 | UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`               |
 | UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                            |
 | Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                             |
@@ -157,10 +160,10 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01) · **`club_sponsor_contracts` + kategorie `sponsor_base`/`sponsor_bonus`** (`20260731140000_sponsors_thin.sql` · LFE-SPONSORS-01).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01:** brak nowych migracji schematu tabel (MESSAGES = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01:** brak nowych migracji schematu tabel (MESSAGES/BOARD = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Board / Stadium UI) · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Stadium UI) · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
-2026-07-31 — LFE-SPONSORS-01 CLOSED · Domain tip `17eb8ba` · kolejka Board→Stadium
+2026-07-31 — LFE-BOARD-01 CLOSED · Domain tip `75c190d` · kolejka Stadium
