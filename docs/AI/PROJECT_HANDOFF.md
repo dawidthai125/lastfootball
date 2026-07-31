@@ -19,7 +19,7 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                             |
 | **Domain feature baseline**     | `024e827` — **LFE-SEASON-END-01** (Season End Thin · D78–D87)                                                      |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                             |
-| **Documentation tip**           | CLOSE sync LFE-SEASON-END-01 (pin follows)                                                                        |
+| **Documentation tip**           | **030e9d2** — LFE-SEASON-END-01 CLOSE (pin)                                                                        |
 | **Branch**                      | `main`                                                                                                            |
 | **Status**                      | PRODUCTION VERIFIED · GREEN · **LFE-SEASON-END-01 CLOSED** · D78–D87 · Domain tip `024e827` · next **Owner GO**   |
 
