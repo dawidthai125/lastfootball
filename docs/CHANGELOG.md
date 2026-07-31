@@ -8,12 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`75c190d`** (LFE-BOARD-01).
+**Domain feature baseline:** **`82a164d`** (LFE-STADIUM-01).
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)
+**Documentation tip:** CLOSE sync — tip pin follows
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-07-31] — LFE-STADIUM-01 · CLOSED
+
+### Product
+
+- Stadium Information Thin: `resolveClubStadium` · StadiumView · qualitative attendance.
+- Pure derive · zero persist · `/stadium` open SEASON+OFFSEASON (D111) · no Ticket Economy (D112) · Confirm Primary.
+- Domain tip → **`82a164d`** · D109–D115 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji).
+
+### Docs
+
+- Sync SSOT Stadium CLOSE · HANDOFF · baseline · status · roadmap · next **TD-03+**.
 
 ## [2026-07-31] — LFE-BOARD-01 · CLOSED
 

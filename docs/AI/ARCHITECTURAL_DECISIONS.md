@@ -210,4 +210,4 @@
 - `/stadium` open · Confirm Primary · zero Match Engine / PreMatch.
 - SSOT Thin = `GDD-STADIUM-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 IMPLEMENT · D1–D115 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 CLOSED · D1–D115 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

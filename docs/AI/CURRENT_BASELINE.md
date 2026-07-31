@@ -16,7 +16,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 ```bash
 git log -1 --oneline                    # tip (może być docs)
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline 75c190d            # Domain feature baseline BOARD-01
+git log -1 --oneline 82a164d            # Domain feature baseline STADIUM-01
+git log -1 --oneline 75c190d            # Prior Domain BOARD-01
 git log -1 --oneline 17eb8ba            # Prior Domain SPONSORS-01
 git log -1 --oneline fa06c53            # Prior Domain PROMOTION-01
 git log -1 --oneline 024e827            # Prior Domain SEASON-END-01
@@ -36,21 +37,21 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                                     |
-| --------------------------- | --------------------------------------------------------------------------- |
-| URL                         | https://lastfootball.vercel.app                                             |
-| Alias                       | https://lastfootball.pl                                                     |
-| Branch                      | `main`                                                                      |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`            |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01              |
-| **Domain feature baseline** | `75c190d` — **LFE-BOARD-01** (Board Information Thin · D102–D108)           |
-| Domain message              | `feat(board): implement LFE-BOARD-01 Board Information Thin`                |
-| Prior Domain                | `17eb8ba` — LFE-SPONSORS-01                                                 |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)       |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`             |
-| **Documentation tip**       | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                               |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · BOARD-01 CLOSED · Domain tip `75c190d` |
+| Pole                        | Wartość                                                                       |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                               |
+| Alias                       | https://lastfootball.pl                                                       |
+| Branch                      | `main`                                                                        |
+| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                  |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`              |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                |
+| **Domain feature baseline** | `82a164d` — **LFE-STADIUM-01** (Stadium Information Thin · D109–D115)         |
+| Domain message              | `feat(stadium): implement LFE-STADIUM-01 Stadium Information Thin`            |
+| Prior Domain                | `75c190d` — LFE-BOARD-01                                                      |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)         |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`               |
+| **Documentation tip**       | CLOSE sync — tip pin follows                                                  |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · STADIUM-01 CLOSED · Domain tip `82a164d` |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -75,6 +76,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Season End Thin (GDD-SEASON-END-01 · D68–D87) · Promotion Thin (D88–D94)
   → Sponsors Thin (resolveClubSponsors · H-SPONSORS · D95–D101)
   → Board Thin (resolveClubBoard · H-BOARD · D102–D108)
+  → Stadium Thin (resolveClubStadium · D109–D115)
   → Squad · Training (Depth + potential ceiling) · Transfers · Finance · Terminarz
   → Academy (SEASON) · Intake + Promote · academy_track on players
   → Scouting (SEASON) · resolveClubScouting · private shortlist (refs only)
@@ -85,44 +87,45 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 
 ## Critical SSOT
 
-| SSOT              | Gdzie                                                                                |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| Cash              | `cash_balance`                                                                       |
-| Transfer envelope | `resolveTransferEnvelope`                                                            |
-| Transfer listing  | `players.transfer_listed_at`                                                         |
-| Transfer UI       | `resolveTransferMarket`                                                              |
-| Live listings     | listed `players` (other clubs)                                                       |
-| Pending / Counter | `transfer_offers`                                                                    |
-| Opening snapshot  | `opening_amount`                                                                     |
-| Settle amount     | `current_amount`                                                                     |
-| Ask               | `deriveTransferFee` (skill+age only)                                                 |
-| Settlement buy    | `completeTransferBuy` (seed \| live)                                                 |
-| Settlement sell   | `completeTransferSell` (instant \| live)                                             |
-| Training UI       | `resolveClubTraining`                                                                |
-| Training persist  | RPC `complete_training_session`                                                      |
-| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                                       |
-| Potential         | `players.potential` · `resolvePlayerPotential`                                       |
-| Match development | RPC `apply_match_development` · K_MATCH=5                                            |
-| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                           |
-| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                       |
-| Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                     |
-| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`                  |
-| Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny         |
-| Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26      |
-| Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO                |
-| Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                                  |
-| Klub (profil)     | `resolveClubProfile` — identity Thin · D47–D51 · `/club` sole DTO                    |
-| Wiadomości        | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO |
-| Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future     |
-| Season End        | `season_phase` / `season_number` · `resolveSeasonReport` · Confirm N+1 · D78–D87     |
-| Promotion         | `league_tier` · `resolveLeagueTierLabel` · outcome · Confirm apply · D88–D94         |
-| Sponsors          | `club_sponsor_contracts` · `resolveClubSponsors` · ledger · H-SPONSORS · D95–D101    |
-| Board             | `resolveClubBoard` — Information Thin · no persist · H-BOARD · D102–D108             |
-| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`               |
-| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                            |
-| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                             |
-| Impl notes        | `docs/implementation/`                                                               |
-| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                         |
+| SSOT              | Gdzie                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| Cash              | `cash_balance`                                                                                 |
+| Transfer envelope | `resolveTransferEnvelope`                                                                      |
+| Transfer listing  | `players.transfer_listed_at`                                                                   |
+| Transfer UI       | `resolveTransferMarket`                                                                        |
+| Live listings     | listed `players` (other clubs)                                                                 |
+| Pending / Counter | `transfer_offers`                                                                              |
+| Opening snapshot  | `opening_amount`                                                                               |
+| Settle amount     | `current_amount`                                                                               |
+| Ask               | `deriveTransferFee` (skill+age only)                                                           |
+| Settlement buy    | `completeTransferBuy` (seed \| live)                                                           |
+| Settlement sell   | `completeTransferSell` (instant \| live)                                                       |
+| Training UI       | `resolveClubTraining`                                                                          |
+| Training persist  | RPC `complete_training_session`                                                                |
+| Training effects  | `applyTrainingSessionEffects` (status+skill≤P)                                                 |
+| Potential         | `players.potential` · `resolvePlayerPotential`                                                 |
+| Match development | RPC `apply_match_development` · K_MATCH=5                                                      |
+| XI Gate           | `validateStartingXi` / `resolveStartingXi`                                                     |
+| Academy UI        | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                                 |
+| Scouting UI       | `resolveClubScouting` (REUSE market + potential)                                               |
+| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`                            |
+| Daily Goal        | `resolveClubDailyGoal` — derive only · ≤1 suggestion · Primary CTA nadrzędny                   |
+| Achievements      | `resolveClubAchievements` — Information Thin · derive · immutable history · D26                |
+| Ranking           | `resolveClubRanking` — Information Thin · table input · D27 · bez ELO                          |
+| Osiągnięcia       | patrz **Achievements** (kod Thin) — GDD §19 produkt                                            |
+| Klub (profil)     | `resolveClubProfile` — identity Thin · D47–D51 · `/club` sole DTO                              |
+| Wiadomości        | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO           |
+| Powiadomienia     | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future               |
+| Season End        | `season_phase` / `season_number` · `resolveSeasonReport` · Confirm N+1 · D78–D87               |
+| Promotion         | `league_tier` · `resolveLeagueTierLabel` · outcome · Confirm apply · D88–D94                   |
+| Sponsors          | `club_sponsor_contracts` · `resolveClubSponsors` · ledger · H-SPONSORS · D95–D101              |
+| Board             | `resolveClubBoard` — Information Thin · no persist · H-BOARD · D102–D108                       |
+| Stadium           | `resolveClubStadium` — Information Thin · STARTER_PACKAGE · qualitative attendance · D109–D115 |
+| UI presentation   | `game-design/UI_DESIGN_GUIDE.md` §16 · Motion §8 · `styles/motion.css`                         |
+| UI microcopy      | `apps/web/src/lib/ui/copy.ts` (`UI_COPY`)                                                      |
+| Branding          | K1+K3 · `BrandLogo` · `apps/web/public/`                                                       |
+| Impl notes        | `docs/implementation/`                                                                         |
+| Master handoff    | `docs/AI/PROJECT_HANDOFF.md`                                                                   |
 
 ### Messages (kontrakt Thin)
 
@@ -160,10 +163,10 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01) · **`club_sponsor_contracts` + kategorie `sponsor_base`/`sponsor_bonus`** (`20260731140000_sponsors_thin.sql` · LFE-SPONSORS-01).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01:** brak nowych migracji schematu tabel (MESSAGES/BOARD = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01 / LFE-STADIUM-01:** brak nowych migracji schematu tabel (MESSAGES/BOARD/STADIUM = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · P1+ domains (Stadium UI) · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · Stadium Ticket Economy / rozbudowa · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist.
 
-2026-07-31 — LFE-BOARD-01 CLOSED · Domain tip `75c190d` · kolejka Stadium
+2026-07-31 — LFE-STADIUM-01 CLOSED · Domain tip `82a164d` · kolejka wyczerpana · next Owner GO → TD-03+

@@ -21,9 +21,9 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                   |
 | ----------------------- | --------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`75c190d`** — LFE-BOARD-01 CLOSED           |
+| **Domain baseline**     | **`82a164d`** — LFE-STADIUM-01 CLOSED         |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin) |
+| **Documentation tip**   | CLOSE sync — tip pin follows                  |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -53,6 +53,8 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-SPONSORS-01**                            | Sponsors Thin · ledger · H-SPONSORS · D95–D101 · `17eb8ba`       |
 | **GDD-BOARD-01**                               | Board Thin kontrakt · D102–D108 · docs                           |
 | **LFE-BOARD-01**                               | Board Information Thin · H-BOARD · D102–D108 · `75c190d`         |
+| **GDD-STADIUM-01**                             | Stadium Thin kontrakt · D109–D115 · docs                         |
+| **LFE-STADIUM-01**                             | Stadium Information Thin · D109–D115 · `82a164d`                 |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -100,7 +102,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** STADIUM (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** TD-03+ (po Owner GO).
 
 **TD-03+ (P2):** transfers actions / displayPos — [`../platform/TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md).
 
@@ -113,4 +115,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** STADIUM (po Owne
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-BOARD-01 CLOSED · next Owner GO → LFE-STADIUM-01
+**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 CLOSED · next Owner GO → TD-03+

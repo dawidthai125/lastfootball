@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-STADIUM-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D109–D115 · Domain tip `82a164d` · next **Owner GO → TD-03+**
+- Kontrakt: `resolveClubStadium` · Information Thin · no persist · no Ticket Economy · unlock `/stadium`
+
+### Added (shipped on `main` — LFE-STADIUM-01)
+
+- Stadium Information Thin · `resolveClubStadium` · StadiumView · unlock `/stadium` SEASON+OFFSEASON
+
 ### Docs (LFE-BOARD-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D102–D108 · Domain tip `75c190d` · next **Owner GO → STADIUM-01**

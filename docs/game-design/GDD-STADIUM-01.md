@@ -2,7 +2,7 @@
 
 **Produkt:** Last Football  
 **EPIC:** GDD-STADIUM-01 / LFE-STADIUM-01  
-**Status:** IMPLEMENT — kontrakt Thin · D109–D115  
+**Status:** CLOSED — kontrakt Thin · D109–D115
 **SSOT Thin:** ten plik  
 **Pointer w GDD:** [`GAME_DESIGN_DOCUMENT.md`](./GAME_DESIGN_DOCUMENT.md) §13 · §5.6
 
@@ -76,4 +76,4 @@
 
 ## Last updated
 
-2026-07-31 — GDD-STADIUM-01 · D109–D115 · LFE-STADIUM-01 IMPLEMENT
+2026-07-31 — GDD-STADIUM-01 CLOSED · D109–D115 · LFE-STADIUM-01

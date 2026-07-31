@@ -50,9 +50,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** `LFE-STADIUM-01` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **Następny EPIC (po Owner GO):** `TD-03+` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - Decyzje **D1–D115:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-07-31 — LFE-STADIUM-01 IMPLEMENT · D1–D115
+2026-07-31 — LFE-STADIUM-01 CLOSED · Domain `82a164d` · D1–D115

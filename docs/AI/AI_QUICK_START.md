@@ -10,16 +10,16 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                                   |
-| ------------------- | ----------------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                     |
-| Domain baseline     | **`75c190d`** — LFE-BOARD-01 (Board Information Thin · D102–D108) |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)          |
-| Documentation tip   | **`b8519bf`** — LFE-BOARD-01 DOCS CLOSE (pin)                     |
-| tip `main`          | po pin CLOSE                                                      |
-| Prod                | https://lastfootball.vercel.app                                   |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                      |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                    |
+|                     |                                                                       |
+| ------------------- | --------------------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                         |
+| Domain baseline     | **`82a164d`** — LFE-STADIUM-01 (Stadium Information Thin · D109–D115) |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)              |
+| Documentation tip   | CLOSE sync — tip pin follows                                          |
+| tip `main`          | po STADIUM CLOSE                                                      |
+| Prod                | https://lastfootball.vercel.app                                       |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                          |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                        |
 
 ## Pipeline (jedyny)
 
@@ -30,14 +30,14 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** `LFE-STADIUM-01`.
+**Następny EPIC (kolejka Ownera):** `TD-03+` (transfers P2).
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
 
 ## Twarde zasady
 
 1. **SSOT FIRST** · **REUSE FIRST** · **ZERO DUPLICATE LOGIC**
 2. **RESOLVER FIRST** · **THIN SLICE** · **NO RUNTIME MOCKS** · **SEED ≠ RUNTIME**
-3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `planClubFixtures`, …)
+3. Domain UI tylko przez resolvery (`resolveTransferMarket`, `resolveClubFinance`, `resolveClubSponsors`, `resolveClubBoard`, `resolveClubStadium`, `resolveClubAcademy`, `resolveClubScouting`, `resolveClubDailyGoal`, `resolveClubAchievements`, `resolveClubRanking`, `resolveClubMessages`, `resolveClubProfile`, `resolveSeasonReport`, `planClubFixtures`, …)
 4. Match mutacje tylko LFE `CommandBus` / session
 5. Transfer settle tylko `completeTransferBuy` / `completeTransferSell` (**Single Settlement Path**)
 6. **UI / prezentacja / chrome:** obowiązuje [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) **§16 Presentation Contract** (nie kopiuj reguł tutaj)
@@ -54,4 +54,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-BOARD-01 CLOSED · Domain `75c190d` · next Owner GO → STADIUM-01
+**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 CLOSED · Domain `82a164d` · next Owner GO → TD-03+
