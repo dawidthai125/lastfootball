@@ -1,6 +1,7 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveOfferAmount, type OfferPreset } from '@/lib/transfers/resolve-negotiation';
 import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
@@ -20,11 +21,6 @@ const AI_BUYER_LABELS = [
 ] as const;
 
 const AI_PRESETS: readonly OfferPreset[] = ['low', 'normal', 'high'];
-
-function displayPos(pos: string): string {
-  if (pos === 'ŚO' || pos === 'LO') return 'OB';
-  return pos;
-}
 
 /** Stable non-crypto hash from existing string ids only — no Date/RNG. */
 function stableHash(parts: readonly string[]): number {

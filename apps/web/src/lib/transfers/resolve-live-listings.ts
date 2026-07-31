@@ -1,12 +1,8 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
+import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import type { LiveListingDto } from '@/lib/transfers/types';
-
-function displayPos(pos: string): string {
-  if (pos === 'ŚO' || pos === 'LO') return 'OB';
-  return pos;
-}
 
 /** Raw row from list_live_transfer_listings RPC (or equivalent query). */
 export type LiveListingRow = {

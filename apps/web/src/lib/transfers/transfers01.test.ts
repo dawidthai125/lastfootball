@@ -4,6 +4,7 @@ import { ECONOMY_THIN } from '@/lib/finance/types';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
+import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
@@ -120,5 +121,12 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
 
   it('UNLOCK_AFTER_PLAYED is 2', () => {
     expect(TRANSFERS_THIN.UNLOCK_AFTER_PLAYED).toBe(2);
+  });
+
+  it('displayPos maps LO/ŚO to OB (LFE-TRANSFERS-10)', () => {
+    expect(displayPos('LO')).toBe('OB');
+    expect(displayPos('ŚO')).toBe('OB');
+    expect(displayPos('N')).toBe('N');
+    expect(displayPos('BR')).toBe('BR');
   });
 });

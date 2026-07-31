@@ -1,5 +1,6 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
+import { displayPos } from '@/lib/transfers/display-pos';
 import type {
   LiveH2hLastActor,
   LiveH2hOfferDto,
@@ -24,11 +25,6 @@ export type TransferOfferRow = {
   readonly pos?: string;
   readonly counterpart_label?: string;
 };
-
-function displayPos(pos: string): string {
-  if (pos === 'ŚO' || pos === 'LO') return 'OB';
-  return pos;
-}
 
 /** Pure map of pending offer rows → DTO. */
 export function resolveLiveH2hOffers(

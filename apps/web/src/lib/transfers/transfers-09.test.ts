@@ -106,18 +106,22 @@ describe('LFE-TRANSFERS-09 parity gate (TD-01)', () => {
 
 describe('LFE-TRANSFERS-09 single live settle invoke (TD-02)', () => {
   it('Instant Buy calls completeTransferBuy once and never completeTransferSell', () => {
-    const src = readFileSync(join(process.cwd(), 'src/lib/transfers/actions.ts'), 'utf8');
+    const src = readFileSync(
+      join(process.cwd(), 'src/lib/transfers/actions-live-instant.ts'),
+      'utf8',
+    );
     const start = src.indexOf('export async function buyLiveTransferPlayer');
-    const end = src.indexOf('export async function acceptLiveTransferOffer');
     expect(start).toBeGreaterThan(-1);
-    expect(end).toBeGreaterThan(start);
-    const fn = src.slice(start, end);
+    const fn = src.slice(start);
     expect(fn.match(/completeTransferBuy\(/g)?.length).toBe(1);
     expect(fn).not.toContain('completeTransferSell(');
   });
 
   it('Accept opening uses Sell only; countered uses Buy only (no double call)', () => {
-    const src = readFileSync(join(process.cwd(), 'src/lib/transfers/actions.ts'), 'utf8');
+    const src = readFileSync(
+      join(process.cwd(), 'src/lib/transfers/actions-live-offers.ts'),
+      'utf8',
+    );
     const start = src.indexOf('export async function acceptLiveTransferOffer');
     const end = src.indexOf('export async function counterLiveTransferOffer');
     expect(start).toBeGreaterThan(-1);

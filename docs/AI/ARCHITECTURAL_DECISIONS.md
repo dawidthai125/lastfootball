@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D108):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D118):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -112,6 +112,9 @@
 | **D113** | Qualitative Attendance     | Pasmo jakościowe · unknown bez home · zero RNG.                                   |
 | **D114** | Starter Package Facts      | Nazwa + pojemność = `STARTER_PACKAGE`.                                            |
 | **D115** | No Match Engine Coupling   | Zero wpływu na LFE Match / PreMatch / Canvas.                                     |
+| **D116** | Transfer Actions Org Split | `actions.ts` → `actions-*.ts` + barrel; Public API bez zmian.                     |
+| **D117** | Transfer displayPos Sole   | Jedyna `displayPos` w `lib/transfers/display-pos.ts`.                             |
+| **D118** | No Transfer Dispatcher     | Brak Dispatcher / Registry / Service Locator; SSP bez zmian.                      |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -210,4 +213,10 @@
 - `/stadium` open · Confirm Primary · zero Match Engine / PreMatch.
 - SSOT Thin = `GDD-STADIUM-01.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-STADIUM-01 CLOSED · D1–D115 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+### D116–D118 — kontrakt Transfers TD-03+ (must-know)
+
+- Organizational split actions + sole `displayPos` · zero semantyki rynku / SQL / DTO / RPC.
+- Brak Dispatcher / Registry / Service Locator · Single Settlement Path nienaruszony.
+- SSOT PLAN = `implementation/LFE-TRANSFERS-10-PLAN.md`.
+
+**ACTIVE** · 2026-07-31 — LFE-TRANSFERS-10 IMPLEMENT · D1–D118 · SSOT [`../DECISIONS.md`](../DECISIONS.md)

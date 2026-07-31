@@ -683,9 +683,26 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D109–D115:** GDD-STADIUM-01 / LFE-STADIUM-01 (feat `82a164d`).
 
+### D116 — Transfer Actions Organizational Split Only · CLOSED
+
+**Dlaczego:** Gruby monolit `actions.ts` utrudnia review bez zmiany API.  
+**Zasada:** Split `actions.ts` → `actions-*.ts` + barrel re-export; **zero** zmian nazw / sygnatur Public Server Actions; **zero** zmian semantyki rynku.
+
+### D117 — Transfer displayPos Sole Helper · CLOSED
+
+**Dlaczego:** Cztery lokalne kopie `displayPos` w `lib/transfers/` = dryft LO/ŚO→OB.  
+**Zasada:** Jedyna definicja = `lib/transfers/display-pos.ts`; dedup **tylko** w module transfers (squad/academy/scouting OUT).
+
+### D118 — No Transfer Dispatcher / Registry / Service Locator · CLOSED
+
+**Dlaczego:** Nowe warstwy orkiestracji przy TD-03+ = scope creep i ryzyko drugiej ścieżki settle.  
+**Zasada:** Brak Dispatcher / Registry / Service Locator; Single Settlement Path bez zmian; shared guards tylko przy realnej deduplikacji.
+
+**Źródło D116–D118:** LFE-TRANSFERS-10 / TD-03+ ([`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md)).
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D115 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D118 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -711,11 +728,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D115 wymaga **AUDIT** i aktu
 **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
 **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
 **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
+**LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md)
 
 ## Last updated
 
-2026-07-31 — LFE-STADIUM-01 CLOSED · D109–D115 · feat `82a164d`
+2026-07-31 — LFE-TRANSFERS-10 IMPLEMENT · D116–D118 · TD-03+

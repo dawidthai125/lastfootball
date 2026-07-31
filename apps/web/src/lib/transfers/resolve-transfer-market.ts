@@ -3,6 +3,7 @@ import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
@@ -15,11 +16,6 @@ import {
   type SellCandidateDto,
   type TransferMarketDto,
 } from '@/lib/transfers/types';
-
-function displayPos(pos: string): string {
-  if (pos === 'ŚO' || pos === 'LO') return 'OB';
-  return pos;
-}
 
 /**
  * Sole transfer market SSOT for product UI (LFE-TRANSFERS-01…07).

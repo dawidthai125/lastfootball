@@ -2,7 +2,7 @@
 
 ## Cel
 
-Głębszy kontrakt architektury rynku transferowego (po LFE-TRANSFERS-01…08).  
+Głębszy kontrakt architektury rynku transferowego (po LFE-TRANSFERS-01…10).  
 **SSOT produktowy skrót:** [`TRANSFERS.md`](./TRANSFERS.md).
 
 ## Kiedy czytać
@@ -11,11 +11,12 @@ AUDIT / PLAN / IMPLEMENT EPIC-ów transferowych; onboarding przed zmianą settle
 
 ## Powiązane
 
-[`TRANSFERS.md`](./TRANSFERS.md) · [`../DECISIONS.md`](../DECISIONS.md) D20 · [`../AI/ARCHITECTURE_RULES.md`](../AI/ARCHITECTURE_RULES.md) · kod: `apps/web/src/lib/transfers/`
+[`TRANSFERS.md`](./TRANSFERS.md) · [`../DECISIONS.md`](../DECISIONS.md) D20 · D116–D118 · [`../AI/ARCHITECTURE_RULES.md`](../AI/ARCHITECTURE_RULES.md) · kod: `apps/web/src/lib/transfers/` · PLAN: [`../implementation/LFE-TRANSFERS-10-PLAN.md`](../implementation/LFE-TRANSFERS-10-PLAN.md)
 
 ## Status
 
-**ACTIVE** · Domain hardening **`e6885dc`** (LFE-TRANSFERS-09 CLOSED) · feature market **`9b1c575`** (LFE-TRANSFERS-08)
+**ACTIVE** · Domain hardening **`e6885dc`** (LFE-TRANSFERS-09 CLOSED) · feature market **`9b1c575`** (LFE-TRANSFERS-08)  
+**LFE-TRANSFERS-10 / TD-03+:** CLOSED draft (organizational split + `displayPos` sole helper · D116–D118) — feat hash przy COMMIT
 
 ---
 
@@ -43,7 +44,9 @@ AUDIT / PLAN / IMPLEMENT EPIC-ów transferowych; onboarding przed zmianą settle
 ```
 TransfersView (client actions)
     ↓
-actions.ts (walidacja + orkiestracja)
+actions.ts (barrel re-export · Public API · bez `'use server'` — dyrektywa na `actions-*.ts`)
+    ↓
+actions-seed.ts | actions-listing.ts | actions-live-instant.ts | actions-live-offers.ts
     ↓
 complete-deal.ts  |  RPC counter/reject/withdraw/unlist
     ↓
@@ -51,6 +54,12 @@ players · cash_balance · finance_movements · transfer_deals · transfer_offer
 ```
 
 UI **tylko** z `resolveTransferMarket` (page ładuje wiersze + oferty).
+
+**displayPos (D117):** sole helper `lib/transfers/display-pos.ts` — LO / ŚO → OB; konsumenci: market / incoming / live listings / live H2H resolvers.
+
+**M2 shared guards:** SKIP — club `select` lists różnią się między actions; extract nie usuwałby duplikacji bez ryzyka zmiany zachowania (D118).
+
+**Nota Next.js:** plik z `'use server'` nie może re-eksportować (`export { … } from`); barrel bez dyrektywy, prawdziwe actions w modułach.
 
 ---
 
@@ -100,10 +109,10 @@ Presety: **90 / 95 / 100 / 110%** ask (`deriveTransferFee`).
 | ------ | --------- | ---------------------------------------------------------- | ----------------------------------------- |
 | TD-01  | P1        | Fee + allow-list SQL ↔ TS drift                            | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
 | TD-02  | P1        | Double-invoke live RPC (sell+buy)                          | **CLOSED** · LFE-TRANSFERS-09 (`e6885dc`) |
-| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4 (stub Accept usunięty) | Otwarte                                   |
+| TD-03+ | P2        | gruby `actions.ts`, `displayPos` ×4 (stub Accept usunięty) | **CLOSED** · LFE-TRANSFERS-10 (D116–D118) |
 
 **Poza Thin:** escrow · timeout · AI H2H · 2+ counters · buyer Counter · custom ask · `completeLiveTransfer()`.
 
 ## Last updated
 
-2026-07-30 — LFE-TRANSFERS-09 CLOSED · TD-01/TD-02 CLOSED
+2026-07-31 — LFE-TRANSFERS-10 / TD-03+ CLOSED draft · D116–D118 · actions barrel + displayPos sole helper
