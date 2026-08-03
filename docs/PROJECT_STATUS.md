@@ -24,8 +24,8 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Domain feature**      | **`6a54722`** — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)   |
 | **Prior Domain**        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutesPlayed · Ratings formula v2)     |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)             |
-| **Documentation tip**   | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                                             |
-| **tip `main`**          | **`759df0f`** — pin tip (Documentation tip = `759df0f`)                           |
+| **Documentation tip**   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                             |
+| **tip `main`**          | **`fcd871d`** — pin tip (Documentation tip = `fcd871d`)                           |
 | **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                    |
 | **CI**                  | **GREEN**                                                                         |
 | **Decisions**           | **D1–D122** (D122 Age++ H-AGE)                                                    |

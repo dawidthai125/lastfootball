@@ -16,8 +16,8 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | Domain baseline     | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122) |
 | Prior Domain        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutes)       |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                    |
-| tip `main`          | **`759df0f`** — pin tip (docs tip `759df0f`)             |
+| Documentation tip   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                    |
+| tip `main`          | **`fcd871d`** — pin tip (docs tip `fcd871d`)             |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |

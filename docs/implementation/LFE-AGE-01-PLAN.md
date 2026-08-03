@@ -6,7 +6,7 @@
 **Wejście:** GAMEPLAY-LOOP-AUDIT-01 · Owner **GO → PLAN**  
 **Status PLAN:** FULLY CLOSED · feat `6a54722` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE  
 **Baseline wejścia:** tip `fc6f692` · Domain `962f0a8` (RATINGS-V2) · Season End `024e827` · PLAYERS-02 / D22 · D1–D121  
-**Baseline wyjścia:** Domain **`6a54722`** · D1–**D122** · docs tip `759df0f`  
+**Baseline wyjścia:** Domain **`6a54722`** · D1–**D122** · docs tip `fcd871d`  
 **SSOT wejścia:** [`../game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) (H-AGE) · [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · [`../DECISIONS.md`](../DECISIONS.md) D22 · D83 · kod `lib/squad/season-age.ts` · `confirmStartNextSeason`
 
 ---
@@ -296,7 +296,7 @@ E2E pełnych 10 sezonów · world AI age · Retirement UI.
 - [x] [`docs/CHANGELOG.md`](../CHANGELOG.md) / root CHANGELOG
 - [x] [`docs/AI/EPIC_INDEX.md`](../AI/EPIC_INDEX.md)
 - [x] Ten PLAN → Status **FULLY CLOSED** + feat hash `6a54722`
-- [ ] Tip pin docs po DOCS PUSH (`759df0f` placeholder)
+- [x] Tip pin docs po DOCS PUSH (`fcd871d`)
 
 **Nie w DOCS CLOSE AGE-01:** pełna spekulacja Prime/Retirement jako zaimplementowana — tylko pointer ROADMAP CAREER.
 
