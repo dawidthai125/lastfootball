@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                   |
-| ----------------------- | --------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED |
-| **Domain baseline**     | **`6a54722`** — LFE-AGE-01 CLOSED             |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED       |
-| **Documentation tip**   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE (pin)   |
+| Warstwa                 | Hash / EPIC                                           |
+| ----------------------- | ----------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED         |
+| **Domain baseline**     | **`843bcfd`** — LFE-LEAGUE-WORLD-02 CLOSED            |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED               |
+| **Documentation tip**   | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE (pin) |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -59,6 +59,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-PUBLIC-API-01**                          | root PUBLIC · `/testing` barrel · D119–D121 · `ce00327`          |
 | **LFE-RATINGS-V2**                             | assists / minutesPlayed · Ratings formula v2 · `962f0a8`         |
 | **LFE-AGE-01**                                 | Season Age++ Thin · H-AGE · Confirm N+1 · D122 · `6a54722`       |
+| **LFE-LEAGUE-WORLD-02**                        | League Strength Profile · skill→MatchSession · D123 · `843bcfd`  |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -106,17 +107,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** League World · §22 · Career Decline (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** §22 · Career Decline (po Owner GO).
 
-**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI.
+**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A).
 
 ## Naming
 
-- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`, `LFE-PUBLIC-API-*`
+- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`, `LFE-PUBLIC-API-*`, `LFE-LEAGUE-WORLD-*`
 - Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`, `GDD-18`, `GDD-19`, `GDD-21`, `GDD-22`
 - UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`, `LFE-UI-MOTION-*`
 - Engine: EPIC-1…7 · `LFE-PUBLIC-API-*`
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · next Owner GO → League World / §22 / Career Decline
+**ACTIVE** · 2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · next Owner GO → §22 / Career Decline

@@ -9,24 +9,24 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## SSOT
 
-| Fakt              | Źródło                                                                            |
-| ----------------- | --------------------------------------------------------------------------------- |
-| Wiersze           | tabela `players`                                                                  |
-| UI kadry          | **wyłącznie** `resolveClubSquad(club, rows)` → `SquadDto` (senior only)           |
-| UI akademii       | **wyłącznie** `resolveClubAcademy(club, rows, phase)` → `AcademyDto`              |
-| UI skautingu      | **wyłącznie** `resolveClubScouting(...)` → `ScoutingDto`                          |
-| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`               |
-| IO                | `listClubPlayers` (bez `DEPARTED`; obejmuje perspektywy — filtr w resolverach)    |
-| Skill             | `players.skill` (1…99)                                                            |
-| Potential         | `players.potential` (1…99; `potential ≥ skill`) — wariant B: `max(skill, seeded)` |
-| Potential UI      | **tylko pasmo** (`potentialLabel`) — **bez liczby**                               |
-| Academy track     | `players.academy_track` · `promoted_at` (D23)                                     |
-| Match development | pure `applyMatchDevelopmentEffects` + RPC `apply_match_development` (senior only) |
-| Starter ids       | `s-{tag}-…`                                                                       |
-| Academy ids       | `a-{tag}-…`                                                                       |
-| Buy ids           | `t-{tag}-…` (Transfers)                                                           |
-| Version           | default `1`                                                                       |
-| Status            | `READY` \| `INJURED` \| `SUSPENDED` \| `TIRED` \| `DEPARTED`                      |
+| Fakt              | Źródło                                                                                             |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Wiersze           | tabela `players`                                                                                   |
+| UI kadry          | **wyłącznie** `resolveClubSquad(club, rows)` → `SquadDto` (senior only)                            |
+| UI akademii       | **wyłącznie** `resolveClubAcademy(club, rows, phase)` → `AcademyDto`                               |
+| UI skautingu      | **wyłącznie** `resolveClubScouting(...)` → `ScoutingDto`                                           |
+| Shortlist         | `scout_shortlist` = **tylko** `(club_id, player_id)` → `players.id`                                |
+| IO                | `listClubPlayers` (bez `DEPARTED`; obejmuje perspektywy — filtr w resolverach)                     |
+| Skill             | `players.skill` (1…99) — SSOT fee + **league MatchSession** via `mapPlayerSkillToLfeSkills` (D123) |
+| Potential         | `players.potential` (1…99; `potential ≥ skill`) — wariant B: `max(skill, seeded)`                  |
+| Potential UI      | **tylko pasmo** (`potentialLabel`) — **bez liczby**                                                |
+| Academy track     | `players.academy_track` · `promoted_at` (D23)                                                      |
+| Match development | pure `applyMatchDevelopmentEffects` + RPC `apply_match_development` (senior only)                  |
+| Starter ids       | `s-{tag}-…`                                                                                        |
+| Academy ids       | `a-{tag}-…`                                                                                        |
+| Buy ids           | `t-{tag}-…` (Transfers)                                                                            |
+| Version           | default `1`                                                                                        |
+| Status            | `READY` \| `INJURED` \| `SUSPENDED` \| `TIRED` \| `DEPARTED`                                       |
 
 ## Development Thin (LFE-PLAYERS-02)
 
@@ -38,7 +38,8 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 | Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC); senior only                   |
 | Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                             |
 | Age                 | Wired Confirm N+1 (H-AGE · **D122**) — REUSE `applySeasonAgeEffects` · `runSeasonTransitionHAge` |
-| LFE                 | **zero zmian**                                                                                   |
+| MatchSession skills | League path: Thin Adapter uniform `mapPlayerSkillToLfeSkills` (D123) — nie multi-attr mapper     |
+| LFE                 | **zero zmian** pakietu / PUBLIC                                                                  |
 
 ## Academy Thin A (LFE-ACADEMY-01)
 
@@ -70,11 +71,11 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## Decyzje
 
-D19 · **D22** · **D23** · **D122** — [`../DECISIONS.md`](../DECISIONS.md).
+D19 · **D22** · **D23** · **D122** · **D123** — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin (kod)
 
-Talenty · career history · XP · attribute DB · numeric potential w UI · Career Decline / Prime / Retirement Depth · world-age (AI clubs) · morale numeric · poziomy akademii · cash-gate · trening akademii.
+Talenty · career history · XP · attribute DB · numeric potential w UI · Career Decline / Prime / Retirement Depth · world-age (AI clubs) · morale numeric · poziomy akademii · cash-gate · trening akademii · multi-attribute LFE skill map.
 
 ## UI (presentation)
 
@@ -84,13 +85,14 @@ Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUID
 
 ## Kod
 
-`lib/squad/*` · `lib/academy/*` · `lib/scouting/*` · `/squad` · `/academy` · `/scouting` · `/players/[id]` · complete fixture / first-match  
+`lib/squad/*` · `lib/academy/*` · `lib/scouting/*` · `lib/match/map-player-skill-to-lfe.ts` · `lib/league/league-strength-profile.ts` · `/squad` · `/academy` · `/scouting` · `/players/[id]` · complete fixture / first-match  
 Migracje: `20260729120000_player_potential_development.sql` · `20260730120000_academy_track.sql` · `20260730140000_scout_shortlist.sql`
 
 ## Operacyjne
 
-> Migracje `players.potential` + RPC `apply_match_development` **oraz** `academy_track` / `promoted_at` **oraz** `scout_shortlist` zastosowane na prod.
+> Migracje `players.potential` + RPC `apply_match_development` **oraz** `academy_track` / `promoted_at` **oraz** `scout_shortlist` zastosowane na prod.  
+> LFE-LEAGUE-WORLD-02: brak migracji (Web strength + skill map only).
 
 ## Last updated
 
-2026-07-30 — LFE-SCOUTING-01
+2026-08-03 — LFE-LEAGUE-WORLD-02 (skill→MatchSession · D123)

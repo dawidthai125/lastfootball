@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-LEAGUE-WORLD-02 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · match stack · Domain tip `843bcfd` · next **Owner GO → §22 / Career Decline**
+- Kontrakt: League Strength Profile · skill→MatchSession Thin Adapter · D123 supersedes D92
+
+### Added (shipped on `main` — LFE-LEAGUE-WORLD-02)
+
+- Tier-aware AI strength bands + player skill map into league MatchSession · PLAN `LFE-LEAGUE-WORLD-02-PLAN.md` · D123
+
 ### Docs (LFE-AGE-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · Season End H-AGE · Domain tip `6a54722` · next **Owner GO → League World / §22 / Career Decline**

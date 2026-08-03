@@ -8,13 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`6a54722`** (LFE-AGE-01).  
-**Prior Domain:** **`962f0a8`** (LFE-RATINGS-V2).  
+**Domain feature baseline:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
+**Prior Domain:** **`6a54722`** (LFE-AGE-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`fcd871d`** — LFE-AGE-01 DOCS CLOSE  
+**Documentation tip:** **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-08-03] — LFE-LEAGUE-WORLD-02 · CLOSED
+
+### Product
+
+- League Strength Profile per `league_tier` · AI opponent skills ∈ band · DB `players.skill` → LFE `PlayerSkills` Thin Adapter · D123 (supersedes D92).
+- Domain tip → **`843bcfd`** · D123 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji · poza Match Engine / LFE PUBLIC).
+
+### Docs
+
+- Sync SSOT LEAGUE-WORLD-02 CLOSE · HANDOFF · baseline · status · PLAYERS · stack note · next **Owner GO → §22 / Career Decline**.
 
 ## [2026-08-03] — LFE-AGE-01 · CLOSED
 

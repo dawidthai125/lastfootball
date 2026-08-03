@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D122):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D123):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -88,7 +88,7 @@
 | **D89**  | Promotion outcome derived  | Pure z tabeli + tier; zero RNG.                                                   |
 | **D90**  | Single tier mutation       | Mutacja tier tylko w Confirm N+1.                                                 |
 | **D91**  | Report before persist tier | Outcome w raporcie OFFSEASON; persist przy Confirm.                               |
-| **D92**  | Same opponent world Thin   | Tier + etykiety only; skład ligi / AI bez zmian.                                  |
+| **D92**  | Same opponent world Thin   | **SUPERSEDED by D123** — historycznie tier+etykiety only.                         |
 | **D93**  | Floor IV · ceiling I       | Brak spadku z IV; brak awansu z I.                                                |
 | **D94**  | No playoffs Thin           | Baraże OUT.                                                                       |
 | **D95**  | One Base Sponsor Contract  | 1 kontrakt / klub; SSOT = `club_sponsor_contracts`.                               |
@@ -119,6 +119,7 @@
 | **D120** | EngineEvent PUBLIC MUST    | `EngineEvent` + tactical factories = PUBLIC (prod UI).                            |
 | **D121** | LFE Testing Barrel Only    | `/testing` = re-export only · Web nie importuje · `/advanced` OUT.                |
 | **D122** | Age++ at Confirm N+1       | H-AGE `runSeasonTransitionHAge` · REUSE pure · `AGE_REGRESS_FROM` · club roster.  |
+| **D123** | Tier-aware league strength | `LeagueStrengthProfile` · AI skills ∈ band · DB skill→MatchSession Thin Adapter.  |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -193,8 +194,9 @@
 
 - `league_tier` = SSOT szczebla · etykiety tylko `resolveLeagueTierLabel`.
 - Outcome pure · raport przed persist · mutacja tier tylko Confirm N+1.
-- Thin: ten sam świat AI (D92) · floor IV / ceiling I · baraże OUT.
-- SSOT Thin = `GDD-PROMOTION-01.md`.
+- Floor IV / ceiling I · baraże OUT · D88–D91 · D93–D94 nienaruszone.
+- Siła AI / MatchSession: **D123** (supersedes D92) — Strength Profile per tier.
+- SSOT Thin = `GDD-PROMOTION-01.md` · world strength = LFE-LEAGUE-WORLD-02.
 
 ### D95–D101 — kontrakt Sponsors Thin (must-know)
 
@@ -230,10 +232,18 @@
 - Scope: non-departed gracza (w tym akademia) · OUT Retirement/Prime/Youth Depth/world-age.
 - SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-AGE-01-PLAN.md`](../implementation/LFE-AGE-01-PLAN.md).
 
+### D123 — League Strength World (must-know)
+
+- `league_tier` → `resolveLeagueStrengthProfile` (`minSkill`/`maxSkill`; kontrakt rozszerzalny).
+- AI: `resolveOpponentPlayerSkill` · `seedOpponentSquad(id, tier)` · skills ∈ pasmo.
+- Gracz: `mapPlayerSkillToLfeSkills` = Thin Adapter uniform (nie multi-attr) · wire w `createSessionFromLeagueFixture`.
+- Web-only · zero LFE PUBLIC / migracji / Match Engine · D92 SUPERSEDED.
+- SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](../implementation/LFE-LEAGUE-WORLD-02-PLAN.md).
+
 ### D119–D121 — kontrakt LFE PUBLIC surface (must-know)
 
 - Root `@lastfootball/lfe` = Freeze PUBLIC only · `EngineEvent` + tactical factories PUBLIC.
 - `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
 - SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
 
-**ACTIVE** · 2026-08-03 — LFE-AGE-01 FULLY CLOSED · D1–D122 · Domain `6a54722` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-08-03 — LFE-LEAGUE-WORLD-02 FULLY CLOSED · D1–D123 · Domain `843bcfd` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

@@ -10,17 +10,17 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                          |
-| ------------------- | -------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122) |
-| Prior Domain        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutes)       |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                    |
-| tip `main`          | **`32f53c6`** — pin tip (docs tip `fcd871d`)             |
-| Prod                | https://lastfootball.vercel.app                          |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
+|                     |                                                               |
+| ------------------- | ------------------------------------------------------------- |
+| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
+| Domain baseline     | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength Profile · D123) |
+| Prior Domain        | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122)      |
+| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
+| Documentation tip   | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE               |
+| tip `main`          | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE               |
+| Prod                | https://lastfootball.vercel.app                               |
+| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
+| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
 
 ## Pipeline (jedyny)
 
@@ -31,7 +31,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** League World / §22 / Career Decline.
+**Następny EPIC (kolejka Ownera):** §22 / Career Decline.  
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13.
 
 ## Twarde zasady
@@ -55,4 +55,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · next Owner GO → League World / §22 / Career Decline
+**ACTIVE** · 2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · next Owner GO → §22 / Career Decline

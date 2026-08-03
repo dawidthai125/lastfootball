@@ -15,6 +15,8 @@ Opis warstwy gameplay po EPIC-1…7: **Gameplay Foundation**, **Match AI**, **Ma
 `LFE_VERSION` / `packages/lfe/package.json` = `0.9.1-match-ai01`.
 
 > **LFE-AGE-01** (Season Age++ · H-AGE · feat `6a54722` · D122) to **Web Season Transition** przy Confirm N+1 — **nie** Match Engine i **nie** pakiet `@lastfootball/lfe`. SSOT: [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · PLAN [`../implementation/LFE-AGE-01-PLAN.md`](../implementation/LFE-AGE-01-PLAN.md).
+>
+> **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · feat `843bcfd` · D123) to **Web** session build (`createSessionFromLeagueFixture`) — konsumuje istniejące PUBLIC `createPlayer({ skills })`; **zero** diff Match Engine / AI / Physics. SSOT: PLAN [`../implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](../implementation/LFE-LEAGUE-WORLD-02-PLAN.md).
 
 ---
 
@@ -160,4 +162,4 @@ Nadal stub: `physics`, `rules`, `ecs`.
 
 ## Last updated
 
-2026-08-03 — LFE-AGE-01 note (Web Season Transition · H-AGE · poza Match Engine) · prior Ratings v2 `962f0a8`
+2026-08-03 — LFE-LEAGUE-WORLD-02 note (Web session skill map · poza Match Engine) · prior AGE-01 `6a54722`

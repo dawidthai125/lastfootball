@@ -556,10 +556,11 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Konsekwencje przed uznaniem łamią D71.  
 **Zasada:** Raport OFFSEASON pokazuje outcome z derive; persist tier dopiero przy Confirm.
 
-### D92 — Thin Same Opponent World · CLOSED
+### D92 — Thin Same Opponent World · SUPERSEDED by D123
 
 **Dlaczego:** Pełna piramida AI = scope poza Thin.  
-**Zasada:** Promotion Thin zmienia wyłącznie szczebel klubu i etykiety; skład ligi i siła AI bez zmian.
+**Zasada (historyczna):** Promotion Thin zmienia wyłącznie szczebel klubu i etykiety; skład ligi i siła AI bez zmian.  
+**Status:** **SUPERSEDED** przez **D123** (LFE-LEAGUE-WORLD-02) — tier wybiera League Strength Profile; AI skills ∈ pasmo; league MatchSession mapuje `players.skill`.
 
 ### D93 — Floor And Ceiling · CLOSED
 
@@ -727,9 +728,18 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D122:** LFE-AGE-01 · feat **`6a54722`** · PLAN [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
+### D123 — Tier-Aware League Strength World · CLOSED
+
+**Dlaczego:** D92 (same opponent world) czyni awans kosmetycznym; retencja S2+ wymaga trudności per szczebel.  
+**Zasada:** `league_tier` wybiera `LeagueStrengthProfile` (`minSkill`/`maxSkill`, kontrakt rozszerzalny); AI seed skills ∈ pasmo (deterministyczny hash); league MatchSession mapuje `players.skill` → LFE `PlayerSkills` przez Thin Adapter `mapPlayerSkillToLfeSkills` (uniform); katalog nazw Thin B bez wymogu 4× content; kalendarz 22 REUSE; brak LFE PUBLIC / migracji / Match Engine.  
+**OUT:** Variant A katalogi · baraże · First Match redesign · multi-attribute skill map · world-age AI.  
+**Superseduje:** **D92** Thin Same Opponent World.
+
+**Źródło D123:** LFE-LEAGUE-WORLD-02 · feat **`843bcfd`** · PLAN [`implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](./implementation/LFE-LEAGUE-WORLD-02-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D122 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D123 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -758,11 +768,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D122 wymaga **AUDIT** i aktu
 **LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
 **LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
 **LFE-AGE-01 (2026-08-03):** Season Age++ H-AGE wired Confirm N+1 (D122); Season Transition Pipeline step 1 · feat **`6a54722`** · PRODUCTION VERIFY.
+**LFE-LEAGUE-WORLD-02 (2026-08-03):** Tier-aware League Strength Profile + player skill→MatchSession map (D123); supersedes D92 · feat **`843bcfd`** · PRODUCTION VERIFY.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · [`implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](./implementation/LFE-LEAGUE-WORLD-02-PLAN.md)
 
 ## Last updated
 
-2026-08-03 — LFE-AGE-01 FULLY CLOSED · feat `6a54722` · D1–D122
+2026-08-03 — LFE-LEAGUE-WORLD-02 FULLY CLOSED · feat `843bcfd` · D1–D123
