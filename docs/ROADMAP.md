@@ -11,7 +11,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Prior Domain:** **`6a54722`** — LFE-AGE-01.  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
 **Documentation tip:** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
-**tip `main`:** **`fbcf150`**  
+**tip `main`:** **`46e385d`**  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-04 · **LEAGUE-WORLD-02** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
