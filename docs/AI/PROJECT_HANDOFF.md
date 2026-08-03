@@ -13,16 +13,16 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                                                           |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pole                            | Wartość                                                                                                                                                                                       |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + **Age++** + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC** + **Ratings v2** + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                             |
-| **Domain feature baseline**     | `6a54722` — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)                                                                                                       |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                             |
-| **Documentation tip**           | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                                                                                                                             |
-| **tip `main`**                  | **`1934e7f`** — pin tip (Documentation tip = `fcd871d`)                                                                                                                           |
-| **Branch**                      | `main`                                                                                                                                                                            |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-AGE-01 FULLY CLOSED** · D1–D122 · next **Owner GO → League World / §22 / Career Decline**                                                  |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                                         |
+| **Domain feature baseline**     | `6a54722` — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)                                                                                                                   |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                                         |
+| **Documentation tip**           | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                                                                                                                                         |
+| **tip `main`**                  | **`1934e7f`** — pin tip (Documentation tip = `fcd871d`)                                                                                                                                       |
+| **Branch**                      | `main`                                                                                                                                                                                        |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-AGE-01 FULLY CLOSED** · D1–D122 · next **Owner GO → League World / §22 / Career Decline**                                                              |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -334,11 +334,11 @@ Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDI
 League World  ·  §22 push/email  ·  Career Decline
 ```
 
-| #   | EPIC                            | Notatka          |
-| --- | ------------------------------- | ---------------- |
-| 1   | League World (AI po tier)       | osobny Owner GO  |
-| 2   | Kanał push / email (§22 Future) | osobny Owner GO  |
-| 3   | Career Decline (po AGE-01)      | osobny Owner GO  |
+| #   | EPIC                            | Notatka         |
+| --- | ------------------------------- | --------------- |
+| 1   | League World (AI po tier)       | osobny Owner GO |
+| 2   | Kanał push / email (§22 Future) | osobny Owner GO |
+| 3   | Career Decline (po AGE-01)      | osobny Owner GO |
 
 **Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI · Ticket Economy · Prime / Retirement.
 

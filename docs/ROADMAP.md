@@ -119,22 +119,22 @@ GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · 
 
 ## FUTURE
 
-| Item                                    | Notatka                       |
-| --------------------------------------- | ----------------------------- |
-| LFE Physics / full Rules                | RESERVED / częściowe eventy   |
-| ECS storage                             | RESERVED                      |
-| Replay persist / video export           | poza MVP                      |
-| Mobile native                           | poza scope                    |
-| Individual training / XP / attribute DB | poza Thin Depth (D21/D22)     |
+| Item                                                    | Notatka                         |
+| ------------------------------------------------------- | ------------------------------- |
+| LFE Physics / full Rules                                | RESERVED / częściowe eventy     |
+| ECS storage                                             | RESERVED                        |
+| Replay persist / video export                           | poza MVP                        |
+| Mobile native                                           | poza scope                      |
+| Individual training / XP / attribute DB                 | poza Thin Depth (D21/D22)       |
 | Career Prime / Decline Depth / Retirement / Youth Depth | po LFE-AGE-01 (D122 foundation) |
-| World-age (AI clubs)                    | poza H-AGE club-only Thin     |
-| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)             |
-| Messages DB / mark-as-read / Accept     | poza Thin derive (D46)        |
-| Multi-tier AI catalogs / baraże         | poza Promotion Thin (D92/D94) |
-| Sponsor marketplace / nego / Quest      | poza Sponsors Thin (D100)     |
-| Board Prestige / Quest / club mgmt      | poza Board Thin (D106–D107)   |
-| Stadium Ticket / expand / Match couple  | poza Stadium Thin (D112–D115) |
-| Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC  |
+| World-age (AI clubs)                                    | poza H-AGE club-only Thin       |
+| Academy levels / cash-gate / youth OVR                  | poza Thin A (D23)               |
+| Messages DB / mark-as-read / Accept                     | poza Thin derive (D46)          |
+| Multi-tier AI catalogs / baraże                         | poza Promotion Thin (D92/D94)   |
+| Sponsor marketplace / nego / Quest                      | poza Sponsors Thin (D100)       |
+| Board Prestige / Quest / club mgmt                      | poza Board Thin (D106–D107)     |
+| Stadium Ticket / expand / Match couple                  | poza Stadium Thin (D112–D115)   |
+| Kanał push / email powiadomień                          | po GDD-22 Thin · osobny EPIC    |
 
 ---
 
@@ -148,11 +148,11 @@ GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · 
 League World (AI po tier)  ·  §22 push/email  ·  /advanced  ·  Career Decline/Youth
 ```
 
-| EPIC                            | Notatka          |
-| ------------------------------- | ---------------- |
-| League World / AI po tier       | retencja S2+     |
-| Kanał push / email (§22 Future) | osobny Owner GO  |
-| LFE `/advanced`                 | Owner GO · defer |
+| EPIC                            | Notatka           |
+| ------------------------------- | ----------------- |
+| League World / AI po tier       | retencja S2+      |
+| Kanał push / email (§22 Future) | osobny Owner GO   |
+| LFE `/advanced`                 | Owner GO · defer  |
 | Career Decline / Youth Depth    | po AGE foundation |
 
 **Alternatywy FUTURE:** Physics · Ticket Economy · Prime / Retirement.  

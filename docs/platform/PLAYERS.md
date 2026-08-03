@@ -30,15 +30,15 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## Development Thin (LFE-PLAYERS-02)
 
-| Ścieżka             | Reguła                                                                                    |
-| ------------------- | ----------------------------------------------------------------------------------------- |
-| Generacja potential | Deterministyczny seed (id+age) → `potential = max(skill, seeded)`                         |
-| Match (PRIMARY)     | Tylko starterzy senior; max +1 skill / gracz / mecz; **K_MATCH=5**; `skill` ≤ `potential` |
-| Persist meczu       | `apply_match_development(club, match_key, updates)` + `match_development_log`             |
-| Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC); senior only            |
-| Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                      |
+| Ścieżka             | Reguła                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| Generacja potential | Deterministyczny seed (id+age) → `potential = max(skill, seeded)`                                |
+| Match (PRIMARY)     | Tylko starterzy senior; max +1 skill / gracz / mecz; **K_MATCH=5**; `skill` ≤ `potential`        |
+| Persist meczu       | `apply_match_development(club, match_key, updates)` + `match_development_log`                    |
+| Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC); senior only                   |
+| Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                             |
 | Age                 | Wired Confirm N+1 (H-AGE · **D122**) — REUSE `applySeasonAgeEffects` · `runSeasonTransitionHAge` |
-| LFE                 | **zero zmian**                                                                            |
+| LFE                 | **zero zmian**                                                                                   |
 
 ## Academy Thin A (LFE-ACADEMY-01)
 

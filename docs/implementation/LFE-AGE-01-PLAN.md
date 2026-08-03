@@ -23,16 +23,16 @@ Włączyć **sezonowy przyrost wieku** kadry przy starcie Season N+1 (hook **H-A
 
 ## 1. Owner LOCK (przed IMPLEMENT)
 
-| #   | Potwierdzenie                                                                                                               | Stan         |
-| --- | --------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| 1   | Moment Age++ = **wyłącznie** ścieżka `confirmStartNextSeason` (H-AGE · D82 sole Confirm)                                    | **LOCKED**   |
-| 2   | REUSE `applySeasonAgeEffects` — **bez** forka reguł age/skill w drugim helperze                                             | **LOCKED**   |
-| 3   | Scope kadry = zawodnicy **klubu gracza** (`players.club_id = clubId`, `departed_at is null`) — senior **i** `academy_track` | **LOCKED**   |
-| 4   | Soft skill regress przy `age ≥ AGE_REGRESS_FROM` (32) = **IN** jako REUSE PLAYERS-02 (seed Decline), nie osobny EPIC        | **LOCKED**   |
-| 5   | **Brak** migracji schematu (`players.age` / `skill` / `potential` już istnieją)                                             | **LOCKED**   |
-| 6   | **Brak** zmian LFE PUBLIC / Match Engine / Settlement / soft-lock Sponsors·Board·Stadium                                    | **LOCKED**   |
-| 7   | Nowa decyzja **D122** (Age++ wired) superseduje „brak auto age++” w D22/D83 **tylko** dla H-AGE                             | **LOCKED**   |
-| 8   | Retirement · Prime buff · Youth intake auto · world-age innych klubów = **OUT**                                             | **LOCKED**   |
+| #   | Potwierdzenie                                                                                                               | Stan       |
+| --- | --------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 1   | Moment Age++ = **wyłącznie** ścieżka `confirmStartNextSeason` (H-AGE · D82 sole Confirm)                                    | **LOCKED** |
+| 2   | REUSE `applySeasonAgeEffects` — **bez** forka reguł age/skill w drugim helperze                                             | **LOCKED** |
+| 3   | Scope kadry = zawodnicy **klubu gracza** (`players.club_id = clubId`, `departed_at is null`) — senior **i** `academy_track` | **LOCKED** |
+| 4   | Soft skill regress przy `age ≥ AGE_REGRESS_FROM` (32) = **IN** jako REUSE PLAYERS-02 (seed Decline), nie osobny EPIC        | **LOCKED** |
+| 5   | **Brak** migracji schematu (`players.age` / `skill` / `potential` już istnieją)                                             | **LOCKED** |
+| 6   | **Brak** zmian LFE PUBLIC / Match Engine / Settlement / soft-lock Sponsors·Board·Stadium                                    | **LOCKED** |
+| 7   | Nowa decyzja **D122** (Age++ wired) superseduje „brak auto age++” w D22/D83 **tylko** dla H-AGE                             | **LOCKED** |
+| 8   | Retirement · Prime buff · Youth intake auto · world-age innych klubów = **OUT**                                             | **LOCKED** |
 
 Owner GO IMPLEMENT zamyka LOCK 1–8. **Zamknięte** — LOCK 1–8 **LOCKED**.
 
@@ -372,10 +372,10 @@ AGE (LFE-AGE-01)          ← ten EPIC: age++ + seed soft-regress @32
 
 ## 15. Status i następny krok
 
-|                          |                                                                                          |
-| ------------------------ | ---------------------------------------------------------------------------------------- |
-| PLAN                     | **FULLY CLOSED** · feat `6a54722` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE            |
-| Implementacja            | **SHIPPED** — Confirm N+1 Age++ wire (H-AGE · D122)                                      |
-| Commit / push / migracje | Domain feat `6a54722` · **brak** migracji schematu                                       |
+|                          |                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| PLAN                     | **FULLY CLOSED** · feat `6a54722` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE |
+| Implementacja            | **SHIPPED** — Confirm N+1 Age++ wire (H-AGE · D122)                           |
+| Commit / push / migracje | Domain feat `6a54722` · **brak** migracji schematu                            |
 
 **EPIC CLOSED.** Następny krok: **Owner GO → League World / §22 / Career Decline** (AUDIT first).

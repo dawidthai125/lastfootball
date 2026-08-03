@@ -18,25 +18,25 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
 **PRODUCTION VERIFIED · GREEN · LFE-AGE-01 CLOSED** (Domain `6a54722` · D1–D122)
 
-|                         |                                                                                   |
-| ----------------------- | --------------------------------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)                         |
-| **Domain feature**      | **`6a54722`** — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)   |
-| **Prior Domain**        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutesPlayed · Ratings formula v2)     |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)             |
-| **Documentation tip**   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                             |
-| **tip `main`**          | **`1934e7f`** — pin tip (Documentation tip = `fcd871d`)                           |
-| **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                    |
-| **CI**                  | **GREEN**                                                                         |
-| **Decisions**           | **D1–D122** (D122 Age++ H-AGE)                                                    |
+|                         |                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)                       |
+| **Domain feature**      | **`6a54722`** — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122) |
+| **Prior Domain**        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutesPlayed · Ratings formula v2)   |
+| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)           |
+| **Documentation tip**   | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                           |
+| **tip `main`**          | **`1934e7f`** — pin tip (Documentation tip = `fcd871d`)                         |
+| **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                  |
+| **CI**                  | **GREEN**                                                                       |
+| **Decisions**           | **D1–D122** (D122 Age++ H-AGE)                                                  |
 
-| Tor               | Stan                                                                                                                                                                                                                                  |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tor               | Stan                                                                                                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Platform          | Onboarding · First Match · Hub · League 22 · Season End · **Age++** · Promotion · Sponsors · Board · Stadium · Finance · Players · Transfers **10** · Messages · Club · SoftLock · Training · Academy · Scouting · Daily · Achievements · Ranking |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                                                                                                                                   |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · **Ratings v2** · Match Path immersive · XI Gate · **PUBLIC surface** (D119–D121)                                                                                                          |
-| Design            | GDD-01…**22** Thin · Season End · Promotion · Sponsors · Board · Stadium · Transfers-10 · PUBLIC-API-01 · RATINGS-V2 · **AGE-01** CLOSED · §26 CLOSED · World Art CLOSED · **next: Owner GO → League World / §22 / Career Decline**   |
-| Infra             | Vercel + Supabase · CI GREEN · AGE-01 = Confirm wire (brak migracji)                                                                                                                                                                  |
+| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                                                                                                                                               |
+| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · **Ratings v2** · Match Path immersive · XI Gate · **PUBLIC surface** (D119–D121)                                                                                                                      |
+| Design            | GDD-01…**22** Thin · Season End · Promotion · Sponsors · Board · Stadium · Transfers-10 · PUBLIC-API-01 · RATINGS-V2 · **AGE-01** CLOSED · §26 CLOSED · World Art CLOSED · **next: Owner GO → League World / §22 / Career Decline**               |
+| Infra             | Vercel + Supabase · CI GREEN · AGE-01 = Confirm wire (brak migracji)                                                                                                                                                                              |
 
 ## W trakcie
 

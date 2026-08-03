@@ -182,17 +182,17 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** GDD §7 wymaga ceiling rozwoju i primary path z meczu bez farmy treningowej i bez LFE.  
 **Zasada:**
 
-| Fakt            | SSOT / kontrakt                                                                                 |
-| --------------- | ----------------------------------------------------------------------------------------------- |
-| Potential SSOT  | kolumna `players.potential` (1…99; check `potential ≥ skill`)                                   |
-| Generacja (B)   | `resolvePlayerPotential` = `max(skill, seedPotentialCeiling(id, age))` — deterministyczny seed  |
-| Match (PRIMARY) | pure `applyMatchDevelopmentEffects` — tylko starterzy; +1 max; **K_MATCH=5**; skill ≤ potential |
-| Persist         | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)            |
-| Training        | D21 respektuje potential (TS + SQL clamp)                                                       |
-| Fee             | **bez zmian** — `deriveTransferFee(skill, age)`                                                 |
+| Fakt            | SSOT / kontrakt                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| Potential SSOT  | kolumna `players.potential` (1…99; check `potential ≥ skill`)                                          |
+| Generacja (B)   | `resolvePlayerPotential` = `max(skill, seedPotentialCeiling(id, age))` — deterministyczny seed         |
+| Match (PRIMARY) | pure `applyMatchDevelopmentEffects` — tylko starterzy; +1 max; **K_MATCH=5**; skill ≤ potential        |
+| Persist         | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)                   |
+| Training        | D21 respektuje potential (TS + SQL clamp)                                                              |
+| Fee             | **bez zmian** — `deriveTransferFee(skill, age)`                                                        |
 | Age             | pure `applySeasonAgeEffects` · **wired** Confirm N+1 (H-AGE · **D122**) — supersedes „brak auto age++” |
-| Presentation    | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals  |
-| LFE             | **zero zmian**                                                                                  |
+| Presentation    | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals         |
+| LFE             | **zero zmian**                                                                                         |
 
 **Poza Thin:** talents · career/dev history · XP · morale · attribute DB · numeric potential UI · Physics/ECS.  
 **Źródło:** LFE-PLAYERS-02 (prod `cd222ba`).  
