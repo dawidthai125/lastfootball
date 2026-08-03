@@ -51,9 +51,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** §22 / Career Decline — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
-- Decyzje **D1–D123:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
+- **Następny EPIC (po Owner GO):** §22 / Youth Depth / Retirement / Prime — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Decyzje **D1–D124:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · tip `46e385d` · docs tip `fbcf150` · D1–D123 · next Owner GO → §22 / Career Decline
+2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · tip `DOCS_TIP` · docs tip `DOCS_TIP` · D1–D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime

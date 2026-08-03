@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-CAREER-DECLINE-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · match stack · Domain tip `3c01baa` · next **Owner GO → §22 / Youth Depth / Retirement / Prime**
+- Kontrakt: Career Phase derive · Growth Gate · banded age regress · D124
+
+### Added (shipped on `main` — LFE-CAREER-DECLINE-01)
+
+- Career Phase + Growth Gate + banded seasonal regress · PLAN `LFE-CAREER-DECLINE-01-PLAN.md` · D124
+
 ### Docs (LFE-LEAGUE-WORLD-02 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · match stack · Domain tip `843bcfd` · next **Owner GO → §22 / Career Decline**

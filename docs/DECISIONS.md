@@ -723,8 +723,9 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Dlaczego:** H-AGE no-op blokował retencję kariery; pure `applySeasonAgeEffects` już istniało (D22).  
 **Zasada:** Jedyny produktowy age++ = `confirmStartNextSeason` → Season Transition step **H-AGE** (`runSeasonTransitionHAge`); REUSE pure; scope = non-departed `players` klubu gracza (w tym `academy_track`); soft regress wyłącznie przez `DEVELOPMENT_THIN.AGE_REGRESS_FROM`; fail-closed + revert przy fail otwarcia sezonu.  
-**OUT:** Retirement · Prime · Decline Depth · Youth Depth · world-age AI · migracje schematu · LFE/Match Engine / Settlement.  
-**Superseduje:** „brak auto age++ w produkcie” (D22 Age line · D83 age no-op).
+**OUT:** Retirement · Prime · Youth Depth · world-age AI · migracje schematu · LFE/Match Engine / Settlement.  
+**Superseduje:** „brak auto age++ w produkcie” (D22 Age line · D83 age no-op).  
+**Supersede częściowy:** Decline Depth Thin → **D124** (Career Phase · Growth Gate · pasma regress).
 
 **Źródło D122:** LFE-AGE-01 · feat **`6a54722`** · PLAN [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
@@ -737,9 +738,17 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D123:** LFE-LEAGUE-WORLD-02 · feat **`843bcfd`** · PLAN [`implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](./implementation/LFE-LEAGUE-WORLD-02-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
+### D124 — Career Phase as Derived Domain Concept · CLOSED
+
+**Dlaczego:** Schyłek i peak muszą być czytelne w UI i bramkować rozwój bez drugiego modelu danych i bez kolumn DB.  
+**Zasada:** `CareerPhase` = pure derive z faktów domeny (Thin: `age`; kontrakt `CareerPhaseInput` rozszerzalny); UI i Growth Gate czytają wyłącznie `resolveCareerPhase` / `resolveGrowthCoefficient`; zero persist `career_phase`; AGE tick nadal H-AGE; Decline Depth Thin = pasma regress (`decline` −1 · `late` −2) + malejący współczynnik growth (nie hard ban); jedna ścieżka age dla całego rosteru (w tym `academy_track`); brak Retirement/Prime/Youth Depth w tym EPICu.  
+**OUT:** Retirement · Prime buff · minutes/morale regress · Youth Depth · migracje · LFE PUBLIC / Match Engine.
+
+**Źródło D124:** LFE-CAREER-DECLINE-01 · feat **`3c01baa`** · PLAN [`implementation/LFE-CAREER-DECLINE-01-PLAN.md`](./implementation/LFE-CAREER-DECLINE-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D123 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D124 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -769,11 +778,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D123 wymaga **AUDIT** i aktu
 **LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
 **LFE-AGE-01 (2026-08-03):** Season Age++ H-AGE wired Confirm N+1 (D122); Season Transition Pipeline step 1 · feat **`6a54722`** · PRODUCTION VERIFY.
 **LFE-LEAGUE-WORLD-02 (2026-08-03):** Tier-aware League Strength Profile + player skill→MatchSession map (D123); supersedes D92 · feat **`843bcfd`** · PRODUCTION VERIFY.
+**LFE-CAREER-DECLINE-01 (2026-08-03):** Career Phase derive + Growth Gate + banded seasonal regress (D124); feat **`3c01baa`** · PRODUCTION VERIFY.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · [`implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](./implementation/LFE-LEAGUE-WORLD-02-PLAN.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · [`implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](./implementation/LFE-LEAGUE-WORLD-02-PLAN.md) · [`implementation/LFE-CAREER-DECLINE-01-PLAN.md`](./implementation/LFE-CAREER-DECLINE-01-PLAN.md)
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 FULLY CLOSED · feat `843bcfd` · D1–D123
+2026-08-03 — LFE-CAREER-DECLINE-01 FULLY CLOSED · feat `3c01baa` · D1–D124

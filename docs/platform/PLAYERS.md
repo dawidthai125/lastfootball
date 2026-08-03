@@ -38,8 +38,22 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 | Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC); senior only                   |
 | Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                             |
 | Age                 | Wired Confirm N+1 (H-AGE · **D122**) — REUSE `applySeasonAgeEffects` · `runSeasonTransitionHAge` |
+| Career Phase        | Pure `resolveCareerPhase` (Thin: age) · label UI · **D124** — zero kolumn DB                     |
+| Growth Gate         | `resolveGrowthCoefficient` / `allowGrowthImpulse` — Match + Training (soft coeff, nie hard ban)  |
+| Age regress         | Pasma `decline` −1 · `late` −2 via phase po age++ (nadal H-AGE)                                  |
 | MatchSession skills | League path: Thin Adapter uniform `mapPlayerSkillToLfeSkills` (D123) — nie multi-attr mapper     |
 | LFE                 | **zero zmian** pakietu / PUBLIC                                                                  |
+
+## Career Decline Thin (LFE-CAREER-DECLINE-01)
+
+| Fakt          | Reguła                                                                                          |
+| ------------- | ----------------------------------------------------------------------------------------------- |
+| Phase SSOT    | `resolveCareerPhase(input)` — sole derive (D124); input rozszerzalny (`role`/`experience` reserved) |
+| Bands Thin    | youth ≤20 · rising 21–27 · prime 28–31 · decline 32–37 · late ≥38                               |
+| Growth        | Soft coefficient (decline 0.5 · late 0.25) — **nie** `coeff = 0`                                |
+| Roster scope  | Jedna ścieżka age dla senior **i** `academy_track`                                              |
+| OUT           | Retirement · Prime buff · Youth Depth · migracje · Match Engine                                 |
+| Migracja      | **brak**                                                                                        |
 
 ## Academy Thin A (LFE-ACADEMY-01)
 
@@ -71,28 +85,28 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## Decyzje
 
-D19 · **D22** · **D23** · **D122** · **D123** — [`../DECISIONS.md`](../DECISIONS.md).
+D19 · **D22** · **D23** · **D122** · **D123** · **D124** — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin (kod)
 
-Talenty · career history · XP · attribute DB · numeric potential w UI · Career Decline / Prime / Retirement Depth · world-age (AI clubs) · morale numeric · poziomy akademii · cash-gate · trening akademii · multi-attribute LFE skill map.
+Talenty · career history · XP · attribute DB · numeric potential w UI · Prime / Retirement / Youth Depth · world-age (AI clubs) · morale numeric · poziomy akademii · cash-gate · trening akademii · multi-attribute LFE skill map.
 
 ## UI (presentation)
 
-Ekran `/squad` = decision-first; `/academy` = Intake + lista perspektyw (pasma); `/scouting` = kandydaci + prywatna shortlista (refs); Player Card (`/players/[id]`) pokazuje **pasmo** potencjału.  
+Ekran `/squad` = decision-first; `/academy` = Intake + lista perspektyw (pasma); `/scouting` = kandydaci + prywatna shortlista (refs); Player Card (`/players/[id]`) pokazuje **pasmo** potencjału **oraz** label fazy kariery (`careerPhaseLabel`).  
 Post Match: sygnały `+1 umiejętność` (nazwy), bez liczby potential.  
 Szczegóły: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.
 
 ## Kod
 
-`lib/squad/*` · `lib/academy/*` · `lib/scouting/*` · `lib/match/map-player-skill-to-lfe.ts` · `lib/league/league-strength-profile.ts` · `/squad` · `/academy` · `/scouting` · `/players/[id]` · complete fixture / first-match  
+`lib/squad/*` · `lib/squad/career-phase.ts` · `lib/squad/growth-gate.ts` · `lib/academy/*` · `lib/scouting/*` · `lib/match/map-player-skill-to-lfe.ts` · `lib/league/league-strength-profile.ts` · `/squad` · `/academy` · `/scouting` · `/players/[id]` · complete fixture / first-match  
 Migracje: `20260729120000_player_potential_development.sql` · `20260730120000_academy_track.sql` · `20260730140000_scout_shortlist.sql`
 
 ## Operacyjne
 
 > Migracje `players.potential` + RPC `apply_match_development` **oraz** `academy_track` / `promoted_at` **oraz** `scout_shortlist` zastosowane na prod.  
-> LFE-LEAGUE-WORLD-02: brak migracji (Web strength + skill map only).
+> LFE-LEAGUE-WORLD-02 / LFE-CAREER-DECLINE-01: brak migracji (Web strength + Career Phase / Growth Gate only).
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 (skill→MatchSession · D123)
+2026-08-03 — LFE-CAREER-DECLINE-01 (Career Phase · Growth Gate · D124)

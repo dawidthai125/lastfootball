@@ -13,11 +13,11 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                               |
 | ------------------- | ------------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
-| Domain baseline     | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength Profile · D123) |
-| Prior Domain        | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122)      |
+| Domain baseline     | **`3c01baa`** — LFE-CAREER-DECLINE-01 (Career Phase · D124)  |
+| Prior Domain        | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength · D123)        |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| Documentation tip   | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                |
-| tip `main`          | **`46e385d`** — pin tip (docs tip `fbcf150`)                  |
+| Documentation tip   | **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE             |
+| tip `main`          | **`DOCS_TIP`** — pin tip (docs tip `DOCS_TIP`)                |
 | Prod                | https://lastfootball.vercel.app                               |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
@@ -31,7 +31,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** §22 / Career Decline.  
+**Następny EPIC (kolejka Ownera):** §22 / Youth Depth / Retirement / Prime.  
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13.
 
 ## Twarde zasady
@@ -55,4 +55,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · next Owner GO → §22 / Career Decline
+**ACTIVE** · 2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · next Owner GO → §22 / Youth Depth / Retirement / Prime

@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D123):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D124):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -120,6 +120,7 @@
 | **D121** | LFE Testing Barrel Only    | `/testing` = re-export only · Web nie importuje · `/advanced` OUT.                |
 | **D122** | Age++ at Confirm N+1       | H-AGE `runSeasonTransitionHAge` · REUSE pure · `AGE_REGRESS_FROM` · club roster.  |
 | **D123** | Tier-aware league strength | `LeagueStrengthProfile` · AI skills ∈ band · DB skill→MatchSession Thin Adapter.  |
+| **D124** | Career Phase derive        | `resolveCareerPhase` · Growth Gate coeff · banded age regress · zero DB column.   |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -228,7 +229,7 @@
 ### D122 — Season Age++ / H-AGE (must-know)
 
 - Jedyny age++ = Confirm N+1 · `runSeasonTransitionHAge` (Season Transition Pipeline step 1).
-- REUSE `applySeasonAgeEffects` · regress tylko `DEVELOPMENT_THIN.AGE_REGRESS_FROM`.
+- REUSE `applySeasonAgeEffects` · regress pasma przez Career Phase (**D124**).
 - Scope: non-departed gracza (w tym akademia) · OUT Retirement/Prime/Youth Depth/world-age.
 - SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-AGE-01-PLAN.md`](../implementation/LFE-AGE-01-PLAN.md).
 
@@ -240,10 +241,17 @@
 - Web-only · zero LFE PUBLIC / migracji / Match Engine · D92 SUPERSEDED.
 - SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](../implementation/LFE-LEAGUE-WORLD-02-PLAN.md).
 
+### D124 — Career Phase / Decline Thin (must-know)
+
+- `resolveCareerPhase(input)` = sole derive SSOT (Thin: `age`; input rozszerzalny).
+- Growth Gate: `resolveGrowthCoefficient` ∈ (0,1] · `allowGrowthImpulse` — Match + Training; **nie** hard ban.
+- Sezonowy regress w `applySeasonAgeEffects` (`decline` −1 · `late` −2) · zero kolumn DB.
+- SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-CAREER-DECLINE-01-PLAN.md`](../implementation/LFE-CAREER-DECLINE-01-PLAN.md).
+
 ### D119–D121 — kontrakt LFE PUBLIC surface (must-know)
 
 - Root `@lastfootball/lfe` = Freeze PUBLIC only · `EngineEvent` + tactical factories PUBLIC.
 - `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
 - SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
 
-**ACTIVE** · 2026-08-03 — LFE-LEAGUE-WORLD-02 FULLY CLOSED · D1–D123 · Domain `843bcfd` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-08-03 — LFE-CAREER-DECLINE-01 FULLY CLOSED · D1–D124 · Domain `3c01baa` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

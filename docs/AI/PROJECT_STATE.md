@@ -25,8 +25,8 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **LFE-LEAGUE-WORLD-02 CLOSED** (`843bcfd`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
-Kandydaci PLANNED: §22 · Career Decline.
+Brak otwartego EPIC. **LFE-CAREER-DECLINE-01 CLOSED** (`3c01baa`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
+Kandydaci PLANNED: §22 · Youth Depth / Retirement / Prime.
 
 ## Powiązania
 
@@ -34,4 +34,4 @@ Kandydaci PLANNED: §22 · Career Decline.
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd`
+2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa`

@@ -7,13 +7,13 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`843bcfd`** — LFE-LEAGUE-WORLD-02 CLOSED (League Strength Profile · D123).  
-**Prior Domain:** **`6a54722`** — LFE-AGE-01.  
+**Domain feature baseline:** **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED (Career Phase · Growth Gate · D124).  
+**Prior Domain:** **`843bcfd`** — LFE-LEAGUE-WORLD-02.  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
-**tip `main`:** **`46e385d`**  
+**Documentation tip:** **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
+**tip `main`:** **`DOCS_TIP`**  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · **LEAGUE-WORLD-02** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · **CAREER-DECLINE-01** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -83,6 +83,7 @@ GDD-§26A/B · LEAGUE-04 · **LEAGUE-WORLD-02** · Transfers **10** · Messages 
 | **LFE-RATINGS-V2**                                     | **CLOSED** · assists / minutesPlayed Thin · Ratings formula v2 · feat **`962f0a8`** · CI GREEN · PRODUCTION VERIFY       |
 | **LFE-AGE-01**                                         | **CLOSED** · H-AGE season age++ · Season Transition · D122 · feat **`6a54722`** · CI GREEN · PRODUCTION VERIFY           |
 | **LFE-LEAGUE-WORLD-02**                                | **CLOSED** · League Strength Profile · skill→MatchSession · D123 · feat **`843bcfd`** · CI GREEN · PRODUCTION VERIFY     |
+| **LFE-CAREER-DECLINE-01**                              | **CLOSED** · Career Phase derive · Growth Gate · banded regress · D124 · feat **`3c01baa`** · CI GREEN · PRODUCTION VERIFY |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                            |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                       |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)               |
@@ -127,7 +128,7 @@ GDD-§26A/B · LEAGUE-04 · **LEAGUE-WORLD-02** · Transfers **10** · Messages 
 | Replay persist / video export                           | poza MVP                        |
 | Mobile native                                           | poza scope                      |
 | Individual training / XP / attribute DB                 | poza Thin Depth (D21/D22)       |
-| Career Prime / Decline Depth / Retirement / Youth Depth | po LFE-AGE-01 (D122 foundation) |
+| Career Prime / Retirement / Youth Depth | po LFE-CAREER-DECLINE-01 (D124 foundation) |
 | World-age (AI clubs)                                    | poza H-AGE club-only Thin       |
 | Academy levels / cash-gate / youth OVR                  | poza Thin A (D23)               |
 | Messages DB / mark-as-read / Accept                     | poza Thin derive (D46)          |
@@ -141,22 +142,22 @@ GDD-§26A/B · LEAGUE-04 · **LEAGUE-WORLD-02** · Transfers **10** · Messages 
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-LEAGUE-WORLD-02 FULLY CLOSED** (`843bcfd` · D123).
+**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-CAREER-DECLINE-01 FULLY CLOSED** (`3c01baa` · D124).
 
-### Oficjalna kolejność (po LEAGUE-WORLD-02)
+### Oficjalna kolejność (po CAREER-DECLINE-01)
 
 ```
-§22 push/email  ·  /advanced  ·  Career Decline/Youth
+§22 push/email  ·  /advanced  ·  Youth Depth / Retirement / Prime
 ```
 
 | EPIC                            | Notatka           |
 | ------------------------------- | ----------------- |
 | Kanał push / email (§22 Future) | osobny Owner GO   |
 | LFE `/advanced`                 | Owner GO · defer  |
-| Career Decline / Youth Depth    | po AGE foundation |
+| Youth Depth / Retirement / Prime | po Decline Thin   |
 
-**Alternatywy FUTURE:** Physics · Ticket Economy · Prime / Retirement · multi-tier AI catalogs (Variant A).  
-Domain feat **`843bcfd`** · Prior AGE **`6a54722`** · Presentation MOTION **`9fd14fc`**.
+**Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · ACADEMY-02.  
+Domain feat **`3c01baa`** · Prior LEAGUE-WORLD **`843bcfd`** · Presentation MOTION **`9fd14fc`**.
 
 ## Decyzje roadmapy
 
@@ -205,4 +206,4 @@ Domain feat **`843bcfd`** · Prior AGE **`6a54722`** · Presentation MOTION **`9
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · D123 · next Owner GO → §22 / Career Decline
+2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime

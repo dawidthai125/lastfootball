@@ -17,6 +17,8 @@ Opis warstwy gameplay po EPIC-1…7: **Gameplay Foundation**, **Match AI**, **Ma
 > **LFE-AGE-01** (Season Age++ · H-AGE · feat `6a54722` · D122) to **Web Season Transition** przy Confirm N+1 — **nie** Match Engine i **nie** pakiet `@lastfootball/lfe`. SSOT: [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · PLAN [`../implementation/LFE-AGE-01-PLAN.md`](../implementation/LFE-AGE-01-PLAN.md).
 >
 > **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · feat `843bcfd` · D123) to **Web** session build (`createSessionFromLeagueFixture`) — konsumuje istniejące PUBLIC `createPlayer({ skills })`; **zero** diff Match Engine / AI / Physics. SSOT: PLAN [`../implementation/LFE-LEAGUE-WORLD-02-PLAN.md`](../implementation/LFE-LEAGUE-WORLD-02-PLAN.md).
+>
+> **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · feat `3c01baa` · D124) to **Web** squad/development — pure derive + soft growth coeff + banded age regress; **zero** diff Match Engine / LFE PUBLIC / migracji. SSOT: [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · PLAN [`../implementation/LFE-CAREER-DECLINE-01-PLAN.md`](../implementation/LFE-CAREER-DECLINE-01-PLAN.md).
 
 ---
 

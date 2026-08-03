@@ -8,13 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
-**Prior Domain:** **`6a54722`** (LFE-AGE-01).  
+**Domain feature baseline:** **`3c01baa`** (LFE-CAREER-DECLINE-01).  
+**Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+**Documentation tip:** **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-08-03] — LFE-CAREER-DECLINE-01 · CLOSED
+
+### Product
+
+- Career Phase pure derive · Growth Gate (soft coeff) · banded seasonal skill regress · D124.
+- Domain tip → **`3c01baa`** · D124 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji · poza Match Engine / LFE PUBLIC).
+
+### Docs
+
+- Sync SSOT CAREER-DECLINE-01 CLOSE · HANDOFF · baseline · status · PLAYERS · stack note · next **Owner GO → §22 / Youth Depth / Retirement / Prime**.
 
 ## [2026-08-03] — LFE-LEAGUE-WORLD-02 · CLOSED
 
