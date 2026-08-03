@@ -48,18 +48,18 @@ describe('LFE-PLAYERS-02 potential (wariant B)', () => {
 
 describe('LFE-PLAYERS-02 match development', () => {
   const starters = [
-    { id: 'a', name: 'A', skill: 60, potential: 80, starter: true },
-    { id: 'b', name: 'B', skill: 60, potential: 80, starter: true },
-    { id: 'c', name: 'C', skill: 60, potential: 80, starter: true },
-    { id: 'd', name: 'D', skill: 60, potential: 80, starter: true },
-    { id: 'e', name: 'E', skill: 60, potential: 80, starter: true },
-    { id: 'f', name: 'F', skill: 60, potential: 80, starter: true },
-    { id: 'g', name: 'G', skill: 60, potential: 80, starter: true },
-    { id: 'h', name: 'H', skill: 60, potential: 80, starter: true },
-    { id: 'i', name: 'I', skill: 60, potential: 80, starter: true },
-    { id: 'j', name: 'J', skill: 60, potential: 80, starter: true },
-    { id: 'k', name: 'K', skill: 60, potential: 80, starter: true },
-    { id: 'bench', name: 'Bench', skill: 60, potential: 80, starter: false },
+    { id: 'a', name: 'A', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'b', name: 'B', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'c', name: 'C', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'd', name: 'D', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'e', name: 'E', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'f', name: 'F', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'g', name: 'G', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'h', name: 'H', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'i', name: 'I', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'j', name: 'J', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'k', name: 'K', skill: 60, potential: 80, starter: true, age: 24 },
+    { id: 'bench', name: 'Bench', skill: 60, potential: 80, starter: false, age: 24 },
   ];
 
   it('caps at K_MATCH=5 and +1; only starters; never above potential', () => {
@@ -78,8 +78,8 @@ describe('LFE-PLAYERS-02 match development', () => {
 
   it('skips players already at potential', () => {
     const capped = [
-      { id: 'x', name: 'X', skill: 75, potential: 75, starter: true },
-      { id: 'y', name: 'Y', skill: 70, potential: 80, starter: true },
+      { id: 'x', name: 'X', skill: 75, potential: 75, starter: true, age: 24 },
+      { id: 'y', name: 'Y', skill: 70, potential: 80, starter: true, age: 24 },
     ];
     const after = applyMatchDevelopmentEffects(capped);
     expect(after.find((p) => p.id === 'x')?.skill).toBe(75);
@@ -97,13 +97,13 @@ describe('LFE-PLAYERS-02 match development', () => {
 describe('LFE-PLAYERS-02 training respects potential', () => {
   it('does not raise skill above potential', () => {
     const base = [
-      { id: 'a', status: 'READY' as const, skill: 70, potential: 70 },
-      { id: 'b', status: 'READY' as const, skill: 60, potential: 80 },
-      { id: 'c', status: 'READY' as const, skill: 60, potential: 80 },
-      { id: 'd', status: 'READY' as const, skill: 60, potential: 80 },
-      { id: 'e', status: 'READY' as const, skill: 60, potential: 80 },
-      { id: 'f', status: 'READY' as const, skill: 60, potential: 80 },
-      { id: 'g', status: 'READY' as const, skill: 60, potential: 80 },
+      { id: 'a', status: 'READY' as const, skill: 70, potential: 70, age: 24 },
+      { id: 'b', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
+      { id: 'c', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
+      { id: 'd', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
+      { id: 'e', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
+      { id: 'f', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
+      { id: 'g', status: 'READY' as const, skill: 60, potential: 80, age: 24 },
     ];
     const out = applyTrainingSessionEffects(base, 'tactics', 'normal');
     expect(out.find((p) => p.id === 'a')?.skill).toBe(70);
@@ -138,13 +138,15 @@ describe('LFE-AGE-01 / PLAYERS-02 season age pure', () => {
     });
   });
 
-  it('caps age at 50 and never drops skill below 1', () => {
+  it('caps age at 50 and never drops skill below 1; late regress −2', () => {
     const out = applySeasonAgeEffects([
       { id: 'cap', age: 50, skill: 40, potential: 50 },
       { id: 'floor', age: 40, skill: 1, potential: 60 },
+      { id: 'late', age: 37, skill: 70, potential: 80 },
     ]);
-    expect(out.find((p) => p.id === 'cap')).toEqual({ id: 'cap', age: 50, skill: 39 });
+    expect(out.find((p) => p.id === 'cap')).toEqual({ id: 'cap', age: 50, skill: 38 });
     expect(out.find((p) => p.id === 'floor')).toEqual({ id: 'floor', age: 41, skill: 1 });
+    expect(out.find((p) => p.id === 'late')).toEqual({ id: 'late', age: 38, skill: 68 });
   });
 });
 

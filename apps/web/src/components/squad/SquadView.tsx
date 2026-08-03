@@ -332,6 +332,8 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                       <span className="lf-sq__skill">{p.skill}</span>
                       {' · '}
                       Pot. {p.potentialLabel}
+                      {' · '}
+                      {p.careerPhaseLabel}
                     </span>
                   </span>
                   <span
@@ -377,6 +379,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                   </th>
                 ))}
                 <th style={{ textAlign: 'left' }}>Potencjał</th>
+                <th style={{ textAlign: 'left' }}>Kariera</th>
               </tr>
             </thead>
             <tbody>
@@ -434,12 +437,13 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                       </span>
                     </td>
                     <td style={{ color: 'var(--lf-color-text-muted)' }}>{p.potentialLabel}</td>
+                    <td style={{ color: 'var(--lf-color-text-muted)' }}>{p.careerPhaseLabel}</td>
                   </tr>
                 );
               })}
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="lf-sq__table-empty">
+                  <td colSpan={9} className="lf-sq__table-empty">
                     Brak zawodników dla wybranych filtrów. Zmień filtry lub wróć do pełnej listy.
                   </td>
                 </tr>

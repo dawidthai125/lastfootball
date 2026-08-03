@@ -1,3 +1,4 @@
+import type { CareerPhaseId } from '@/lib/squad/career-phase';
 import type { PotentialBandId } from '@/lib/squad/potential';
 
 /** Domain player readiness — stored in DB; localized in STATUS_LABEL / UI. */
@@ -15,6 +16,9 @@ export type SquadPlayerDto = {
   /** Presentation only — never expose raw potential number. */
   readonly potentialBand: PotentialBandId;
   readonly potentialLabel: string;
+  /** Derived Career Phase (D124) — never persisted. */
+  readonly careerPhase: CareerPhaseId;
+  readonly careerPhaseLabel: string;
   readonly status: PlayerStatus;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];

@@ -15,6 +15,8 @@ function player(
     skill: 65,
     potentialBand: 'medium',
     potentialLabel: 'Średni',
+    careerPhase: 'rising',
+    careerPhaseLabel: 'Rozwój',
     status: partial.status ?? 'READY',
     nationality: 'PL',
     attributes: [],

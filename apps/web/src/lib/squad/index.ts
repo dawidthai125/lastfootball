@@ -46,6 +46,13 @@ export {
 export type { PotentialBandId } from '@/lib/squad/potential';
 export { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
 export {
+  resolveCareerPhase,
+  resolveCareerPhaseView,
+  careerPhaseLabel,
+} from '@/lib/squad/career-phase';
+export type { CareerPhaseId, CareerPhaseInput, CareerPhaseView } from '@/lib/squad/career-phase';
+export { resolveGrowthCoefficient, allowGrowthImpulse } from '@/lib/squad/growth-gate';
+export {
   applyMatchDevelopmentEffects,
   summarizeMatchDevelopment,
 } from '@/lib/squad/match-development';

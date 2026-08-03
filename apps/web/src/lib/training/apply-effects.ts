@@ -1,4 +1,6 @@
 import type { PlayerStatus } from '@/lib/squad/types';
+import { resolveCareerPhase } from '@/lib/squad/career-phase';
+import { allowGrowthImpulse } from '@/lib/squad/growth-gate';
 import {
   TRAINING_THIN,
   type TrainingFocusId,
@@ -11,6 +13,8 @@ export type TrainingPlayerSlice = {
   readonly status: PlayerStatus;
   readonly skill: number;
   readonly potential: number;
+  /** Required for Career Phase / Growth Gate (LFE-CAREER-DECLINE-01). */
+  readonly age: number;
 };
 
 function focusSkillOffset(focusId: TrainingFocusId): number {
@@ -29,6 +33,7 @@ function skillBoostIds(
   players: readonly TrainingPlayerSlice[],
   focusId: TrainingFocusId,
   intensityId: TrainingIntensityId,
+  impulseKey: string,
 ): ReadonlySet<string> {
   if (intensityId === 'light' || focusId === 'regeneration') {
     return new Set();
@@ -49,6 +54,7 @@ function skillBoostIds(
   const sorted = eligible.map((p) => p.id).sort();
   if (sorted.length === 0) return new Set();
 
+  const byId = new Map(players.map((p) => [p.id, p]));
   const offset = focusSkillOffset(focusId) % sorted.length;
   const rotated = [...sorted.slice(offset), ...sorted.slice(0, offset)];
   const step = intensityId === 'high' ? 2 : 3;
@@ -59,7 +65,12 @@ function skillBoostIds(
     i += step
   ) {
     const id = rotated[i];
-    if (id) toBoost.add(id);
+    if (!id) continue;
+    const row = byId.get(id);
+    if (!row) continue;
+    const phase = resolveCareerPhase({ age: row.age });
+    if (!allowGrowthImpulse(id, impulseKey, phase)) continue;
+    toBoost.add(id);
   }
   return toBoost;
 }
@@ -67,17 +78,25 @@ function skillBoostIds(
 /**
  * Pure status + skill transitions for a team training session.
  * Never changes roster size — only `status` and `players.skill` (Thin depth).
- * Anti-farm: max +1 skill / player / session; K = SKILL_UP_MAX_PER_SESSION.
+ * Anti-farm: max +1 skill / player / session; K = SKILL_UP_MAX_PER_SESSION;
+ * Growth Gate by Career Phase (shared helper with Match PRIMARY).
  */
 export function applyTrainingSessionEffects(
   players: readonly TrainingPlayerSlice[],
   focusId: TrainingFocusId,
   intensityId: TrainingIntensityId,
+  impulseKey = 'training',
 ): TrainingPlayerSlice[] {
   if (focusId === 'regeneration') {
     return players.map((p) => {
       if (p.status === 'TIRED') {
-        return { id: p.id, status: 'READY' as const, skill: p.skill, potential: p.potential };
+        return {
+          id: p.id,
+          status: 'READY' as const,
+          skill: p.skill,
+          potential: p.potential,
+          age: p.age,
+        };
       }
       return p;
     });
@@ -99,7 +118,7 @@ export function applyTrainingSessionEffects(
     if (id) toTire.add(id);
   }
 
-  const toBoost = skillBoostIds(players, focusId, intensityId);
+  const toBoost = skillBoostIds(players, focusId, intensityId, impulseKey);
 
   return players.map((p) => {
     let status = p.status;
@@ -114,7 +133,7 @@ export function applyTrainingSessionEffects(
       skill = Math.min(99, p.potential, p.skill + TRAINING_THIN.SKILL_UP_MAX_PER_PLAYER);
     }
 
-    return { id: p.id, status, skill, potential: p.potential };
+    return { id: p.id, status, skill, potential: p.potential, age: p.age };
   });
 }
 

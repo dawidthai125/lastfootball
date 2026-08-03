@@ -80,8 +80,10 @@ export async function completeTrainingSession(
     status: p.status,
     skill: p.skill,
     potential: p.potential,
+    age: p.age,
   }));
-  const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId);
+  const impulseKey = `${today}:${input.focusId}:${input.intensityId}`;
+  const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId, impulseKey);
   const summary = summarizeTrainingSessionEffects(before, after);
 
   const updates: { id: string; status: string; skill: number }[] = [];

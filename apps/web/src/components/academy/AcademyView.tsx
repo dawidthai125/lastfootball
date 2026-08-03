@@ -107,7 +107,7 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
                     {p.name}
                   </div>
                   <div className="mt-0.5 text-[11px] text-[var(--lf-muted)]">
-                    {p.pos} · {p.age} lat · potencjał: {p.potentialLabel}
+                    {p.pos} · {p.age} lat · potencjał: {p.potentialLabel} · {p.careerPhaseLabel}
                   </div>
                 </div>
                 <form action={promoteAction}>

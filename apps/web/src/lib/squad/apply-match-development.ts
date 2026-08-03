@@ -44,8 +44,9 @@ export async function applyMatchDevelopment(
     skill: p.skill,
     potential: p.potential,
     starter: p.starter,
+    age: p.age,
   }));
-  const after = applyMatchDevelopmentEffects(before);
+  const after = applyMatchDevelopmentEffects(before, input.matchKey);
   const summary = summarizeMatchDevelopment(before, after);
 
   const updates: { id: string; skill: number }[] = [];
@@ -102,7 +103,8 @@ export function previewMatchDevelopment(
     skill: p.skill,
     potential: p.potential,
     starter: p.starter,
+    age: p.age,
   }));
-  const after = applyMatchDevelopmentEffects(before);
+  const after = applyMatchDevelopmentEffects(before, 'preview');
   return summarizeMatchDevelopment(before, after);
 }

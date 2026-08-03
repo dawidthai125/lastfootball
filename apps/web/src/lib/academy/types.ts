@@ -1,4 +1,5 @@
 import type { PotentialBandId } from '@/lib/squad/potential';
+import type { CareerPhaseId } from '@/lib/squad/career-phase';
 import type { HubPhase } from '@/lib/hub/types';
 
 /** Thin A constants — implementation only (not GDD numbers). */
@@ -14,6 +15,9 @@ export type AcademyProspectDto = {
   readonly age: number;
   readonly potentialBand: PotentialBandId;
   readonly potentialLabel: string;
+  /** Derived Career Phase (D124) — same age path as seniors. */
+  readonly careerPhase: CareerPhaseId;
+  readonly careerPhaseLabel: string;
 };
 
 export type AcademyIntakeBlockedReason = 'not_season' | 'slots_full' | null;

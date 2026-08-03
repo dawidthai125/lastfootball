@@ -1,4 +1,6 @@
+import { resolveCareerPhase } from '@/lib/squad/career-phase';
 import { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
+import { allowGrowthImpulse } from '@/lib/squad/growth-gate';
 
 export type MatchDevPlayerSlice = {
   readonly id: string;
@@ -6,6 +8,8 @@ export type MatchDevPlayerSlice = {
   readonly skill: number;
   readonly potential: number;
   readonly starter: boolean;
+  /** Required for Career Phase / Growth Gate (LFE-CAREER-DECLINE-01). */
+  readonly age: number;
 };
 
 export type MatchDevResultSlice = {
@@ -21,16 +25,19 @@ export type MatchDevelopmentSummary = {
 
 /**
  * Primary growth path (GDD §7.12) — Thin.
- * Max +1 skill / player / match; K_MATCH players among starters; skill ≤ potential.
+ * Max +1 skill / player / match; K_MATCH among starters; skill ≤ potential;
+ * Growth Gate by Career Phase (decline/late soft coefficient).
  */
 export function applyMatchDevelopmentEffects(
   players: readonly MatchDevPlayerSlice[],
+  impulseKey = 'match',
 ): MatchDevResultSlice[] {
   const eligible = players
     .filter((p) => p.starter && p.skill < p.potential && p.skill < 99 && p.potential >= 1)
     .map((p) => p.id)
     .sort();
 
+  const byId = new Map(players.map((p) => [p.id, p]));
   const toBoost = new Set<string>();
   const step = 2;
   for (
@@ -39,7 +46,12 @@ export function applyMatchDevelopmentEffects(
     i += step
   ) {
     const id = eligible[i];
-    if (id) toBoost.add(id);
+    if (!id) continue;
+    const row = byId.get(id);
+    if (!row) continue;
+    const phase = resolveCareerPhase({ age: row.age });
+    if (!allowGrowthImpulse(id, impulseKey, phase)) continue;
+    toBoost.add(id);
   }
 
   return players.map((p) => {

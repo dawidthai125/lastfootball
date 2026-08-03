@@ -167,6 +167,9 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
         Potencjał <strong>{player.potentialLabel}</strong>
       </span>
       <span>
+        Kariera <strong>{player.careerPhaseLabel}</strong>
+      </span>
+      <span>
         Status <strong>{STATUS_LABEL[player.status]}</strong>
       </span>
     </div>

@@ -1,5 +1,6 @@
 import type { ClubDto } from '@/lib/club/types';
 import type { HubPhase } from '@/lib/hub/types';
+import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
 import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
 import { isAcademyProspect, type PlayerRowDto } from '@/lib/squad/types';
 import {
@@ -15,6 +16,7 @@ function displayPos(pos: string): string {
 }
 
 function toProspect(row: PlayerRowDto): AcademyProspectDto {
+  const careerPhase = resolveCareerPhase({ age: row.age });
   return {
     id: row.id,
     name: row.name,
@@ -22,6 +24,8 @@ function toProspect(row: PlayerRowDto): AcademyProspectDto {
     age: row.age,
     potentialBand: resolvePotentialBand(row.potential),
     potentialLabel: potentialBandLabel(row.potential),
+    careerPhase,
+    careerPhaseLabel: careerPhaseLabel({ age: row.age }),
   };
 }
 
