@@ -14,7 +14,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 | **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
 
 ```bash
-git log -1 --oneline                    # tip main (docs pin po CLOSE)
+git log -1 --oneline                    # tip main = c5c5866
+git log -1 --oneline c5c5866            # Documentation tip RATINGS-V2 CLOSE
 git log -1 --oneline 962f0a8            # Production Feature / Domain RATINGS-V2
 git log -1 --oneline ce00327            # Prior Domain PUBLIC-API-01
 git log -1 --oneline 54d0724            # Production Baseline UI P0
@@ -45,8 +46,8 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | URL                         | https://lastfootball.vercel.app                                                             |
 | Alias                       | https://lastfootball.pl                                                                     |
 | Branch                      | `main`                                                                                      |
-| **tip `main`**              | _(pin po DOCS CLOSE)_ · Domain feat `962f0a8`                                               |
-| **Documentation tip**       | _(pin po DOCS CLOSE)_ · LFE-RATINGS-V2 DOCS CLOSE                                           |
+| **tip `main`**              | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE (pin)                                             |
+| **Documentation tip**       | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE (pin)                                             |
 | **Production Feature**      | **`962f0a8`** — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)           |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                            |

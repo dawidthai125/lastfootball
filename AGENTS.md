@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · D1–D121
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · tip `c5c5866` · D1–D121
