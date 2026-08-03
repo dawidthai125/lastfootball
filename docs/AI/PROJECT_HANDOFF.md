@@ -20,7 +20,7 @@
 | **Domain feature baseline**     | `3c01baa` — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                                                                                                                            |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                                                |
 | **Documentation tip**           | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                                                                                                                                   |
-| **tip `main`**                  | **`8483d05`** — pin tip (Documentation tip = `8483d05`)                                                                                                                                           |
+| **tip `main`**                  | **`9ea2a78`** — pin tip (Documentation tip = `8483d05`)                                                                                                                                           |
 | **Branch**                      | `main`                                                                                                                                                                                               |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-CAREER-DECLINE-01 FULLY CLOSED** · D1–D124 · next **Owner GO → §22 / Youth Depth / Retirement / Prime**                                                      |
 
