@@ -20,7 +20,7 @@
 | **Domain feature baseline**     | `962f0a8` — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)                                                                                                     |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                             |
 | **Documentation tip**           | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE                                                                                                                                         |
-| **tip `main`**                  | **`ac32505`** — pin tip (Documentation tip = `c5c5866`)                                                                                                                           |
+| **tip `main`**                  | **`524e958`** — pin tip (Documentation tip = `c5c5866`)                                                                                                                           |
 | **Branch**                      | `main`                                                                                                                                                                            |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-RATINGS-V2 FULLY CLOSED** · D1–D121 · next **Owner GO → §22 push / `/advanced`**                                                           |
 
