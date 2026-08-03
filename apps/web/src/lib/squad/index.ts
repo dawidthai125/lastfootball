@@ -49,7 +49,8 @@ export {
   applyMatchDevelopmentEffects,
   summarizeMatchDevelopment,
 } from '@/lib/squad/match-development';
-export { applySeasonAgeEffects, onSeasonEnd } from '@/lib/squad/season-age';
+export { applySeasonAgeEffects } from '@/lib/squad/season-age';
+export type { SeasonAgePlayerSlice, SeasonAgeResultSlice } from '@/lib/squad/season-age';
 
 // Server I/O (listClubPlayers / loadClubStartingXi) — import from
 // `@/lib/squad/get-players` or `@/lib/squad/load-starting-xi` (not this barrel).

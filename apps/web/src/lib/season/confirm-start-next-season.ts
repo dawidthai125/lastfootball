@@ -12,7 +12,11 @@ import {
 } from '@/lib/league/league-tier';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import type { ConfirmStartNextSeasonState } from '@/lib/season/action-types';
-import { onSeasonEnd } from '@/lib/squad/season-age';
+import {
+  createHAgeSupabasePort,
+  revertSeasonTransitionHAge,
+  runSeasonTransitionHAge,
+} from '@/lib/season/transition';
 import { renewSponsorAndPayBase } from '@/lib/sponsors/actions';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -20,9 +24,10 @@ import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 /**
  * Confirm N+1 (D82 · D85) — sole path into Season N+1.
  * Sole league_tier mutation (D90): derive outcome → applyLeagueTierOutcome → persist.
- * H-SPONSORS (D98 · D101): flat renew (manual Accept or auto) → base payout once (Owner LOCK 2).
- * Clears slate → planClubFixtures reseed (D80) → season++ · in_season.
- * Hooks = no-op only for age (D83). AI catalog unchanged (D92).
+ * H-SPONSORS (D98 · D101): flat renew (manual Accept or auto) → base payout once.
+ * Clears slate → planClubFixtures reseed (D80) → H-AGE (LFE-AGE-01) → season++ · in_season.
+ * H-AGE = first Season Transition Pipeline step · sole age++ product path.
+ * AI catalog unchanged (D92).
  */
 export async function confirmStartNextSeason(
   _prev: ConfirmStartNextSeasonState,
@@ -117,6 +122,13 @@ export async function confirmStartNextSeason(
     return { error: 'Nie udało się zaplanować nowego sezonu.' };
   }
 
+  // H-AGE — Season Transition Pipeline step 1 (before in_season persist).
+  const hAgePort = createHAgeSupabasePort(supabase);
+  const hAge = await runSeasonTransitionHAge(clubId, hAgePort);
+  if (!hAge.ok) {
+    return { error: hAge.error };
+  }
+
   const { error: updErr } = await supabase
     .from('clubs')
     .update({
@@ -128,11 +140,9 @@ export async function confirmStartNextSeason(
     .eq('season_phase', 'offseason');
 
   if (updErr) {
+    await revertSeasonTransitionHAge(clubId, hAgePort, hAge.snapshot);
     return { error: 'Nie udało się otworzyć nowego sezonu.' };
   }
-
-  // H-AGE / Board — Thin no-op (D83).
-  onSeasonEnd(clubId);
 
   revalidatePath('/', 'layout');
   redirect('/hub');

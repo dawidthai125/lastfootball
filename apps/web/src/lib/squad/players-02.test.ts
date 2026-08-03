@@ -12,7 +12,7 @@ import {
   resolvePotentialBand,
   seedPotentialCeiling,
 } from '@/lib/squad/potential';
-import { applySeasonAgeEffects, onSeasonEnd } from '@/lib/squad/season-age';
+import { applySeasonAgeEffects } from '@/lib/squad/season-age';
 import { applyTrainingSessionEffects } from '@/lib/training/apply-effects';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 
@@ -114,26 +114,37 @@ describe('LFE-PLAYERS-02 training respects potential', () => {
   });
 });
 
-describe('LFE-PLAYERS-02 age hook only', () => {
-  it('applySeasonAgeEffects ages +1 and soft-regresses from 32', () => {
+describe('LFE-AGE-01 / PLAYERS-02 season age pure', () => {
+  it('applySeasonAgeEffects ages +1 and soft-regresses from AGE_REGRESS_FROM', () => {
     const out = applySeasonAgeEffects([
       { id: 'young', age: 20, skill: 70, potential: 90 },
-      { id: 'old', age: 32, skill: 80, potential: 85 },
+      { id: 'edge', age: DEVELOPMENT_THIN.AGE_REGRESS_FROM - 1, skill: 80, potential: 85 },
+      { id: 'old', age: DEVELOPMENT_THIN.AGE_REGRESS_FROM, skill: 80, potential: 85 },
     ]);
     expect(out.find((p) => p.id === 'young')).toEqual({
       id: 'young',
       age: 21,
       skill: 70,
     });
+    expect(out.find((p) => p.id === 'edge')).toEqual({
+      id: 'edge',
+      age: DEVELOPMENT_THIN.AGE_REGRESS_FROM,
+      skill: 79,
+    });
     expect(out.find((p) => p.id === 'old')).toEqual({
       id: 'old',
-      age: 33,
+      age: DEVELOPMENT_THIN.AGE_REGRESS_FROM + 1,
       skill: 79,
     });
   });
 
-  it('onSeasonEnd is a no-op hook', () => {
-    expect(() => onSeasonEnd('club-1')).not.toThrow();
+  it('caps age at 50 and never drops skill below 1', () => {
+    const out = applySeasonAgeEffects([
+      { id: 'cap', age: 50, skill: 40, potential: 50 },
+      { id: 'floor', age: 40, skill: 1, potential: 60 },
+    ]);
+    expect(out.find((p) => p.id === 'cap')).toEqual({ id: 'cap', age: 50, skill: 39 });
+    expect(out.find((p) => p.id === 'floor')).toEqual({ id: 'floor', age: 41, skill: 1 });
   });
 });
 

@@ -14,8 +14,9 @@ export type SeasonAgeResultSlice = {
 };
 
 /**
- * Pure season-end age tick (LFE-PLAYERS-02).
- * NOT wired to product IO — no auto age++ until real season-end exists.
+ * Pure season age tick (LFE-AGE-01 · REUSE PLAYERS-02).
+ * Sole rule SSOT for age++ / soft regress — Career Stages (Prime / Decline / …)
+ * must derive from `age` + `DEVELOPMENT_THIN.AGE_REGRESS_FROM`, not forked constants.
  */
 export function applySeasonAgeEffects(
   players: readonly SeasonAgePlayerSlice[],
@@ -26,17 +27,7 @@ export function applySeasonAgeEffects(
     if (age >= DEVELOPMENT_THIN.AGE_REGRESS_FROM && skill > 1) {
       skill = Math.max(1, Math.min(p.potential, skill - 1));
     }
-    // skill never exceeds potential
     skill = Math.min(skill, p.potential);
     return { id: p.id, age, skill };
   });
-}
-
-/**
- * Product hook — wired from Confirm N+1 (LFE-SEASON-END-01 · D83).
- * Thin no-op: does not mutate DB / age / economy until Owner EPIC.
- */
-export function onSeasonEnd(_clubId: string): void {
-  // Hook only — Owner lock: no automatic age++ in Thin.
-  void _clubId;
 }
