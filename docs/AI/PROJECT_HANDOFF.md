@@ -20,7 +20,7 @@
 | **Domain feature baseline**     | `6a54722` — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)                                                                                                       |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                             |
 | **Documentation tip**           | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                                                                                                                             |
-| **tip `main`**                  | **`fcd871d`** — pin tip (Documentation tip = `fcd871d`)                                                                                                                           |
+| **tip `main`**                  | **`c161f41`** — pin tip (Documentation tip = `fcd871d`)                                                                                                                           |
 | **Branch**                      | `main`                                                                                                                                                                            |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-AGE-01 FULLY CLOSED** · D1–D122 · next **Owner GO → League World / §22 / Career Decline**                                                  |
 
