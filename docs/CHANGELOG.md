@@ -11,7 +11,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Domain feature baseline:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Prior Domain:** **`6a54722`** (LFE-AGE-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+**Documentation tip:** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---

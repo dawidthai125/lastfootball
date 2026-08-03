@@ -19,8 +19,8 @@
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                                                |
 | **Domain feature baseline**     | `843bcfd` — **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · D123)                                                                                                            |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                                                |
-| **Documentation tip**           | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                                                                                                                      |
-| **tip `main`**                  | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                                                                                                                      |
+| **Documentation tip**           | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                                                                                                                       |
+| **tip `main`**                  | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                                                                                                                       |
 | **Branch**                      | `main`                                                                                                                                                                                               |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-LEAGUE-WORLD-02 FULLY CLOSED** · D1–D123 · next **Owner GO → §22 / Career Decline**                                                                           |
 

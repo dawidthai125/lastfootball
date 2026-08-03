@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · tip `DOCS_TIP` · D1–D123 · next Owner GO → §22 / Career Decline
+2026-08-03 — LFE-LEAGUE-WORLD-02 CLOSED · Domain `843bcfd` · tip `fbcf150` · D1–D123 · next Owner GO → §22 / Career Decline

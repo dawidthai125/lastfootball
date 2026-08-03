@@ -24,8 +24,8 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Domain feature**      | **`843bcfd`** — **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · D123) |
 | **Prior Domain**        | **`6a54722`** — LFE-AGE-01 (Season Age++ Thin · H-AGE · D122)                                 |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)                         |
-| **Documentation tip**   | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                               |
-| **tip `main`**          | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                               |
+| **Documentation tip**   | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                |
+| **tip `main`**          | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                |
 | **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                                |
 | **CI**                  | **GREEN**                                                                                     |
 | **Decisions**           | **D1–D123** (D123 Tier-aware Strength · D92 SUPERSEDED)                                       |

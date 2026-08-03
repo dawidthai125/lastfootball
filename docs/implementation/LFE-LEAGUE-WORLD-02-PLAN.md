@@ -6,7 +6,7 @@
 **Wejście:** AUDIT LFE-LEAGUE-WORLD-02 · Owner **GO → PLAN**  
 **Status PLAN:** FULLY CLOSED · feat `843bcfd` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE  
 **Baseline wejścia:** Domain `6a54722` (AGE-01 · D122) · Promotion `fa06c53` (D88–D94 · D92) · tip `89ec878` (docs) · D1–D122  
-**Baseline wyjścia:** Domain **`843bcfd`** · D1–**D123** · docs tip `DOCS_TIP`  
+**Baseline wyjścia:** Domain **`843bcfd`** · D1–**D123** · docs tip `fbcf150`  
 **SSOT wejścia:** AUDIT sesji · [`../game-design/GDD-PROMOTION-01.md`](../game-design/GDD-PROMOTION-01.md) · [`../platform/LEAGUE.md`](../platform/LEAGUE.md) · [`../DECISIONS.md`](../DECISIONS.md) D15/D17/D28/D88–D94 · `opponent-catalog.ts` · `plan-fixtures.ts` · `create-session.ts` · `seed-roster.ts`
 
 ---

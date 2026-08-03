@@ -47,8 +47,8 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | URL                         | https://lastfootball.vercel.app                                                              |
 | Alias                       | https://lastfootball.pl                                                                      |
 | Branch                      | `main`                                                                                       |
-| **tip `main`**              | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                              |
-| **Documentation tip**       | **`DOCS_TIP`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                              |
+| **tip `main`**              | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                               |
+| **Documentation tip**       | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                               |
 | **Production Feature**      | **`843bcfd`** — **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession)       |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                 |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                             |
