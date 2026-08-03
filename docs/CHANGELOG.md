@@ -11,7 +11,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Domain feature baseline:** **`3c01baa`** (LFE-CAREER-DECLINE-01).  
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
+**Documentation tip:** **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---

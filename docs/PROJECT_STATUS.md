@@ -24,8 +24,8 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Domain feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                 |
 | **Prior Domain**        | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (League Strength Profile · D123)                          |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)                         |
-| **Documentation tip**   | **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                             |
-| **tip `main`**          | **`DOCS_TIP`** — pin tip (Documentation tip = `DOCS_TIP`)                                     |
+| **Documentation tip**   | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                             |
+| **tip `main`**          | **`8483d05`** — pin tip (Documentation tip = `8483d05`)                                     |
 | **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                                |
 | **CI**                  | **GREEN**                                                                                     |
 | **Decisions**           | **D1–D124** (D124 Career Phase · D123 Strength · D122 H-AGE)                                  |

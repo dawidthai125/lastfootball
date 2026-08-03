@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · tip `DOCS_TIP` · docs tip `DOCS_TIP` · D1–D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime
+2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · tip `8483d05` · docs tip `8483d05` · D1–D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime

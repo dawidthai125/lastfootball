@@ -48,8 +48,8 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | URL                         | https://lastfootball.vercel.app                                                              |
 | Alias                       | https://lastfootball.pl                                                                      |
 | Branch                      | `main`                                                                                       |
-| **tip `main`**              | **`DOCS_TIP`** — pin tip (Documentation tip = `DOCS_TIP`)                                    |
-| **Documentation tip**       | **`DOCS_TIP`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                            |
+| **tip `main`**              | **`8483d05`** — pin tip (Documentation tip = `8483d05`)                                    |
+| **Documentation tip**       | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                            |
 | **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                 |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                             |
