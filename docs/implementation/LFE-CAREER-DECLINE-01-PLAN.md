@@ -365,8 +365,8 @@ E2E 10 sezonów · Retirement UI · minutes-based regress · Prime buff.
 
 ## 15. Milestones IMPLEMENT (po Owner GO)
 
-| M      | Zakres                                                                     | OUT          | Stan    |
-| ------ | -------------------------------------------------------------------------- | ------------ | ------- |
+| M      | Zakres                                                                     | OUT          | Stan     |
+| ------ | -------------------------------------------------------------------------- | ------------ | -------- |
 | **M1** | `resolveCareerPhase` + `DEVELOPMENT_THIN` progi + testy pure               | DB column    | **DONE** |
 | **M2** | `resolveGrowthCoefficient` + wire Match/Training gate + testy              | Hard ban (0) | **DONE** |
 | **M3** | Pasma regress w `applySeasonAgeEffects` (§6.1 lub waiver) + H-AGE regresja | Retirement   | **DONE** |
@@ -387,12 +387,12 @@ E2E 10 sezonów · Retirement UI · minutes-based regress · Prime buff.
 
 ## 17. Status — FULLY CLOSED
 
-|                          |                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| PLAN                     | **FULLY CLOSED** — `docs/implementation/LFE-CAREER-DECLINE-01-PLAN.md`          |
-| Domain feat              | **`3c01baa`**                                                                   |
-| Decision                 | **D124** CLOSED                                                                 |
-| CI / Production          | GREEN · VERIFIED                                                                |
-| Następny EPIC            | **Czekaj na Owner GO** — §22 / Youth Depth / Retirement / Prime                 |
+|                 |                                                                        |
+| --------------- | ---------------------------------------------------------------------- |
+| PLAN            | **FULLY CLOSED** — `docs/implementation/LFE-CAREER-DECLINE-01-PLAN.md` |
+| Domain feat     | **`3c01baa`**                                                          |
+| Decision        | **D124** CLOSED                                                        |
+| CI / Production | GREEN · VERIFIED                                                       |
+| Następny EPIC   | **Czekaj na Owner GO** — §22 / Youth Depth / Retirement / Prime        |
 
 **EPIC LFE-CAREER-DECLINE-01 = FULLY CLOSED.** Nie startować kolejnego EPIC bez Owner GO.

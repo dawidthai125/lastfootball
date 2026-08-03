@@ -46,14 +46,14 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## Career Decline Thin (LFE-CAREER-DECLINE-01)
 
-| Fakt          | Reguła                                                                                          |
-| ------------- | ----------------------------------------------------------------------------------------------- |
-| Phase SSOT    | `resolveCareerPhase(input)` — sole derive (D124); input rozszerzalny (`role`/`experience` reserved) |
-| Bands Thin    | youth ≤20 · rising 21–27 · prime 28–31 · decline 32–37 · late ≥38                               |
-| Growth        | Soft coefficient (decline 0.5 · late 0.25) — **nie** `coeff = 0`                                |
-| Roster scope  | Jedna ścieżka age dla senior **i** `academy_track`                                              |
-| OUT           | Retirement · Prime buff · Youth Depth · migracje · Match Engine                                 |
-| Migracja      | **brak**                                                                                        |
+| Fakt         | Reguła                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------- |
+| Phase SSOT   | `resolveCareerPhase(input)` — sole derive (D124); input rozszerzalny (`role`/`experience` reserved) |
+| Bands Thin   | youth ≤20 · rising 21–27 · prime 28–31 · decline 32–37 · late ≥38                                   |
+| Growth       | Soft coefficient (decline 0.5 · late 0.25) — **nie** `coeff = 0`                                    |
+| Roster scope | Jedna ścieżka age dla senior **i** `academy_track`                                                  |
+| OUT          | Retirement · Prime buff · Youth Depth · migracje · Match Engine                                     |
+| Migracja     | **brak**                                                                                            |
 
 ## Academy Thin A (LFE-ACADEMY-01)
 
