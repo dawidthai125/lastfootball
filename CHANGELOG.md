@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-RATINGS-V2 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · match stack · Domain tip `962f0a8` · next **Owner GO → §22 push / `/advanced`**
+- Kontrakt: assists / minutesPlayed Thin · Ratings formula v2 · bez PUBLIC surface / migracji · D119–D121 nienaruszone
+
+### Added (shipped on `main` — LFE-RATINGS-V2)
+
+- Player Match Data assists + minutesPlayed · Post Match ratings v2 · PLAN `LFE-RATINGS-V2-PLAN.md`
+
 ### Docs (LFE-PUBLIC-API-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · D119–D121 · Domain tip `ce00327` · next **Owner GO → Ratings v2**

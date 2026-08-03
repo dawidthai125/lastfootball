@@ -30,7 +30,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
 
 ## Następny EPIC (po Owner GO)
 
-`Ratings v2` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§13.
+§22 push/email lub `/advanced` — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§11.
 
 ## Twarde (skrót)
 
@@ -38,4 +38,4 @@ Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlemen
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327`
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8`

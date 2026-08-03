@@ -13,7 +13,7 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 | LiveMatchRuntime + Live Bridge | ✅ `main`       | + first-match session path            |
 | Canvas Renderer 2D             | ✅ `main`       |                                       |
 | Replay Buffer + Controller     | ✅ `main`       |                                       |
-| Post Match UI + Ratings        | ✅ `main`       |                                       |
+| Post Match UI + Ratings        | ✅ `main`       | Ratings v2 · assists / minutes        |
 | First Match entry              | ✅ LFE-MATCH-01 | `/match/first` · Club DTO             |
 | Return to Hub                  | ✅ LFE-HUB-01   | EARLY_CLUB after `completeFirstMatch` |
 
@@ -130,12 +130,13 @@ MatchCanvasReadModel = {
 
 - Spatial kickoff + presentation derive (nie pełna fizyka).
 - Replay tylko RAM.
-- Player Ratings = pure derive w Post Match (skala 1.0–10.0, XI obu drużyn, MVP); bez assists/minutes w formule v1.
+- Player Ratings = pure derive w Post Match (skala 1.0–10.0, XI obu drużyn, MVP).
+- **Ratings v2 (LFE-RATINGS-V2 · `962f0a8`):** formuła + DTO czyta `assists` / `minutesPlayed` z `statistics.players`; UI meta `G · A · min`; bez Physics / nowych PUBLIC exportów.
 
 ## Powiązania
 
-[`../ARCHITECTURE.md`](../ARCHITECTURE.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) · [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md) · [`../AI/START_HERE.md`](../AI/START_HERE.md)
+[`../ARCHITECTURE.md`](../ARCHITECTURE.md) · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) · [`../platform/FIRST_MATCH.md`](../platform/FIRST_MATCH.md) · [`../AI/START_HERE.md`](../AI/START_HERE.md) · PLAN [`../implementation/LFE-RATINGS-V2-PLAN.md`](../implementation/LFE-RATINGS-V2-PLAN.md)
 
 ## Last updated
 
-2026-07-24 — LFE-DOCS-01
+2026-08-03 — LFE-RATINGS-V2 DOCS CLOSE

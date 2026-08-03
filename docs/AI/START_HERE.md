@@ -65,7 +65,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 ```
 
 **Brak EPIC IN PROGRESS.** Oficjalna kolejka (po **Owner GO**, start od **AUDIT**):
-`TD-03+`.
+`§22 push/email` · `/advanced`.
 Szczegóły: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13 · [`../ROADMAP.md`](../ROADMAP.md).
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
@@ -104,4 +104,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) �
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 CLOSED · next Owner GO → Ratings v2
+2026-08-03 — LFE-RATINGS-V2 CLOSED · next Owner GO → §22 push / `/advanced`

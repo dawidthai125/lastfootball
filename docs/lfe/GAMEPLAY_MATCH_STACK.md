@@ -112,25 +112,29 @@ Jeden tick gry: zegar połowy, possession roll, resolve akcji, lifecycle half/en
 
 ---
 
-## 4. Player Match Data (LFE-PLAYER-MATCH-DATA-01)
+## 4. Player Match Data (LFE-PLAYER-MATCH-DATA-01 + LFE-RATINGS-V2)
 
 ### Odpowiedzialność
 
 - Inicjalizacja `MatchState.statistics.players` dla całego rosteru.
 - Deterministyczna atrybucja `playerId` (bez RNG) dla `GOAL` / `SHOT` / `FOUL`.
 - Bump `PlayerStatistics`: `goals`, `shots`, `foulsCommitted`.
+- **LFE-RATINGS-V2 (Thin IN):** bump `assists` (0|1 na gol, ≠ scorer) · `minutesPlayed` (XI + SUB · `displayMinute`).
 - `TeamStatistics` i drabina RNG — bez zmian.
+- Ratings UI = warstwa Web (pure derive) — nie Engine.
 
 ### Pliki
 
-- `packages/lfe/src/match/engine/attribute-player.ts`
-- `packages/lfe/src/match/engine/resolve.ts`
+- `packages/lfe/src/match/engine/attribute-player.ts` (+ `attributeAssistForGoal`)
+- `packages/lfe/src/match/engine/minutes-played.ts`
+- `packages/lfe/src/match/engine/resolve.ts` · `tick.ts`
 - `packages/lfe/src/match/domain/statistics.ts`
 - test: `player-match-data01.test.ts`
+- PLAN: [`../implementation/LFE-RATINGS-V2-PLAN.md`](../implementation/LFE-RATINGS-V2-PLAN.md)
 
-### Poza zakresem
+### Poza zakresem (nadal OUT)
 
-Assists, minutesPlayed, Ratings, UI.
+passes / tackles / cards bump · Physics · xG/xA · nowe PUBLIC exporty · migracje.
 
 ---
 
@@ -146,7 +150,7 @@ Nadal stub: `physics`, `rules`, `ecs`.
 - Nie obchodzić AI „na sztywno” w Engine bez EPIC.
 - Nie wołać `simulateMatchTick` z React — tylko przez session/simulation.
 - Nie traktować spatial kickoff jako pełnej fizyki.
-- Nie dodawać `rng.next()` w atrybucji zawodnika.
+- Nie dodawać `rng.next()` w atrybucji zawodnika / asysty.
 
 ## Powiązania
 
@@ -154,4 +158,4 @@ Nadal stub: `physics`, `rules`, `ecs`.
 
 ## Last updated
 
-2026-07-24 — LFE-PLAYER-MATCH-DATA-01
+2026-08-03 — LFE-RATINGS-V2 · assists / minutesPlayed Thin IN · feat `962f0a8`

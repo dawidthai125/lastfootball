@@ -12,7 +12,9 @@ Szybki skrót warstw API. **Pełny kontrakt freeze:** [LFE_ARCHITECTURE_FREEZE.m
 - Entry: `@lastfootball/lfe` → `src/index.ts` (PUBLIC).
 - Testing: `@lastfootball/lfe/testing` → `src/testing.ts` (**barrel only**).
 - `/advanced` — **nie** zaimplementowane (defer).
-- Feat CLOSE: **`ce00327`** · D119–D121.
+- Feat CLOSE PUBLIC: **`ce00327`** · D119–D121.
+- Domain feat Ratings: **`962f0a8`** (LFE-RATINGS-V2) — **bez** zmiany PUBLIC surface.
+- **NEXT EPIC:** §22 push/email · `/advanced` (nie LFE surface)
 
 ## Opis działania
 
@@ -74,4 +76,4 @@ Canvas / Replay / LiveMatchRuntime / Post Match → [`../web/MATCH_UI_PIPELINE.m
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · root PUBLIC only · `/testing` T2
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · PUBLIC surface nienaruszony (D119–D121)

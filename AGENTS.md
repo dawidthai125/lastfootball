@@ -51,9 +51,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** `Ratings v2` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **Następny EPIC (po Owner GO):** §22 push/email lub `/advanced` — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - Decyzje **D1–D121:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327` · D1–D121
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · D1–D121

@@ -25,7 +25,8 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **Czekaj na Owner GO** (nie startować AUDIT bez GO). Kandydaci poza scope: Settings/§22 · Season End · TD-03 P2.
+Brak otwartego EPIC. **LFE-RATINGS-V2 CLOSED** (`962f0a8`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
+Kandydaci PLANNED: §22 push/email · `/advanced`.
 
 ## Powiązania
 
@@ -33,4 +34,4 @@ Brak otwartego EPIC. **Czekaj na Owner GO** (nie startować AUDIT bez GO). Kandy
 
 ## Last updated
 
-2026-07-30 — LFE-CLUB-01 · D47–D51 CLOSED
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8`

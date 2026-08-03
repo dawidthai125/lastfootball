@@ -8,12 +8,25 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`ce00327`** (LFE-PUBLIC-API-01).
-**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).
-**Documentation tip:** **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin)
+**Domain feature baseline:** **`962f0a8`** (LFE-RATINGS-V2).  
+**Prior Domain:** **`ce00327`** (LFE-PUBLIC-API-01).  
+**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
+**Documentation tip:** _(pin po CLOSE)_ · Domain feat `962f0a8`  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-08-03] — LFE-RATINGS-V2 · CLOSED
+
+### Product
+
+- LFE internal: deterministyczne `assists` (0|1 / gol) · `minutesPlayed` (XI + SUB · displayMinute).
+- Web: `computePlayerRatings` v2 · `PlayerRatingView` · Post Match meta `G · A · min`.
+- Domain tip → **`962f0a8`** · D119–D121 **nienaruszone** · CI GREEN · PRODUCTION VERIFIED (brak migracji · brak nowych PUBLIC exportów).
+
+### Docs
+
+- Sync SSOT RATINGS-V2 CLOSE · HANDOFF · baseline · status · roadmap · stack match · next **Owner GO → §22 push / `/advanced`**.
 
 ## [2026-07-31] — LFE-PUBLIC-API-01 · CLOSED
 

@@ -13,10 +13,11 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                          |
 | ------------------- | -------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`ce00327`** — LFE-PUBLIC-API-01 (PUBLIC · D119–D121)   |
+| Domain baseline     | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutes)       |
+| Prior Domain        | **`ce00327`** — LFE-PUBLIC-API-01 (PUBLIC · D119–D121)   |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin)       |
-| tip `main`          | po pin CLOSE `7485366`                                   |
+| Documentation tip   | _(pin po CLOSE)_ · Domain feat `962f0a8`                 |
+| tip `main`          | _(pin po CLOSE)_ · Domain feat `962f0a8`                 |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
@@ -30,8 +31,8 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** `Ratings v2` (alternatywa: §22 push/email).
-Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §12–§13.
+**Następny EPIC (kolejka Ownera):** §22 push/email lub `/advanced`.
+Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13.
 
 ## Twarde zasady
 
@@ -54,4 +55,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 CLOSED · Domain `ce00327` · next Owner GO → Ratings v2
+**ACTIVE** · 2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`

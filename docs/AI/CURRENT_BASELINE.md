@@ -14,9 +14,10 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 | **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
 
 ```bash
-git log -1 --oneline                    # tip (może być docs)
+git log -1 --oneline                    # tip main (docs pin po CLOSE)
+git log -1 --oneline 962f0a8            # Production Feature / Domain RATINGS-V2
+git log -1 --oneline ce00327            # Prior Domain PUBLIC-API-01
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline ce00327            # Domain feature baseline PUBLIC-API-01
 git log -1 --oneline 9424dd8            # Prior Domain TRANSFERS-10
 git log -1 --oneline 82a164d            # Prior Domain STADIUM-01
 git log -1 --oneline 75c190d            # Prior Domain BOARD-01
@@ -39,21 +40,26 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 
 ## Production
 
-| Pole                        | Wartość                                                                            |
-| --------------------------- | ---------------------------------------------------------------------------------- |
-| URL                         | https://lastfootball.vercel.app                                                    |
-| Alias                       | https://lastfootball.pl                                                            |
-| Branch                      | `main`                                                                             |
-| **Production Baseline**     | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                       |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                   |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                     |
-| **Domain feature baseline** | `ce00327` — **LFE-PUBLIC-API-01** (root PUBLIC · `/testing` · D119–D121)           |
-| Domain message              | `feat(lfe): narrow PUBLIC root surface and add testing barrel (LFE-PUBLIC-API-01)` |
-| Prior Domain                | `9424dd8` — LFE-TRANSFERS-10                                                       |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)              |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                    |
-| **Documentation tip**       | **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin)                                 |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · PUBLIC-API-01 CLOSED · Domain tip `ce00327`   |
+| Pole                        | Wartość                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                                             |
+| Alias                       | https://lastfootball.pl                                                                     |
+| Branch                      | `main`                                                                                      |
+| **tip `main`**              | _(pin po DOCS CLOSE)_ · Domain feat `962f0a8`                                               |
+| **Documentation tip**       | _(pin po DOCS CLOSE)_ · LFE-RATINGS-V2 DOCS CLOSE                                           |
+| **Production Feature**      | **`962f0a8`** — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)           |
+| Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                            |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                              |
+| Domain message              | `feat(match): add assists and minutes to Player Match Data and Ratings v2 (LFE-RATINGS-V2)` |
+| Prior Domain                | `ce00327` — LFE-PUBLIC-API-01                                                               |
+| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                       |
+| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                             |
+| CI                          | **GREEN**                                                                                   |
+| Production                  | **VERIFIED**                                                                                |
+| Decisions                   | **D1–D121** (bez nowych D\* w Ratings v2)                                                   |
+| **NEXT EPIC**               | **§22 push/email** lub **`/advanced`** (czekaj na Owner GO · start AUDIT)                   |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-RATINGS-V2 CLOSED · Domain `962f0a8`               |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -103,6 +109,8 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Transfer displayPos | `lib/transfers/display-pos.ts` (sole · D117)                                                   |
 | Transfer actions    | `actions.ts` barrel → `actions-*.ts` (D116) · no Dispatcher (D118)                             |
 | LFE PUBLIC surface  | `@lastfootball/lfe` = Freeze PUBLIC only · allowlist + gate · `/testing` barrel (D119–D121)    |
+| Player Match Data   | `statistics.players` · goals/shots/fouls · **assists/minutesPlayed** Thin (LFE-RATINGS-V2)     |
+| Post Match Ratings  | `computePlayerRatings` · `PlayerRatingView` · PostMatchView (assists/minutes in formula + UI)  |
 | Settlement buy      | `completeTransferBuy` (seed \| live)                                                           |
 | Settlement sell     | `completeTransferSell` (instant \| live)                                                       |
 | Training UI         | `resolveClubTraining`                                                                          |
@@ -168,10 +176,10 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01) · **`club_sponsor_contracts` + kategorie `sponsor_base`/`sponsor_bonus`** (`20260731140000_sponsors_thin.sql` · LFE-SPONSORS-01).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01 / LFE-STADIUM-01 / LFE-TRANSFERS-10 / LFE-PUBLIC-API-01:** brak nowych migracji schematu tabel (MESSAGES/BOARD/STADIUM = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only; TRANSFERS-10 = org refactor only; PUBLIC-API-01 = package surface only).
+> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01 / LFE-STADIUM-01 / LFE-TRANSFERS-10 / LFE-PUBLIC-API-01 / LFE-RATINGS-V2:** brak nowych migracji schematu tabel (MESSAGES/BOARD/STADIUM = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only; TRANSFERS-10 = org refactor only; PUBLIC-API-01 = package surface only; RATINGS-V2 = engine fill + web derive).
 
 ## Not on production
 
 AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · Stadium Ticket Economy / rozbudowa · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist · `@lastfootball/lfe/advanced`.
 
-2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · Domain tip `ce00327` · next Owner GO → Ratings v2
+2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`

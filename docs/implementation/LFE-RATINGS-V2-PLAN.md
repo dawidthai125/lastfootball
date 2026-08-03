@@ -4,8 +4,8 @@
 **Typ:** Thin engine fill + Post Match derive / presentation  
 **Data:** 2026-08-03  
 **Wejście:** AUDIT COMPLETE · Owner **GO PLAN**  
-**Status PLAN:** IMPLEMENT COMPLETE · czekaj na **Owner GO COMMIT**  
-**Baseline wejścia:** tip `5ffc9d1` · Domain `ce00327` · Docs tip `7485366` · D1–D121  
+**Status PLAN:** FULLY CLOSED · feat `962f0a8` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE  
+**Baseline wejścia:** tip (pre) `5ffc9d1` · Domain feat `962f0a8` · Prior Domain `ce00327` · D1–D121  
 **SSOT wejścia:** AUDIT Ratings v2 (sesja) · [`../ROADMAP.md`](../ROADMAP.md) · Handoff §11 · [`../lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) · [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)
 
 ---
@@ -248,30 +248,30 @@ readonly minutesPlayed: number;
 
 ## 10. Checklist VERIFY (po IMPLEMENT · przed COMMIT)
 
-- [ ] AC §4 asysty spełnione (L1–L3)
-- [ ] AC §5 minutes spełnione (L4–L5)
-- [ ] Formuła / DTO / UI Thin (W1–W6)
-- [ ] `git diff` — **brak** zmian `public-allowlist.ts` / nowych root exportów
-- [ ] `git diff` — **brak** `supabase/migrations/**`
-- [ ] format · typecheck · lint · test · build PASS (lokalnie)
-- [ ] Brak importu `@lastfootball/lfe/testing` w `apps/web`
-- [ ] Canvas / Replay / Live Bridge — bez zbędnego diffu API
-- [ ] Soft-lock / transfers / season — nietknięte
+- [x] AC §4 asysty spełnione (L1–L3)
+- [x] AC §5 minutes spełnione (L4–L5)
+- [x] Formuła / DTO / UI Thin (W1–W6)
+- [x] `git diff` — **brak** zmian `public-allowlist.ts` / nowych root exportów
+- [x] `git diff` — **brak** `supabase/migrations/**`
+- [x] format · typecheck · lint · test · build PASS (lokalnie)
+- [x] Brak importu `@lastfootball/lfe/testing` w `apps/web`
+- [x] Canvas / Replay / Live Bridge — bez zbędnego diffu API
+- [x] Soft-lock / transfers / season — nietknięte
 
 ---
 
 ## 11. Checklist DOCS CLOSE (po PRODUCTION VERIFY · Owner GO docs)
 
-- [ ] [`docs/lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) — Player Match Data: assists/minutes **IN** Thin
-- [ ] [`docs/web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) — Ratings v2 (assists/minutes)
-- [ ] [`docs/lfe/CURRENT_STATUS.md`](../lfe/CURRENT_STATUS.md) — Ratings v2 DONE / next
-- [ ] [`docs/ROADMAP.md`](../ROADMAP.md) — Ratings v2 → DONE; odśwież NEXT
-- [ ] [`docs/PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`docs/AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md) — tip / domain feat
-- [ ] [`docs/AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md) §1 / §11 — sync
-- [ ] [`docs/CHANGELOG.md`](../CHANGELOG.md) · root `CHANGELOG.md` — wpis EPIC
-- [ ] [`docs/lfe/PUBLIC_API.md`](../lfe/PUBLIC_API.md) — tylko status NEXT (bez claimu nowego surface)
-- [ ] **Potwierdź ponownie:** D119–D121 bez zmian · brak nowej D\* o ile Owner nie zdecyduje inaczej
-- [ ] FINAL DOCS VERIFY · EPIC FULLY CLOSED
+- [x] [`docs/lfe/GAMEPLAY_MATCH_STACK.md`](../lfe/GAMEPLAY_MATCH_STACK.md) — Player Match Data: assists/minutes **IN** Thin
+- [x] [`docs/web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md) — Ratings v2 (assists/minutes)
+- [x] [`docs/lfe/CURRENT_STATUS.md`](../lfe/CURRENT_STATUS.md) — Ratings v2 DONE / next
+- [x] [`docs/ROADMAP.md`](../ROADMAP.md) — Ratings v2 → DONE; odśwież NEXT
+- [x] [`docs/PROJECT_STATUS.md`](../PROJECT_STATUS.md) · [`docs/AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md) — tip / domain feat
+- [x] [`docs/AI/PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md) §1 / §11 — sync
+- [x] [`docs/CHANGELOG.md`](../CHANGELOG.md) · root `CHANGELOG.md` — wpis EPIC
+- [x] [`docs/lfe/PUBLIC_API.md`](../lfe/PUBLIC_API.md) — tylko status NEXT (bez claimu nowego surface)
+- [x] **Potwierdź ponownie:** D119–D121 bez zmian · brak nowej D\* o ile Owner nie zdecyduje inaczej
+- [x] FINAL DOCS VERIFY · EPIC FULLY CLOSED
 
 ---
 
@@ -300,4 +300,4 @@ readonly minutesPlayed: number;
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 IMPLEMENT COMPLETE · VERIFY PASS · czekaj na **GO COMMIT**
+2026-08-03 — LFE-RATINGS-V2 FULLY CLOSED · feat `962f0a8` · DOCS CLOSE · D119–D121 nienaruszone

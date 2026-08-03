@@ -104,9 +104,9 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Ratings v2 (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** §22 push/email · `/advanced` (po Owner GO).
 
-**Alternatywy:** §22 push/email · `/advanced`.
+**Alternatywy FUTURE:** Physics · multi-tier AI.
 
 ## Naming
 
@@ -117,4 +117,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Ratings v2 (po O
 
 ## Status
 
-**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 CLOSED · next Owner GO → Ratings v2
+**ACTIVE** · 2026-08-03 — LFE-RATINGS-V2 CLOSED · next Owner GO → §22 push / `/advanced`

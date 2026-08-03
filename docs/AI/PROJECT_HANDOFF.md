@@ -13,25 +13,26 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                                                  |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC surface** + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                    |
-| **Domain feature baseline**     | `ce00327` — **LFE-PUBLIC-API-01** (root PUBLIC · `/testing` · D119–D121)                                                                                                 |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                    |
-| **Documentation tip**           | **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin)                                                                                                                       |
-| **tip `main`**                  | after PUBLIC-API-01 CLOSE pin `7485366`                                                                                                                                  |
-| **Branch**                      | `main`                                                                                                                                                                   |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-PUBLIC-API-01 FULLY CLOSED** · D1–D121 · next **Owner GO → Ratings v2**                                                           |
+| Pole                            | Wartość                                                                                                                                                                           |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC** + **Ratings v2** + GDD-16…**22** + MOTION-01 |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                             |
+| **Domain feature baseline**     | `962f0a8` — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)                                                                                                     |
+| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                             |
+| **Documentation tip**           | _(pin po DOCS CLOSE)_ · LFE-RATINGS-V2 CLOSE                                                                                                                                      |
+| **tip `main`**                  | _(pin po DOCS CLOSE)_ · Domain feat `962f0a8`                                                                                                                                     |
+| **Branch**                      | `main`                                                                                                                                                                            |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-RATINGS-V2 FULLY CLOSED** · D1–D121 · next **Owner GO → §22 push / `/advanced`**                                                           |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
 | **CI Status** | GREEN wymagane na tip `main` (Format · Typecheck · Lint · Test · Build) |
 
 ```bash
-git log -1 --oneline                    # tip (docs / presentation)
+git log -1 --oneline                    # tip (docs pin)
+git log -1 --oneline 962f0a8            # Domain RATINGS-V2
 git log -1 --oneline 54d0724            # Production Baseline UI P0
-git log -1 --oneline ce00327            # Domain PUBLIC-API-01
+git log -1 --oneline ce00327            # Prior Domain PUBLIC-API-01
 git log -1 --oneline 9424dd8            # Prior Domain TRANSFERS-10
 git log -1 --oneline 82a164d            # Prior Domain STADIUM-01
 git log -1 --oneline 75c190d            # Prior Domain BOARD-01
@@ -260,7 +261,7 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 - Hub EARLY_CLUB / SEASON / **OFFSEASON** · Primary CTA · SoftLockRouteGate
 - Liga **22** · tabela derive · Terminarz · Season End Thin · Promotion Thin · Sponsors Thin · Board Thin · **Stadium Thin**
 - Finanse · Kadra · Transfery 01–**10** · Trening Depth · Akademia · Skauting · Daily · Achievements · Ranking · Messages · Club profile
-- Match Live + Canvas + Replay · Post · match development PRIMARY
+- Match Live + Canvas + Replay · Post · **Ratings v2** · match development PRIMARY
 
 ### Co jest Thin (świadome limity)
 
@@ -268,7 +269,7 @@ kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · P
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** — oficjalna kolejka domain (Promotion→…→Stadium) **wyczerpana**; **TD-03+ / LFE-TRANSFERS-10 CLOSED**; **LFE-PUBLIC-API-01 CLOSED**. Rekomendacja ROADMAP: **Ratings v2** (patrz §10).
+**Czekaj na Owner GO** — kolejka soft-lock + TD-03+ + PUBLIC + **Ratings v2** = **CLOSED**. Rekomendacja ROADMAP: **§22 push/email** lub **`/advanced`** (patrz §10).
 
 ---
 
@@ -317,23 +318,24 @@ Access SSOT: `resolveNavAccess` / `isModuleSoftLocked` · gate: `SoftLockRouteGa
 
 ---
 
-## 10. Roadmapa oficjalna (kolejność Ownera · 2026-07-31)
+## 10. Roadmapa oficjalna (kolejność Ownera · 2026-08-03)
 
 Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDIT).
 
-Oficjalna kolejka domain **Promotion → Sponsors → Board → Stadium** = **CLOSED / wyczerpana**.  
-**TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).  
-**LFE-PUBLIC-API-01** = **CLOSED** (`ce00327` · D119–D121).
+**LFE-RATINGS-V2** = **CLOSED** (`962f0a8`).  
+**LFE-PUBLIC-API-01** = **CLOSED** (`ce00327` · D119–D121).  
+**TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).
 
 ```
-Ratings v2
+§22 push/email  ·  /advanced
 ```
 
-| #   | EPIC           | Notatka                              |
-| --- | -------------- | ------------------------------------ |
-| 1   | **Ratings v2** | bogatsze Player Match Data (assists) |
+| #   | EPIC                            | Notatka          |
+| --- | ------------------------------- | ---------------- |
+| 1   | Kanał push / email (§22 Future) | osobny Owner GO  |
+| 2   | LFE `/advanced`                 | Owner GO · defer |
 
-**Alternatywy PLANNED:** §22 push/email · `/advanced` LFE · multi-tier AI (poza D92).
+**Alternatywy FUTURE:** Physics · multi-tier AI · Ticket Economy.
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -341,11 +343,11 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO → `Ratings v2`**
+### **Czekaj na Owner GO → §22 push/email lub `/advanced`**
 
-**Uzasadnienie:** LFE-PUBLIC-API-01 CLOSED · D119–D121 · Domain `ce00327`. ROADMAP PLANNED: następny wpis = Ratings v2.
+**Uzasadnienie:** LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · D119–D121 nienaruszone. ROADMAP PLANNED: §22 · `/advanced`.
 
-**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · drugi planner terminarza · age++ / Ticket Economy / Stadium expand bez EPIC · multi-tier AI bez EPIC · druga ścieżka settle · `/advanced` bez EPIC.
+**Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · Physics „przy okazji” · druga ścieżka settle · import `/testing` w web.
 
 **Nie zaczynaj** kolejnego EPIC bez **Owner GO**.
 
@@ -407,7 +409,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH
 
 ### Czego nie implementować bez Owner GO
 
-- Żadnego nowego EPICu (Ratings / §22 / `/advanced`) bez Owner GO.
+- Żadnego nowego EPICu (§22 / `/advanced` / Physics) bez Owner GO.
 - age++ · Ticket Economy · Stadium expand · Prestige/Quest · multi-tier AI catalogs.
 - Drugiego `planClubFixtures` / standings DB / Fake Production.
 - Commitów i pushy „przy okazji”.
@@ -512,4 +514,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · Domain `ce00327` · next Owner GO → Ratings v2
+2026-08-03 — LFE-RATINGS-V2 FULLY CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`
