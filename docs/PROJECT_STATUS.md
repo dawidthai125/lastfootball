@@ -24,8 +24,8 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Domain feature**      | **`962f0a8`** — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2) |
 | **Prior Domain**        | **`ce00327`** — LFE-PUBLIC-API-01 (root PUBLIC · `/testing` · D119–D121)          |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)             |
-| **Documentation tip**   | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE (pin)                                   |
-| **tip `main`**          | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE (pin)                                   |
+| **Documentation tip**   | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE                                         |
+| **tip `main`**          | **`ac32505`** — pin tip (Documentation tip = `c5c5866`)                           |
 | **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                    |
 | **CI**                  | **GREEN**                                                                         |
 | **Decisions**           | **D1–D121** (bez nowych D\* w Ratings v2)                                         |

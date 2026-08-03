@@ -11,7 +11,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Domain feature baseline:** **`962f0a8`** (LFE-RATINGS-V2).  
 **Prior Domain:** **`ce00327`** (LFE-PUBLIC-API-01).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE (pin)  
+**Documentation tip:** **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
