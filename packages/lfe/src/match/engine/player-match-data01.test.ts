@@ -8,7 +8,7 @@ import {
   createPlayer,
   createSubstitutePlayerCommand,
 } from '../../testing';
-import { attributePlayerForEvent } from './attribute-player';
+import { attributeAssistForGoal, attributePlayerForEvent } from './attribute-player';
 
 function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
   const homeIds = Array.from({ length: 11 }, (_, i) => `h${i}`);
@@ -74,7 +74,12 @@ function playerRow(session: ReturnType<typeof makeSession>, playerId: string) {
   return session.getMatchState().statistics.players.find((p) => p.playerId === playerId);
 }
 
-describe('LFE-PLAYER-MATCH-DATA-01', () => {
+function runToFinished(session: ReturnType<typeof makeSession>, steps = 5_000) {
+  openPlay(session);
+  session.run(steps);
+}
+
+describe('LFE-PLAYER-MATCH-DATA-01 / LFE-RATINGS-V2', () => {
   it('T1: createMatch initializes statistics.players for full roster', () => {
     const s = makeSession();
     const state = s.getMatchState();
@@ -101,7 +106,6 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     expect(a).toBeDefined();
     expect(a).toBe(b);
     expect(c).toBeDefined();
-    // different tick may differ; still always from home lineup
     expect(state.homeLineup.slots.some((slot) => slot.playerId === a)).toBe(true);
     expect(state.homeLineup.slots.some((slot) => slot.playerId === c)).toBe(true);
   });
@@ -116,6 +120,7 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     expect(a.getMatchState().score).toEqual(b.getMatchState().score);
     expect(a.getMatchState().statistics.home).toEqual(b.getMatchState().statistics.home);
     expect(a.getMatchState().statistics.away).toEqual(b.getMatchState().statistics.away);
+    expect(a.getMatchState().statistics.players).toEqual(b.getMatchState().statistics.players);
     expect(
       a
         .context()
@@ -151,11 +156,19 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     }
 
     for (const e of goals) {
-      const payload = e.payload as { side: 'home' | 'away'; playerId?: string };
+      const payload = e.payload as {
+        side: 'home' | 'away';
+        playerId?: string;
+        assistPlayerId?: string;
+      };
       expect(payload.playerId).toBeDefined();
       const row = playerRow(s, payload.playerId!);
       expect(row!.goals).toBeGreaterThan(0);
       expect(row!.side).toBe(payload.side);
+      if (payload.assistPlayerId !== undefined) {
+        expect(payload.assistPlayerId).not.toBe(payload.playerId);
+        expect(playerRow(s, payload.assistPlayerId)!.assists).toBeGreaterThan(0);
+      }
     }
 
     for (const e of fouls) {
@@ -167,7 +180,6 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
       expect(row!.side).toBe(payload.against === 'home' ? 'away' : 'home');
     }
 
-    // Same tick ladder: SHOT then GOAL share playerId when both present consecutively for side
     for (let i = 0; i < hist.length - 1; i++) {
       if (hist[i]!.type === 'SHOT' && hist[i + 1]!.type === 'GOAL') {
         const shotP = (hist[i]!.payload as { playerId?: string }).playerId;
@@ -211,29 +223,127 @@ describe('LFE-PLAYER-MATCH-DATA-01', () => {
     s.step();
 
     expect(s.getMatchState().homeLineup.slots.some((x) => x.playerId === 'h-bench')).toBe(true);
-    // Prior goal counters unchanged for all rows that had goals
     for (const g of goalsBefore) {
       expect(playerRow(s, g.id)!.goals).toBe(g.goals);
     }
 
     s.run(400);
-    // Bench player now on pitch may receive events; roster row still exists
     expect(playerRow(s, 'h-bench')).toBeDefined();
     expect(playerRow(s, outId)).toBeDefined();
   });
 
-  it('T10: OUT fields stay zero after play', () => {
+  it('L1–L2: GOAL bumps scorer goals and assist on a different XI player', () => {
+    const s = makeSession(12_000, 100);
+    openPlay(s);
+    s.run(800);
+
+    const goals = s
+      .context()
+      .events.history()
+      .filter((e) => e.type === 'GOAL');
+    expect(goals.length).toBeGreaterThan(0);
+
+    for (const e of goals) {
+      const payload = e.payload as {
+        playerId?: string;
+        assistPlayerId?: string;
+        side: 'home' | 'away';
+      };
+      expect(payload.playerId).toBeDefined();
+      if (payload.assistPlayerId !== undefined) {
+        expect(payload.assistPlayerId).not.toBe(payload.playerId);
+        expect(s.getMatchState().players.some((p) => p.id === payload.assistPlayerId)).toBe(true);
+      }
+    }
+
+    const totalAssists = s.getMatchState().statistics.players.reduce((n, p) => n + p.assists, 0);
+    const goalsWithAssist = goals.filter(
+      (e) => (e.payload as { assistPlayerId?: string }).assistPlayerId !== undefined,
+    ).length;
+    expect(totalAssists).toBe(goalsWithAssist);
+  });
+
+  it('L2b: attributeAssistForGoal never returns scorer; undefined when XI size 1', () => {
+    const s = makeSession();
+    openPlay(s);
+    const state = s.getMatchState();
+    const scorer = state.homeLineup.slots[0]!.playerId;
+    const assist = attributeAssistForGoal(state, 'home', scorer, 10);
+    expect(assist).toBeDefined();
+    expect(assist).not.toBe(scorer);
+
+    const solo = {
+      ...state,
+      homeLineup: {
+        ...state.homeLineup,
+        slots: Object.freeze([state.homeLineup.slots[0]!]),
+      },
+    };
+    expect(attributeAssistForGoal(solo, 'home', scorer, 10)).toBeUndefined();
+  });
+
+  it('L3: assists are deterministic across identical seeds', () => {
+    const a = makeSession(6_000, 100);
+    const b = makeSession(6_000, 100);
+    openPlay(a);
+    openPlay(b);
+    a.run(300);
+    b.run(300);
+    const assistsA = a.getMatchState().statistics.players.map((p) => p.assists);
+    const assistsB = b.getMatchState().statistics.players.map((p) => p.assists);
+    expect(assistsA).toEqual(assistsB);
+  });
+
+  it('L4: after MATCH_END starters have minutesPlayed > 0; unused bench stays 0', () => {
+    const s = makeSession(2_000, 100);
+    runToFinished(s, 8_000);
+    const state = s.getMatchState();
+    expect(state.phase === 'FINISHED' || state.phase === 'FULL_TIME').toBe(true);
+
+    for (const slot of [...state.homeLineup.slots, ...state.awayLineup.slots]) {
+      expect(playerRow(s, slot.playerId)!.minutesPlayed).toBeGreaterThan(0);
+    }
+    expect(playerRow(s, 'h-bench')!.minutesPlayed).toBe(0);
+  });
+
+  it('L5: SUB freezes out minutes; in can grow after further play', () => {
+    const s = makeSession(4_000, 80);
+    openPlay(s);
+    s.run(120);
+
+    const outId = s.getMatchState().homeLineup.slots[10]!.playerId;
+    s.dispatch(
+      createSubstitutePlayerCommand({
+        tick: s.context().tick,
+        source: 'user',
+        side: 'home',
+        playerOutId: outId,
+        playerInId: 'h-bench',
+      }),
+    );
+    s.step();
+
+    const outMinutesAtSub = playerRow(s, outId)!.minutesPlayed;
+    const inMinutesAtSub = playerRow(s, 'h-bench')!.minutesPlayed;
+    expect(outMinutesAtSub).toBeGreaterThan(0);
+    expect(inMinutesAtSub).toBe(0);
+
+    s.run(8_000);
+
+    expect(playerRow(s, outId)!.minutesPlayed).toBe(outMinutesAtSub);
+    expect(playerRow(s, 'h-bench')!.minutesPlayed).toBeGreaterThan(inMinutesAtSub);
+  });
+
+  it('L6: OUT fields (passes/tackles/cards) stay zero after play', () => {
     const s = makeSession(5_000, 100);
     openPlay(s);
     s.run(200);
     for (const row of s.getMatchState().statistics.players) {
-      expect(row.assists).toBe(0);
       expect(row.passesAttempted).toBe(0);
       expect(row.passesCompleted).toBe(0);
       expect(row.tackles).toBe(0);
       expect(row.yellowCards).toBe(0);
       expect(row.redCards).toBe(0);
-      expect(row.minutesPlayed).toBe(0);
     }
   });
 });

@@ -1,5 +1,6 @@
 import type { MatchState } from '../../match/domain';
 import { createMatchTactics } from '../../match/domain';
+import { reconcileMinutesPlayed } from '../../match/engine/minutes-played';
 import type { CommandHandler, CommandValidator, ValidationError } from '../types';
 
 import type {
@@ -219,7 +220,7 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
       playerIds: Object.freeze(nextBenchIds),
     });
 
-    const next: MatchState = Object.freeze({
+    const nextRaw: MatchState = Object.freeze({
       ...state,
       homeLineup: side === 'home' ? nextLineup : state.homeLineup,
       awayLineup: side === 'away' ? nextLineup : state.awayLineup,
@@ -239,6 +240,8 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
         }),
       ]),
     });
+    // LFE-RATINGS-V2: freeze out-player minutes; in-player starts from current minute.
+    const next = reconcileMinutesPlayed(nextRaw);
     ctx.setMatchState(next);
     ctx.recordEvent('SUBSTITUTION', {
       side,

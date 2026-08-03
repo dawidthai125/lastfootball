@@ -17,7 +17,12 @@ export {
   withPossessionTick,
 } from './resolve';
 export type { MatchEngineEmit } from './resolve';
-export { attributePlayerForEvent, stableEventKindHash } from './attribute-player';
+export {
+  attributePlayerForEvent,
+  attributeAssistForGoal,
+  stableEventKindHash,
+} from './attribute-player';
 export type { AttributeEventKind } from './attribute-player';
+export { computeMinutesPlayed, reconcileMinutesPlayed } from './minutes-played';
 export { simulateMatchTick } from './tick';
 export type { MatchEngineTickInput, MatchEngineTickResult } from './tick';

@@ -4,7 +4,7 @@ import { bumpPlayerStat, createScore } from '../domain';
 import type { Rng } from '../../rng';
 import { decideActionFromState, decidePossessionFromState } from '../../ai';
 
-import { attributePlayerForEvent } from './attribute-player';
+import { attributeAssistForGoal, attributePlayerForEvent } from './attribute-player';
 
 export type MatchEngineEmit = {
   readonly type: EngineEventType;
@@ -169,12 +169,16 @@ export function resolvePossessionAction(
     return { state: next, emits };
   }
 
+  const assistPlayerId =
+    actorId !== undefined ? attributeAssistForGoal(next, side, actorId, tick) : undefined;
+
   emits.push({
     type: 'GOAL',
     payload: {
       side,
       minute: next.clock.displayMinute,
       ...(actorId !== undefined ? { playerId: actorId } : {}),
+      ...(assistPlayerId !== undefined ? { assistPlayerId } : {}),
     },
   });
   const scored = side === 'home' ? next.statistics.home : next.statistics.away;
@@ -183,6 +187,14 @@ export function resolvePossessionAction(
     const row = goalPlayers.find((p) => p.playerId === actorId);
     if (row) {
       goalPlayers = bumpPlayerStat(goalPlayers, actorId, { goals: row.goals + 1 });
+    }
+  }
+  if (assistPlayerId !== undefined) {
+    const assistRow = goalPlayers.find((p) => p.playerId === assistPlayerId);
+    if (assistRow) {
+      goalPlayers = bumpPlayerStat(goalPlayers, assistPlayerId, {
+        assists: assistRow.assists + 1,
+      });
     }
   }
   next = Object.freeze({

@@ -1,5 +1,5 @@
 /**
- * LFE-PLAYER-RATINGS-01 — pure rating derive + MVP (no Engine).
+ * LFE-PLAYER-RATINGS-01 / LFE-RATINGS-V2 — pure rating derive + MVP (no Engine).
  */
 import { describe, expect, it } from 'vitest';
 
@@ -92,7 +92,27 @@ function makeState(opts?: {
   } as unknown as MatchState;
 }
 
-describe('LFE-PLAYER-RATINGS-01', () => {
+function baseView(
+  partial: Partial<PlayerRatingView> & Pick<PlayerRatingView, 'playerId' | 'side'>,
+): PlayerRatingView {
+  return {
+    name: 'P',
+    shirtNumber: 1,
+    role: 'ST',
+    slotIndex: 0,
+    rating: 7.0,
+    status: 'solid',
+    goals: 0,
+    assists: 0,
+    shots: 0,
+    foulsCommitted: 0,
+    minutesPlayed: 0,
+    isMvp: false,
+    ...partial,
+  };
+}
+
+describe('LFE-PLAYER-RATINGS-01 / LFE-RATINGS-V2', () => {
   it('T1: XI home+away = 11+11 sorted by slotIndex', () => {
     const r = computePlayerRatings(makeState());
     expect(r.home).toHaveLength(11);
@@ -135,11 +155,11 @@ describe('LFE-PLAYER-RATINGS-01', () => {
     expect(clampRating(-2)).toBe(1.0);
   });
 
-  it('T5: same MatchState twice → identical ratings + MVP', () => {
+  it('T5 / W6: same MatchState twice → identical ratings + MVP', () => {
     const state = makeState({
       homeScore: 2,
       awayScore: 1,
-      patchStats: { h9: { goals: 2, shots: 3 }, a9: { goals: 1 } },
+      patchStats: { h9: { goals: 2, shots: 3, assists: 1 }, a9: { goals: 1 } },
     });
     const a = computePlayerRatings(state);
     const b = computePlayerRatings(state);
@@ -147,44 +167,55 @@ describe('LFE-PLAYER-RATINGS-01', () => {
     expect(a.mvpPlayerId).toBe(b.mvpPlayerId);
   });
 
-  it('T6: MVP tie-break goals → shots → fouls → home → slot → id', () => {
+  it('T6: MVP tie-break goals → assists → minutes → shots → fouls → home → slot → id', () => {
     const tied: PlayerRatingView[] = [
-      {
+      baseView({
         playerId: 'a1',
         side: 'away',
         name: 'A',
-        shirtNumber: 1,
-        role: 'ST',
-        slotIndex: 0,
-        rating: 7.0,
-        status: 'solid',
         goals: 1,
+        assists: 1,
+        minutesPlayed: 90,
         shots: 2,
-        foulsCommitted: 0,
-        isMvp: false,
-      },
-      {
+      }),
+      baseView({
         playerId: 'h1',
         side: 'home',
         name: 'H',
-        shirtNumber: 1,
-        role: 'ST',
         slotIndex: 1,
-        rating: 7.0,
-        status: 'solid',
         goals: 1,
+        assists: 1,
+        minutesPlayed: 90,
         shots: 2,
-        foulsCommitted: 0,
-        isMvp: false,
-      },
+      }),
     ];
     expect(selectMvp(tied)).toBe('h1');
 
-    const bySlot: PlayerRatingView[] = [
-      { ...tied[1]!, playerId: 'h2', slotIndex: 2 },
-      { ...tied[1]!, playerId: 'h0', slotIndex: 0 },
+    const byAssists: PlayerRatingView[] = [
+      baseView({ playerId: 'h0', side: 'home', goals: 1, assists: 0, minutesPlayed: 90 }),
+      baseView({
+        playerId: 'h1',
+        side: 'home',
+        slotIndex: 1,
+        goals: 1,
+        assists: 2,
+        minutesPlayed: 80,
+      }),
     ];
-    expect(selectMvp(bySlot)).toBe('h0');
+    expect(selectMvp(byAssists)).toBe('h1');
+
+    const byMinutes: PlayerRatingView[] = [
+      baseView({ playerId: 'h0', side: 'home', goals: 1, assists: 1, minutesPlayed: 60 }),
+      baseView({
+        playerId: 'h1',
+        side: 'home',
+        slotIndex: 1,
+        goals: 1,
+        assists: 1,
+        minutesPlayed: 90,
+      }),
+    ];
+    expect(selectMvp(byMinutes)).toBe('h1');
   });
 
   it('T7: GK clean sheet +0.5 vs field without goals', () => {
@@ -192,19 +223,43 @@ describe('LFE-PLAYER-RATINGS-01', () => {
     const homeGk = r.home.find((p) => p.role === 'GK')!;
     const homeField = r.home.find((p) => p.role === 'ST')!;
     const awayGk = r.away.find((p) => p.role === 'GK')!;
-    // home win +0.3; home GK also +0.5 clean sheet
     expect(homeGk.rating).toBe(round1(6.0 + 0.3 + 0.5));
     expect(homeField.rating).toBe(round1(6.0 + 0.3));
-    // away lose -0.3; away GK no clean sheet
     expect(awayGk.rating).toBe(round1(6.0 - 0.3));
   });
 
-  it('T8: missing statistics row → counters 0, no crash', () => {
+  it('T8 / W4: missing statistics row → counters 0, no crash', () => {
     const r = computePlayerRatings(makeState({ homeScore: 0, awayScore: 0, omitStatsFor: ['h9'] }));
     const row = r.home.find((p) => p.playerId === 'h9')!;
     expect(row.goals).toBe(0);
+    expect(row.assists).toBe(0);
     expect(row.shots).toBe(0);
     expect(row.foulsCommitted).toBe(0);
+    expect(row.minutesPlayed).toBe(0);
     expect(row.rating).toBe(6.0);
+  });
+
+  it('W1: assists add +0.5 each, capped at +1.5', () => {
+    const r = computePlayerRatings(
+      makeState({
+        homeScore: 0,
+        awayScore: 0,
+        patchStats: { h9: { assists: 4 } },
+      }),
+    );
+    // base 6 + 3*0.5 = 7.5
+    expect(r.home.find((p) => p.playerId === 'h9')!.rating).toBe(7.5);
+  });
+
+  it('W2: PlayerRatingView carries assists + minutesPlayed', () => {
+    const r = computePlayerRatings(
+      makeState({
+        patchStats: { h9: { assists: 2, minutesPlayed: 88, goals: 1 } },
+      }),
+    );
+    const row = r.home.find((p) => p.playerId === 'h9')!;
+    expect(row.assists).toBe(2);
+    expect(row.minutesPlayed).toBe(88);
+    expect(row.goals).toBe(1);
   });
 });

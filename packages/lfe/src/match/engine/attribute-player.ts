@@ -3,6 +3,9 @@ import type { MatchState, PitchRole, PitchSide, PlayerId } from '../domain';
 /** Event kinds that receive deterministic player attribution in PLAYER-MATCH-DATA-01. */
 export type AttributeEventKind = 'GOAL' | 'SHOT' | 'FOUL';
 
+/** Hash kinds including ASSIST (Ratings v2) — ASSIST is not a Match Engine event actor kind. */
+type AttributeHashKind = AttributeEventKind | 'ASSIST';
+
 const OFFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set([
   'ST',
   'CF',
@@ -16,7 +19,7 @@ const OFFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set([
 const DEFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set(['CB', 'CDM', 'RB', 'LB', 'RWB', 'LWB']);
 
 /** Stable non-cryptographic hash — no RNG. */
-export function stableEventKindHash(kind: AttributeEventKind): number {
+export function stableEventKindHash(kind: AttributeHashKind): number {
   let h = 0;
   for (let i = 0; i < kind.length; i++) {
     h = (h * 31 + kind.charCodeAt(i)) | 0;
@@ -46,5 +49,25 @@ export function attributePlayerForEvent(
     return undefined;
   }
   const index = (tick + stableEventKindHash(kind)) % candidates.length;
+  return candidates[index]!.playerId;
+}
+
+/**
+ * LFE-RATINGS-V2 — deterministic assist for a GOAL (0|1, never the scorer, no RNG).
+ */
+export function attributeAssistForGoal(
+  state: MatchState,
+  actingSide: PitchSide,
+  scorerId: PlayerId,
+  tick: number,
+): PlayerId | undefined {
+  const lineup = actingSide === 'home' ? state.homeLineup : state.awayLineup;
+  const withoutScorer = lineup.slots.filter((s) => s.playerId !== scorerId);
+  if (withoutScorer.length === 0) {
+    return undefined;
+  }
+  const preferred = withoutScorer.filter((s) => OFFENSIVE_ROLES.has(s.role));
+  const candidates = preferred.length > 0 ? preferred : withoutScorer;
+  const index = (tick + stableEventKindHash('ASSIST')) % candidates.length;
   return candidates[index]!.playerId;
 }

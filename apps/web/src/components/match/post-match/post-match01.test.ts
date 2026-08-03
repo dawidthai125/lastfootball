@@ -117,7 +117,7 @@ describe('LFE-POST-MATCH-01', () => {
     expect(summary.resultLabel).toContain('gospodarz');
   });
 
-  it('T9: summary includes ratings + mvpPlayerId', () => {
+  it('T9 / W5: summary includes ratings v2 + mvpPlayerId (assists/minutes on view)', () => {
     const summary = buildPostMatchSummary({
       matchState: fakeState(1, 0),
       events: [{ type: 'MATCH_END', tick: 1, payload: { minute: 90 } }],
@@ -134,6 +134,8 @@ describe('LFE-POST-MATCH-01', () => {
       summary.ratings.home.find((p) => p.playerId === summary.mvpPlayerId) ??
       summary.ratings.away.find((p) => p.playerId === summary.mvpPlayerId);
     expect(mvp?.isMvp).toBe(true);
+    expect(typeof mvp?.assists).toBe('number');
+    expect(typeof mvp?.minutesPlayed).toBe('number');
     expect(
       summary.ratings.home.filter((p) => p.isMvp).length +
         summary.ratings.away.filter((p) => p.isMvp).length,

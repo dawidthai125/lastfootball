@@ -1,8 +1,8 @@
 /**
- * LFE-PLAYER-RATINGS-01 — pure Post Match derive from MatchState.
+ * LFE-PLAYER-RATINGS-01 / LFE-RATINGS-V2 — pure Post Match derive from MatchState.
  * No Engine / AI / MatchState mutation.
  *
- * MVP Formula v1 — intentionally simple; future versions may incorporate assists, minutes played, passes, tackles, interceptions, saves, xG and xA without changing the public API.
+ * Formula v2: v1 + assists; minutesPlayed on view + MVP tie-break (not a large rating delta).
  */
 
 import type { MatchState } from '@lastfootball/lfe';
@@ -19,8 +19,10 @@ export type PlayerRatingView = {
   readonly rating: number;
   readonly status: PlayerRatingStatus;
   readonly goals: number;
+  readonly assists: number;
   readonly shots: number;
   readonly foulsCommitted: number;
+  readonly minutesPlayed: number;
   readonly isMvp: boolean;
 };
 
@@ -33,6 +35,8 @@ export type PlayerRatingsResult = {
 const BASE = 6.0;
 const GOAL_DELTA = 1.0;
 const GOAL_CAP = 3;
+const ASSIST_DELTA = 0.5;
+const ASSIST_CAP = 3;
 const SHOT_DELTA = 0.1;
 const SHOT_CAP = 6;
 const FOUL_DELTA = -0.25;
@@ -69,6 +73,7 @@ function statusForRating(rating: number, isMvp: boolean): PlayerRatingStatus {
 
 function ratePlayer(input: {
   readonly goals: number;
+  readonly assists: number;
   readonly shots: number;
   readonly foulsCommitted: number;
   readonly role: string;
@@ -77,12 +82,14 @@ function ratePlayer(input: {
   readonly awayScore: number;
 }): number {
   const goals = Math.min(input.goals, GOAL_CAP);
+  const assists = Math.min(input.assists, ASSIST_CAP);
   const shots = Math.min(input.shots, SHOT_CAP);
   const fouls = Math.min(input.foulsCommitted, FOUL_CAP);
 
   let raw =
     BASE +
     goals * GOAL_DELTA +
+    assists * ASSIST_DELTA +
     shots * SHOT_DELTA +
     fouls * FOUL_DELTA +
     teamResultDelta(input.side, input.homeScore, input.awayScore);
@@ -96,7 +103,7 @@ function ratePlayer(input: {
 }
 
 /**
- * Deterministic MVP: max rating → goals → shots → fewer fouls → home → slotIndex → playerId.
+ * Deterministic MVP: rating → goals → assists → minutes → shots → fewer fouls → home → slotIndex → playerId.
  */
 export function selectMvp(players: readonly PlayerRatingView[]): string | null {
   if (players.length === 0) return null;
@@ -104,6 +111,8 @@ export function selectMvp(players: readonly PlayerRatingView[]): string | null {
   const ranked = [...players].sort((a, b) => {
     if (b.rating !== a.rating) return b.rating - a.rating;
     if (b.goals !== a.goals) return b.goals - a.goals;
+    if (b.assists !== a.assists) return b.assists - a.assists;
+    if (b.minutesPlayed !== a.minutesPlayed) return b.minutesPlayed - a.minutesPlayed;
     if (b.shots !== a.shots) return b.shots - a.shots;
     if (a.foulsCommitted !== b.foulsCommitted) return a.foulsCommitted - b.foulsCommitted;
     if (a.side !== b.side) return a.side === 'home' ? -1 : 1;
@@ -126,8 +135,10 @@ function buildSideRatings(
     const player = state.players.find((p) => p.id === slot.playerId);
     const stats = state.statistics.players.find((p) => p.playerId === slot.playerId);
     const goals = stats?.goals ?? 0;
+    const assists = stats?.assists ?? 0;
     const shots = stats?.shots ?? 0;
     const foulsCommitted = stats?.foulsCommitted ?? 0;
+    const minutesPlayed = stats?.minutesPlayed ?? 0;
 
     return {
       playerId: slot.playerId,
@@ -137,10 +148,13 @@ function buildSideRatings(
       role: slot.role,
       slotIndex: slot.slotIndex,
       goals,
+      assists,
       shots,
       foulsCommitted,
+      minutesPlayed,
       rating: ratePlayer({
         goals,
+        assists,
         shots,
         foulsCommitted,
         role: slot.role,

@@ -301,6 +301,8 @@ function RatingsColumn({
               >
                 {p.role}
                 {p.isMvp ? ' · MVP' : ''}
+                {' · '}
+                {p.goals}G · {p.assists}A · {p.minutesPlayed} min{' '}
               </span>
             </span>
             <span

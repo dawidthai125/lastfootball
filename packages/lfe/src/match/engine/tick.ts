@@ -3,6 +3,7 @@ import type { MatchState } from '../domain';
 import type { Rng } from '../../rng';
 
 import { advanceMatchClock, isHalfComplete } from './clock';
+import { reconcileMinutesPlayed } from './minutes-played';
 import {
   resolvePossessionAction,
   rollPossessionSide,
@@ -70,6 +71,7 @@ export function simulateMatchTick(
   next = Object.freeze({ ...state, clock, tick: input.tick });
 
   if (isHalfComplete(clock, input.halfDurationMs)) {
+    next = reconcileMinutesPlayed(next);
     if (state.phase === 'FIRST_HALF') {
       lifecycle.push({ type: 'END_FIRST_HALF', tick: input.tick });
       emits.push({
