@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · tip `1934e7f` · docs tip `fcd871d` · D1–D122 · next Owner GO → League World / §22 / Career Decline
+2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · tip `32f53c6` · docs tip `fcd871d` · D1–D122 · next Owner GO → League World / §22 / Career Decline

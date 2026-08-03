@@ -46,7 +46,7 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | URL                         | https://lastfootball.vercel.app                                                     |
 | Alias                       | https://lastfootball.pl                                                             |
 | Branch                      | `main`                                                                              |
-| **tip `main`**              | **`1934e7f`** — LFE-AGE-01 DOCS CLOSE                                               |
+| **tip `main`**              | **`32f53c6`** — LFE-AGE-01 DOCS CLOSE                                               |
 | **Documentation tip**       | **`fcd871d`** — LFE-AGE-01 DOCS CLOSE                                               |
 | **Production Feature**      | **`6a54722`** — **LFE-AGE-01** (H-AGE season age++ · Season Transition Pipeline)    |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                        |
