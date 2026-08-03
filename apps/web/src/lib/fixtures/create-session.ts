@@ -11,10 +11,12 @@ import type { PlayerId } from '@lastfootball/domain';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
+import { mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 /**
- * League fixture → MatchSession. Our XI from DB rows; opponent from AI seed.
+ * League fixture → MatchSession.
+ * Our XI skills from DB (`players.skill`); AI from League Strength Profile (tier).
  */
 export function createSessionFromLeagueFixture(
   club: ClubDto,
@@ -22,7 +24,7 @@ export function createSessionFromLeagueFixture(
   ourXi: readonly RosterPlayerSeed[],
 ): MatchSession {
   const our = ourXi;
-  const their = seedOpponentSquad(fixture.opponentClubId);
+  const their = seedOpponentSquad(fixture.opponentClubId, club.leagueTier);
   const formationCode: FormationCode = '4-4-2';
 
   const homeTeamId = 'team-home';
@@ -31,26 +33,34 @@ export function createSessionFromLeagueFixture(
   const ourSide = fixture.isHome ? 'home' : 'away';
   const theirSide = fixture.isHome ? 'away' : 'home';
 
-  const ourPlayers = our.map((p) =>
-    createPlayer({
+  const ourPlayers = our.map((p) => {
+    if (p.skill == null || !Number.isFinite(p.skill)) {
+      throw new Error(`League XI missing skill for player ${p.id}`);
+    }
+    return createPlayer({
       id: p.id as PlayerId,
       teamId: ourSide === 'home' ? homeTeamId : awayTeamId,
       side: ourSide,
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-    }),
-  );
-  const theirPlayers = their.map((p) =>
-    createPlayer({
+      skills: mapPlayerSkillToLfeSkills(p.skill),
+    });
+  });
+  const theirPlayers = their.map((p) => {
+    if (p.skill == null || !Number.isFinite(p.skill)) {
+      throw new Error(`Opponent seed missing skill for ${p.id}`);
+    }
+    return createPlayer({
       id: p.id as PlayerId,
       teamId: theirSide === 'home' ? homeTeamId : awayTeamId,
       side: theirSide,
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-    }),
-  );
+      skills: mapPlayerSkillToLfeSkills(p.skill),
+    });
+  });
 
   const homePlayers = fixture.isHome ? ourPlayers : theirPlayers;
   const awayPlayers = fixture.isHome ? theirPlayers : ourPlayers;

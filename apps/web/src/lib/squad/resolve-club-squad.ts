@@ -115,6 +115,7 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     role: r.role as PitchRole,
     starter: true,
     captain: r.captain || undefined,
+    skill: r.skill,
   }));
   if (xi.length !== 11) {
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);

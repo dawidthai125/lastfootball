@@ -26,8 +26,8 @@ import { listClubFixtures } from '@/lib/fixtures/get-fixture';
  * Sole league_tier mutation (D90): derive outcome → applyLeagueTierOutcome → persist.
  * H-SPONSORS (D98 · D101): flat renew (manual Accept or auto) → base payout once.
  * Clears slate → planClubFixtures reseed (D80) → H-AGE (LFE-AGE-01) → season++ · in_season.
- * H-AGE = first Season Transition Pipeline step · sole age++ product path.
- * AI catalog unchanged (D92).
+ * League world strength = club.leagueTier at MatchSession (LFE-LEAGUE-WORLD-02).
+ * AI catalog names unchanged (Thin B); Match Engine / PUBLIC untouched.
  */
 export async function confirmStartNextSeason(
   _prev: ConfirmStartNextSeasonState,
@@ -107,7 +107,7 @@ export async function confirmStartNextSeason(
     return { error: 'Nie udało się wyczyścić terminarza.' };
   }
 
-  const plan = planClubFixtures(clubId);
+  const plan = planClubFixtures(clubId, nextTier);
   const rows = plan.map((p) => ({
     club_id: clubId,
     matchday: p.matchday,

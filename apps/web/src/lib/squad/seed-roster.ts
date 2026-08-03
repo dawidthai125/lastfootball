@@ -1,5 +1,11 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
+import type { LeagueTier } from '@/lib/league/league-tier';
+import {
+  resolveLeagueStrengthProfile,
+  resolveOpponentPlayerSkill,
+} from '@/lib/league/league-strength-profile';
+
 export type RosterPlayerSeed = {
   readonly id: string;
   readonly name: string;
@@ -9,6 +15,11 @@ export type RosterPlayerSeed = {
   readonly captain?: boolean;
   /** true = starting XI */
   readonly starter: boolean;
+  /**
+   * Club player DB skill (1…99) for league MatchSession map.
+   * Required on league XI from resolveStartingXi; optional on AI/first-match seeds.
+   */
+  readonly skill?: number;
 };
 
 const XI_BASE: Omit<RosterPlayerSeed, 'id' | 'starter'>[] = [
@@ -77,9 +88,13 @@ export function seedBotSquad(): readonly RosterPlayerSeed[] {
   return base.map((p, i) => ({ ...p, id: `bot-${i}`, starter: true }));
 }
 
-/** Deterministic opponent XI from opponent_club_id. */
-export function seedOpponentSquad(opponentClubId: string): readonly RosterPlayerSeed[] {
+/** Deterministic opponent XI from opponent_club_id (+ tier strength Thin). */
+export function seedOpponentSquad(
+  opponentClubId: string,
+  tier: LeagueTier = 'iv',
+): readonly RosterPlayerSeed[] {
   const tag = opponentClubId.replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'opp';
+  const profile = resolveLeagueStrengthProfile(tier);
   const names = [
     'A. Rywal',
     'B. Rywal',
@@ -113,5 +128,6 @@ export function seedOpponentSquad(opponentClubId: string): readonly RosterPlayer
     pos: r.pos,
     role: r.role,
     starter: true as const,
+    skill: resolveOpponentPlayerSkill(opponentClubId, i, profile),
   }));
 }

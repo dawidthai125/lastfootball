@@ -14,3 +14,8 @@ export {
   resolveLeagueTierLabel,
   resolvePromotionOutcome,
 } from '@/lib/league/league-tier';
+export type { LeagueStrengthProfile } from '@/lib/league/league-strength-profile';
+export {
+  resolveLeagueStrengthProfile,
+  resolveOpponentPlayerSkill,
+} from '@/lib/league/league-strength-profile';

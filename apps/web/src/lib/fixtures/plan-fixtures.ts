@@ -4,6 +4,7 @@ import {
   pickOpponentsForClub,
   type OpponentClub,
 } from '@/lib/fixtures/opponent-catalog';
+import type { LeagueTier } from '@/lib/league/league-tier';
 
 export type PlannedFixture = {
   readonly matchday: number;
@@ -17,8 +18,12 @@ export type PlannedFixture = {
  * Exactly LEAGUE_FIXTURE_COUNT (22) rows — double RR vs catalog AI.
  * MD1–11 identity matches LEAGUE-03 single RR (top-up / prod safe).
  * MD12–22 = return legs (!isHome, same opponent). Top-up must reuse this plan.
+ *
+ * `tier` optional (LFE-LEAGUE-WORLD-02 Thin B) — reserved for future catalog-A;
+ * strength world uses club.leagueTier at MatchSession build, not planner rows.
  */
-export function planClubFixtures(clubId: string): readonly PlannedFixture[] {
+export function planClubFixtures(clubId: string, _tier?: LeagueTier): readonly PlannedFixture[] {
+  void _tier;
   const n = LEAGUE_SINGLE_RR_COUNT;
   const opponents = pickOpponentsForClub(clubId, n);
   const homeFirst = (hashBit(clubId) & 1) === 0;

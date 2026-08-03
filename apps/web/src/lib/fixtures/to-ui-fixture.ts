@@ -53,7 +53,7 @@ export function buildLeaguePreMatchBundle(
 ): PreMatchBundle {
   const fixture = toUiFixture(dto, club);
   const our = ourXi;
-  const their = seedOpponentSquad(dto.opponentClubId);
+  const their = seedOpponentSquad(dto.opponentClubId, club.leagueTier);
 
   return {
     fixture,
