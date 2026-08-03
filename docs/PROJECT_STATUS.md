@@ -5,38 +5,42 @@
 **SSOT statusu projektu** („gdzie jesteśmy”).  
 Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 
-| Potrzebujesz                | Dokument                                                                       |
-| --------------------------- | ------------------------------------------------------------------------------ |
-| Feature baseline / docs tip | [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)                           |
-| Master handoff AI           | [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)                             |
-| Lista EPIC DONE/PLANNED     | [`ROADMAP.md`](./ROADMAP.md)                                                   |
-| Indeks EPIC (skrót AI)      | [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md)                                       |
-| UI / Auth presentation      | [`implementation/`](./implementation/)                                         |
-| Onboarding AI               | [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md) |
+Potrzebujesz Dokument
+
+---
+
+Feature baseline / docs tip [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md)  
+Master handoff AI [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md)  
+Lista EPIC DONE/PLANNED [`ROADMAP.md`](./ROADMAP.md)  
+Indeks EPIC (skrót AI) [`AI/EPIC_INDEX.md`](./AI/EPIC_INDEX.md)  
+UI / Auth presentation [`implementation/`](./implementation/)  
+Onboarding AI [`AGENTS.md`](../AGENTS.md) → [`AI/AI_QUICK_START.md`](./AI/AI_QUICK_START.md)
 
 ## Aktualny etap
 
 **PRODUCTION VERIFIED · GREEN · LFE-LEAGUE-WORLD-02 CLOSED** (Domain `843bcfd` · D1–D123)
 
-|                         |                                                                                               |
-| ----------------------- | --------------------------------------------------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)                                     |
-| **Domain feature**      | **`843bcfd`** — **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · D123) |
-| **Prior Domain**        | **`6a54722`** — LFE-AGE-01 (Season Age++ Thin · H-AGE · D122)                                 |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)                         |
-| **Documentation tip**   | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                |
-| **tip `main`**          | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                                                |
-| **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                                |
-| **CI**                  | **GREEN**                                                                                     |
-| **Decisions**           | **D1–D123** (D123 Tier-aware Strength · D92 SUPERSEDED)                                       |
+---
 
-| Tor               | Stan                                                                                                                                                                                                                                                             |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Platform          | Onboarding · First Match · Hub · League 22 · **League World** · Season End · Age++ · Promotion · Sponsors · Board · Stadium · Finance · Players · Transfers **10** · Messages · Club · SoftLock · Training · Academy · Scouting · Daily · Achievements · Ranking |
-| UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16                                                                                                                                                              |
-| Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · **Ratings v2** · Match Path immersive · XI Gate · **PUBLIC surface** (D119–D121)                                                                                                                                     |
-| Design            | GDD-01…**22** Thin · Season End · Promotion · Sponsors · Board · Stadium · Transfers-10 · PUBLIC-API-01 · RATINGS-V2 · AGE-01 · **LEAGUE-WORLD-02** CLOSED · §26 CLOSED · World Art CLOSED · **next: Owner GO → §22 / Career Decline**                           |
-| Infra             | Vercel + Supabase · CI GREEN · LEAGUE-WORLD-02 = Web-only (brak migracji)                                                                                                                                                                                        |
+**Production Baseline** **`54d0724`** — **LFE-UI-IMPL-06** (Live → Post fidelity)  
+**Domain feature** **`843bcfd`** — **LFE-LEAGUE-WORLD-02** (League Strength Profile · skill→MatchSession · D123)  
+**Prior Domain** **`6a54722`** — LFE-AGE-01 (Season Age++ Thin · H-AGE · D122)  
+**Presentation tip** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match presentation motion Thin)  
+**Documentation tip** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+**tip `main`** **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+**Prod** https://lastfootball.vercel.app · **VERIFIED**  
+**CI** **GREEN**  
+**Decisions** **D1–D123** (D123 Tier-aware Strength · D92 SUPERSEDED)
+
+Tor Stan
+
+---
+
+Platform Onboarding · First Match · Hub · League 22 · **League World** · Season End · Age++ · Promotion · Sponsors · Board · Stadium · Finance · Players · Transfers **10** · Messages · Club · SoftLock · Training · Academy · Scouting · Daily · Achievements · Ranking  
+UX presentation **UI P0 CLOSED** · Landing · Branding · Auth UX · **MOTION-01** · Night Pitch Office · Guide §8/§16  
+Engine / Match UI LFE 0.9.1 + Live · Canvas · Replay · Post · **Ratings v2** · Match Path immersive · XI Gate · **PUBLIC surface** (D119–D121)  
+Design GDD-01…**22** Thin · Season End · Promotion · Sponsors · Board · Stadium · Transfers-10 · PUBLIC-API-01 · RATINGS-V2 · AGE-01 · **LEAGUE-WORLD-02** CLOSED · §26 CLOSED · World Art CLOSED · **next: Owner GO → §22 / Career Decline**  
+Infra Vercel + Supabase · CI GREEN · LEAGUE-WORLD-02 = Web-only (brak migracji)
 
 ## W trakcie
 

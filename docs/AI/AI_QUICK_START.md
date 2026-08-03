@@ -10,17 +10,17 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 
 ## Stan produkcji (skrót)
 
-|                     |                                                               |
-| ------------------- | ------------------------------------------------------------- |
-| Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED                 |
-| Domain baseline     | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength Profile · D123) |
-| Prior Domain        | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122)      |
-| Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)      |
-| Documentation tip   | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                |
-| tip `main`          | **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE                |
-| Prod                | https://lastfootball.vercel.app                               |
-| Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                  |
-| Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                |
+---
+
+Production Baseline **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED  
+Domain baseline **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength Profile · D123)  
+Prior Domain **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122)  
+Presentation tip **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin)  
+Documentation tip **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+tip `main` **`fbcf150`** — LFE-LEAGUE-WORLD-02 DOCS CLOSE  
+Prod https://lastfootball.vercel.app  
+Master handoff [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)  
+Status projektu [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)
 
 ## Pipeline (jedyny)
 
