@@ -14,9 +14,9 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 | **Documentation tip**       | Nowszy `docs:` na `main` — **nie** zastępuje Production / Domain / Presentation tip                       |
 
 ```bash
-git log -1 --oneline                    # tip main = 524e958
-git log -1 --oneline c5c5866            # Documentation tip RATINGS-V2 CLOSE
-git log -1 --oneline 962f0a8            # Production Feature / Domain RATINGS-V2
+git log -1 --oneline                    # tip main (docs close)
+git log -1 --oneline 6a54722            # Production Feature / Domain AGE-01
+git log -1 --oneline 962f0a8            # Prior Domain RATINGS-V2
 git log -1 --oneline ce00327            # Prior Domain PUBLIC-API-01
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline 9424dd8            # Prior Domain TRANSFERS-10
@@ -46,21 +46,21 @@ git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
 | URL                         | https://lastfootball.vercel.app                                                             |
 | Alias                       | https://lastfootball.pl                                                                     |
 | Branch                      | `main`                                                                                      |
-| **tip `main`**              | **`524e958`** — pin tip (Documentation tip = `c5c5866`)                                     |
-| **Documentation tip**       | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE                                                   |
-| **Production Feature**      | **`962f0a8`** — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)           |
+| **tip `main`**              | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                                                       |
+| **Documentation tip**       | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                                                       |
+| **Production Feature**      | **`6a54722`** — **LFE-AGE-01** (H-AGE season age++ · Season Transition Pipeline)            |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                            |
 | UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                              |
-| Domain message              | `feat(match): add assists and minutes to Player Match Data and Ratings v2 (LFE-RATINGS-V2)` |
-| Prior Domain                | `ce00327` — LFE-PUBLIC-API-01                                                               |
+| Domain message              | `feat(season): wire H-AGE age++ on Confirm N+1 (LFE-AGE-01)`                                |
+| Prior Domain                | `962f0a8` — LFE-RATINGS-V2                                                                  |
 | **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                       |
 | Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                             |
 | CI                          | **GREEN**                                                                                   |
 | Production                  | **VERIFIED**                                                                                |
-| Decisions                   | **D1–D121** (bez nowych D\* w Ratings v2)                                                   |
-| **NEXT EPIC**               | **§22 push/email** lub **`/advanced`** (czekaj na Owner GO · start AUDIT)                   |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-RATINGS-V2 CLOSED · Domain `962f0a8`               |
+| Decisions                   | **D1–D122** (D122 Age++ H-AGE)                                                              |
+| **NEXT EPIC**               | **Czekaj na Owner GO** — League World / §22 push / Career Decline                           |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-AGE-01 CLOSED · Domain `6a54722` · D1–D122         |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -83,6 +83,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Club identity Thin (resolveClubProfile · /club · D47–D51)
   → Soft-lock route gate (SoftLockRouteGate · SoftLockState · D52 · D63–D67)
   → Season End Thin (GDD-SEASON-END-01 · D68–D87) · Promotion Thin (D88–D94)
+  → H-AGE season age++ on Confirm N+1 (LFE-AGE-01 · D122 · Season Transition)
   → Sponsors Thin (resolveClubSponsors · H-SPONSORS · D95–D101)
   → Board Thin (resolveClubBoard · H-BOARD · D102–D108)
   → Stadium Thin (resolveClubStadium · D109–D115)
@@ -118,6 +119,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Training persist    | RPC `complete_training_session`                                                                |
 | Training effects    | `applyTrainingSessionEffects` (status+skill≤P)                                                 |
 | Potential           | `players.potential` · `resolvePlayerPotential`                                                 |
+| Season Age++ (H-AGE)| `applySeasonAgeEffects` · `runSeasonTransitionHAge` on Confirm N+1 (D122)                      |
 | Match development   | RPC `apply_match_development` · K_MATCH=5                                                      |
 | XI Gate             | `validateStartingXi` / `resolveStartingXi`                                                     |
 | Academy UI          | `resolveClubAcademy` · `players.academy_track` / `promoted_at`                                 |
@@ -177,10 +179,10 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01) · **`club_sponsor_contracts` + kategorie `sponsor_base`/`sponsor_bonus`** (`20260731140000_sponsors_thin.sql` · LFE-SPONSORS-01).  
-> **LFE-DAILY-01 / LFE-ACHIEVEMENTS-01 / LFE-RANKING-01 / LFE-LEAGUE-04 / LFE-MESSAGES-01 / LFE-CLUB-01 / LFE-SOFTLOCK-01 / LFE-BOARD-01 / LFE-STADIUM-01 / LFE-TRANSFERS-10 / LFE-PUBLIC-API-01 / LFE-RATINGS-V2:** brak nowych migracji schematu tabel (MESSAGES/BOARD/STADIUM = derive only; LEAGUE-04 = top-up fixtures; SOFTLOCK = presentation gate only; TRANSFERS-10 = org refactor only; PUBLIC-API-01 = package surface only; RATINGS-V2 = engine fill + web derive).
+> **LFE-DAILY-01 / … / LFE-RATINGS-V2 / LFE-AGE-01:** brak nowych migracji schematu (AGE-01 = persist `players.age`/`skill`; RATINGS-V2 = engine fill + web derive; PUBLIC-API = package surface; …).
 
 ## Not on production
 
-AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · auto season-end `age++` · numeric potential in UI · envelope ratio ≠ 1 · Stadium Ticket Economy / rozbudowa · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist · `@lastfootball/lfe/advanced`.
+AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · Prime / Decline Depth / Retirement / Youth Depth / world-age AI · numeric potential in UI · envelope ratio ≠ 1 · Stadium Ticket Economy / rozbudowa · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist · `@lastfootball/lfe/advanced`.
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`
+2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · D122 · next Owner GO → League World / §22 / Career

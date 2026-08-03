@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D121):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D122):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -79,7 +79,7 @@
 | **D80**  | Sole planner               | N+1 tylko przez `planClubFixtures` (zero drugiego terminarza).                    |
 | **D81**  | Report pure resolve        | `resolveSeasonReport` z tabeli; Information Thin.                                 |
 | **D82**  | Confirm before N+1         | Auto start nowego sezonu zakazany.                                                |
-| **D83**  | Hooks no-op in Thin        | `onSeasonEnd` no-op age++; Sponsors+Board wired as info/Confirm; age still OUT.   |
+| **D83**  | Hooks no-op in Thin        | Oryginał SEASON-END; H-AGE → **D122**; Sponsors/Board/Promotion = osobne CLOSED.  |
 | **D84**  | Report = existing facts    | Highlighty tylko z faktów domeny.                                                 |
 | **D85**  | Confirm sole N+1 path      | Tylko `confirmStartNextSeason`.                                                   |
 | **D86**  | Report read-only           | View bez mutacji; Confirm osobno.                                                 |
@@ -118,6 +118,7 @@
 | **D119** | LFE Root = Freeze PUBLIC   | Root barrel wyłącznie PUBLIC Contract.                                            |
 | **D120** | EngineEvent PUBLIC MUST    | `EngineEvent` + tactical factories = PUBLIC (prod UI).                            |
 | **D121** | LFE Testing Barrel Only    | `/testing` = re-export only · Web nie importuje · `/advanced` OUT.                |
+| **D122** | Age++ at Confirm N+1       | H-AGE `runSeasonTransitionHAge` · REUSE pure · `AGE_REGRESS_FROM` · club roster.  |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -222,10 +223,17 @@
 - Brak Dispatcher / Registry / Service Locator · Single Settlement Path nienaruszony.
 - SSOT PLAN = `implementation/LFE-TRANSFERS-10-PLAN.md`.
 
+### D122 — Season Age++ / H-AGE (must-know)
+
+- Jedyny age++ = Confirm N+1 · `runSeasonTransitionHAge` (Season Transition Pipeline step 1).
+- REUSE `applySeasonAgeEffects` · regress tylko `DEVELOPMENT_THIN.AGE_REGRESS_FROM`.
+- Scope: non-departed gracza (w tym akademia) · OUT Retirement/Prime/Youth Depth/world-age.
+- SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-AGE-01-PLAN.md`](../implementation/LFE-AGE-01-PLAN.md).
+
 ### D119–D121 — kontrakt LFE PUBLIC surface (must-know)
 
 - Root `@lastfootball/lfe` = Freeze PUBLIC only · `EngineEvent` + tactical factories PUBLIC.
 - `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
 - SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
 
-**ACTIVE** · 2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · D1–D121 · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-08-03 — LFE-AGE-01 FULLY CLOSED · D1–D122 · Domain `6a54722` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

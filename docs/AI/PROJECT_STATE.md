@@ -25,8 +25,8 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **LFE-RATINGS-V2 CLOSED** (`962f0a8`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
-Kandydaci PLANNED: §22 push/email · `/advanced`.
+Brak otwartego EPIC. **LFE-AGE-01 CLOSED** (`6a54722`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
+Kandydaci PLANNED: League World · §22 · Career Decline.
 
 ## Powiązania
 
@@ -34,4 +34,4 @@ Kandydaci PLANNED: §22 push/email · `/advanced`.
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8`
+2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722`

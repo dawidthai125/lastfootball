@@ -8,13 +8,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
-**Domain feature baseline:** **`962f0a8`** (LFE-RATINGS-V2).  
-**Prior Domain:** **`ce00327`** (LFE-PUBLIC-API-01).  
+**Domain feature baseline:** **`6a54722`** (LFE-AGE-01).  
+**Prior Domain:** **`962f0a8`** (LFE-RATINGS-V2).  
 **Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE  
+**Documentation tip:** **`759df0f`** — LFE-AGE-01 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-08-03] — LFE-AGE-01 · CLOSED
+
+### Product
+
+- Season Age++ Thin (H-AGE): wire `applySeasonAgeEffects` przy `confirmStartNextSeason` · persist age(+ soft skill regress @32) · D122.
+- Domain tip → **`6a54722`** · D122 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji · poza Match Engine / LFE package).
+
+### Docs
+
+- Sync SSOT AGE-01 CLOSE · HANDOFF · baseline · status · PLAYERS · Season End H-AGE · next **Owner GO → League World / §22 / Career Decline**.
 
 ## [2026-08-03] — LFE-RATINGS-V2 · CLOSED
 

@@ -21,9 +21,9 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | Warstwa                 | Hash / EPIC                                        |
 | ----------------------- | -------------------------------------------------- |
 | **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED      |
-| **Domain baseline**     | **`ce00327`** — LFE-PUBLIC-API-01 CLOSED           |
+| **Domain baseline**     | **`6a54722`** — LFE-AGE-01 CLOSED                  |
 | **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED            |
-| **Documentation tip**   | **`7485366`** — LFE-PUBLIC-API-01 DOCS CLOSE (pin) |
+| **Documentation tip**   | **`759df0f`** — LFE-AGE-01 DOCS CLOSE (pin)        |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -57,6 +57,8 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-STADIUM-01**                             | Stadium Information Thin · D109–D115 · `82a164d`                 |
 | **LFE-TRANSFERS-10** / **TD-03+**              | actions split · displayPos sole · D116–D118 · `9424dd8`          |
 | **LFE-PUBLIC-API-01**                          | root PUBLIC · `/testing` barrel · D119–D121 · `ce00327`          |
+| **LFE-RATINGS-V2**                             | assists / minutesPlayed · Ratings formula v2 · `962f0a8`         |
+| **LFE-AGE-01**                                 | Season Age++ Thin · H-AGE · Confirm N+1 · D122 · `6a54722`       |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -104,9 +106,9 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** §22 push/email · `/advanced` (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** League World · §22 · Career Decline (po Owner GO).
 
-**Alternatywy FUTURE:** Physics · multi-tier AI.
+**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI.
 
 ## Naming
 
@@ -117,4 +119,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** §22 push/email 
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-RATINGS-V2 CLOSED · next Owner GO → §22 push / `/advanced`
+**ACTIVE** · 2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · next Owner GO → League World / §22 / Career Decline

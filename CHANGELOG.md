@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-AGE-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · Season End H-AGE · Domain tip `6a54722` · next **Owner GO → League World / §22 / Career Decline**
+- Kontrakt: Season Age++ Thin · H-AGE · Confirm N+1 · D122 · REUSE `applySeasonAgeEffects`
+
+### Added (shipped on `main` — LFE-AGE-01)
+
+- Season Age++ wire at Confirm N+1 · soft skill regress @32 · PLAN `LFE-AGE-01-PLAN.md` · D122
+
 ### Docs (LFE-RATINGS-V2 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · match stack · Domain tip `962f0a8` · next **Owner GO → §22 push / `/advanced`**

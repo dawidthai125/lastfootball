@@ -7,13 +7,13 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 ## Aktualny stan
 
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
-**Domain feature baseline:** **`962f0a8`** — LFE-RATINGS-V2 CLOSED (assists / minutesPlayed · Ratings formula v2).  
-**Prior Domain:** **`ce00327`** — LFE-PUBLIC-API-01.  
+**Domain feature baseline:** **`6a54722`** — LFE-AGE-01 CLOSED (H-AGE season age++ · D122).  
+**Prior Domain:** **`962f0a8`** — LFE-RATINGS-V2.  
 **Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE  
-**tip `main`:** **`524e958`**
+**Documentation tip:** **`759df0f`** — LFE-AGE-01 DOCS CLOSE  
+**tip `main`:** **`759df0f`**  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -81,6 +81,7 @@ GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · 
 | **LFE-TRANSFERS-10** / **TD-03+**                      | **CLOSED** · actions split · `displayPos` sole · D116–D118 · feat `9424dd8` · PRODUCTION VERIFY                          |
 | **LFE-PUBLIC-API-01**                                  | **CLOSED** · root PUBLIC only · `/testing` barrel · D119–D121 · feat `ce00327` · PRODUCTION VERIFY                       |
 | **LFE-RATINGS-V2**                                     | **CLOSED** · assists / minutesPlayed Thin · Ratings formula v2 · feat **`962f0a8`** · CI GREEN · PRODUCTION VERIFY       |
+| **LFE-AGE-01**                                         | **CLOSED** · H-AGE season age++ · Season Transition · D122 · feat **`6a54722`** · CI GREEN · PRODUCTION VERIFY           |
 | **LFE-TRAINING-01**                                    | **CLOSED** · team training Thin · `resolveClubTraining` · D21                                                            |
 | **LFE-TRAINING-02**                                    | **CLOSED** · Training Depth · skill progression + XI Gate · RPC atomic · `5e6c2ad`                                       |
 | **LFE-UI-EVOLUTION-01** (A–H)                          | **CLOSED** · decision-first Hub · Shell · Transfers · Kick-Off · Training · Squad · Finance (presentation)               |
@@ -125,6 +126,8 @@ GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · 
 | Replay persist / video export           | poza MVP                      |
 | Mobile native                           | poza scope                    |
 | Individual training / XP / attribute DB | poza Thin Depth (D21/D22)     |
+| Career Prime / Decline Depth / Retirement / Youth Depth | po LFE-AGE-01 (D122 foundation) |
+| World-age (AI clubs)                    | poza H-AGE club-only Thin     |
 | Academy levels / cash-gate / youth OVR  | poza Thin A (D23)             |
 | Messages DB / mark-as-read / Accept     | poza Thin derive (D46)        |
 | Multi-tier AI catalogs / baraże         | poza Promotion Thin (D92/D94) |
@@ -137,21 +140,23 @@ GDD-§26A/B · LEAGUE-04 · Transfers **10** · Messages · Club · SoftLock · 
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-RATINGS-V2 FULLY CLOSED** (`962f0a8`).
+**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-AGE-01 FULLY CLOSED** (`6a54722` · D122).
 
-### Oficjalna kolejność (po Ratings v2)
+### Oficjalna kolejność (po AGE-01)
 
 ```
-§22 push/email  ·  /advanced
+League World (AI po tier)  ·  §22 push/email  ·  /advanced  ·  Career Decline/Youth
 ```
 
 | EPIC                            | Notatka          |
 | ------------------------------- | ---------------- |
+| League World / AI po tier       | retencja S2+     |
 | Kanał push / email (§22 Future) | osobny Owner GO  |
 | LFE `/advanced`                 | Owner GO · defer |
+| Career Decline / Youth Depth    | po AGE foundation |
 
-**Alternatywy FUTURE:** Physics · multi-tier AI · Ticket Economy.  
-Domain feat **`962f0a8`** · Prior PUBLIC **`ce00327`** · Presentation MOTION **`9fd14fc`**.
+**Alternatywy FUTURE:** Physics · Ticket Economy · Prime / Retirement.  
+Domain feat **`6a54722`** · Prior Ratings **`962f0a8`** · Presentation MOTION **`9fd14fc`**.
 
 ## Decyzje roadmapy
 
@@ -173,6 +178,7 @@ Domain feat **`962f0a8`** · Prior PUBLIC **`ce00327`** · Presentation MOTION *
 - Transfers hardening = fee SQL helpers + parity gate · single live settle invoke · D38 (TRANSFERS-09 · TD-01/TD-02 CLOSED).
 - **Transfers TD-03+** = actions organizational split · `displayPos` sole helper · D116–D118 (TRANSFERS-10 · feat `9424dd8`).
 - **LFE PUBLIC surface** = root Freeze PUBLIC only · `/testing` barrel · `/advanced` defer · D119–D121 (PUBLIC-API-01 · feat `ce00327`).
+- **Age++ Thin (D122)** = H-AGE na Confirm N+1 · `runSeasonTransitionHAge` · REUSE `applySeasonAgeEffects` · `AGE_REGRESS_FROM` · feat `6a54722`.
 - **Ratings v2** = assists / minutesPlayed Thin fill + Post Match formula/UI · feat `962f0a8` · bez nowych PUBLIC exportów / migracji.
 - **Messages Thin** = `resolveClubMessages` derive E1–E3 · `/messages` + Overlay = ta sama DTO · brak DB/mocków · D40–D46 (MESSAGES-01).
 - **Club Profile Thin** = `resolveClubProfile` Composition · identity ≠ progression · brak silnika §6 / personelu · D47–D51 (CLUB-01).
@@ -198,4 +204,4 @@ Domain feat **`962f0a8`** · Prior PUBLIC **`ce00327`** · Presentation MOTION *
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`
+2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · D122 · next Owner GO → League World / §22 / Career

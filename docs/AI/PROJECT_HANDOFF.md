@@ -15,14 +15,14 @@
 
 | Pole                            | Wartość                                                                                                                                                                           |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC** + **Ratings v2** + GDD-16…**22** + MOTION-01 |
+| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + Transfers 10 + Season End + **Age++** + Promotion + Sponsors + Board + Stadium + **LFE PUBLIC** + **Ratings v2** + GDD-16…**22** + MOTION-01 |
 | **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                             |
-| **Domain feature baseline**     | `962f0a8` — **LFE-RATINGS-V2** (assists / minutesPlayed · Ratings formula v2)                                                                                                     |
+| **Domain feature baseline**     | `6a54722` — **LFE-AGE-01** (Season Age++ Thin · H-AGE · Confirm N+1 · D122)                                                                                                       |
 | **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                             |
-| **Documentation tip**           | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE                                                                                                                                         |
-| **tip `main`**                  | **`524e958`** — pin tip (Documentation tip = `c5c5866`)                                                                                                                           |
+| **Documentation tip**           | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                                                                                                                                             |
+| **tip `main`**                  | **`759df0f`** — pin tip (Documentation tip = `759df0f`)                                                                                                                           |
 | **Branch**                      | `main`                                                                                                                                                                            |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-RATINGS-V2 FULLY CLOSED** · D1–D121 · next **Owner GO → §22 push / `/advanced`**                                                           |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-AGE-01 FULLY CLOSED** · D1–D122 · next **Owner GO → League World / §22 / Career Decline**                                                  |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -30,7 +30,8 @@
 
 ```bash
 git log -1 --oneline                    # tip (docs pin)
-git log -1 --oneline 962f0a8            # Domain RATINGS-V2
+git log -1 --oneline 6a54722            # Domain AGE-01
+git log -1 --oneline 962f0a8            # Prior Domain RATINGS-V2
 git log -1 --oneline 54d0724            # Production Baseline UI P0
 git log -1 --oneline ce00327            # Prior Domain PUBLIC-API-01
 git log -1 --oneline 9424dd8            # Prior Domain TRANSFERS-10
@@ -86,6 +87,8 @@ Transfers-10 / TD-03+: actions organizational split + `displayPos` sole helper �
 | **LFE-TRANSFERS-09**                           | **Hardening** TD-01/TD-02 · fee parity · single live settle · D38 · `e6885dc`          |
 | **LFE-TRANSFERS-10**                           | **TD-03+** · actions split · `displayPos` sole · D116–D118 · `9424dd8`                 |
 | **LFE-PUBLIC-API-01**                          | **Package Surface** · root PUBLIC · `/testing` barrel · D119–D121 · `ce00327`          |
+| **LFE-RATINGS-V2**                             | **Ratings formula v2** · assists / minutesPlayed · `962f0a8`                           |
+| **LFE-AGE-01**                                 | **Season Age++ Thin** · H-AGE · Confirm N+1 · D122 · `6a54722`                         |
 | **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`                  |
 | **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                    |
 | **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`                   |
@@ -253,7 +256,7 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 4. **EARLY_CLUB** → seed **22** fixtures → **SEASON**
 5. **Matchday loop:** Hub Primary → Match Path → wynik → finanse / development / trening / transfery (gdy odblokowane) · akademia / skauting · daily goal · ranking / osiągnięcia / wiadomości
 6. Po **22/22 played** → **Season Closed** → **OFFSEASON** · raport (+ outcome awansu/spadku derive) · soft-lock Sponsors/Board/Stadium
-7. **Confirm N+1** → apply `league_tier` (D90) · clear slate · `planClubFixtures` · `season_number++` · powrót **SEASON**
+7. **Confirm N+1** → Age++ (H-AGE · D122) · apply `league_tier` (D90) · clear slate · `planClubFixtures` · `season_number++` · powrót **SEASON**
 
 ### Co działa (Thin Slice na produkcji)
 
@@ -265,11 +268,11 @@ Landing / Auth używają Tunnel (`HERO-002`) — presentation only, bez edycji a
 
 ### Co jest Thin (świadome limity)
 
-kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · Promotion **Thin CLOSED** (D88–D94 · same AI world) · Sponsors **Thin CLOSED** (D95–D101 · ledger only) · Board **Thin CLOSED** (D102–D108 · no persist) · Stadium **Thin CLOSED** (D109–D115 · no tickets / no Match Engine) · brak XP / attribute DB · Ranking bez ELO/points surface · Achievements bez XP/score · Messages = derive · **brak kanału push** · brak auto age++ · brak Physics · akademia/skauting limity Thin · Daily bez Quest Engine.
+kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · Age++ **Thin CLOSED** (H-AGE · D122 · Confirm N+1) · Promotion **Thin CLOSED** (D88–D94 · same AI world) · Sponsors **Thin CLOSED** (D95–D101 · ledger only) · Board **Thin CLOSED** (D102–D108 · no persist) · Stadium **Thin CLOSED** (D109–D115 · no tickets / no Match Engine) · brak XP / attribute DB · Ranking bez ELO/points surface · Achievements bez XP/score · Messages = derive · **brak kanału push** · brak Physics · akademia/skauting limity Thin · Daily bez Quest Engine.
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** — kolejka soft-lock + TD-03+ + PUBLIC + **Ratings v2** = **CLOSED**. Rekomendacja ROADMAP: **§22 push/email** lub **`/advanced`** (patrz §10).
+**Czekaj na Owner GO** — kolejka soft-lock + TD-03+ + PUBLIC + Ratings v2 + **AGE-01** = **CLOSED**. Rekomendacja ROADMAP: **League World** / **§22** / **Career Decline** (patrz §10).
 
 ---
 
@@ -322,20 +325,22 @@ Access SSOT: `resolveNavAccess` / `isModuleSoftLocked` · gate: `SoftLockRouteGa
 
 Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDIT).
 
+**LFE-AGE-01** = **CLOSED** (`6a54722` · D122).  
 **LFE-RATINGS-V2** = **CLOSED** (`962f0a8`).  
 **LFE-PUBLIC-API-01** = **CLOSED** (`ce00327` · D119–D121).  
 **TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).
 
 ```
-§22 push/email  ·  /advanced
+League World  ·  §22 push/email  ·  Career Decline
 ```
 
 | #   | EPIC                            | Notatka          |
 | --- | ------------------------------- | ---------------- |
-| 1   | Kanał push / email (§22 Future) | osobny Owner GO  |
-| 2   | LFE `/advanced`                 | Owner GO · defer |
+| 1   | League World (AI po tier)       | osobny Owner GO  |
+| 2   | Kanał push / email (§22 Future) | osobny Owner GO  |
+| 3   | Career Decline (po AGE-01)      | osobny Owner GO  |
 
-**Alternatywy FUTURE:** Physics · multi-tier AI · Ticket Economy.
+**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI · Ticket Economy · Prime / Retirement.
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -343,9 +348,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO → §22 push/email lub `/advanced`**
+### **Czekaj na Owner GO → League World / §22 / Career Decline**
 
-**Uzasadnienie:** LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · D119–D121 nienaruszone. ROADMAP PLANNED: §22 · `/advanced`.
+**Uzasadnienie:** LFE-AGE-01 CLOSED · Domain `6a54722` · D122 Age++ H-AGE wired. ROADMAP PLANNED: League World · §22 · Career Decline.
 
 **Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · Physics „przy okazji” · druga ścieżka settle · import `/testing` w web.
 
@@ -409,8 +414,8 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH
 
 ### Czego nie implementować bez Owner GO
 
-- Żadnego nowego EPICu (§22 / `/advanced` / Physics) bez Owner GO.
-- age++ · Ticket Economy · Stadium expand · Prestige/Quest · multi-tier AI catalogs.
+- Żadnego nowego EPICu (League World / §22 / Career Decline / `/advanced` / Physics) bez Owner GO.
+- Ticket Economy · Stadium expand · Prestige/Quest · multi-tier AI catalogs · Prime / Retirement.
 - Drugiego `planClubFixtures` / standings DB / Fake Production.
 - Commitów i pushy „przy okazji”.
 
@@ -444,18 +449,18 @@ Cursor Agent = Senior Engineer — wykonuje po GO; docs+code SSOT; bez historii 
 7. UI presentation → Guide §16; bez driftu DNA / Style Lock.
 8. Branding K1+K3 i World Art — zmiana tylko osobnym EPIC + GO.
 9. §26 = SSOT liczb Thin; D18/D20 = SSOT implementacji economy/transfers.
-10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Promotion Thin CLOSED (D88–D94) · Sponsors Thin CLOSED (D95–D101) · Board Thin CLOSED (D102–D108) · Stadium Thin CLOSED (D109–D115) · Transfers-10 / TD-03+ CLOSED (D116–D118) · LFE PUBLIC surface CLOSED (D119–D121).
-11. Decyzje **D1–D121** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
+10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Age++ Thin CLOSED (D122 · H-AGE) · Promotion Thin CLOSED (D88–D94) · Sponsors Thin CLOSED (D95–D101) · Board Thin CLOSED (D102–D108) · Stadium Thin CLOSED (D109–D115) · Transfers-10 / TD-03+ CLOSED (D116–D118) · LFE PUBLIC surface CLOSED (D119–D121).
+11. Decyzje **D1–D122** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
 
 ## 15. Known Constraints
 
 - Thin Slice wszędzie w platformie — świadome limity vs pełne GDD.
-- Domain tip = **PUBLIC-API-01** (`ce00327`); prior TRANSFERS-10 `9424dd8`; Presentation MOTION `9fd14fc`; UI P0 `54d0724`.
+- Domain tip = **AGE-01** (`6a54722`); prior RATINGS-V2 `962f0a8`; Presentation MOTION `9fd14fc`; UI P0 `54d0724`.
 - Soft-lock Sponsors/Board/Stadium = **open** (D99/D105/D111); windowed: transfers/training.
-- Brak: AI clubs · escrow · timeout · Physics · XP/attribute DB · Ranking ELO · Achievements XP · Messages DB · §6 engine · auto age++ · Stadium Ticket/expand · Board Prestige/Quest · sponsor marketplace · multi-tier AI / baraże · `completeLiveTransfer()` · `@lastfootball/lfe/advanced`.
-- Migracje prod: training · potential · academy_track · scout_shortlist · fee helpers · season_number/season_phase · league_tier · **club_sponsor_contracts**; Messages/Club/SoftLock/Board/Stadium/TRANSFERS-10/PUBLIC-API-01 = brak migracji.
+- Brak: AI clubs · escrow · timeout · Physics · XP/attribute DB · Ranking ELO · Achievements XP · Messages DB · §6 engine · Stadium Ticket/expand · Board Prestige/Quest · sponsor marketplace · multi-tier AI / baraże · `completeLiveTransfer()` · `@lastfootball/lfe/advanced` · Career Decline / Prime / Retirement Depth.
+- Migracje prod: training · potential · academy_track · scout_shortlist · fee helpers · season_number/season_phase · league_tier · **club_sponsor_contracts**; Messages/Club/SoftLock/Board/Stadium/TRANSFERS-10/PUBLIC-API-01/RATINGS-V2/AGE-01 = brak migracji.
 - Sekrety `.env` — nigdy w git · Force-push `main` — zakaz.
 
 ---
@@ -494,9 +499,9 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                        |
 | UX           | **Dobry**    | Hub decision-first · SoftLock · OFFSEASON CTA                                                      |
 | Gameplay     | **Thin+**    | Pełna pętla sezonu 22 + N+1 Confirm · Training · Transfers · Academy · Scouting · Info Thin layers |
-| Dokumentacja | **Aktualna** | PUBLIC-API-01 CLOSE · Domain tip `ce00327` · D1–D121                                               |
+| Dokumentacja | **Aktualna** | AGE-01 CLOSE · Domain tip `6a54722` · D1–D122                                                      |
 | CI           | **GREEN**    | tip `main` VERIFIED                                                                                |
-| Production   | **GREEN**    | Vercel · Domain `ce00327` · brak migracji PUBLIC-API-01                                            |
+| Production   | **GREEN**    | Vercel · Domain `6a54722` · brak migracji AGE-01                                                   |
 
 ---
 
@@ -514,4 +519,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 FULLY CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`
+2026-08-03 — LFE-AGE-01 FULLY CLOSED · Domain `6a54722` · next Owner GO → League World / §22 / Career Decline

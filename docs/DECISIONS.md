@@ -190,7 +190,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | Persist         | RPC `apply_match_development` + `match_development_log` (idempotent per `match_key`)            |
 | Training        | D21 respektuje potential (TS + SQL clamp)                                                       |
 | Fee             | **bez zmian** — `deriveTransferFee(skill, age)`                                                 |
-| Age             | pure `applySeasonAgeEffects` + `onSeasonEnd` hook — **brak** auto age++ w produkcie             |
+| Age             | pure `applySeasonAgeEffects` · **wired** Confirm N+1 (H-AGE · **D122**) — supersedes „brak auto age++” |
 | Presentation    | pasma only (Niski / Średni / Wysoki / Bardzo wysoki); Squad + Player Card + Post Match signals  |
 | LFE             | **zero zmian**                                                                                  |
 
@@ -511,7 +511,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D83 — Season End Hooks Are No-Op In Thin · CLOSED
 
 **Dlaczego:** age++ / Sponsors / Board w lifecycle = scope systems (D68 · D72).  
-**Zasada:** Hooki w LFE-SEASON-END-01 = no-op (`onSeasonEnd`); feature = osobny Owner EPIC.
+**Zasada (oryginał SEASON-END-01):** Hooki = no-op do czasu Owner EPIC.  
+**Supersede częściowy:** H-AGE → **D122** (wired); H-SPONSORS / H-BOARD / H-PROMOTION = osobne CLOSED EPICi (nie no-op).
 
 ### D84 — Season Report Uses Existing Facts Only · CLOSED
 
@@ -717,9 +718,18 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D119–D121:** LFE-PUBLIC-API-01 · feat **`ce00327`** · PLAN [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
+### D122 — Season Age++ Wired at Confirm N+1 (H-AGE) · CLOSED
+
+**Dlaczego:** H-AGE no-op blokował retencję kariery; pure `applySeasonAgeEffects` już istniało (D22).  
+**Zasada:** Jedyny produktowy age++ = `confirmStartNextSeason` → Season Transition step **H-AGE** (`runSeasonTransitionHAge`); REUSE pure; scope = non-departed `players` klubu gracza (w tym `academy_track`); soft regress wyłącznie przez `DEVELOPMENT_THIN.AGE_REGRESS_FROM`; fail-closed + revert przy fail otwarcia sezonu.  
+**OUT:** Retirement · Prime · Decline Depth · Youth Depth · world-age AI · migracje schematu · LFE/Match Engine / Settlement.  
+**Superseduje:** „brak auto age++ w produkcie” (D22 Age line · D83 age no-op).
+
+**Źródło D122:** LFE-AGE-01 · feat **`6a54722`** · PLAN [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D121 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D122 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -747,11 +757,12 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D121 wymaga **AUDIT** i aktu
 **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
 **LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
 **LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
+**LFE-AGE-01 (2026-08-03):** Season Age++ H-AGE wired Confirm N+1 (D122); Season Transition Pipeline step 1 · feat **`6a54722`** · PRODUCTION VERIFY.
 
 ## Powiązania
 
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md)
+[`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`AI/DECISIONS.md`](./AI/DECISIONS.md) · [`AI/ARCHITECTURAL_DECISIONS.md`](./AI/ARCHITECTURAL_DECISIONS.md) · [`lfe/PUBLIC_API.md`](./lfe/PUBLIC_API.md) · [`lfe/LFE_ARCHITECTURE_FREEZE.md`](./lfe/LFE_ARCHITECTURE_FREEZE.md) · [`game-design/GAME_DESIGN_DOCUMENT.md`](./game-design/GAME_DESIGN_DOCUMENT.md) · [`game-design/GDD-SEASON-END-01.md`](./game-design/GDD-SEASON-END-01.md) · [`game-design/GDD-PROMOTION-01.md`](./game-design/GDD-PROMOTION-01.md) · [`game-design/GDD-SPONSORS-01.md`](./game-design/GDD-SPONSORS-01.md) · [`game-design/GDD-BOARD-01.md`](./game-design/GDD-BOARD-01.md) · [`game-design/GDD-STADIUM-01.md`](./game-design/GDD-STADIUM-01.md) · [`implementation/LFE-TRANSFERS-10-PLAN.md`](./implementation/LFE-TRANSFERS-10-PLAN.md) · [`implementation/LFE-PUBLIC-API-01-PLAN.md`](./implementation/LFE-PUBLIC-API-01-PLAN.md) · [`implementation/LFE-AGE-01-PLAN.md`](./implementation/LFE-AGE-01-PLAN.md)
 
 ## Last updated
 
-2026-07-31 — LFE-PUBLIC-API-01 FULLY CLOSED · feat `ce00327` · D119–D121
+2026-08-03 — LFE-AGE-01 FULLY CLOSED · feat `6a54722` · D1–D122

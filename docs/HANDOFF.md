@@ -38,4 +38,4 @@ Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlemen
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8`
+2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722`

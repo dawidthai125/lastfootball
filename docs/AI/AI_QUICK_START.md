@@ -13,11 +13,11 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 |                     |                                                          |
 | ------------------- | -------------------------------------------------------- |
 | Production Baseline | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED            |
-| Domain baseline     | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutes)       |
-| Prior Domain        | **`ce00327`** — LFE-PUBLIC-API-01 (PUBLIC · D119–D121)   |
+| Domain baseline     | **`6a54722`** — LFE-AGE-01 (Season Age++ · H-AGE · D122) |
+| Prior Domain        | **`962f0a8`** — LFE-RATINGS-V2 (assists / minutes)       |
 | Presentation tip    | **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin) |
-| Documentation tip   | **`c5c5866`** — LFE-RATINGS-V2 DOCS CLOSE                |
-| tip `main`          | **`524e958`** — pin tip (docs tip `c5c5866`)             |
+| Documentation tip   | **`759df0f`** — LFE-AGE-01 DOCS CLOSE                    |
+| tip `main`          | **`759df0f`** — pin tip (docs tip `759df0f`)             |
 | Prod                | https://lastfootball.vercel.app                          |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)             |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)           |
@@ -31,7 +31,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** §22 push/email lub `/advanced`.
+**Następny EPIC (kolejka Ownera):** League World / §22 / Career Decline.
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13.
 
 ## Twarde zasady
@@ -55,4 +55,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · next Owner GO → §22 push / `/advanced`
+**ACTIVE** · 2026-08-03 — LFE-AGE-01 CLOSED · Domain `6a54722` · next Owner GO → League World / §22 / Career Decline

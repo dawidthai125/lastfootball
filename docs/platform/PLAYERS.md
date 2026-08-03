@@ -37,7 +37,7 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 | Persist meczu       | `apply_match_development(club, match_key, updates)` + `match_development_log`             |
 | Training            | LFE-TRAINING-02 respektuje ceiling `potential` (TS + clamp w RPC); senior only            |
 | Transfer fee        | **bez zmian** — `deriveTransferFee(skill, age)` only                                      |
-| Age                 | Hook pure `applySeasonAgeEffects` / `onSeasonEnd` — **brak** auto `age++` w produkcie     |
+| Age                 | Wired Confirm N+1 (H-AGE · **D122**) — REUSE `applySeasonAgeEffects` · `runSeasonTransitionHAge` |
 | LFE                 | **zero zmian**                                                                            |
 
 ## Academy Thin A (LFE-ACADEMY-01)
@@ -70,11 +70,11 @@ Glosariusz: [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE
 
 ## Decyzje
 
-D19 · **D22** · **D23** — [`../DECISIONS.md`](../DECISIONS.md).
+D19 · **D22** · **D23** · **D122** — [`../DECISIONS.md`](../DECISIONS.md).
 
 ## Poza Thin (kod)
 
-Talenty · career history · XP · attribute DB · numeric potential w UI · auto season-end age · morale numeric · poziomy akademii · cash-gate · trening akademii.
+Talenty · career history · XP · attribute DB · numeric potential w UI · Career Decline / Prime / Retirement Depth · world-age (AI clubs) · morale numeric · poziomy akademii · cash-gate · trening akademii.
 
 ## UI (presentation)
 

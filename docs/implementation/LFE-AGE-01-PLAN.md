@@ -4,8 +4,9 @@
 **Typ:** docs PLAN · Career Thin foundation (wire istniejącego pure age tick)  
 **Data:** 2026-08-03  
 **Wejście:** GAMEPLAY-LOOP-AUDIT-01 · Owner **GO → PLAN**  
-**Status PLAN:** DRAFT — czekaj na Owner **GO → IMPLEMENT**  
+**Status PLAN:** FULLY CLOSED · feat `6a54722` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE  
 **Baseline wejścia:** tip `fc6f692` · Domain `962f0a8` (RATINGS-V2) · Season End `024e827` · PLAYERS-02 / D22 · D1–D121  
+**Baseline wyjścia:** Domain **`6a54722`** · D1–**D122** · docs tip `759df0f`  
 **SSOT wejścia:** [`../game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) (H-AGE) · [`../platform/PLAYERS.md`](../platform/PLAYERS.md) · [`../DECISIONS.md`](../DECISIONS.md) D22 · D83 · kod `lib/squad/season-age.ts` · `confirmStartNextSeason`
 
 ---
@@ -24,16 +25,16 @@ Włączyć **sezonowy przyrost wieku** kadry przy starcie Season N+1 (hook **H-A
 
 | #   | Potwierdzenie                                                                                                               | Stan         |
 | --- | --------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| 1   | Moment Age++ = **wyłącznie** ścieżka `confirmStartNextSeason` (H-AGE · D82 sole Confirm)                                    | **PROPOSED** |
-| 2   | REUSE `applySeasonAgeEffects` — **bez** forka reguł age/skill w drugim helperze                                             | **PROPOSED** |
-| 3   | Scope kadry = zawodnicy **klubu gracza** (`players.club_id = clubId`, `departed_at is null`) — senior **i** `academy_track` | **PROPOSED** |
-| 4   | Soft skill regress przy `age ≥ AGE_REGRESS_FROM` (32) = **IN** jako REUSE PLAYERS-02 (seed Decline), nie osobny EPIC        | **PROPOSED** |
-| 5   | **Brak** migracji schematu (`players.age` / `skill` / `potential` już istnieją)                                             | **PROPOSED** |
-| 6   | **Brak** zmian LFE PUBLIC / Match Engine / Settlement / soft-lock Sponsors·Board·Stadium                                    | **PROPOSED** |
-| 7   | Nowa decyzja **D122** (Age++ wired) superseduje „brak auto age++” w D22/D83 **tylko** dla H-AGE                             | **PROPOSED** |
-| 8   | Retirement · Prime buff · Youth intake auto · world-age innych klubów = **OUT**                                             | **PROPOSED** |
+| 1   | Moment Age++ = **wyłącznie** ścieżka `confirmStartNextSeason` (H-AGE · D82 sole Confirm)                                    | **LOCKED**   |
+| 2   | REUSE `applySeasonAgeEffects` — **bez** forka reguł age/skill w drugim helperze                                             | **LOCKED**   |
+| 3   | Scope kadry = zawodnicy **klubu gracza** (`players.club_id = clubId`, `departed_at is null`) — senior **i** `academy_track` | **LOCKED**   |
+| 4   | Soft skill regress przy `age ≥ AGE_REGRESS_FROM` (32) = **IN** jako REUSE PLAYERS-02 (seed Decline), nie osobny EPIC        | **LOCKED**   |
+| 5   | **Brak** migracji schematu (`players.age` / `skill` / `potential` już istnieją)                                             | **LOCKED**   |
+| 6   | **Brak** zmian LFE PUBLIC / Match Engine / Settlement / soft-lock Sponsors·Board·Stadium                                    | **LOCKED**   |
+| 7   | Nowa decyzja **D122** (Age++ wired) superseduje „brak auto age++” w D22/D83 **tylko** dla H-AGE                             | **LOCKED**   |
+| 8   | Retirement · Prime buff · Youth intake auto · world-age innych klubów = **OUT**                                             | **LOCKED**   |
 
-Owner GO IMPLEMENT zamyka LOCK 1–8.
+Owner GO IMPLEMENT zamyka LOCK 1–8. **Zamknięte** — LOCK 1–8 **LOCKED**.
 
 ---
 
@@ -287,15 +288,15 @@ E2E pełnych 10 sezonów · world AI age · Retirement UI.
 
 - [ ] [`docs/DECISIONS.md`](../DECISIONS.md) — **D122** Age++ wired · update D22 age line · D83 age no-op supersede
 - [ ] [`docs/AI/ARCHITECTURAL_DECISIONS.md`](../AI/ARCHITECTURAL_DECISIONS.md) — skrót D122
-- [ ] [`docs/platform/PLAYERS.md`](../platform/PLAYERS.md) — Age = wired Confirm; reguły regress
-- [ ] [`docs/game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) — H-AGE status CLOSED / pointer do LFE-AGE-01
+- [x] [`docs/platform/PLAYERS.md`](../platform/PLAYERS.md) — Age = wired Confirm; reguły regress
+- [x] [`docs/game-design/GDD-SEASON-END-01.md`](../game-design/GDD-SEASON-END-01.md) — H-AGE status CLOSED / pointer do LFE-AGE-01
 - [ ] [`docs/ROADMAP.md`](../ROADMAP.md) — LFE-AGE-01 DONE · ROADMAP CAREER pointer
-- [ ] [`docs/PROJECT_STATUS.md`](../PROJECT_STATUS.md)
+- [x] [`docs/PROJECT_STATUS.md`](../PROJECT_STATUS.md)
 - [ ] [`docs/AI/CURRENT_BASELINE.md`](../AI/CURRENT_BASELINE.md) · [`PROJECT_HANDOFF.md`](../AI/PROJECT_HANDOFF.md) — Domain tip · „auto age++” usunięte z Not on production
-- [ ] [`docs/CHANGELOG.md`](../CHANGELOG.md) / root CHANGELOG
-- [ ] [`docs/AI/EPIC_INDEX.md`](../AI/EPIC_INDEX.md)
-- [ ] Ten PLAN → Status **FULLY CLOSED** + feat hash
-- [ ] Tip pin docs po DOCS PUSH
+- [x] [`docs/CHANGELOG.md`](../CHANGELOG.md) / root CHANGELOG
+- [x] [`docs/AI/EPIC_INDEX.md`](../AI/EPIC_INDEX.md)
+- [x] Ten PLAN → Status **FULLY CLOSED** + feat hash `6a54722`
+- [ ] Tip pin docs po DOCS PUSH (`759df0f` placeholder)
 
 **Nie w DOCS CLOSE AGE-01:** pełna spekulacja Prime/Retirement jako zaimplementowana — tylko pointer ROADMAP CAREER.
 
@@ -358,22 +359,23 @@ AGE (LFE-AGE-01)          ← ten EPIC: age++ + seed soft-regress @32
 
 ---
 
-## 14. Decyzja proponowana (DOCS CLOSE · nie teraz)
+## 14. Decyzja (DOCS CLOSE)
 
-### D122 — Season Age++ Wired at Confirm N+1 (PROPOSED)
+### D122 — Season Age++ Wired at Confirm N+1 (CLOSED)
 
 **Dlaczego:** H-AGE no-op (D83) blokuje retencję kariery; pure tick już istnieje (D22).  
 **Zasada:** Jedyny age++ produktowy = Confirm N+1; REUSE `applySeasonAgeEffects`; scope = non-departed players klubu gracza (w tym academy_track); brak Retirement/Prime/Youth Depth w tym EPICu.  
-**Superseduje:** fragment D22/D83 „brak auto age++ w produkcie”.
+**Superseduje:** fragment D22/D83 „brak auto age++ w produkcie”.  
+**Feat:** `6a54722`.
 
 ---
 
 ## 15. Status i następny krok
 
-|                          |                                                                      |
-| ------------------------ | -------------------------------------------------------------------- |
-| PLAN                     | **COMPLETE (DRAFT file)** — `docs/implementation/LFE-AGE-01-PLAN.md` |
-| Implementacja            | **Zakazana** do Owner **GO → IMPLEMENT**                             |
-| Commit / push / migracje | **Zakazane** w tym etapie                                            |
+|                          |                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| PLAN                     | **FULLY CLOSED** · feat `6a54722` · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE            |
+| Implementacja            | **SHIPPED** — Confirm N+1 Age++ wire (H-AGE · D122)                                      |
+| Commit / push / migracje | Domain feat `6a54722` · **brak** migracji schematu                                       |
 
-**Czekam na Owner GO → IMPLEMENT** (z potwierdzeniem LOCK 1–8) albo korektę PLAN (np. regress OUT, world-age IN, inny order Confirm).
+**EPIC CLOSED.** Następny krok: **Owner GO → League World / §22 / Career Decline** (AUDIT first).
