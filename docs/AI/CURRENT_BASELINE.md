@@ -50,7 +50,7 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | URL                         | https://lastfootball.vercel.app                                                                  |
 | Alias                       | https://lastfootball.pl                                                                          |
 | Branch                      | `main`                                                                                           |
-| **tip `main`**              | **`c75577c`** — pin tip (Documentation tip = `c75577c`)                                          |
+| **tip `main`**              | **`b792fd2`** — pin tip (Documentation tip = `c75577c`)                                          |
 | **Documentation tip**       | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                  |
 | **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                    |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                     |

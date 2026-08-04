@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · docs tip `c75577c` · D1–D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · docs tip `c75577c` · tip main `b792fd2` · D1–D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime
