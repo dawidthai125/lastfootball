@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Docs (LFE-NOTIFICATIONS-01 CLOSE)
+
+- Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · INVITATIONS · MESSAGES · HUB · MODULE_MAP · D125 · Presentation tip `54ae7b3` · next **Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**
+- Kontrakt: Invitation Layer composition · sessionStorage dismiss · Overlay → messages
+
+### Added (shipped on `main` — LFE-NOTIFICATIONS-01)
+
+- In-App Invitation Layer · `resolveClubInvitations` · PLAN `LFE-NOTIFICATIONS-01-PLAN.md` · D125 · feat `54ae7b3`
+
 ### Docs (LFE-CAREER-DECLINE-01 CLOSE)
 
 - Sync HANDOFF · CURRENT_BASELINE · PROJECT_STATUS · ROADMAP · PLAYERS · match stack · Domain tip `3c01baa` · next **Owner GO → §22 / Youth Depth / Retirement / Prime**

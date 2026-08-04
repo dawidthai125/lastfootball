@@ -14,7 +14,7 @@ Szybki skrót warstw API. **Pełny kontrakt freeze:** [LFE_ARCHITECTURE_FREEZE.m
 - `/advanced` — **nie** zaimplementowane (defer).
 - Feat CLOSE PUBLIC: **`ce00327`** · D119–D121.
 - Domain feat Ratings: **`962f0a8`** (LFE-RATINGS-V2) — **bez** zmiany PUBLIC surface.
-- **NEXT EPIC:** §22 push/email · `/advanced` (nie LFE surface)
+- **NEXT EPIC:** Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime (nie LFE surface)
 
 ## Opis działania
 
@@ -76,4 +76,4 @@ Canvas / Replay / LiveMatchRuntime / Post Match → [`../web/MATCH_UI_PIPELINE.m
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · Domain `962f0a8` · PUBLIC surface nienaruszony (D119–D121)
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · PUBLIC surface nienaruszony (D119–D121)

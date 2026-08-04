@@ -40,6 +40,7 @@ lastfootball/
 | Skauting      | `resolveClubScouting`                                                | `lib/scouting/`                  | [`platform/PLAYERS.md`](../platform/PLAYERS.md) (Scouting Thin B) · D24                                                  |
 | Transfery     | `resolveTransferMarket`                                              | `lib/transfers/`                 | [`platform/TRANSFERS.md`](../platform/TRANSFERS.md) · [`TRANSFER_ARCHITECTURE.md`](../platform/TRANSFER_ARCHITECTURE.md) |
 | Wiadomości    | **`resolveClubMessages`**                                            | `lib/messages/`                  | [`platform/MESSAGES.md`](../platform/MESSAGES.md) · D40–D46                                                              |
+| Zaproszenia   | **`resolveClubInvitations`**                                         | `lib/invitations/`               | [`platform/INVITATIONS.md`](../platform/INVITATIONS.md) · D125 · ≠ Messages                                              |
 | Klub (profil) | **`resolveClubProfile`**                                             | `lib/club/resolve-club-profile`  | [`platform/CLUB.md`](../platform/CLUB.md) · D47–D51                                                                      |
 | Trening       | `resolveClubTraining`                                                | `lib/training/`                  | [`platform/TRAINING.md`](../platform/TRAINING.md)                                                                        |
 | Auth / klub   | session + club DTO                                                   | `lib/auth/`, `lib/club/`         | [`platform/ONBOARDING_FLOW.md`](../platform/ONBOARDING_FLOW.md)                                                          |
@@ -52,7 +53,8 @@ lastfootball/
 Hub CTA ──► /matches | /transfers | /training | /league | /finance | /academy | /scouting
 Daily Goal ──► resolveClubDailyGoal (derive) ──► istniejące trasy (suggestion; Primary nadrzędny)
 Achievements ──► resolveClubAchievements (derive history) ──► /achievements
-Messages ──► resolveClubMessages (derive E1–E3) ──► /messages + Overlay (ta sama DTO)
+Messages ──► resolveClubMessages (derive E1–E3) ──► /messages + Overlay kind=messages (ta sama DTO · D43)
+Invitations ──► resolveClubInvitations (composition ≤1) ──► InvitationToastHost (sessionStorage dismiss · D125)
 Club ──► resolveClubProfile (compose identity) ──► /club
 League ──► planClubFixtures (22) → ensureClubFixtures → resolveLeagueTable ──► /league
 Ranking ──► resolveLeagueTable → resolveClubRanking ──► /rankings

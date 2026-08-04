@@ -4,8 +4,9 @@
 **Typ:** Information Thin · Invitation Layer (GDD §22 in-app kod) — **bez** Web Push · **bez** Email  
 **Data:** 2026-08-04  
 **Wejście:** AUDIT COMPLETE · Owner **GO PLAN**  
-**Status PLAN:** **READY FOR OWNER GO IMPLEMENT**  
-**Baseline wejścia:** Domain `3c01baa` · HEAD `021b06d` · D1–D124 · GDD-22 CLOSED (docs) · LFE-MESSAGES-01 CLOSED (`800ed0d`)
+**Status PLAN:** **CLOSED** · EPIC LFE-NOTIFICATIONS-01 FULLY CLOSED (feat `54ae7b3` · style `cb1511e` · D125 · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE)  
+**Baseline wejścia:** Domain `3c01baa` · HEAD `021b06d` · D1–D124 · GDD-22 CLOSED (docs) · LFE-MESSAGES-01 CLOSED (`800ed0d`)  
+**Baseline wyjścia:** Presentation `54ae7b3` · D1–**D125**
 
 > **Nazwa EPIC-u** (`LFE-NOTIFICATIONS-01`) pozostaje ID historycznym.  
 > **Nazwy kodu / DTO / resolvera:** wyłącznie **Invitation** — **zakaz** `Notifications` / `resolveClubNotifications` / `ClubNotificationsDto`.
@@ -233,16 +234,16 @@ Cel: odciąć produktowy drift „notifications = §22”.
 
 ## 7. D125 proposal (do zapisu przy DOCS CLOSE)
 
-> Status przy PLAN: **PROPOSED**. Wpis do `docs/DECISIONS.md` dopiero po Owner VERIFY / DOCS CLOSE (jak D122–D124).
+> Status przy CLOSE: **D125 CLOSED** w [`../DECISIONS.md`](../DECISIONS.md).
 
-### D125 — In-App Invitation Layer (Composition Thin) · PROPOSED
+### D125 — In-App Invitation Layer (Composition Thin) · CLOSED
 
-**Dlaczego:** GDD §22 wymaga soft remind in-app bez push/email; Overlay „notifications” myli się ze skrzynką §21 (D43).  
-**Zasada:** Jedyny SSOT zaproszeń in-app UI = `resolveClubInvitations` → `ClubInvitationsDto` (≤1); pure composition z `ClubMessagesDto` (decision) + Hub Primary matchday; **nie** drugi inbox i **nie** SSOT decyzji; dismiss wyłącznie `sessionStorage`; zero migracji / push / email; LFE/PUBLIC nienaruszone; nazewnictwo kodu = Invitation (nie Notification).  
+**Dlaczego:** GDD §22 wymaga soft remind in-app bez push/email; Overlay „notifications” myliło się ze skrzynką §21 (D43).  
+**Zasada:** Jedyny SSOT zaproszeń in-app UI = `resolveClubInvitations` → `ClubInvitationsDto` (≤1); pure composition z `ClubMessagesDto` (`priority: 'decision'`) + Hub Primary matchday; **nie** drugi inbox i **nie** SSOT decyzji; dismiss wyłącznie `sessionStorage` w presentation host; zero migracji / Web Push / Email; LFE/PUBLIC nienaruszone; nazewnictwo kodu = Invitation (nie Notification\*); Overlay chrome kind = `messages` (D43 peek).  
 **OUT:** Web Push · Email · preferencje DB · E1 info-as-invite · mutacje z toastu · zmiana D40–D46 poza rename Overlay → messages.  
 **Relacja:** §22 polityka · §21 Messages (D40–D46) · §23 Hub Primary nadrzędny.
 
-**Źródło (po CLOSE):** LFE-NOTIFICATIONS-01 · feat `TBD` · PLAN [`implementation/LFE-NOTIFICATIONS-01-PLAN.md`](./LFE-NOTIFICATIONS-01-PLAN.md).
+**Źródło:** LFE-NOTIFICATIONS-01 · feat **`54ae7b3`** · PLAN [`implementation/LFE-NOTIFICATIONS-01-PLAN.md`](./LFE-NOTIFICATIONS-01-PLAN.md).
 
 ---
 
@@ -304,7 +305,8 @@ Do **OWNER GO IMPLEMENT** status = **PLAN READY**.
 - [x] ≤1 invitation · sessionStorage dismiss
 - [x] Presentation ≠ Domain · NO DUPLICATE · LFE/PUBLIC freeze
 - [x] Naming = Invitation Layer (`resolveClubInvitations`)
-- [ ] **GO IMPLEMENT** (osobne)
+- [x] Naming = Invitation Layer (`resolveClubInvitations`)
+- [x] **GO IMPLEMENT** · COMMIT · PUSH · CI GREEN · PRODUCTION VERIFY · DOCS CLOSE
 
 ---
 
@@ -313,3 +315,5 @@ Do **OWNER GO IMPLEMENT** status = **PLAN READY**.
 | Wersja | Data       | Opis                                                                          |
 | ------ | ---------- | ----------------------------------------------------------------------------- |
 | 1.0.0  | 2026-08-04 | PLAN COMPLETE — Owner GO PLAN · Wariant B · Invitation naming · D125 proposed |
+| 1.1.0  | 2026-08-04 | IMPLEMENT · feat `54ae7b3` · style `cb1511e` · CI GREEN                       |
+| 1.2.0  | 2026-08-04 | DOCS CLOSE · D125 CLOSED · EPIC FULLY CLOSED                                  |

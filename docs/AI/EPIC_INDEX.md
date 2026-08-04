@@ -18,12 +18,12 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                            |
-| ----------------------- | ------------------------------------------------------ |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED          |
-| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED           |
-| **Presentation tip**    | **`9fd14fc`** — LFE-UI-MOTION-01 CLOSED                |
-| **Documentation tip**   | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE (pin) |
+| Warstwa                 | Hash / EPIC                                           |
+| ----------------------- | ----------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED         |
+| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED          |
+| **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED           |
+| **Documentation tip**   | **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE (pin) |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -61,6 +61,7 @@ Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJEC
 | **LFE-AGE-01**                                 | Season Age++ Thin · H-AGE · Confirm N+1 · D122 · `6a54722`       |
 | **LFE-LEAGUE-WORLD-02**                        | League Strength Profile · skill→MatchSession · D123 · `843bcfd`  |
 | **LFE-CAREER-DECLINE-01**                      | Career Phase · Growth Gate · banded regress · D124 · `3c01baa`   |
+| **LFE-NOTIFICATIONS-01**                       | Invitation Layer · `resolveClubInvitations` · D125 · `54ae7b3`   |
 | LFE-TRAINING-01 · 02                           | Trening Thin + Depth (skill · XI Gate) (D21)                     |
 | GDD-§26A / §26B                                | SSOT liczb + sync kodu                                           |
 
@@ -100,6 +101,7 @@ GDD-01…22 · §20 · §23 · §26 (liczby Thin) · World Art · Hi-Fi · Proto
 | **GDD-22**                | Powiadomienia Thin · content `09b85e7` · tip `f871ca8`                                                        |
 | **M2.5**                  | First Domain Implementation Review · **PASS**                                                                 |
 | **LFE-UI-MOTION-01**      | Presentation motion Thin · Hub/Match · Guide §8 · `9fd14fc`                                                   |
+| **LFE-NOTIFICATIONS-01**  | Invitation Layer · D125 · feat `54ae7b3`                                                                      |
 | **LFE-HANDOFF-01**        | Master handoff AI · docs sync                                                                                 |
 
 **SSOT reguł prezentacji:** [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16.  
@@ -108,17 +110,17 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** §22 · Youth Depth / Retirement / Prime (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Canvas REUSE · ACADEMY-02 · Retirement · §22 push · Prime (po Owner GO).
 
-**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A).
+**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A) · Youth Depth.
 
 ## Naming
 
-- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`, `LFE-PUBLIC-API-*`, `LFE-LEAGUE-WORLD-*`
+- Product: `LFE-*-01`, `LFE-TRANSFERS-0N`, `LFE-ACADEMY-*`, `LFE-SCOUTING-*`, `LFE-PUBLIC-API-*`, `LFE-LEAGUE-WORLD-*`, `LFE-NOTIFICATIONS-*`
 - Docs: `AI-DOCS-*`, `GDD-§26A`, `LFE-DOCS-UX-*`, `LFE-DOCS-BASELINE-*`, `LFE-HANDOFF-*`, `LFE-UI-EVOLUTION-*`, `GDD-16`, `GDD-17`, `GDD-18`, `GDD-19`, `GDD-21`, `GDD-22`
 - UI / marketing: `LFE-UI-IMPL-0N`, `LFE-CONTENT-PASS-*`, `LFE-LANDING-*`, `LFE-BRANDING-*`, `LFE-AUTH-UX-*`, `LFE-UI-MOTION-*`
 - Engine: EPIC-1…7 · `LFE-PUBLIC-API-*`
 
 ## Status
 
-**ACTIVE** · 2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · next Owner GO → §22 / Youth Depth / Retirement / Prime
+**ACTIVE** · 2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

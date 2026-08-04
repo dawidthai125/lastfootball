@@ -30,12 +30,12 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
 
 ## Następny EPIC (po Owner GO)
 
-§22 push/email lub Youth Depth / Retirement / Prime — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§11.
+Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§11.
 
 ## Twarde (skrót)
 
-Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D124 · LFE PUBLIC only · ZERO Fake Production.
+Owner GO · Hub = decyzja · Resolvery UI · SEED != RUNTIME · Single Settlement Path · Canvas/Replay read-only · UI EPIC → Guide §16 · Visual DNA LOCKED · D1–D125 · LFE PUBLIC only · ZERO Fake Production.
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa`
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125

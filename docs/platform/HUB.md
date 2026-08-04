@@ -20,6 +20,7 @@ Prezentacja (Hero / CTA / daily loop / Kadra): [`../game-design/UI_DESIGN_GUIDE.
 **Sesja:** `resolveHubSession(phase, nextFixture, lastPlayed)` → `matchday` | `post_match` | `idle`.  
 **Jedyny Primary CTA:** `resolvePrimaryCta(phase, session, { nextFixture })`.  
 **Daily Goal (sugestia §20):** `resolveClubDailyGoal(...)` — pure derive · ≤1 · może `null` · **nie** Primary.  
+**Invitation Layer (§22 in-app · D125):** `resolveClubInvitations` — composition Messages decision + matchday Primary · ≤1 toast · **nie** Primary · [`INVITATIONS.md`](./INVITATIONS.md).  
 **Secondary (daily loop UI):** `resolveSecondaryCtas(phase, { hasFixtures, trainingUnlocked, transferWindowOpen })` — access via `resolveNavAccess`.
 
 ## Decision layout (EARLY_CLUB + SEASON)
@@ -93,6 +94,8 @@ Soft-lock: Akademia, Skauting, Sponsorzy, Zarząd, Stadion (+ Liga/Finanse na EA
 | Kadra           | [`PLAYERS.md`](./PLAYERS.md)                                                 |
 | Transfery       | [`TRANSFERS.md`](./TRANSFERS.md)                                             |
 | Trening         | [`TRAINING.md`](./TRAINING.md)                                               |
+| Wiadomości      | [`MESSAGES.md`](./MESSAGES.md)                                               |
+| Zaproszenia     | [`INVITATIONS.md`](./INVITATIONS.md) · D125                                  |
 | First Match     | [`FIRST_MATCH.md`](./FIRST_MATCH.md)                                         |
 | Match Live UI   | [`../web/MATCH_UI_PIPELINE.md`](../web/MATCH_UI_PIPELINE.md)                 |
 | UI Contract     | [`../game-design/UI_DESIGN_GUIDE.md`](../game-design/UI_DESIGN_GUIDE.md) §16 |
@@ -107,4 +110,4 @@ FOMO kolejki 12, Top 4 fiction, peer-CTA treningu, fikcyjne okno transferowe, `d
 
 ## Last updated
 
-2026-07-30 — LFE-DAILY-01 (Daily Goal Thin · D25)
+2026-08-04 — LFE-NOTIFICATIONS-01 (Invitation Layer · D125) · Daily Goal D25

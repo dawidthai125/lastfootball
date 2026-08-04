@@ -746,9 +746,18 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło D124:** LFE-CAREER-DECLINE-01 · feat **`3c01baa`** · PLAN [`implementation/LFE-CAREER-DECLINE-01-PLAN.md`](./implementation/LFE-CAREER-DECLINE-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
 
+### D125 — In-App Invitation Layer (Composition Thin) · CLOSED
+
+**Dlaczego:** GDD §22 wymaga soft remind in-app bez push/email; Overlay „notifications” myliło się ze skrzynką §21 (D43).  
+**Zasada:** Jedyny SSOT zaproszeń in-app UI = `resolveClubInvitations` → `ClubInvitationsDto` (≤1); pure composition z `ClubMessagesDto` (`priority: 'decision'`) + Hub Primary matchday; **nie** drugi inbox i **nie** SSOT decyzji; dismiss wyłącznie `sessionStorage` w presentation host; zero migracji / Web Push / Email; LFE/PUBLIC nienaruszone; nazewnictwo kodu = Invitation (nie Notification\*); Overlay chrome kind = `messages` (D43 peek).  
+**OUT:** Web Push · Email · preferencje DB · E1 info-as-invite · mutacje z toastu · zmiana D40–D46 poza rename Overlay → messages.  
+**Relacja:** §22 polityka · §21 Messages (D40–D46) · §23 Hub Primary nadrzędny.
+
+**Źródło D125:** LFE-NOTIFICATIONS-01 · feat **`54ae7b3`** · style `cb1511e` · PLAN [`implementation/LFE-NOTIFICATIONS-01-PLAN.md`](./implementation/LFE-NOTIFICATIONS-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D124 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D125 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
@@ -765,7 +774,8 @@ Każde złamanie D1–D28 / D38 / D40–D52 / D63–D124 wymaga **AUDIT** i aktu
 **LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
 **LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
 **LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
-**LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.
+**LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.  
+**LFE-NOTIFICATIONS-01 (2026-08-04):** `resolveClubInvitations` composition Thin (D125); Overlay kind → `messages`; feat `54ae7b3`.
 **LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
 **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
 **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.

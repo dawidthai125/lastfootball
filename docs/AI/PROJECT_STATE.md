@@ -25,8 +25,8 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **LFE-CAREER-DECLINE-01 CLOSED** (`3c01baa`). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
-Kandydaci PLANNED: §22 · Youth Depth / Retirement / Prime.
+Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED** (`54ae7b3` · D125). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
+Kandydaci PLANNED: Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime.
 
 ## Powiązania
 
@@ -34,4 +34,4 @@ Kandydaci PLANNED: §22 · Youth Depth / Retirement / Prime.
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa`
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125

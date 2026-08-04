@@ -51,9 +51,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** §22 / Youth Depth / Retirement / Prime — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
-- Decyzje **D1–D124:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
+- **Następny EPIC (po Owner GO):** Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Decyzje **D1–D125:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · tip `9ea2a78` · docs tip `8483d05` · D1–D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · docs tip `DOCSTIP` · D1–D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

@@ -65,7 +65,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 ```
 
 **Brak EPIC IN PROGRESS.** Oficjalna kolejka (po **Owner GO**, start od **AUDIT**):
-`§22 push/email` · `/advanced`.
+`Canvas REUSE` · `ACADEMY-02` · Retirement · `§22 push/email` · Prime · `/advanced`.
 Szczegóły: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13 · [`../ROADMAP.md`](../ROADMAP.md).
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).
@@ -104,4 +104,4 @@ Pełna filozofia: [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md) �
 
 ## Last updated
 
-2026-08-03 — LFE-RATINGS-V2 CLOSED · next Owner GO → §22 push / `/advanced`
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

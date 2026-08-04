@@ -15,6 +15,8 @@ Jedyny szybny SSOT: **co jest wdrożone na produkcji teraz**.
 
 ```bash
 git log -1 --oneline                    # tip main (docs close)
+git log -1 --oneline 54ae7b3            # Presentation tip NOTIFICATIONS-01
+git log -1 --oneline 9fd14fc            # Prior Presentation MOTION-01
 git log -1 --oneline 3c01baa            # Production Feature / Domain CAREER-DECLINE-01
 git log -1 --oneline 843bcfd            # Prior Domain LEAGUE-WORLD-02
 git log -1 --oneline 6a54722            # Prior Domain AGE-01
@@ -36,33 +38,34 @@ git log -1 --oneline bf86749            # Prior Domain RANKING-01
 git log -1 --oneline 3915be9            # Prior Domain ACHIEVEMENTS-01
 git log -1 --oneline 73e1361            # Prior Domain DAILY-01
 git log -1 --oneline 93fd6d5            # Prior Domain SCOUTING-01
-git log -1 --oneline 9fd14fc            # Presentation tip MOTION-01
+git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 ```
 
 ---
 
 ## Production
 
-| Pole                        | Wartość                                                                                        |
-| --------------------------- | ---------------------------------------------------------------------------------------------- |
-| URL                         | https://lastfootball.vercel.app                                                                |
-| Alias                       | https://lastfootball.pl                                                                        |
-| Branch                      | `main`                                                                                         |
-| **tip `main`**              | **`9ea2a78`** — pin tip (Documentation tip = `8483d05`)                                        |
-| **Documentation tip**       | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                               |
-| **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                  |
-| Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                   |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                               |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                 |
-| Domain message              | `feat(career): add Career Phase derive and Growth Gate (LFE-CAREER-DECLINE-01)`                |
-| Prior Domain                | `843bcfd` — LFE-LEAGUE-WORLD-02                                                                |
-| **Presentation tip**        | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                          |
-| Presentation message        | `feat(ui): implement LFE-UI-MOTION-01 presentation motion thin`                                |
-| CI                          | **GREEN**                                                                                      |
-| Production                  | **VERIFIED**                                                                                   |
-| Decisions                   | **D1–D124** (D124 Career Phase derive · D123 Strength · D122 H-AGE)                            |
-| **NEXT EPIC**               | **Czekaj na Owner GO** — §22 / Youth Depth / Retirement / Prime                                |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · D1–D124 |
+| Pole                        | Wartość                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| URL                         | https://lastfootball.vercel.app                                                                  |
+| Alias                       | https://lastfootball.pl                                                                          |
+| Branch                      | `main`                                                                                           |
+| **tip `main`**              | **`DOCSTIP`** — pin tip (Documentation tip = `DOCSTIP`)                                          |
+| **Documentation tip**       | **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                  |
+| **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                    |
+| Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                     |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                 |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                   |
+| Domain message              | `feat(career): add Career Phase derive and Growth Gate (LFE-CAREER-DECLINE-01)`                  |
+| Prior Domain                | `843bcfd` — LFE-LEAGUE-WORLD-02                                                                  |
+| **Presentation tip**        | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                              |
+| Presentation message        | `feat(ui): add in-app Invitation Layer thin (LFE-NOTIFICATIONS-01)`                              |
+| Prior Presentation          | `9fd14fc` — LFE-UI-MOTION-01                                                                     |
+| CI                          | **GREEN**                                                                                        |
+| Production                  | **VERIFIED**                                                                                     |
+| Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)                   |
+| **NEXT EPIC**               | **Czekaj na Owner GO** — Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime               |
+| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
@@ -97,6 +100,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
   → Match Path immersive (chrome ukryty na /match/*)
   → Match development (PRIMARY skill growth · pasma potencjału)
   → Hub/Match presentation motion Thin (enter · press · Goal/Final overlay)
+  → Invitation Layer Thin (resolveClubInvitations · toast · D125 · ≠ Messages)
 ```
 
 ## Critical SSOT
@@ -125,6 +129,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Potential            | `players.potential` · `resolvePlayerPotential`                                                   |
 | Season Age++ (H-AGE) | `applySeasonAgeEffects` · `runSeasonTransitionHAge` on Confirm N+1 (D122)                        |
 | Career Phase         | `resolveCareerPhase` · `resolveGrowthCoefficient` · banded regress (D124)                        |
+| Invitation Layer     | `resolveClubInvitations` · ≤1 · Messages decision + Hub matchday · sessionStorage dismiss (D125) |
 | League Strength      | `resolveLeagueStrengthProfile` · `mapPlayerSkillToLfeSkills` · session wire (D123)               |
 | Match development    | RPC `apply_match_development` · K_MATCH=5                                                        |
 | XI Gate              | `validateStartingXi` / `resolveStartingXi`                                                       |
@@ -137,7 +142,7 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 | Osiągnięcia          | patrz **Achievements** (kod Thin) — GDD §19 produkt                                              |
 | Klub (profil)        | `resolveClubProfile` — identity Thin · D47–D51 · `/club` sole DTO                                |
 | Wiadomości           | `resolveClubMessages` — derive E1–E3 · D40–D46 · `/messages` + Overlay = ta sama DTO             |
-| Powiadomienia        | GDD §22 Thin (docs) — polityka alertów · zaproszenie ≠ wymuszenie; push = Future                 |
+| Powiadomienia        | GDD §22 · **in-app** = Invitation Layer (D125) · push/email = Future                             |
 | Season End           | `season_phase` / `season_number` · `resolveSeasonReport` · Confirm N+1 · D78–D87                 |
 | Promotion            | `league_tier` · `resolveLeagueTierLabel` · outcome · Confirm apply · D88–D94 · strength **D123** |
 | Sponsors             | `club_sponsor_contracts` · `resolveClubSponsors` · ledger · H-SPONSORS · D95–D101                |
@@ -185,10 +190,10 @@ Landing → Auth (modal lub /login|/register) → Welcome → Club Wizard · Rev
 ## Operacyjne
 
 > Migracje Supabase na prod (zastosowane): `complete_training_session` · `players.potential` + `apply_match_development` · **`academy_track` / `promoted_at`** (`20260730120000_academy_track.sql`) · **`scout_shortlist`** (`20260730140000_scout_shortlist.sql`) · **`derive_transfer_fee_thin` / `is_allowed_transfer_amount_thin`** (`20260730150000_transfer_fee_parity_helpers.sql` · LFE-TRANSFERS-09) · **`season_number` / `season_phase`** (SEASON-END-01) · **`league_tier`** (`20260731120000_league_tier.sql` · LFE-PROMOTION-01) · **`club_sponsor_contracts` + kategorie `sponsor_base`/`sponsor_bonus`** (`20260731140000_sponsors_thin.sql` · LFE-SPONSORS-01).  
-> **LFE-DAILY-01 / … / LFE-RATINGS-V2 / LFE-AGE-01 / LFE-LEAGUE-WORLD-02 / LFE-CAREER-DECLINE-01:** brak nowych migracji schematu (CAREER-DECLINE = Web derive + Growth Gate; LEAGUE-WORLD-02 = Web strength + skill map; AGE-01 = persist `players.age`/`skill`; …).
+> **LFE-DAILY-01 / … / LFE-RATINGS-V2 / LFE-AGE-01 / LFE-LEAGUE-WORLD-02 / LFE-CAREER-DECLINE-01 / LFE-NOTIFICATIONS-01:** brak nowych migracji schematu (NOTIFICATIONS = Web Invitation composition + toast; CAREER-DECLINE = Web derive + Growth Gate; …).
 
 ## Not on production
 
 AI clubs · 2+ counters · buyer Counter · Instant Sell nego · custom ask · timeout / AI pending · escrow · `completeLiveTransfer()` · Physics · individual training · XP / attribute DB · Messages DB / mark-as-read / Accept w skrzynce · §6 numeric engine / club staff UI · **kanał push / email powiadomień** · Prime / Retirement / Youth Depth / world-age AI · numeric potential in UI · envelope ratio ≠ 1 · Stadium Ticket Economy / rozbudowa · Board Prestige/Quest · sponsor marketplace / nego / Quest Engine · multi-tier AI catalogs (Variant A) / baraże · academy levels / cash-gate / youth OVR · scout fog / regiony / misje / koszty / personel / `scout_score` · Quest Engine / daily persist / nagrody zadań · achievement XP/score/persist · `@lastfootball/lfe/advanced`.
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · Domain `3c01baa` · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

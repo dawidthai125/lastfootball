@@ -10,11 +10,23 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Production Baseline (UI P0):** **`54d0724`** (LFE-UI-IMPL-06).  
 **Domain feature baseline:** **`3c01baa`** (LFE-CAREER-DECLINE-01).  
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
-**Presentation tip:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
+**Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
+**Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
+**Documentation tip:** **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-08-04] — LFE-NOTIFICATIONS-01 · CLOSED
+
+### Product
+
+- In-App Invitation Layer · `resolveClubInvitations` · ≤1 soft invite · Messages decision + Hub matchday · sessionStorage dismiss · Overlay → `messages` · D125.
+- Presentation tip → **`54ae7b3`** · style `cb1511e` · D125 CLOSED · CI GREEN · PRODUCTION VERIFIED (brak migracji · poza LFE PUBLIC / push/email).
+
+### Docs
+
+- Sync SSOT NOTIFICATIONS-01 CLOSE · INVITATIONS · MESSAGES · HUB · MODULE_MAP · D125 · HANDOFF · baseline · status · next **Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**.
 
 ## [2026-08-03] — LFE-CAREER-DECLINE-01 · CLOSED
 

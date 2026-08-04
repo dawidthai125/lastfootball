@@ -13,16 +13,17 @@
 
 ## 1. Aktualny baseline
 
-| Pole                            | Wartość                                                                                                                                                                                                               |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production Version**          | UI P0 + SoftLock + Club + Messages + League 22 + League World + Transfers 10 + Season End + Age++ + **Career Decline** + Promotion + Sponsors + Board + Stadium + LFE PUBLIC + Ratings v2 + GDD-16…**22** + MOTION-01 |
-| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                                                                 |
-| **Domain feature baseline**     | `3c01baa` — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                                                                                                                                             |
-| **Presentation tip**            | `9fd14fc` — **LFE-UI-MOTION-01** (Hub/Match presentation motion Thin)                                                                                                                                                 |
-| **Documentation tip**           | **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE                                                                                                                                                                      |
-| **tip `main`**                  | **`9ea2a78`** — pin tip (Documentation tip = `8483d05`)                                                                                                                                                               |
-| **Branch**                      | `main`                                                                                                                                                                                                                |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-CAREER-DECLINE-01 FULLY CLOSED** · D1–D124 · next **Owner GO → §22 / Youth Depth / Retirement / Prime**                                                                        |
+| Pole                            | Wartość                                                                                                                                                                                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Production Version**          | UI P0 + SoftLock + Club + Messages + **Invitations** + League 22 + League World + Transfers 10 + Season End + Age++ + Career Decline + Promotion + Sponsors + Board + Stadium + LFE PUBLIC + Ratings v2 + GDD-16…**22** + MOTION-01 |
+| **Production Baseline (UI P0)** | `54d0724` — **LFE-UI-IMPL-06** (Live → Post fidelity)                                                                                                                                                                               |
+| **Domain feature baseline**     | `3c01baa` — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                                                                                                                                                           |
+| **Presentation tip**            | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                                                                                                                                                                 |
+| **Prior Presentation**          | `9fd14fc` — **LFE-UI-MOTION-01**                                                                                                                                                                                                    |
+| **Documentation tip**           | **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                                                                                                                                                     |
+| **tip `main`**                  | **`DOCSTIP`** — pin tip (Documentation tip = `DOCSTIP`)                                                                                                                                                                             |
+| **Branch**                      | `main`                                                                                                                                                                                                                              |
+| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-NOTIFICATIONS-01 FULLY CLOSED** · D1–D125 · next **Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**                                                                    |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
@@ -95,6 +96,7 @@ Transfers-10 / TD-03+: actions organizational split + `displayPos` sole helper �
 | **LFE-LEAGUE-WORLD-02**                        | **League Strength Profile** · skill→MatchSession · D123 · `843bcfd`                    |
 | **LFE-CAREER-DECLINE-01**                      | **Career Phase · Growth Gate** · banded regress · D124 · `3c01baa`                     |
 | **LFE-MESSAGES-01**                            | **Messages Thin** · `resolveClubMessages` E1–E3 · D40–D46 · `800ed0d`                  |
+| **LFE-NOTIFICATIONS-01**                       | **Invitation Layer** · `resolveClubInvitations` · D125 · `54ae7b3`                     |
 | **LFE-CLUB-01**                                | **Club identity Thin** · `resolveClubProfile` · D47–D51 · `36ba9be`                    |
 | **LFE-SOFTLOCK-01**                            | **Route soft-lock gate** · SoftLockState · D52 · D63–D67 · `46f7caa`                   |
 | **GDD-SEASON-END-01**                          | **Season End Thin** · D68–D77 · SSOT `GDD-SEASON-END-01.md` · docs only                |
@@ -152,7 +154,8 @@ LFE-DOCS-01 · DOCS-UX-03 · DOCS-SYNC-01 · DOCS-BASELINE-01 · **LFE-HANDOFF-0
 - Visual DNA / Style Lock / World Art / tokeny / branding SVG — **bez driftu** bez osobnego Owner GO.
 - Kalendarz Thin = **22** fixtures (D28 / LEAGUE-04).
 - **Information Thin / Skauting (D24):** shortlista = refs only; porządkuje informacje, **nie** ocenia / nie decyduje za gracza; zero wpływu na AI/rynek/symulację.
-- **Messages Thin (D40–D46):** `resolveClubMessages` only · Overlay = ta sama DTO · NO RUNTIME MOCKS.
+- **Messages Thin (D40–D46):** `resolveClubMessages` only · Overlay kind=`messages` · ta sama DTO · NO RUNTIME MOCKS.
+- **Invitation Layer (D125):** `resolveClubInvitations` ≤1 · composition Messages+Hub · sessionStorage dismiss · ≠ push/email.
   Pełny indeks: [`../DECISIONS.md`](../DECISIONS.md) · skrót trwały: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
@@ -277,7 +280,7 @@ kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · A
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** — Career Decline + League World + AGE-01 + soft-lock + TD-03+ + PUBLIC + Ratings v2 = **CLOSED**. Rekomendacja ROADMAP: **§22** / **Youth Depth** / **Retirement** / **Prime** (patrz §10).
+**Czekaj na Owner GO** — NOTIFICATIONS-01 + Career Decline + League World + AGE-01 + soft-lock + TD-03+ + PUBLIC + Ratings v2 = **CLOSED**. Rekomendacja ROADMAP: **Canvas REUSE** / **ACADEMY-02** / **Retirement** / **§22 push** / **Prime** (patrz §10).
 
 ---
 
@@ -326,10 +329,11 @@ Access SSOT: `resolveNavAccess` / `isModuleSoftLocked` · gate: `SoftLockRouteGa
 
 ---
 
-## 10. Roadmapa oficjalna (kolejność Ownera · 2026-08-03)
+## 10. Roadmapa oficjalna (kolejność Ownera · 2026-08-04)
 
 Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDIT).
 
+**LFE-NOTIFICATIONS-01** = **CLOSED** (`54ae7b3` · D125).  
 **LFE-CAREER-DECLINE-01** = **CLOSED** (`3c01baa` · D124).  
 **LFE-LEAGUE-WORLD-02** = **CLOSED** (`843bcfd` · D123).  
 **LFE-AGE-01** = **CLOSED** (`6a54722` · D122).  
@@ -338,15 +342,18 @@ Brak EPIC **IN PROGRESS**. Start **wyłącznie** po **Owner GO** (zwykle od AUDI
 **TD-03+ / LFE-TRANSFERS-10** = **CLOSED** (`9424dd8` · D116–D118).
 
 ```
-§22 push/email  ·  Youth Depth / Retirement / Prime
+Canvas REUSE getSpatialState  ·  LFE-ACADEMY-02  ·  Retirement  ·  §22 push/email  ·  Career Prime
 ```
 
-| #   | EPIC                             | Notatka         |
-| --- | -------------------------------- | --------------- |
-| 1   | Kanał push / email (§22 Future)  | osobny Owner GO |
-| 2   | Youth Depth / Retirement / Prime | osobny Owner GO |
+| #   | EPIC                               | Notatka         |
+| --- | ---------------------------------- | --------------- |
+| 1   | Canvas REUSE → `getSpatialState()` | osobny Owner GO |
+| 2   | LFE-ACADEMY-02                     | osobny Owner GO |
+| 3   | LFE-RETIREMENT-01                  | osobny Owner GO |
+| 4   | Kanał push / email (§22 Future)    | osobny Owner GO |
+| 5   | Career Prime                       | osobny Owner GO |
 
-**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A) · Ticket Economy · ACADEMY-02.
+**Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A) · Ticket Economy · Youth Depth.
 
 SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
@@ -354,9 +361,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO → §22 / Youth Depth / Retirement / Prime**
+### **Czekaj na Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**
 
-**Uzasadnienie:** LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · D124 Career Phase. ROADMAP PLANNED: §22 · Youth Depth / Retirement / Prime.
+**Uzasadnienie:** LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 Invitation Layer. ROADMAP PLANNED: Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime.
 
 **Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · Physics „przy okazji” · druga ścieżka settle · import `/testing` w web.
 
@@ -456,7 +463,7 @@ Cursor Agent = Senior Engineer — wykonuje po GO; docs+code SSOT; bez historii 
 8. Branding K1+K3 i World Art — zmiana tylko osobnym EPIC + GO.
 9. §26 = SSOT liczb Thin; D18/D20 = SSOT implementacji economy/transfers.
 10. Kalendarz **22** (D28) · Season End Thin CLOSED (D68–D87) · Age++ Thin CLOSED (D122 · H-AGE) · Career Phase / Decline Thin CLOSED (D124) · Promotion Thin CLOSED (D88–D94) · League Strength CLOSED (D123) · Sponsors Thin CLOSED (D95–D101) · Board Thin CLOSED (D102–D108) · Stadium Thin CLOSED (D109–D115) · Transfers-10 / TD-03+ CLOSED (D116–D118) · LFE PUBLIC surface CLOSED (D119–D121).
-11. Decyzje **D1–D124** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
+11. Decyzje **D1–D125** obowiązują — pełny rejestr: [`../DECISIONS.md`](../DECISIONS.md); skrót: [`ARCHITECTURAL_DECISIONS.md`](./ARCHITECTURAL_DECISIONS.md).
 
 ---
 
@@ -505,7 +512,7 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 | UI           | **Dobry+**   | Night Pitch Office P0 + Landing/Auth spójne                                                        |
 | UX           | **Dobry**    | Hub decision-first · SoftLock · OFFSEASON CTA                                                      |
 | Gameplay     | **Thin+**    | Pełna pętla sezonu 22 + N+1 Confirm · Training · Transfers · Academy · Scouting · Info Thin layers |
-| Dokumentacja | **Aktualna** | CAREER-DECLINE-01 CLOSE · Domain tip `3c01baa` · D1–D124                                           |
+| Dokumentacja | **Aktualna** | NOTIFICATIONS-01 CLOSE · Presentation `54ae7b3` · D1–D125                                          |
 | CI           | **GREEN**    | tip `main` VERIFIED                                                                                |
 | Production   | **GREEN**    | Vercel · Domain `3c01baa` · brak migracji CAREER-DECLINE-01                                        |
 
@@ -525,4 +532,4 @@ Szczegóły: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../W
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 FULLY CLOSED · Domain `3c01baa` · next Owner GO → §22 / Youth Depth / Retirement / Prime
+2026-08-04 — LFE-NOTIFICATIONS-01 FULLY CLOSED · Presentation `54ae7b3` · D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

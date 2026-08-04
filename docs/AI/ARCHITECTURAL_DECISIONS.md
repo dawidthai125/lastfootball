@@ -4,7 +4,7 @@
 
 **Krótki przewodnik** dla nowej sesji ChatGPT / Cursor: trwałe decyzje architektoniczne **bez** kopiowania pełnych opisów.
 
-**Pełny rejestr D\* (D1–D124):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
+**Pełny rejestr D\* (D1–D125):** [`../DECISIONS.md`](../DECISIONS.md) — **SSOT**; ten plik = skrót cold start.
 **Zasady filozofii:** [`ARCHITECTURE_PRINCIPLES.md`](./ARCHITECTURE_PRINCIPLES.md)  
 **Reguły warstw / SSOT map:** [`ARCHITECTURE_RULES.md`](./ARCHITECTURE_RULES.md)
 
@@ -121,6 +121,7 @@
 | **D122** | Age++ at Confirm N+1       | H-AGE `runSeasonTransitionHAge` · REUSE pure · `AGE_REGRESS_FROM` · club roster.  |
 | **D123** | Tier-aware league strength | `LeagueStrengthProfile` · AI skills ∈ band · DB skill→MatchSession Thin Adapter.  |
 | **D124** | Career Phase derive        | `resolveCareerPhase` · Growth Gate coeff · banded age regress · zero DB column.   |
+| **D125** | In-App Invitation Layer    | `resolveClubInvitations` ≤1 · Messages decision + Hub matchday · sessionStorage.  |
 | **D40**  | Fake Production Rule       | Prod nie udaje spraw / unread bez faktu domenowego.                               |
 | **D41**  | No runtime mocks           | Odblokowany moduł ≠ hardcoded / mock lista.                                       |
 | **D42**  | Messages Are Derived       | Inbox = derive skutków; nigdy przyczyna.                                          |
@@ -168,8 +169,15 @@
 ### D40–D46 — kontrakt Messages (must-know)
 
 - `resolveClubMessages` = **jedyny** SSOT UI · derive E1–E3.
-- `/messages` + Overlay = **ta sama** DTO · UI nie sortuje/filtruje.
+- `/messages` + Overlay = **ta sama** DTO · Overlay kind = **`messages`** · UI nie sortuje/filtruje.
 - **NO RUNTIME MOCKS** · brak DB / mark-as-read / Accept w skrzynce.
+
+### D125 — kontrakt Invitation Layer (must-know)
+
+- `resolveClubInvitations` = **jedyny** SSOT zaproszeń in-app · composition Thin (≠ drugi inbox).
+- Źródła: Messages `decision` + Hub matchday Primary · ≤1 · dismiss = `sessionStorage` only.
+- **≠** Primary Hub · **bez** Web Push / Email / migracji / LFE PUBLIC.
+- Naming: Invitation — zakaz `Notification*` w resolverze/DTO.
 
 ### D47–D51 — kontrakt Club Profile (must-know)
 
@@ -248,10 +256,16 @@
 - Sezonowy regress w `applySeasonAgeEffects` (`decline` −1 · `late` −2) · zero kolumn DB.
 - SSOT: [`../DECISIONS.md`](../DECISIONS.md) · PLAN [`../implementation/LFE-CAREER-DECLINE-01-PLAN.md`](../implementation/LFE-CAREER-DECLINE-01-PLAN.md).
 
+### D125 — Invitation Layer (must-know)
+
+- `resolveClubInvitations` = sole SSOT zaproszeń in-app · ≤1 · composition Messages decision + Hub matchday.
+- Dismiss = `sessionStorage` only · Overlay kind=`messages` (D43) · bez push/email/migracji/LFE.
+- SSOT: [`../platform/INVITATIONS.md`](../platform/INVITATIONS.md) · PLAN [`../implementation/LFE-NOTIFICATIONS-01-PLAN.md`](../implementation/LFE-NOTIFICATIONS-01-PLAN.md).
+
 ### D119–D121 — kontrakt LFE PUBLIC surface (must-know)
 
 - Root `@lastfootball/lfe` = Freeze PUBLIC only · `EngineEvent` + tactical factories PUBLIC.
 - `@lastfootball/lfe/testing` = barrel only · `/advanced` defer · zero zmian Engine/AI logiki.
 - SSOT = `LFE_ARCHITECTURE_FREEZE.md` · PLAN `implementation/LFE-PUBLIC-API-01-PLAN.md`.
 
-**ACTIVE** · 2026-08-03 — LFE-CAREER-DECLINE-01 FULLY CLOSED · D1–D124 · Domain `3c01baa` · SSOT [`../DECISIONS.md`](../DECISIONS.md)
+**ACTIVE** · 2026-08-04 — LFE-NOTIFICATIONS-01 FULLY CLOSED · D1–D125 · Presentation `54ae7b3` · SSOT [`../DECISIONS.md`](../DECISIONS.md)

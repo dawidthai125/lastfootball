@@ -9,11 +9,12 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Production Baseline (UI P0):** **`54d0724`** — LFE-UI-IMPL-06 CLOSED.  
 **Domain feature baseline:** **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED (Career Phase · Growth Gate · D124).  
 **Prior Domain:** **`843bcfd`** — LFE-LEAGUE-WORLD-02.  
-**Presentation tip:** **`9fd14fc`** — LFE-UI-MOTION-01 (Hub/Match motion Thin).  
-**Documentation tip:** **`8483d05`** — LFE-CAREER-DECLINE-01 DOCS CLOSE  
-**tip `main`:** **`9ea2a78`**  
+**Presentation tip:** **`54ae7b3`** — LFE-NOTIFICATIONS-01 (Invitation Layer · D125).  
+**Prior Presentation:** **`9fd14fc`** — LFE-UI-MOTION-01.  
+**Documentation tip:** **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
+**tip `main`:** **`DOCSTIP`**  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
-GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · **CAREER-DECLINE-01** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
+GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATIONS-01** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
 ---
 
@@ -104,6 +105,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · **CAREER-DECLINE-01** · Transfer
 | **LFE-BRANDING-01B**                                   | **CLOSED** · logo K1+K3 · favicons · OG · `1fbd6b5`                                                                        |
 | **LFE-AUTH-UX-01**                                     | **CLOSED** · Login Modal · AuthStage `/login` `/register` · prior presentation `9dc834a`                                   |
 | **LFE-UI-MOTION-01**                                   | **CLOSED** · Presentation motion Thin · Hub/Match · Guide §8 · **`9fd14fc`** · CI GREEN · PRODUCTION VERIFIED              |
+| **LFE-NOTIFICATIONS-01**                               | **CLOSED** · In-App Invitation Layer · `resolveClubInvitations` · D125 · feat **`54ae7b3`** · style `cb1511e` · CI GREEN   |
 | **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                                 |
 
 ## IN PROGRESS 🔄
@@ -114,10 +116,14 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · **CAREER-DECLINE-01** · Transfer
 
 ## PLANNED ⬜
 
-| Item                            | Zależność        |
-| ------------------------------- | ---------------- |
-| Kanał push / email (§22 Future) | osobny Owner GO  |
-| LFE `/advanced` subpath         | Owner GO · defer |
+| Item                               | Zależność        |
+| ---------------------------------- | ---------------- |
+| Canvas REUSE → `getSpatialState()` | Owner GO         |
+| LFE-ACADEMY-02                     | Owner GO         |
+| LFE-RETIREMENT-01                  | Owner GO         |
+| Kanał push / email (§22 Future)    | osobny Owner GO  |
+| Career Prime                       | Owner GO         |
+| LFE `/advanced` subpath            | Owner GO · defer |
 
 ## FUTURE
 
@@ -142,22 +148,25 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · **CAREER-DECLINE-01** · Transfer
 
 ## Next Recommended EPIC
 
-**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-CAREER-DECLINE-01 FULLY CLOSED** (`3c01baa` · D124).
+**Czekaj na Owner GO** — brak otwartego EPIC. **LFE-NOTIFICATIONS-01 FULLY CLOSED** (`54ae7b3` · D125). Domain CAREER-DECLINE nadal `3c01baa`.
 
-### Oficjalna kolejność (po CAREER-DECLINE-01)
+### Oficjalna kolejność (po NOTIFICATIONS-01)
 
 ```
-§22 push/email  ·  /advanced  ·  Youth Depth / Retirement / Prime
+Canvas REUSE getSpatialState  ·  LFE-ACADEMY-02  ·  Retirement  ·  §22 push/email  ·  Career Prime
 ```
 
-| EPIC                             | Notatka          |
-| -------------------------------- | ---------------- |
-| Kanał push / email (§22 Future)  | osobny Owner GO  |
-| LFE `/advanced`                  | Owner GO · defer |
-| Youth Depth / Retirement / Prime | po Decline Thin  |
+| EPIC                               | Notatka          |
+| ---------------------------------- | ---------------- |
+| Canvas REUSE → `getSpatialState()` | osobny Owner GO  |
+| LFE-ACADEMY-02                     | Owner GO         |
+| LFE-RETIREMENT-01                  | Owner GO         |
+| Kanał push / email (§22 Future)    | osobny Owner GO  |
+| Career Prime                       | Owner GO         |
+| LFE `/advanced`                    | Owner GO · defer |
 
-**Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · ACADEMY-02.  
-Domain feat **`3c01baa`** · Prior LEAGUE-WORLD **`843bcfd`** · Presentation MOTION **`9fd14fc`**.
+**Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · Youth Depth.  
+Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTION **`9fd14fc`**.
 
 ## Decyzje roadmapy
 
@@ -195,9 +204,9 @@ Domain feat **`3c01baa`** · Prior LEAGUE-WORLD **`843bcfd`** · Presentation MO
 - **§18 Ranking Thin** = sezonowy ranking klubów; kod Thin = `resolveClubRanking` (D27); ≠ §6 / §10; table = input only.
 - **§19 Osiągnięcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); ≠ §6 / §18; §20 hook ≠ katalog.
 - **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia · Transfery = SSOT ofert · kod Thin = `resolveClubMessages` (D40–D46); Overlay = ta sama DTO; brak DB/mocków.
-- **§22 Powiadomienia Thin** = polityka alertów · zaproszenie ≠ wymuszenie · opt-out ≠ utrata info (Hub/Inbox/domena) · Soft FOMO · opt-in · dedup; push/email/SDK/quiet hours/kod = Future; Overlay ≠ osobny SSOT list (reuse Messages DTO).
+- **§22 Powiadomienia Thin** = polityka alertów (GDD-22 docs) · **in-app Invitation Layer CLOSED** (`resolveClubInvitations` · D125 · feat `54ae7b3`) · Overlay kind=`messages` (D43) · push/email/SDK/quiet hours = nadal Future.
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
-- **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); nie zmienia Domain tip.
+- **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); **NOTIFICATIONS-01** = Invitation Layer presentation tip `54ae7b3`; nie zmienia Domain tip.
 - **M2.5 PASS** = standard SSOT FIRST · REUSE · ZERO DUPLICATE · Presentation ≠ Domain · Thin IN/OUT · pełny workflow.
 
 ## Powiązania
@@ -206,4 +215,4 @@ Domain feat **`3c01baa`** · Prior LEAGUE-WORLD **`843bcfd`** · Presentation MO
 
 ## Last updated
 
-2026-08-03 — LFE-CAREER-DECLINE-01 CLOSED · Domain `3c01baa` · D124 · next Owner GO → §22 / Youth Depth / Retirement / Prime
+2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime

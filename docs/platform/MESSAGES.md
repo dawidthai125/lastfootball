@@ -13,8 +13,14 @@ Wiadomości Thin (GDD §21) — in-app skrót **skutków** zdarzeń domenowych.
 | Persist   | **brak** DB / tabel / migracji / mark-as-read                         |
 | Oferty    | **§12 / Transfery** = SSOT procesu; wiadomość = skrót + `/transfers`  |
 | Widoki    | `/messages` + Overlay = **ta sama** `ClubMessagesDto` (D43)           |
+| Overlay   | kind = **`messages`** (nie „notifications”; peek skrzynki ≠ §22)      |
 | Kolejność | wyłącznie `resolveClubMessages` — UI nie sortuje / nie filtruje (D44) |
 | Mocki     | zakaz (D40/D41)                                                       |
+
+## Relacja do Invitation Layer (§22 in-app)
+
+- Messages `priority: 'decision'` = wejście do `resolveClubInvitations` (composition).
+- Invitation **≠** drugi inbox — SSOT zaproszeń: [`INVITATIONS.md`](./INVITATIONS.md) · D125.
 
 ## Decyzje
 
@@ -26,4 +32,4 @@ D40–D46 · [`../DECISIONS.md`](../DECISIONS.md)
 
 ## Last updated
 
-2026-07-30 — LFE-MESSAGES-01 CLOSED · Domain `800ed0d`
+2026-08-04 — Overlay rename messages · LFE-NOTIFICATIONS-01 CLOSED (D125)
