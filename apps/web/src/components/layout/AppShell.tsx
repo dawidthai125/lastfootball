@@ -8,6 +8,7 @@ import { MobileNav } from '@/components/layout/MobileNav';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { ShellProvider, useShell } from '@/components/layout/ShellProvider';
 import { TopBar } from '@/components/layout/TopBar';
+import { InvitationToastHost } from '@/components/invitations/InvitationToastHost';
 import { OverlayProvider } from '@/components/overlay/OverlayProvider';
 import { OverlayRoot } from '@/components/overlay/OverlayRoot';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
@@ -52,6 +53,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
         ) : null}
       </div>
       {hideMatchChrome ? null : <MobileNav />}
+      {hideMatchChrome ? null : <InvitationToastHost />}
       <OverlayRoot />
     </div>
   );

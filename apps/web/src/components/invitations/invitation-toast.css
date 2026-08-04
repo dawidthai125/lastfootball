@@ -1,0 +1,73 @@
+/* LFE-NOTIFICATIONS-01 — Invitation toast (presentation only). */
+
+.lf-invitation-toast {
+  position: fixed;
+  right: var(--lf-space-3);
+  bottom: calc(var(--lf-space-3) + var(--lf-shell-mobile-nav, 0px));
+  z-index: var(--lf-z-toast);
+  display: flex;
+  max-width: min(22rem, calc(100vw - 2 * var(--lf-space-3)));
+  align-items: stretch;
+  border-width: var(--lf-border-width-hair);
+  border-style: solid;
+  border-color: var(--lf-color-border-gold);
+  background: var(--lf-color-bg-panel);
+  box-shadow: var(--lf-shadow-md);
+}
+
+.lf-invitation-toast__body {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+  padding: var(--lf-space-3);
+  text-decoration: none;
+  color: inherit;
+}
+
+.lf-invitation-toast__eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-gold);
+}
+
+.lf-invitation-toast__subject {
+  font-family: var(--font-ui);
+  font-size: var(--lf-type-table);
+  color: var(--lf-color-text-primary);
+  line-height: 1.3;
+}
+
+.lf-invitation-toast__cta {
+  font-family: var(--font-ui);
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-gold-base);
+}
+
+.lf-invitation-toast__dismiss {
+  flex-shrink: 0;
+  border: 0;
+  border-left-width: var(--lf-border-width-hair);
+  border-left-style: solid;
+  border-left-color: var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-panel-alt);
+  color: var(--lf-color-text-muted);
+  padding: 0 var(--lf-space-3);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.lf-invitation-toast__dismiss:hover {
+  color: var(--lf-color-text-primary);
+}
+
+@media (min-width: 768px) {
+  .lf-invitation-toast {
+    bottom: var(--lf-space-4);
+    right: var(--lf-space-4);
+  }
+}

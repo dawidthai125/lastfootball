@@ -7,7 +7,8 @@ import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { UI_COPY } from '@/lib/ui/copy';
 
 /**
- * Notifications overlay — same ClubMessagesDto as /messages (LFE-MESSAGES-01 · D43).
+ * Messages overlay — same ClubMessagesDto as /messages (LFE-MESSAGES-01 · D43).
+ * Peek skrzynki — ≠ Invitation Layer (LFE-NOTIFICATIONS-01).
  * No runtime mocks · no mark-as-read workflow.
  */
 export function OverlayRoot() {
@@ -30,7 +31,7 @@ export function OverlayRoot() {
         onClick={close}
       />
 
-      {active === 'notifications' ? (
+      {active === 'messages' ? (
         <aside
           role="dialog"
           aria-modal="true"

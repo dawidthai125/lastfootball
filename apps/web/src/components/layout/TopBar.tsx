@@ -9,6 +9,7 @@ import { useShell } from '@/components/layout/ShellProvider';
 import { signOut } from '@/lib/auth/actions';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveHubPhase } from '@/lib/hub';
+import { UI_COPY } from '@/lib/ui/copy';
 
 function phaseLabel(phase: ReturnType<typeof resolveHubPhase>): string {
   if (phase === 'SEASON') return 'Sezon';
@@ -24,7 +25,7 @@ export function TopBar() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const phase = resolveHubPhase(club, { hasFixtures });
-  const { toggleNotifications } = useOverlay();
+  const { toggleMessages } = useOverlay();
   const { toggleNav, navCollapsed } = useShell();
 
   const clubName = club?.name ?? 'Klub';
@@ -133,7 +134,7 @@ export function TopBar() {
 
         <button
           type="button"
-          onClick={toggleNotifications}
+          onClick={toggleMessages}
           className="inline-flex items-center"
           style={{
             borderWidth: 'var(--lf-border-width-hair)',
@@ -147,7 +148,7 @@ export function TopBar() {
             minWidth: 44,
             justifyContent: 'center',
           }}
-          aria-label="Powiadomienia"
+          aria-label={UI_COPY.messagesBellAria}
         >
           <NavIcon id="messages" size={16} />
         </button>

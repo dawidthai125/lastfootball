@@ -10,14 +10,14 @@ import {
   type ReactNode,
 } from 'react';
 
-export type OverlayKind = 'notifications' | 'modal' | null;
+export type OverlayKind = 'messages' | 'modal' | null;
 
 type OverlayContextValue = {
   active: OverlayKind;
-  openNotifications: () => void;
+  openMessages: () => void;
   openModal: () => void;
   close: () => void;
-  toggleNotifications: () => void;
+  toggleMessages: () => void;
 };
 
 const OverlayContext = createContext<OverlayContextValue | null>(null);
@@ -26,10 +26,10 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
   const [active, setActive] = useState<OverlayKind>(null);
 
   const close = useCallback(() => setActive(null), []);
-  const openNotifications = useCallback(() => setActive('notifications'), []);
+  const openMessages = useCallback(() => setActive('messages'), []);
   const openModal = useCallback(() => setActive('modal'), []);
-  const toggleNotifications = useCallback(() => {
-    setActive((prev) => (prev === 'notifications' ? null : 'notifications'));
+  const toggleMessages = useCallback(() => {
+    setActive((prev) => (prev === 'messages' ? null : 'messages'));
   }, []);
 
   useEffect(() => {
@@ -51,8 +51,8 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
   }, [active]);
 
   const value = useMemo(
-    () => ({ active, openNotifications, openModal, close, toggleNotifications }),
-    [active, openNotifications, openModal, close, toggleNotifications],
+    () => ({ active, openMessages, openModal, close, toggleMessages }),
+    [active, openMessages, openModal, close, toggleMessages],
   );
 
   return <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>;

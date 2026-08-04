@@ -44,6 +44,14 @@ export const UI_COPY = {
   messagesOpenInbox: 'Otwórz skrzynkę',
   messagesPriorityDecision: 'Sprawa',
   messagesPriorityInfo: 'Info',
+  messagesBellAria: 'Sprawy',
+
+  /** LFE-NOTIFICATIONS-01 — Invitation Layer (in-app soft remind; ≠ Messages) */
+  invitationEyebrow: 'Zaproszenie',
+  invitationMatchday: 'Idź do meczu',
+  invitationOpen: 'Przejdź',
+  invitationDismiss: 'Odrzuć zaproszenie',
+  invitationAria: 'Zaproszenie do decyzji',
 
   /** LFE-ACHIEVEMENTS-01 — history Thin (no XP / rewards) */
   achievementsTitle: 'Osiągnięcia',
