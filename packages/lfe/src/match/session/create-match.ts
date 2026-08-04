@@ -10,6 +10,7 @@ import { createSimulation } from '../../simulation';
 import type { MatchState } from '../domain';
 import { createMatchSpatialState } from '../positioning';
 import type { MatchSpatialState } from '../positioning';
+import { advanceMatchSpatialState } from '../positioning/spatial-motion';
 import type { MatchEvent, MatchResult } from '../types';
 import type { WorldState } from '../../world';
 
@@ -209,7 +210,17 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
       }
       // Paused session: still allow headless step for determinism tests (time scale separate)
       syncScoreTied();
-      return simulation.step();
+      const snapshot = simulation.step();
+      const matchState = simulation.getMatchState();
+      if (matchState) {
+        spatial = advanceMatchSpatialState({
+          previous: spatial,
+          matchState,
+          tick: simulation.clock.tick,
+          events: simulation.events.history(),
+        });
+      }
+      return snapshot;
     },
 
     run(ticks: number) {
