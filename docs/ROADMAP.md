@@ -1,4 +1,4 @@
-# Roadmap — Last Football
+﻿# Roadmap — Last Football
 
 ## Cel
 
@@ -11,8 +11,8 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Prior Domain:** **`843bcfd`** — LFE-LEAGUE-WORLD-02.  
 **Presentation tip:** **`54ae7b3`** — LFE-NOTIFICATIONS-01 (Invitation Layer · D125).  
 **Prior Presentation:** **`9fd14fc`** — LFE-UI-MOTION-01.  
-**Documentation tip:** **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
-**tip `main`:** **`DOCSTIP`**  
+**Documentation tip:** **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
+**tip `main`:** **`c75577c`**  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATIONS-01** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 

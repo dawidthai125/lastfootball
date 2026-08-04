@@ -1,4 +1,4 @@
-# Changelog (docs SSOT index)
+﻿# Changelog (docs SSOT index)
 
 ## Cel dokumentu
 
@@ -12,7 +12,7 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
+**Documentation tip:** **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---

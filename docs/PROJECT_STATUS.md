@@ -1,4 +1,4 @@
-# Project Status — Last Football
+﻿# Project Status — Last Football
 
 ## Cel
 
@@ -25,8 +25,8 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Prior Domain**        | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (League Strength Profile · D123)                 |
 | **Presentation tip**    | **`54ae7b3`** — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)              |
 | **Prior Presentation**  | **`9fd14fc`** — LFE-UI-MOTION-01                                                     |
-| **Documentation tip**   | **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                      |
-| **tip `main`**          | **`DOCSTIP`** — pin tip (Documentation tip = `DOCSTIP`)                              |
+| **Documentation tip**   | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                      |
+| **tip `main`**          | **`c75577c`** — pin tip (Documentation tip = `c75577c`)                              |
 | **Prod**                | https://lastfootball.vercel.app · **VERIFIED**                                       |
 | **CI**                  | **GREEN**                                                                            |
 | **Decisions**           | **D1–D125** (D125 Invitation Layer · D124 Career Phase · D123 Strength · D122 H-AGE) |

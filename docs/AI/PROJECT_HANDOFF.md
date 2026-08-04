@@ -1,4 +1,4 @@
-# PROJECT HANDOFF — Last Football
+﻿# PROJECT HANDOFF — Last Football
 
 **EPIC:** AI-HANDOFF-02 (docs-only · cold start)  
 **Etap:** PROJECT HANDOFF & AI ONBOARDING  
@@ -20,8 +20,8 @@
 | **Domain feature baseline**     | `3c01baa` — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                                                                                                                                                           |
 | **Presentation tip**            | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                                                                                                                                                                 |
 | **Prior Presentation**          | `9fd14fc` — **LFE-UI-MOTION-01**                                                                                                                                                                                                    |
-| **Documentation tip**           | **`DOCSTIP`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                                                                                                                                                     |
-| **tip `main`**                  | **`DOCSTIP`** — pin tip (Documentation tip = `DOCSTIP`)                                                                                                                                                                             |
+| **Documentation tip**           | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                                                                                                                                                     |
+| **tip `main`**                  | **`c75577c`** — pin tip (Documentation tip = `c75577c`)                                                                                                                                                                             |
 | **Branch**                      | `main`                                                                                                                                                                                                                              |
 | **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-NOTIFICATIONS-01 FULLY CLOSED** · D1–D125 · next **Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**                                                                    |
 
