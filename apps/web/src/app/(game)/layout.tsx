@@ -7,15 +7,8 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
-import {
-  resolveHubPhase,
-  resolveHubSession,
-  resolvePrimaryCta,
-} from '@/lib/hub';
-import {
-  resolveClubInvitations,
-  type ClubInvitationsDto,
-} from '@/lib/invitations';
+import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
+import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';

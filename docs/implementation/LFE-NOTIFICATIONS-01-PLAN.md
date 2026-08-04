@@ -33,40 +33,40 @@ Wdrożyć **in-app Invitation Layer**: maksymalnie **jedno** aktywne zaproszenie
 
 ### 1.1 Decyzje Ownera (F1–F11)
 
-| # | Decyzja | Freeze |
-| --- | --- | --- |
-| F1 | Źródła v1 = **Wariant B** | Transfer Decisions (**Messages** `priority: 'decision'` = E2/E3) **+** Matchday (Hub Primary) |
-| F2 | Max REUSE Messages + Hub | Composition only — **zakaz** re-derive ofert / fee / XI / fixtures planner |
-| F3 | Migracja | **NIE** |
-| F4 | Web Push | **NIE** (OUT · Future osobny EPIC) |
-| F5 | Email | **NIE** (OUT) |
-| F6 | Aktywne zaproszenia | **≤ 1** |
-| F7 | Dismiss | **wyłącznie `sessionStorage`** (plus UI state odzwierciedlający dismiss) |
-| F8 | Presentation ≠ Domain | Toast/banner = prezentacja; reguły biznesowe w domenie / Hub / Messages |
-| F9 | NO DUPLICATE LOGIC | Jedna reguła sprawczości = istniejące resolvery; Invitation = projekcja |
-| F10 | PUBLIC API | **bez zmian** |
-| F11 | LFE | **bez zmian** |
+| #   | Decyzja                   | Freeze                                                                                        |
+| --- | ------------------------- | --------------------------------------------------------------------------------------------- |
+| F1  | Źródła v1 = **Wariant B** | Transfer Decisions (**Messages** `priority: 'decision'` = E2/E3) **+** Matchday (Hub Primary) |
+| F2  | Max REUSE Messages + Hub  | Composition only — **zakaz** re-derive ofert / fee / XI / fixtures planner                    |
+| F3  | Migracja                  | **NIE**                                                                                       |
+| F4  | Web Push                  | **NIE** (OUT · Future osobny EPIC)                                                            |
+| F5  | Email                     | **NIE** (OUT)                                                                                 |
+| F6  | Aktywne zaproszenia       | **≤ 1**                                                                                       |
+| F7  | Dismiss                   | **wyłącznie `sessionStorage`** (plus UI state odzwierciedlający dismiss)                      |
+| F8  | Presentation ≠ Domain     | Toast/banner = prezentacja; reguły biznesowe w domenie / Hub / Messages                       |
+| F9  | NO DUPLICATE LOGIC        | Jedna reguła sprawczości = istniejące resolvery; Invitation = projekcja                       |
+| F10 | PUBLIC API                | **bez zmian**                                                                                 |
+| F11 | LFE                       | **bez zmian**                                                                                 |
 
 ### 1.2 Naming Freeze (Invitation Layer)
 
-| Pojęcie | Nazwa kanoniczna | Zakaz |
-| --- | --- | --- |
-| Resolver | `resolveClubInvitations` | `*Notification*` w nowym kodzie resolver/DTO |
-| DTO lista | `ClubInvitationsDto` | `ClubNotificationsDto` |
-| DTO item | `ClubInvitationDto` | `ClubNotificationDto` |
-| Moduł Web | `apps/web/src/lib/invitations/` | `lib/notifications/` (nowy) |
-| UI host | `InvitationToastHost` (lub równoważne Invitation\*) | `NotificationToast*` jako nazwa warstwy §22 |
-| Rola produktowa | **Invitation** / zaproszenie (§22) | mylenie z **Messages** / wiadomość (§21) |
-| EPIC ID | `LFE-NOTIFICATIONS-01` (docs/ID) | — (ID historyczne OK) |
+| Pojęcie         | Nazwa kanoniczna                                    | Zakaz                                        |
+| --------------- | --------------------------------------------------- | -------------------------------------------- |
+| Resolver        | `resolveClubInvitations`                            | `*Notification*` w nowym kodzie resolver/DTO |
+| DTO lista       | `ClubInvitationsDto`                                | `ClubNotificationsDto`                       |
+| DTO item        | `ClubInvitationDto`                                 | `ClubNotificationDto`                        |
+| Moduł Web       | `apps/web/src/lib/invitations/`                     | `lib/notifications/` (nowy)                  |
+| UI host         | `InvitationToastHost` (lub równoważne Invitation\*) | `NotificationToast*` jako nazwa warstwy §22  |
+| Rola produktowa | **Invitation** / zaproszenie (§22)                  | mylenie z **Messages** / wiadomość (§21)     |
+| EPIC ID         | `LFE-NOTIFICATIONS-01` (docs/ID)                    | — (ID historyczne OK)                        |
 
 **Słownik sesji (wiążący)**
 
-| Termin | Znaczenie |
-| --- | --- |
-| **Invitation** | Soft remind in-app (§22) — zaproszenie do decyzji |
-| **Message** | Pozycja skrzynki (§21) — skutek; SSOT UI = `resolveClubMessages` |
-| **Overlay Messages** | Peek skrzynki (D43) — **nie** Invitation Layer |
-| **Hub Primary** | SSOT „co teraz” (§23) — Invitation **nigdy** nie jest Primary |
+| Termin               | Znaczenie                                                        |
+| -------------------- | ---------------------------------------------------------------- |
+| **Invitation**       | Soft remind in-app (§22) — zaproszenie do decyzji                |
+| **Message**          | Pozycja skrzynki (§21) — skutek; SSOT UI = `resolveClubMessages` |
+| **Overlay Messages** | Peek skrzynki (D43) — **nie** Invitation Layer                   |
+| **Hub Primary**      | SSOT „co teraz” (§23) — Invitation **nigdy** nie jest Primary    |
 
 ### 1.3 Warstwy (SSOT map)
 
@@ -89,20 +89,20 @@ Domain facts (Transfers · Fixtures · Club · Training unlock)
                 └─ click → istniejący href (moduł domeny / match path)
 ```
 
-| Warstwa | Owner | Invitation |
-| --- | --- | --- |
-| Transfery / Messages | `resolveClubMessages` (D40–D46) | Wejście: tylko `priority: 'decision'` |
-| Hub Primary | `resolvePrimaryCta` | Wejście: matchday Primary (`play-next-match`) |
-| Invitation Layer | `resolveClubInvitations` | Projekcja ≤1 zaproszenia |
-| Presentation | `InvitationToastHost` | Toast/banner · Guide §16 |
-| Dismiss | `sessionStorage` | Per `invitation.id` · sesja przeglądarki |
-| LFE / PUBLIC | freeze D119–D121 | **out of scope** |
+| Warstwa              | Owner                           | Invitation                                    |
+| -------------------- | ------------------------------- | --------------------------------------------- |
+| Transfery / Messages | `resolveClubMessages` (D40–D46) | Wejście: tylko `priority: 'decision'`         |
+| Hub Primary          | `resolvePrimaryCta`             | Wejście: matchday Primary (`play-next-match`) |
+| Invitation Layer     | `resolveClubInvitations`        | Projekcja ≤1 zaproszenia                      |
+| Presentation         | `InvitationToastHost`           | Toast/banner · Guide §16                      |
+| Dismiss              | `sessionStorage`                | Per `invitation.id` · sesja przeglądarki      |
+| LFE / PUBLIC         | freeze D119–D121                | **out of scope**                              |
 
 ### 1.4 Priorytet wyboru (≤1)
 
 Gdy oba sygnały istnieją, **jedna** reguła sort/pick w resolverze (UI nie filtruje):
 
-1. **Transfer decision** (Messages E2/E3) — sprawa wymagająca akcji na rynku  
+1. **Transfer decision** (Messages E2/E3) — sprawa wymagająca akcji na rynku
 2. **Matchday** — Primary `play-next-match` z `nextFixture`
 
 **Suppress (nie emituj invitation):**
@@ -152,12 +152,12 @@ type ResolveClubInvitationsInput = {
 
 Cel: odciąć produktowy drift „notifications = §22”.
 
-| Element dziś | Po IMPLEMENT (Thin) | Uwagi |
-| --- | --- | --- |
-| `OverlayKind = 'notifications'` | `'messages'` | rename symboli + call sites |
-| `openNotifications` / `toggleNotifications` | `openMessages` / `toggleMessages` | TopBar · OverlayProvider |
-| UI copy dzwonka / overlay | spójne z Messages („Sprawy” / skrzynka) | nie „Powiadomienia push” |
-| Nowy toast | Invitation copy (`UI_COPY.invitation*`) | osobny od Messages |
+| Element dziś                                | Po IMPLEMENT (Thin)                     | Uwagi                       |
+| ------------------------------------------- | --------------------------------------- | --------------------------- |
+| `OverlayKind = 'notifications'`             | `'messages'`                            | rename symboli + call sites |
+| `openNotifications` / `toggleNotifications` | `openMessages` / `toggleMessages`       | TopBar · OverlayProvider    |
+| UI copy dzwonka / overlay                   | spójne z Messages („Sprawy” / skrzynka) | nie „Powiadomienia push”    |
+| Nowy toast                                  | Invitation copy (`UI_COPY.invitation*`) | osobny od Messages          |
 
 **OUT rename:** nie zmieniać ID EPIC docs historycznych · nie kasować GDD §22 słowa „powiadomienie” (polityka produktu) — w kodzie Web = Invitation.
 
@@ -165,31 +165,31 @@ Cel: odciąć produktowy drift „notifications = §22”.
 
 ## 3. Zakres Thin (IN)
 
-| # | Element |
-| --- | --- |
-| 1 | `resolveClubInvitations` + `ClubInvitationsDto` / `ClubInvitationDto` |
-| 2 | Wariant B: Messages decision + Hub matchday Primary |
-| 3 | `InvitationToastHost` w game `AppShell` — max 1 widoczne po filtrze dismiss |
-| 4 | Click → `href`; dismiss → `sessionStorage` key `lf:invitation:dismissed:${id}` (lub równoważny prefix) |
-| 5 | Rename Overlay `notifications` → `messages` (chrome) |
-| 6 | `UI_COPY` invitation + ewentualny cleanup copy overlay |
-| 7 | Testy pure resolver (priority transfer > matchday; empty; suppressMatchday; length ≤1) |
-| 8 | Gate: brak mock list · brak LFE import · brak migracji |
-| 9 | DOCS CLOSE po PRODUCTION VERIFY (MESSAGES · HUB · MODULE_MAP · DECISIONS D125 · ROADMAP/STATUS/BASELINE/HANDOFF · CHANGELOG) |
+| #   | Element                                                                                                                      |
+| --- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `resolveClubInvitations` + `ClubInvitationsDto` / `ClubInvitationDto`                                                        |
+| 2   | Wariant B: Messages decision + Hub matchday Primary                                                                          |
+| 3   | `InvitationToastHost` w game `AppShell` — max 1 widoczne po filtrze dismiss                                                  |
+| 4   | Click → `href`; dismiss → `sessionStorage` key `lf:invitation:dismissed:${id}` (lub równoważny prefix)                       |
+| 5   | Rename Overlay `notifications` → `messages` (chrome)                                                                         |
+| 6   | `UI_COPY` invitation + ewentualny cleanup copy overlay                                                                       |
+| 7   | Testy pure resolver (priority transfer > matchday; empty; suppressMatchday; length ≤1)                                       |
+| 8   | Gate: brak mock list · brak LFE import · brak migracji                                                                       |
+| 9   | DOCS CLOSE po PRODUCTION VERIFY (MESSAGES · HUB · MODULE_MAP · DECISIONS D125 · ROADMAP/STATUS/BASELINE/HANDOFF · CHANGELOG) |
 
 ---
 
 ## 4. Zakres OUT (twarde)
 
-- Web Push · Email · SMS · SDK · quiet hours · cron  
-- Migracje / tabele preferencji / mark-as-read / RPC  
-- Re-derive ofert, fee, settlement, XI, LFE MatchSession  
-- Drugi inbox · Accept/Reject w toascie · mutacje domeny z invitation  
-- Emisja E1 Messages `info` (okno transferowe) jako invitation v1  
-- Daily Goal / Achievements / Ranking jako źródła v1  
-- Zmiana semantyki D40–D46 (Messages SSOT) poza rename Overlay  
-- `@lastfootball/lfe` / PUBLIC allowlist / `/testing` / `/advanced`  
-- Opcje ustawień opt-in pełne (Future) — Thin = dismiss sesji tylko  
+- Web Push · Email · SMS · SDK · quiet hours · cron
+- Migracje / tabele preferencji / mark-as-read / RPC
+- Re-derive ofert, fee, settlement, XI, LFE MatchSession
+- Drugi inbox · Accept/Reject w toascie · mutacje domeny z invitation
+- Emisja E1 Messages `info` (okno transferowe) jako invitation v1
+- Daily Goal / Achievements / Ranking jako źródła v1
+- Zmiana semantyki D40–D46 (Messages SSOT) poza rename Overlay
+- `@lastfootball/lfe` / PUBLIC allowlist / `/testing` / `/advanced`
+- Opcje ustawień opt-in pełne (Future) — Thin = dismiss sesji tylko
 
 ---
 
@@ -211,21 +211,21 @@ Cel: odciąć produktowy drift „notifications = §22”.
 
 ## 6. File Map (IMPLEMENT)
 
-| Plik | Rola |
-| --- | --- |
-| `apps/web/src/lib/invitations/resolve-club-invitations.ts` | Resolver + typy DTO |
-| `apps/web/src/lib/invitations/index.ts` | Barrel PUBLIC Web |
-| `apps/web/src/lib/invitations/invitations-01.test.ts` | Pure tests |
-| `apps/web/src/components/invitations/InvitationToastHost.tsx` | Presentation host + sessionStorage dismiss |
-| `apps/web/src/components/layout/AppShell.tsx` | Mount host |
-| `apps/web/src/app/(game)/layout.tsx` i/lub Hub/shell wire | Podaj input (messages już jest; primary/session/suppress) |
-| `apps/web/src/components/club/ClubProvider.tsx` | Opcjonalnie: przekaż `invitations` **albo** host liczy client-side z msgs+hub ctx — preferowane: **server resolve w layout** + prop (jak Messages) |
-| `apps/web/src/components/overlay/OverlayProvider.tsx` | Rename kind/API → messages |
-| `apps/web/src/components/overlay/OverlayRoot.tsx` | `active === 'messages'` |
-| `apps/web/src/components/layout/TopBar.tsx` | `toggleMessages` |
-| `apps/web/src/lib/ui/copy.ts` | `invitation*` (+ overlay copy jeśli potrzeba) |
-| `apps/web/src/styles/*` | Minimal toast styles — REUSE tokens (`--lf-z-toast`) · Guide §16 |
-| **Docs CLOSE (później)** | `platform/MESSAGES.md` · `platform/HUB.md` · `AI/MODULE_MAP.md` · `DECISIONS.md` (D125) · `ARCHITECTURAL_DECISIONS.md` · ROADMAP/STATUS/BASELINE/HANDOFF · CHANGELOG · ten PLAN status |
+| Plik                                                          | Rola                                                                                                                                                                                   |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web/src/lib/invitations/resolve-club-invitations.ts`    | Resolver + typy DTO                                                                                                                                                                    |
+| `apps/web/src/lib/invitations/index.ts`                       | Barrel PUBLIC Web                                                                                                                                                                      |
+| `apps/web/src/lib/invitations/invitations-01.test.ts`         | Pure tests                                                                                                                                                                             |
+| `apps/web/src/components/invitations/InvitationToastHost.tsx` | Presentation host + sessionStorage dismiss                                                                                                                                             |
+| `apps/web/src/components/layout/AppShell.tsx`                 | Mount host                                                                                                                                                                             |
+| `apps/web/src/app/(game)/layout.tsx` i/lub Hub/shell wire     | Podaj input (messages już jest; primary/session/suppress)                                                                                                                              |
+| `apps/web/src/components/club/ClubProvider.tsx`               | Opcjonalnie: przekaż `invitations` **albo** host liczy client-side z msgs+hub ctx — preferowane: **server resolve w layout** + prop (jak Messages)                                     |
+| `apps/web/src/components/overlay/OverlayProvider.tsx`         | Rename kind/API → messages                                                                                                                                                             |
+| `apps/web/src/components/overlay/OverlayRoot.tsx`             | `active === 'messages'`                                                                                                                                                                |
+| `apps/web/src/components/layout/TopBar.tsx`                   | `toggleMessages`                                                                                                                                                                       |
+| `apps/web/src/lib/ui/copy.ts`                                 | `invitation*` (+ overlay copy jeśli potrzeba)                                                                                                                                          |
+| `apps/web/src/styles/*`                                       | Minimal toast styles — REUSE tokens (`--lf-z-toast`) · Guide §16                                                                                                                       |
+| **Docs CLOSE (później)**                                      | `platform/MESSAGES.md` · `platform/HUB.md` · `AI/MODULE_MAP.md` · `DECISIONS.md` (D125) · `ARCHITECTURAL_DECISIONS.md` · ROADMAP/STATUS/BASELINE/HANDOFF · CHANGELOG · ten PLAN status |
 
 **Nie ruszać:** `packages/lfe/**` · `supabase/**` · transfer settle · Match Engine.
 
@@ -271,14 +271,14 @@ Cel: odciąć produktowy drift „notifications = §22”.
 
 ## 9. Ryzyka (PLAN)
 
-| Ryzyko | Mitigacja |
-| --- | --- |
-| Drift nazwy Notification w PR | Freeze §1.2 + AC + review grep |
-| Duplikacja logiki transfer | Input = gotowe `ClubMessagesDto` |
-| Toast vs Primary na Hubie | `suppressMatchday` + hierarchia §23 |
-| Overlay rename regresja | Test/smoke TopBar + Overlay + D43 |
-| sessionStorage SSR | Host client-only; brak storage w resolverze |
-| Scope creep push | OUT §4 |
+| Ryzyko                        | Mitigacja                                   |
+| ----------------------------- | ------------------------------------------- |
+| Drift nazwy Notification w PR | Freeze §1.2 + AC + review grep              |
+| Duplikacja logiki transfer    | Input = gotowe `ClubMessagesDto`            |
+| Toast vs Primary na Hubie     | `suppressMatchday` + hierarchia §23         |
+| Overlay rename regresja       | Test/smoke TopBar + Overlay + D43           |
+| sessionStorage SSR            | Host client-only; brak storage w resolverze |
+| Scope creep push              | OUT §4                                      |
 
 ---
 
@@ -286,10 +286,10 @@ Cel: odciąć produktowy drift „notifications = §22”.
 
 EPIC **FULLY CLOSED** dopiero gdy:
 
-1. OWNER GO IMPLEMENT → kod Thin + VALIDATION PASS  
-2. OWNER GO COMMIT → PUSH → CI GREEN  
-3. PRODUCTION VERIFY PASS  
-4. DOCS CLOSE (D125 CLOSED + sync) → DOCS COMMIT/PUSH → FINAL DOCS VERIFY  
+1. OWNER GO IMPLEMENT → kod Thin + VALIDATION PASS
+2. OWNER GO COMMIT → PUSH → CI GREEN
+3. PRODUCTION VERIFY PASS
+4. DOCS CLOSE (D125 CLOSED + sync) → DOCS COMMIT/PUSH → FINAL DOCS VERIFY
 5. Raport **EPIC FULLY CLOSED**
 
 Do **OWNER GO IMPLEMENT** status = **PLAN READY**.
@@ -298,18 +298,18 @@ Do **OWNER GO IMPLEMENT** status = **PLAN READY**.
 
 ## 11. Decyzje wymagające OWNER GO IMPLEMENT
 
-- [x] Wariant B  
-- [x] REUSE Messages + Hub  
-- [x] Brak migracji / push / email  
-- [x] ≤1 invitation · sessionStorage dismiss  
-- [x] Presentation ≠ Domain · NO DUPLICATE · LFE/PUBLIC freeze  
-- [x] Naming = Invitation Layer (`resolveClubInvitations`)  
+- [x] Wariant B
+- [x] REUSE Messages + Hub
+- [x] Brak migracji / push / email
+- [x] ≤1 invitation · sessionStorage dismiss
+- [x] Presentation ≠ Domain · NO DUPLICATE · LFE/PUBLIC freeze
+- [x] Naming = Invitation Layer (`resolveClubInvitations`)
 - [ ] **GO IMPLEMENT** (osobne)
 
 ---
 
 ## Historia
 
-| Wersja | Data | Opis |
-| --- | --- | --- |
-| 1.0.0 | 2026-08-04 | PLAN COMPLETE — Owner GO PLAN · Wariant B · Invitation naming · D125 proposed |
+| Wersja | Data       | Opis                                                                          |
+| ------ | ---------- | ----------------------------------------------------------------------------- |
+| 1.0.0  | 2026-08-04 | PLAN COMPLETE — Owner GO PLAN · Wariant B · Invitation naming · D125 proposed |

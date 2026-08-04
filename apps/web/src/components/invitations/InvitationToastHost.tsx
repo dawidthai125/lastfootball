@@ -5,10 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useClubInvitations } from '@/components/club/ClubProvider';
-import {
-  invitationDismissStorageKey,
-  type ClubInvitationDto,
-} from '@/lib/invitations';
+import { invitationDismissStorageKey, type ClubInvitationDto } from '@/lib/invitations';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './invitation-toast.css';

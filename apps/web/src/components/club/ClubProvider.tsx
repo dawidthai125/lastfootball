@@ -45,9 +45,7 @@ export function ClubProvider({
   children: ReactNode;
 }) {
   return (
-    <ClubContext.Provider
-      value={{ club, hasFixtures, trainingUnlocked, messages, invitations }}
-    >
+    <ClubContext.Provider value={{ club, hasFixtures, trainingUnlocked, messages, invitations }}>
       {children}
     </ClubContext.Provider>
   );
