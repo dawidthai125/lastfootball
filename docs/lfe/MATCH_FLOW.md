@@ -13,7 +13,7 @@ Web: LiveMatchRuntime → Canvas → Replay → Post Match (poza LFE).
 
 ### 1. Build config
 
-Aplikacja składa `MatchSessionConfig` (lub `createSessionFromFixture` w web):
+Aplikacja składa `MatchSessionConfig` (w web: pierwszy mecz albo mecz ligi; brak danych to błąd, nie atrapa):
 
 - seed, team IDs, names
 - `players`, `homeLineup` / `awayLineup`, benches

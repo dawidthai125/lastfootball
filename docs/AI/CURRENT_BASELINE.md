@@ -45,27 +45,27 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 
 ## Production
 
-| Pole                        | Wartość                                                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------ |
-| URL                         | https://lastfootball.vercel.app                                                                  |
-| Alias                       | https://lastfootball.pl                                                                          |
-| Branch                      | `main`                                                                                           |
-| **tip `main`**              | **`b792fd2`** — pin tip (Documentation tip = `c75577c`)                                          |
-| **Documentation tip**       | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                  |
-| **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                    |
-| Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                     |
-| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                 |
-| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                   |
-| Domain message              | `feat(career): add Career Phase derive and Growth Gate (LFE-CAREER-DECLINE-01)`                  |
-| Prior Domain                | `843bcfd` — LFE-LEAGUE-WORLD-02                                                                  |
-| **Presentation tip**        | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                              |
-| Presentation message        | `feat(ui): add in-app Invitation Layer thin (LFE-NOTIFICATIONS-01)`                              |
-| Prior Presentation          | `9fd14fc` — LFE-UI-MOTION-01                                                                     |
-| CI                          | **GREEN**                                                                                        |
-| Production                  | **VERIFIED**                                                                                     |
-| Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)                   |
-| **NEXT EPIC**               | **Czekaj na Owner GO** — Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime               |
-| Status                      | **PRODUCTION VERIFIED · CI GREEN** · LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 |
+| Pole                        | Wartość                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------- |
+| URL                         | https://lastfootball.vercel.app                                                                   |
+| Alias                       | https://lastfootball.pl                                                                           |
+| Branch                      | `main`                                                                                            |
+| **tip `main`**              | **`a2b2528`** — fix(match): drop the FC Lastovia runtime fallback (Documentation tip = `5bc9d33`) |
+| **Documentation tip**       | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01                                                |
+| **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                     |
+| Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                      |
+| Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                  |
+| UI P0 status                | **CLOSED** · IMPL-01…06 · 06A · CONTENT-PASS-01 · DOCS-SYNC-01                                    |
+| Domain message              | `feat(career): add Career Phase derive and Growth Gate (LFE-CAREER-DECLINE-01)`                   |
+| Prior Domain                | `843bcfd` — LFE-LEAGUE-WORLD-02                                                                   |
+| **Presentation tip**        | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                               |
+| Presentation message        | `feat(ui): add in-app Invitation Layer thin (LFE-NOTIFICATIONS-01)`                               |
+| Prior Presentation          | `9fd14fc` — LFE-UI-MOTION-01                                                                      |
+| CI                          | local `npm run validate` PASS · remote on the PR for `a2b2528`                                    |
+| Production                  | previous deploy until `a2b2528` is on `main`                                                      |
+| Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)                    |
+| **NEXT EPIC**               | **Czekaj na Owner GO** — Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime                |
+| Status                      | match fallback removed in `a2b2528` · LFE-NOTIFICATIONS-01 stays the last product epic · D125     |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
