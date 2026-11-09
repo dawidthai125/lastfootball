@@ -280,7 +280,7 @@ kalendarz **22** (D28) · Season End **Thin CLOSED** (GDD+kod · D68–D87) · A
 
 ### Planowane (Owner wybiera)
 
-**Czekaj na Owner GO** — NOTIFICATIONS-01 + Career Decline + League World + AGE-01 + soft-lock + TD-03+ + PUBLIC + Ratings v2 = **CLOSED**. Rekomendacja ROADMAP: **Canvas REUSE** / **ACADEMY-02** / **Retirement** / **§22 push** / **Prime** (patrz §10).
+Owner GO 2026-11-09. Canvas REUSE i spatial restarts są w kodzie. Academy 02 = SCOPE LOCK. Dalej tylko Retirement / §22 push / Prime, każdy z własnym kontraktem (patrz §11).
 
 ---
 
@@ -361,9 +361,9 @@ SSOT listy: [`../ROADMAP.md`](../ROADMAP.md).
 
 ## 11. Rekomendowany następny EPIC
 
-### **Czekaj na Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**
+### **Retirement / §22 push / Prime — każdy wymaga kontraktu**
 
-**Uzasadnienie:** LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 Invitation Layer. ROADMAP PLANNED: Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime.
+**Uzasadnienie:** Canvas REUSE `759d49f` · spatial restarts `4377677` · Academy 02 SCOPE LOCK ([`../implementation/LFE-ACADEMY-02-SCOPE.md`](../implementation/LFE-ACADEMY-02-SCOPE.md)). Retirement, push/email i Prime nie mają jeszcze zakresu.
 
 **Zakaz teraz:** AUDIT / PLAN / IMPLEMENT bez Owner GO · Fake Production · Physics „przy okazji” · druga ścieżka settle · import `/testing` w web.
 

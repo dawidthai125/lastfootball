@@ -51,9 +51,9 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC (po Owner GO):** Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime — SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **Następny EPIC:** Retirement / §22 push / Prime — każdy z własnym kontraktem. Academy 02 = SCOPE LOCK. SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - Decyzje **D1–D125:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated
 
-2026-11-09 — tip main `759d49f` (canvas paints getSpatialState) · docs tip `57c323d` · next Academy 02, then Retirement / §22 push / Prime · D1–D125
+2026-11-09 — tip main `4377677` (spatial set-piece restarts) · docs tip `1073660` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125

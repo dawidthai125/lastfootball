@@ -64,8 +64,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
   → PRODUCTION VERIFY → DOCS CLOSE → DOCS COMMIT → DOCS PUSH → FINAL DOCS VERIFY
 ```
 
-**Brak EPIC IN PROGRESS.** Oficjalna kolejka (po **Owner GO**, start od **AUDIT**):
-`Canvas REUSE` · `ACADEMY-02` · Retirement · `§22 push/email` · Prime · `/advanced`.
+**Brak EPIC IN PROGRESS.** Kolejka: Retirement · `§22 push/email` · Prime — każdy z kontraktem. Academy 02 = SCOPE LOCK. Spatial restarts `4377677`.
 Szczegóły: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13 · [`../ROADMAP.md`](../ROADMAP.md).
 
 Szczegóły Owner GO: [`EPIC_WORKFLOW.md`](./EPIC_WORKFLOW.md) · [`../WORKFLOW.md`](../WORKFLOW.md).

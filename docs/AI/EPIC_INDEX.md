@@ -111,7 +111,7 @@ Przy rozbieżności z postmortemem **wygrywa Guide**.
 
 ## PLANNED (Owner wybiera)
 
-Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Canvas REUSE · ACADEMY-02 · Retirement · §22 push · Prime (po Owner GO).
+Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Retirement · §22 push · Prime. Academy 02 = SCOPE LOCK. Spatial restarts `4377677`.
 
 **Alternatywy FUTURE:** `/advanced` · Physics · multi-tier AI catalogs (Variant A) · Youth Depth.
 

@@ -12,9 +12,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`201af50`** — docs pin for the match fallback removal  
-**tip `main`:** **`759d49f`** — canvas paints `getSpatialState()`  
+**Documentation tip:** **`1073660`** — docs close for Canvas REUSE  
+**tip `main`:** **`4377677`** — ball restarts on GOAL / CORNER / PENALTY / FREE_KICK  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-09] — Academy 02 scope lock · spatial restarts
+
+### Product
+
+- LFE-ACADEMY-02 has a written scope and no code. Levels, cash-gate, academy training, and youth OVR stay out until GDD §16 and §26 change.
+- Match spatial motion pulls the ball to a restart for 40 ticks after GOAL, CORNER, PENALTY, or FREE_KICK (`4377677`). Open play no longer flips side on an empty event list.
 
 ---
 

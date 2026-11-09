@@ -14,7 +14,7 @@ Szybki skrót warstw API. **Pełny kontrakt freeze:** [LFE_ARCHITECTURE_FREEZE.m
 - `/advanced` — **nie** zaimplementowane (defer).
 - Feat CLOSE PUBLIC: **`ce00327`** · D119–D121.
 - Domain feat Ratings: **`962f0a8`** (LFE-RATINGS-V2) — **bez** zmiany PUBLIC surface.
-- **NEXT EPIC:** Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime (nie LFE surface)
+- **NEXT EPIC:** Retirement · §22 push/email · Prime (osobny kontrakt). Spatial restarts `4377677` są w PUBLIC session snapshot, bez nowego surface.
 
 ## Opis działania
 

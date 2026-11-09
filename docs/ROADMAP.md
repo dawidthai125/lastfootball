@@ -116,13 +116,13 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## PLANNED ⬜
 
-| Item                            | Zależność        |
-| ------------------------------- | ---------------- |
-| LFE-ACADEMY-02                  | Owner GO         |
-| LFE-RETIREMENT-01               | Owner GO         |
-| Kanał push / email (§22 Future) | osobny Owner GO  |
-| Career Prime                    | Owner GO         |
-| LFE `/advanced` subpath         | Owner GO · defer |
+| Item                            | Zależność                                                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| LFE-ACADEMY-02                  | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) |
+| LFE-RETIREMENT-01               | Owner GO                                                                                                       |
+| Kanał push / email (§22 Future) | osobny Owner GO                                                                                                |
+| Career Prime                    | Owner GO                                                                                                       |
+| LFE `/advanced` subpath         | Owner GO · defer                                                                                               |
 
 ## FUTURE
 
@@ -147,21 +147,24 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f` (pitch uses `getSpatialState()` only). Następny do implementacji: **LFE-ACADEMY-02**.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK.
 
-### Oficjalna kolejność (po NOTIFICATIONS-01)
+### Oficjalna kolejność
 
 ```
-LFE-ACADEMY-02  ·  Retirement  ·  §22 push/email  ·  Career Prime
+LFE-SPATIAL-EVENTS-01  ·  Retirement  ·  §22 push/email  ·  Career Prime
 ```
 
-| EPIC                            | Notatka          |
-| ------------------------------- | ---------------- |
-| LFE-ACADEMY-02                  | Owner GO         |
-| LFE-RETIREMENT-01               | Owner GO         |
-| Kanał push / email (§22 Future) | osobny Owner GO  |
-| Career Prime                    | Owner GO         |
-| LFE `/advanced`                 | Owner GO · defer |
+Academy 02 nie wraca do kolejki bez zmiany GDD §16 i liczb §26.
+
+| EPIC                            | Notatka         |
+| ------------------------------- | --------------- |
+| LFE-ACADEMY-02                  | SCOPE LOCK      |
+| LFE-SPATIAL-EVENTS-01           | `4377677`       |
+| LFE-RETIREMENT-01               | brak kontraktu  |
+| Kanał push / email (§22 Future) | osobny kontrakt |
+| Career Prime                    | brak kontraktu  |
+| LFE `/advanced`                 | defer           |
 
 **Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · Youth Depth.  
 Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTION **`9fd14fc`**.

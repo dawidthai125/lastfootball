@@ -62,10 +62,10 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | Presentation message        | `feat(ui): add in-app Invitation Layer thin (LFE-NOTIFICATIONS-01)`               |
 | Prior Presentation          | `9fd14fc` — LFE-UI-MOTION-01                                                      |
 | CI                          | **GREEN** on PR #5 (format, types, lint, test, build)                             |
-| Production                  | `63607fa` is on `main` · Vercel production deploy follows the merge               |
+| Production                  | `bf00229` on `main` · Vercel completed (Canvas REUSE)                             |
 | Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)    |
-| **NEXT EPIC**               | **LFE-ACADEMY-02**, then Retirement / §22 push / Prime                            |
-| Status                      | Canvas REUSE closed in `759d49f` · pitch reads spatial state only · D1–D125       |
+| **NEXT EPIC**               | Retirement / §22 push / Prime — each needs its own contract                       |
+| Status                      | Academy 02 SCOPE LOCK · spatial restarts `4377677` · Canvas `759d49f` · D1–D125   |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
