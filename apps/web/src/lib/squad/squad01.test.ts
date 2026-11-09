@@ -5,6 +5,7 @@ import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import {
   getSquadPlayerById,
   resolveClubSquad,
+  resolveMatchBench,
   resolveStartingXi,
   seedClubRoster,
   seedStarterSquad,
@@ -42,6 +43,16 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     expect(inserts.every((p) => p.version === 1)).toBe(true);
     expect(inserts.every((p) => p.status === 'READY')).toBe(true);
     expect(inserts.map((p) => p.id)).toEqual(seedClubRoster(clubId).map((p) => p.id));
+  });
+
+  it('resolveMatchBench is the fit non-starters, capped at 7', () => {
+    const rows = rowsFromSeed('club-1');
+    const bench = resolveMatchBench(rows);
+    expect(bench).toHaveLength(7);
+    expect(bench.every((player) => player.starter === false)).toBe(true);
+    expect(bench.map((player) => player.id)).not.toEqual(
+      expect.arrayContaining(resolveStartingXi(rows).map((player) => player.id)),
+    );
   });
 
   it('resolveClubSquad maps DB rows — never empty without error', () => {

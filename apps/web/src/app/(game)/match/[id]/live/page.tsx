@@ -10,7 +10,7 @@ import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { matchPrePath } from '@/lib/match/match-path';
 import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
-import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
+import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
@@ -43,8 +43,9 @@ export default async function LiveMatchPage({ params }: PageProps) {
     if (!club) redirect('/welcome');
     if (isFirstMatchCompleted(club)) redirect('/hub');
     try {
-      const ourXi = await loadClubStartingXi(club);
       const players = await listClubPlayers(club.id);
+      const ourXi = resolveStartingXi(players);
+      const ourBench = resolveMatchBench(players);
       const developmentNames = previewMatchDevelopment(players).skillUpNames;
       return (
         <LiveMatchFoundation
@@ -52,6 +53,7 @@ export default async function LiveMatchPage({ params }: PageProps) {
           club={club}
           firstMatch
           ourXi={ourXi}
+          ourBench={ourBench}
           developmentNames={developmentNames}
         />
       );
@@ -72,8 +74,9 @@ export default async function LiveMatchPage({ params }: PageProps) {
   if (dto.status !== 'upcoming') redirect('/hub');
 
   try {
-    const ourXi = await loadClubStartingXi(club);
     const players = await listClubPlayers(club.id);
+    const ourXi = resolveStartingXi(players);
+    const ourBench = resolveMatchBench(players);
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
     return (
       <LiveMatchFoundation
@@ -81,6 +84,7 @@ export default async function LiveMatchPage({ params }: PageProps) {
         club={club}
         leagueFixture={dto}
         ourXi={ourXi}
+        ourBench={ourBench}
         developmentNames={developmentNames}
       />
     );

@@ -8,6 +8,8 @@ import type { LeagueTier } from '@/lib/league/league-tier';
 import { LEAGUE_TIERS_ASC } from '@/lib/league/league-tier';
 import { mapPlayerSkillToLfeSkills, clampSkill } from '@/lib/match/map-player-skill-to-lfe';
 import { seedOpponentSquad } from '@/lib/squad/seed-roster';
+import { createSubstitutePlayerCommand } from '@lastfootball/lfe';
+
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
@@ -123,6 +125,7 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     const our = players.filter((p) => String(p.id).startsWith('p-'));
     const ai = players.filter((p) => String(p.id).startsWith('o-'));
     expect(our).toHaveLength(11);
+    expect(session.getMatchState().homeBench.playerIds).toHaveLength(0);
     expect(ai).toHaveLength(11);
     for (const p of our) {
       expect(p.skills.finishing).toBe(80);
@@ -132,6 +135,34 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
       expect(p.skills.finishing).toBeGreaterThanOrEqual(profile.minSkill);
       expect(p.skills.finishing).toBeLessThanOrEqual(profile.maxSkill);
     }
+  });
+
+  it('puts the club bench on the manager side', () => {
+    const bench = [
+      {
+        id: 'b-1',
+        name: 'Rezerwa',
+        number: 12,
+        pos: 'N',
+        role: 'ST' as const,
+        starter: false as const,
+        skill: 60,
+      },
+    ];
+    const session = createSessionFromLeagueFixture(club('ii'), fixture(), xi(80), bench);
+    expect(session.getMatchState().homeBench.playerIds).toEqual(['b-1']);
+    const outId = session.getMatchState().homeLineup.slots[10]!.playerId;
+    const result = session.dispatch(
+      createSubstitutePlayerCommand({
+        tick: session.context().tick,
+        source: 'ui',
+        side: 'home',
+        playerOutId: outId,
+        playerInId: 'b-1',
+      }),
+    );
+    expect(result.ok).toBe(true);
+    expect(session.getMatchState().homeBench.playerIds).toContain(outId);
   });
 
   it('fails closed when our XI skill is missing', () => {

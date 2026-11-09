@@ -1,10 +1,13 @@
 import type { EngineEvent, MatchSession, MatchState } from '@lastfootball/lfe';
 import {
   createKickoffCommand,
+  createPauseMatchCommand,
+  createResumeMatchCommand,
   createSetMentalityCommand,
   createSetPressingCommand,
   createSetTempoCommand,
   createSetWidthCommand,
+  createSubstitutePlayerCommand,
 } from '@lastfootball/lfe';
 
 import type { Fixture } from '@/data/fixtures';
@@ -48,6 +51,9 @@ export type LiveMatchSnapshot = {
   readonly replay: ReplayView;
 };
 
+/** Product window from GDD §9.10 while the manager is watching live. */
+export const LIVE_SUB_LIMIT = 3;
+
 const FEED_TYPES = new Set([
   'MATCH_START',
   'HALF_END',
@@ -88,8 +94,9 @@ export class LiveMatchRuntime {
   private cachedSnapshot: LiveMatchSnapshot | null = null;
   private cachedVersion = -1;
   private timer: ReturnType<typeof setInterval> | null = null;
-  private readonly ticksPerPulse = 8;
+  private ticksPerPulse = 1;
   private playbackSource: PlaybackSource = 'live';
+  private readonly managerSide: 'home' | 'away';
 
   constructor(
     fixture: Fixture,
@@ -97,10 +104,18 @@ export class LiveMatchRuntime {
     club?: ClubDto | null,
     leagueFixture?: FixtureDto | null,
     ourXi?: readonly RosterPlayerSeed[] | null,
+    ourBench?: readonly RosterPlayerSeed[] | null,
   ) {
     this.fixture = fixture;
     this.shell = shell;
-    this.session = resolveSession(fixture, club, leagueFixture ?? null, ourXi ?? null);
+    this.managerSide = fixture.home ? 'home' : 'away';
+    this.session = resolveSession(
+      fixture,
+      club,
+      leagueFixture ?? null,
+      ourXi ?? null,
+      ourBench ?? null,
+    );
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
     this.replayBuffer = createReplayBuffer({ capacity: 3600 });
@@ -181,7 +196,7 @@ export class LiveMatchRuntime {
       this.flushEvents();
       this.recordAndMaybePresentLive();
       this.bump();
-    }, 50);
+    }, 200);
   }
 
   stopSimulation(): void {
@@ -317,7 +332,7 @@ export class LiveMatchRuntime {
         return kind !== 'lifecycle' && kind !== 'kickoff';
       })
       .slice(-40)
-      .map(({ e, i }) => mapFeedItem(e, i, matchState.clock.displayMinute));
+      .map(({ e, i }) => mapFeedItem(e, i, matchState.clock.displayMinute, matchState.players));
 
     return {
       matchState,
@@ -361,7 +376,56 @@ export class LiveMatchRuntime {
     };
   }
 
-  dispatchUiCommand(commandId: string): void {
+  /** 1 = a full match is about six minutes. 2 and 4 only speed the clock. */
+  setWatchSpeed(speed: 1 | 2 | 4): void {
+    if (this.playbackSource !== 'live') return;
+    this.ticksPerPulse = speed;
+    this.bump();
+  }
+
+  togglePause(): void {
+    if (!this.watchingLive()) return;
+    const tick = this.session.context().tick;
+    const command =
+      this.session.status === 'paused'
+        ? createResumeMatchCommand({ tick, source: 'ui' })
+        : createPauseMatchCommand({ tick, source: 'ui' });
+    this.session.dispatch(command);
+    this.bump();
+  }
+
+  substitute(playerOutId: string, playerInId: string): { ok: boolean; error?: string } {
+    if (!this.watchingLive()) {
+      return { ok: false, error: 'Zmiany tylko gdy oglądasz mecz na żywo.' };
+    }
+    const state = this.session.getMatchState();
+    if (state.phase === 'FINISHED' || state.phase === 'FULL_TIME') {
+      return { ok: false, error: 'Mecz już się skończył.' };
+    }
+    const used = state.substitutions.filter((sub) => sub.side === this.managerSide).length;
+    if (used >= LIVE_SUB_LIMIT) {
+      return { ok: false, error: 'Wykorzystałeś 3 zmiany.' };
+    }
+    const result = this.session.dispatch(
+      createSubstitutePlayerCommand({
+        tick: this.session.context().tick,
+        source: 'ui',
+        side: this.managerSide,
+        playerOutId,
+        playerInId,
+      }),
+    );
+    if (!result.ok) {
+      return { ok: false, error: 'Ta zmiana nie weszła. Wybierz kogoś z boiska i kogoś z ławki.' };
+    }
+    this.flushEvents();
+    this.recordAndMaybePresentLive();
+    this.bump();
+    return { ok: true };
+  }
+
+  dispatchUiCommand(commandId: string): boolean {
+    if (!this.watchingLive()) return false;
     const tick = this.session.context().tick;
     const factories: Record<string, () => Parameters<MatchSession['dispatch']>[0]> = {
       press: () => createSetPressingCommand({ tick, source: 'ui', value: 75 }),
@@ -372,11 +436,17 @@ export class LiveMatchRuntime {
       balance: () => createSetMentalityCommand({ tick, source: 'ui', value: 50 }),
     };
     const factory = factories[commandId];
-    if (!factory) return;
-    this.session.dispatch(factory());
+    if (!factory) return false;
+    const result = this.session.dispatch(factory());
+    if (!result.ok) return false;
     this.flushEvents();
     this.recordAndMaybePresentLive();
     this.bump();
+    return true;
+  }
+
+  private watchingLive(): boolean {
+    return this.playbackSource === 'live' && this.session.status !== 'stopped';
   }
 
   dispose(): void {
@@ -417,6 +487,7 @@ function mapFeedItem(
   e: EngineEvent,
   index: number,
   minute: number,
+  players: MatchState['players'],
 ): LiveMatchSnapshot['feed'][number] {
   const payloadMinute =
     e.payload && typeof e.payload === 'object' && 'minute' in e.payload
@@ -426,7 +497,7 @@ function mapFeedItem(
     id: `ev-${index}-${e.type}-${e.tick}`,
     minute: `${Math.floor(payloadMinute)}'`,
     kind: eventKind(String(e.type)),
-    text: humanizeEvent(e),
+    text: humanizeEvent(e, players),
     highlight: e.type === 'GOAL',
   };
 }
@@ -449,7 +520,11 @@ function eventKind(type: string): LiveEventKind {
   }
 }
 
-function humanizeEvent(e: EngineEvent): string {
+function nameOf(players: MatchState['players'], id: string): string {
+  return players.find((player) => player.id === id)?.name ?? 'zawodnik';
+}
+
+function humanizeEvent(e: EngineEvent, names: MatchState['players']): string {
   const side =
     e.payload && typeof e.payload === 'object' && 'side' in e.payload
       ? String((e.payload as { side: string }).side)
@@ -471,8 +546,17 @@ function humanizeEvent(e: EngineEvent): string {
       return 'Faul.';
     case 'CORNER':
       return `Rzut rożny (${side || '—'})`;
-    case 'SUBSTITUTION':
-      return 'Zmiana zawodnika.';
+    case 'SUBSTITUTION': {
+      const outId =
+        e.payload && typeof e.payload === 'object' && 'playerOutId' in e.payload
+          ? String((e.payload as { playerOutId: string }).playerOutId)
+          : '';
+      const inId =
+        e.payload && typeof e.payload === 'object' && 'playerInId' in e.payload
+          ? String((e.payload as { playerInId: string }).playerInId)
+          : '';
+      return `${nameOf(names, outId)} ↔ ${nameOf(names, inId)}`;
+    }
     case 'SYSTEM': {
       const kind =
         e.payload && typeof e.payload === 'object' && 'kind' in e.payload
@@ -491,12 +575,13 @@ function resolveSession(
   club: ClubDto | null | undefined,
   leagueFixture: FixtureDto | null,
   ourXi: readonly RosterPlayerSeed[] | null,
+  ourBench: readonly RosterPlayerSeed[] | null,
 ): MatchSession {
   if (fixture.id === FIRST_MATCH_ID && club && ourXi) {
-    return createSessionFromFirstMatch(club, ourXi);
+    return createSessionFromFirstMatch(club, ourXi, ourBench ?? []);
   }
   if (club && leagueFixture && ourXi) {
-    return createSessionFromLeagueFixture(club, leagueFixture, ourXi);
+    return createSessionFromLeagueFixture(club, leagueFixture, ourXi, ourBench ?? []);
   }
   throw new MatchSessionDataError();
 }
