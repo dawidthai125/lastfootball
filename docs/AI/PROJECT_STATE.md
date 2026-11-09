@@ -26,7 +26,7 @@
 ## Następny EPIC
 
 Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED** (`54ae7b3` · D125). Owner GO 2026-11-09.  
-Następny do implementacji: Canvas REUSE, potem ACADEMY-02 · Retirement · §22 push/email · Prime.
+Canvas REUSE closed (`759d49f`). Następny: ACADEMY-02 · Retirement · §22 push/email · Prime.
 
 ## Powiązania
 

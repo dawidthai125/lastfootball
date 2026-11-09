@@ -13,10 +13,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
 **Documentation tip:** **`201af50`** — docs pin for the match fallback removal  
-**tip `main`:** **`63607fa`** — fix(match): drop the FC Lastovia runtime fallback  
+**tip `main`:** **`759d49f`** — canvas paints `getSpatialState()`  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-11-09] — Canvas REUSE
+
+### Product
+
+- The match canvas paints player and ball positions from `getSpatialState()` only. Events still drive the FX flash, not a second pitch.
+- Removed the unused FC Lastovia panels and the seed fixture bundles (`FIXTURES`, `getPreMatchBundle`, `getLiveMatchBundle`).
+- Tip main → **`759d49f`**.
 
 ## [2026-11-09] — match runtime mock removed
 
