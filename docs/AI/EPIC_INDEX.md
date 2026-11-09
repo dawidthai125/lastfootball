@@ -18,13 +18,13 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                        |
-| ----------------------- | -------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED      |
-| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED       |
-| **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED        |
-| **Documentation tip**   | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01 |
-| **tip `main`**          | **`a2b2528`** — no FC Lastovia runtime fallback    |
+| Warstwa                 | Hash / EPIC                                             |
+| ----------------------- | ------------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED           |
+| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED            |
+| **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED             |
+| **Documentation tip**   | **`201af50`** — docs pin for the match fallback removal |
+| **tip `main`**          | **`63607fa`** — no FC Lastovia runtime fallback         |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -124,4 +124,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Canvas REUSE · 
 
 ## Status
 
-**ACTIVE** · 2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime
+**ACTIVE** · 2026-11-09 — match fallback removed · tip `63607fa` · next Canvas REUSE (Owner GO) · then Academy 02 / Retirement / §22 push / Prime

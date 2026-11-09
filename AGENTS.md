@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-11-09 — tip main `a2b2528` (no FC Lastovia runtime fallback) · docs tip `5bc9d33` · LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D1–D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime
+2026-11-09 — tip main `63607fa` (no FC Lastovia runtime fallback) · docs tip `201af50` · LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D1–D125 · next Canvas REUSE (Owner GO 2026-11-09), then Academy 02 / Retirement / §22 push / Prime
