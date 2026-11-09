@@ -24,7 +24,7 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 | **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED            |
 | **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED             |
 | **Documentation tip**   | **`201af50`** — docs pin for the match fallback removal |
-| **tip `main`**          | **`63607fa`** — no FC Lastovia runtime fallback         |
+| **tip `main`**          | **`759d49f`** — canvas paints `getSpatialState()`       |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 
@@ -124,4 +124,4 @@ Pełna lista: [`../ROADMAP.md`](../ROADMAP.md) — **kolejka:** Canvas REUSE · 
 
 ## Status
 
-**ACTIVE** · 2026-11-09 — match fallback removed · tip `63607fa` · next Canvas REUSE (Owner GO) · then Academy 02 / Retirement / §22 push / Prime
+**ACTIVE** · 2026-11-09 — Canvas REUSE closed · tip `759d49f` · next Academy 02 / Retirement / §22 push / Prime

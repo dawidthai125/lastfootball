@@ -12,7 +12,7 @@ Mapa postępu: **DONE / IN PROGRESS / PLANNED / FUTURE**.
 **Presentation tip:** **`54ae7b3`** — LFE-NOTIFICATIONS-01 (Invitation Layer · D125).  
 **Prior Presentation:** **`9fd14fc`** — LFE-UI-MOTION-01.  
 **Documentation tip:** **`201af50`** — docs pin for the match fallback removal  
-**tip `main`:** **`63607fa`** — fix(match): drop the FC Lastovia runtime fallback  
+**tip `main`:** **`759d49f`** — canvas paints `getSpatialState()`  
 Szczegóły tip / warstwy: [`AI/CURRENT_BASELINE.md`](./AI/CURRENT_BASELINE.md) · master: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).  
 GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATIONS-01** · Transfers **10** · Messages · Club · SoftLock · Season End · Promotion · Sponsors · Board · Stadium · **LFE-PUBLIC-API-01** · **LFE-RATINGS-V2** · **LFE-AGE-01** · Training · Academy · Scouting · **GDD-16…22** · **M2.5 PASS** · MOTION-01 · UI P0 · Vercel Production.
 
@@ -116,14 +116,13 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## PLANNED ⬜
 
-| Item                               | Zależność        |
-| ---------------------------------- | ---------------- |
-| Canvas REUSE → `getSpatialState()` | Owner GO         |
-| LFE-ACADEMY-02                     | Owner GO         |
-| LFE-RETIREMENT-01                  | Owner GO         |
-| Kanał push / email (§22 Future)    | osobny Owner GO  |
-| Career Prime                       | Owner GO         |
-| LFE `/advanced` subpath            | Owner GO · defer |
+| Item                            | Zależność        |
+| ------------------------------- | ---------------- |
+| LFE-ACADEMY-02                  | Owner GO         |
+| LFE-RETIREMENT-01               | Owner GO         |
+| Kanał push / email (§22 Future) | osobny Owner GO  |
+| Career Prime                    | Owner GO         |
+| LFE `/advanced` subpath         | Owner GO · defer |
 
 ## FUTURE
 
@@ -148,22 +147,21 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 FULLY CLOSED** (`54ae7b3` · D125). Domain CAREER-DECLINE nadal `3c01baa`. Następny do implementacji: **Canvas REUSE**.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f` (pitch uses `getSpatialState()` only). Następny do implementacji: **LFE-ACADEMY-02**.
 
 ### Oficjalna kolejność (po NOTIFICATIONS-01)
 
 ```
-Canvas REUSE getSpatialState  ·  LFE-ACADEMY-02  ·  Retirement  ·  §22 push/email  ·  Career Prime
+LFE-ACADEMY-02  ·  Retirement  ·  §22 push/email  ·  Career Prime
 ```
 
-| EPIC                               | Notatka          |
-| ---------------------------------- | ---------------- |
-| Canvas REUSE → `getSpatialState()` | osobny Owner GO  |
-| LFE-ACADEMY-02                     | Owner GO         |
-| LFE-RETIREMENT-01                  | Owner GO         |
-| Kanał push / email (§22 Future)    | osobny Owner GO  |
-| Career Prime                       | Owner GO         |
-| LFE `/advanced`                    | Owner GO · defer |
+| EPIC                            | Notatka          |
+| ------------------------------- | ---------------- |
+| LFE-ACADEMY-02                  | Owner GO         |
+| LFE-RETIREMENT-01               | Owner GO         |
+| Kanał push / email (§22 Future) | osobny Owner GO  |
+| Career Prime                    | Owner GO         |
+| LFE `/advanced`                 | Owner GO · defer |
 
 **Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · Youth Depth.  
 Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTION **`9fd14fc`**.

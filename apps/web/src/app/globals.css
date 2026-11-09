@@ -8,6 +8,10 @@
  */
 
 :root {
+  /* SKIN-01. Files live in the repo so the build does not call Google Fonts. */
+  --font-ui: 'Archivo', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
+
   --lf-color-bg-void: #03050a;
   --lf-color-bg-base: #07111c;
   --lf-color-bg-raised: #0c1824;

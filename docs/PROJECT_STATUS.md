@@ -26,7 +26,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | **Presentation tip**    | **`54ae7b3`** — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)              |
 | **Prior Presentation**  | **`9fd14fc`** — LFE-UI-MOTION-01                                                     |
 | **Documentation tip**   | **`201af50`** — docs pin for the match fallback removal                              |
-| **tip `main`**          | **`63607fa`** — fix(match): drop the FC Lastovia runtime fallback                    |
+| **tip `main`**          | **`759d49f`** — canvas paints `getSpatialState()`                                    |
 | **Prod**                | https://lastfootball.vercel.app · `63607fa` on `main`, deploy follows the merge      |
 | **CI**                  | **GREEN** on PR #5                                                                   |
 | **Decisions**           | **D1–D125** (D125 Invitation Layer · D124 Career Phase · D123 Strength · D122 H-AGE) |

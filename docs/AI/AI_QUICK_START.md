@@ -17,7 +17,7 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | Prior Domain        | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength · D123)          |
 | Presentation tip    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 (Invitation Layer · D125) |
 | Documentation tip   | **`201af50`** — docs pin for the match fallback removal        |
-| tip `main`          | **`63607fa`** — fix(match): no FC Lastovia runtime fallback    |
+| tip `main`          | **`759d49f`** — canvas paints `getSpatialState()`              |
 | Prod                | https://lastfootball.vercel.app                                |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                   |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                 |
@@ -55,4 +55,4 @@ Potem task-specific (Hub · Guide §16 · platform · LFE) z tabeli w START_HERE
 
 ## Status
 
-**ACTIVE** · 2026-11-09 — match fallback removed · tip `63607fa` · next Canvas REUSE (Owner GO) · then Academy 02 / Retirement / §22 push / Prime
+**ACTIVE** · 2026-11-09 — Canvas REUSE closed · tip `759d49f` · next Academy 02 / Retirement / §22 push / Prime
