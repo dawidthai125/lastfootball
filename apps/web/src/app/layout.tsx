@@ -1,27 +1,22 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Archivo, Source_Sans_3 } from 'next/font/google';
+import '@fontsource/archivo/latin-500.css';
+import '@fontsource/archivo/latin-600.css';
+import '@fontsource/archivo/latin-700.css';
+import '@fontsource/archivo/latin-ext-500.css';
+import '@fontsource/archivo/latin-ext-600.css';
+import '@fontsource/archivo/latin-ext-700.css';
+import '@fontsource/source-sans-3/latin-400.css';
+import '@fontsource/source-sans-3/latin-500.css';
+import '@fontsource/source-sans-3/latin-600.css';
+import '@fontsource/source-sans-3/latin-ext-400.css';
+import '@fontsource/source-sans-3/latin-ext-500.css';
+import '@fontsource/source-sans-3/latin-ext-600.css';
 
 import { env } from '@/config/env';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 import './globals.css';
-
-/** Heading / UI chrome — SKIN-01 Archivo (LFE-UI-IMPL-04 / PTI-03). */
-const fontDisplay = Archivo({
-  subsets: ['latin', 'latin-ext'],
-  weight: ['500', '600', '700'],
-  variable: '--font-ui',
-  display: 'swap',
-});
-
-/** Body / data — SKIN-01 Source Sans 3. */
-const fontBody = Source_Sans_3({
-  subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600'],
-  variable: '--font-body',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.appUrl ?? 'https://lastfootball.vercel.app'),
@@ -55,7 +50,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pl" className={`${fontDisplay.variable} ${fontBody.variable}`}>
+    <html lang="pl">
       <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
