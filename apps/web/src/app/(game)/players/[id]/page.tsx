@@ -44,7 +44,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
       />
 
       {/* M4: Hero → decyzja → status → atrybuty → kontekst */}
-      <PlayerHero player={player} />
+      <PlayerHero player={player} club={club} />
       <PlayerActions player={player} />
       <PlayerStatus player={player} />
       <PlayerAttributes player={player} />
