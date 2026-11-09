@@ -12,9 +12,17 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`1073660`** — docs close for Canvas REUSE  
-**tip `main`:** **`4377677`** — ball restarts on GOAL / CORNER / PENALTY / FREE_KICK  
+**Documentation tip:** **`33110c1`** — Academy 02 scope lock and spatial pin  
+**tip `main`:** **`e20b3f8`** — live pause, watch speed, and substitutions  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-09] — Live match decisions
+
+### Product
+
+- While the manager watches live, they can pause, pick 1× / 2× / 4×, change the tactic, and make up to 3 substitutions. Replay does not send those commands. The bench is the fit seniors outside the XI (`e20b3f8`). Default pace is about six minutes for a full match.
 
 ---
 

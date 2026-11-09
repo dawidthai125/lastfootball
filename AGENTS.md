@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-11-09 — tip main `4377677` (spatial set-piece restarts) · docs tip `1073660` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125
+2026-11-09 — tip main `e20b3f8` (live pause, speed, substitutions) · docs tip `33110c1` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125

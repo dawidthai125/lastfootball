@@ -65,7 +65,7 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | Production                  | `bf00229` on `main` · Vercel completed (Canvas REUSE)                             |
 | Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)    |
 | **NEXT EPIC**               | Retirement / §22 push / Prime — each needs its own contract                       |
-| Status                      | Academy 02 SCOPE LOCK · spatial restarts `4377677` · Canvas `759d49f` · D1–D125   |
+| Status                      | Live decisions `e20b3f8` · spatial `4377677` · Academy 02 SCOPE LOCK · D1–D125    |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
