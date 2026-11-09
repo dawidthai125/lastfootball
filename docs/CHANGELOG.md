@@ -12,9 +12,17 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`33110c1`** — Academy 02 scope lock and spatial pin  
-**tip `main`:** **`e20b3f8`** — live pause, watch speed, and substitutions  
+**Documentation tip:** **`15d63b5`** — live decisions pin  
+**tip `main`:** **`95864cb`** — a paused substitution shows on the pitch  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-09] — Paused substitution on the pitch
+
+### Product
+
+- A substitution while the match is paused reseats the spatial lineup immediately. The newcomer takes the vacated slot, players who stayed keep their pose, and the ball does not move. No simulation tick (`95864cb`).
 
 ---
 

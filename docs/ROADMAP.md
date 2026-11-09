@@ -147,7 +147,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji.
 
 ### Oficjalna kolejność
 
