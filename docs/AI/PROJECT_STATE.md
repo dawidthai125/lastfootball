@@ -25,8 +25,8 @@
 
 ## Następny EPIC
 
-Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED** (`54ae7b3` · D125). **Czekaj na Owner GO** (nie startować AUDIT bez GO).  
-Kandydaci PLANNED: Canvas REUSE · ACADEMY-02 · Retirement · §22 push/email · Prime.
+Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED** (`54ae7b3` · D125). Owner GO 2026-11-09.  
+Następny do implementacji: Canvas REUSE, potem ACADEMY-02 · Retirement · §22 push/email · Prime.
 
 ## Powiązania
 

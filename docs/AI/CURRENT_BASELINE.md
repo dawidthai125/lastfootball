@@ -50,8 +50,8 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | URL                         | https://lastfootball.vercel.app                                                                   |
 | Alias                       | https://lastfootball.pl                                                                           |
 | Branch                      | `main`                                                                                            |
-| **tip `main`**              | **`a2b2528`** — fix(match): drop the FC Lastovia runtime fallback (Documentation tip = `5bc9d33`) |
-| **Documentation tip**       | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01                                                |
+| **tip `main`**              | **`63607fa`** — fix(match): drop the FC Lastovia runtime fallback (Documentation tip = `201af50`) |
+| **Documentation tip**       | **`201af50`** — docs pin for the match fallback removal                                           |
 | **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                     |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                                      |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                                  |
@@ -61,11 +61,11 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | **Presentation tip**        | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                               |
 | Presentation message        | `feat(ui): add in-app Invitation Layer thin (LFE-NOTIFICATIONS-01)`                               |
 | Prior Presentation          | `9fd14fc` — LFE-UI-MOTION-01                                                                      |
-| CI                          | local `npm run validate` PASS · remote on the PR for `a2b2528`                                    |
-| Production                  | previous deploy until `a2b2528` is on `main`                                                      |
+| CI                          | **GREEN** on PR #5 (format, types, lint, test, build)                                             |
+| Production                  | `63607fa` is on `main` · Vercel production deploy follows the merge                               |
 | Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)                    |
-| **NEXT EPIC**               | **Czekaj na Owner GO** — Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime                |
-| Status                      | match fallback removed in `a2b2528` · LFE-NOTIFICATIONS-01 stays the last product epic · D125     |
+| **NEXT EPIC**               | Owner GO 2026-11-09 · next **Canvas REUSE**, then Academy 02 / Retirement / §22 push / Prime      |
+| Status                      | match fallback removed in `63607fa` · LFE-NOTIFICATIONS-01 stays the last product epic · D125     |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
