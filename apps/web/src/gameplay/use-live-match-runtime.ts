@@ -17,14 +17,24 @@ export function useLiveMatchRuntime(
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
+  sessionError: string | null;
   dispatchUiCommand: (commandId: string) => void;
 } {
   const [runtime, setRuntime] = useState<LiveMatchRuntime | null>(null);
+  const [sessionError, setSessionError] = useState<string | null>(null);
 
   const xiKey = ourXi?.map((p) => p.id).join(',') ?? '';
 
   useEffect(() => {
-    const rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi);
+    setSessionError(null);
+    let rt: LiveMatchRuntime;
+    try {
+      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';
+      setSessionError(message);
+      return;
+    }
     rt.ensureSimulationRunning();
     setRuntime(rt);
     return () => {
@@ -47,6 +57,7 @@ export function useLiveMatchRuntime(
   return {
     snapshot,
     runtime,
+    sessionError,
     dispatchUiCommand: (id) => {
       runtime?.dispatchUiCommand(id);
     },

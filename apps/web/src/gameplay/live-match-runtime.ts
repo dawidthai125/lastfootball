@@ -9,7 +9,6 @@ import {
 
 import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
-import { createSessionFromFixture } from '@/gameplay/create-session-from-fixture';
 import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
@@ -62,6 +61,14 @@ const FEED_TYPES = new Set([
   'SUBSTITUTION',
   'SYSTEM',
 ]);
+
+/** Thrown when a live match has no club session. Seed clubs are not a fallback. */
+export class MatchSessionDataError extends Error {
+  constructor() {
+    super('Mecz wymaga klubu i składu. Nie podstawiam atrapy.');
+    this.name = 'MatchSessionDataError';
+  }
+}
 
 /**
  * Owns MatchSession + Canvas host + Replay buffer/controller.
@@ -491,5 +498,5 @@ function resolveSession(
   if (club && leagueFixture && ourXi) {
     return createSessionFromLeagueFixture(club, leagueFixture, ourXi);
   }
-  return createSessionFromFixture(fixture);
+  throw new MatchSessionDataError();
 }

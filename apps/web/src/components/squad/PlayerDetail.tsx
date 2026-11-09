@@ -5,7 +5,6 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
-import { dashboardMock } from '@/data/mock';
 
 import './squad-decision.css';
 
@@ -46,7 +45,13 @@ function statusTone(status: SquadPlayer['status']): {
 }
 
 /** Hero — identity only (status chip kept as identity signal). */
-export function PlayerHero({ player }: { player: SquadPlayer }) {
+export function PlayerHero({
+  player,
+  club,
+}: {
+  player: SquadPlayer;
+  club: { name: string; shortName: string };
+}) {
   const tone = statusTone(player.status);
 
   return (
@@ -62,11 +67,7 @@ export function PlayerHero({ player }: { player: SquadPlayer }) {
       >
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--lf-space-2)' }}>
           <PlayerPortrait playerId={player.id} name={player.name} size="lg" />
-          <ClubCrest
-            shortName={dashboardMock.club.shortName}
-            clubName={dashboardMock.club.name}
-            size="sm"
-          />
+          <ClubCrest shortName={club.shortName} clubName={club.name} size="sm" />
         </div>
 
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>

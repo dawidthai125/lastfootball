@@ -10,7 +10,6 @@ import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gamepl
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
 import type { ReplaySpeed } from '@/gameplay/replay';
-import { dashboardMock } from '@/data/mock';
 import { MatchMomentOverlay } from '@/components/match/MatchMomentOverlay';
 import {
   buildPostMatchSummary,
@@ -48,18 +47,19 @@ export function LiveMatchFoundation({
   developmentNames?: readonly string[];
 }) {
   const { fixture } = bundle;
-  const { snapshot, dispatchUiCommand, runtime } = useLiveMatchRuntime(
+  const { snapshot, dispatchUiCommand, runtime, sessionError } = useLiveMatchRuntime(
     fixture,
     bundle,
     club,
     leagueFixture,
     ourXi,
   );
-  const us = club ?? dashboardMock.club;
-  const homeName = fixture.home ? us.name : fixture.opponent;
-  const awayName = fixture.home ? fixture.opponent : us.name;
-  const homeShort = fixture.home ? us.shortName : fixture.opponentShort;
-  const awayShort = fixture.home ? fixture.opponentShort : us.shortName;
+  const usName = club?.name ?? '—';
+  const usShort = club?.shortName ?? '—';
+  const homeName = fixture.home ? usName : fixture.opponent;
+  const awayName = fixture.home ? fixture.opponent : usName;
+  const homeShort = fixture.home ? usShort : fixture.opponentShort;
+  const awayShort = fixture.home ? fixture.opponentShort : usShort;
 
   const [viewMode, setViewMode] = useState(bundle.viewModes[0]?.id ?? 'tactical');
   const [commandId, setCommandId] = useState(bundle.commands[0]?.id ?? '');
@@ -119,6 +119,14 @@ export function LiveMatchFoundation({
     const renderer = runtime.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
     renderer?.setPlaybackMode?.(snapshot.replay.source === 'replay' ? 'replay' : 'live');
   }, [runtime, snapshot?.replay.source, postMatchOpen, snapshot]);
+
+  if (sessionError) {
+    return (
+      <div data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04" role="alert">
+        <p>{sessionError}</p>
+      </div>
+    );
+  }
 
   if (!runtime || !snapshot) {
     return (
