@@ -12,10 +12,24 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE  
+**Documentation tip:** **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01  
+**tip `main`:** **`a2b2528`** — fix(match): drop the FC Lastovia runtime fallback  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
+
+## [2026-11-09] — match runtime mock removed
+
+### Product
+
+- Live match no longer falls back to the seed club FC Lastovia. Missing club, league fixture, or XI raises `MatchSessionDataError`.
+- Player hero crest uses the manager club.
+- `npm test` typechecks `@lastfootball/domain`.
+- Tip main → **`a2b2528`**.
+
+### Docs
+
+- Pin documentation tip to **`5bc9d33`**. Match pipeline no longer documents `createSessionFromFixture`.
 
 ## [2026-08-04] — LFE-NOTIFICATIONS-01 · CLOSED
 

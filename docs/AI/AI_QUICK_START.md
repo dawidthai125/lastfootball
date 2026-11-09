@@ -16,8 +16,8 @@ Natychmiastowy cold start ChatGPT / Cursor **bez** historii czatu.
 | Domain baseline     | **`3c01baa`** — LFE-CAREER-DECLINE-01 (Career Phase · D124)    |
 | Prior Domain        | **`843bcfd`** — LFE-LEAGUE-WORLD-02 (Strength · D123)          |
 | Presentation tip    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 (Invitation Layer · D125) |
-| Documentation tip   | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                |
-| tip `main`          | **`b792fd2`** — pin tip (docs tip `c75577c`)                   |
+| Documentation tip   | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01             |
+| tip `main`          | **`a2b2528`** — fix(match): no FC Lastovia runtime fallback    |
 | Prod                | https://lastfootball.vercel.app                                |
 | Master handoff      | [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)                   |
 | Status projektu     | [`../PROJECT_STATUS.md`](../PROJECT_STATUS.md)                 |

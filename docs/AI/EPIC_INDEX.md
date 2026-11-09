@@ -18,12 +18,13 @@ Gdy potrzebujesz „co już zamknięto” / „jakie ID EPIC istnieją” — pr
 
 ## Feature baseline
 
-| Warstwa                 | Hash / EPIC                                           |
-| ----------------------- | ----------------------------------------------------- |
-| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED         |
-| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED          |
-| **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED           |
-| **Documentation tip**   | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE (pin) |
+| Warstwa                 | Hash / EPIC                                        |
+| ----------------------- | -------------------------------------------------- |
+| **Production Baseline** | **`54d0724`** — LFE-UI-IMPL-06 · UI P0 CLOSED      |
+| **Domain baseline**     | **`3c01baa`** — LFE-CAREER-DECLINE-01 CLOSED       |
+| **Presentation tip**    | **`54ae7b3`** — LFE-NOTIFICATIONS-01 CLOSED        |
+| **Documentation tip**   | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01 |
+| **tip `main`**          | **`a2b2528`** — no FC Lastovia runtime fallback    |
 
 Szczegóły: [`CURRENT_BASELINE.md`](./CURRENT_BASELINE.md) · handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md)
 

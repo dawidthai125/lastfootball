@@ -19,8 +19,9 @@ Dokumentacja warstwy **aplikacji** (`apps/web`) dla przebiegu meczu Live → Can
 
 Entry points:
 
-- Mock/season fixtures: `createSessionFromFixture`
 - First Match: `createSessionFromFirstMatch(club)` → same LFE `createMatch`
+- League: `createSessionFromLeagueFixture(club, fixture, xi)`
+- Missing club, fixture, or XI: `MatchSessionDataError` (no seed club)
 
 ---
 
@@ -30,9 +31,11 @@ Entry points:
 flowchart TD
   PM[Pre Match UI] --> CSF{first match?}
   CSF -->|yes| CFM[createSessionFromFirstMatch]
-  CSF -->|no| FIX[createSessionFromFixture]
+  CSF -->|no| LEAGUE{club + fixture + XI?}
+  LEAGUE -->|yes| CSL[createSessionFromLeagueFixture]
+  LEAGUE -->|no| ERR[MatchSessionDataError]
   CFM --> CM[createMatch LFE]
-  FIX --> CM
+  CSL --> CM
   CM --> LMR[LiveMatchRuntime]
   LMR -->|session.run LIVE| ENG[Match Engine + AI]
   ENG --> MS[MatchState]
@@ -59,7 +62,7 @@ flowchart TD
 | **Odpowiedzialność** | Sesja LFE, pulse symulacji, snapshot UI, CommandBus z UI, zapis Replay, tryb LIVE/REPLAY                                                          |
 | **Wejścia**          | `Fixture`, `LiveMatchBundle`                                                                                                                      |
 | **Wyjścia**          | `LiveMatchSnapshot`, `canvasHost.present`, replay API                                                                                             |
-| **Pliki**            | `apps/web/src/gameplay/live-match-runtime.ts`, `use-live-match-runtime.ts`, `create-session-from-fixture.ts`, `lib/first-match/create-session.ts` |
+| **Pliki**            | `apps/web/src/gameplay/live-match-runtime.ts`, `use-live-match-runtime.ts`, `lib/fixtures/create-session.ts`, `lib/first-match/create-session.ts` |
 
 | **API** | `getSnapshot`, `subscribe`, `dispatchUiCommand`, `startSimulation`/`stopSimulation`, `enterReplay`/`exitReplay`, `replayPlay`/`Pause`/`Stop`/`Seek`/`SeekRatio`/`SetSpeed`, `getPlaybackSource`, `replayBuffer`, `dispose` |
 

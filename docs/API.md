@@ -22,7 +22,7 @@ Szczegóły w dokumentach powiązanych — tu tylko mapa.
 
 | Obszar           | Dokument                                               | Entry points (skrót)                                                         |
 | ---------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| LiveMatchRuntime | [web/MATCH_UI_PIPELINE.md](./web/MATCH_UI_PIPELINE.md) | `LiveMatchRuntime`, `useLiveMatchRuntime`, `createSessionFromFixture`        |
+| LiveMatchRuntime | [web/MATCH_UI_PIPELINE.md](./web/MATCH_UI_PIPELINE.md) | `LiveMatchRuntime`, `useLiveMatchRuntime`, `MatchSessionDataError`           |
 | Canvas           | ten sam                                                | `createMatchCanvasHost`, `createMatchCanvasRenderer`, `MatchCanvasReadModel` |
 | Replay           | ten sam                                                | `createReplayBuffer`, `createReplayController`                               |
 | Barrel           | `gameplay/index.ts`                                    | re-export powyżej                                                            |

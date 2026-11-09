@@ -20,10 +20,10 @@
 | **Domain feature baseline**     | `3c01baa` — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)                                                                                                                                                           |
 | **Presentation tip**            | `54ae7b3` — **LFE-NOTIFICATIONS-01** (Invitation Layer Thin · D125)                                                                                                                                                                 |
 | **Prior Presentation**          | `9fd14fc` — **LFE-UI-MOTION-01**                                                                                                                                                                                                    |
-| **Documentation tip**           | **`c75577c`** — LFE-NOTIFICATIONS-01 DOCS CLOSE                                                                                                                                                                                     |
-| **tip `main`**                  | **`b792fd2`** — pin tip (Documentation tip = `c75577c`)                                                                                                                                                                             |
+| **Documentation tip**           | **`5bc9d33`** — pin tip after LFE-NOTIFICATIONS-01                                                                                                                                                                                  |
+| **tip `main`**                  | **`a2b2528`** — fix(match): drop the FC Lastovia runtime fallback                                                                                                                                                                   |
 | **Branch**                      | `main`                                                                                                                                                                                                                              |
-| **Status**                      | PRODUCTION VERIFIED · CI GREEN · **LFE-NOTIFICATIONS-01 FULLY CLOSED** · D1–D125 · next **Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**                                                                    |
+| **Status**                      | tip `a2b2528` removes the FC Lastovia match fallback · LFE-NOTIFICATIONS-01 stays CLOSED · D1–D125 · next **Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime**                                                             |
 
 | **Production URL** | https://lastfootball.vercel.app |
 | **Alias** | https://lastfootball.pl |
