@@ -36,7 +36,7 @@ Inne handoff / state docs **odsyłają tutaj** — nie kopiuj pełnego statusu.
 | Platform          | Onboarding · First Match · Hub · League 22 · League World · Season End · Age++ · Career Decline · Promotion · Sponsors · Board · Stadium · Finance · Players · Transfers **10** · Messages · **Invitations** · Club · SoftLock · Training · Academy · Scouting · Daily · Achievements · Ranking |
 | UX presentation   | **UI P0 CLOSED** · Landing · Branding · Auth UX · MOTION-01 · **Invitation Layer** · Night Pitch Office · Guide §8/§16                                                                                                                                                                          |
 | Engine / Match UI | LFE 0.9.1 + Live · Canvas · Replay · Post · **Ratings v2** · Match Path immersive · XI Gate · **PUBLIC surface** (D119–D121) · Spatial Motion Thin (`021b06d`)                                                                                                                                  |
-| Design            | GDD-01…**22** Thin · **LFE-NOTIFICATIONS-01** CLOSED (in-app §22) · CAREER-DECLINE-01 · §26 · World Art · **next: Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push-email / Prime**                                                                                                  |
+| Design            | GDD-01…**22** Thin · **LFE-NOTIFICATIONS-01** CLOSED (in-app §22) · CAREER-DECLINE-01 · §26 · World Art · **next: Retirement / §22 push / Prime (kontrakt) · Academy 02 SCOPE LOCK · spatial `4377677`**                                                                                        |
 | Infra             | Vercel + Supabase · CI GREEN · NOTIFICATIONS-01 = Web-only (brak migracji)                                                                                                                                                                                                                      |
 
 ## W trakcie
@@ -52,7 +52,7 @@ Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED**.
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §11.  
-**NEXT EPIC:** **Canvas REUSE (`getSpatialState`)** / **LFE-ACADEMY-02** / **Retirement** / **§22 push/email** / **Prime** — **nie startować** bez Owner GO (AUDIT first).
+**NEXT EPIC:** Retirement / §22 push/email / Prime — każdy wymaga własnego kontraktu. Academy 02 = SCOPE LOCK. Spatial restarts = `4377677`.
 
 ## Decyzje
 

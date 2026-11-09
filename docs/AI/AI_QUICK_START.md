@@ -31,7 +31,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VALIDATION → COMMIT → PUSH →
 
 **Bez Owner GO:** nie commit, nie push, nie IMPLEMENT poza PLAN.
 
-**Następny EPIC (kolejka Ownera):** Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime.  
+**Następny EPIC:** Retirement / §22 push / Prime — każdy z własnym kontraktem. Academy 02 = SCOPE LOCK.  
 Handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md) §10–§13.
 
 ## Twarde zasady

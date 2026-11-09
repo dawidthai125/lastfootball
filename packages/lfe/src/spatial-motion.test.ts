@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { advanceMatchSpatialState } from './match/positioning/spatial-motion';
+import type { MatchSpatialState } from './match/positioning/spatial-state';
 import {
   createBench,
   createKickoffCommand,
@@ -75,4 +77,87 @@ describe('spatial movement thin', () => {
 
     expect(second.getSpatialState()).toEqual(first.getSpatialState());
   });
+
+  it('keeps open play on one half when no event names a side', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const even = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 8,
+      events: [],
+    });
+    const odd = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [],
+    });
+
+    expect(even.ball.position.x).toBeGreaterThan(52.5);
+    expect(odd.ball.position.x).toBeGreaterThan(52.5);
+  });
+
+  it('restarts the ball at the centre after a goal', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const goal = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'GOAL', tick: 9, payload: { side: 'home' } }],
+    });
+    const open = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'POSSESSION', tick: 9, payload: { side: 'home' } }],
+    });
+
+    expect(goal.ball.position).toEqual({ x: 52.5, y: 34 });
+    expect(open.ball.position.x).toBeGreaterThan(52.5);
+  });
+
+  it('pulls the ball to the attacking corner', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const corner = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'CORNER', tick: 9, payload: { side: 'home' } }],
+    });
+    const open = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'POSSESSION', tick: 9, payload: { side: 'home' } }],
+    });
+
+    expect(corner.ball.position.x).toBeGreaterThan(open.ball.position.x);
+  });
+
+  it('drops a goal restart after the short window', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const later = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 50,
+      events: [{ type: 'GOAL', tick: 9, payload: { side: 'home' } }],
+    });
+
+    expect(later.ball.position).not.toEqual({ x: 52.5, y: 34 });
+  });
 });
+
+function withBall(state: MatchSpatialState, x: number, y: number): MatchSpatialState {
+  return {
+    ...state,
+    ball: { position: { x, y } },
+  };
+}

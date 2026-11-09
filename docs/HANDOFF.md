@@ -30,7 +30,7 @@ AUDIT → PLAN → OWNER GO → IMPLEMENT → VERIFY → COMMIT → PUSH → CI
 
 ## Następny EPIC (po Owner GO)
 
-Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime — [`ROADMAP.md`](./ROADMAP.md) · Handoff §10–§11.
+Retirement / §22 push / Prime — każdy z kontraktem. Academy 02 = SCOPE LOCK. [`ROADMAP.md`](./ROADMAP.md).
 
 ## Twarde (skrót)
 

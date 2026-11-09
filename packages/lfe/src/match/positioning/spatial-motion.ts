@@ -13,7 +13,8 @@ import {
  *
  * This is deliberately not Physics: it keeps a formation-shaped team block,
  * moves it in response to possession, and eases each player toward a new
- * target. Canvas and Replay only consume the resulting snapshots.
+ * target. A recent GOAL, CORNER, PENALTY, or FREE_KICK pulls the ball to
+ * that restart for a short window. Canvas and Replay only consume the snapshots.
  */
 export function advanceMatchSpatialState(input: {
   readonly previous: MatchSpatialState;
@@ -25,8 +26,9 @@ export function advanceMatchSpatialState(input: {
 
   const { pitch } = input.previous;
   const baseline = createMatchSpatialState(input.matchState);
-  const possession = resolvePossessionSide(input.events, input.tick);
-  const ballTarget = resolveBallTarget(pitch.length, pitch.width, possession, input.tick);
+  const setPiece = latestSetPiece(input.events, input.tick);
+  const possession = setPiece?.side ?? resolvePossessionSide(input.events);
+  const ballTarget = resolveBallTarget(pitch.length, pitch.width, possession, input.tick, setPiece);
   const baselineByPlayer = new Map(baseline.players.map((player) => [player.playerId, player]));
 
   const players = input.previous.players.map((player) => {
@@ -48,7 +50,9 @@ export function advanceMatchSpatialState(input: {
   return Object.freeze({
     ...input.previous,
     players: Object.freeze(players),
-    ball: Object.freeze({ position: moveToward(input.previous.ball.position, ballTarget, 1.1) }),
+    ball: Object.freeze({
+      position: moveToward(input.previous.ball.position, ballTarget, setPiece ? 3.4 : 1.1),
+    }),
   });
 }
 
@@ -56,17 +60,59 @@ function isPlayPhase(phase: MatchState['phase']): boolean {
   return phase === 'FIRST_HALF' || phase === 'SECOND_HALF';
 }
 
-function resolvePossessionSide(events: readonly EngineEvent[], tick: number): 'home' | 'away' {
-  for (let index = events.length - 1; index >= 0; index -= 1) {
-    const payload = events[index]?.payload;
-    if (!payload || typeof payload !== 'object' || !('side' in payload)) continue;
-    const side = String((payload as { side: unknown }).side);
-    if (side === 'home' || side === 'away') return side;
-  }
-  return tick % 2 === 0 ? 'home' : 'away';
+const SET_PIECE_TYPES = new Set(['GOAL', 'CORNER', 'PENALTY', 'FREE_KICK']);
+const SET_PIECE_TICKS = 40;
+
+function readSide(payload: unknown): 'home' | 'away' | undefined {
+  if (!payload || typeof payload !== 'object' || !('side' in payload)) return undefined;
+  const side = String((payload as { side: unknown }).side);
+  return side === 'home' || side === 'away' ? side : undefined;
 }
 
-function resolveBallTarget(length: number, width: number, side: 'home' | 'away', tick: number) {
+function latestSetPiece(
+  events: readonly EngineEvent[],
+  tick: number,
+): { type: string; side: 'home' | 'away' } | undefined {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index];
+    if (!event || !SET_PIECE_TYPES.has(event.type)) continue;
+    if (event.tick > tick || tick - event.tick > SET_PIECE_TICKS) continue;
+    const side = readSide(event.payload);
+    if (side) return { type: event.type, side };
+  }
+  return undefined;
+}
+
+function resolvePossessionSide(events: readonly EngineEvent[]): 'home' | 'away' {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const side = readSide(events[index]?.payload);
+    if (side) return side;
+  }
+  return 'home';
+}
+
+function resolveBallTarget(
+  length: number,
+  width: number,
+  side: 'home' | 'away',
+  tick: number,
+  setPiece: { type: string; side: 'home' | 'away' } | undefined,
+) {
+  if (setPiece?.type === 'GOAL') return position(length / 2, width / 2);
+  if (setPiece?.type === 'CORNER') {
+    const x = setPiece.side === 'home' ? length - 1 : 1;
+    const y = setPiece.side === 'home' ? 1 : width - 1;
+    return position(x, y);
+  }
+  if (setPiece?.type === 'PENALTY') {
+    const x = setPiece.side === 'home' ? length - 11 : 11;
+    return position(x, width / 2);
+  }
+  if (setPiece?.type === 'FREE_KICK') {
+    const x = setPiece.side === 'home' ? length - 25 : 25;
+    return position(x, width / 2);
+  }
+
   const progress = 0.48 + Math.sin(tick * 0.11) * 0.2;
   const x = side === 'home' ? length * progress : length * (1 - progress);
   const y = width * (0.5 + Math.sin(tick * 0.17 + (side === 'home' ? 0 : Math.PI)) * 0.22);
