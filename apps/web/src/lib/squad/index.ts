@@ -18,6 +18,8 @@ export {
 export {
   resolveClubSquad,
   resolveStartingXi,
+  resolveMatchBench,
+  MATCH_BENCH_MAX,
   getSquadPlayerById,
 } from '@/lib/squad/resolve-club-squad';
 export {

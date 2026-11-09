@@ -8,6 +8,7 @@ import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gameplay/canvas';
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
+import { LIVE_SUB_LIMIT, type LiveMatchSnapshot } from '@/gameplay/live-match-runtime';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
 import type { ReplaySpeed } from '@/gameplay/replay';
 import { MatchMomentOverlay } from '@/components/match/MatchMomentOverlay';
@@ -36,6 +37,7 @@ export function LiveMatchFoundation({
   firstMatch = false,
   leagueFixture = null,
   ourXi = null,
+  ourBench = null,
   developmentNames = [],
 }: {
   bundle: LiveMatchBundle;
@@ -43,17 +45,20 @@ export function LiveMatchFoundation({
   firstMatch?: boolean;
   leagueFixture?: FixtureDto | null;
   ourXi?: readonly RosterPlayerSeed[] | null;
+  ourBench?: readonly RosterPlayerSeed[] | null;
   /** Post Match development signals (LFE-PLAYERS-02). */
   developmentNames?: readonly string[];
 }) {
   const { fixture } = bundle;
-  const { snapshot, dispatchUiCommand, runtime, sessionError } = useLiveMatchRuntime(
-    fixture,
-    bundle,
-    club,
-    leagueFixture,
-    ourXi,
-  );
+  const {
+    snapshot,
+    dispatchUiCommand,
+    runtime,
+    sessionError,
+    substitute,
+    togglePause,
+    setWatchSpeed,
+  } = useLiveMatchRuntime(fixture, bundle, club, leagueFixture, ourXi, ourBench);
   const usName = club?.name ?? '—';
   const usShort = club?.shortName ?? '—';
   const homeName = fixture.home ? usName : fixture.opponent;
@@ -65,6 +70,10 @@ export function LiveMatchFoundation({
   const [commandId, setCommandId] = useState(bundle.commands[0]?.id ?? '');
   const [feedFilter, setFeedFilter] = useState<'all' | LiveEventKind>('all');
   const [rightTab, setRightTab] = useState<'commands' | 'stats' | 'subs'>('commands');
+  const [outId, setOutId] = useState<string | null>(null);
+  const [inId, setInId] = useState<string | null>(null);
+  const [decisionError, setDecisionError] = useState<string | null>(null);
+  const [watchSpeed, setWatchSpeedState] = useState<1 | 2 | 4>(1);
   const [postMatchOpen, setPostMatchOpen] = useState(false);
   const [finalOpen, setFinalOpen] = useState(false);
   const [goalOverlay, setGoalOverlay] = useState<{
@@ -245,6 +254,27 @@ export function LiveMatchFoundation({
           >
             {bundle.viewers} widzów
           </span>
+          {snapshot && !finished && !isReplay ? (
+            <div className="lf-live__watch">
+              <button type="button" className="lf-live__watch-btn" onClick={() => togglePause()}>
+                {snapshot.sessionStatus === 'paused' ? 'Wznów' : 'Pauza'}
+              </button>
+              {([1, 2, 4] as const).map((speed) => (
+                <button
+                  key={speed}
+                  type="button"
+                  className="lf-live__watch-btn"
+                  aria-pressed={watchSpeed === speed}
+                  onClick={() => {
+                    setWatchSpeed(speed);
+                    setWatchSpeedState(speed);
+                  }}
+                >
+                  {speed}×
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div
@@ -869,7 +899,12 @@ export function LiveMatchFoundation({
                 </div>
                 <button
                   type="button"
-                  onClick={() => dispatchUiCommand(commandId)}
+                  onClick={() => {
+                    const applied = dispatchUiCommand(commandId);
+                    setDecisionError(
+                      applied ? null : 'Taktyka działa tylko gdy oglądasz mecz na żywo.',
+                    );
+                  }}
                   style={{
                     marginTop: 'var(--lf-space-3)',
                     width: '100%',
@@ -959,63 +994,28 @@ export function LiveMatchFoundation({
             ) : null}
 
             {rightTab === 'subs' ? (
-              <>
-                <p
-                  style={{
-                    margin: 0,
-                    marginBottom: 'var(--lf-space-3)',
-                    fontSize: 'var(--lf-type-caption)',
-                    color: 'var(--lf-color-text-muted)',
-                  }}
-                >
-                  Pozostałe zmiany:{' '}
-                  <strong
-                    className="tabular-nums"
-                    style={{ color: 'var(--lf-color-text-primary)' }}
-                  >
-                    {bundle.subs.remaining}
-                  </strong>
-                </p>
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                  {bundle.subs.bench.map((b) => (
-                    <li
-                      key={b.name}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        padding: 'var(--lf-space-2) 0',
-                        borderBottomWidth: 'var(--lf-border-width-hair)',
-                        borderBottomStyle: 'solid',
-                        borderBottomColor: 'var(--lf-color-border-subtle)',
-                        fontSize: 'var(--lf-type-caption)',
-                      }}
-                    >
-                      <span style={{ color: 'var(--lf-color-text-primary)' }}>{b.name}</span>
-                      <span style={{ color: 'var(--lf-color-text-gold)' }}>{b.pos}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  disabled
-                  style={{
-                    marginTop: 'var(--lf-space-3)',
-                    width: '100%',
-                    borderWidth: 'var(--lf-border-width-hair)',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--lf-color-border-subtle)',
-                    background: 'var(--lf-color-bg-inset)',
-                    color: 'var(--lf-color-text-faint)',
-                    fontSize: 'var(--lf-type-caption)',
-                    padding: 'var(--lf-space-2)',
-                    borderRadius: 'var(--lf-radius-sm)',
-                    opacity: 'var(--lf-opacity-disabled)',
-                    cursor: 'not-allowed',
-                  }}
-                >
-                  Wykonaj zmianę (silnik)
-                </button>
-              </>
+              <LiveSubs
+                snapshot={snapshot}
+                home={fixture.home}
+                isReplay={isReplay}
+                outId={outId}
+                inId={inId}
+                error={decisionError}
+                onOut={setOutId}
+                onIn={setInId}
+                onConfirm={() => {
+                  if (!outId || !inId) {
+                    setDecisionError('Wybierz kto schodzi i kto wchodzi.');
+                    return;
+                  }
+                  const result = substitute(outId, inId);
+                  setDecisionError(result.ok ? null : (result.error ?? 'Zmiana nie weszła.'));
+                  if (result.ok) {
+                    setOutId(null);
+                    setInId(null);
+                  }
+                }}
+              />
             ) : null}
           </div>
 
@@ -1122,6 +1122,96 @@ export function LiveMatchFoundation({
           <ClubCrest shortName={awayShort} clubName={awayName} size="sm" />
         </div>
       </footer>
+    </div>
+  );
+}
+
+function LiveSubs({
+  snapshot,
+  home,
+  isReplay,
+  outId,
+  inId,
+  error,
+  onOut,
+  onIn,
+  onConfirm,
+}: {
+  snapshot: LiveMatchSnapshot;
+  home: boolean;
+  isReplay: boolean;
+  outId: string | null;
+  inId: string | null;
+  error: string | null;
+  onOut: (id: string) => void;
+  onIn: (id: string) => void;
+  onConfirm: () => void;
+}) {
+  const state = snapshot.matchState;
+  const side = home ? 'home' : 'away';
+  const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
+  const bench = side === 'home' ? state.homeBench : state.awayBench;
+  const used = state.substitutions.filter((sub) => sub.side === side).length;
+  const remaining = Math.max(0, LIVE_SUB_LIMIT - used);
+  const label = (id: string) => {
+    const player = state.players.find((item) => item.id === id);
+    return player ? `${player.shirtNumber} ${player.name}` : id;
+  };
+
+  return (
+    <div className="lf-live__subs">
+      <p className="lf-live__subs-note">
+        {isReplay
+          ? 'Zmiany wchodzą tylko na żywo. Wyjdź z powtórki.'
+          : `Pozostałe zmiany: ${remaining}/${LIVE_SUB_LIMIT}. Pauza zatrzymuje zegar.`}
+      </p>
+      {error ? (
+        <p className="lf-live__subs-error" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <p className="lf-live__subs-label">Schodzi</p>
+      <div className="lf-live__subs-grid">
+        {lineup.slots.map((slot) => (
+          <button
+            key={slot.playerId}
+            type="button"
+            className="lf-live__choice"
+            aria-pressed={outId === slot.playerId}
+            disabled={isReplay || remaining === 0}
+            onClick={() => onOut(slot.playerId)}
+          >
+            {label(slot.playerId)}
+          </button>
+        ))}
+      </div>
+      <p className="lf-live__subs-label">Wchodzi</p>
+      {bench.playerIds.length === 0 ? (
+        <p className="lf-live__subs-note">Brak zdrowych rezerwowych w kadrze.</p>
+      ) : (
+        <div className="lf-live__subs-grid">
+          {bench.playerIds.map((id) => (
+            <button
+              key={id}
+              type="button"
+              className="lf-live__choice"
+              aria-pressed={inId === id}
+              disabled={isReplay || remaining === 0}
+              onClick={() => onIn(id)}
+            >
+              {label(id)}
+            </button>
+          ))}
+        </div>
+      )}
+      <button
+        type="button"
+        className="lf-live__subs-go"
+        disabled={isReplay || remaining === 0 || !outId || !inId}
+        onClick={onConfirm}
+      >
+        Wykonaj zmianę
+      </button>
     </div>
   );
 }

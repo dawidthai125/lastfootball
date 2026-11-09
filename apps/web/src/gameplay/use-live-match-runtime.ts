@@ -14,22 +14,26 @@ export function useLiveMatchRuntime(
   club?: ClubDto | null,
   leagueFixture?: FixtureDto | null,
   ourXi?: readonly RosterPlayerSeed[] | null,
+  ourBench?: readonly RosterPlayerSeed[] | null,
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
   sessionError: string | null;
-  dispatchUiCommand: (commandId: string) => void;
+  dispatchUiCommand: (commandId: string) => boolean;
+  substitute: (outId: string, inId: string) => { ok: boolean; error?: string };
+  togglePause: () => void;
+  setWatchSpeed: (speed: 1 | 2 | 4) => void;
 } {
   const [runtime, setRuntime] = useState<LiveMatchRuntime | null>(null);
   const [sessionError, setSessionError] = useState<string | null>(null);
 
-  const xiKey = ourXi?.map((p) => p.id).join(',') ?? '';
+  const xiKey = `${ourXi?.map((p) => p.id).join(',') ?? ''}|${ourBench?.map((p) => p.id).join(',') ?? ''}`;
 
   useEffect(() => {
     setSessionError(null);
     let rt: LiveMatchRuntime;
     try {
-      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi);
+      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi, ourBench);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';
       setSessionError(message);
@@ -58,8 +62,10 @@ export function useLiveMatchRuntime(
     snapshot,
     runtime,
     sessionError,
-    dispatchUiCommand: (id) => {
-      runtime?.dispatchUiCommand(id);
-    },
+    dispatchUiCommand: (id) => runtime?.dispatchUiCommand(id) ?? false,
+    substitute: (outId, inId) =>
+      runtime?.substitute(outId, inId) ?? { ok: false, error: 'Mecz nie jest uruchomiony.' },
+    togglePause: () => runtime?.togglePause(),
+    setWatchSpeed: (speed) => runtime?.setWatchSpeed(speed),
   };
 }

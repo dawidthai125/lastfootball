@@ -22,6 +22,7 @@ export function createSessionFromLeagueFixture(
   club: ClubDto,
   fixture: FixtureDto,
   ourXi: readonly RosterPlayerSeed[],
+  ourBench: readonly RosterPlayerSeed[] = [],
 ): MatchSession {
   const our = ourXi;
   const their = seedOpponentSquad(fixture.opponentClubId, club.leagueTier);
@@ -36,6 +37,20 @@ export function createSessionFromLeagueFixture(
   const ourPlayers = our.map((p) => {
     if (p.skill == null || !Number.isFinite(p.skill)) {
       throw new Error(`League XI missing skill for player ${p.id}`);
+    }
+    return createPlayer({
+      id: p.id as PlayerId,
+      teamId: ourSide === 'home' ? homeTeamId : awayTeamId,
+      side: ourSide,
+      name: p.name,
+      shirtNumber: p.number,
+      preferredRole: p.role,
+      skills: mapPlayerSkillToLfeSkills(p.skill),
+    });
+  });
+  const benchPlayers = ourBench.map((p) => {
+    if (p.skill == null || !Number.isFinite(p.skill)) {
+      throw new Error(`League bench missing skill for player ${p.id}`);
     }
     return createPlayer({
       id: p.id as PlayerId,
@@ -96,9 +111,9 @@ export function createSessionFromLeagueFixture(
       formationCode,
       playerIds: awayIds,
     }),
-    homeBench: createBench('home', []),
-    awayBench: createBench('away', []),
-    players: [...homePlayers, ...awayPlayers],
+    homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
+    awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
+    players: [...homePlayers, ...awayPlayers, ...benchPlayers],
     settings: {
       halfDurationMs: 45_000,
       halfTimeDurationMs: 3_000,

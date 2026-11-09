@@ -127,6 +127,26 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
   return xi;
 }
 
+/** Fit seniors outside the XI. Cap is the match bench, not a second squad model. */
+export const MATCH_BENCH_MAX = 7;
+
+export function resolveMatchBench(rows: readonly PlayerRowDto[]): readonly RosterPlayerSeed[] {
+  return filterSeniorPlayers(rows)
+    .filter((row) => !row.starter && row.status !== 'INJURED' && row.status !== 'SUSPENDED')
+    .slice()
+    .sort((a, b) => a.shirtNumber - b.shirtNumber || a.id.localeCompare(b.id))
+    .slice(0, MATCH_BENCH_MAX)
+    .map((row): RosterPlayerSeed => ({
+      id: row.id,
+      name: row.name,
+      number: row.shirtNumber,
+      pos: row.pos,
+      role: row.role as PitchRole,
+      starter: false,
+      skill: row.skill,
+    }));
+}
+
 export function getSquadPlayerById(squad: SquadDto, playerId: string): SquadPlayerDto | null {
   return squad.players.find((p) => p.id === playerId) ?? null;
 }

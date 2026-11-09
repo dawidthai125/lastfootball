@@ -20,6 +20,7 @@ import { hashSeed } from '@/lib/match/hash-seed';
 export function createSessionFromFirstMatch(
   club: ClubDto,
   ourXi: readonly RosterPlayerSeed[],
+  ourBench: readonly RosterPlayerSeed[] = [],
 ): MatchSession {
   const homeTeamId = 'team-home';
   const awayTeamId = 'team-away';
@@ -28,6 +29,16 @@ export function createSessionFromFirstMatch(
   const formationCode: FormationCode = '4-4-2';
 
   const homePlayers = our.map((p) =>
+    createPlayer({
+      id: p.id as PlayerId,
+      teamId: homeTeamId,
+      side: 'home',
+      name: p.name,
+      shirtNumber: p.number,
+      preferredRole: p.role,
+    }),
+  );
+  const benchPlayers = ourBench.map((p) =>
     createPlayer({
       id: p.id as PlayerId,
       teamId: homeTeamId,
@@ -72,9 +83,12 @@ export function createSessionFromFirstMatch(
       formationCode,
       playerIds: awayIds,
     }),
-    homeBench: createBench('home', []),
+    homeBench: createBench(
+      'home',
+      benchPlayers.map((p) => p.id),
+    ),
     awayBench: createBench('away', []),
-    players: [...homePlayers, ...awayPlayers],
+    players: [...homePlayers, ...awayPlayers, ...benchPlayers],
     settings: {
       halfDurationMs: 20_000,
       halfTimeDurationMs: 2_000,

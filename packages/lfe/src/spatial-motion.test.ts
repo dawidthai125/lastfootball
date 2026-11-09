@@ -153,6 +153,24 @@ describe('spatial movement thin', () => {
 
     expect(later.ball.position).not.toEqual({ x: 52.5, y: 34 });
   });
+
+  it('puts a new lineup player on the pitch and drops the one who left', () => {
+    const session = openSession(3);
+    const spatial = session.getSpatialState();
+    const matchState = session.getMatchState();
+    const dropped = spatial.players[0]!;
+    const trimmed = { ...spatial, players: spatial.players.slice(1) };
+    const next = advanceMatchSpatialState({
+      previous: trimmed,
+      matchState,
+      tick: 9,
+      events: [],
+    });
+
+    expect(next.players).toHaveLength(22);
+    expect(next.players.some((player) => player.playerId === dropped.playerId)).toBe(true);
+    expect(next.players.some((player) => player.playerId === 'not-in-lineup')).toBe(false);
+  });
 });
 
 function withBall(state: MatchSpatialState, x: number, y: number): MatchSpatialState {

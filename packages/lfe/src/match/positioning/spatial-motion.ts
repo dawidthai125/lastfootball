@@ -29,10 +29,11 @@ export function advanceMatchSpatialState(input: {
   const setPiece = latestSetPiece(input.events, input.tick);
   const possession = setPiece?.side ?? resolvePossessionSide(input.events);
   const ballTarget = resolveBallTarget(pitch.length, pitch.width, possession, input.tick, setPiece);
-  const baselineByPlayer = new Map(baseline.players.map((player) => [player.playerId, player]));
-
-  const players = input.previous.players.map((player) => {
-    const anchor = baselineByPlayer.get(player.playerId) ?? player;
+  const previousByPlayer = new Map(
+    input.previous.players.map((player) => [player.playerId, player]),
+  );
+  const players = baseline.players.map((anchor) => {
+    const player = previousByPlayer.get(anchor.playerId) ?? anchor;
     const target = resolvePlayerTarget(
       anchor,
       pitch.length,
@@ -42,8 +43,8 @@ export function advanceMatchSpatialState(input: {
       input.tick,
     );
     return Object.freeze({
-      ...player,
-      position: moveToward(player.position, target, player.role === 'GK' ? 0.18 : 0.52),
+      ...anchor,
+      position: moveToward(player.position, target, anchor.role === 'GK' ? 0.18 : 0.52),
     });
   });
 
