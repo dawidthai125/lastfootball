@@ -9,6 +9,38 @@ import {
 } from './spatial-state';
 
 /**
+ * Put the current lineup on the pitch without a simulation tick.
+ * Players who stayed keep their pose. A newcomer takes the pose of the
+ * player who left the same slot. The ball stays where it is.
+ */
+export function reseatSpatialLineup(
+  previous: MatchSpatialState,
+  matchState: MatchState,
+): MatchSpatialState {
+  const baseline = createMatchSpatialState(matchState);
+  const previousById = new Map(previous.players.map((player) => [player.playerId, player]));
+  const previousBySlot = new Map(
+    previous.players.map((player) => [`${player.side}:${player.slotIndex}`, player]),
+  );
+  const players = baseline.players.map((anchor) => {
+    const stayed = previousById.get(anchor.playerId);
+    const vacated = previousBySlot.get(`${anchor.side}:${anchor.slotIndex}`);
+    const pose = stayed ?? vacated ?? anchor;
+    return Object.freeze({
+      ...anchor,
+      position: pose.position,
+      facing: pose.facing,
+    });
+  });
+
+  return Object.freeze({
+    ...previous,
+    players: Object.freeze(players),
+    ball: previous.ball,
+  });
+}
+
+/**
  * Deterministic movement Thin for the spatial read model.
  *
  * This is deliberately not Physics: it keeps a formation-shaped team block,

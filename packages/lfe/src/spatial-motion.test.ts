@@ -8,6 +8,7 @@ import {
   createLineup,
   createMatch,
   createPlayer,
+  createSubstitutePlayerCommand,
 } from './testing';
 
 function players(side: 'home' | 'away', teamId: string) {
@@ -170,6 +171,74 @@ describe('spatial movement thin', () => {
     expect(next.players).toHaveLength(22);
     expect(next.players.some((player) => player.playerId === dropped.playerId)).toBe(true);
     expect(next.players.some((player) => player.playerId === 'not-in-lineup')).toBe(false);
+  });
+
+  it('puts the substitute on the paused pitch without a simulation tick', () => {
+    const home = players('home', 'home');
+    const away = players('away', 'away');
+    const bench = createPlayer({
+      id: 'home-bench',
+      teamId: 'home',
+      side: 'home',
+      name: 'home bench',
+      shirtNumber: 12,
+      preferredRole: 'ST',
+    });
+    const session = createMatch({
+      seed: 3,
+      homeTeamId: 'home',
+      awayTeamId: 'away',
+      homeLineup: createLineup({
+        side: 'home',
+        formationCode: '4-4-2',
+        playerIds: home.map((player) => player.id),
+      }),
+      awayLineup: createLineup({
+        side: 'away',
+        formationCode: '4-4-2',
+        playerIds: away.map((player) => player.id),
+      }),
+      homeBench: createBench('home', ['home-bench']),
+      awayBench: createBench('away', []),
+      players: [...home, ...away, bench],
+      engine: { logLevel: 'silent' },
+    });
+    session.start();
+    session.step();
+    session.dispatch(createKickoffCommand({ tick: session.context().tick, source: 'system' }));
+    session.run(40);
+    const paused = session.pause();
+    expect(paused.ok).toBe(true);
+
+    const before = session.getSpatialState();
+    const tick = session.context().tick;
+    const outgoing = before.players.find((player) => player.playerId === 'home-10');
+    const stayer = before.players.find((player) => player.playerId === 'home-5');
+    expect(outgoing).toBeDefined();
+    expect(stayer).toBeDefined();
+
+    const result = session.dispatch(
+      createSubstitutePlayerCommand({
+        tick,
+        source: 'ui',
+        side: 'home',
+        playerOutId: 'home-10',
+        playerInId: 'home-bench',
+      }),
+    );
+    const after = session.getSpatialState();
+    const incoming = after.players.find((player) => player.playerId === 'home-bench');
+    const still = after.players.find((player) => player.playerId === 'home-5');
+
+    expect(result.ok).toBe(true);
+    expect(session.status).toBe('paused');
+    expect(session.context().tick).toBe(tick);
+    expect(after.players).toHaveLength(22);
+    expect(after.players.some((player) => player.playerId === 'home-10')).toBe(false);
+    expect(incoming?.position).toEqual(outgoing?.position);
+    expect(incoming?.facing).toBe(outgoing?.facing);
+    expect(still?.position).toEqual(stayer?.position);
+    expect(after.ball).toEqual(before.ball);
   });
 });
 

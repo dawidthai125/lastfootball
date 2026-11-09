@@ -10,7 +10,7 @@ import { createSimulation } from '../../simulation';
 import type { MatchState } from '../domain';
 import { createMatchSpatialState } from '../positioning';
 import type { MatchSpatialState } from '../positioning';
-import { advanceMatchSpatialState } from '../positioning/spatial-motion';
+import { advanceMatchSpatialState, reseatSpatialLineup } from '../positioning/spatial-motion';
 import type { MatchEvent, MatchResult } from '../types';
 import type { WorldState } from '../../world';
 
@@ -185,6 +185,10 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
       syncScoreTied();
       const result = simulation.dispatch(command);
       if (result.ok) {
+        if (command.type === 'SubstitutePlayer') {
+          const matchState = simulation.getMatchState();
+          if (matchState) spatial = reseatSpatialLineup(spatial, matchState);
+        }
         if (command.type === 'PauseMatch' && lifecycle.status === 'running') {
           lifecycle.transition('paused');
         } else if (command.type === 'ResumeMatch' && lifecycle.status === 'paused') {
