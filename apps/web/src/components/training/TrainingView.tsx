@@ -75,7 +75,7 @@ export function TrainingView({ training }: { training: TrainingDto }) {
         <p className="lf-tr__status">Sesja dostępna</p>
         <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
         <p className="lf-tr__meta">
-          Rozegrane: {training.playedCount}/{training.playedRequired} · Dziś (UTC): {training.today}
+          Rozegrane: {training.playedCount} · Dziś (UTC): {training.today}
         </p>
       </header>
 
