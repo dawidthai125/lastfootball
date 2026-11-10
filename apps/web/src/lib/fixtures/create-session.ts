@@ -11,6 +11,7 @@ import type { PlayerId } from '@lastfootball/domain';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
+import { orderForFormation } from '@/lib/match/order-xi';
 import { mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -25,11 +26,14 @@ export function createSessionFromLeagueFixture(
   ourXi: readonly RosterPlayerSeed[],
   ourBench: readonly RosterPlayerSeed[] = [],
 ): MatchSession {
-  const our = ourXi;
+  const our = orderForFormation(ourXi, '4-4-2');
   const cup = fixture.competition === 'cup';
-  const their = seedOpponentSquad(
-    fixture.opponentClubId,
-    cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
+  const their = orderForFormation(
+    seedOpponentSquad(
+      fixture.opponentClubId,
+      cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
+    ),
+    '4-4-2',
   );
   const formationCode: FormationCode = '4-4-2';
 

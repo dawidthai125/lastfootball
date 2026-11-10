@@ -67,6 +67,9 @@ export async function runTrainingSession(
   revalidatePath('/training');
   revalidatePath('/squad');
   revalidatePath('/hub');
+  for (const player of result.summary.skillUpNames) {
+    revalidatePath(`/players/${player.id}`);
+  }
 
   return {
     ok: true,
