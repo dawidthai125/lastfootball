@@ -20,7 +20,7 @@ export default async function TrainingPage() {
   ]);
   const training = resolveClubTraining({
     clubId: club.id,
-    playedCount: countPlayedInList(fixtures),
+    playedCount: countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
     lastTrainingOn: club.lastTrainingOn,
     activePlayers,
   });

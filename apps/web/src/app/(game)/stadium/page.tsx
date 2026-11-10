@@ -25,7 +25,7 @@ export default async function StadiumPage() {
 
   const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const homePlayed = fixtures
-    .filter((f) => f.isHome && f.status === 'played')
+    .filter((f) => f.competition === 'league' && f.isHome && f.status === 'played')
     .sort((a, b) => {
       const aT = a.playedAt ?? '';
       const bT = b.playedAt ?? '';

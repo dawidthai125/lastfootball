@@ -173,7 +173,10 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
         id: 'e0',
         minute: "0'",
         kind: 'info',
-        text: `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
+        text:
+          dto.competition === 'cup'
+            ? `Puchar: ${club.name} vs ${dto.opponent.name}.`
+            : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
       },
     ],
     commands: [
