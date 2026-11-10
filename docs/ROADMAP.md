@@ -147,7 +147,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji. **Tactics on the pitch** w `5ed0ba3`: mentalność i szerokość układają blok strony, która ma taktykę. Na wyjeździe pokrętła zostają przy menedżerze.
 
 ### Oficjalna kolejność
 
@@ -216,4 +216,4 @@ Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTI
 
 ## Last updated
 
-2026-08-04 — LFE-NOTIFICATIONS-01 CLOSED · Presentation `54ae7b3` · D125 · next Owner GO → Canvas REUSE / ACADEMY-02 / Retirement / §22 push / Prime
+2026-11-10 — tactics on the pitch `5ed0ba3` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime (each needs a contract)

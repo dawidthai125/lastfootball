@@ -52,7 +52,7 @@ Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED**.
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §11.  
-**NEXT EPIC:** Retirement / §22 push/email / Prime — każdy wymaga własnego kontraktu. Academy 02 = SCOPE LOCK. Live decisions = `e20b3f8`. Paused sub pose = `95864cb`.
+**NEXT EPIC:** Retirement / §22 push/email / Prime — każdy wymaga własnego kontraktu. Academy 02 = SCOPE LOCK. Tactics on the pitch = `5ed0ba3`. Paused sub pose = `95864cb`.
 
 ## Decyzje
 
