@@ -75,7 +75,7 @@ supabase/ (Auth + Postgres migrations)
 - `LEAGUE_FIXTURE_COUNT = 22` — jedyny SSOT długości sezonu.
 - Jedyny planner = `planClubFixtures`; MD1–11 = identity LEAGUE-03; MD12–22 = rewanże.
 - Top-up tylko brakujące MD; zero przebudowy istniejących wierszy.
-- AI↔AI w tabeli = double RR (`planAiVsAiMatches`); nie Match Engine.
+- AI↔AI w tabeli = double RR tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. Nie Match Engine.
 - OUT: Season End · awans/spadek · schedulery.
 
 ## Ranking rules (LFE-RANKING-01 / D27 / GDD §18)

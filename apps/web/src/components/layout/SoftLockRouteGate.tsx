@@ -34,7 +34,7 @@ export function SoftLockRouteGate({ children }: { children: ReactNode }) {
     <SoftLockState
       waId="ILL-002"
       illustrationSrc="/assets/world-art/ill-002-softlock-training.png"
-      title={`${item.label} jest ${UI_COPY.softLockUnavailable}`}
+      title={UI_COPY.softLockTitle(item.label)}
       reason={UI_COPY.softLockReason}
     />
   );

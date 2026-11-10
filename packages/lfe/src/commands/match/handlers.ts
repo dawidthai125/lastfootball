@@ -40,7 +40,11 @@ export const startMatchHandler: CommandHandler<StartMatchCommand> = {
     if (facts.homeLineupConfirmed && facts.awayLineupConfirmed) {
       ctx.enqueueLifecycle({ type: 'CONFIRM_LINEUPS', tick: command.tick });
     }
-    ctx.recordEvent('MATCH_START', { seed: ctx.world.match.seed, commandId: command.id });
+    ctx.recordEvent('MATCH_START', {
+      seed: ctx.world.match.seed,
+      commandId: command.id,
+      minute: 0,
+    });
   },
 };
 

@@ -114,6 +114,9 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
     }
   }
 
+  // Tick order. A missing minute must not use the final clock or a sub lands at 90'.
+  timeline.sort((a, b) => a.tick - b.tick);
+
   const homePoss = matchState.statistics.home.possessionTicks;
   const awayPoss = matchState.statistics.away.possessionTicks;
   const totalPoss = homePoss + awayPoss;
@@ -230,10 +233,11 @@ function eventSide(e: EngineEvent): string | undefined {
 }
 
 function eventMinute(e: EngineEvent, fallback: number): string {
-  const m =
+  const raw =
     e.payload && typeof e.payload === 'object' && 'minute' in e.payload
       ? Number((e.payload as { minute: number }).minute)
-      : fallback;
+      : Number.NaN;
+  const m = Number.isFinite(raw) ? raw : e.type === 'MATCH_START' ? 0 : fallback;
   return `${Math.floor(m)}'`;
 }
 

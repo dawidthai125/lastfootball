@@ -102,6 +102,7 @@ describe('GAMEPLAY-01 foundation', () => {
     expect(result.ok).toBe(true);
     expect(s.getMatchState().homeLineup.slots.some((x) => x.playerId === 'h-bench')).toBe(true);
     expect(s.getMatchState().homeBench.playerIds).toContain('h10');
-    expect(result.events.some((e) => e.type === 'SUBSTITUTION')).toBe(true);
+    const sub = result.events.find((e) => e.type === 'SUBSTITUTION');
+    expect(sub?.payload).toMatchObject({ minute: expect.any(Number) });
   });
 });

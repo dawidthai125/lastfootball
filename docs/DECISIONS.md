@@ -320,7 +320,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 | OUT     | Season End · awans/spadek · schedulery · Match Engine · migracje schematu |
 
 **Źródło:** LFE-LEAGUE-04 (feat `9027baf`).  
-**Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).
+**Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).  
+**Dopisek 2026-11-10:** tabela liczy pary AI↔AI tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. D28 zostaje CLOSED.
 
 ### D38 — Transfer public API compatibility (Buy/Sell + live RPC Args) · CLOSED
 

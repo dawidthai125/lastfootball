@@ -241,6 +241,7 @@ export const changeFormationHandler: CommandHandler<ChangeFormationCommand> = {
       side,
       formationCode,
       commandId: command.id,
+      minute: state.clock.displayMinute,
     });
   },
 };
@@ -321,6 +322,7 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
       playerOutId,
       playerInId,
       commandId: command.id,
+      minute: state.clock.displayMinute,
     });
   },
 };
