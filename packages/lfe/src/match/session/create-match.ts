@@ -48,6 +48,7 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
     scoreTied: false,
     halfDurationMs: match.settings.halfDurationMs,
     halfTimeDurationMs: match.settings.halfTimeDurationMs,
+    extraTimeDurationMs: match.settings.extraTimeHalfMs * 2,
   });
 
   lifecycle.transition('ready');

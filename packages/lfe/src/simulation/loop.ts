@@ -90,6 +90,7 @@ export function createSimulation(options: SimulationOptions): Simulation {
     scoreTied: false,
     halfDurationMs: 45 * 60 * 1000,
     halfTimeDurationMs: 15 * 60 * 1000,
+    extraTimeDurationMs: 30 * 60 * 1000,
   };
 
   for (const system of createBuiltinSystems()) {

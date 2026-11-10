@@ -21,8 +21,9 @@ export function createMatchEngineSystem(): SimulationSystem {
       // FULL_TIME: nothing to simulate (COMPLETE already queued from second half end)
       if (phase === 'FULL_TIME' || phase === 'FINISHED') return;
 
-      const halfDurationMs = ctx.lifecycleFacts.halfDurationMs;
-      const halfTimeDurationMs = ctx.lifecycleFacts.halfTimeDurationMs;
+      const facts = ctx.lifecycleFacts;
+      const halfDurationMs = facts.halfDurationMs;
+      const halfTimeDurationMs = facts.halfTimeDurationMs;
 
       const result = simulateMatchTick(ctx.matchState, {
         tick: ctx.tick,
@@ -30,6 +31,9 @@ export function createMatchEngineSystem(): SimulationSystem {
         rng: ctx.rng,
         halfDurationMs,
         halfTimeDurationMs,
+        extraTimeDurationMs: facts.extraTimeDurationMs,
+        enableExtraTime: facts.enableExtraTime,
+        enablePenalties: facts.enablePenalties,
       });
 
       ctx.matchState = result.state;

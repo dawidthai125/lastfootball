@@ -64,7 +64,9 @@ export function advanceMatchClock(
   const periodElapsedMs = samePeriod ? clock.periodElapsedMs + dtMs : dtMs;
   const clamped = Math.min(periodElapsedMs, halfMs + clock.stoppageMs);
   const base = baseDisplayMinute(opts.phase);
-  const displayMinute = base + (clamped / halfMs) * DISPLAY_MINUTES_PER_HALF;
+  // Regulation maps one half onto 45'. Extra time is one 30' block (two 15' halves).
+  const displaySpan = opts.phase === 'EXTRA_TIME' ? 30 : DISPLAY_MINUTES_PER_HALF;
+  const displayMinute = base + (clamped / halfMs) * displaySpan;
 
   return createMatchClock({
     period: targetPeriod,

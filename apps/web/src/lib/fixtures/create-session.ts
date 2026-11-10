@@ -131,6 +131,8 @@ export function createSessionFromLeagueFixture(
       halfTimeDurationMs: 3_000,
       enableExtraTime: cup,
       enablePenalties: cup,
+      // Same compression as regulation: 1 display minute = 1s. Extra time is 30'.
+      extraTimeHalfMs: 15_000,
     },
   });
 }

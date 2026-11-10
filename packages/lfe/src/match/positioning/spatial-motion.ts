@@ -92,7 +92,7 @@ export function advanceMatchSpatialState(input: {
 }
 
 function isPlayPhase(phase: MatchState['phase']): boolean {
-  return phase === 'FIRST_HALF' || phase === 'SECOND_HALF';
+  return phase === 'FIRST_HALF' || phase === 'SECOND_HALF' || phase === 'EXTRA_TIME';
 }
 
 const SET_PIECE_TYPES = new Set(['GOAL', 'CORNER', 'PENALTY', 'FREE_KICK']);
