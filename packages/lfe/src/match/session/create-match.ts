@@ -189,6 +189,21 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
           const matchState = simulation.getMatchState();
           if (matchState) spatial = reseatSpatialLineup(spatial, matchState);
         }
+        if (command.type === 'ChangeFormation') {
+          const matchState = simulation.getMatchState();
+          if (matchState) {
+            const tick = simulation.clock.tick;
+            const events = simulation.events.history();
+            for (let step = 0; step < 80; step += 1) {
+              spatial = advanceMatchSpatialState({
+                previous: spatial,
+                matchState,
+                tick,
+                events,
+              });
+            }
+          }
+        }
         if (command.type === 'PauseMatch' && lifecycle.status === 'running') {
           lifecycle.transition('paused');
         } else if (command.type === 'ResumeMatch' && lifecycle.status === 'paused') {

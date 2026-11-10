@@ -162,6 +162,8 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
       { id: 'balance', label: 'Zbilansowany' },
       { id: 'defend', label: 'Blok niski' },
       { id: 'wide', label: 'Gra szeroka' },
+      { id: 'form-442', label: 'Układ 4-4-2' },
+      { id: 'form-433', label: 'Układ 4-3-3' },
     ],
     instructions: [
       { id: 'focus', label: 'Focus gry', value: 'Środek' },

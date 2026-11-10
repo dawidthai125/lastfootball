@@ -1,5 +1,6 @@
 import type { EngineEvent, MatchSession, MatchState } from '@lastfootball/lfe';
 import {
+  createChangeFormationCommand,
   createKickoffCommand,
   createPauseMatchCommand,
   createResumeMatchCommand,
@@ -65,6 +66,7 @@ const FEED_TYPES = new Set([
   'CORNER',
   'CARD',
   'SUBSTITUTION',
+  'FORMATION_CHANGE',
   'SYSTEM',
 ]);
 
@@ -435,6 +437,10 @@ export class LiveMatchRuntime {
       attack: () => createSetMentalityCommand({ tick, source: 'ui', value: 70, side }),
       defend: () => createSetMentalityCommand({ tick, source: 'ui', value: 30, side }),
       balance: () => createSetMentalityCommand({ tick, source: 'ui', value: 50, side }),
+      'form-442': () =>
+        createChangeFormationCommand({ tick, source: 'ui', side, formationCode: '4-4-2' }),
+      'form-433': () =>
+        createChangeFormationCommand({ tick, source: 'ui', side, formationCode: '4-3-3' }),
     };
     const factory = factories[commandId];
     if (!factory) return false;
@@ -547,6 +553,13 @@ function humanizeEvent(e: EngineEvent, names: MatchState['players']): string {
       return 'Faul.';
     case 'CORNER':
       return `Rzut rożny (${side || '—'})`;
+    case 'FORMATION_CHANGE': {
+      const code =
+        e.payload && typeof e.payload === 'object' && 'formationCode' in e.payload
+          ? String((e.payload as { formationCode: string }).formationCode)
+          : '';
+      return `Układ ${code || '—'}`;
+    }
     case 'SUBSTITUTION': {
       const outId =
         e.payload && typeof e.payload === 'object' && 'playerOutId' in e.payload

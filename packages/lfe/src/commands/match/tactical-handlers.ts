@@ -1,5 +1,6 @@
 import type { MatchState } from '../../match/domain';
-import { createMatchTactics } from '../../match/domain';
+import { createMatchTactics, formationByCode } from '../../match/domain';
+import type { Lineup } from '../../match/domain';
 import { reconcileMinutesPlayed } from '../../match/engine/minutes-played';
 import type { CommandHandler, CommandValidator, ValidationError } from '../types';
 
@@ -184,17 +185,57 @@ export const setPlayerInstructionHandler: CommandHandler<SetPlayerInstructionCom
   },
 };
 
+const LIVE_FORMATIONS = new Set(['4-4-2', '4-3-3']);
+
+function lineupWithFormation(lineup: Lineup, formationCode: '4-4-2' | '4-3-3'): Lineup {
+  const formation = formationByCode(formationCode);
+  const ordered = [...lineup.slots].sort((a, b) => a.slotIndex - b.slotIndex);
+  const slots = formation.slots.map((slot, index) =>
+    Object.freeze({
+      slotIndex: slot.slotIndex,
+      role: slot.role,
+      playerId: ordered[index]!.playerId,
+    }),
+  );
+  return Object.freeze({
+    ...lineup,
+    formationCode,
+    formation,
+    slots: Object.freeze(slots),
+  });
+}
+
 export const changeFormationHandler: CommandHandler<ChangeFormationCommand> = {
   type: 'ChangeFormation',
   validate(command, ctx) {
-    return [...requireMatchState(command, ctx), ...requireNotFinished(command, ctx)];
+    const errors = [
+      ...requireMatchState(command, ctx),
+      ...requireNotFinished(command, ctx),
+      ...requireOwningSide(command, ctx),
+    ];
+    const code = command.payload?.formationCode;
+    if (!code || !LIVE_FORMATIONS.has(code)) {
+      errors.push({
+        code: 'UNKNOWN_FORMATION',
+        message: 'Formation must be 4-4-2 or 4-3-3',
+        field: 'payload.formationCode',
+      });
+    }
+    return errors;
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;
-    const { formationCode, side } = command.payload!;
-    const next = patchTactics(state, {
-      formationCode: side === 'home' ? formationCode : state.tactics.formationCode,
+    const { side } = command.payload!;
+    const formationCode = command.payload!.formationCode as '4-4-2' | '4-3-3';
+    const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
+    const nextLineup = lineupWithFormation(lineup, formationCode);
+    const withLineup = Object.freeze({
+      ...state,
+      homeLineup: side === 'home' ? nextLineup : state.homeLineup,
+      awayLineup: side === 'away' ? nextLineup : state.awayLineup,
     });
+    const next =
+      side === withLineup.tacticsSide ? patchTactics(withLineup, { formationCode }) : withLineup;
     ctx.setMatchState(next);
     ctx.recordEvent('FORMATION_CHANGE', {
       side,
