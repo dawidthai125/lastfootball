@@ -49,6 +49,7 @@ export function resolveLeagueTable(
   }
 
   for (const f of fixtures) {
+    if (f.competition !== 'league') continue;
     if (f.status !== 'played' || f.homeScore == null || f.awayScore == null) continue;
     const playerId = club.id;
     const oppId = f.opponentClubId;

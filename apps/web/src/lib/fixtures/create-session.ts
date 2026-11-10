@@ -12,6 +12,7 @@ import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
 import { mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
+import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 /**
@@ -25,7 +26,11 @@ export function createSessionFromLeagueFixture(
   ourBench: readonly RosterPlayerSeed[] = [],
 ): MatchSession {
   const our = ourXi;
-  const their = seedOpponentSquad(fixture.opponentClubId, club.leagueTier);
+  const cup = fixture.competition === 'cup';
+  const their = seedOpponentSquad(
+    fixture.opponentClubId,
+    cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
+  );
   const formationCode: FormationCode = '4-4-2';
 
   const homeTeamId = 'team-home';
@@ -118,8 +123,8 @@ export function createSessionFromLeagueFixture(
     settings: {
       halfDurationMs: 45_000,
       halfTimeDurationMs: 3_000,
-      enableExtraTime: false,
-      enablePenalties: false,
+      enableExtraTime: cup,
+      enablePenalties: cup,
     },
   });
 }

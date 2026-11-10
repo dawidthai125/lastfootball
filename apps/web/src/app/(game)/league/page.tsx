@@ -6,6 +6,7 @@ import { Table } from '@/components/ui/Table';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubFixtures } from '@/lib/fixtures';
 import { CupBracket } from '@/components/cup/CupBracket';
+import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
@@ -17,9 +18,18 @@ export default async function LeaguePage() {
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 
-  const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
+  const seeded = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
+  const fixtures = await ensurePlayerCupTie(club, seeded);
   const table = resolveLeagueTable(club, fixtures);
   const cup = resolveNationalCup(club, fixtures);
+  const playable = cup.playerTie?.due
+    ? fixtures.find(
+        (f) =>
+          f.competition === 'cup' &&
+          f.matchday === cup.playerTie?.matchday &&
+          f.status !== 'played',
+      )
+    : null;
 
   return (
     <div>
@@ -91,7 +101,7 @@ export default async function LeaguePage() {
           ]}
         />
       </Panel>
-      <CupBracket cup={cup} />
+      <CupBracket cup={cup} playFixtureId={playable?.id ?? null} />
     </div>
   );
 }

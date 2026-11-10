@@ -136,6 +136,7 @@ export async function completeFixture(
         .from('fixtures')
         .select('id')
         .eq('club_id', clubId)
+        .eq('competition', 'league')
         .eq('status', 'scheduled')
         .order('matchday', { ascending: true })
         .limit(1)

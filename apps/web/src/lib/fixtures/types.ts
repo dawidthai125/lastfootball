@@ -6,7 +6,7 @@ export type FixtureDto = {
   readonly id: string;
   readonly clubId: string;
   readonly matchday: number;
-  readonly competition: 'league';
+  readonly competition: 'league' | 'cup';
   /** Catalog id — SSOT for opponent identity. */
   readonly opponentClubId: string;
   readonly opponent: OpponentClub;

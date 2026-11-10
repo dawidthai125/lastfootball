@@ -58,3 +58,22 @@ export function cupGuestsForTier(tier: LeagueTier): readonly CupGuest[] {
 export function cupGuestOriginLabel(tier: LeagueTier): string {
   return GUEST_ORIGIN[tier];
 }
+
+const ALL_GUESTS: readonly CupGuest[] = [
+  ...GUESTS_FROM_III,
+  ...GUESTS_FROM_II,
+  ...GUESTS_FROM_I,
+  ...WILDCARDS,
+];
+
+export function findCupGuest(id: string): CupGuest | null {
+  return ALL_GUESTS.find((g) => g.id === id) ?? null;
+}
+
+/** Guest clubs play at the tier they come from. League opponents stay on the club tier. */
+export function cupOpponentTier(opponentId: string, clubTier: LeagueTier): LeagueTier {
+  if (opponentId.startsWith('cup-iii-')) return 'iii';
+  if (opponentId.startsWith('cup-ii-')) return 'ii';
+  if (opponentId.startsWith('cup-i-') || opponentId.startsWith('cup-wild-')) return 'i';
+  return clubTier;
+}
