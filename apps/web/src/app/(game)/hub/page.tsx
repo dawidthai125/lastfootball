@@ -14,6 +14,9 @@ import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { resolveCashChipLabel, resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { resolveHubPhase } from '@/lib/hub';
+import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
+import { resolveNationalCup } from '@/lib/cup';
+import { resolveHubCupLink } from '@/lib/hub/cup-link';
 import { resolveLeagueTable, resolvePlayerLeaguePositionLabel } from '@/lib/league';
 import { closeSeasonIfComplete, resolveSeasonReport } from '@/lib/season';
 import { TRAINING_THIN } from '@/lib/training';
@@ -55,6 +58,9 @@ export default async function HubPage() {
     countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
     TRAINING_THIN.UNLOCK_AFTER_PLAYED,
   );
+  const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
+  const cupLink =
+    phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
 
   return (
     <EarlyClubHub
@@ -67,6 +73,7 @@ export default async function HubPage() {
       trainingUnlocked={trainingUnlocked}
       todayUtc={utcDateString()}
       seasonReport={seasonReport}
+      cupLink={cupLink}
     />
   );
 }

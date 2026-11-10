@@ -17,6 +17,7 @@ import {
   resolvePrimaryCta,
   resolveSecondaryCtas,
   type ClubDailyGoalDto,
+  type HubCupLink,
   type HubCta,
   type HubSession,
 } from '@/lib/hub';
@@ -40,6 +41,7 @@ export function EarlyClubHub({
   trainingUnlocked = false,
   todayUtc = utcDateString(),
   seasonReport = null,
+  cupLink = null,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -52,6 +54,8 @@ export function EarlyClubHub({
   todayUtc?: string;
   /** Offseason read-only report (D84 · D86); null outside OFFSEASON. */
   seasonReport?: SeasonReportDto | null;
+  /** Due national-cup tie. Does not replace the league primary action. */
+  cupLink?: HubCupLink | null;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -133,6 +137,11 @@ export function EarlyClubHub({
         ) : (
           <PrimaryCta cta={primary} />
         )}
+        {cupLink ? (
+          <Link href={cupLink.href} className="lf-hub__secondary-item" data-hub-cup="due">
+            {cupLink.label}
+          </Link>
+        ) : null}
         <DailyGoalSuggestion goal={dailyGoal} />
       </div>
 

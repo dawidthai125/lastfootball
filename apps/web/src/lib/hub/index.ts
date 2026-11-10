@@ -8,6 +8,7 @@ export type {
 } from '@/lib/hub/types';
 export { resolveHubPhase, resolveHubSession } from '@/lib/hub/types';
 export { resolvePrimaryCta, resolveSecondaryCtas } from '@/lib/hub/resolve-primary-cta';
+export { resolveHubCupLink, type HubCupLink } from '@/lib/hub/cup-link';
 export { resolveNavAccess, isModuleSoftLocked } from '@/lib/hub/unlock';
 export type { NavAccessContext } from '@/lib/hub/unlock';
 export {
