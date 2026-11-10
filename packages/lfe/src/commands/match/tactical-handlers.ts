@@ -37,6 +37,22 @@ function requireNotFinished(command: { type: string }, ctx: Parameters<CommandVa
   return errors;
 }
 
+function requireOwningSide(
+  command: { type: string; payload?: { side?: 'home' | 'away' } },
+  ctx: Parameters<CommandValidator>[1],
+) {
+  const side = command.payload?.side;
+  if (!side) return [];
+  const owner = ctx.getMatchState()?.tacticsSide ?? 'home';
+  if (side === owner) return [];
+  return [
+    {
+      code: 'TACTICS_SIDE',
+      message: `Cannot apply ${command.type} for ${side} — tactics belong to ${owner}`,
+    },
+  ];
+}
+
 function patchTactics(state: MatchState, patch: Partial<MatchState['tactics']>): MatchState {
   return Object.freeze({
     ...state,
@@ -78,7 +94,11 @@ export const changeTacticsHandler: CommandHandler<ChangeTacticsCommand> = {
 export const setPressingHandler: CommandHandler<SetPressingCommand> = {
   type: 'SetPressing',
   validate(command, ctx) {
-    return [...requireMatchState(command, ctx), ...requireNotFinished(command, ctx)];
+    return [
+      ...requireMatchState(command, ctx),
+      ...requireNotFinished(command, ctx),
+      ...requireOwningSide(command, ctx),
+    ];
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;
@@ -91,7 +111,11 @@ export const setPressingHandler: CommandHandler<SetPressingCommand> = {
 export const setTempoHandler: CommandHandler<SetTempoCommand> = {
   type: 'SetTempo',
   validate(command, ctx) {
-    return [...requireMatchState(command, ctx), ...requireNotFinished(command, ctx)];
+    return [
+      ...requireMatchState(command, ctx),
+      ...requireNotFinished(command, ctx),
+      ...requireOwningSide(command, ctx),
+    ];
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;
@@ -104,7 +128,11 @@ export const setTempoHandler: CommandHandler<SetTempoCommand> = {
 export const setWidthHandler: CommandHandler<SetWidthCommand> = {
   type: 'SetWidth',
   validate(command, ctx) {
-    return [...requireMatchState(command, ctx), ...requireNotFinished(command, ctx)];
+    return [
+      ...requireMatchState(command, ctx),
+      ...requireNotFinished(command, ctx),
+      ...requireOwningSide(command, ctx),
+    ];
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;
@@ -117,7 +145,11 @@ export const setWidthHandler: CommandHandler<SetWidthCommand> = {
 export const setMentalityHandler: CommandHandler<SetMentalityCommand> = {
   type: 'SetMentality',
   validate(command, ctx) {
-    return [...requireMatchState(command, ctx), ...requireNotFinished(command, ctx)];
+    return [
+      ...requireMatchState(command, ctx),
+      ...requireNotFinished(command, ctx),
+      ...requireOwningSide(command, ctx),
+    ];
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;

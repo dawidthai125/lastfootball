@@ -54,8 +54,10 @@ export interface MatchState {
   readonly cards: readonly Card[];
   readonly injuries: readonly Injury[];
   readonly statistics: Statistics;
-  /** Active tactics for the managing side (home by default until multi-manager). */
+  /** Active tactics for `tacticsSide` (home until the session says otherwise). */
   readonly tactics: MatchTactics;
+  /** Which side owns `tactics`. The other side stays on balanced dials. */
+  readonly tacticsSide: 'home' | 'away';
   /** Tick index mirrored from simulation when bound (0 until core wiring). */
   readonly tick: number;
 }
@@ -73,6 +75,7 @@ export interface CreateMatchStateInput {
   weather?: Weather;
   stadium?: Stadium;
   phase?: MatchPhase;
+  tacticsSide?: 'home' | 'away';
 }
 
 export function createMatchState(input: CreateMatchStateInput): MatchState {
@@ -99,8 +102,19 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
     injuries: Object.freeze([]),
     statistics: emptyStatistics(createPlayersStatistics(input.players)),
     tactics: createMatchTactics({
-      formationCode: input.homeLineup.formationCode,
+      formationCode:
+        (input.tacticsSide ?? 'home') === 'home'
+          ? input.homeLineup.formationCode
+          : input.awayLineup.formationCode,
     }),
+    tacticsSide: input.tacticsSide ?? 'home',
     tick: 0,
   });
+}
+
+/** Dials for one side. Only `tacticsSide` reads `state.tactics`. */
+export function tacticsOwnedBy(state: MatchState, side: 'home' | 'away'): MatchTactics {
+  if (side === state.tacticsSide) return state.tactics;
+  const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
+  return createMatchTactics({ formationCode: lineup.formationCode });
 }

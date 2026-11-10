@@ -27,6 +27,7 @@ export function buildMatchFromConfig(config: MatchSessionConfig): Match {
     awayBench: config.awayBench,
     players: config.players,
     phase: 'PRE_MATCH',
+    tacticsSide: config.tacticsSide,
   });
 
   return createMatchModel({

@@ -1,5 +1,6 @@
 import type { EngineEvent } from '../../events';
-import type { MatchState } from '../domain';
+import type { MatchState, MatchTactics } from '../domain';
+import { tacticsOwnedBy } from '../domain';
 
 import { position } from './coordinates';
 import {
@@ -73,6 +74,7 @@ export function advanceMatchSpatialState(input: {
       ballTarget,
       possession,
       input.tick,
+      tacticsOwnedBy(input.matchState, anchor.side),
     );
     return Object.freeze({
       ...anchor,
@@ -159,9 +161,11 @@ function resolvePlayerTarget(
   ball: { readonly x: number; readonly y: number },
   possession: 'home' | 'away',
   tick: number,
+  tactics: MatchTactics,
 ) {
   const centreX = length / 2;
   const centreY = width / 2;
+  const shaped = shapeAnchor(anchor, length, width, centreY, tactics);
   const ownsBall = anchor.side === possession;
   const roleWeight = anchor.role === 'GK' ? 0.04 : ownsBall ? 0.3 : 0.14;
   const attackDirection = anchor.side === 'home' ? 1 : -1;
@@ -170,15 +174,48 @@ function resolvePlayerTarget(
   const wave = Math.sin(tick * 0.13 + anchor.slotIndex * 1.71 + (anchor.side === 'home' ? 0 : 2.4));
   const lateralWave =
     Math.cos(tick * 0.1 + anchor.slotIndex * 1.17) * (anchor.role === 'GK' ? 0.15 : 0.75);
+  const press = !ownsBall && anchor.role !== 'GK' ? ((tactics.pressing - 50) / 50) * 3.2 : 0;
+  const pressX = ball.x - shaped.x;
+  const pressY = ball.y - shaped.y;
+  const pressDistance = Math.hypot(pressX, pressY);
 
   return position(
     clamp(
-      anchor.position.x + (ball.x - centreX) * roleWeight + forwardRun + wave * 0.55,
+      shaped.x +
+        (ball.x - centreX) * roleWeight +
+        forwardRun +
+        wave * 0.55 +
+        (pressDistance === 0 ? 0 : (pressX / pressDistance) * press),
       1,
       length - 1,
     ),
-    clamp(anchor.position.y + (ball.y - centreY) * roleWeight + lateralWave, 1, width - 1),
+    clamp(
+      shaped.y +
+        (ball.y - centreY) * roleWeight +
+        lateralWave +
+        (pressDistance === 0 ? 0 : (pressY / pressDistance) * press),
+      1,
+      width - 1,
+    ),
   );
+}
+
+/** Mentality shifts the block. Width opens it. 50/50 leaves the anchor. */
+function shapeAnchor(
+  anchor: SpatialPlayer,
+  length: number,
+  width: number,
+  centreY: number,
+  tactics: MatchTactics,
+) {
+  const attackDirection = anchor.side === 'home' ? 1 : -1;
+  const depth =
+    attackDirection * ((tactics.mentality - 50) / 50) * (anchor.role === 'GK' ? 1.2 : 8);
+  const spread = anchor.role === 'GK' ? 1 : 0.72 + (tactics.width / 100) * 0.56;
+  return {
+    x: clamp(anchor.position.x + depth, 1, length - 1),
+    y: clamp(centreY + (anchor.position.y - centreY) * spread, 1, width - 1),
+  };
 }
 
 function roleForwardBias(role: SpatialPlayer['role']): number {

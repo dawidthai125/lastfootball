@@ -35,10 +35,22 @@ export interface SubstitutePlayerCommand extends Command<
   }
 > {}
 
-export interface SetPressingCommand extends Command<'SetPressing', { readonly value: number }> {}
-export interface SetTempoCommand extends Command<'SetTempo', { readonly value: number }> {}
-export interface SetWidthCommand extends Command<'SetWidth', { readonly value: number }> {}
-export interface SetMentalityCommand extends Command<'SetMentality', { readonly value: number }> {}
+export interface SetPressingCommand extends Command<
+  'SetPressing',
+  { readonly value: number; readonly side?: 'home' | 'away' }
+> {}
+export interface SetTempoCommand extends Command<
+  'SetTempo',
+  { readonly value: number; readonly side?: 'home' | 'away' }
+> {}
+export interface SetWidthCommand extends Command<
+  'SetWidth',
+  { readonly value: number; readonly side?: 'home' | 'away' }
+> {}
+export interface SetMentalityCommand extends Command<
+  'SetMentality',
+  { readonly value: number; readonly side?: 'home' | 'away' }
+> {}
 
 export interface SetPlayerInstructionCommand extends Command<
   'SetPlayerInstruction',
@@ -106,32 +118,36 @@ export function createSubstitutePlayerCommand(
   ) as SubstitutePlayerCommand;
 }
 
+function dialPayload(value: number, side?: 'home' | 'away') {
+  return side ? { value: clamp01to100(value), side } : { value: clamp01to100(value) };
+}
+
 export function createSetPressingCommand(
-  opts: CreateCommandOpts & { value: number },
+  opts: CreateCommandOpts & { value: number; side?: 'home' | 'away' },
 ): SetPressingCommand {
-  return withPayload('SetPressing', opts, {
-    value: clamp01to100(opts.value),
-  }) as SetPressingCommand;
+  return withPayload('SetPressing', opts, dialPayload(opts.value, opts.side)) as SetPressingCommand;
 }
 
 export function createSetTempoCommand(
-  opts: CreateCommandOpts & { value: number },
+  opts: CreateCommandOpts & { value: number; side?: 'home' | 'away' },
 ): SetTempoCommand {
-  return withPayload('SetTempo', opts, { value: clamp01to100(opts.value) }) as SetTempoCommand;
+  return withPayload('SetTempo', opts, dialPayload(opts.value, opts.side)) as SetTempoCommand;
 }
 
 export function createSetWidthCommand(
-  opts: CreateCommandOpts & { value: number },
+  opts: CreateCommandOpts & { value: number; side?: 'home' | 'away' },
 ): SetWidthCommand {
-  return withPayload('SetWidth', opts, { value: clamp01to100(opts.value) }) as SetWidthCommand;
+  return withPayload('SetWidth', opts, dialPayload(opts.value, opts.side)) as SetWidthCommand;
 }
 
 export function createSetMentalityCommand(
-  opts: CreateCommandOpts & { value: number },
+  opts: CreateCommandOpts & { value: number; side?: 'home' | 'away' },
 ): SetMentalityCommand {
-  return withPayload('SetMentality', opts, {
-    value: clamp01to100(opts.value),
-  }) as SetMentalityCommand;
+  return withPayload(
+    'SetMentality',
+    opts,
+    dialPayload(opts.value, opts.side),
+  ) as SetMentalityCommand;
 }
 
 export function createSetPlayerInstructionCommand(

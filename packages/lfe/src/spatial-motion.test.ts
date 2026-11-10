@@ -7,7 +7,9 @@ import {
   createKickoffCommand,
   createLineup,
   createMatch,
+  createMatchTactics,
   createPlayer,
+  createSetMentalityCommand,
   createSubstitutePlayerCommand,
 } from './testing';
 
@@ -240,7 +242,85 @@ describe('spatial movement thin', () => {
     expect(still?.position).toEqual(stayer?.position);
     expect(after.ball).toEqual(before.ball);
   });
+
+  it('moves only the managing side when mentality or width changes', () => {
+    const session = openSession(11);
+    const previous = session.getSpatialState();
+    const matchState = session.getMatchState();
+    const tick = session.context().tick;
+    const events = [...session.context().events.history()];
+    const settle = (
+      mentality: number,
+      pitchWidth: number,
+      tacticsSide: 'home' | 'away' = 'home',
+    ) => {
+      let cursor = previous;
+      const shaped = {
+        ...matchState,
+        tacticsSide,
+        tactics: createMatchTactics({
+          ...matchState.tactics,
+          mentality,
+          width: pitchWidth,
+        }),
+      };
+      for (let step = 0; step < 40; step += 1) {
+        cursor = advanceMatchSpatialState({
+          previous: cursor,
+          matchState: shaped,
+          tick,
+          events,
+        });
+      }
+      return cursor;
+    };
+
+    const balanced = settle(50, 50);
+    const attacking = settle(90, 50);
+    const narrow = settle(50, 15);
+    const wide = settle(50, 95);
+    const awayAttack = settle(90, 50, 'away');
+
+    expect(meanX(attacking, 'home')).toBeGreaterThan(meanX(balanced, 'home') + 3);
+    expect(meanX(attacking, 'away')).toBeCloseTo(meanX(balanced, 'away'), 1);
+    expect(spreadY(wide, 'home')).toBeGreaterThan(spreadY(narrow, 'home') + 2);
+    expect(meanX(awayAttack, 'away')).toBeLessThan(meanX(balanced, 'away') - 3);
+    expect(meanX(awayAttack, 'home')).toBeCloseTo(meanX(balanced, 'home'), 1);
+  });
+
+  it('rejects a tactics dial for the side that does not own them', () => {
+    const session = openSession(5);
+    const tick = session.context().tick;
+    const rejected = session.dispatch(
+      createSetMentalityCommand({ tick, source: 'ui', value: 80, side: 'away' }),
+    );
+    const accepted = session.dispatch(
+      createSetMentalityCommand({ tick, source: 'ui', value: 80, side: 'home' }),
+    );
+
+    expect(rejected.ok).toBe(false);
+    expect(accepted.ok).toBe(true);
+    expect(session.getMatchState().tactics.mentality).toBe(80);
+    expect(session.getMatchState().tacticsSide).toBe('home');
+  });
 });
+
+function outfield(state: MatchSpatialState, side: 'home' | 'away') {
+  return state.players.filter((player) => player.side === side && player.role !== 'GK');
+}
+
+function meanX(state: MatchSpatialState, side: 'home' | 'away') {
+  const players = outfield(state, side);
+  return players.reduce((sum, player) => sum + player.position.x, 0) / players.length;
+}
+
+function spreadY(state: MatchSpatialState, side: 'home' | 'away') {
+  const players = outfield(state, side);
+  const mean = players.reduce((sum, player) => sum + player.position.y, 0) / players.length;
+  return Math.sqrt(
+    players.reduce((sum, player) => sum + (player.position.y - mean) ** 2, 0) / players.length,
+  );
+}
 
 function withBall(state: MatchSpatialState, x: number, y: number): MatchSpatialState {
   return {

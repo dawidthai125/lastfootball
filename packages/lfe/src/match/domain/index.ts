@@ -77,7 +77,7 @@ export type { MatchTactics } from './tactics';
 export { DEFAULT_MATCH_TACTICS, createMatchTactics } from './tactics';
 
 export type { MatchState, CreateMatchStateInput } from './match-state';
-export { createMatchState } from './match-state';
+export { createMatchState, tacticsOwnedBy } from './match-state';
 
 export type { Match, CreateMatchModelInput } from './match';
 export { createMatchModel, withMatchState } from './match';

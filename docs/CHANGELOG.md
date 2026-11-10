@@ -12,9 +12,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`15d63b5`** — live decisions pin  
-**tip `main`:** **`95864cb`** — a paused substitution shows on the pitch  
+**Documentation tip:** **`730286b`** — paused substitution pin  
+**tip `main`:** **`5ed0ba3`** — managing-side tactics show on the pitch  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-10] — Tactics show on the pitch
+
+### Product
+
+- Mentality shifts the managing side's block up or back. Width opens or narrows that block. The other side stays on balanced dials (`5ed0ba3`).
+- An away fixture keeps the manager's pressing, tempo, width, and mentality on their own team. A dial sent for the other side is rejected.
 
 ---
 

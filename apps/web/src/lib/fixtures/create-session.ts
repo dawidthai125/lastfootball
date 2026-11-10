@@ -114,6 +114,7 @@ export function createSessionFromLeagueFixture(
     homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
+    tacticsSide: ourSide,
     settings: {
       halfDurationMs: 45_000,
       halfTimeDurationMs: 3_000,
