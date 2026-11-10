@@ -12,9 +12,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`b14a8cf`** — national cup bracket pin  
-**tip `main`:** **`a138fc5`** — the manager can play the current cup tie  
+**Documentation tip:** **`4191b17`** — playable cup pin  
+**tip `main`:** **`a428952`** — the due cup tie shows on the hub and calendar  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-10] — Cup on the hub and calendar
+
+### Product
+
+- When the national cup tie is due, the hub shows a link to the league screen. The next league match stays the primary action (`a428952`).
+- The calendar filter includes the cup. Its hero stays the next league kickoff unless the filter is the cup.
 
 ---
 

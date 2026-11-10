@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-11-10 — tip main `a138fc5` (playable cup) · docs tip `b14a8cf` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125
+2026-11-10 — tip main `a428952` (cup on hub) · docs tip `4191b17` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125

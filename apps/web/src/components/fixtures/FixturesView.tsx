@@ -12,6 +12,7 @@ import {
   type Fixture,
   type MatchStatus,
 } from '@/data/fixtures';
+import { pickCalendarHero } from '@/lib/fixtures/calendar-hero';
 
 const controlStyle: CSSProperties = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -73,7 +74,7 @@ export function FixturesView({
 }) {
   const router = useRouter();
   const [competition, setCompetition] = useState<CompetitionFilter>('ALL');
-  const next = fixtures.find((f) => f.status === 'upcoming') ?? null;
+  const next = pickCalendarHero(fixtures, competition);
 
   const rows = useMemo(() => {
     let list = [...fixtures];
@@ -152,6 +153,7 @@ export function FixturesView({
           >
             <option value="ALL">Wszystkie</option>
             <option value="league">{COMPETITION_LABEL.league}</option>
+            <option value="cup">{COMPETITION_LABEL.cup}</option>
           </select>
         </label>
       </div>
@@ -169,7 +171,11 @@ export function FixturesView({
       <FixtureTable
         title="Rozegrane"
         rows={played}
-        empty="Brak rozegranych meczów ligowych."
+        empty={
+          competition === 'cup'
+            ? 'Brak rozegranych meczów pucharowych.'
+            : 'Brak rozegranych meczów ligowych.'
+        }
         clubShortName={clubShortName}
         onOpen={() => undefined}
       />
