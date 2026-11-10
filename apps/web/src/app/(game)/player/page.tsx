@@ -1,6 +1,6 @@
 import { permanentRedirect } from 'next/navigation';
 
-/** Legacy route — permanent redirect to canonical player dossier. */
+/** Legacy route. The static demo id is not a club player, so the squad list is the list. */
 export default function PlayerPage() {
-  permanentRedirect('/players/p-dk');
+  permanentRedirect('/squad');
 }

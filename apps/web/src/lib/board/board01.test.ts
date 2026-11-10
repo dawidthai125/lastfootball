@@ -53,6 +53,20 @@ describe('resolveClubBoard', () => {
     expect(dto.tone).toBe('neutral');
   });
 
+  it('does not call a blank table a rise', () => {
+    const dto = resolveClubBoard({
+      seasonPhase: 'in_season',
+      seasonNumber: 1,
+      playerPosition: 2,
+      tableSize: 12,
+      playedCount: 0,
+      seasonReport: null,
+    });
+    expect(dto.standing.trend).toBe('unknown');
+    expect(dto.standing.progressLabel).toMatch(/bez meczu/i);
+    expect(dto.tone).toBe('neutral');
+  });
+
   it('derives rising / positive from top third', () => {
     const dto = resolveClubBoard({
       seasonPhase: 'in_season',

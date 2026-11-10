@@ -49,7 +49,12 @@ const EXPECTATION = {
     'Sezon ma być czytelny i godny klubu — solidna ligowa postawa bez dramatu. To opis kierunku, nie zadanie do odhaczenia.',
 } as const;
 
-function resolveTrend(position: number | null, tableSize: number): BoardStandingTrend {
+function resolveTrend(
+  position: number | null,
+  tableSize: number,
+  playedCount: number,
+): BoardStandingTrend {
+  if (playedCount < 1) return 'unknown';
   if (position == null || tableSize < 1) return 'unknown';
   const size = Math.max(1, Math.trunc(tableSize));
   const pos = Math.trunc(position);
@@ -60,7 +65,12 @@ function resolveTrend(position: number | null, tableSize: number): BoardStanding
   return 'steady';
 }
 
-function trendLabel(trend: BoardStandingTrend, position: number | null): string {
+function trendLabel(
+  trend: BoardStandingTrend,
+  position: number | null,
+  playedCount: number,
+): string {
+  if (playedCount < 1) return 'Jeszcze bez meczu ligowego';
   if (position == null) return 'Pozycja: —';
   switch (trend) {
     case 'rising':
@@ -98,7 +108,7 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
 
   const size = Math.max(0, Math.trunc(tableSize));
   const played = Math.max(0, Math.trunc(playedCount));
-  const trend = resolveTrend(playerPosition, size);
+  const trend = resolveTrend(playerPosition, size, played);
   const tone = resolveTone(seasonPhase, trend, seasonReport);
   const offseason = seasonPhase === 'offseason';
 
@@ -124,7 +134,7 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
       position: playerPosition,
       played,
       tableSize: size,
-      progressLabel: trendLabel(trend, playerPosition),
+      progressLabel: trendLabel(trend, playerPosition, played),
       trend,
     },
     seasonReview,

@@ -65,15 +65,21 @@ export type ResolveClubSponsorsInput = {
   readonly seasonPhase: ClubSeasonPhase;
   readonly playerPosition: number | null;
   readonly tableSize: number;
+  /** League games the manager has played. Omitted only for callers that already know the place is real. */
+  readonly leaguePlayed?: number;
 };
 
 /** Pure sole UI DTO for Sponsors (D96). */
 export function resolveClubSponsors(input: ResolveClubSponsorsInput): ClubSponsorsDto {
-  const { contract, seasonPhase, playerPosition, tableSize } = input;
+  const { contract, seasonPhase, playerPosition, tableSize, leaguePlayed } = input;
   const target = Math.max(1, Math.trunc(contract.goal_target));
   const size = Math.max(1, Math.trunc(tableSize));
+  const seasonStarted = leaguePlayed == null || leaguePlayed > 0;
   const complete =
-    playerPosition != null && playerPosition >= 1 && playerPosition <= Math.min(target, size);
+    seasonStarted &&
+    playerPosition != null &&
+    playerPosition >= 1 &&
+    playerPosition <= Math.min(target, size);
 
   let bonusState: SponsorBonusState = 'locked';
   if (contract.bonus_claimed_at) {
@@ -83,8 +89,9 @@ export function resolveClubSponsors(input: ResolveClubSponsorsInput): ClubSponso
     bonusState = 'claimable';
   }
 
-  const progressLabel =
-    playerPosition == null
+  const progressLabel = !seasonStarted
+    ? `Jeszcze bez meczu ligowego · cel: top ${target}`
+    : playerPosition == null
       ? 'Pozycja: —'
       : complete
         ? `Cel spełniony (miejsce ${playerPosition})`

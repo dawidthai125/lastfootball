@@ -44,7 +44,7 @@ export function RankingView({ ranking }: { ranking: ClubRankingDto }) {
         {rows.map((r) => (
           <li
             key={r.clubId}
-            className={`lf-rank__item${r.isPlayer ? 'lf-rank__item--self' : ''}`}
+            className={r.isPlayer ? 'lf-rank__item lf-rank__item--self' : 'lf-rank__item'}
             data-rank-pos={r.position}
             data-rank-band={r.band}
           >
