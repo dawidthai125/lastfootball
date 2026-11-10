@@ -5,7 +5,13 @@ import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
-import { matchLivePath, matchTunnelPath, matchVsPath, matchXiPath } from '@/lib/match/match-path';
+import {
+  matchLivePath,
+  matchPrePath,
+  matchTunnelPath,
+  matchVsPath,
+  matchXiPath,
+} from '@/lib/match/match-path';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './prematch-kickoff.css';
