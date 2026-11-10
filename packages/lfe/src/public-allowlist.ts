@@ -61,6 +61,7 @@ export const LFE_PUBLIC_ALLOWLIST = [
   'createBench',
   'createMatchSettings',
   'formationByCode',
+  'orderPlayersByRole',
   'FORMATION_442',
   'FORMATION_433',
   'DEFAULT_MATCH_SETTINGS',

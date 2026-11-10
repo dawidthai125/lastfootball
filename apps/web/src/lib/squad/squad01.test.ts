@@ -90,6 +90,22 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     }
   });
 
+  it('shows lower energy when a player is tired, injured, or suspended', () => {
+    const rows = rowsFromSeed('club-1').map((player, index) => {
+      if (index === 0) return { ...player, status: 'TIRED' as const };
+      if (index === 1) return { ...player, status: 'INJURED' as const };
+      if (index === 2) return { ...player, status: 'SUSPENDED' as const };
+      return player;
+    });
+    const squad = resolveClubSquad({ id: 'club-1' }, rows);
+    expect(squad.players.find((player) => player.status === 'TIRED')?.energy).toBe(42);
+    expect(squad.players.find((player) => player.status === 'INJURED')?.energy).toBe(25);
+    expect(squad.players.find((player) => player.status === 'SUSPENDED')?.energy).toBe(50);
+    const ready = squad.players.find((player) => player.status === 'READY');
+    expect(ready?.energy).toBeGreaterThanOrEqual(70);
+    expect(ready?.energy).toBeLessThanOrEqual(89);
+  });
+
   it('getSquadPlayerById reads from resolved squad', () => {
     const clubId = 'abc';
     const squad = resolveClubSquad({ id: clubId }, rowsFromSeed(clubId));

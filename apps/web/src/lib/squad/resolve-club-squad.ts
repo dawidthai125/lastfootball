@@ -35,6 +35,14 @@ function roleLabel(pos: string, captain: boolean): string {
   }
 }
 
+/** Tired and injured players must not look fresh. Ready energy still varies by shirt. */
+function energyForStatus(status: PlayerRowDto['status'], shirt: number): number {
+  if (status === 'INJURED') return 25;
+  if (status === 'TIRED') return 42;
+  if (status === 'SUSPENDED') return 50;
+  return 70 + (shirt % 20);
+}
+
 function toDto(row: PlayerRowDto): SquadPlayerDto {
   const skill = row.skill;
   const shirt = row.shirtNumber;
@@ -47,7 +55,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     position: displayPosition(row.pos),
     age: row.age,
     form: 60 + (shirt % 25),
-    energy: 70 + (shirt % 20),
+    energy: energyForStatus(row.status, shirt),
     skill,
     potentialBand,
     potentialLabel: potentialBandLabel(row.potential),
