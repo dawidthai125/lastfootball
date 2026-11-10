@@ -3,6 +3,7 @@ import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
+import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 
 export function buildFirstFixture(club: ClubDto): Fixture {
@@ -28,7 +29,7 @@ export function buildFirstPreMatchBundle(
   ourXi: readonly RosterPlayerSeed[],
 ): PreMatchBundle {
   const fixture = buildFirstFixture(club);
-  const our = ourXi;
+  const our = orderForFormation(ourXi, '4-4-2');
   const their = seedBotSquad();
 
   return {
@@ -84,19 +85,7 @@ export function buildFirstPreMatchBundle(
       name: p.name,
       number: p.number,
     })),
-    pitchSlots: [
-      { number: 1, x: 50, y: 88 },
-      { number: 2, x: 18, y: 68 },
-      { number: 4, x: 38, y: 72 },
-      { number: 5, x: 62, y: 72 },
-      { number: 3, x: 82, y: 68 },
-      { number: 6, x: 35, y: 52 },
-      { number: 8, x: 65, y: 52 },
-      { number: 7, x: 18, y: 36 },
-      { number: 10, x: 50, y: 34 },
-      { number: 11, x: 82, y: 36 },
-      { number: 9, x: 50, y: 16 },
-    ],
+    pitchSlots: pitchSlotsFor(our, '4-4-2'),
     teamCondition: { label: 'Gotowa', value: 85 },
     ticker: `${club.name} — pierwszy gwizdek w historii klubu.`,
     decisions: [
