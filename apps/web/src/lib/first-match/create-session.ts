@@ -12,6 +12,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 import { hashSeed } from '@/lib/match/hash-seed';
+import { orderForFormation } from '@/lib/match/order-xi';
 
 /**
  * Builds MatchSession for inaugural match from Club DTO + DB XI + AI bot seed.
@@ -24,8 +25,8 @@ export function createSessionFromFirstMatch(
 ): MatchSession {
   const homeTeamId = 'team-home';
   const awayTeamId = 'team-away';
-  const our = ourXi;
-  const their = seedBotSquad();
+  const our = orderForFormation(ourXi, '4-4-2');
+  const their = orderForFormation(seedBotSquad(), '4-4-2');
   const formationCode: FormationCode = '4-4-2';
 
   const homePlayers = our.map((p) =>

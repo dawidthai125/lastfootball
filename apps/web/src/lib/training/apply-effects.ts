@@ -10,6 +10,7 @@ import {
 
 export type TrainingPlayerSlice = {
   readonly id: string;
+  readonly name?: string;
   readonly status: PlayerStatus;
   readonly skill: number;
   readonly potential: number;
@@ -146,17 +147,22 @@ export function summarizeTrainingSessionEffects(
   let tired = 0;
   let regenerated = 0;
   let skillUp = 0;
+  const skillUpNames: { id: string; name: string }[] = [];
   for (const b of before) {
     const a = byId.get(b.id);
     if (!a) continue;
     if (b.status === 'READY' && a.status === 'TIRED') tired += 1;
     if (b.status === 'TIRED' && a.status === 'READY') regenerated += 1;
-    if (a.skill > b.skill) skillUp += 1;
+    if (a.skill > b.skill) {
+      skillUp += 1;
+      skillUpNames.push({ id: b.id, name: b.name ?? b.id });
+    }
   }
   return {
     trained: before.length,
     tired,
     regenerated,
     skillUp,
+    skillUpNames,
   };
 }

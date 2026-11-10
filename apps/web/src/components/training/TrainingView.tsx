@@ -171,6 +171,17 @@ export function TrainingView({ training }: { training: TrainingDto }) {
               Zregenerowani <strong>{state.summary.regenerated}</strong>
               {' · '}
               +skill <strong>{state.summary.skillUp}</strong>
+              {state.summary.skillUpNames && state.summary.skillUpNames.length > 0 ? (
+                <>
+                  {': '}
+                  {state.summary.skillUpNames.map((player, index) => (
+                    <span key={player.id}>
+                      {index > 0 ? ', ' : null}
+                      <Link href={`/players/${player.id}`}>{player.name}</Link>
+                    </span>
+                  ))}
+                </>
+              ) : null}
               {' — '}
               <Link href="/squad">Kadra</Link>
             </p>

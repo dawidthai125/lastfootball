@@ -63,7 +63,7 @@ export async function completeTrainingSession(
         ok: true,
         skipped: true,
         changedCount: 0,
-        summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0 },
+        summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0, skillUpNames: [] },
       };
     }
     const msg =
@@ -77,6 +77,7 @@ export async function completeTrainingSession(
 
   const before = seniors.map((p) => ({
     id: p.id,
+    name: p.name,
     status: p.status,
     skill: p.skill,
     potential: p.potential,
@@ -117,7 +118,7 @@ export async function completeTrainingSession(
       ok: true,
       skipped: true,
       changedCount: 0,
-      summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0 },
+      summary: { trained: 0, tired: 0, regenerated: 0, skillUp: 0, skillUpNames: [] },
     };
   }
 

@@ -75,6 +75,8 @@ export type TrainingSessionSummary = {
   readonly tired: number;
   readonly regenerated: number;
   readonly skillUp: number;
+  /** Players whose skill went up, so the squad card can be opened on them. */
+  readonly skillUpNames: readonly { id: string; name: string }[];
 };
 
 export const TRAINING_FOCUSES: readonly TrainingFocusOption[] = [

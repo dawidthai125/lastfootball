@@ -3,6 +3,7 @@ export type TrainingSessionSummaryState = {
   readonly tired: number;
   readonly regenerated: number;
   readonly skillUp: number;
+  readonly skillUpNames?: readonly { id: string; name: string }[];
 };
 
 export type TrainingActionState = {
