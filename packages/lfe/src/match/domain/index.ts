@@ -22,6 +22,7 @@ export { createTeam } from './team';
 
 export type { Formation, FormationSlot, FormationCode } from './formation';
 export { FORMATION_433, FORMATION_442, formationByCode } from './formation';
+export { orderPlayersByRole } from './order-lineup';
 
 export type { Lineup, LineupSlot, CreateLineupInput } from './lineup';
 export { createLineup } from './lineup';

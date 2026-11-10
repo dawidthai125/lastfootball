@@ -348,6 +348,60 @@ describe('spatial movement thin', () => {
       before.players.filter((player) => player.side === 'away').map((player) => player.role),
     );
   });
+
+  it('puts the winger back on the wing when the shape becomes 4-3-3', () => {
+    const roles = ['GK', 'RB', 'CB', 'CB', 'LB', 'CM', 'CM', 'RW', 'CM', 'LW', 'ST'] as const;
+    const home = roles.map((role, index) =>
+      createPlayer({
+        id: `home-${index}`,
+        teamId: 'home',
+        side: 'home',
+        name: `home ${index}`,
+        shirtNumber: index + 1,
+        preferredRole: role,
+      }),
+    );
+    const away = players('away', 'away');
+    const session = createMatch({
+      seed: 3,
+      homeTeamId: 'home',
+      awayTeamId: 'away',
+      homeLineup: createLineup({
+        side: 'home',
+        formationCode: '4-4-2',
+        playerIds: home.map((player) => player.id),
+      }),
+      awayLineup: createLineup({
+        side: 'away',
+        formationCode: '4-4-2',
+        playerIds: away.map((player) => player.id),
+      }),
+      homeBench: createBench('home', []),
+      awayBench: createBench('away', []),
+      players: [...home, ...away],
+      engine: { logLevel: 'silent' },
+    });
+    session.start();
+    session.step();
+    session.dispatch(createKickoffCommand({ tick: session.context().tick, source: 'system' }));
+    session.step();
+    const accepted = session.dispatch(
+      createChangeFormationCommand({
+        tick: session.context().tick,
+        source: 'ui',
+        side: 'home',
+        formationCode: '4-3-3',
+      }),
+    );
+    const at = (index: number) =>
+      session.getMatchState().homeLineup.slots.find((slot) => slot.slotIndex === index)?.playerId;
+
+    expect(accepted.ok).toBe(true);
+    expect(at(8)).toBe('home-7');
+    expect(at(10)).toBe('home-9');
+    expect(at(9)).toBe('home-10');
+    expect(at(5)).toBe('home-5');
+  });
 });
 
 function outfield(state: MatchSpatialState, side: 'home' | 'away') {

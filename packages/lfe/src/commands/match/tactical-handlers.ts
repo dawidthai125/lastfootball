@@ -1,6 +1,5 @@
-import type { MatchState } from '../../match/domain';
-import { createMatchTactics, formationByCode } from '../../match/domain';
-import type { Lineup } from '../../match/domain';
+import type { Lineup, MatchState, PitchRole } from '../../match/domain';
+import { createMatchTactics, formationByCode, orderPlayersByRole } from '../../match/domain';
 import { reconcileMinutesPlayed } from '../../match/engine/minutes-played';
 import type { CommandHandler, CommandValidator, ValidationError } from '../types';
 
@@ -187,14 +186,26 @@ export const setPlayerInstructionHandler: CommandHandler<SetPlayerInstructionCom
 
 const LIVE_FORMATIONS = new Set(['4-4-2', '4-3-3']);
 
-function lineupWithFormation(lineup: Lineup, formationCode: '4-4-2' | '4-3-3'): Lineup {
+function lineupWithFormation(
+  lineup: Lineup,
+  formationCode: '4-4-2' | '4-3-3',
+  roster: readonly { id: string; preferredRole: PitchRole }[],
+): Lineup {
   const formation = formationByCode(formationCode);
-  const ordered = [...lineup.slots].sort((a, b) => a.slotIndex - b.slotIndex);
+  const byId = new Map(roster.map((player) => [player.id, player.preferredRole]));
+  const current = [...lineup.slots].sort((a, b) => a.slotIndex - b.slotIndex);
+  const ordered = orderPlayersByRole(
+    current.map((slot) => ({
+      id: slot.playerId,
+      role: byId.get(slot.playerId) ?? slot.role,
+    })),
+    formationCode,
+  );
   const slots = formation.slots.map((slot, index) =>
     Object.freeze({
       slotIndex: slot.slotIndex,
       role: slot.role,
-      playerId: ordered[index]!.playerId,
+      playerId: ordered[index]!.id,
     }),
   );
   return Object.freeze({
@@ -228,7 +239,7 @@ export const changeFormationHandler: CommandHandler<ChangeFormationCommand> = {
     const { side } = command.payload!;
     const formationCode = command.payload!.formationCode as '4-4-2' | '4-3-3';
     const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
-    const nextLineup = lineupWithFormation(lineup, formationCode);
+    const nextLineup = lineupWithFormation(lineup, formationCode, state.players);
     const withLineup = Object.freeze({
       ...state,
       homeLineup: side === 'home' ? nextLineup : state.homeLineup,
