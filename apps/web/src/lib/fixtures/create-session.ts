@@ -25,8 +25,9 @@ export function createSessionFromLeagueFixture(
   fixture: FixtureDto,
   ourXi: readonly RosterPlayerSeed[],
   ourBench: readonly RosterPlayerSeed[] = [],
+  ourFormation: FormationCode = '4-4-2',
 ): MatchSession {
-  const our = orderForFormation(ourXi, '4-4-2');
+  const our = orderForFormation(ourXi, ourFormation);
   const cup = fixture.competition === 'cup';
   const their = orderForFormation(
     seedOpponentSquad(
@@ -35,7 +36,8 @@ export function createSessionFromLeagueFixture(
     ),
     '4-4-2',
   );
-  const formationCode: FormationCode = '4-4-2';
+  const homeFormation: FormationCode = fixture.isHome ? ourFormation : '4-4-2';
+  const awayFormation: FormationCode = fixture.isHome ? '4-4-2' : ourFormation;
 
   const homeTeamId = 'team-home';
   const awayTeamId = 'team-away';
@@ -111,13 +113,13 @@ export function createSessionFromLeagueFixture(
     awayShortName: awayShort,
     homeLineup: createLineup({
       side: 'home',
-      formationCode,
+      formationCode: homeFormation,
       playerIds: homeIds,
       captainPlayerId: homeCaptain,
     }),
     awayLineup: createLineup({
       side: 'away',
-      formationCode,
+      formationCode: awayFormation,
       playerIds: awayIds,
     }),
     homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),

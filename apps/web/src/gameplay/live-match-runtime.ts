@@ -1,4 +1,4 @@
-import type { EngineEvent, MatchSession, MatchState } from '@lastfootball/lfe';
+import type { EngineEvent, FormationCode, MatchSession, MatchState } from '@lastfootball/lfe';
 import {
   createChangeFormationCommand,
   createKickoffCommand,
@@ -107,6 +107,7 @@ export class LiveMatchRuntime {
     leagueFixture?: FixtureDto | null,
     ourXi?: readonly RosterPlayerSeed[] | null,
     ourBench?: readonly RosterPlayerSeed[] | null,
+    ourFormation: FormationCode = '4-4-2',
   ) {
     this.fixture = fixture;
     this.shell = shell;
@@ -117,6 +118,7 @@ export class LiveMatchRuntime {
       leagueFixture ?? null,
       ourXi ?? null,
       ourBench ?? null,
+      ourFormation,
     );
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
@@ -595,12 +597,13 @@ function resolveSession(
   leagueFixture: FixtureDto | null,
   ourXi: readonly RosterPlayerSeed[] | null,
   ourBench: readonly RosterPlayerSeed[] | null,
+  ourFormation: FormationCode,
 ): MatchSession {
   if (fixture.id === FIRST_MATCH_ID && club && ourXi) {
     return createSessionFromFirstMatch(club, ourXi, ourBench ?? []);
   }
   if (club && leagueFixture && ourXi) {
-    return createSessionFromLeagueFixture(club, leagueFixture, ourXi, ourBench ?? []);
+    return createSessionFromLeagueFixture(club, leagueFixture, ourXi, ourBench ?? [], ourFormation);
   }
   throw new MatchSessionDataError();
 }

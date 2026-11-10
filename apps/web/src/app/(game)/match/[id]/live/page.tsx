@@ -8,6 +8,7 @@ import { buildFirstLiveBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { matchPrePath } from '@/lib/match/match-path';
+import { parseOurFormation } from '@/lib/match/our-formation';
 import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
@@ -15,6 +16,7 @@ import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ shape?: string | string[] }>;
 };
 
 function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
@@ -35,8 +37,9 @@ function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
   );
 }
 
-export default async function LiveMatchPage({ params }: PageProps) {
+export default async function LiveMatchPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const ourFormation = parseOurFormation((await searchParams).shape);
 
   if (id === FIRST_MATCH_ID) {
     const club = await getManagerClub();
@@ -85,6 +88,7 @@ export default async function LiveMatchPage({ params }: PageProps) {
         leagueFixture={dto}
         ourXi={ourXi}
         ourBench={ourBench}
+        ourFormation={ourFormation}
         developmentNames={developmentNames}
       />
     );

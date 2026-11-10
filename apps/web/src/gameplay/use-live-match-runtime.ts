@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
+import type { FormationCode } from '@lastfootball/lfe';
+
 import type { Fixture, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
@@ -15,6 +17,7 @@ export function useLiveMatchRuntime(
   leagueFixture?: FixtureDto | null,
   ourXi?: readonly RosterPlayerSeed[] | null,
   ourBench?: readonly RosterPlayerSeed[] | null,
+  ourFormation: FormationCode = '4-4-2',
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
@@ -27,13 +30,13 @@ export function useLiveMatchRuntime(
   const [runtime, setRuntime] = useState<LiveMatchRuntime | null>(null);
   const [sessionError, setSessionError] = useState<string | null>(null);
 
-  const xiKey = `${ourXi?.map((p) => p.id).join(',') ?? ''}|${ourBench?.map((p) => p.id).join(',') ?? ''}`;
+  const xiKey = `${ourFormation}|${ourXi?.map((p) => p.id).join(',') ?? ''}|${ourBench?.map((p) => p.id).join(',') ?? ''}`;
 
   useEffect(() => {
     setSessionError(null);
     let rt: LiveMatchRuntime;
     try {
-      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi, ourBench);
+      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi, ourBench, ourFormation);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';
       setSessionError(message);
@@ -47,7 +50,7 @@ export function useLiveMatchRuntime(
     };
     // Recreate only when match identity / XI ids change — not on parent re-renders.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fixture/shell/club by id
-  }, [fixture.id, shell.fixture.id, club?.id, leagueFixture?.id, xiKey]);
+  }, [fixture.id, shell.fixture.id, club?.id, leagueFixture?.id, xiKey, ourFormation]);
 
   const snapshot = useSyncExternalStore(
     (onStoreChange) => {

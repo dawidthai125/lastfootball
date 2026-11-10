@@ -165,6 +165,29 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     expect(session.getMatchState().homeBench.playerIds).toContain(outId);
   });
 
+  it('starts the club in 4-3-3 and leaves the opponent on 4-4-2', () => {
+    const home = createSessionFromLeagueFixture(club('ii'), fixture(), xi(80), [], '4-3-3');
+    const homeState = home.getMatchState();
+    expect(homeState.homeLineup.formationCode).toBe('4-3-3');
+    expect(homeState.awayLineup.formationCode).toBe('4-4-2');
+    expect(homeState.tactics.formationCode).toBe('4-3-3');
+    expect(homeState.homeLineup.slots.find((slot) => slot.slotIndex === 8)?.playerId).toBe('p-7');
+    expect(homeState.homeLineup.slots.find((slot) => slot.slotIndex === 10)?.playerId).toBe('p-10');
+
+    const away = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), isHome: false },
+      xi(80),
+      [],
+      '4-3-3',
+    );
+    const awayState = away.getMatchState();
+    expect(awayState.awayLineup.formationCode).toBe('4-3-3');
+    expect(awayState.homeLineup.formationCode).toBe('4-4-2');
+    expect(awayState.tactics.formationCode).toBe('4-3-3');
+    expect(awayState.awayLineup.slots.find((slot) => slot.slotIndex === 8)?.playerId).toBe('p-7');
+  });
+
   it('fails closed when our XI skill is missing', () => {
     const bad = xi(70).map((p, i) => (i === 0 ? { ...p, skill: undefined } : p));
     expect(() => createSessionFromLeagueFixture(club('iv'), fixture(), bad)).toThrow(

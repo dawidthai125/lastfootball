@@ -129,6 +129,39 @@
   pointer-events: none;
 }
 
+.lf-ko__shapes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-2);
+  margin-bottom: var(--lf-space-3);
+}
+
+.lf-mp__shape {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  min-height: 44px;
+  padding: 0 var(--lf-space-3);
+  border: 1px solid var(--lf-color-text-muted);
+  color: var(--lf-color-text-muted);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 700;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-decoration: none;
+}
+
+.lf-mp__shape--on {
+  border-color: var(--lf-color-border-gold);
+  color: var(--lf-color-text-gold);
+}
+
+.lf-mp__shape:focus-visible {
+  outline: 2px solid var(--lf-color-border-gold);
+  outline-offset: 2px;
+}
+
 .lf-mp__soft {
   display: inline-flex;
   align-items: center;
