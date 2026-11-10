@@ -489,6 +489,10 @@ function mapPeriod(phase: string, period: string): string {
   if (period === 'first_half' || phase === 'FIRST_HALF') return '1. połowa';
   if (period === 'second_half' || phase === 'SECOND_HALF') return '2. połowa';
   if (period === 'half_time' || phase === 'HALF_TIME') return 'Przerwa';
+  if (phase === 'EXTRA_TIME' || period === 'extra_time_first' || period === 'extra_time_second') {
+    return 'Dogrywka';
+  }
+  if (phase === 'PENALTIES' || period === 'penalties') return 'Karne';
   return phase;
 }
 

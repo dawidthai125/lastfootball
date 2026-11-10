@@ -1,5 +1,5 @@
 import type { MatchLifecycleEvent } from '../state-machine';
-import type { MatchState } from '../domain';
+import { createScore, type MatchState } from '../domain';
 import type { Rng } from '../../rng';
 
 import { advanceMatchClock, isHalfComplete } from './clock';
@@ -17,6 +17,10 @@ export type MatchEngineTickInput = {
   readonly rng: Rng;
   readonly halfDurationMs: number;
   readonly halfTimeDurationMs: number;
+  /** Both extra-time halves. League matches leave this unused. */
+  readonly extraTimeDurationMs: number;
+  readonly enableExtraTime: boolean;
+  readonly enablePenalties: boolean;
 };
 
 export type MatchEngineTickResult = {
@@ -24,6 +28,25 @@ export type MatchEngineTickResult = {
   readonly emits: readonly MatchEngineEmit[];
   readonly lifecycle: readonly MatchLifecycleEvent[];
 };
+
+/** A draw stays a draw unless this match was opened as a cup (extra time or penalties). */
+function regulationDrawFinishes(state: MatchState, input: MatchEngineTickInput): boolean {
+  if (state.score.home !== state.score.away) return true;
+  return !input.enableExtraTime && !input.enablePenalties;
+}
+
+function queueFullTime(
+  lifecycle: MatchLifecycleEvent[],
+  emits: MatchEngineEmit[],
+  state: MatchState,
+  tick: number,
+): void {
+  lifecycle.push({ type: 'COMPLETE_MATCH', tick });
+  emits.push({
+    type: 'MATCH_END',
+    payload: { score: state.score, minute: state.clock.displayMinute },
+  });
+}
 
 /**
  * One Match Engine step — pure aside from rng consumption.
@@ -60,17 +83,43 @@ export function simulateMatchTick(
     return { state: next, emits, lifecycle };
   }
 
-  if (state.phase !== 'FIRST_HALF' && state.phase !== 'SECOND_HALF') {
+  // Shoot-out is one tick. The goal is only on the score, not in player stats,
+  // matching the cup table (a draw becomes a one-goal winner, decidedBy extra).
+  if (state.phase === 'PENALTIES') {
+    const side = input.rng.nextBool() ? 'home' : 'away';
+    next = Object.freeze({
+      ...state,
+      tick: input.tick,
+      score: createScore(
+        side === 'home' ? state.score.home + 1 : state.score.home,
+        side === 'away' ? state.score.away + 1 : state.score.away,
+      ),
+    });
+    emits.push({
+      type: 'SYSTEM',
+      payload: { kind: 'penalty_decider', side, score: next.score },
+    });
+    lifecycle.push({ type: 'END_PENALTIES', tick: input.tick });
+    queueFullTime(lifecycle, emits, next, input.tick);
+    return { state: next, emits, lifecycle };
+  }
+
+  if (
+    state.phase !== 'FIRST_HALF' &&
+    state.phase !== 'SECOND_HALF' &&
+    state.phase !== 'EXTRA_TIME'
+  ) {
     return { state, emits, lifecycle };
   }
 
+  const periodMs = state.phase === 'EXTRA_TIME' ? input.extraTimeDurationMs : input.halfDurationMs;
   const clock = advanceMatchClock(state.clock, input.dtMs, {
     phase: state.phase,
-    halfDurationMs: input.halfDurationMs,
+    halfDurationMs: periodMs,
   });
   next = Object.freeze({ ...state, clock, tick: input.tick });
 
-  if (isHalfComplete(clock, input.halfDurationMs)) {
+  if (isHalfComplete(clock, periodMs)) {
     next = reconcileMinutesPlayed(next);
     if (state.phase === 'FIRST_HALF') {
       lifecycle.push({ type: 'END_FIRST_HALF', tick: input.tick });
@@ -78,17 +127,26 @@ export function simulateMatchTick(
         type: 'HALF_END',
         payload: { half: 1, score: next.score, minute: clock.displayMinute },
       });
-    } else {
+    } else if (state.phase === 'SECOND_HALF') {
       lifecycle.push({ type: 'END_SECOND_HALF', tick: input.tick });
       emits.push({
         type: 'HALF_END',
         payload: { half: 2, score: next.score, minute: clock.displayMinute },
       });
-      lifecycle.push({ type: 'COMPLETE_MATCH', tick: input.tick });
+      // League draws finish here. A cup draw goes to extra time or penalties.
+      if (regulationDrawFinishes(next, input)) {
+        queueFullTime(lifecycle, emits, next, input.tick);
+      }
+    } else {
+      lifecycle.push({ type: 'END_EXTRA_TIME', tick: input.tick });
       emits.push({
-        type: 'MATCH_END',
-        payload: { score: next.score, minute: clock.displayMinute },
+        type: 'HALF_END',
+        payload: { half: 3, score: next.score, minute: clock.displayMinute },
       });
+      const stillTied = next.score.home === next.score.away;
+      if (!stillTied || !input.enablePenalties) {
+        queueFullTime(lifecycle, emits, next, input.tick);
+      }
     }
     return { state: next, emits, lifecycle };
   }

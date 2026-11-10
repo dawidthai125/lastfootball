@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { createMatchClock, createScore } from '../domain';
 import {
   createBench,
   createKickoffCommand,
@@ -8,7 +9,7 @@ import {
   createPlayer,
 } from '../../testing';
 
-function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
+function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200, knockout = false) {
   const homeIds = Array.from({ length: 11 }, (_, i) => `h${i}`);
   const awayIds = Array.from({ length: 11 }, (_, i) => `a${i}`);
   const players = [
@@ -46,10 +47,40 @@ function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
     settings: {
       halfDurationMs,
       halfTimeDurationMs,
-      enableExtraTime: false,
-      enablePenalties: false,
+      enableExtraTime: knockout,
+      enablePenalties: knockout,
+      extraTimeHalfMs: 200,
     },
   });
+}
+
+function lifecycleTargets(session: ReturnType<typeof makeSession>): string[] {
+  return session
+    .context()
+    .events.history()
+    .flatMap((event) => {
+      const payload = event.payload;
+      if (!payload || typeof payload !== 'object' || !('kind' in payload)) return [];
+      if ((payload as { kind?: unknown }).kind !== 'lifecycle') return [];
+      return [String((payload as { to?: unknown }).to)];
+    });
+}
+
+function tieAtNinety(session: ReturnType<typeof makeSession>, home: number, away: number): void {
+  const state = session.getMatchState();
+  session.context().simulation.setMatchState(
+    Object.freeze({
+      ...state,
+      phase: 'SECOND_HALF',
+      score: createScore(home, away),
+      clock: createMatchClock({
+        period: 'second_half',
+        periodElapsedMs: 60_000,
+        displayMinute: 90,
+        frozen: false,
+      }),
+    }),
+  );
 }
 
 function openPlay(session: ReturnType<typeof makeSession>) {
@@ -118,5 +149,36 @@ describe('MATCH-ENGINE-01', () => {
         .events.history()
         .map((e) => e.type),
     );
+  });
+
+  it('finishes a tied league match at 90 without extra time', () => {
+    const s = makeSession(1_000, 50, false);
+    openPlay(s);
+    tieAtNinety(s, 0, 0);
+    s.run(8);
+    expect(s.getMatchState().phase).toBe('FINISHED');
+    expect(s.getMatchState().score).toEqual({ home: 0, away: 0 });
+    expect(lifecycleTargets(s)).not.toContain('EXTRA_TIME');
+    expect(lifecycleTargets(s)).not.toContain('PENALTIES');
+  });
+
+  it('plays extra time and separates a tied cup match', () => {
+    const s = makeSession(1_000, 50, true);
+    openPlay(s);
+    tieAtNinety(s, 1, 1);
+    s.run(40);
+    expect(lifecycleTargets(s)).toContain('EXTRA_TIME');
+    expect(s.getMatchState().phase).toBe('FINISHED');
+    expect(s.getMatchState().score.home).not.toBe(s.getMatchState().score.away);
+  });
+
+  it('keeps a decided cup match inside 90 minutes', () => {
+    const s = makeSession(1_000, 50, true);
+    openPlay(s);
+    tieAtNinety(s, 2, 0);
+    s.run(8);
+    expect(s.getMatchState().phase).toBe('FINISHED');
+    expect(s.getMatchState().score).toEqual({ home: 2, away: 0 });
+    expect(lifecycleTargets(s)).not.toContain('EXTRA_TIME');
   });
 });

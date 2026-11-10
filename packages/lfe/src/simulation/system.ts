@@ -48,6 +48,8 @@ export interface LifecycleFacts {
   halfDurationMs: number;
   /** Half-time break length in simulation ms. */
   halfTimeDurationMs: number;
+  /** Both extra-time halves together, in simulation ms. Unused when extra time is off. */
+  extraTimeDurationMs: number;
 }
 
 export interface SimulationSystem {
