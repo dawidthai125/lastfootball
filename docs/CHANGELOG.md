@@ -12,9 +12,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`fedbbe3`** — tactics on the pitch pin  
-**tip `main`:** **`875f89a`** — the watching manager can switch 4-4-2 and 4-3-3  
+**Documentation tip:** **`819c745`** — live formation pin  
+**tip `main`:** **`d5ffe0c`** — derived Puchar Krajowy and W/D/L on the league table  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-10] — Puchar Krajowy Thin
+
+### Product
+
+- The league table shows wins, draws, and losses next to matches, goal difference, and points (`d5ffe0c`).
+- Puchar Krajowy is a 16-club knockout on the league screen. The draw opens after 8 played league matches. AI ties get a decisive score. The manager's tie stays unplayed. No cup fixture is stored.
+- Seasonal club ranking stays position, club, and band. It does not show points.
 
 ---
 

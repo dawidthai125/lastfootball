@@ -147,7 +147,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji. **Tactics on the pitch** w `5ed0ba3`: mentalność i szerokość układają blok strony, która ma taktykę. Na wyjeździe pokrętła zostają przy menedżerze. **Live formation** w `875f89a`: podczas oglądania menedżer przełącza 4-4-2 i 4-3-3. Druga strona zostaje przy swoim układzie.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji. **Tactics on the pitch** w `5ed0ba3`: mentalność i szerokość układają blok strony, która ma taktykę. Na wyjeździe pokrętła zostają przy menedżerze. **Live formation** w `875f89a`: podczas oglądania menedżer przełącza 4-4-2 i 4-3-3. Druga strona zostaje przy swoim układzie. **Puchar Krajowy Thin** w `d5ffe0c`: drabinka 16 drużyn na ekranie ligi, po 8 kolejkach. Pary AI mają wynik. Para menedżera czeka na prawdziwy mecz. Ranking sezonowy bez punktów zostaje na `/rankings`.
 
 ### Oficjalna kolejność
 
@@ -175,7 +175,8 @@ Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTI
 - Hub = decyzja (§23), nie dashboard.
 - UI/Canvas nie omija `MatchSession` / CommandBus.
 - Replay nigdy nie odpala Engine.
-- Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17).
+- Tabela ligowa = pure derive (`resolveLeagueTable`); brak standings DB (D17). Kolumny Z/R/P na ekranie ligi (`d5ffe0c`).
+- Puchar Krajowy Thin = `resolveNationalCup` derive · brak wiersza pucharowego w `fixtures` · feat `d5ffe0c`. Ranking = `resolveClubRanking` bez punktów.
 - Terminarz = `fixtures` + `planClubFixtures` + top-up · **22** double RR (D15 / D28 / LFE-LEAGUE-04).
 - Kasa = `cash_balance`; UI tylko przez `resolveClubFinance` (D18); **liczby = GDD §26**; kod = `ECONOMY_THIN` (§26B).
 - Envelope = `resolveTransferEnvelope` (ratio 1 Thin) — nie kolumna DB (E1).
@@ -216,4 +217,4 @@ Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTI
 
 ## Last updated
 
-2026-11-10 — live formation `875f89a` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime (each needs a contract)
+2026-11-10 — Puchar Krajowy Thin `d5ffe0c` · live formation `875f89a` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime (each needs a contract)
