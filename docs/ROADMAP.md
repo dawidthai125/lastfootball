@@ -147,7 +147,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## Next Recommended EPIC
 
-Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji. **Tactics on the pitch** w `5ed0ba3`: mentalność i szerokość układają blok strony, która ma taktykę. Na wyjeździe pokrętła zostają przy menedżerze. **Live formation** w `875f89a`: podczas oglądania menedżer przełącza 4-4-2 i 4-3-3. Druga strona zostaje przy swoim układzie. **Puchar Krajowy Thin** w `d5ffe0c`: drabinka 16 drużyn na ekranie ligi, po 8 kolejkach. Pary AI mają wynik. **Playable cup** w `a138fc5`: para menedżera jest prawdziwym meczem, z dogrywką i karnymi. Ranking sezonowy bez punktów zostaje na `/rankings`.
+Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** zapisany jako SCOPE LOCK (bez kodu). **LFE-SPATIAL-EVENTS-01** w `4377677`: piłka idzie na wznowienie po GOAL / CORNER / PENALTY / FREE_KICK. **Live decisions** w `e20b3f8`: pauza, tempo oglądania 1×/2×/4× i do 3 zmian, tylko gdy menedżer ogląda mecz na żywo. **Paused sub pose** w `95864cb`: zmiana w pauzie od razu wchodzi na boisko, bez kroku symulacji. **Tactics on the pitch** w `5ed0ba3`: mentalność i szerokość układają blok strony, która ma taktykę. Na wyjeździe pokrętła zostają przy menedżerze. **Live formation** w `875f89a`: podczas oglądania menedżer przełącza 4-4-2 i 4-3-3. Druga strona zostaje przy swoim układzie. **Puchar Krajowy Thin** w `d5ffe0c`: drabinka 16 drużyn na ekranie ligi, po 8 kolejkach. Pary AI mają wynik. **Playable cup** w `a138fc5`: para menedżera jest prawdziwym meczem, z dogrywką i karnymi. **Cup on hub** w `a428952`: para do zagrania jest na hubie i w filtrze terminarza. Liga zostaje pierwsza. Ranking sezonowy bez punktów zostaje na `/rankings`.
 
 ### Oficjalna kolejność
 
@@ -217,4 +217,4 @@ Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTI
 
 ## Last updated
 
-2026-11-10 — playable cup `a138fc5` · Puchar Thin `d5ffe0c` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime (each needs a contract)
+2026-11-10 — cup on hub `a428952` · playable cup `a138fc5` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime (each needs a contract)

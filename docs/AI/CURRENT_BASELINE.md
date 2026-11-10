@@ -50,8 +50,8 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | URL                         | https://lastfootball.vercel.app                                                 |
 | Alias                       | https://lastfootball.pl                                                         |
 | Branch                      | `main`                                                                          |
-| **tip `main`**              | **`a138fc5`** — playable cup tie (Documentation tip = `b14a8cf`)                |
-| **Documentation tip**       | **`b14a8cf`** — pin of the derived cup before the playable tie                  |
+| **tip `main`**              | **`a428952`** — cup on the hub and calendar (Documentation tip = `4191b17`)     |
+| **Documentation tip**       | **`4191b17`** — pin of the playable cup before the hub link                     |
 | **Production Feature**      | **`3c01baa`** — **LFE-CAREER-DECLINE-01** (Career Phase · Growth Gate · D124)   |
 | Production Baseline (UI P0) | `54d0724` — **LFE-UI-IMPL-06** CLOSED (Live → Post fidelity)                    |
 | Baseline message            | `feat(ui): polish Live Match and Post fidelity (LFE-UI-IMPL-06)`                |
@@ -65,7 +65,7 @@ git log -1 --oneline 021b06d            # LFE Spatial Motion Thin
 | Production                  | `0dcf95b` on `main` · Vercel completed (live decisions)                         |
 | Decisions                   | **D1–D125** (D125 Invitation · D124 Career Phase · D123 Strength · D122 H-AGE)  |
 | **NEXT EPIC**               | Retirement / §22 push / Prime — each needs its own contract                     |
-| Status                      | Playable cup `a138fc5` · Puchar Thin `d5ffe0c` · Academy 02 SCOPE LOCK          |
+| Status                      | Cup on hub `a428952` · Playable cup `a138fc5` · Academy 02 SCOPE LOCK           |
 
 Master handoff: [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md).
 
