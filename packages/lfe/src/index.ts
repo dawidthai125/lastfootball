@@ -56,6 +56,7 @@ export {
   createBench,
   createMatchSettings,
   formationByCode,
+  orderPlayersByRole,
   FORMATION_442,
   FORMATION_433,
   DEFAULT_MATCH_SETTINGS,
