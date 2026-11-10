@@ -1,5 +1,5 @@
-import type { MatchState, MatchTactics, PitchSide, Player } from '../match/domain';
-import { createMatchTactics } from '../match/domain';
+import type { MatchState, PitchSide, Player } from '../match/domain';
+import { tacticsOwnedBy } from '../match/domain';
 
 import type { MatchAiContext, MatchAiSideContext } from './types';
 
@@ -48,17 +48,8 @@ function teamFreshness(players: readonly Player[]): number {
   return clamp01(sum / players.length);
 }
 
-function tacticsForSide(state: MatchState, side: PitchSide): MatchTactics {
-  if (side === 'home') return state.tactics;
-  // Away manager stub: mirror formation, balanced dials until multi-manager.
-  return createMatchTactics({
-    mentality: 50,
-    pressing: 50,
-    tempo: 50,
-    width: 50,
-    formationCode: state.awayLineup.formationCode,
-    styleLabel: 'Zbilansowany',
-  });
+function tacticsForSide(state: MatchState, side: PitchSide) {
+  return tacticsOwnedBy(state, side);
 }
 
 function buildSide(state: MatchState, side: PitchSide): MatchAiSideContext {

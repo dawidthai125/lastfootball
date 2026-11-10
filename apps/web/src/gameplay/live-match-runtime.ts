@@ -427,13 +427,14 @@ export class LiveMatchRuntime {
   dispatchUiCommand(commandId: string): boolean {
     if (!this.watchingLive()) return false;
     const tick = this.session.context().tick;
+    const side = this.managerSide;
     const factories: Record<string, () => Parameters<MatchSession['dispatch']>[0]> = {
-      press: () => createSetPressingCommand({ tick, source: 'ui', value: 75 }),
-      tempo: () => createSetTempoCommand({ tick, source: 'ui', value: 70 }),
-      wide: () => createSetWidthCommand({ tick, source: 'ui', value: 70 }),
-      attack: () => createSetMentalityCommand({ tick, source: 'ui', value: 70 }),
-      defend: () => createSetMentalityCommand({ tick, source: 'ui', value: 30 }),
-      balance: () => createSetMentalityCommand({ tick, source: 'ui', value: 50 }),
+      press: () => createSetPressingCommand({ tick, source: 'ui', value: 75, side }),
+      tempo: () => createSetTempoCommand({ tick, source: 'ui', value: 70, side }),
+      wide: () => createSetWidthCommand({ tick, source: 'ui', value: 70, side }),
+      attack: () => createSetMentalityCommand({ tick, source: 'ui', value: 70, side }),
+      defend: () => createSetMentalityCommand({ tick, source: 'ui', value: 30, side }),
+      balance: () => createSetMentalityCommand({ tick, source: 'ui', value: 50, side }),
     };
     const factory = factories[commandId];
     if (!factory) return false;

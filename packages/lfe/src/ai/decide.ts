@@ -47,7 +47,14 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
 
   const homeMentality = h.tactics.mentality / 100;
   const homePressing = h.tactics.pressing / 100;
-  let homeChance = 0.48 + (homeMentality - 0.5) * 0.12 + (homePressing - 0.5) * 0.06;
+  const awayMentality = a.tactics.mentality / 100;
+  const awayPressing = a.tactics.pressing / 100;
+  let homeChance =
+    0.48 +
+    (homeMentality - 0.5) * 0.12 +
+    (homePressing - 0.5) * 0.06 -
+    (awayMentality - 0.5) * 0.12 -
+    (awayPressing - 0.5) * 0.06;
 
   homeChance += strengthDelta(h.strength, a.strength);
   homeChance += (h.freshness - a.freshness) * 0.04;

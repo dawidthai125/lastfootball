@@ -17,6 +17,8 @@ export interface MatchInput {
   /** Full roster referenced by lineups/benches. */
   players: readonly Player[];
   settings?: Partial<MatchSettings>;
+  /** Side that owns MatchState.tactics. Defaults to home. */
+  tacticsSide?: 'home' | 'away';
 }
 
 export interface MatchEvent {

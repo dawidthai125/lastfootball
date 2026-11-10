@@ -96,6 +96,24 @@ describe('MATCH-AI-01', () => {
     expect(high.goalChance).toBeGreaterThan(low.goalChance);
   });
 
+  it('applies MatchState tactics to the owning side, including away', () => {
+    const baseline = decidePossession(buildMatchAiContext(makeState()));
+    const awayOwned = Object.freeze({
+      ...makeState({ homeMentality: 85 }),
+      tacticsSide: 'away' as const,
+    });
+    const ctx = buildMatchAiContext(awayOwned);
+
+    expect(ctx.away.tactics.mentality).toBe(85);
+    expect(ctx.home.tactics.mentality).toBe(50);
+    expect(decidePossession(buildMatchAiContext(awayOwned)).homeChance).toBeLessThan(
+      baseline.homeChance,
+    );
+    expect(decideAction(ctx, 'away').shotChance).toBeGreaterThan(
+      decideAction(ctx, 'home').shotChance,
+    );
+  });
+
   it('trailing late boosts attack pressure', () => {
     const level = scorePhaseModifier(buildMatchAiContext(makeState()).home, 20);
     const trailingLate = scorePhaseModifier(
