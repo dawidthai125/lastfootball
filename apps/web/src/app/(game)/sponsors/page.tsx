@@ -30,11 +30,13 @@ export default async function SponsorsPage() {
 
   const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const table = resolveLeagueTable(club, fixtures);
+  const playerRow = table.rows.find((r) => r.isPlayer);
   const sponsors = resolveClubSponsors({
     contract,
     seasonPhase: club.seasonPhase,
-    playerPosition: table.rows.find((r) => r.isPlayer)?.position ?? null,
+    playerPosition: playerRow?.position ?? null,
     tableSize: table.rows.length,
+    leaguePlayed: playerRow?.played ?? 0,
   });
 
   return <SponsorsView sponsors={sponsors} />;

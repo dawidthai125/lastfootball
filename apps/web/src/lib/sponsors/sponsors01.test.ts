@@ -46,6 +46,19 @@ describe('buildStarterSponsorContractInsert', () => {
 });
 
 describe('resolveClubSponsors', () => {
+  it('does not call a blank table a finished goal', () => {
+    const dto = resolveClubSponsors({
+      contract: contract(),
+      seasonPhase: 'in_season',
+      playerPosition: 4,
+      tableSize: 12,
+      leaguePlayed: 0,
+    });
+    expect(dto.goal.complete).toBe(false);
+    expect(dto.goal.progressLabel).toMatch(/bez meczu/i);
+    expect(dto.bonusState).toBe('locked');
+  });
+
   it('builds DTO with goal progress and locked bonus in-season', () => {
     const dto = resolveClubSponsors({
       contract: contract(),

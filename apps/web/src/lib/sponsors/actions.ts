@@ -35,11 +35,13 @@ export async function claimSponsorBonus(
 
   const fixtures = await listClubFixtures(club.id);
   const table = resolveLeagueTable(club, fixtures);
+  const playerRow = table.rows.find((r) => r.isPlayer);
   const dto = resolveClubSponsors({
     contract,
     seasonPhase: club.seasonPhase,
-    playerPosition: table.rows.find((r) => r.isPlayer)?.position ?? null,
+    playerPosition: playerRow?.position ?? null,
     tableSize: table.rows.length,
+    leaguePlayed: playerRow?.played ?? 0,
   });
 
   if (dto.bonusState !== 'claimable') {
