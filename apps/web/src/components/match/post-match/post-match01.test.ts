@@ -98,6 +98,7 @@ describe('LFE-POST-MATCH-01', () => {
       events: [
         { type: 'MATCH_START', tick: 1 },
         { type: 'GOAL', tick: 100, payload: { side: 'home', minute: 12 } },
+        { type: 'SUBSTITUTION', tick: 150, payload: { side: 'home' } },
         { type: 'SHOT', tick: 200, payload: { side: 'away', minute: 40 } },
         { type: 'GOAL', tick: 300, payload: { side: 'away', minute: 55 } },
         { type: 'GOAL', tick: 400, payload: { side: 'home', minute: 78 } },
@@ -113,6 +114,12 @@ describe('LFE-POST-MATCH-01', () => {
     expect(summary.awayScore).toBe(1);
     expect(summary.goals).toHaveLength(3);
     expect(summary.timeline.some((t) => t.type === 'MATCH_END')).toBe(true);
+    expect(summary.timeline.find((t) => t.type === 'MATCH_START')?.minute).toBe("0'");
+    expect(summary.timeline[0]?.type).toBe('MATCH_START');
+    const subAt = summary.timeline.findIndex((t) => t.type === 'SUBSTITUTION');
+    const laterGoal = summary.timeline.findIndex((t) => t.type === 'GOAL' && t.minute === "55'");
+    expect(subAt).toBeGreaterThan(0);
+    expect(subAt).toBeLessThan(laterGoal);
     expect(summary.possession.home + summary.possession.away).toBe(100);
     expect(summary.resultLabel).toContain('gospodarz');
   });

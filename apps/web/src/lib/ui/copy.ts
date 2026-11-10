@@ -96,6 +96,8 @@ export const UI_COPY = {
   clubLinksLabel: 'Skróty',
 
   softLockUnavailable: 'niedostępne',
+  /** Works for every noun gender. "X jest niedostępne" does not. */
+  softLockTitle: (label: string) => `${label} — na razie poza zasięgiem`,
   softLockSoon: 'wkrótce',
   softLockReason:
     'Ta lokacja odblokuje się wraz z postępem klubu. Wróć później lub wybierz inną sprawę dnia.',

@@ -496,9 +496,14 @@ function mapFeedItem(
   minute: number,
   players: MatchState['players'],
 ): LiveMatchSnapshot['feed'][number] {
-  const payloadMinute =
+  const rawMinute =
     e.payload && typeof e.payload === 'object' && 'minute' in e.payload
       ? Number((e.payload as { minute: number }).minute)
+      : Number.NaN;
+  const payloadMinute = Number.isFinite(rawMinute)
+    ? rawMinute
+    : e.type === 'MATCH_START'
+      ? 0
       : minute;
   return {
     id: `ev-${index}-${e.type}-${e.tick}`,

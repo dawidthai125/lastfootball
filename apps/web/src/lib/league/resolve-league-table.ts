@@ -2,7 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveLeagueMembers } from '@/lib/league/league-members';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
-import { planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
+import { planAiMatchesForPlayedWeeks } from '@/lib/league/simulate-ai-results';
 import {
   LEAGUE_POINTS,
   type LeagueMember,
@@ -24,7 +24,8 @@ type Acc = {
 
 /**
  * Sole league table SSOT for product UI (LFE-LEAGUE-02).
- * Player results from fixtures; AI↔AI from deterministic derive — no standings DB.
+ * Player results from fixtures. AI↔AI derive only for matchdays the manager
+ * has already played — no standings DB. A finished 22-week season is the full double RR.
  * League label from club.leagueTier (LFE-PROMOTION-01 · D88).
  */
 export function resolveLeagueTable(
@@ -60,8 +61,11 @@ export function resolveLeagueTable(
     }
   }
 
-  const aiIds = members.filter((m) => !m.isPlayer).map((m) => m.id);
-  for (const m of planAiVsAiMatches(aiIds)) {
+  const playedDays = new Set<number>();
+  for (const f of fixtures) {
+    if (f.competition === 'league' && f.status === 'played') playedDays.add(f.matchday);
+  }
+  for (const m of planAiMatchesForPlayedWeeks(club.id, playedDays)) {
     applyResult(byId, m.homeId, m.awayId, m.homeScore, m.awayScore);
   }
 

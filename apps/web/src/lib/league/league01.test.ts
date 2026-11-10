@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
 import { LEAGUE_SIZE, resolveLeagueMembers } from '@/lib/league/league-members';
@@ -7,7 +8,7 @@ import {
   resolveLeagueTable,
   resolvePlayerLeaguePositionLabel,
 } from '@/lib/league/resolve-league-table';
-import { planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
+import { planAiMatchesForPlayedWeeks, planAiVsAiMatches } from '@/lib/league/simulate-ai-results';
 
 const club = { id: 'club-aaa', name: 'Alpha FC', shortName: 'AFC', leagueTier: 'iv' as const };
 
@@ -92,6 +93,39 @@ describe('resolveLeagueTable', () => {
     const table = resolveLeagueTable(club, []);
     const label = resolvePlayerLeaguePositionLabel(table);
     expect(label).toMatch(/^\d+\. miejsce \/ 12$/);
+  });
+});
+
+describe('resolveLeagueTable played weeks', () => {
+  it('keeps every club on 0 until the manager plays a league match', () => {
+    const table = resolveLeagueTable(club, []);
+    expect(table.rows.every((r) => r.played === 0 && r.points === 0)).toBe(true);
+  });
+
+  it('counts only the played week, including that week of AI games', () => {
+    const leg = planClubFixtures(club.id).find((p) => p.matchday === 3)!;
+    const table = resolveLeagueTable(club, [
+      played({
+        opponentClubId: leg.opponentClubId,
+        homeScore: 1,
+        awayScore: 0,
+        isHome: leg.isHome,
+        matchday: 3,
+      }),
+    ]);
+    const player = table.rows.find((r) => r.isPlayer)!;
+    expect(player.played).toBe(1);
+    expect(table.rows.every((r) => r.played <= 1)).toBe(true);
+    expect(table.rows.some((r) => !r.isPlayer && r.played === 1)).toBe(true);
+  });
+
+  it('full 22 played weeks match the ungated AI double round-robin', () => {
+    const ids = OPPONENT_CATALOG.map((o) => o.id);
+    const days = new Set(Array.from({ length: 22 }, (_, i) => i + 1));
+    const gated = planAiMatchesForPlayedWeeks(club.id, days);
+    const full = planAiVsAiMatches(ids);
+    const key = (m: { homeId: string; awayId: string }) => `${m.homeId}>${m.awayId}`;
+    expect(gated.map(key).sort()).toEqual(full.map(key).sort());
   });
 });
 

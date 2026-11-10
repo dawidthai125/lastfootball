@@ -220,11 +220,7 @@ export function MobileNav() {
 
       <SoftLockModal
         open={Boolean(lockTitle)}
-        title={
-          lockTitle
-            ? `${lockTitle} jest ${UI_COPY.softLockUnavailable}`
-            : `Lokacja ${UI_COPY.softLockUnavailable}`
-        }
+        title={lockTitle ? UI_COPY.softLockTitle(lockTitle) : UI_COPY.softLockTitle('Lokacja')}
         reason={UI_COPY.softLockReason}
         onClose={closeLock}
       />

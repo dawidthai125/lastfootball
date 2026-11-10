@@ -6,19 +6,19 @@ Terminarz i tabela ligowa (Thin). Hub konsumuje next match + chip pozycji.
 
 ## SSOT
 
-| Fakt       | Źródło                                                                |
-| ---------- | --------------------------------------------------------------------- |
-| Terminarz  | tabela `fixtures` → `FixtureDto`                                      |
-| Next match | `getNextFixture` (`status=upcoming`)                                  |
-| Opponent   | `opponent_club_id` + katalog AI                                       |
-| Plan       | **wyłącznie** `planClubFixtures(clubId)` (pure)                       |
-| Ensure     | `ensureClubFixtures` — insert / **top-up** z tego samego planu        |
-| Liczba     | `LEAGUE_FIXTURE_COUNT = 22` (double RR vs 11 AI · GDD §10)            |
-| Runda 1    | MD1–11 — identity LEAGUE-03 (nigdy nie przebudowywane)                |
-| Runda 2    | MD12–22 — rewanże (`!isHome`, ten sam opponent)                       |
-| Tabela     | **wyłącznie** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto` |
-| AI↔AI      | **double RR** derive (bez Match Engine, bez standings DB)             |
-| Chip       | `resolvePlayerLeaguePositionLabel(table)`                             |
+| Fakt       | Źródło                                                                                                                        |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Terminarz  | tabela `fixtures` → `FixtureDto`                                                                                              |
+| Next match | `getNextFixture` (`status=upcoming`)                                                                                          |
+| Opponent   | `opponent_club_id` + katalog AI                                                                                               |
+| Plan       | **wyłącznie** `planClubFixtures(clubId)` (pure)                                                                               |
+| Ensure     | `ensureClubFixtures` — insert / **top-up** z tego samego planu                                                                |
+| Liczba     | `LEAGUE_FIXTURE_COUNT = 22` (double RR vs 11 AI · GDD §10)                                                                    |
+| Runda 1    | MD1–11 — identity LEAGUE-03 (nigdy nie przebudowywane)                                                                        |
+| Runda 2    | MD12–22 — rewanże (`!isHome`, ten sam opponent)                                                                               |
+| Tabela     | **wyłącznie** `resolveLeagueTable(club, fixtures)` → `LeagueTableDto`                                                         |
+| AI↔AI      | **double RR** derive, tylko rozegrane kolejki menedżera (pełny sezon = ten sam zbiór par). Bez Match Engine, bez standings DB |
+| Chip       | `resolvePlayerLeaguePositionLabel(table)`                                                                                     |
 
 First Match (`id=first`) **nie** jest wierszem `fixtures`.
 
