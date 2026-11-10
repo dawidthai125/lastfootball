@@ -12,9 +12,18 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`730286b`** — paused substitution pin  
-**tip `main`:** **`5ed0ba3`** — managing-side tactics show on the pitch  
+**Documentation tip:** **`fedbbe3`** — tactics on the pitch pin  
+**tip `main`:** **`875f89a`** — the watching manager can switch 4-4-2 and 4-3-3  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-10] — Live formation
+
+### Product
+
+- While watching live, the manager can switch the side between 4-4-2 and 4-3-3. The same eleven players take the new slots and the block eases there without a simulation tick (`875f89a`).
+- A formation sent for the other side is rejected. 4-2-3-1, 3-5-2, and 5-3-2 stay unavailable.
 
 ---
 

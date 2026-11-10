@@ -56,4 +56,4 @@ Nie kopiuj hashy tutaj na sztywno.
 
 ## Last updated
 
-2026-11-10 — tip main `5ed0ba3` (tactics on the pitch) · docs tip `730286b` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125
+2026-11-10 — tip main `875f89a` (live formation) · docs tip `fedbbe3` · Academy 02 SCOPE LOCK · next Retirement / §22 push / Prime · D1–D125
