@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { orderForFormation } from '@/lib/match/order-xi';
+import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 
 const SQUAD = [
   { id: 'gk', role: 'GK' as const },
@@ -24,6 +24,17 @@ describe('orderForFormation', () => {
     expect(ids[8]).toBe('lw');
     expect(ids[9]).toBe('st');
     expect(ids.filter((id) => id.startsWith('cm'))).toHaveLength(3);
+  });
+
+  it('draws the winger on the wing of the pre-match pitch', () => {
+    const slots = pitchSlotsFor(
+      SQUAD.map((player, index) => ({ ...player, number: index + 1 })),
+      '4-4-2',
+    );
+    const wing = slots.find((slot) => slot.number === 8);
+    const back = slots.find((slot) => slot.number === 3);
+    expect(wing && back && wing.y).toBeLessThan(back.y);
+    expect(wing?.x).toBeGreaterThan(70);
   });
 
   it('fills 4-3-3 wide slots with the wide players', () => {
