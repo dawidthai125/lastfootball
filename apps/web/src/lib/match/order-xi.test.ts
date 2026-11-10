@@ -33,8 +33,10 @@ describe('orderForFormation', () => {
     );
     const wing = slots.find((slot) => slot.number === 8);
     const back = slots.find((slot) => slot.number === 3);
-    expect(wing && back && wing.y).toBeLessThan(back.y);
-    expect(wing?.x).toBeGreaterThan(70);
+    expect(wing).toBeDefined();
+    expect(back).toBeDefined();
+    expect(wing?.y ?? 0).toBeLessThan(back?.y ?? 0);
+    expect(wing?.x ?? 0).toBeGreaterThan(70);
   });
 
   it('fills 4-3-3 wide slots with the wide players', () => {
