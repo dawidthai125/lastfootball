@@ -57,7 +57,7 @@ export async function completeFixture(
 
   const { data: fixture, error: loadErr } = await supabase
     .from('fixtures')
-    .select('id, club_id, matchday, status, is_home')
+    .select('id, club_id, matchday, status, is_home, competition')
     .eq('id', fixtureId)
     .eq('club_id', clubId)
     .maybeSingle();
@@ -72,6 +72,7 @@ export async function completeFixture(
     matchday: number;
     status: string;
     is_home: boolean;
+    competition: string;
   };
 
   if (row.status !== 'played') {
@@ -107,7 +108,7 @@ export async function completeFixture(
       return { error: 'Nie udało się zapisać wyniku.' };
     }
 
-    if (updated) {
+    if (updated && row.competition !== 'cup') {
       const isHome = (updated as { is_home: boolean }).is_home;
       const reward = resolveLeagueMatchReward({
         homeScore: home,
@@ -136,6 +137,7 @@ export async function completeFixture(
         .from('fixtures')
         .select('id')
         .eq('club_id', clubId)
+        .eq('competition', 'league')
         .eq('status', 'scheduled')
         .order('matchday', { ascending: true })
         .limit(1)

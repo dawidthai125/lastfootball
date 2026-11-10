@@ -52,7 +52,7 @@ Brak otwartego EPIC. **LFE-NOTIFICATIONS-01 CLOSED**.
 ## Co następne
 
 Patrz [`ROADMAP.md`](./ROADMAP.md) · [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md) §11.  
-**NEXT EPIC:** Retirement / §22 push/email / Prime — każdy wymaga własnego kontraktu. Academy 02 = SCOPE LOCK. Puchar Krajowy Thin = `d5ffe0c`. Live formation = `875f89a`.
+**NEXT EPIC:** Retirement / §22 push/email / Prime — każdy wymaga własnego kontraktu. Academy 02 = SCOPE LOCK. Playable cup = `a138fc5`. Puchar Thin = `d5ffe0c`.
 
 ## Decyzje
 
@@ -61,4 +61,4 @@ PLAN: [`implementation/LFE-NOTIFICATIONS-01-PLAN.md`](./implementation/LFE-NOTIF
 
 ## Last updated
 
-2026-11-10 — Puchar Krajowy Thin `d5ffe0c` · docs tip `819c745` · Academy 02 SCOPE LOCK
+2026-11-10 — playable cup `a138fc5` · docs tip `b14a8cf` · Academy 02 SCOPE LOCK

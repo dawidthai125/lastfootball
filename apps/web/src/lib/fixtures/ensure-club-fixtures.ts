@@ -26,7 +26,8 @@ export async function ensureClubFixtures(
   if (options.seasonPhase === 'offseason') return existing;
 
   const plan = planClubFixtures(clubId);
-  const inserts = resolveFixtureTopUp(plan, existing);
+  const leagueExisting = existing.filter((f) => f.competition === 'league');
+  const inserts = resolveFixtureTopUp(plan, leagueExisting);
 
   if (inserts.length === 0) return existing;
 

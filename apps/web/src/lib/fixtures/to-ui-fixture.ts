@@ -2,6 +2,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
@@ -12,20 +13,37 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
       ? `${dto.homeScore}:${dto.awayScore}`
       : undefined;
   const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
+  const cupRound = dto.competition === 'cup' ? cupRoundForMatchday(dto.matchday) : null;
+  const cupLabel = cupRound ? cupRoundLabel(cupRound) : 'Puchar';
 
   return {
     id: dto.id,
     day: dto.matchday,
-    whenLabel: dto.status === 'upcoming' ? 'Dziś' : `Kolejka ${dto.matchday}`,
-    dateLabel: `Kolejka ${dto.matchday}`,
+    whenLabel:
+      dto.competition === 'cup'
+        ? dto.status === 'upcoming'
+          ? 'Dziś'
+          : cupLabel
+        : dto.status === 'upcoming'
+          ? 'Dziś'
+          : `Kolejka ${dto.matchday}`,
+    dateLabel: dto.competition === 'cup' ? cupLabel : `Kolejka ${dto.matchday}`,
     kickoff: dto.status === 'upcoming' ? 'Teraz' : undefined,
-    competition: 'league',
-    competitionLabel: `${leagueLabel} · kolejka ${dto.matchday}`,
+    competition: dto.competition === 'cup' ? 'cup' : 'league',
+    competitionLabel:
+      dto.competition === 'cup'
+        ? `Puchar Krajowy · ${cupLabel}`
+        : `${leagueLabel} · kolejka ${dto.matchday}`,
     opponent: dto.opponent.name,
     opponentShort: dto.opponent.shortName,
     opponentClubId: dto.opponentClubId,
     home: dto.isHome,
-    stadium: dto.isHome ? STARTER_PACKAGE.stadiumLabel(club.name) : `Stadion ${dto.opponent.name}`,
+    stadium:
+      cupRound === 4
+        ? 'Stadion finałowy'
+        : dto.isHome
+          ? STARTER_PACKAGE.stadiumLabel(club.name)
+          : `Stadion ${dto.opponent.name}`,
     status:
       dto.status === 'played' ? 'played' : dto.status === 'upcoming' ? 'upcoming' : 'scheduled',
     score,
@@ -114,7 +132,10 @@ export function buildLeaguePreMatchBundle(
     })),
     pitchSlots: [...PITCH_SLOTS],
     teamCondition: { label: 'Gotowa', value: 82 },
-    ticker: `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
+    ticker:
+      dto.competition === 'cup'
+        ? `${club.name} · Puchar Krajowy vs ${dto.opponent.name}.`
+        : `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
     decisions: [
       {
         id: 'lineup',
@@ -152,7 +173,10 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
         id: 'e0',
         minute: "0'",
         kind: 'info',
-        text: `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
+        text:
+          dto.competition === 'cup'
+            ? `Puchar: ${club.name} vs ${dto.opponent.name}.`
+            : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
       },
     ],
     commands: [

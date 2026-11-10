@@ -4,6 +4,11 @@ import { resolveLeagueMembers } from '@/lib/league/league-members';
 import { formatSeasonLabel } from '@/lib/season/types';
 
 import { cupGuestOriginLabel, cupGuestsForTier } from '@/lib/cup/cup-guests';
+import {
+  CUP_ROUND_AFTER_LEAGUE,
+  cupMatchdayForRound,
+  cupRoundForMatchday,
+} from '@/lib/cup/matchdays';
 import type {
   CupClub,
   CupDecidedBy,
@@ -13,7 +18,15 @@ import type {
   CupTieDto,
   CupVenue,
   NationalCupDto,
+  PlayerCupTieDto,
 } from '@/lib/cup/types';
+
+type StoredCup = {
+  readonly opponentId: string;
+  readonly homeScore: number;
+  readonly awayScore: number;
+  readonly playerIsHome: boolean;
+};
 
 /** Draw opens after this many played league fixtures (GDD §11.8, after matchday 8). */
 export const CUP_UNLOCK_AFTER_MATCHDAY = 8 as const;
@@ -46,6 +59,9 @@ export function resolveNationalCup(
   const qualified = [...field].sort((a, b) => a.name.localeCompare(b.name, 'pl'));
   const playedLeagueMatchdays = countPlayedLeagueMatchdays(fixtures);
   const editionOpen = playedLeagueMatchdays >= CUP_UNLOCK_AFTER_MATCHDAY;
+  const rounds = editionOpen
+    ? drawRounds(field, `${club.id}|${seasonNumber}`, storedCupResults(fixtures))
+    : [];
 
   return {
     name: 'Puchar Krajowy',
@@ -55,7 +71,8 @@ export function resolveNationalCup(
     playedLeagueMatchdays,
     editionOpen,
     qualified,
-    rounds: editionOpen ? drawRounds(field, `${club.id}|${seasonNumber}`) : [],
+    rounds,
+    playerTie: findPlayerTie(rounds, playedLeagueMatchdays),
   };
 }
 
@@ -87,7 +104,53 @@ function countPlayedLeagueMatchdays(fixtures: readonly FixtureDto[]): number {
   return n;
 }
 
-function drawRounds(field: readonly CupClub[], seedKey: string): readonly CupRoundDto[] {
+function storedCupResults(fixtures: readonly FixtureDto[]): ReadonlyMap<CupRoundIndex, StoredCup> {
+  const out = new Map<CupRoundIndex, StoredCup>();
+  for (const f of fixtures) {
+    if (f.competition !== 'cup' || f.status !== 'played') continue;
+    if (f.homeScore == null || f.awayScore == null) continue;
+    const round = cupRoundForMatchday(f.matchday);
+    if (!round) continue;
+    out.set(round, {
+      opponentId: f.opponentClubId,
+      homeScore: f.homeScore,
+      awayScore: f.awayScore,
+      playerIsHome: f.isHome,
+    });
+  }
+  return out;
+}
+
+function findPlayerTie(
+  rounds: readonly CupRoundDto[],
+  playedLeagueMatchdays: number,
+): PlayerCupTieDto | null {
+  for (const round of rounds) {
+    for (const tie of round.ties) {
+      if (tie.status !== 'awaiting_player') continue;
+      if (tie.home.kind !== 'club' || tie.away.kind !== 'club') continue;
+      const player = tie.home.club.isPlayer ? tie.home.club : tie.away.club;
+      const opponent = tie.home.club.isPlayer ? tie.away.club : tie.home.club;
+      return {
+        round: round.round,
+        roundLabel: round.label,
+        matchday: cupMatchdayForRound(round.round),
+        due: playedLeagueMatchdays >= CUP_ROUND_AFTER_LEAGUE[round.round],
+        opponentId: opponent.id,
+        opponentName: opponent.name,
+        opponentShort: opponent.shortName,
+        isHome: tie.venue === 'neutral' ? true : tie.hostClubId === player.id,
+      };
+    }
+  }
+  return null;
+}
+
+function drawRounds(
+  field: readonly CupClub[],
+  seedKey: string,
+  stored: ReadonlyMap<CupRoundIndex, StoredCup>,
+): readonly CupRoundDto[] {
   const seed = `cup-draw-v1|${seedKey}`;
   let entrants: CupSide[] = drawSlots(field, seed).map((club) => ({ kind: 'club', club }));
   const rounds: CupRoundDto[] = [];
@@ -96,7 +159,7 @@ function drawRounds(field: readonly CupClub[], seedKey: string): readonly CupRou
     const ties: BuiltTie[] = [];
     const next: CupSide[] = [];
     for (let i = 0; i < entrants.length; i += 2) {
-      const tie = makeTie(round, i / 2, entrants[i]!, entrants[i + 1]!, seed);
+      const tie = makeTie(round, i / 2, entrants[i]!, entrants[i + 1]!, seed, stored.get(round));
       ties.push(tie);
       next.push(advance(tie));
     }
@@ -132,8 +195,9 @@ function makeTie(
   left: CupSide,
   right: CupSide,
   seed: string,
+  stored: StoredCup | undefined,
 ): BuiltTie {
-  const played = resolveTie(round, left, right, seed);
+  const played = resolveTie(round, left, right, seed, stored);
   const onPlayerPath = sideOnPath(played.home) || sideOnPath(played.away);
   return {
     id: `r${round}-${index}`,
@@ -142,17 +206,50 @@ function makeTie(
   };
 }
 
+function applyStoredPlayerResult(
+  home: CupClub,
+  away: CupClub,
+  stored: StoredCup | undefined,
+): {
+  homeScore: number;
+  awayScore: number;
+  winnerId: string | null;
+  status: 'played';
+  decidedBy: null;
+} | null {
+  if (!stored) return null;
+  const opponent = home.isPlayer ? away : home;
+  if (stored.opponentId !== opponent.id) return null;
+  const playerScore = stored.playerIsHome ? stored.homeScore : stored.awayScore;
+  const opponentScore = stored.playerIsHome ? stored.awayScore : stored.homeScore;
+  const homeScore = home.isPlayer ? playerScore : opponentScore;
+  const awayScore = away.isPlayer ? playerScore : opponentScore;
+  const winnerId = homeScore === awayScore ? null : homeScore > awayScore ? home.id : away.id;
+  return { homeScore, awayScore, winnerId, status: 'played', decidedBy: null };
+}
+
 function resolveTie(
   round: CupRoundIndex,
   left: CupSide,
   right: CupSide,
   seed: string,
+  stored: StoredCup | undefined,
 ): Omit<BuiltTie, 'id' | 'onPlayerPath'> {
   if (left.kind === 'club' && right.kind === 'club') {
     const ordered = orderSides(left.club, right.club, seed, round);
     const home: CupSide = { kind: 'club', club: ordered.home };
     const away: CupSide = { kind: 'club', club: ordered.away };
     if (left.club.isPlayer || right.club.isPlayer) {
+      const played = applyStoredPlayerResult(ordered.home, ordered.away, stored);
+      if (played) {
+        return {
+          home,
+          away,
+          ...played,
+          venue: ordered.venue,
+          hostClubId: ordered.hostClubId,
+        };
+      }
       return {
         home,
         away,

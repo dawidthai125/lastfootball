@@ -82,13 +82,14 @@ export function resolveClubAchievements(input: ResolveClubAchievementsInput): Cl
     });
   }
 
-  if (hasPlayedFixture(fixtures)) {
+  const leaguePlayed = fixtures.filter((f) => f.competition === 'league');
+  if (hasPlayedFixture(leaguePlayed)) {
     milestones.push({
       id: 'first_league_match',
       category: 'sport',
       title: UI_COPY.achievementFirstLeagueTitle,
       detail: UI_COPY.achievementFirstLeagueDetail,
-      occurredAt: earliestPlayedAt(fixtures),
+      occurredAt: earliestPlayedAt(leaguePlayed),
     });
   }
 

@@ -56,7 +56,10 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
     homeName,
     awayShort,
     awayName,
-    meta: `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
+    meta:
+      dto.competition === 'cup'
+        ? `Puchar · ${dto.matchday === 104 ? 'Neutralny' : dto.isHome ? 'U siebie' : 'Wyjazd'}`
+        : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
     firstMatch: false,
   };
 }

@@ -52,7 +52,7 @@ export default async function HubPage() {
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const trainingUnlocked = hasPlayedUnlock(
-    countPlayedInList(fixtures),
+    countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
     TRAINING_THIN.UNLOCK_AFTER_PLAYED,
   );
 

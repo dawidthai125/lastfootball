@@ -1,6 +1,6 @@
 /**
- * Puchar Krajowy Thin (GDD §11). Derive only — no fixtures row, no cup table.
- * The player's tie stays unplayed until a real cup match exists.
+ * Puchar Krajowy (GDD §11).
+ * AI ties are derived. The manager's tie is a real cup fixture once the round is due.
  */
 
 export type CupOrigin = 'league' | 'guest';
@@ -46,6 +46,18 @@ export type CupRoundDto = {
   readonly ties: readonly CupTieDto[];
 };
 
+export type PlayerCupTieDto = {
+  readonly round: CupRoundIndex;
+  readonly roundLabel: string;
+  readonly matchday: number;
+  /** True when enough league matches are played to open this round. */
+  readonly due: boolean;
+  readonly opponentId: string;
+  readonly opponentName: string;
+  readonly opponentShort: string;
+  readonly isHome: boolean;
+};
+
 export type NationalCupDto = {
   readonly name: 'Puchar Krajowy';
   readonly seasonLabel: string;
@@ -58,4 +70,6 @@ export type NationalCupDto = {
   readonly qualified: readonly CupClub[];
   /** Empty until the edition opens (draw is after league matchday 8). */
   readonly rounds: readonly CupRoundDto[];
+  /** Next unplayed tie for the manager. Null before the draw, or after elimination. */
+  readonly playerTie: PlayerCupTieDto | null;
 };

@@ -28,7 +28,7 @@ export default async function BoardPage() {
     seasonNumber: club.seasonNumber,
     playerPosition: playerRow?.position ?? null,
     tableSize: table.rows.length,
-    playedCount: countPlayedInList(fixtures),
+    playedCount: countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
     seasonReport,
   });
 

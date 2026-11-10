@@ -112,7 +112,7 @@ export function FixturesView({
             color: 'var(--lf-color-text-muted)',
           }}
         >
-          {leagueLabel} · {fixtures.length} spotkań (Thin A)
+          {leagueLabel} · {fixtures.filter((f) => f.competition === 'league').length} spotkań ligi
         </p>
       </header>
 

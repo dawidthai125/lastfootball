@@ -59,6 +59,11 @@ describe('LFE-SEASON-END-01 trigger + labels', () => {
     expect(isSeasonCompleteTrigger(full.slice(0, 1))).toBe(false);
     expect(full).toHaveLength(LEAGUE_FIXTURE_COUNT);
     expect(isSeasonCompleteTrigger(full)).toBe(true);
+    const withCup: FixtureDto[] = [
+      ...full,
+      { ...full[0]!, id: 'cup-1', matchday: 101, competition: 'cup', status: 'scheduled' },
+    ];
+    expect(isSeasonCompleteTrigger(withCup)).toBe(true);
     expect(
       isSeasonCompleteTrigger([
         ...full.slice(0, 21),

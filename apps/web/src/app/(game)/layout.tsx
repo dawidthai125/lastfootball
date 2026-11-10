@@ -45,12 +45,13 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
 
   if (club && isFirstMatchCompleted(club)) {
     const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
-    hasFixtures = fixtures.length > 0;
-    const playedCount = countPlayedInList(fixtures);
+    const leagueFixtures = fixtures.filter((f) => f.competition === 'league');
+    hasFixtures = leagueFixtures.length > 0;
+    const playedCount = countPlayedInList(leagueFixtures);
     trainingUnlocked = hasPlayedUnlock(playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
 
-    const nextFixture = pickNextUpcoming(fixtures);
-    const lastPlayedFixture = pickLastPlayed(fixtures);
+    const nextFixture = pickNextUpcoming(leagueFixtures);
+    const lastPlayedFixture = pickLastPlayed(leagueFixtures);
     const phase = resolveHubPhase(club, { hasFixtures });
     const hubSession = resolveHubSession(phase, nextFixture, lastPlayedFixture);
     const primary = resolvePrimaryCta(phase, hubSession, {

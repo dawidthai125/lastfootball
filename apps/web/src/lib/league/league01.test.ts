@@ -69,6 +69,25 @@ describe('resolveLeagueTable', () => {
     expect(rival.lost).toBeGreaterThanOrEqual(1);
   });
 
+  it('does not add cup goals to the league table', () => {
+    const opp = OPPONENT_CATALOG[0]!;
+    const leagueOnly = resolveLeagueTable(club, []);
+    const withCup = resolveLeagueTable(club, [
+      played({
+        id: 'cup-x',
+        matchday: 101,
+        competition: 'cup',
+        opponentClubId: opp.id,
+        homeScore: 5,
+        awayScore: 0,
+        isHome: true,
+      }),
+    ]);
+    expect(withCup.rows.find((r) => r.isPlayer)?.points).toBe(
+      leagueOnly.rows.find((r) => r.isPlayer)?.points,
+    );
+  });
+
   it('exposes position label for Hub chip', () => {
     const table = resolveLeagueTable(club, []);
     const label = resolvePlayerLeaguePositionLabel(table);

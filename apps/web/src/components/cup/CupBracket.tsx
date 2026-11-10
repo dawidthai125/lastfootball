@@ -1,11 +1,19 @@
+import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import type { CupSide, CupTieDto, NationalCupDto } from '@/lib/cup';
+import { openCupTie } from '@/lib/cup/open-cup-tie';
 
 /**
  * Puchar Krajowy on the league screen (same unlock as Liga).
  * Does not write a result for the manager's tie.
  */
-export function CupBracket({ cup }: { cup: NationalCupDto }) {
+export function CupBracket({
+  cup,
+  playFixtureId,
+}: {
+  cup: NationalCupDto;
+  playFixtureId?: string | null;
+}) {
   return (
     <Panel
       className="mt-3"
@@ -14,7 +22,11 @@ export function CupBracket({ cup }: { cup: NationalCupDto }) {
       action={cup.editionOpen ? cup.seasonLabel : `po kolejce ${cup.unlockAfterMatchday}`}
     >
       <div className="p-2.5" data-lf-impl="LFE-CUP-01">
-        {cup.editionOpen ? <OpenBracket cup={cup} /> : <ClosedBracket cup={cup} />}
+        {cup.editionOpen ? (
+          <OpenBracket cup={cup} playFixtureId={playFixtureId ?? null} />
+        ) : (
+          <ClosedBracket cup={cup} />
+        )}
       </div>
     </Panel>
   );
@@ -46,13 +58,42 @@ function ClosedBracket({ cup }: { cup: NationalCupDto }) {
   );
 }
 
-function OpenBracket({ cup }: { cup: NationalCupDto }) {
+function OpenBracket({
+  cup,
+  playFixtureId,
+}: {
+  cup: NationalCupDto;
+  playFixtureId: string | null;
+}) {
+  const tie = cup.playerTie;
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[13px] text-[var(--lf-text)]">
-        Jedna drabinka, jeden mecz. Twoja para czeka na prawdziwy mecz. Pary bez Ciebie są już
+        Jedna drabinka, jeden mecz. Dogrywka i karne tylko w twoim meczu. Pary bez ciebie są
         domknięte. Goście: {cup.guestOriginLabel}.
       </p>
+      {tie && playFixtureId ? (
+        <form action={openCupTie} className="flex items-center gap-2">
+          <input type="hidden" name="fixtureId" value={playFixtureId} />
+          <Button type="submit" variant="primary">
+            Zagraj {tie.roundLabel}
+          </Button>
+          <span className="text-[12px] text-[var(--lf-muted)]">
+            {tie.round === 4 ? 'neutralny' : tie.isHome ? 'u siebie' : 'wyjazd'} ·{' '}
+            {tie.opponentName}
+          </span>
+        </form>
+      ) : null}
+      {tie && !tie.due ? (
+        <p className="text-[12px] text-[var(--lf-muted)]">
+          {tie.roundLabel} otwiera się po rozegraniu wymaganych kolejek ligi.
+        </p>
+      ) : null}
+      {!tie && cup.editionOpen ? (
+        <p className="text-[12px] text-[var(--lf-muted)]">
+          Twoja ścieżka w tym pucharze jest zamknięta. Liga zostaje.
+        </p>
+      ) : null}
       {cup.rounds.map((round) => (
         <section key={round.round} aria-label={round.label} data-cup-round={round.round}>
           <h3 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold tracking-wide text-[var(--lf-faint)] uppercase">

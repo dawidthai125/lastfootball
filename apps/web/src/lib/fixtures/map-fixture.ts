@@ -1,3 +1,4 @@
+import { findCupGuest } from '@/lib/cup/cup-guests';
 import { requireOpponent } from '@/lib/fixtures/opponent-catalog';
 import type { FixtureDto, FixtureRow, FixtureStatus } from '@/lib/fixtures/types';
 
@@ -11,9 +12,9 @@ export function mapFixtureRow(row: FixtureRow): FixtureDto {
     id: row.id,
     clubId: row.club_id,
     matchday: row.matchday,
-    competition: 'league',
+    competition: row.competition === 'cup' ? 'cup' : 'league',
     opponentClubId: row.opponent_club_id,
-    opponent: requireOpponent(row.opponent_club_id),
+    opponent: findCupGuest(row.opponent_club_id) ?? requireOpponent(row.opponent_club_id),
     isHome: row.is_home,
     status: asStatus(row.status),
     homeScore: row.home_score,

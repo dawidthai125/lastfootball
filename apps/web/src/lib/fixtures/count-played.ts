@@ -14,6 +14,7 @@ export async function countClubPlayedFixtures(
     .from('fixtures')
     .select('id', { count: 'exact', head: true })
     .eq('club_id', clubId)
+    .eq('competition', 'league')
     .eq('status', 'played');
 
   if (error || count == null) return 0;

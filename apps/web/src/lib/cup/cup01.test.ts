@@ -111,6 +111,69 @@ describe('resolveNationalCup', () => {
     ).toBe(true);
   });
 
+  it('keeps a played cup win on the bracket and waits for the next anchor', () => {
+    const open = resolveNationalCup(club, played(8));
+    const tie = open.playerTie;
+    expect(tie?.due).toBe(true);
+    expect(tie?.matchday).toBe(101);
+    expect(tie).toBeTruthy();
+    if (!tie) return;
+
+    const won = resolveNationalCup(club, [
+      ...played(8),
+      {
+        id: 'cup-1',
+        clubId: club.id,
+        matchday: tie.matchday,
+        competition: 'cup',
+        opponentClubId: tie.opponentId,
+        opponent: { id: tie.opponentId, name: tie.opponentName, shortName: tie.opponentShort },
+        isHome: tie.isHome,
+        status: 'played',
+        homeScore: tie.isHome ? 2 : 0,
+        awayScore: tie.isHome ? 0 : 2,
+        playedAt: '2026-07-25T00:00:00.000Z',
+        createdAt: '2026-07-25T00:00:00.000Z',
+      },
+    ]);
+
+    expect(won.rounds[0]?.ties.some((t) => t.status === 'played' && t.winnerId === club.id)).toBe(
+      true,
+    );
+    expect(won.playerTie?.round).toBe(2);
+    expect(won.playerTie?.due).toBe(false);
+    expect(won.playerTie?.matchday).toBe(102);
+  });
+
+  it('drops the player after a cup loss and finishes the other ties', () => {
+    const open = resolveNationalCup(club, played(8));
+    const tie = open.playerTie;
+    expect(tie).toBeTruthy();
+    if (!tie) return;
+
+    const lost = resolveNationalCup(club, [
+      ...played(8),
+      {
+        id: 'cup-1',
+        clubId: club.id,
+        matchday: tie.matchday,
+        competition: 'cup',
+        opponentClubId: tie.opponentId,
+        opponent: { id: tie.opponentId, name: tie.opponentName, shortName: tie.opponentShort },
+        isHome: tie.isHome,
+        status: 'played',
+        homeScore: tie.isHome ? 0 : 1,
+        awayScore: tie.isHome ? 1 : 0,
+        playedAt: '2026-07-25T00:00:00.000Z',
+        createdAt: '2026-07-25T00:00:00.000Z',
+      },
+    ]);
+
+    expect(lost.playerTie).toBeNull();
+    expect(lost.rounds.flatMap((r) => [...r.ties]).every((t) => t.status === 'played')).toBe(true);
+    expect(lost.rounds[0]?.ties.some((t) => t.winnerId === tie.opponentId)).toBe(true);
+  });
+
   it('ignores a played row that has no score', () => {
     const rows = played(8);
     rows[7] = { ...rows[7]!, homeScore: null, awayScore: null };

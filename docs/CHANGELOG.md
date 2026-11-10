@@ -12,9 +12,19 @@ Szczegóły Keep-a-Changelog: także root [`CHANGELOG.md`](../CHANGELOG.md).
 **Prior Domain:** **`843bcfd`** (LFE-LEAGUE-WORLD-02).  
 **Presentation tip:** **`54ae7b3`** (LFE-NOTIFICATIONS-01 Invitation Layer).  
 **Prior Presentation:** **`9fd14fc`** (LFE-UI-MOTION-01).  
-**Documentation tip:** **`819c745`** — live formation pin  
-**tip `main`:** **`d5ffe0c`** — derived Puchar Krajowy and W/D/L on the league table  
+**Documentation tip:** **`b14a8cf`** — national cup bracket pin  
+**tip `main`:** **`a138fc5`** — the manager can play the current cup tie  
 Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
+
+---
+
+## [2026-11-10] — Playable cup tie
+
+### Product
+
+- After the league anchor, the manager's cup tie is a real match (`a138fc5`). Extra time and penalties are on. AI ties stay derived.
+- The result does not change the league table. Season end still waits for 22 league matches. The hub keeps the next league match.
+- The fixtures check must allow `cup` before the button can save a row. Migration `20261110140000_fixtures_cup.sql`.
 
 ---
 
