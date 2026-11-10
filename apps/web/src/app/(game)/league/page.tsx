@@ -5,6 +5,8 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Table } from '@/components/ui/Table';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubFixtures } from '@/lib/fixtures';
+import { CupBracket } from '@/components/cup/CupBracket';
+import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
 
@@ -17,6 +19,7 @@ export default async function LeaguePage() {
 
   const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const table = resolveLeagueTable(club, fixtures);
+  const cup = resolveNationalCup(club, fixtures);
 
   return (
     <div>
@@ -50,6 +53,24 @@ export default async function LeaguePage() {
               render: (r: LeagueTableRowDto) => <span className="tabular-nums">{r.played}</span>,
             },
             {
+              key: 'won',
+              header: 'Z',
+              align: 'right',
+              render: (r: LeagueTableRowDto) => <span className="tabular-nums">{r.won}</span>,
+            },
+            {
+              key: 'drawn',
+              header: 'R',
+              align: 'right',
+              render: (r: LeagueTableRowDto) => <span className="tabular-nums">{r.drawn}</span>,
+            },
+            {
+              key: 'lost',
+              header: 'P',
+              align: 'right',
+              render: (r: LeagueTableRowDto) => <span className="tabular-nums">{r.lost}</span>,
+            },
+            {
               key: 'gd',
               header: '+/−',
               align: 'right',
@@ -70,6 +91,7 @@ export default async function LeaguePage() {
           ]}
         />
       </Panel>
+      <CupBracket cup={cup} />
     </div>
   );
 }
