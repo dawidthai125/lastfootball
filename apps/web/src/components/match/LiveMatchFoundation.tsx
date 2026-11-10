@@ -929,8 +929,9 @@ export function LiveMatchFoundation({
                     color: 'var(--lf-color-text-faint)',
                   }}
                 >
-                  CommandBus → MatchState · pressing {snapshot.tactics.pressing} · tempo{' '}
-                  {snapshot.tactics.tempo} · mentalność {snapshot.tactics.mentality}
+                  CommandBus → MatchState · układ {snapshot.tactics.formationCode} · pressing{' '}
+                  {snapshot.tactics.pressing} · tempo {snapshot.tactics.tempo} · mentalność{' '}
+                  {snapshot.tactics.mentality}
                 </p>
                 <div style={{ marginTop: 'var(--lf-space-4)' }}>
                   <div

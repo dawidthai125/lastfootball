@@ -9,6 +9,7 @@ import {
   createMatch,
   createMatchTactics,
   createPlayer,
+  createChangeFormationCommand,
   createSetMentalityCommand,
   createSubstitutePlayerCommand,
 } from './testing';
@@ -302,6 +303,50 @@ describe('spatial movement thin', () => {
     expect(accepted.ok).toBe(true);
     expect(session.getMatchState().tactics.mentality).toBe(80);
     expect(session.getMatchState().tacticsSide).toBe('home');
+  });
+
+  it('moves the managing side into 4-3-3 and leaves the other side on 4-4-2', () => {
+    const session = openSession(9);
+    const before = session.getSpatialState();
+    const wing = before.players.find((player) => player.playerId === 'home-8');
+    const holder = before.players.find((player) => player.playerId === 'home-5');
+    const tick = session.context().tick;
+    const rejected = session.dispatch(
+      createChangeFormationCommand({
+        tick,
+        source: 'ui',
+        side: 'away',
+        formationCode: '4-3-3',
+      }),
+    );
+    const accepted = session.dispatch(
+      createChangeFormationCommand({
+        tick,
+        source: 'ui',
+        side: 'home',
+        formationCode: '4-3-3',
+      }),
+    );
+    const after = session.getSpatialState();
+    const state = session.getMatchState();
+    const nextWing = after.players.find((player) => player.playerId === 'home-8');
+    const nextHolder = after.players.find((player) => player.playerId === 'home-5');
+
+    expect(rejected.ok).toBe(false);
+    expect(accepted.ok).toBe(true);
+    expect(state.homeLineup.formationCode).toBe('4-3-3');
+    expect(state.awayLineup.formationCode).toBe('4-4-2');
+    expect(state.tactics.formationCode).toBe('4-3-3');
+    expect(state.homeLineup.slots.find((slot) => slot.slotIndex === 0)?.playerId).toBe('home-0');
+    expect(nextWing?.role).toBe('RW');
+    expect(nextHolder?.role).toBe('CDM');
+    expect(nextWing && wing && nextWing.position.x).toBeGreaterThan((wing?.position.x ?? 0) + 5);
+    expect(nextHolder && holder).toBeTruthy();
+    expect(
+      after.players.filter((player) => player.side === 'away').map((player) => player.role),
+    ).toEqual(
+      before.players.filter((player) => player.side === 'away').map((player) => player.role),
+    );
   });
 });
 
