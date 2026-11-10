@@ -1,5 +1,6 @@
 'use client';
 
+import type { FormationCode } from '@lastfootball/lfe';
 import Link from 'next/link';
 import { useEffect, useState, type CSSProperties } from 'react';
 
@@ -38,6 +39,7 @@ export function LiveMatchFoundation({
   leagueFixture = null,
   ourXi = null,
   ourBench = null,
+  ourFormation = '4-4-2',
   developmentNames = [],
 }: {
   bundle: LiveMatchBundle;
@@ -46,6 +48,7 @@ export function LiveMatchFoundation({
   leagueFixture?: FixtureDto | null;
   ourXi?: readonly RosterPlayerSeed[] | null;
   ourBench?: readonly RosterPlayerSeed[] | null;
+  ourFormation?: FormationCode;
   /** Post Match development signals (LFE-PLAYERS-02). */
   developmentNames?: readonly string[];
 }) {
@@ -58,7 +61,7 @@ export function LiveMatchFoundation({
     substitute,
     togglePause,
     setWatchSpeed,
-  } = useLiveMatchRuntime(fixture, bundle, club, leagueFixture, ourXi, ourBench);
+  } = useLiveMatchRuntime(fixture, bundle, club, leagueFixture, ourXi, ourBench, ourFormation);
   const usName = club?.name ?? '—';
   const usShort = club?.shortName ?? '—';
   const homeName = fixture.home ? usName : fixture.opponent;

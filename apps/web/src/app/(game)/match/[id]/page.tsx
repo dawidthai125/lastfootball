@@ -8,10 +8,12 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
+import { parseOurFormation } from '@/lib/match/our-formation';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ shape?: string | string[] }>;
 };
 
 function SquadError({ detail }: { detail?: string }) {
@@ -28,8 +30,9 @@ function SquadError({ detail }: { detail?: string }) {
   );
 }
 
-export default async function PreMatchPage({ params }: PageProps) {
+export default async function PreMatchPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const shape = parseOurFormation((await searchParams).shape);
 
   if (id === FIRST_MATCH_ID) {
     const club = await getManagerClub();
@@ -91,7 +94,7 @@ export default async function PreMatchPage({ params }: PageProps) {
 
   try {
     const ourXi = await loadClubStartingXi(club);
-    return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto, ourXi)} />;
+    return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto, ourXi, shape)} />;
   } catch (e) {
     if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
     throw e;

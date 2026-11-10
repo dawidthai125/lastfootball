@@ -1,3 +1,5 @@
+import type { FormationCode } from '@lastfootball/lfe';
+
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
@@ -55,9 +57,10 @@ export function buildLeaguePreMatchBundle(
   club: ClubDto,
   dto: FixtureDto,
   ourXi: readonly RosterPlayerSeed[],
+  formationCode: FormationCode = '4-4-2',
 ): PreMatchBundle {
   const fixture = toUiFixture(dto, club);
-  const our = orderForFormation(ourXi, '4-4-2');
+  const our = orderForFormation(ourXi, formationCode);
   const their = seedOpponentSquad(dto.opponentClubId, club.leagueTier);
 
   return {
@@ -93,7 +96,7 @@ export function buildLeaguePreMatchBundle(
       },
     ],
     h2h: [],
-    formation: '4-4-2',
+    formation: formationCode,
     styleLabel: 'Zbilansowany',
     tactics: [
       { id: 'mentality', label: 'Mentalność', value: 50 },
@@ -117,7 +120,7 @@ export function buildLeaguePreMatchBundle(
       name: p.name,
       number: p.number,
     })),
-    pitchSlots: pitchSlotsFor(our, '4-4-2'),
+    pitchSlots: pitchSlotsFor(our, formationCode),
     teamCondition: { label: 'Gotowa', value: 82 },
     ticker:
       dto.competition === 'cup'
@@ -129,7 +132,7 @@ export function buildLeaguePreMatchBundle(
         label: 'Skład',
         hint: 'Skład startowy — potwierdź i wyjdź na boisko',
       },
-      { id: 'tactics', label: 'Taktyka', hint: 'Ustawienie 4-4-2 (podgląd)' },
+      { id: 'tactics', label: 'Taktyka', hint: `Ustawienie ${formationCode}` },
       { id: 'setpieces', label: 'Stałe fragmenty', hint: 'Domyślne' },
     ],
   };

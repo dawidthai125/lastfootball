@@ -5,7 +5,13 @@ import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { CrestMonogram, FormPills } from '@/components/match/CrestMonogram';
 import type { PreMatchBundle } from '@/data/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
-import { matchLivePath, matchTunnelPath, matchVsPath, matchXiPath } from '@/lib/match/match-path';
+import {
+  matchLivePath,
+  matchPrePath,
+  matchTunnelPath,
+  matchVsPath,
+  matchXiPath,
+} from '@/lib/match/match-path';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './prematch-kickoff.css';
@@ -68,9 +74,37 @@ export function PreMatchView({
             <span className="lf-mp__check-status">OK</span>
           </li>
         </ul>
+        {firstMatch ? null : (
+          <div className="lf-ko__shapes" role="group" aria-label="Układ na ten mecz">
+            {(['4-4-2', '4-3-3'] as const).map((code) => {
+              const selected = bundle.formation === code;
+              return (
+                <Link
+                  key={code}
+                  href={
+                    code === '4-3-3'
+                      ? `${matchPrePath(fixture.id)}?shape=4-3-3`
+                      : matchPrePath(fixture.id)
+                  }
+                  className={selected ? 'lf-mp__shape lf-mp__shape--on' : 'lf-mp__shape'}
+                  aria-current={selected ? 'true' : undefined}
+                >
+                  {code}
+                </Link>
+              );
+            })}
+          </div>
+        )}
         <div className="lf-ko__cta-wrap">
           {checklistReady ? (
-            <Link href={matchLivePath(fixture.id)} className="lf-mp__primary">
+            <Link
+              href={
+                !firstMatch && bundle.formation === '4-3-3'
+                  ? `${matchLivePath(fixture.id)}?shape=4-3-3`
+                  : matchLivePath(fixture.id)
+              }
+              className="lf-mp__primary"
+            >
               {firstMatch ? UI_COPY.playFirstMatch : UI_COPY.playMatch}
             </Link>
           ) : (
