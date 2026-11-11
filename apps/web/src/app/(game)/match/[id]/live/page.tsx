@@ -11,6 +11,7 @@ import { matchPrePath } from '@/lib/match/match-path';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -81,6 +82,10 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     const ourXi = resolveStartingXi(players);
     const ourBench = resolveMatchBench(players);
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
+    const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
+    if (dto.competition === 'challenge' && !rival) {
+      return <SquadError matchId={id} detail="Rywal nie ma pełnej jedenastki." />;
+    }
     return (
       <LiveMatchFoundation
         bundle={buildLeagueLiveBundle(club, dto)}
@@ -89,6 +94,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         ourXi={ourXi}
         ourBench={ourBench}
         ourFormation={ourFormation}
+        theirXi={rival?.xi ?? null}
         developmentNames={developmentNames}
       />
     );

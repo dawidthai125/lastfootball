@@ -26,16 +26,18 @@ export function createSessionFromLeagueFixture(
   ourXi: readonly RosterPlayerSeed[],
   ourBench: readonly RosterPlayerSeed[] = [],
   ourFormation: FormationCode = '4-4-2',
+  theirXi?: readonly RosterPlayerSeed[] | null,
 ): MatchSession {
   const our = orderForFormation(ourXi, ourFormation);
   const cup = fixture.competition === 'cup';
-  const their = orderForFormation(
-    seedOpponentSquad(
-      fixture.opponentClubId,
-      cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
-    ),
-    '4-4-2',
-  );
+  const theirSource =
+    theirXi && theirXi.length === 11
+      ? theirXi
+      : seedOpponentSquad(
+          fixture.opponentClubId,
+          cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
+        );
+  const their = orderForFormation(theirSource, '4-4-2');
   const homeFormation: FormationCode = fixture.isHome ? ourFormation : '4-4-2';
   const awayFormation: FormationCode = fixture.isHome ? '4-4-2' : ourFormation;
 

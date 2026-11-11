@@ -6,6 +6,7 @@ const EARLY_CLUB_OPEN = new Set([
   'club',
   'squad',
   'matches',
+  'rivals',
   'messages',
   'achievements',
   'rankings',

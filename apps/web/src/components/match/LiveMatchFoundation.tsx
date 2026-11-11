@@ -40,6 +40,7 @@ export function LiveMatchFoundation({
   ourXi = null,
   ourBench = null,
   ourFormation = '4-4-2',
+  theirXi = null,
   developmentNames = [],
 }: {
   bundle: LiveMatchBundle;
@@ -49,6 +50,7 @@ export function LiveMatchFoundation({
   ourXi?: readonly RosterPlayerSeed[] | null;
   ourBench?: readonly RosterPlayerSeed[] | null;
   ourFormation?: FormationCode;
+  theirXi?: readonly RosterPlayerSeed[] | null;
   /** Post Match development signals (LFE-PLAYERS-02). */
   developmentNames?: readonly string[];
 }) {
@@ -61,7 +63,16 @@ export function LiveMatchFoundation({
     substitute,
     togglePause,
     setWatchSpeed,
-  } = useLiveMatchRuntime(fixture, bundle, club, leagueFixture, ourXi, ourBench, ourFormation);
+  } = useLiveMatchRuntime(
+    fixture,
+    bundle,
+    club,
+    leagueFixture,
+    ourXi,
+    ourBench,
+    ourFormation,
+    theirXi,
+  );
   const usName = club?.name ?? '—';
   const usShort = club?.shortName ?? '—';
   const homeName = fixture.home ? usName : fixture.opponent;

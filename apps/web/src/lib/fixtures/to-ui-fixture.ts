@@ -23,20 +23,30 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     id: dto.id,
     day: dto.matchday,
     whenLabel:
-      dto.competition === 'cup'
-        ? dto.status === 'upcoming'
-          ? 'Dziś'
-          : cupLabel
-        : dto.status === 'upcoming'
-          ? 'Dziś'
+      dto.competition === 'challenge'
+        ? 'Wyzwanie'
+        : dto.competition === 'cup'
+          ? dto.status === 'upcoming'
+            ? 'Dziś'
+            : cupLabel
+          : dto.status === 'upcoming'
+            ? 'Dziś'
+            : `Kolejka ${dto.matchday}`,
+    dateLabel:
+      dto.competition === 'challenge'
+        ? 'Wyzwanie'
+        : dto.competition === 'cup'
+          ? cupLabel
           : `Kolejka ${dto.matchday}`,
-    dateLabel: dto.competition === 'cup' ? cupLabel : `Kolejka ${dto.matchday}`,
     kickoff: dto.status === 'upcoming' ? 'Teraz' : undefined,
-    competition: dto.competition === 'cup' ? 'cup' : 'league',
+    competition:
+      dto.competition === 'cup' ? 'cup' : dto.competition === 'challenge' ? 'friendly' : 'league',
     competitionLabel:
-      dto.competition === 'cup'
-        ? `Puchar Krajowy · ${cupLabel}`
-        : `${leagueLabel} · kolejka ${dto.matchday}`,
+      dto.competition === 'challenge'
+        ? 'Wyzwanie'
+        : dto.competition === 'cup'
+          ? `Puchar Krajowy · ${cupLabel}`
+          : `${leagueLabel} · kolejka ${dto.matchday}`,
     opponent: dto.opponent.name,
     opponentShort: dto.opponent.shortName,
     opponentClubId: dto.opponentClubId,
