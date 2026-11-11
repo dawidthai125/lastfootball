@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
+import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -76,6 +77,14 @@ export async function completeFixture(
   };
 
   if (row.status !== 'played') {
+    const emailGate = await loadEmailGate(user.id);
+    if (!emailGate.confirmed && row.competition === 'challenge') {
+      return { error: 'Potwierdź email, żeby grać w rywalizacji.' };
+    }
+    if (emailGate.matchesBlocked) {
+      return { error: 'Potwierdź email, żeby rozgrywać kolejne mecze.' };
+    }
+
     const players = await listClubPlayers(clubId);
     const dev = await applyMatchDevelopment(supabase, {
       clubId,

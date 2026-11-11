@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { LandingCta } from '@/components/landing/LandingCta';
 import { signOut } from '@/lib/auth/actions';
 import { getAuthUser } from '@/lib/auth/session';
@@ -27,6 +28,7 @@ export default async function WelcomePage() {
         Zbudujesz klub i poprowadzisz go przez ligę. Jedna decyzja: zacznij kreację.
       </p>
       {email ? <p className="lf-auth-form__meta">{email}</p> : null}
+      {user ? <EmailConfirmSlot userId={user.id} variant="auth" /> : null}
 
       <div className="lf-landing__cta-row">
         <LandingCta href="/onboarding/club" variant="primary">
