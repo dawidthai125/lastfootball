@@ -22,6 +22,20 @@ const TIER_LABEL: Record<LeagueTier, string> = {
   i: 'I liga',
 };
 
+const TIER_GENITIVE: Record<LeagueTier, string> = {
+  iv: 'IV ligi',
+  iii: 'III ligi',
+  ii: 'II ligi',
+  i: 'I ligi',
+};
+
+const TIER_LOCATIVE: Record<LeagueTier, string> = {
+  iv: 'IV lidze',
+  iii: 'III lidze',
+  ii: 'II lidze',
+  i: 'I lidze',
+};
+
 /** Sole runtime SSOT for league display labels (D88 · Runtime SSOT Migration). */
 export function resolveLeagueTierLabel(tier: LeagueTier): string {
   return TIER_LABEL[tier];
@@ -55,13 +69,13 @@ export function resolvePromotionOutcome(
       return {
         kind: 'stay',
         label:
-          pos === 1 ? 'Mistrz Ligii I — bez awansu wyżej' : 'Wicemistrz Ligii I — bez awansu wyżej',
+          pos === 1 ? 'Mistrz I ligi — bez awansu wyżej' : 'Wicemistrz I ligi — bez awansu wyżej',
       };
     }
     const next = applyLeagueTierOutcome(tier, 'promote');
     return {
       kind: 'promote',
-      label: `Awans do ${resolveLeagueTierLabel(next)}`,
+      label: `Awans do ${TIER_GENITIVE[next]}`,
     };
   }
 
@@ -69,19 +83,19 @@ export function resolvePromotionOutcome(
     if (tier === 'iv') {
       return {
         kind: 'stay',
-        label: 'Podłoga Ligii IV — bez spadku',
+        label: 'Podłoga IV ligi — bez spadku',
       };
     }
     const next = applyLeagueTierOutcome(tier, 'relegate');
     return {
       kind: 'relegate',
-      label: `Spadek do ${resolveLeagueTierLabel(next)}`,
+      label: `Spadek do ${TIER_GENITIVE[next]}`,
     };
   }
 
   return {
     kind: 'stay',
-    label: `Utrzymanie w ${resolveLeagueTierLabel(tier)}`,
+    label: `Utrzymanie w ${TIER_LOCATIVE[tier]}`,
   };
 }
 
