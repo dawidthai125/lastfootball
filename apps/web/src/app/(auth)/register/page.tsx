@@ -22,7 +22,7 @@ export default function RegisterPage() {
           Auth wymaga skonfigurowanego Supabase (env).
         </p>
       ) : null}
-      <RegisterForm />
+      <RegisterForm turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || null} />
     </AuthStage>
   );
 }

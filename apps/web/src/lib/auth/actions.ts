@@ -3,15 +3,21 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { headers } from 'next/headers';
+
 import type { AuthActionState } from '@/lib/auth/types';
 import { getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
+import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate';
+import { takeSignupSlot } from '@/lib/auth/signup-throttle';
+import { turnstileMessage, verifyTurnstileToken } from '@/lib/auth/turnstile';
 import { env } from '@/config/env';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 function mapAuthError(message: string): string {
   const m = message.toLowerCase();
   if (m.includes('invalid login credentials')) return 'Nieprawidłowy email lub hasło.';
-  if (m.includes('user already registered'))
+  if (m.includes('already') && m.includes('register'))
     return 'Konto z tym emailem już istnieje. Zaloguj się.';
   if (m.includes('password')) return 'Hasło nie spełnia wymagań (min. 6 znaków).';
   if (m.includes('rate')) return 'Zbyt wiele prób. Spróbuj za chwilę.';
@@ -73,9 +79,48 @@ export async function signUpWithPassword(
     return { error: 'Hasło musi mieć co najmniej 6 znaków.', info: null };
   }
 
-  const supabase = await createClient();
-  const origin = env.appUrl ?? 'http://localhost:3000';
+  const headerList = await headers();
+  const ip = clientIpFromHeaders(headerList);
+  const captcha = await verifyTurnstileToken(
+    String(formData.get('cf-turnstile-response') ?? ''),
+    ip,
+  );
+  if (captcha !== 'ok' && captcha !== 'skipped') {
+    return { error: turnstileMessage(captcha), info: null };
+  }
 
+  const supabase = await createClient();
+
+  if (env.supabaseServiceRoleKey) {
+    const block = await takeSignupSlot(ip);
+    if (block) return { error: signupBlockMessage(block), info: null };
+
+    const admin = createAdminClient();
+    const { error: createError } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+    if (createError) {
+      return { error: mapAuthError(createError.message), info: null };
+    }
+
+    const { data: signed, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (signInError || !signed.session) {
+      return {
+        error: 'Konto jest gotowe. Zaloguj się hasłem, które właśnie ustawiłeś.',
+        info: null,
+      };
+    }
+
+    revalidatePath('/', 'layout');
+    redirect('/welcome');
+  }
+
+  const origin = env.appUrl ?? 'http://localhost:3000';
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

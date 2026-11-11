@@ -5,9 +5,10 @@ import { useActionState } from 'react';
 
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { signUpWithPassword } from '@/lib/auth/actions';
+import { TurnstileField } from '@/components/auth/TurnstileField';
 import { Checkbox, Field, Input } from '@/components/ui/FormControls';
 
-export function RegisterForm() {
+export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [state, action, pending] = useActionState(signUpWithPassword, AUTH_ACTION_INITIAL);
 
   return (
@@ -46,6 +47,10 @@ export function RegisterForm() {
           disabled={pending}
         />
       </Field>
+
+      {turnstileSiteKey ? (
+        <TurnstileField siteKey={turnstileSiteKey} resetKey={state.error ?? ''} />
+      ) : null}
 
       <div className="lf-auth-form__terms">
         <Checkbox name="terms" required disabled={pending} label="Akceptuję" />

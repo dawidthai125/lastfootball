@@ -939,6 +939,10 @@
   color: var(--lf-color-text-primary);
 }
 
+.lf-auth-form__turnstile {
+  min-height: 65px;
+}
+
 .lf-auth-form__terms {
   display: flex;
   flex-wrap: wrap;
