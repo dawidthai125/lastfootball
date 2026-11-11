@@ -6,7 +6,8 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import type { AuthActionState } from '@/lib/auth/types';
-import { getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
+import { issueConfirmLink } from '@/lib/auth/email-confirm';
+import { getAuthUser, getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
 import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate';
 import { takeSignupSlot } from '@/lib/auth/signup-throttle';
 import { turnstileMessage, verifyTurnstileToken } from '@/lib/auth/turnstile';
@@ -96,13 +97,13 @@ export async function signUpWithPassword(
     if (block) return { error: signupBlockMessage(block), info: null };
 
     const admin = createAdminClient();
-    const { error: createError } = await admin.auth.admin.createUser({
+    const { data: createdUser, error: createError } = await admin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
     });
-    if (createError) {
-      return { error: mapAuthError(createError.message), info: null };
+    if (createError || !createdUser.user) {
+      return { error: mapAuthError(createError?.message ?? 'signup_failed'), info: null };
     }
 
     const { data: signed, error: signInError } = await supabase.auth.signInWithPassword({
@@ -115,6 +116,8 @@ export async function signUpWithPassword(
         info: null,
       };
     }
+
+    await issueConfirmLink(createdUser.user.id, email);
 
     revalidatePath('/', 'layout');
     redirect('/welcome');
@@ -142,6 +145,32 @@ export async function signUpWithPassword(
 
   revalidatePath('/', 'layout');
   redirect('/welcome');
+}
+
+export async function sendEmailConfirmLink(
+  prev: { error: string | null; info: string | null },
+  formData: FormData,
+): Promise<{ error: string | null; info: string | null }> {
+  void prev;
+  void formData;
+  const user = await getAuthUser();
+  if (!user?.id || !user.email) {
+    return { error: 'Zaloguj się, żeby wysłać link.', info: null };
+  }
+  const result = await issueConfirmLink(user.id, user.email);
+  if (result === 'sent') {
+    return { error: null, info: 'Nowy link jest na mailu i działa 24 godziny.' };
+  }
+  if (result === 'confirmed') {
+    return { error: null, info: 'Email jest już potwierdzony.' };
+  }
+  if (result === 'cooldown') {
+    return { error: 'Nowy link można wysłać za kilka minut.', info: null };
+  }
+  if (result === 'daily') {
+    return { error: 'Dziś wysłaliśmy już kilka linków. Spróbuj jutro.', info: null };
+  }
+  return { error: 'Nie udało się wysłać. Spróbuj za chwilę.', info: null };
 }
 
 export async function signOut(): Promise<void> {

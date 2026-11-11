@@ -28,7 +28,13 @@ export const ECONOMY_THIN = {
 } as const;
 
 export type FinanceMovementCategory =
-  'starter' | 'match_reward' | 'transfer_buy' | 'transfer_sell' | 'sponsor_base' | 'sponsor_bonus';
+  | 'starter'
+  | 'match_reward'
+  | 'transfer_buy'
+  | 'transfer_sell'
+  | 'sponsor_base'
+  | 'sponsor_bonus'
+  | 'email_confirm';
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

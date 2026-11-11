@@ -7,6 +7,7 @@ import { CREST_TEMPLATES } from '@/lib/club/catalog';
 import type { CreateClubState } from '@/lib/club/action-types';
 import { validateClubIdentity } from '@/lib/club/validation';
 import { env } from '@/config/env';
+import { grantEmailConfirmBonus } from '@/lib/auth/email-confirm';
 import { ECONOMY_THIN } from '@/lib/finance';
 import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
@@ -88,6 +89,7 @@ export async function createClub(
     await supabase
       .from('club_sponsor_contracts')
       .insert(buildStarterSponsorContractInsert(clubId, 1) as never);
+    await grantEmailConfirmBonus(user.id);
   }
 
   // Clear legacy smoke/dev metadata flag if present

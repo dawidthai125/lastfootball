@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
+import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { nextChallengeMatchday } from '@/lib/rivals/matchday';
 import { createClient } from '@/lib/supabase/server';
@@ -75,6 +76,9 @@ export async function createRivalChallenge(formData: FormData): Promise<void> {
   const rivalId = String(formData.get('rivalId') ?? '');
   const club = await getManagerClub();
   if (!club || !rivalId || rivalId === club.id) return;
+
+  const emailGate = await loadEmailGate(club.ownerId);
+  if (emailGate.rivalsBlocked) redirect('/rivals');
 
   const supabase = await createClient();
   const rivals = await listRivalClubs();
