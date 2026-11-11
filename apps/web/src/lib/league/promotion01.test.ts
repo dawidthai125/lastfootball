@@ -27,7 +27,7 @@ describe('LFE-PROMOTION-01 resolvePromotionOutcome + applyLeagueTierOutcome', ()
   it('promotes places 1–2 from IV', () => {
     const o1 = resolvePromotionOutcome(1, 12, 'iv');
     expect(o1.kind).toBe('promote');
-    expect(o1.label).toBe('Awans do III liga');
+    expect(o1.label).toBe('Awans do III ligi');
     expect(applyLeagueTierOutcome('iv', o1.kind)).toBe('iii');
 
     const o2 = resolvePromotionOutcome(2, 12, 'iv');
@@ -38,14 +38,14 @@ describe('LFE-PROMOTION-01 resolvePromotionOutcome + applyLeagueTierOutcome', ()
   it('mid-table stays', () => {
     const o = resolvePromotionOutcome(6, 12, 'iii');
     expect(o.kind).toBe('stay');
-    expect(o.label).toBe('Utrzymanie w III liga');
+    expect(o.label).toBe('Utrzymanie w III lidze');
     expect(applyLeagueTierOutcome('iii', o.kind)).toBe('iii');
   });
 
   it('relegates places 11–12 except floor IV', () => {
     const o11 = resolvePromotionOutcome(11, 12, 'iii');
     expect(o11.kind).toBe('relegate');
-    expect(o11.label).toBe('Spadek do IV liga');
+    expect(o11.label).toBe('Spadek do IV ligi');
     expect(applyLeagueTierOutcome('iii', o11.kind)).toBe('iv');
 
     const floor = resolvePromotionOutcome(12, 12, 'iv');
