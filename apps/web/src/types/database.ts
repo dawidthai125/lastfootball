@@ -414,6 +414,54 @@ export type Database = {
           },
         ];
       };
+      rival_challenges: {
+        Row: {
+          id: string;
+          fixture_id: string;
+          challenger_club_id: string;
+          challenger_name: string;
+          challenger_short: string;
+          rival_club_id: string;
+          rival_name: string;
+          rival_short: string;
+          status: string;
+          home_score: number | null;
+          away_score: number | null;
+          played_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          fixture_id: string;
+          challenger_club_id: string;
+          challenger_name: string;
+          challenger_short: string;
+          rival_club_id: string;
+          rival_name: string;
+          rival_short: string;
+          status?: string;
+          home_score?: number | null;
+          away_score?: number | null;
+          played_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          fixture_id?: string;
+          challenger_club_id?: string;
+          challenger_name?: string;
+          challenger_short?: string;
+          rival_club_id?: string;
+          rival_name?: string;
+          rival_short?: string;
+          status?: string;
+          home_score?: number | null;
+          away_score?: number | null;
+          played_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       infra_meta: {
         Row: {
           key: string;
@@ -437,6 +485,29 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      list_rival_clubs: {
+        Args: Record<string, never>;
+        Returns: {
+          id: string;
+          name: string;
+          short_name: string;
+        }[];
+      };
+      rival_match_squad: {
+        Args: { p_club_id: string };
+        Returns: {
+          id: string;
+          name: string;
+          shirt_number: number;
+          pos: string;
+          role: string;
+          starter: boolean;
+          captain: boolean;
+          age: number;
+          skill: number;
+          status: string;
+        }[];
+      };
       list_live_transfer_listings: {
         Args: { p_exclude_club_id: string };
         Returns: {

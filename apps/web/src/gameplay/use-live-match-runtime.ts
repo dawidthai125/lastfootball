@@ -18,6 +18,7 @@ export function useLiveMatchRuntime(
   ourXi?: readonly RosterPlayerSeed[] | null,
   ourBench?: readonly RosterPlayerSeed[] | null,
   ourFormation: FormationCode = '4-4-2',
+  theirXi?: readonly RosterPlayerSeed[] | null,
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
@@ -30,13 +31,22 @@ export function useLiveMatchRuntime(
   const [runtime, setRuntime] = useState<LiveMatchRuntime | null>(null);
   const [sessionError, setSessionError] = useState<string | null>(null);
 
-  const xiKey = `${ourFormation}|${ourXi?.map((p) => p.id).join(',') ?? ''}|${ourBench?.map((p) => p.id).join(',') ?? ''}`;
+  const xiKey = `${ourFormation}|${ourXi?.map((p) => p.id).join(',') ?? ''}|${ourBench?.map((p) => p.id).join(',') ?? ''}|${theirXi?.map((p) => p.id).join(',') ?? ''}`;
 
   useEffect(() => {
     setSessionError(null);
     let rt: LiveMatchRuntime;
     try {
-      rt = new LiveMatchRuntime(fixture, shell, club, leagueFixture, ourXi, ourBench, ourFormation);
+      rt = new LiveMatchRuntime(
+        fixture,
+        shell,
+        club,
+        leagueFixture,
+        ourXi,
+        ourBench,
+        ourFormation,
+        theirXi,
+      );
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';
       setSessionError(message);

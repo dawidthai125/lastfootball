@@ -108,6 +108,7 @@ export class LiveMatchRuntime {
     ourXi?: readonly RosterPlayerSeed[] | null,
     ourBench?: readonly RosterPlayerSeed[] | null,
     ourFormation: FormationCode = '4-4-2',
+    theirXi?: readonly RosterPlayerSeed[] | null,
   ) {
     this.fixture = fixture;
     this.shell = shell;
@@ -119,6 +120,7 @@ export class LiveMatchRuntime {
       ourXi ?? null,
       ourBench ?? null,
       ourFormation,
+      theirXi,
     );
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
@@ -602,12 +604,20 @@ function resolveSession(
   ourXi: readonly RosterPlayerSeed[] | null,
   ourBench: readonly RosterPlayerSeed[] | null,
   ourFormation: FormationCode,
+  theirXi?: readonly RosterPlayerSeed[] | null,
 ): MatchSession {
   if (fixture.id === FIRST_MATCH_ID && club && ourXi) {
     return createSessionFromFirstMatch(club, ourXi, ourBench ?? []);
   }
   if (club && leagueFixture && ourXi) {
-    return createSessionFromLeagueFixture(club, leagueFixture, ourXi, ourBench ?? [], ourFormation);
+    return createSessionFromLeagueFixture(
+      club,
+      leagueFixture,
+      ourXi,
+      ourBench ?? [],
+      ourFormation,
+      theirXi,
+    );
   }
   throw new MatchSessionDataError();
 }

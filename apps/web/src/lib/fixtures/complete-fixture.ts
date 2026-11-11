@@ -108,7 +108,7 @@ export async function completeFixture(
       return { error: 'Nie udało się zapisać wyniku.' };
     }
 
-    if (updated && row.competition !== 'cup') {
+    if (updated && row.competition === 'league') {
       const isHome = (updated as { is_home: boolean }).is_home;
       const reward = resolveLeagueMatchReward({
         homeScore: home,
@@ -154,6 +154,23 @@ export async function completeFixture(
       }
 
       await ensureTransferWindow(supabase, clubId);
+    }
+  }
+
+  if (row.competition === 'challenge') {
+    const playedAt = new Date().toISOString();
+    const { error: challengeErr } = await supabase
+      .from('rival_challenges')
+      .update({
+        status: 'played',
+        home_score: Math.trunc(homeScore),
+        away_score: Math.trunc(awayScore),
+        played_at: playedAt,
+      } as never)
+      .eq('fixture_id', row.id)
+      .eq('challenger_club_id', clubId);
+    if (challengeErr) {
+      return { error: 'Wynik jest zapisany, ale nie doszedł do rywala.' };
     }
   }
 
