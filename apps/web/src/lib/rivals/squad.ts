@@ -14,10 +14,9 @@ export async function loadRivalSquad(rivalClubId: string): Promise<{
   bench: readonly RosterPlayerSeed[];
 } | null> {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc(
-    'rival_match_squad',
-    { p_club_id: rivalClubId } as never,
-  );
+  const { data, error } = await supabase.rpc('rival_match_squad', {
+    p_club_id: rivalClubId,
+  } as never);
   const squad = data as
     | {
         id: string;
