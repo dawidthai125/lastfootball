@@ -110,4 +110,20 @@ describe('EPIC-2 match domain', () => {
     expect(next.state.phase).toBe('FIRST_HALF');
     expect(next.state.score.home).toBe(1);
   });
+
+  it('puts each player on the formation slot index, not the list position', () => {
+    const playerIds = Array.from({ length: 11 }, (_, index) => `p${index}`);
+    const lineup = createLineup({
+      side: 'home',
+      formationCode: '4-4-2',
+      playerIds,
+      formation: {
+        ...FORMATION_442,
+        slots: [...FORMATION_442.slots].reverse(),
+      },
+    });
+    expect(lineup.slots.find((slot) => slot.slotIndex === 0)?.playerId).toBe('p0');
+    expect(lineup.slots.find((slot) => slot.role === 'GK')?.playerId).toBe('p0');
+    expect(lineup.slots.find((slot) => slot.slotIndex === 10)?.playerId).toBe('p10');
+  });
 });
