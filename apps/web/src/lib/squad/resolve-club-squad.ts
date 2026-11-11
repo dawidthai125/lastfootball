@@ -43,6 +43,28 @@ function energyForStatus(status: PlayerRowDto['status'], shirt: number): number 
   return 70 + (shirt % 20);
 }
 
+/** Squad form follows skill and status. A shirt number does not move it, so a training skill gain or a tired day is visible. */
+function formForPlayer(skill: number, status: PlayerRowDto['status']): number {
+  let form = 35 + Math.round(skill * 0.5);
+  if (status === 'TIRED') form -= 10;
+  if (status === 'INJURED') form -= 20;
+  if (status === 'SUSPENDED') form -= 8;
+  return Math.min(95, Math.max(20, form));
+}
+
+/**
+ * Display-only wage until a wage contract exists.
+ * Skill and age, not the shirt. This number is not taken from club cash (D21).
+ */
+function displayWage(skill: number, age: number): number {
+  const ageBump = Math.max(0, 32 - age) * 50;
+  return 1200 + skill * 35 + ageBump;
+}
+
+function displayClause(skill: number): number {
+  return 100_000 + skill * 5_000;
+}
+
 function toDto(row: PlayerRowDto): SquadPlayerDto {
   const skill = row.skill;
   const shirt = row.shirtNumber;
@@ -54,7 +76,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     shortName: row.name,
     position: displayPosition(row.pos),
     age: row.age,
-    form: 60 + (shirt % 25),
+    form: formForPlayer(skill, row.status),
     energy: energyForStatus(row.status, shirt),
     skill,
     potentialBand,
@@ -74,9 +96,9 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
       { label: 'Głowa', value: skill - 5 },
     ],
     contract: {
-      wage: 2000 + shirt * 100,
+      wage: displayWage(skill, row.age),
       until: '30.06.2028',
-      clause: 200_000 + shirt * 10_000,
+      clause: displayClause(skill),
       role: roleLabel(row.pos, row.captain),
     },
     history: [`Skład startowy ${row.clubId.slice(0, 8)}`, row.starter ? 'XI' : 'Ławka'],

@@ -106,6 +106,34 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     expect(ready?.energy).toBeLessThanOrEqual(89);
   });
 
+  it('form and wage follow skill, age and status, not the shirt number', () => {
+    const base = rowsFromSeed('club-1')[0]!;
+    const readyLow = {
+      ...base,
+      id: 'low-shirt',
+      shirtNumber: 2,
+      skill: 70,
+      age: 24,
+      status: 'READY' as const,
+    };
+    const readyHigh = {
+      ...readyLow,
+      id: 'high-shirt',
+      shirtNumber: 18,
+    };
+    const tired = { ...readyLow, id: 'tired', status: 'TIRED' as const };
+    const squad = resolveClubSquad({ id: 'club-1' }, [readyLow, readyHigh, tired]);
+    const low = squad.players.find((player) => player.id === 'low-shirt')!;
+    const high = squad.players.find((player) => player.id === 'high-shirt')!;
+    const rested = squad.players.find((player) => player.id === 'tired')!;
+    expect(low.form).toBe(70);
+    expect(high.form).toBe(low.form);
+    expect(high.contract.wage).toBe(low.contract.wage);
+    expect(high.contract.clause).toBe(low.contract.clause);
+    expect(low.contract.wage).toBe(4050);
+    expect(rested.form).toBe(60);
+  });
+
   it('getSquadPlayerById reads from resolved squad', () => {
     const clubId = 'abc';
     const squad = resolveClubSquad({ id: clubId }, rowsFromSeed(clubId));

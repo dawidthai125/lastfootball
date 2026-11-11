@@ -37,13 +37,17 @@ export function createLineup(input: CreateLineupInput): Lineup {
   if (formation.slots.length !== 11) {
     throw new Error('Formation must define 11 slots');
   }
-  const slots = formation.slots.map((slot, i) =>
-    Object.freeze({
+  const slots = formation.slots.map((slot) => {
+    const playerId = input.playerIds[slot.slotIndex];
+    if (!playerId) {
+      throw new Error('Lineup slot has no player');
+    }
+    return Object.freeze({
       slotIndex: slot.slotIndex,
       role: slot.role,
-      playerId: input.playerIds[i]!,
-    }),
-  );
+      playerId,
+    });
+  });
   return Object.freeze({
     side: input.side,
     formationCode: input.formationCode,
