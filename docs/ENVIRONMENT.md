@@ -22,15 +22,17 @@ Rules:
 
 ## Variable reference
 
-| Name                            | Public?       | Required prod?      | Description                              |
-| ------------------------------- | ------------- | ------------------- | ---------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`           | yes           | recommended         | Canonical app URL                        |
-| `NEXT_PUBLIC_SUPABASE_URL`      | yes           | yes (when using SB) | Supabase API URL                         |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes           | yes (when using SB) | Anon key (RLS applies)                   |
-| `SUPABASE_SERVICE_ROLE_KEY`     | **no**        | for admin/cron      | Bypasses RLS                             |
-| `CRON_SECRET`                   | **no**        | when cron exists    | Authorize cron routes                    |
-| `NEXT_TELEMETRY_DISABLED`       | yes           | optional            | `1` recommended                          |
-| `VERCEL_ENV`                    | set by Vercel | —                   | `production` / `preview` / `development` |
+| Name                             | Public?       | Required prod?      | Description                                         |
+| -------------------------------- | ------------- | ------------------- | --------------------------------------------------- |
+| `NEXT_PUBLIC_APP_URL`            | yes           | recommended         | Canonical app URL                                   |
+| `NEXT_PUBLIC_SUPABASE_URL`       | yes           | yes (when using SB) | Supabase API URL                                    |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | yes           | yes (when using SB) | Anon key (RLS applies)                              |
+| `SUPABASE_SERVICE_ROLE_KEY`      | **no**        | for admin/cron      | Bypasses RLS                                        |
+| `CRON_SECRET`                    | **no**        | when cron exists    | Authorize cron routes                               |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | yes           | no                  | Signup bot check. Set with the secret, or omit both |
+| `TURNSTILE_SECRET_KEY`           | **no**        | no                  | Verifies the Turnstile token on the server          |
+| `NEXT_TELEMETRY_DISABLED`        | yes           | optional            | `1` recommended                                     |
+| `VERCEL_ENV`                     | set by Vercel | —                   | `production` / `preview` / `development`            |
 
 ## Secrets policy
 

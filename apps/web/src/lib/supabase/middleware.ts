@@ -1,6 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { hasSupabaseSessionCookie } from '@/lib/auth/signup-gate';
+
 type CookieToSet = {
   name: string;
   value: string;
@@ -31,6 +33,18 @@ export async function updateSession(request: NextRequest): Promise<{
       hasClub: false,
       firstMatchCompleted: false,
       configured: false,
+    };
+  }
+
+  // Anonymous page views must not call Auth or read clubs. A flood of logged-out
+  // requests used to hit Supabase on every navigation.
+  if (!hasSupabaseSessionCookie(request.cookies.getAll().map((cookie) => cookie.name))) {
+    return {
+      response,
+      userId: null,
+      hasClub: false,
+      firstMatchCompleted: false,
+      configured: true,
     };
   }
 
