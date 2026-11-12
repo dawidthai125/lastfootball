@@ -7,13 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
 import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
-
-export type SaveXiActionState = {
-  ok?: boolean;
-  error?: string;
-};
-
-export const SAVE_XI_INITIAL: SaveXiActionState = {};
+import type { SaveXiActionState } from '@/lib/squad/xi-action-state';
 
 /**
  * Persist Match XI — sets players.starter for manager club (exactly 11).

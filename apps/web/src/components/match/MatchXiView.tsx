@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { PlayerPortrait } from '@/components/assets';
 import { LocationHero, StateBanner } from '@/components/ui';
-import { saveStartingXi, SAVE_XI_INITIAL } from '@/lib/squad/actions';
+import { saveStartingXi } from '@/lib/squad/actions';
+import { SAVE_XI_INITIAL } from '@/lib/squad/xi-action-state';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import {
   applyXiSelection,
