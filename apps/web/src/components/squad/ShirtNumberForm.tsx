@@ -3,7 +3,8 @@
 import { useActionState } from 'react';
 
 import { Input } from '@/components/ui/FormControls';
-import { ASSIGN_SHIRT_INITIAL, assignShirtNumber } from '@/lib/squad/actions-shirt';
+import { assignShirtNumber } from '@/lib/squad/actions-shirt';
+import { ASSIGN_SHIRT_INITIAL } from '@/lib/squad/shirt-action-state';
 
 import './squad-decision.css';
 
