@@ -127,6 +127,12 @@ export function wageFromSkill(skill: number, age: number): number {
   return 1200 + clampAttr(skill) * 35 + youth;
 }
 
+/** One match pays a seventh of the weekly wage bill. Cash still cannot go below zero. */
+export function weeklyMatchWage(bill: number): number {
+  const due = Number.isFinite(bill) ? Math.max(0, Math.trunc(bill)) : 0;
+  return Math.round(due / 7);
+}
+
 export function payWages(cash: number, bill: number): { paid: number; nextCash: number } {
   const available = Number.isFinite(cash) ? Math.max(0, cash) : 0;
   const due = Number.isFinite(bill) ? Math.max(0, bill) : 0;

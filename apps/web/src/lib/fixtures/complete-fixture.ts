@@ -14,7 +14,13 @@ import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
-import { applyMatchSquadTruth, groupsFromSkill, payWages, wageFromSkill } from '@/lib/squad/truth';
+import {
+  applyMatchSquadTruth,
+  groupsFromSkill,
+  payWages,
+  wageFromSkill,
+  weeklyMatchWage,
+} from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
@@ -215,7 +221,7 @@ export async function completeFixture(
             0,
           )
         : 0;
-      const paid = payWages(nextBalance, bill);
+      const paid = payWages(nextBalance, weeklyMatchWage(bill));
       nextBalance = paid.nextCash;
 
       const { error: cashErr } = await supabase

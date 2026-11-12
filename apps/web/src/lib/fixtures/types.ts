@@ -22,6 +22,10 @@ export type FixtureDto = {
   readonly homePitchLevel?: number;
   /** Home club stands, 0 when unknown. */
   readonly homeStandsLevel?: number;
+  /** Home club pressing habit, 0 when unknown. Shared matches must use the home club. */
+  readonly homeStylePressing?: number;
+  /** Viewer club pressing habit. Used when this club owns the away tactics. */
+  readonly viewerStylePressing?: number;
 };
 
 export type FixtureRow = {

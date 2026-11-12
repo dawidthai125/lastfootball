@@ -127,6 +127,7 @@ describe('LFE-POST-MATCH-01', () => {
     expect(summary.report).toHaveLength(3);
     expect(summary.report[0]).toContain('2:1');
     expect(summary.report[1]).toContain('Podania celne');
+    expect(summary.why).toBe('Żadna strona nie narzuciła wyraźnej przewagi.');
     expect(summary.stats.some((stat) => stat.label === 'Podania celne')).toBe(true);
   });
 

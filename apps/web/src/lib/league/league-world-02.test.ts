@@ -11,6 +11,7 @@ import { seedOpponentSquad } from '@/lib/squad/seed-roster';
 import { createSubstitutePlayerCommand } from '@lastfootball/lfe';
 
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
+import { buildLeaguePreMatchBundle } from '@/lib/fixtures/to-ui-fixture';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
@@ -186,6 +187,50 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     expect(awayState.homeLineup.formationCode).toBe('4-4-2');
     expect(awayState.tactics.formationCode).toBe('4-3-3');
     expect(awayState.awayLineup.slots.find((slot) => slot.slotIndex === 8)?.playerId).toBe('p-7');
+  });
+
+  it('starts pressing from the tactics owner habit', () => {
+    const plain = createSessionFromLeagueFixture(club('ii'), fixture(), xi(80));
+    expect(plain.getMatchState().tactics.pressing).toBe(50);
+
+    const home = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), homeStylePressing: 4 },
+      xi(80),
+    );
+    expect(home.getMatchState().tacticsSide).toBe('home');
+    expect(home.getMatchState().tactics.pressing).toBe(58);
+
+    const awayOwn = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), isHome: false, viewerStylePressing: 4, homeStylePressing: 8 },
+      xi(80),
+    );
+    expect(awayOwn.getMatchState().tacticsSide).toBe('away');
+    expect(awayOwn.getMatchState().tactics.pressing).toBe(58);
+
+    const sharedAway = createSessionFromLeagueFixture(
+      club('ii'),
+      {
+        ...fixture(),
+        isHome: false,
+        sharedSeed: 7,
+        homeStylePressing: 4,
+        viewerStylePressing: 8,
+      },
+      xi(80),
+    );
+    expect(sharedAway.getMatchState().tacticsSide).toBe('home');
+    expect(sharedAway.getMatchState().tactics.pressing).toBe(58);
+
+    const preview = buildLeaguePreMatchBundle(
+      club('ii'),
+      { ...fixture(), homeStylePressing: 4 },
+      xi(80),
+    );
+    expect(preview.tactics.find((row) => row.id === 'pressing')?.value).toBe(58);
+    const quiet = buildLeaguePreMatchBundle(club('ii'), fixture(), xi(80));
+    expect(quiet.tactics.find((row) => row.id === 'pressing')?.value).toBe(50);
   });
 
   it('fails closed when our XI skill is missing', () => {
