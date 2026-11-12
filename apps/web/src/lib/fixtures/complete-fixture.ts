@@ -8,8 +8,12 @@ import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
+import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
+import { applyMatchSquadTruth, groupsFromSkill, payWages, wageFromSkill } from '@/lib/squad/truth';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
@@ -85,19 +89,71 @@ export async function completeFixture(
       return { error: 'Potwierdź email, żeby rozgrywać kolejne mecze.' };
     }
 
+    const { data: lastPlayed } = await supabase
+      .from('fixtures')
+      .select('played_at')
+      .eq('club_id', clubId)
+      .eq('status', 'played')
+      .order('played_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const lastAt = (lastPlayed as { played_at: string | null } | null)?.played_at ?? null;
+    const blocked = matchdayBlockReason(lastAt, new Date());
+    if (blocked) return { error: blocked };
+
     const players = await listClubPlayers(clubId);
+    const seniors = filterSeniorPlayers(players);
+    const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
+    const home = Math.trunc(homeScore);
+    const away = Math.trunc(awayScore);
+    const ours = row.is_home ? home : away;
+    const theirs = row.is_home ? away : home;
+    const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
+    const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
+    for (const p of seniors) {
+      if (p.starter && p.status !== 'INJURED' && p.status !== 'SUSPENDED') roleById[p.id] = 'xi';
+      else if (benchIds.has(p.id)) roleById[p.id] = 'bench';
+      else roleById[p.id] = 'out';
+    }
+    const afterTruth = applyMatchSquadTruth(
+      seniors.map((p) => ({
+        id: p.id,
+        pos: p.pos,
+        status: p.status,
+        skill: p.skill,
+        potential: p.potential,
+        groups: p.groups ?? groupsFromSkill(p.skill),
+        energy: p.energy ?? 80,
+        form: p.form ?? 60,
+        recentRatings: p.recentRatings ?? [],
+        suspensionMatches: p.suspensionMatches ?? 0,
+      })),
+      { matchKey: row.id, result, roleById },
+    );
+    const truthById = Object.fromEntries(
+      afterTruth.map((p) => [
+        p.id,
+        {
+          status: p.status,
+          groups: p.groups,
+          energy: p.energy,
+          form: p.form,
+          suspensionMatches: p.suspensionMatches,
+          recentRatings: p.recentRatings,
+        },
+      ]),
+    );
     const dev = await applyMatchDevelopment(supabase, {
       clubId,
       matchKey: row.id,
       activePlayers: players,
+      truthById,
     });
     if (!dev.ok) {
       return { error: dev.error };
     }
 
     const playedAt = new Date().toISOString();
-    const home = Math.trunc(homeScore);
-    const away = Math.trunc(awayScore);
 
     const { data: updated, error: updErr } = await supabase
       .from('fixtures')
@@ -117,14 +173,30 @@ export async function completeFixture(
       return { error: 'Nie udało się zapisać wyniku.' };
     }
 
-    if (updated && row.competition === 'league') {
-      const isHome = (updated as { is_home: boolean }).is_home;
-      const reward = resolveLeagueMatchReward({
-        homeScore: home,
-        awayScore: away,
-        isHome,
-      });
-      const nextBalance = clubRow.cash_balance + reward.amount;
+    if (updated) {
+      let nextBalance = clubRow.cash_balance;
+      const reward =
+        row.competition === 'league'
+          ? resolveLeagueMatchReward({
+              homeScore: home,
+              awayScore: away,
+              isHome: (updated as { is_home: boolean }).is_home,
+            })
+          : null;
+      if (reward) nextBalance += reward.amount;
+      const wagesKnown = seniors.some((player) => typeof player.wage === 'number');
+      const bill = wagesKnown
+        ? seniors.reduce(
+            (sum, player) =>
+              sum +
+              (typeof player.wage === 'number'
+                ? player.wage
+                : wageFromSkill(player.skill, player.age)),
+            0,
+          )
+        : 0;
+      const paid = payWages(nextBalance, bill);
+      nextBalance = paid.nextCash;
 
       const { error: cashErr } = await supabase
         .from('clubs')
@@ -132,37 +204,49 @@ export async function completeFixture(
         .eq('id', clubId);
 
       if (!cashErr) {
-        await supabase.from('finance_movements').insert({
-          club_id: clubId,
-          category: 'match_reward',
-          label: reward.label,
-          amount: reward.amount,
-          fixture_id: row.id,
-        } as never);
-        // Unique on fixture_id → silently ignore duplicate reward on race.
+        if (reward) {
+          await supabase.from('finance_movements').insert({
+            club_id: clubId,
+            category: 'match_reward',
+            label: reward.label,
+            amount: reward.amount,
+            fixture_id: row.id,
+          } as never);
+        }
+        if (paid.paid > 0) {
+          await supabase.from('finance_movements').insert({
+            club_id: clubId,
+            category: 'wages',
+            label: 'Pensje kolejki',
+            amount: -paid.paid,
+            fixture_id: row.id,
+          } as never);
+        }
       }
 
-      const { data: next } = await supabase
-        .from('fixtures')
-        .select('id')
-        .eq('club_id', clubId)
-        .eq('competition', 'league')
-        .eq('status', 'scheduled')
-        .order('matchday', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-
-      if (next) {
-        const nextId = (next as { id: string }).id;
-        await supabase
+      if (row.competition === 'league') {
+        const { data: next } = await supabase
           .from('fixtures')
-          .update({ status: 'upcoming' } as never)
-          .eq('id', nextId)
+          .select('id')
           .eq('club_id', clubId)
-          .eq('status', 'scheduled');
-      }
+          .eq('competition', 'league')
+          .eq('status', 'scheduled')
+          .order('matchday', { ascending: true })
+          .limit(1)
+          .maybeSingle();
 
-      await ensureTransferWindow(supabase, clubId);
+        if (next) {
+          const nextId = (next as { id: string }).id;
+          await supabase
+            .from('fixtures')
+            .update({ status: 'upcoming' } as never)
+            .eq('id', nextId)
+            .eq('club_id', clubId)
+            .eq('status', 'scheduled');
+        }
+
+        await ensureTransferWindow(supabase, clubId);
+      }
     }
   }
 

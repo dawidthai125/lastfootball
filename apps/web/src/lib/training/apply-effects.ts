@@ -2,6 +2,12 @@ import type { PlayerStatus } from '@/lib/squad/types';
 import { resolveCareerPhase } from '@/lib/squad/career-phase';
 import { allowGrowthImpulse } from '@/lib/squad/growth-gate';
 import {
+  bumpGroup,
+  energyAfterTraining,
+  groupKeyForFocus,
+  type AttrGroups,
+} from '@/lib/squad/truth';
+import {
   TRAINING_THIN,
   type TrainingFocusId,
   type TrainingIntensityId,
@@ -16,6 +22,9 @@ export type TrainingPlayerSlice = {
   readonly potential: number;
   /** Required for Career Phase / Growth Gate (LFE-CAREER-DECLINE-01). */
   readonly age: number;
+  readonly pos?: string;
+  readonly groups?: AttrGroups;
+  readonly energy?: number;
 };
 
 function focusSkillOffset(focusId: TrainingFocusId): number {
@@ -90,13 +99,21 @@ export function applyTrainingSessionEffects(
 ): TrainingPlayerSlice[] {
   if (focusId === 'regeneration') {
     return players.map((p) => {
-      if (p.status === 'TIRED') {
+      const trained =
+        typeof p.energy === 'number'
+          ? energyAfterTraining({
+              energy: p.energy,
+              focus: focusId,
+              intensity: intensityId,
+              status: p.status,
+            })
+          : null;
+      if (p.status === 'TIRED' || trained?.status === 'READY') {
         return {
-          id: p.id,
+          ...p,
           status: 'READY' as const,
           skill: p.skill,
-          potential: p.potential,
-          age: p.age,
+          energy: trained?.energy ?? p.energy,
         };
       }
       return p;
@@ -104,7 +121,16 @@ export function applyTrainingSessionEffects(
   }
 
   if (intensityId === 'light') {
-    return players.map((p) => p);
+    return players.map((p) => {
+      if (typeof p.energy !== 'number') return p;
+      const trained = energyAfterTraining({
+        energy: p.energy,
+        focus: focusId,
+        intensity: intensityId,
+        status: p.status,
+      });
+      return { ...p, energy: trained.energy, status: trained.status };
+    });
   }
 
   // Deterministic: sort by id, mark every Nth READY → TIRED.
@@ -130,11 +156,34 @@ export function applyTrainingSessionEffects(
     }
 
     let skill = p.skill;
+    let groups = p.groups;
     if (toBoost.has(p.id)) {
       skill = Math.min(99, p.potential, p.skill + TRAINING_THIN.SKILL_UP_MAX_PER_PLAYER);
+      const key = groupKeyForFocus(focusId, p.pos ?? '');
+      if (groups && key) {
+        groups = bumpGroup(groups, key, 1, p.potential);
+      }
     }
 
-    return { id: p.id, status, skill, potential: p.potential, age: p.age };
+    const trained =
+      typeof p.energy === 'number'
+        ? energyAfterTraining({
+            energy: p.energy,
+            focus: focusId,
+            intensity: intensityId,
+            status,
+          })
+        : null;
+
+    return {
+      ...p,
+      status: trained?.status ?? status,
+      skill,
+      groups,
+      energy: trained?.energy ?? p.energy,
+      potential: p.potential,
+      age: p.age,
+    };
   });
 }
 

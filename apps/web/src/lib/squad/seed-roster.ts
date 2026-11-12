@@ -20,6 +20,9 @@ export type RosterPlayerSeed = {
    * Required on league XI from resolveStartingXi; optional on AI/first-match seeds.
    */
   readonly skill?: number;
+  readonly groups?: import('@/lib/squad/types').AttrGroups;
+  readonly energy?: number;
+  readonly form?: number;
 };
 
 const XI_BASE: Omit<RosterPlayerSeed, 'id' | 'starter'>[] = [

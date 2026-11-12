@@ -13,8 +13,23 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
 import { orderForFormation } from '@/lib/match/order-xi';
 import { mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
+import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+
+function conditionFromSeed(p: RosterPlayerSeed) {
+  const energy = p.energy ?? 80;
+  const form = p.form ?? 70;
+  return {
+    energy,
+    morale: form,
+    freshness: energy,
+    isInjured: false,
+    isSuspended: false,
+    yellowCards: 0,
+    hasRedCard: false,
+  };
+}
 
 /**
  * League fixture → MatchSession.
@@ -58,7 +73,8 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: mapPlayerSkillToLfeSkills(p.skill),
+      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      condition: conditionFromSeed(p),
     });
   });
   const benchPlayers = ourBench.map((p) => {
@@ -72,7 +88,8 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: mapPlayerSkillToLfeSkills(p.skill),
+      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      condition: conditionFromSeed(p),
     });
   });
   const theirPlayers = their.map((p) => {
