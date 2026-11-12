@@ -3,16 +3,9 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
-import { createClient } from '@/lib/supabase/server';
 import { planShirtAssignment } from '@/lib/squad/assign-shirt';
-
-export type AssignShirtState = {
-  ok?: boolean;
-  error?: string;
-  swappedWith?: string;
-};
-
-export const ASSIGN_SHIRT_INITIAL: AssignShirtState = {};
+import type { AssignShirtState } from '@/lib/squad/shirt-action-state';
+import { createClient } from '@/lib/supabase/server';
 
 export async function assignShirtNumber(
   _prev: AssignShirtState,
