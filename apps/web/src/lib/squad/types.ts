@@ -16,6 +16,8 @@ export type SquadPlayerDto = {
   readonly id: string;
   readonly name: string;
   readonly shortName: string;
+  /** Shirt number 1–99. Unique in the club. */
+  readonly shirtNumber: number;
   readonly position: string;
   readonly age: number;
   readonly form: number;

@@ -102,6 +102,11 @@ export function PlayerHero({
               color: 'var(--lf-color-text-muted)',
             }}
           >
+            Numer{' '}
+            <strong className="tabular-nums" style={{ color: 'var(--lf-color-text-primary)' }}>
+              {player.shirtNumber}
+            </strong>
+            {' · '}
             Poz.{' '}
             <strong style={{ color: 'var(--lf-color-text-primary)' }}>{player.position}</strong>
             {' · '}
