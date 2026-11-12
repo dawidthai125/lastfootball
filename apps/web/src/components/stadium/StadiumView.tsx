@@ -85,34 +85,50 @@ function LevelPips({ level }: { level: number }) {
   );
 }
 
-function StandPreview({ level }: { level: number }) {
+function StandFrame({ level }: { level: number }) {
   const dress = standDress(level);
-  const look = stadiumLook({ stands: level, pitch: 0, trainingCenter: 0 });
   return (
-    <div className="lf-sta-bowl">
-      <div
-        className="lf-sta-bowl__frame"
-        data-rows={dress.rows}
-        data-crowd={dress.crowd}
-        aria-hidden
-      >
-        {dress.roof ? <span className="lf-sta-bowl__roof" /> : null}
-        {dress.lights ? (
-          <>
-            <span className="lf-sta-bowl__light lf-sta-bowl__light--left" />
-            <span className="lf-sta-bowl__light lf-sta-bowl__light--right" />
-          </>
-        ) : null}
-        <div className="lf-sta-bowl__pitch" />
+    <div className="lf-sta-bowl__frame" data-rows={dress.rows} data-crowd={dress.crowd} aria-hidden>
+      {dress.roof ? <span className="lf-sta-bowl__roof" /> : null}
+      {dress.lights ? (
+        <>
+          <span className="lf-sta-bowl__light lf-sta-bowl__light--left" />
+          <span className="lf-sta-bowl__light lf-sta-bowl__light--right" />
+        </>
+      ) : null}
+      <div className="lf-sta-bowl__pitch" />
+    </div>
+  );
+}
+
+function StandPreview({ level }: { level: number }) {
+  const look = stadiumLook({ stands: level, pitch: 0, trainingCenter: 0 });
+  const ahead = [1, 2, 3].filter((step) => step > level);
+  return (
+    <div>
+      <div className="lf-sta-bowl">
+        <StandFrame level={level} />
+        <div className="lf-sta-bowl__copy">
+          <p className="text-[13px] text-[var(--lf-text-strong)]">
+            {level <= 0 ? 'Bez oprawy trybun' : look.stands}
+          </p>
+          <p className="mt-1 text-[12px] text-[var(--lf-muted)]">
+            Na boisku w meczu u siebie, od następnego wczytania.
+          </p>
+        </div>
       </div>
-      <div className="lf-sta-bowl__copy">
-        <p className="text-[13px] text-[var(--lf-text-strong)]">
-          {level <= 0 ? 'Bez oprawy trybun' : look.stands}
-        </p>
-        <p className="mt-1 text-[12px] text-[var(--lf-muted)]">
-          Na boisku w meczu u siebie, od następnego wczytania.
-        </p>
-      </div>
+      {ahead.length > 0 ? (
+        <div className="lf-sta-next">
+          {ahead.map((step) => (
+            <figure key={step}>
+              <StandFrame level={step} />
+              <figcaption>
+                {stadiumLook({ stands: step, pitch: 0, trainingCenter: 0 }).stands}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

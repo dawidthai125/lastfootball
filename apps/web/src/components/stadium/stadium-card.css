@@ -74,6 +74,28 @@
   min-width: 0;
 }
 
+.lf-sta-next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-3);
+  margin-top: var(--lf-space-3);
+}
+
+.lf-sta-next figure {
+  margin: 0;
+}
+
+.lf-sta-next .lf-sta-bowl__frame {
+  width: 5.5rem;
+  height: 3.6rem;
+}
+
+.lf-sta-next figcaption {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--lf-muted);
+}
+
 .lf-sta-row {
   display: flex;
   flex-wrap: wrap;
