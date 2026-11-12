@@ -2,10 +2,13 @@
 
 .lf-live {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: var(--lf-space-3);
-  min-height: 100dvh;
+  gap: var(--lf-space-2);
+  height: 100%;
+  min-height: 0;
   min-width: 0;
+  overflow: hidden;
 }
 
 .lf-live__scorebug {
@@ -87,9 +90,16 @@
 .lf-live__stage {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--lf-space-3);
+  grid-template-rows: minmax(10rem, 1fr) auto minmax(8.5rem, 30dvh) auto;
+  grid-template-areas:
+    'pitch'
+    'feed'
+    'panel'
+    'more';
+  gap: var(--lf-space-2);
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 .lf-live__feed,
@@ -100,22 +110,33 @@
 }
 
 .lf-live__pitch {
-  order: 1;
+  display: contents;
+}
+
+.lf-live__canvas {
+  grid-area: pitch;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  background: var(--lf-color-bg-void);
+  border-radius: var(--lf-radius-sm);
 }
 
 .lf-live__panel {
-  order: 2;
+  grid-area: panel;
+  overflow: auto;
 }
 
 .lf-live__call {
   position: absolute;
   z-index: 3;
-  top: var(--lf-space-3);
-  left: var(--lf-space-3);
-  right: var(--lf-space-3);
+  top: var(--lf-space-2);
+  left: var(--lf-space-2);
+  right: var(--lf-space-2);
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: var(--lf-space-2);
 }
 
@@ -127,13 +148,16 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  padding: var(--lf-space-2) var(--lf-space-3);
+  padding: var(--lf-space-1) var(--lf-space-2);
   border-radius: var(--lf-radius-sm);
   border: var(--lf-border-width-hair) solid var(--lf-color-border-gold);
   background: rgba(3, 5, 10, 0.82);
   color: var(--lf-color-text-primary);
   font-weight: 600;
   line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lf-live__call-minute {
@@ -143,10 +167,38 @@
 }
 
 .lf-live__feed {
+  grid-area: feed;
   display: flex;
   flex-direction: column;
-  max-height: 11rem;
+  max-height: 6.5rem;
+  min-height: 0;
+  overflow: hidden;
   border-left-color: var(--lf-color-status-live);
+}
+
+.lf-live__more {
+  grid-area: more;
+  min-height: 0;
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-color-bg-panel);
+}
+
+.lf-live__more summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-3);
+  cursor: pointer;
+  color: var(--lf-color-text-secondary);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-caption);
+  font-weight: 600;
+}
+
+.lf-live__more[open] {
+  max-height: 34dvh;
+  overflow: auto;
 }
 
 .lf-live__feed-head {
@@ -163,9 +215,11 @@
 .lf-live__feed-list {
   list-style: none;
   margin: 0;
+  min-height: 0;
   padding: var(--lf-space-2);
   overflow: auto;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--lf-space-1);
 }
@@ -199,15 +253,19 @@
 @media (min-width: 1024px) {
   .lf-live__stage {
     grid-template-columns: minmax(0, 1fr) minmax(13rem, 17rem);
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'pitch panel'
+      'feed panel'
+      'more panel';
   }
 
-  .lf-live__pitch,
-  .lf-live__panel {
-    order: 0;
+  .lf-live__feed {
+    max-height: 8rem;
   }
 
   .lf-live__panel {
-    max-height: calc(100dvh - var(--lf-space-8) * 4);
+    max-height: none;
   }
 }
 
@@ -285,12 +343,13 @@
 
 @media (max-width: 767px) {
   .lf-live__scorebug {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: var(--lf-space-2);
-    text-align: center;
+    padding: var(--lf-space-2);
   }
 
-  .lf-live__scorebug > :last-child {
-    text-align: center;
+  .lf-live__viewers,
+  .lf-live__meta {
+    display: none;
   }
 }
