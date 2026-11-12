@@ -9,6 +9,8 @@ import type { LiveEventKind } from '@/data/fixtures';
 import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
+import { threeMatchSentences } from '@/lib/match/match-report';
+
 import { computePlayerRatings, type PlayerRatingView } from './player-ratings';
 
 export type PostMatchGoal = {
@@ -51,6 +53,8 @@ export type PostMatchSummary = {
     readonly away: readonly PlayerRatingView[];
   };
   readonly mvpPlayerId: string | null;
+  /** Three sentences taken from the score, passes and goals in this log. */
+  readonly report: readonly [string, string, string];
 };
 
 const TIMELINE_TYPES = new Set([
@@ -129,6 +133,7 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
         };
 
   const derived = computePlayerRatings(matchState);
+  const firstGoal = [...goals].sort((a, b) => a.tick - b.tick)[0] ?? null;
 
   return {
     homeName,
@@ -145,6 +150,11 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
         label: 'Strzały',
         home: matchState.statistics.home.shots,
         away: matchState.statistics.away.shots,
+      },
+      {
+        label: 'Podania celne',
+        home: matchState.statistics.home.passesCompleted,
+        away: matchState.statistics.away.passesCompleted,
       },
       {
         label: 'Na bramkę',
@@ -173,6 +183,22 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
       away: derived.away,
     },
     mvpPlayerId: derived.mvpPlayerId,
+    report: threeMatchSentences({
+      homeName,
+      awayName,
+      homeScore,
+      awayScore,
+      homePassesCompleted: matchState.statistics.home.passesCompleted,
+      awayPassesCompleted: matchState.statistics.away.passesCompleted,
+      homeShots: matchState.statistics.home.shots,
+      awayShots: matchState.statistics.away.shots,
+      firstGoal: firstGoal
+        ? {
+            minute: firstGoal.minute,
+            side: firstGoal.side,
+          }
+        : null,
+    }),
   };
 }
 

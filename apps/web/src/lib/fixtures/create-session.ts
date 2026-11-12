@@ -31,6 +31,12 @@ function conditionFromSeed(p: RosterPlayerSeed) {
   };
 }
 
+/** Opponent condition only when the seed actually carries it, so AI matches stay put. */
+function conditionForOpponent(p: RosterPlayerSeed) {
+  if (typeof p.energy !== 'number' && typeof p.form !== 'number') return undefined;
+  return conditionFromSeed(p);
+}
+
 /**
  * League fixture → MatchSession.
  * Our XI skills from DB (`players.skill`); AI from League Strength Profile (tier).
@@ -43,7 +49,9 @@ export function createSessionFromLeagueFixture(
   ourFormation: FormationCode = '4-4-2',
   theirXi?: readonly RosterPlayerSeed[] | null,
 ): MatchSession {
-  const our = orderForFormation(ourXi, ourFormation);
+  const shared = typeof fixture.sharedSeed === 'number';
+  const formation: FormationCode = shared ? '4-4-2' : ourFormation;
+  const our = orderForFormation(ourXi, formation);
   const cup = fixture.competition === 'cup';
   const theirSource =
     theirXi && theirXi.length === 11
@@ -53,8 +61,8 @@ export function createSessionFromLeagueFixture(
           cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
         );
   const their = orderForFormation(theirSource, '4-4-2');
-  const homeFormation: FormationCode = fixture.isHome ? ourFormation : '4-4-2';
-  const awayFormation: FormationCode = fixture.isHome ? '4-4-2' : ourFormation;
+  const homeFormation: FormationCode = fixture.isHome ? formation : '4-4-2';
+  const awayFormation: FormationCode = fixture.isHome ? '4-4-2' : formation;
 
   const homeTeamId = 'team-home';
   const awayTeamId = 'team-away';
@@ -77,7 +85,8 @@ export function createSessionFromLeagueFixture(
       condition: conditionFromSeed(p),
     });
   });
-  const benchPlayers = ourBench.map((p) => {
+  const benchSource = shared ? [] : ourBench;
+  const benchPlayers = benchSource.map((p) => {
     if (p.skill == null || !Number.isFinite(p.skill)) {
       throw new Error(`League bench missing skill for player ${p.id}`);
     }
@@ -103,7 +112,8 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: mapPlayerSkillToLfeSkills(p.skill),
+      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      ...(conditionForOpponent(p) ? { condition: conditionForOpponent(p) } : {}),
     });
   });
 
@@ -112,9 +122,12 @@ export function createSessionFromLeagueFixture(
   const homeIds = homePlayers.map((p) => p.id);
   const awayIds = awayPlayers.map((p) => p.id);
   const ourCaptain = our.find((p) => p.captain)?.id;
-  const homeCaptain = fixture.isHome
-    ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
-    : homeIds[0]!;
+  const homeSeeds = fixture.isHome ? our : their;
+  const homeCaptain = shared
+    ? ((homeSeeds.find((p) => p.captain)?.id as PlayerId | undefined) ?? homeIds[0]!)
+    : fixture.isHome
+      ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
+      : homeIds[0]!;
 
   const homeName = fixture.isHome ? club.name : fixture.opponent.name;
   const awayName = fixture.isHome ? fixture.opponent.name : club.name;
@@ -122,7 +135,7 @@ export function createSessionFromLeagueFixture(
   const awayShort = fixture.isHome ? fixture.opponent.shortName : club.shortName;
 
   return createMatch({
-    seed: hashSeed(`${fixture.id}:${club.id}`),
+    seed: shared ? fixture.sharedSeed! : hashSeed(`${fixture.id}:${club.id}`),
     matchId: fixture.id,
     homeTeamId,
     awayTeamId,
@@ -144,7 +157,7 @@ export function createSessionFromLeagueFixture(
     homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
-    tacticsSide: ourSide,
+    tacticsSide: shared ? 'home' : ourSide,
     settings: {
       halfDurationMs: 45_000,
       halfTimeDurationMs: 3_000,

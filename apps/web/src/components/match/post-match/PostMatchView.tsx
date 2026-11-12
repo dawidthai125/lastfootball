@@ -105,6 +105,14 @@ export function PostMatchView({
           ) : null}
         </div>
         <p className="lf-post__meta">Bufor Replay · {replayFrames} klatek</p>
+        <ol
+          className="lf-post__reward"
+          style={{ margin: 'var(--lf-space-3) 0 0', paddingLeft: '1.2em' }}
+        >
+          {summary.report.map((sentence, index) => (
+            <li key={index}>{sentence}</li>
+          ))}
+        </ol>
       </header>
 
       <div className="lf-post__context">

@@ -5,6 +5,7 @@ import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
+import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -18,6 +19,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
   const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
   const cupRound = dto.competition === 'cup' ? cupRoundForMatchday(dto.matchday) : null;
   const cupLabel = cupRound ? cupRoundLabel(cupRound) : 'Puchar';
+  const humanRound = dto.competition === 'human' ? humanRoundFromFixture(dto.matchday) : null;
 
   return {
     id: dto.id,
@@ -25,28 +27,35 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     whenLabel:
       dto.competition === 'challenge'
         ? 'Wyzwanie'
-        : dto.competition === 'cup'
-          ? dto.status === 'upcoming'
-            ? 'Dziś'
-            : cupLabel
-          : dto.status === 'upcoming'
-            ? 'Dziś'
-            : `Kolejka ${dto.matchday}`,
+        : dto.competition === 'human'
+          ? 'Liga ludzi'
+          : dto.competition === 'cup'
+            ? dto.status === 'upcoming'
+              ? 'Dziś'
+              : cupLabel
+            : dto.status === 'upcoming'
+              ? 'Dziś'
+              : `Kolejka ${dto.matchday}`,
     dateLabel:
       dto.competition === 'challenge'
         ? 'Wyzwanie'
-        : dto.competition === 'cup'
-          ? cupLabel
-          : `Kolejka ${dto.matchday}`,
-    kickoff: dto.status === 'upcoming' ? 'Teraz' : undefined,
+        : dto.competition === 'human'
+          ? `Liga ludzi · kolejka ${humanRound ?? dto.matchday}`
+          : dto.competition === 'cup'
+            ? cupLabel
+            : `Kolejka ${dto.matchday}`,
+    kickoff:
+      dto.competition === 'human' ? '18:00' : dto.status === 'upcoming' ? 'Teraz' : undefined,
     competition:
       dto.competition === 'cup' ? 'cup' : dto.competition === 'challenge' ? 'friendly' : 'league',
     competitionLabel:
       dto.competition === 'challenge'
         ? 'Wyzwanie'
-        : dto.competition === 'cup'
-          ? `Puchar Krajowy · ${cupLabel}`
-          : `${leagueLabel} · kolejka ${dto.matchday}`,
+        : dto.competition === 'human'
+          ? `Liga ludzi · kolejka ${humanRound ?? dto.matchday}`
+          : dto.competition === 'cup'
+            ? `Puchar Krajowy · ${cupLabel}`
+            : `${leagueLabel} · kolejka ${dto.matchday}`,
     opponent: dto.opponent.name,
     opponentShort: dto.opponent.shortName,
     opponentClubId: dto.opponentClubId,
@@ -68,10 +77,14 @@ export function buildLeaguePreMatchBundle(
   dto: FixtureDto,
   ourXi: readonly RosterPlayerSeed[],
   formationCode: FormationCode = '4-4-2',
+  theirXi?: readonly RosterPlayerSeed[] | null,
 ): PreMatchBundle {
   const fixture = toUiFixture(dto, club);
   const our = orderForFormation(ourXi, formationCode);
-  const their = seedOpponentSquad(dto.opponentClubId, club.leagueTier);
+  const their =
+    theirXi && theirXi.length === 11
+      ? orderForFormation(theirXi, '4-4-2')
+      : seedOpponentSquad(dto.opponentClubId, club.leagueTier);
 
   return {
     fixture,
@@ -97,8 +110,20 @@ export function buildLeaguePreMatchBundle(
       points: 0,
     },
     stakes: [
-      { id: 'league', label: 'Rozgrywki', value: resolveLeagueTierLabel(club.leagueTier) },
-      { id: 'md', label: 'Kolejka', value: String(dto.matchday) },
+      {
+        id: 'league',
+        label: 'Rozgrywki',
+        value: dto.competition === 'human' ? 'Liga ludzi' : resolveLeagueTierLabel(club.leagueTier),
+      },
+      {
+        id: 'md',
+        label: 'Kolejka',
+        value: String(
+          dto.competition === 'human'
+            ? (humanRoundFromFixture(dto.matchday) ?? dto.matchday)
+            : dto.matchday,
+        ),
+      },
       {
         id: 'venue',
         label: 'Stadion',
@@ -135,7 +160,9 @@ export function buildLeaguePreMatchBundle(
     ticker:
       dto.competition === 'cup'
         ? `${club.name} · Puchar Krajowy vs ${dto.opponent.name}.`
-        : `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
+        : dto.competition === 'human'
+          ? `${club.name} · Liga ludzi vs ${dto.opponent.name}. Jeden mecz z jednego seeda.`
+          : `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
     decisions: [
       {
         id: 'lineup',
@@ -176,19 +203,24 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
         text:
           dto.competition === 'cup'
             ? `Puchar: ${club.name} vs ${dto.opponent.name}.`
-            : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
+            : dto.competition === 'human'
+              ? `Liga ludzi: ${club.name} vs ${dto.opponent.name}. Taktyka jest zamknięta.`
+              : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
       },
     ],
-    commands: [
-      { id: 'attack', label: 'Atak agresywny' },
-      { id: 'press', label: 'Pressing wysoki' },
-      { id: 'tempo', label: 'Tempo szybkie' },
-      { id: 'balance', label: 'Zbilansowany' },
-      { id: 'defend', label: 'Blok niski' },
-      { id: 'wide', label: 'Gra szeroka' },
-      { id: 'form-442', label: 'Układ 4-4-2' },
-      { id: 'form-433', label: 'Układ 4-3-3' },
-    ],
+    commands:
+      dto.competition === 'human'
+        ? []
+        : [
+            { id: 'attack', label: 'Atak agresywny' },
+            { id: 'press', label: 'Pressing wysoki' },
+            { id: 'tempo', label: 'Tempo szybkie' },
+            { id: 'balance', label: 'Zbilansowany' },
+            { id: 'defend', label: 'Blok niski' },
+            { id: 'wide', label: 'Gra szeroka' },
+            { id: 'form-442', label: 'Układ 4-4-2' },
+            { id: 'form-433', label: 'Układ 4-3-3' },
+          ],
     instructions: [
       { id: 'focus', label: 'Focus gry', value: 'Środek' },
       { id: 'trap', label: 'Pułapka ofsajdowa', value: 'Wyłączona', on: false },

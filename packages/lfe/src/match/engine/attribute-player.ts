@@ -1,7 +1,7 @@
 import type { MatchState, PitchRole, PitchSide, PlayerId } from '../domain';
 
 /** Event kinds that receive deterministic player attribution in PLAYER-MATCH-DATA-01. */
-export type AttributeEventKind = 'GOAL' | 'SHOT' | 'FOUL';
+export type AttributeEventKind = 'GOAL' | 'SHOT' | 'FOUL' | 'PASS';
 
 /** Hash kinds including ASSIST (Ratings v2) — ASSIST is not a Match Engine event actor kind. */
 type AttributeHashKind = AttributeEventKind | 'ASSIST';
@@ -17,6 +17,18 @@ const OFFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set([
 ]);
 
 const DEFENSIVE_ROLES: ReadonlySet<PitchRole> = new Set(['CB', 'CDM', 'RB', 'LB', 'RWB', 'LWB']);
+
+const PASS_ROLES: ReadonlySet<PitchRole> = new Set([
+  'CM',
+  'CDM',
+  'CAM',
+  'LM',
+  'RM',
+  'RB',
+  'LB',
+  'RWB',
+  'LWB',
+]);
 
 /** Stable non-cryptographic hash — no RNG. */
 export function stableEventKindHash(kind: AttributeHashKind): number {
@@ -34,6 +46,7 @@ export function stableEventKindHash(kind: AttributeHashKind): number {
  * `actingSide` is the side of the attributed player:
  * - GOAL / SHOT → attacking (possession) side
  * - FOUL → fouling side (opposite of payload `against`)
+ * - PASS → possession side, midfield first
  */
 export function attributePlayerForEvent(
   state: MatchState,
@@ -42,7 +55,8 @@ export function attributePlayerForEvent(
   tick: number,
 ): PlayerId | undefined {
   const lineup = actingSide === 'home' ? state.homeLineup : state.awayLineup;
-  const preferred = kind === 'FOUL' ? DEFENSIVE_ROLES : OFFENSIVE_ROLES;
+  const preferred =
+    kind === 'FOUL' ? DEFENSIVE_ROLES : kind === 'PASS' ? PASS_ROLES : OFFENSIVE_ROLES;
   const preferredSlots = lineup.slots.filter((s) => preferred.has(s.role));
   const candidates = preferredSlots.length > 0 ? preferredSlots : lineup.slots;
   if (candidates.length === 0) {

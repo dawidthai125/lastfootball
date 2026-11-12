@@ -9,7 +9,13 @@ function asStatus(raw: string): FixtureStatus {
 
 export function mapFixtureRow(row: FixtureRow): FixtureDto {
   const competition =
-    row.competition === 'cup' ? 'cup' : row.competition === 'challenge' ? 'challenge' : 'league';
+    row.competition === 'cup'
+      ? 'cup'
+      : row.competition === 'challenge'
+        ? 'challenge'
+        : row.competition === 'human'
+          ? 'human'
+          : 'league';
   const opponent =
     competition === 'challenge'
       ? { id: row.opponent_club_id, name: 'Rywal', shortName: 'RYW' }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { Panel } from '@/components/ui/Panel';
@@ -10,6 +11,7 @@ import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
+import { loadHumanLeagueCard } from '@/lib/league/human-league-store';
 
 /**
  * League table — fed only by resolveLeagueTable() (LFE-LEAGUE-02).
@@ -21,6 +23,7 @@ export default async function LeaguePage() {
   const seeded = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const fixtures = await ensurePlayerCupTie(club, seeded);
   const table = resolveLeagueTable(club, fixtures);
+  const human = await loadHumanLeagueCard(club).catch(() => null);
   const cup = resolveNationalCup(club, fixtures);
   const playable = cup.playerTie?.due
     ? fixtures.find(
@@ -34,6 +37,46 @@ export default async function LeaguePage() {
   return (
     <div>
       <SectionHeader title="Liga" subtitle={`${table.leagueLabel} · ${table.seasonLabel}`} />
+      {human ? (
+        <Panel title="Liga ludzi">
+          <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
+            12 miejsc. Wolne miejsca zajmują boty. Oba kluby oglądają ten sam mecz z jednego seeda.
+          </p>
+          {human.opponentName ? (
+            <p style={{ margin: '0 0 var(--lf-space-2)' }}>
+              {human.round ? `Kolejka ${human.round}. ` : ''}
+              Rywal: {human.opponentName}.
+            </p>
+          ) : null}
+          {human.windowSentence ? (
+            <p style={{ margin: '0 0 var(--lf-space-2)' }}>{human.windowSentence}</p>
+          ) : null}
+          {human.note ? (
+            <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
+              {human.note}
+            </p>
+          ) : null}
+          {human.fixtureId ? (
+            <p style={{ margin: '0 0 var(--lf-space-3)' }}>
+              <Link
+                href={`/match/${human.fixtureId}`}
+                style={{ color: 'var(--lf-color-text-gold)' }}
+              >
+                Wejdź w mecz
+              </Link>
+            </p>
+          ) : null}
+          <ol style={{ margin: 0, paddingLeft: '1.2em' }}>
+            {human.seats.map((seat) => (
+              <li key={seat.slot} style={{ fontWeight: seat.yours ? 700 : 400 }}>
+                {seat.name}
+                {seat.kind === 'bot' ? ' · bot' : ''}
+                {seat.yours ? ' · Ty' : ''}
+              </li>
+            ))}
+          </ol>
+        </Panel>
+      ) : null}
       <Panel title="Tabela" flush>
         <Table
           rowKey={(r) => r.clubId}
