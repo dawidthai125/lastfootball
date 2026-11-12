@@ -14,6 +14,7 @@ import { hashSeed } from '@/lib/match/hash-seed';
 import { orderForFormation } from '@/lib/match/order-xi';
 import { clampSkill, mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
 import { homePitchBonus } from '@/lib/stadium/levels';
+import { kickoffPressing } from '@/lib/training/style';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -76,6 +77,9 @@ export function createSessionFromLeagueFixture(
 
   const ourSide = fixture.isHome ? 'home' : 'away';
   const theirSide = fixture.isHome ? 'away' : 'home';
+  const tacticsSide = shared ? 'home' : ourSide;
+  const habit =
+    tacticsSide === 'home' ? (fixture.homeStylePressing ?? 0) : (fixture.viewerStylePressing ?? 0);
   const pitchBonus = homePitchBonus(fixture.homePitchLevel ?? 0);
 
   const ourPlayers = our.map((p) => {
@@ -174,7 +178,8 @@ export function createSessionFromLeagueFixture(
     homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
-    tacticsSide: shared ? 'home' : ourSide,
+    tacticsSide,
+    openingPressing: kickoffPressing(habit),
     settings: {
       halfDurationMs: 45_000,
       halfTimeDurationMs: 3_000,

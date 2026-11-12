@@ -113,6 +113,7 @@ export function PostMatchView({
             <li key={index}>{sentence}</li>
           ))}
         </ol>
+        <p className="lf-post__meta">{summary.why}</p>
       </header>
 
       <div className="lf-post__context">

@@ -10,6 +10,7 @@ import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { kickoffPressing } from '@/lib/training/style';
 
 function groundStadiumLabel(dto: FixtureDto, club: ClubDto): string {
   const cupRound = cupRoundForMatchday(dto.matchday);
@@ -25,6 +26,15 @@ function groundStadiumLabel(dto: FixtureDto, club: ClubDto): string {
   if (dto.competition === 'cup' && cupRound === 4) return base;
   const look = stadiumLook({ stands, pitch, trainingCenter: 0 });
   return `${base} · ${look.stands} · ${look.pitch}`;
+}
+
+/** Same owner rule as the match session. A missing habit stays at pressing 50. */
+function ownerKickoffPressing(dto: FixtureDto): number {
+  const shared = typeof dto.sharedSeed === 'number';
+  const tacticsSide = shared ? 'home' : dto.isHome ? 'home' : 'away';
+  const habit =
+    tacticsSide === 'home' ? (dto.homeStylePressing ?? 0) : (dto.viewerStylePressing ?? 0);
+  return kickoffPressing(habit);
 }
 
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
@@ -148,7 +158,7 @@ export function buildLeaguePreMatchBundle(
     tactics: [
       { id: 'mentality', label: 'Mentalność', value: 50 },
       { id: 'possession', label: 'Posiadanie', value: 50 },
-      { id: 'pressing', label: 'Pressing', value: 50 },
+      { id: 'pressing', label: 'Pressing', value: ownerKickoffPressing(dto) },
       { id: 'tempo', label: 'Tempo', value: 50 },
       { id: 'width', label: 'Szerokość', value: 55 },
       { id: 'density', label: 'Zagęszczenie', value: 50 },

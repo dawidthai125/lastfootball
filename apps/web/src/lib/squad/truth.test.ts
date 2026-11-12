@@ -10,6 +10,7 @@ import {
   mapGroupsToLfeSkills,
   payWages,
   wageFromSkill,
+  weeklyMatchWage,
   type SquadTruthPlayer,
 } from './truth';
 
@@ -102,6 +103,12 @@ describe('squad truth wages', () => {
     expect(payWages(100, 250)).toEqual({ paid: 100, nextCash: 0 });
     expect(payWages(0, 80)).toEqual({ paid: 0, nextCash: 0 });
     expect(payWages(-40, 25)).toEqual({ paid: 0, nextCash: 0 });
+  });
+
+  it('charges one seventh of the weekly bill for a match', () => {
+    expect(weeklyMatchWage(7000)).toBe(1000);
+    expect(weeklyMatchWage(0)).toBe(0);
+    expect(weeklyMatchWage(Number.NaN)).toBe(0);
   });
 });
 

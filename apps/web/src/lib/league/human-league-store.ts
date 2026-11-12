@@ -558,6 +558,18 @@ async function homePitchLevel(
   return Math.max(0, Math.min(3, Math.trunc(level)));
 }
 
+async function homeStylePressing(
+  admin: ReturnType<typeof createAdminClient>,
+  homeId: string,
+): Promise<number> {
+  if (isBotClubId(homeId)) return 0;
+  const row = await admin.from('clubs').select('style_pressing').eq('id', homeId).maybeSingle();
+  if (row.error || !row.data) return 0;
+  const points = (row.data as { style_pressing?: number }).style_pressing;
+  if (typeof points !== 'number' || !Number.isFinite(points)) return 0;
+  return Math.max(0, Math.min(8, Math.trunc(points)));
+}
+
 export async function authoritativeHumanScore(
   clubId: string,
   fixtureMatchday: number,
@@ -637,6 +649,7 @@ export async function authoritativeHumanScore(
       createdAt: broadcast.kickoff_on,
       sharedSeed: Number(broadcast.seed),
       homePitchLevel: await homePitchLevel(admin, broadcast.home_id),
+      homeStylePressing: await homeStylePressing(admin, broadcast.home_id),
     },
     homeXi,
     [],

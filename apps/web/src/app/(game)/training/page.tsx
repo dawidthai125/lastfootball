@@ -30,5 +30,12 @@ export default async function TrainingPage() {
   const supabase = await createClient();
   const build = await readClubBuild(supabase, club.id);
 
-  return <TrainingView training={training} coachGroup={build.coachGroup} cash={club.cashBalance} />;
+  return (
+    <TrainingView
+      training={training}
+      coachGroup={build.coachGroup}
+      cash={club.cashBalance}
+      stylePressing={build.stylePressing}
+    />
+  );
 }

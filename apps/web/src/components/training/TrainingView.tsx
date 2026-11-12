@@ -8,6 +8,7 @@ import { runTrainingSession } from '@/lib/training/actions';
 import { hireClubCoach } from '@/lib/training/actions-coach';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
+import { kickoffPressing, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
 import { Button } from '@/components/ui';
@@ -54,10 +55,12 @@ export function TrainingView({
   training,
   coachGroup = null,
   cash = 0,
+  stylePressing = 0,
 }: {
   training: TrainingDto;
   coachGroup?: CoachGroup | null;
   cash?: number;
+  stylePressing?: number;
 }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -94,6 +97,11 @@ export function TrainingView({
   return (
     <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
       <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
+
+      <p className="lf-tr__meta">
+        Pressing klubu: {stylePressing}/{STYLE_THIN.CAP}. Na meczu, który prowadzisz, startuje z{' '}
+        {kickoffPressing(stylePressing)}. Taktyka normalna albo wysoka podnosi to o 1.
+      </p>
 
       <section className="lf-tr__block" aria-label="Trener">
         <h3 className="lf-tr__block-title">Trener</h3>

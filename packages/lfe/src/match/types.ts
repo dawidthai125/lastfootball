@@ -19,6 +19,8 @@ export interface MatchInput {
   settings?: Partial<MatchSettings>;
   /** Side that owns MatchState.tactics. Defaults to home. */
   tacticsSide?: 'home' | 'away';
+  /** Kickoff pressing for the tactics owner. Omitted keeps the default 50. */
+  openingPressing?: number;
 }
 
 export interface MatchEvent {

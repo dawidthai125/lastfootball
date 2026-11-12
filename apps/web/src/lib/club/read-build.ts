@@ -1,12 +1,15 @@
 import type { createClient } from '@/lib/supabase/server';
 import { emptyStadiumLevels, type StadiumLevels } from '@/lib/stadium/levels';
 import { isCoachGroup, type CoachGroup } from '@/lib/training/coach';
+import { clampStyle } from '@/lib/training/style';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
 export type ClubBuild = {
   readonly coachGroup: CoachGroup | null;
   readonly levels: StadiumLevels;
+  /** Pressing habit 0..8. Missing column stays 0. */
+  readonly stylePressing: number;
 };
 
 function clampLevel(value: unknown): number {
@@ -22,8 +25,18 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
     .eq('id', clubId)
     .maybeSingle();
 
+  const style = await supabase
+    .from('clubs')
+    .select('style_pressing')
+    .eq('id', clubId)
+    .maybeSingle();
+  const stylePressing =
+    style.error || !style.data
+      ? 0
+      : clampStyle((style.data as { style_pressing?: number }).style_pressing ?? 0);
+
   if (rich.error || !rich.data) {
-    return { coachGroup: null, levels: emptyStadiumLevels() };
+    return { coachGroup: null, levels: emptyStadiumLevels(), stylePressing };
   }
 
   const row = rich.data as {
@@ -39,5 +52,6 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       pitch: clampLevel(row.pitch_level),
       trainingCenter: clampLevel(row.training_center_level),
     },
+    stylePressing,
   };
 }

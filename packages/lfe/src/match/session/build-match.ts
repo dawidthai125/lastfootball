@@ -28,6 +28,7 @@ export function buildMatchFromConfig(config: MatchSessionConfig): Match {
     players: config.players,
     phase: 'PRE_MATCH',
     tacticsSide: config.tacticsSide,
+    openingPressing: config.openingPressing,
   });
 
   return createMatchModel({

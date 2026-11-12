@@ -10,6 +10,7 @@ import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
 import { threeMatchSentences } from '@/lib/match/match-report';
+import { whyLine } from '@/lib/match/why-line';
 
 import { computePlayerRatings, type PlayerRatingView } from './player-ratings';
 
@@ -55,6 +56,8 @@ export type PostMatchSummary = {
   readonly mvpPlayerId: string | null;
   /** Three sentences taken from the score, passes and goals in this log. */
   readonly report: readonly [string, string, string];
+  /** One sentence on why the match looked like this. */
+  readonly why: string;
 };
 
 const TIMELINE_TYPES = new Set([
@@ -199,7 +202,21 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
           }
         : null,
     }),
+    why: whyLine({
+      homeName,
+      awayName,
+      homeShots: matchState.statistics.home.shots,
+      awayShots: matchState.statistics.away.shots,
+      homePassesCompleted: matchState.statistics.home.passesCompleted,
+      awayPassesCompleted: matchState.statistics.away.passesCompleted,
+      firstGoalMinute: firstGoal ? minuteNumber(firstGoal.minute) : null,
+    }),
   };
+}
+
+function minuteNumber(minute: string): number | null {
+  const value = Number.parseInt(minute, 10);
+  return Number.isFinite(value) ? value : null;
 }
 
 /**

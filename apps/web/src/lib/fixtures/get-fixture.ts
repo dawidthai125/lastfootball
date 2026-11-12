@@ -3,6 +3,7 @@ import { env } from '@/config/env';
 import { mapFixtureRow } from '@/lib/fixtures/map-fixture';
 import { humanRoundFromFixture } from '@/lib/league/human-league';
 import type { FixtureDto, FixtureRow } from '@/lib/fixtures/types';
+import { clampStyle } from '@/lib/training/style';
 
 async function withChallengeNames(clubId: string, fixtures: FixtureDto[]): Promise<FixtureDto[]> {
   if (!fixtures.some((fixture) => fixture.competition === 'challenge')) return fixtures;
@@ -108,6 +109,43 @@ async function attachHomeGround(
   });
 }
 
+/** Pressing habit. A missing column leaves the fixture unchanged. */
+async function attachClubStyle(
+  viewerClubId: string,
+  fixtures: FixtureDto[],
+): Promise<FixtureDto[]> {
+  const ids = [
+    ...new Set(
+      [
+        ...fixtures.map((fixture) => homeClubId(viewerClubId, fixture)),
+        CLUB_UUID.test(viewerClubId) ? viewerClubId : null,
+      ].filter((id): id is string => id != null),
+    ),
+  ];
+  if (ids.length === 0) return fixtures;
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('clubs').select('id, style_pressing').in('id', ids);
+  if (error || !data) return fixtures;
+  const points = new Map(
+    (data as { id: string; style_pressing: number }[]).map((row) => [
+      row.id,
+      clampStyle(row.style_pressing ?? 0),
+    ]),
+  );
+  return fixtures.map((fixture) => {
+    const homeId = homeClubId(viewerClubId, fixture);
+    return {
+      ...fixture,
+      homeStylePressing: homeId ? (points.get(homeId) ?? 0) : 0,
+      viewerStylePressing: points.get(viewerClubId) ?? 0,
+    };
+  });
+}
+
+async function withGround(viewerClubId: string, fixtures: FixtureDto[]): Promise<FixtureDto[]> {
+  return attachClubStyle(viewerClubId, await attachHomeGround(viewerClubId, fixtures));
+}
+
 export async function listClubFixtures(clubId: string): Promise<FixtureDto[]> {
   if (!env.isSupabaseConfigured) return [];
   const supabase = await createClient();
@@ -118,7 +156,7 @@ export async function listClubFixtures(clubId: string): Promise<FixtureDto[]> {
     .order('matchday', { ascending: true });
 
   if (error || !data) return [];
-  return attachHomeGround(
+  return withGround(
     clubId,
     await withHumanNames(
       clubId,
@@ -141,7 +179,7 @@ export async function getFixtureByIdForClub(
     .maybeSingle();
 
   if (error || !data) return null;
-  const [dto] = await attachHomeGround(
+  const [dto] = await withGround(
     clubId,
     await withHumanNames(
       clubId,
@@ -166,7 +204,8 @@ export async function getNextFixture(clubId: string): Promise<FixtureDto | null>
     .maybeSingle();
 
   if (error || !data) return null;
-  return mapFixtureRow(data as FixtureRow);
+  const [dto] = await withGround(clubId, [mapFixtureRow(data as FixtureRow)]);
+  return dto ?? null;
 }
 
 export async function getLastPlayedFixture(clubId: string): Promise<FixtureDto | null> {
@@ -183,5 +222,6 @@ export async function getLastPlayedFixture(clubId: string): Promise<FixtureDto |
     .maybeSingle();
 
   if (error || !data) return null;
-  return mapFixtureRow(data as FixtureRow);
+  const [dto] = await withGround(clubId, [mapFixtureRow(data as FixtureRow)]);
+  return dto ?? null;
 }

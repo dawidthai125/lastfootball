@@ -76,6 +76,13 @@ export interface CreateMatchStateInput {
   stadium?: Stadium;
   phase?: MatchPhase;
   tacticsSide?: 'home' | 'away';
+  /** Kickoff pressing for the tactics owner. Omitted keeps 50. */
+  openingPressing?: number;
+}
+
+function openingPressingOf(value: number | undefined): number | undefined {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return undefined;
+  return Math.max(0, Math.min(100, Math.trunc(value)));
 }
 
 export function createMatchState(input: CreateMatchStateInput): MatchState {
@@ -106,6 +113,9 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
         (input.tacticsSide ?? 'home') === 'home'
           ? input.homeLineup.formationCode
           : input.awayLineup.formationCode,
+      ...(openingPressingOf(input.openingPressing) === undefined
+        ? {}
+        : { pressing: openingPressingOf(input.openingPressing) }),
     }),
     tacticsSide: input.tacticsSide ?? 'home',
     tick: 0,
