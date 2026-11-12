@@ -97,7 +97,7 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
 
     const side = eventSide(e);
     const minute = eventMinute(e, matchState.clock.displayMinute);
-    const text = humanize(e, side);
+    const text = humanize(e, side, homeName, awayName);
     const kind = eventKind(type);
     const highlight = type === 'GOAL';
 
@@ -302,29 +302,41 @@ function eventKind(type: string): LiveEventKind {
   }
 }
 
-function humanize(e: EngineEvent, side: string | undefined): string {
+function sideName(side: string | undefined, homeName: string, awayName: string): string {
+  if (side === 'home') return homeName;
+  if (side === 'away') return awayName;
+  return 'Drużyna';
+}
+
+function humanize(
+  e: EngineEvent,
+  side: string | undefined,
+  homeName: string,
+  awayName: string,
+): string {
+  const team = sideName(side, homeName, awayName);
   switch (e.type) {
     case 'MATCH_START':
-      return 'Mecz rozpoczęty.';
+      return 'Zaczynamy. Piłka w grze.';
     case 'HALF_END':
       return 'Koniec połowy.';
     case 'MATCH_END':
       return 'Koniec meczu.';
     case 'GOAL':
-      return `GOL! (${side || 'drużyna'})`;
+      return `Gol! ${team}.`;
     case 'SHOT':
-      return `Strzał (${side || '—'})`;
+      return `Strzał. ${team}.`;
     case 'ATTACK':
-      return `Atak (${side || '—'})`;
+      return `${team} rusza do ataku.`;
     case 'FOUL':
       return 'Faul.';
     case 'CORNER':
-      return `Rzut rożny (${side || '—'})`;
+      return `Rzut rożny. ${team}.`;
     case 'SUBSTITUTION':
       return 'Zmiana zawodnika.';
     case 'CARD':
       return 'Kartka.';
     default:
-      return String(e.type);
+      return 'Sytuacja na boisku.';
   }
 }
