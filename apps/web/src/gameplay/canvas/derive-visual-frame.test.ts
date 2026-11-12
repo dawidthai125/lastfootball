@@ -45,6 +45,8 @@ describe('deriveVisualFrame spatial reuse', () => {
       y: 33.25,
     });
     expect(visual.ball).toEqual({ x: 72.4, y: 21.1 });
+    expect(visual.ballOwnerId).toBeNull();
+    expect(visual.referee).toBeNull();
     expect(visual.pitchLength).toBe(105);
     expect(visual.pitchWidth).toBe(68);
   });

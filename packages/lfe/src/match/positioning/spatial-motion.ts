@@ -38,16 +38,18 @@ export function reseatSpatialLineup(
     ...previous,
     players: Object.freeze(players),
     ball: previous.ball,
+    referee: previous.referee ?? baseline.referee,
   });
 }
 
 /**
  * Deterministic movement Thin for the spatial read model.
  *
- * This is deliberately not Physics: it keeps a formation-shaped team block,
- * moves it in response to possession, and eases each player toward a new
- * target. A recent GOAL, CORNER, PENALTY, or FREE_KICK pulls the ball to
- * that restart for a short window. Canvas and Replay only consume the snapshots.
+ * This is deliberately not the match result. The score still comes from the
+ * tick engine. The picture reads that engine: the ball travels to a teammate
+ * after a pass, a shot runs at the goal, and the referee runs to a foul.
+ * A recent GOAL, CORNER, PENALTY, or FREE_KICK still pulls the ball to that
+ * restart for a short window. Canvas and Replay only consume the snapshots.
  */
 export function advanceMatchSpatialState(input: {
   readonly previous: MatchSpatialState;
@@ -61,7 +63,7 @@ export function advanceMatchSpatialState(input: {
   const baseline = createMatchSpatialState(input.matchState);
   const setPiece = latestSetPiece(input.events, input.tick);
   const possession = setPiece?.side ?? resolvePossessionSide(input.events);
-  const ballTarget = resolveBallTarget(pitch.length, pitch.width, possession, input.tick, setPiece);
+  const focus = resolveBallTarget(pitch.length, pitch.width, possession, input.tick, setPiece);
   const previousByPlayer = new Map(
     input.previous.players.map((player) => [player.playerId, player]),
   );
@@ -71,7 +73,7 @@ export function advanceMatchSpatialState(input: {
       anchor,
       pitch.length,
       pitch.width,
-      ballTarget,
+      focus,
       possession,
       input.tick,
       tacticsOwnedBy(input.matchState, anchor.side),
@@ -82,12 +84,36 @@ export function advanceMatchSpatialState(input: {
     });
   });
 
+  const action = setPiece ? undefined : latestAction(input.events, input.tick);
+  const shot =
+    action?.type === 'SHOT' && input.tick - action.tick <= SHOT_FLIGHT_TICKS ? action : undefined;
+  const pass = !shot && action?.type === 'PASS' ? action : undefined;
+  const aimed = aimBall(players, possession, input.tick, input.previous.ball, pass);
+  const destination = setPiece
+    ? focus
+    : shot
+      ? goalMouth(shot.side, pitch.length, pitch.width)
+      : (playerById(players, aimed.targetPlayerId)?.position ?? focus);
+  const ballPosition = moveToward(
+    input.previous.ball.position,
+    destination,
+    setPiece || shot ? 3.4 : 2.6,
+  );
+  const foul = latestFoul(input.events, input.tick);
+  const fouler = foul ? playerById(players, foul.playerId) : undefined;
+  const refereeFrom = input.previous.referee?.position ?? baseline.referee.position;
+  const refereeTarget = fouler?.position ?? besideBall(ballPosition, pitch.width);
+  const refereePosition = moveToward(refereeFrom, refereeTarget, foul ? 2.4 : 0.62);
+
   return Object.freeze({
     ...input.previous,
     players: Object.freeze(players),
     ball: Object.freeze({
-      position: moveToward(input.previous.ball.position, ballTarget, setPiece ? 3.4 : 1.1),
+      position: ballPosition,
+      targetPlayerId: setPiece || shot ? null : aimed.targetPlayerId,
+      aimedTick: setPiece || shot ? input.tick : aimed.aimedTick,
     }),
+    referee: Object.freeze({ position: refereePosition }),
   });
 }
 
@@ -102,6 +128,104 @@ function readSide(payload: unknown): 'home' | 'away' | undefined {
   if (!payload || typeof payload !== 'object' || !('side' in payload)) return undefined;
   const side = String((payload as { side: unknown }).side);
   return side === 'home' || side === 'away' ? side : undefined;
+}
+
+function readPlayerId(payload: unknown): string | null {
+  if (!payload || typeof payload !== 'object' || !('playerId' in payload)) return null;
+  const id = (payload as { playerId: unknown }).playerId;
+  return typeof id === 'string' && id.length > 0 ? id : null;
+}
+
+const SHOT_FLIGHT_TICKS = 16;
+const FOUL_RUN_TICKS = 40;
+
+function latestAction(
+  events: readonly EngineEvent[],
+  tick: number,
+):
+  | { type: 'PASS' | 'SHOT'; tick: number; side: 'home' | 'away'; playerId: string | null }
+  | undefined {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index];
+    const type = event?.type === 'PASS' ? 'PASS' : event?.type === 'SHOT' ? 'SHOT' : null;
+    if (!event || !type) continue;
+    if (event.tick > tick) continue;
+    const side = readSide(event.payload);
+    if (!side) continue;
+    return { type, tick: event.tick, side, playerId: readPlayerId(event.payload) };
+  }
+  return undefined;
+}
+
+function latestFoul(
+  events: readonly EngineEvent[],
+  tick: number,
+): { playerId: string | null } | undefined {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index];
+    if (!event || event.type !== 'FOUL') continue;
+    if (event.tick > tick || tick - event.tick > FOUL_RUN_TICKS) continue;
+    return { playerId: readPlayerId(event.payload) };
+  }
+  return undefined;
+}
+
+function playerById(
+  players: readonly SpatialPlayer[],
+  id: string | null,
+): SpatialPlayer | undefined {
+  if (!id) return undefined;
+  return players.find((player) => player.playerId === id);
+}
+
+function aimBall(
+  players: readonly SpatialPlayer[],
+  side: 'home' | 'away',
+  tick: number,
+  ball: { readonly targetPlayerId?: string | null; readonly aimedTick?: number },
+  pass: { tick: number; side: 'home' | 'away'; playerId: string | null } | undefined,
+): { targetPlayerId: string | null; aimedTick: number } {
+  const previousTick = ball.aimedTick ?? -1;
+  const previousId = ball.targetPlayerId ?? null;
+  if (pass && pass.side === side && pass.tick !== previousTick) {
+    return {
+      targetPlayerId: pickReceiver(players, side, pass.playerId, pass.tick),
+      aimedTick: pass.tick,
+    };
+  }
+  if (previousId && playerById(players, previousId)?.side === side) {
+    return { targetPlayerId: previousId, aimedTick: previousTick };
+  }
+  return {
+    targetPlayerId: pickReceiver(players, side, null, Math.floor(tick / 20)),
+    aimedTick: previousTick,
+  };
+}
+
+function pickReceiver(
+  players: readonly SpatialPlayer[],
+  side: 'home' | 'away',
+  excludeId: string | null,
+  stamp: number,
+): string | null {
+  const mates = players
+    .filter(
+      (player) => player.side === side && player.role !== 'GK' && player.playerId !== excludeId,
+    )
+    .sort(
+      (a, b) => b.slotIndex - a.slotIndex || String(a.playerId).localeCompare(String(b.playerId)),
+    );
+  if (mates.length === 0) return null;
+  const index = Math.abs(Math.trunc(stamp)) % mates.length;
+  return String(mates[index]!.playerId);
+}
+
+function goalMouth(side: 'home' | 'away', length: number, width: number) {
+  return position(side === 'home' ? length - 1.5 : 1.5, width / 2);
+}
+
+function besideBall(ball: { readonly x: number; readonly y: number }, width: number) {
+  return position(ball.x, clamp(ball.y + 6, 2, width - 2));
 }
 
 function latestSetPiece(
