@@ -74,6 +74,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     id: row.id,
     name: row.name,
     shortName: row.name,
+    shirtNumber: row.shirtNumber,
     position: displayPosition(row.pos),
     age: row.age,
     form: typeof row.form === 'number' ? row.form : formForPlayer(skill, row.status),

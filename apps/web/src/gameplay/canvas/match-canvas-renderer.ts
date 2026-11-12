@@ -252,16 +252,7 @@ function paint(
   // Players
   for (const p of frame.players) {
     const c = worldToCanvas(p, sx, sy, ox, oy);
-    drawPlayer(
-      ctx,
-      c.x,
-      c.y,
-      p.side,
-      p.shirtNumber,
-      p.facing,
-      fx.viewMode === 'formation',
-      p.playerId === frame.ballOwnerId,
-    );
+    drawPlayer(ctx, c.x, c.y, p.side, p.shirtNumber, p.facing, p.playerId === frame.ballOwnerId);
   }
 
   // Ball. A line shows a pass that has not arrived yet.
@@ -385,10 +376,9 @@ function drawPlayer(
   side: 'home' | 'away',
   shirt: number,
   facing: number,
-  showNumber: boolean,
   hasBall: boolean,
 ) {
-  const r = 7;
+  const r = 11;
   if (hasBall) {
     ctx.beginPath();
     ctx.arc(x, y, r + 3.5, 0, Math.PI * 2);
@@ -403,20 +393,18 @@ function drawPlayer(
   ctx.strokeStyle = 'rgba(3, 5, 10, 0.55)';
   ctx.lineWidth = 1;
   ctx.stroke();
-  const nose = 9;
+  const nose = r;
   ctx.beginPath();
   ctx.moveTo(x + Math.cos(facing) * (r - 1), y + Math.sin(facing) * (r - 1));
   ctx.lineTo(x + Math.cos(facing) * nose, y + Math.sin(facing) * nose);
   ctx.strokeStyle = side === 'home' ? TOKENS.home : TOKENS.away;
   ctx.lineWidth = 2;
   ctx.stroke();
-  if (showNumber) {
-    ctx.fillStyle = TOKENS.void;
-    ctx.font = 'bold 8px IBM Plex Sans, ui-sans-serif, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(String(shirt), x, y + 0.5);
-  }
+  ctx.fillStyle = side === 'home' ? TOKENS.void : TOKENS.text;
+  ctx.font = 'bold 10px IBM Plex Sans, ui-sans-serif, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(shirt), x, y + 0.5);
 }
 
 function drawReferee(ctx: CanvasRenderingContext2D, x: number, y: number, atFoul: boolean) {

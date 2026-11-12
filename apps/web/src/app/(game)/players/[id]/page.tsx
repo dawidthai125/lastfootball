@@ -9,6 +9,7 @@ import {
   PlayerHistory,
   PlayerStatus,
 } from '@/components/squad/PlayerDetail';
+import { ShirtNumberForm } from '@/components/squad/ShirtNumberForm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { getSquadPlayerById, resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -45,6 +46,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
 
       {/* M4: Hero → decyzja → status → atrybuty → kontekst */}
       <PlayerHero player={player} club={club} />
+      <ShirtNumberForm playerId={player.id} shirtNumber={player.shirtNumber} />
       <PlayerActions player={player} />
       <PlayerStatus player={player} />
       <PlayerAttributes player={player} />

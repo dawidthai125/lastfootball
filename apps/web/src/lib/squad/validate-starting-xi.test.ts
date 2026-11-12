@@ -9,6 +9,7 @@ function player(
   return {
     name: partial.name ?? partial.id,
     shortName: partial.id,
+    shirtNumber: partial.shirtNumber ?? 1,
     age: 24,
     form: 70,
     energy: 80,

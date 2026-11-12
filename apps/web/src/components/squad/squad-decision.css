@@ -351,6 +351,50 @@
   border-radius: 0;
 }
 
+.lf-sq-detail__shirt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--lf-space-3);
+  max-width: 36rem;
+}
+
+.lf-sq-detail__shirt-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+  font-size: var(--lf-type-label);
+  font-weight: 600;
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-muted);
+}
+
+.lf-sq-detail__shirt-input {
+  width: 5.5rem;
+}
+
+.lf-sq-detail__shirt-hint {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-sq-detail__shirt-msg {
+  flex: 1 1 12rem;
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
+.lf-sq-detail__shirt-msg--bad {
+  color: var(--lf-color-status-danger);
+}
+
 .lf-sq-detail__decisions {
   display: flex;
   flex-wrap: wrap;

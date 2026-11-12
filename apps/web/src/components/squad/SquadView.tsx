@@ -219,7 +219,9 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                     >
                       <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
                       <span className="lf-sq__attention-body">
-                        <span className="lf-sq__attention-name">{p.name}</span>
+                        <span className="lf-sq__attention-name">
+                          {p.shirtNumber} {p.name}
+                        </span>
                         <span className="lf-sq__attention-meta">
                           {p.position} · {attentionReason(p)}
                         </span>
@@ -326,7 +328,9 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                 >
                   <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
                   <span className="lf-sq__card-body">
-                    <span className="lf-sq__card-name">{p.name}</span>
+                    <span className="lf-sq__card-name">
+                      {p.shirtNumber} {p.name}
+                    </span>
                     <span className="lf-sq__card-meta">
                       {p.position} · Forma {p.form} · Energia {p.energy} ·{' '}
                       <span className="lf-sq__skill">{p.skill}</span>
@@ -408,7 +412,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                         }}
                       >
                         <PlayerPortrait playerId={p.id} name={p.name} size="sm" />
-                        {p.name}
+                        {p.shirtNumber} {p.name}
                       </span>
                     </td>
                     <td>{p.position}</td>
