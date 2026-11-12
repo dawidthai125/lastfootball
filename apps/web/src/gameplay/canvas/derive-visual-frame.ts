@@ -30,10 +30,12 @@ export function deriveVisualFrame(model: MatchCanvasReadModel): VisualFrame {
       side: sp.side,
       role: sp.role,
       shirtNumber: meta?.shirtNumber ?? sp.slotIndex + 1,
+      facing: typeof sp.facing === 'number' ? sp.facing : sp.side === 'home' ? 0 : Math.PI,
       x: clamp(sp.position.x, 0, pitch.length),
       y: clamp(sp.position.y, 0, pitch.width),
     } satisfies VisualPlayer;
   });
+  const referee = spatial.referee?.position;
 
   return {
     tick,
@@ -45,6 +47,13 @@ export function deriveVisualFrame(model: MatchCanvasReadModel): VisualFrame {
       x: clamp(spatial.ball.position.x, 0, pitch.length),
       y: clamp(spatial.ball.position.y, 0, pitch.width),
     },
+    ballOwnerId: spatial.ball.targetPlayerId ?? null,
+    referee: referee
+      ? {
+          x: clamp(referee.x, 0, pitch.length),
+          y: clamp(referee.y, 0, pitch.width),
+        }
+      : null,
     fx: deriveFx(events, tick),
   };
 }

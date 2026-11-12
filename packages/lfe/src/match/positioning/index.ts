@@ -23,5 +23,10 @@ export { buildFormationLayout, occupyFormationLayout } from './formation-layout'
 export type { SpawnPoint, SpawnPoints } from './spawn';
 export { createKickoffSpawnPoints } from './spawn';
 
-export type { SpatialPlayer, SpatialBall, MatchSpatialState } from './spatial-state';
+export type {
+  SpatialPlayer,
+  SpatialBall,
+  SpatialOfficial,
+  MatchSpatialState,
+} from './spatial-state';
 export { createMatchSpatialState, findSpatialPlayer } from './spatial-state';

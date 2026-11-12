@@ -37,7 +37,7 @@ const FX_MS: Record<VisualFxKind, number> = {
   MATCH_START: 1600,
   GOAL: 2200,
   SHOT: 900,
-  FOUL: 1000,
+  FOUL: 1600,
   CORNER: 1100,
   SUBSTITUTION: 1400,
   HALF_END: 1800,
@@ -220,14 +220,37 @@ function paint(
 
   drawPitchMarkings(ctx, ox, oy, pw, ph);
 
+  if (frame.referee) {
+    const ref = worldToCanvas(frame.referee, sx, sy, ox, oy);
+    drawReferee(ctx, ref.x, ref.y, fx.fxKind === 'FOUL');
+  }
+
+  const owner = frame.ballOwnerId
+    ? frame.players.find((player) => player.playerId === frame.ballOwnerId)
+    : undefined;
+
   // Players
   for (const p of frame.players) {
     const c = worldToCanvas(p, sx, sy, ox, oy);
-    drawPlayer(ctx, c.x, c.y, p.side, p.shirtNumber, fx.viewMode === 'formation');
+    drawPlayer(
+      ctx,
+      c.x,
+      c.y,
+      p.side,
+      p.shirtNumber,
+      p.facing,
+      fx.viewMode === 'formation',
+      p.playerId === frame.ballOwnerId,
+    );
   }
 
-  // Ball
+  // Ball. A line shows a pass that has not arrived yet.
   const b = worldToCanvas(frame.ball, sx, sy, ox, oy);
+  if (owner) {
+    const feet = worldToCanvas(owner, sx, sy, ox, oy);
+    const gap = Math.hypot(feet.x - b.x, feet.y - b.y);
+    if (gap > 10) drawPass(ctx, feet.x, feet.y, b.x, b.y);
+  }
   drawBall(ctx, b.x, b.y, fx.fxKind === 'SHOT' || fx.fxKind === 'GOAL');
 
   if (fx.fxKind && fx.fxAlpha > 0) {
@@ -290,15 +313,31 @@ function drawPlayer(
   y: number,
   side: 'home' | 'away',
   shirt: number,
+  facing: number,
   showNumber: boolean,
+  hasBall: boolean,
 ) {
   const r = 7;
+  if (hasBall) {
+    ctx.beginPath();
+    ctx.arc(x, y, r + 3.5, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(240, 244, 250, 0.7)';
+    ctx.lineWidth = 1.25;
+    ctx.stroke();
+  }
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fillStyle = side === 'home' ? TOKENS.home : TOKENS.away;
   ctx.fill();
   ctx.strokeStyle = 'rgba(3, 5, 10, 0.55)';
   ctx.lineWidth = 1;
+  ctx.stroke();
+  const nose = 9;
+  ctx.beginPath();
+  ctx.moveTo(x + Math.cos(facing) * (r - 1), y + Math.sin(facing) * (r - 1));
+  ctx.lineTo(x + Math.cos(facing) * nose, y + Math.sin(facing) * nose);
+  ctx.strokeStyle = side === 'home' ? TOKENS.home : TOKENS.away;
+  ctx.lineWidth = 2;
   ctx.stroke();
   if (showNumber) {
     ctx.fillStyle = TOKENS.void;
@@ -307,6 +346,35 @@ function drawPlayer(
     ctx.textBaseline = 'middle';
     ctx.fillText(String(shirt), x, y + 0.5);
   }
+}
+
+function drawReferee(ctx: CanvasRenderingContext2D, x: number, y: number, atFoul: boolean) {
+  ctx.beginPath();
+  ctx.arc(x, y, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#14181F';
+  ctx.fill();
+  ctx.strokeStyle = atFoul ? '#E2C15A' : 'rgba(240, 244, 250, 0.85)';
+  ctx.lineWidth = atFoul ? 2 : 1.2;
+  ctx.stroke();
+  if (atFoul) {
+    ctx.fillStyle = '#E2C15A';
+    ctx.fillRect(x + 5, y - 7, 4, 6);
+  }
+}
+
+function drawPass(
+  ctx: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.lineTo(toX, toY);
+  ctx.strokeStyle = 'rgba(240, 244, 250, 0.45)';
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
 }
 
 function drawBall(ctx: CanvasRenderingContext2D, x: number, y: number, hot: boolean) {
@@ -345,7 +413,7 @@ function drawEventFx(
     ctx.fillStyle = TOKENS.dangerSoft;
     ctx.fillRect(ox, oy, pw, ph);
   } else if (kind === 'FOUL') {
-    ctx.fillStyle = TOKENS.warnSoft;
+    ctx.fillStyle = 'rgba(196, 160, 53, 0.12)';
     ctx.fillRect(ox, oy, pw, ph);
   } else if (kind === 'SHOT') {
     const goalX = side === 'away' ? ox + 8 : ox + pw - 8;
@@ -458,6 +526,11 @@ function lerpFrame(a: VisualFrame, b: VisualFrame, t: number): VisualFrame {
     pitchWidth: b.pitchWidth,
     players,
     ball: { x: lerp(a.ball.x, b.ball.x, t), y: lerp(a.ball.y, b.ball.y, t) },
+    ballOwnerId: t > 0.5 ? b.ballOwnerId : a.ballOwnerId,
+    referee:
+      a.referee && b.referee
+        ? { x: lerp(a.referee.x, b.referee.x, t), y: lerp(a.referee.y, b.referee.y, t) }
+        : (b.referee ?? a.referee),
     fx: t > 0.5 ? b.fx : a.fx,
   };
 }

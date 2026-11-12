@@ -144,6 +144,62 @@ describe('spatial movement thin', () => {
     expect(corner.ball.position.x).toBeGreaterThan(open.ball.position.x);
   });
 
+  it('carries the ball toward a teammate after a pass', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const pass = {
+      type: 'PASS' as const,
+      tick: 9,
+      payload: { side: 'home' as const, playerId: 'home-6', completed: true },
+    };
+    const first = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [pass],
+    });
+    const second = advanceMatchSpatialState({
+      previous: first,
+      matchState,
+      tick: 10,
+      events: [pass],
+    });
+    const target = first.players.find((player) => player.playerId === first.ball.targetPlayerId);
+
+    expect(target?.side).toBe('home');
+    expect(target?.playerId).not.toBe('home-6');
+    expect(target?.role).not.toBe('GK');
+    expect(second.ball.targetPlayerId).toBe(first.ball.targetPlayerId);
+    expect(distance(second.ball.position, target!.position)).toBeLessThan(
+      distance(base.ball.position, target!.position),
+    );
+  });
+
+  it('runs the referee toward the player who fouled', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const fouler = base.players.find((player) => player.playerId === 'home-2');
+    const chased = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'FOUL', tick: 9, payload: { against: 'away', playerId: 'home-2' } }],
+    });
+    const calm = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [],
+    });
+
+    expect(fouler).toBeTruthy();
+    expect(distance(chased.referee.position, fouler!.position)).toBeLessThan(
+      distance(calm.referee.position, fouler!.position),
+    );
+  });
+
   it('drops a goal restart after the short window', () => {
     const session = openSession(3);
     const base = withBall(session.getSpatialState(), 52.5, 34);
@@ -424,6 +480,10 @@ function spreadY(state: MatchSpatialState, side: 'home' | 'away') {
 function withBall(state: MatchSpatialState, x: number, y: number): MatchSpatialState {
   return {
     ...state,
-    ball: { position: { x, y } },
+    ball: { position: { x, y }, targetPlayerId: null, aimedTick: -1 },
   };
+}
+
+function distance(a: { x: number; y: number }, b: { x: number; y: number }) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
 }

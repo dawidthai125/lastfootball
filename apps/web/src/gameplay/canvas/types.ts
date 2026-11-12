@@ -18,6 +18,8 @@ export type VisualPlayer = VisualPoint & {
   readonly side: 'home' | 'away';
   readonly role: string;
   readonly shirtNumber: number;
+  /** Radians. 0 attacks toward +x. */
+  readonly facing: number;
 };
 
 export type VisualFxKind =
@@ -36,5 +38,9 @@ export type VisualFrame = {
   readonly pitchWidth: number;
   readonly players: readonly VisualPlayer[];
   readonly ball: VisualPoint;
+  /** Player the ball is going to. Null during a restart or a shot. */
+  readonly ballOwnerId: string | null;
+  /** Referee pose. Null when an old snapshot has no official. */
+  readonly referee: VisualPoint | null;
   readonly fx: VisualFx | null;
 };

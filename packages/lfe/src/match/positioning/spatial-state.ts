@@ -2,7 +2,7 @@ import type { MatchState } from '../domain/match-state';
 import type { Pitch } from '../domain/pitch';
 import type { PlayerId, PitchRole, PitchSide } from '../domain/ids';
 
-import type { Position } from './coordinates';
+import { position, type Position } from './coordinates';
 import { createPitchGrid, type PitchGrid } from './grid';
 import { createKickoffSpawnPoints } from './spawn';
 import { createZones, type PitchZone } from './zones';
@@ -19,6 +19,14 @@ export interface SpatialPlayer {
 
 export interface SpatialBall {
   readonly position: Position;
+  /** Player the ball is travelling to, or at whose feet it already sits. */
+  readonly targetPlayerId: string | null;
+  /** Tick of the pass or shot that chose the target. -1 before the first aim. */
+  readonly aimedTick: number;
+}
+
+export interface SpatialOfficial {
+  readonly position: Position;
 }
 
 /**
@@ -31,6 +39,7 @@ export interface MatchSpatialState {
   readonly zonesAway: readonly PitchZone[];
   readonly players: readonly SpatialPlayer[];
   readonly ball: SpatialBall;
+  readonly referee: SpatialOfficial;
 }
 
 /**
@@ -57,7 +66,14 @@ export function createMatchSpatialState(matchState: MatchState): MatchSpatialSta
     zonesHome: createZones(pitch, 'home'),
     zonesAway: createZones(pitch, 'away'),
     players: Object.freeze(players),
-    ball: Object.freeze({ position: spawns.ball }),
+    ball: Object.freeze({
+      position: spawns.ball,
+      targetPlayerId: null,
+      aimedTick: -1,
+    }),
+    referee: Object.freeze({
+      position: position(pitch.length / 2, Math.min(pitch.width - 2, pitch.width / 2 + 8)),
+    }),
   });
 }
 
