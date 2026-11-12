@@ -483,90 +483,60 @@ export function LiveMatchFoundation({
       <div className="lf-live__stage">
         {/* Canvas + commentary + timeline + momentum */}
         <div className="lf-live__pitch">
-          <div
-            id={MATCH_CANVAS_ROOT_ID}
-            data-lf-canvas-host="true"
-            data-match-id={fixture.id}
-            data-match-phase={snapshot.matchState.phase}
-            data-match-tick={snapshot.matchState.tick}
-            data-view-mode={viewMode}
-            aria-label="Obszar boiska (Canvas host)"
-            className="lf-live__canvas"
-          >
-            <AtmosphereLayer
-              layers={['floodlight', 'vignette', 'grain']}
-              style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
-            />
-            {/* Canvas 2D renderer mounts a <canvas> into this host (z-index 1). */}
-
-            <div className="lf-live__call">
-              <p className="lf-live__call-line" aria-live="polite">
-                {latestCommentary ? (
-                  <>
-                    <span className="lf-live__call-minute">{latestCommentary.minute}</span>{' '}
-                    {latestCommentary.text}
-                  </>
-                ) : (
-                  'Komentarz pojawi się przy pierwszym zdarzeniu.'
-                )}
-              </p>
-              <button
-                type="button"
-                aria-pressed={commentatorOn}
-                onClick={toggleCommentator}
-                style={chipStyle(commentatorOn)}
-              >
-                Komentator
-              </button>
-            </div>
-
+          <div className="lf-live__frame">
             <div
-              style={{
-                position: 'absolute',
-                left: 'var(--lf-space-4)',
-                right: 'var(--lf-space-4)',
-                bottom: 'var(--lf-space-4)',
-                zIndex: 2,
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 'var(--lf-space-1)',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
+              id={MATCH_CANVAS_ROOT_ID}
+              data-lf-canvas-host="true"
+              data-match-id={fixture.id}
+              data-match-phase={snapshot.matchState.phase}
+              data-match-tick={snapshot.matchState.tick}
+              data-view-mode={viewMode}
+              aria-label="Obszar boiska (Canvas host)"
+              className="lf-live__canvas"
             >
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--lf-space-1)' }}>
-                {bundle.viewModes.map((m) => (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => setViewMode(m.id)}
-                    style={chipStyle(viewMode === m.id)}
-                  >
-                    {m.label}
-                  </button>
-                ))}
+              <AtmosphereLayer
+                layers={['floodlight', 'vignette', 'grain']}
+                style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
+              />
+              {/* Canvas 2D renderer mounts a <canvas> into this host (z-index 1). */}
+
+              <div className="lf-live__call">
+                <p className="lf-live__call-line" aria-live="polite">
+                  {latestCommentary ? (
+                    <>
+                      <span className="lf-live__call-minute">{latestCommentary.minute}</span>{' '}
+                      {latestCommentary.text}
+                    </>
+                  ) : (
+                    'Komentarz pojawi się przy pierwszym zdarzeniu.'
+                  )}
+                </p>
+                <button
+                  type="button"
+                  aria-pressed={commentatorOn}
+                  onClick={toggleCommentator}
+                  style={chipStyle(commentatorOn)}
+                >
+                  Komentator
+                </button>
               </div>
-              <div
-                className="font-[family-name:var(--font-ui)]"
-                style={{
-                  fontSize: 'var(--lf-type-label)',
-                  letterSpacing: 'var(--lf-type-tracking-label)',
-                  textTransform: 'uppercase',
-                  color: 'var(--lf-color-text-faint)',
-                  background: 'rgba(3, 5, 10, 0.65)',
-                  padding: 'var(--lf-space-1) var(--lf-space-2)',
-                  borderRadius: 'var(--lf-radius-sm)',
-                  borderWidth: 'var(--lf-border-width-hair)',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--lf-color-border-subtle)',
-                }}
-              >
-                {isReplay ? 'REPLAY' : 'LIVE'} · {snapshot.matchState.phase} · tick{' '}
-                {snapshot.matchState.tick}
-                {isReplay
-                  ? ` · ${replay.index + 1}/${replay.length}`
-                  : ` · ${runtime.session.status}`}
-              </div>
+            </div>
+            <div className="lf-live__modes">
+              {bundle.viewModes.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setViewMode(m.id)}
+                  style={chipStyle(viewMode === m.id)}
+                >
+                  {m.label}
+                </button>
+              ))}
+              {isReplay ? (
+                <span className="lf-live__modes-note">
+                  Powtórka {replay.index + 1}/{replay.length}
+                </span>
+              ) : null}
             </div>
           </div>
 
@@ -970,16 +940,9 @@ export function LiveMatchFoundation({
                 >
                   Zastosuj zmiany
                 </button>
-                <p
-                  style={{
-                    margin: 'var(--lf-space-2) 0 0',
-                    fontSize: 'var(--lf-type-label)',
-                    color: 'var(--lf-color-text-faint)',
-                  }}
-                >
-                  CommandBus → MatchState · układ {snapshot.tactics.formationCode} · pressing{' '}
-                  {snapshot.tactics.pressing} · tempo {snapshot.tactics.tempo} · mentalność{' '}
-                  {snapshot.tactics.mentality}
+                <p className="lf-live__tactic">
+                  Układ {snapshot.tactics.formationCode} · pressing {snapshot.tactics.pressing} ·
+                  tempo {snapshot.tactics.tempo} · mentalność {snapshot.tactics.mentality}
                 </p>
                 <div style={{ marginTop: 'var(--lf-space-4)' }}>
                   <div

@@ -236,16 +236,6 @@ export function PostMatchView({
                 <span style={{ flex: 1, textAlign: 'left', fontSize: 'var(--lf-type-caption)' }}>
                   {item.text}
                 </span>
-                <span
-                  style={{
-                    fontSize: 'var(--lf-type-label)',
-                    color: 'var(--lf-color-text-faint)',
-                    textTransform: 'uppercase',
-                    letterSpacing: 'var(--lf-type-tracking-label)',
-                  }}
-                >
-                  {item.type}
-                </span>
               </button>
             </li>
           ))}
