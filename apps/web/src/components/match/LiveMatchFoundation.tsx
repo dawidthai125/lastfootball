@@ -292,6 +292,7 @@ export function LiveMatchFoundation({
 
   const events =
     feedFilter === 'all' ? snapshot.feed : snapshot.feed.filter((e) => e.kind === feedFilter);
+  const latestCommentary = snapshot.feed[snapshot.feed.length - 1];
 
   const playheadPct = clampPct((snapshot.matchState.clock.displayMinute / 90) * 100);
   const goalMarkers = snapshot.feed.filter((e) => e.kind === 'goal' || e.highlight);
@@ -478,136 +479,9 @@ export function LiveMatchFoundation({
         </div>
       ) : null}
 
-      {/* Main stage — desktop 3-col · mobile pitch-first stack */}
+      {/* Pitch first. Commentary sits on the picture and just under it. */}
       <div className="lf-live__stage">
-        {/* Event feed */}
-        <section
-          aria-label="Komentarz meczu"
-          className="lf-live__feed lf-section-shell"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 0,
-            borderLeftColor: 'var(--lf-color-status-live)',
-          }}
-        >
-          <header
-            className="lf-section-shell__header"
-            style={{ flexWrap: 'wrap', gap: 'var(--lf-space-2)' }}
-          >
-            <h2 className="lf-section-shell__title">Komentarz</h2>
-            <div style={{ display: 'flex', gap: 'var(--lf-space-1)', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                aria-pressed={commentatorOn}
-                onClick={toggleCommentator}
-                style={chipStyle(commentatorOn)}
-              >
-                {commentatorOn ? 'Komentator włączony' : 'Komentator'}
-              </button>
-              {(
-                [
-                  ['all', 'Wszystkie'],
-                  ['goal', 'Gole'],
-                  ['card', 'Kartki'],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setFeedFilter(id)}
-                  style={chipStyle(feedFilter === id)}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </header>
-          {snapshot.feed.length > 0 ? (
-            <p
-              aria-live="polite"
-              style={{
-                margin: 0,
-                padding: 'var(--lf-space-2) var(--lf-space-3)',
-                borderBottomWidth: 'var(--lf-border-width-hair)',
-                borderBottomStyle: 'solid',
-                borderBottomColor: 'var(--lf-color-border-subtle)',
-                color: 'var(--lf-color-text-primary)',
-                fontWeight: 600,
-                lineHeight: 1.4,
-              }}
-            >
-              <span
-                className="font-[family-name:var(--font-ui)] tabular-nums"
-                style={{ color: 'var(--lf-color-text-gold)' }}
-              >
-                {snapshot.feed[snapshot.feed.length - 1]?.minute}
-              </span>{' '}
-              {snapshot.feed[snapshot.feed.length - 1]?.text}
-            </p>
-          ) : null}
-          <ul
-            style={{
-              listStyle: 'none',
-              margin: 0,
-              padding: 'var(--lf-space-2)',
-              overflow: 'auto',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--lf-space-1)',
-            }}
-          >
-            {events.map((e) => (
-              <li
-                key={e.id}
-                className={[
-                  'lf-live__feed-row',
-                  e.kind === 'goal' ? 'lf-live__feed-row--goal' : '',
-                  e.highlight ? 'lf-live__feed-row--highlight' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                <span
-                  className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
-                  style={{ color: 'var(--lf-color-text-gold)' }}
-                >
-                  {e.minute}
-                </span>
-                <LiveEventIcon
-                  kind={e.kind}
-                  highlight={Boolean(e.highlight)}
-                  size={14}
-                  title={e.kind}
-                />
-                <span
-                  style={{
-                    color: e.highlight
-                      ? 'var(--lf-color-text-primary)'
-                      : 'var(--lf-color-text-secondary)',
-                    fontWeight: e.highlight || e.kind === 'goal' ? 600 : 400,
-                  }}
-                >
-                  {e.text}
-                </span>
-              </li>
-            ))}
-            {events.length === 0 ? (
-              <li
-                style={{
-                  padding: 'var(--lf-space-3)',
-                  color: 'var(--lf-color-text-muted)',
-                  fontSize: 'var(--lf-type-caption)',
-                }}
-              >
-                Brak zdarzeń dla filtra.
-              </li>
-            ) : null}
-          </ul>
-        </section>
-
-        {/* Canvas + timeline + momentum */}
+        {/* Canvas + commentary + timeline + momentum */}
         <div
           className="lf-live__pitch"
           style={{
@@ -642,6 +516,27 @@ export function LiveMatchFoundation({
               style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
             />
             {/* Canvas 2D renderer mounts a <canvas> into this host (z-index 1). */}
+
+            <div className="lf-live__call">
+              <p className="lf-live__call-line" aria-live="polite">
+                {latestCommentary ? (
+                  <>
+                    <span className="lf-live__call-minute">{latestCommentary.minute}</span>{' '}
+                    {latestCommentary.text}
+                  </>
+                ) : (
+                  'Komentarz pojawi się przy pierwszym zdarzeniu.'
+                )}
+              </p>
+              <button
+                type="button"
+                aria-pressed={commentatorOn}
+                onClick={toggleCommentator}
+                style={chipStyle(commentatorOn)}
+              >
+                {commentatorOn ? 'Komentator włączony' : 'Komentator'}
+              </button>
+            </div>
 
             <div
               style={{
@@ -692,6 +587,70 @@ export function LiveMatchFoundation({
               </div>
             </div>
           </div>
+
+          <section aria-label="Komentarz meczu" className="lf-live__feed lf-section-shell">
+            <header className="lf-section-shell__header lf-live__feed-head">
+              <h2 className="lf-section-shell__title">Komentarz</h2>
+              <div className="lf-live__feed-filters">
+                {(
+                  [
+                    ['all', 'Wszystkie'],
+                    ['goal', 'Gole'],
+                    ['card', 'Kartki'],
+                  ] as const
+                ).map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setFeedFilter(id)}
+                    style={chipStyle(feedFilter === id)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </header>
+            <ul className="lf-live__feed-list">
+              {events.map((e) => (
+                <li
+                  key={e.id}
+                  className={[
+                    'lf-live__feed-row',
+                    e.kind === 'goal' ? 'lf-live__feed-row--goal' : '',
+                    e.highlight ? 'lf-live__feed-row--highlight' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  <span
+                    className="font-[family-name:var(--font-ui)] font-semibold tabular-nums"
+                    style={{ color: 'var(--lf-color-text-gold)' }}
+                  >
+                    {e.minute}
+                  </span>
+                  <LiveEventIcon
+                    kind={e.kind}
+                    highlight={Boolean(e.highlight)}
+                    size={14}
+                    title={e.kind}
+                  />
+                  <span
+                    style={{
+                      color: e.highlight
+                        ? 'var(--lf-color-text-primary)'
+                        : 'var(--lf-color-text-secondary)',
+                      fontWeight: e.highlight || e.kind === 'goal' ? 600 : 400,
+                    }}
+                  >
+                    {e.text}
+                  </span>
+                </li>
+              ))}
+              {events.length === 0 ? (
+                <li className="lf-live__feed-empty">Brak zdarzeń dla filtra.</li>
+              ) : null}
+            </ul>
+          </section>
 
           {/* Timeline with event markers */}
           <section
