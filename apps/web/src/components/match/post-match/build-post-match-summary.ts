@@ -82,8 +82,28 @@ export type BuildPostMatchInput = {
   readonly awayShort: string;
 };
 
+function cardSplit(
+  events: readonly { type: string; payload?: unknown }[],
+  matchState: MatchState,
+  colour: 'yellow' | 'red',
+): { home: number; away: number } {
+  let home = 0;
+  let away = 0;
+  for (const event of events) {
+    if (event.type !== 'CARD' || !event.payload || typeof event.payload !== 'object') continue;
+    const payload = event.payload as { playerId?: string; colour?: string };
+    if (payload.colour !== colour || !payload.playerId) continue;
+    const side = matchState.players.find((player) => player.id === payload.playerId)?.side;
+    if (side === 'home') home += 1;
+    else if (side === 'away') away += 1;
+  }
+  return { home, away };
+}
+
 export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSummary {
   const { matchState, events, homeName, awayName, homeShort, awayShort } = input;
+  const yellowCards = cardSplit(events, matchState, 'yellow');
+  const redCards = cardSplit(events, matchState, 'red');
   const homeScore = matchState.score.home;
   const awayScore = matchState.score.away;
 
@@ -97,7 +117,7 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
 
     const side = eventSide(e);
     const minute = eventMinute(e, matchState.clock.displayMinute);
-    const text = humanize(e, side, homeName, awayName);
+    const text = humanize(e, side, homeName, awayName, matchState);
     const kind = eventKind(type);
     const highlight = type === 'GOAL';
 
@@ -176,8 +196,13 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
       },
       {
         label: 'Żółte',
-        home: matchState.statistics.home.yellowCards,
-        away: matchState.statistics.away.yellowCards,
+        home: matchState.statistics.home.yellowCards + yellowCards.home,
+        away: matchState.statistics.away.yellowCards + yellowCards.away,
+      },
+      {
+        label: 'Czerwone',
+        home: (matchState.statistics.home.redCards ?? 0) + redCards.home,
+        away: (matchState.statistics.away.redCards ?? 0) + redCards.away,
       },
     ],
     possession,
@@ -313,6 +338,7 @@ function humanize(
   side: string | undefined,
   homeName: string,
   awayName: string,
+  matchState: MatchState,
 ): string {
   const team = sideName(side, homeName, awayName);
   switch (e.type) {
@@ -334,8 +360,15 @@ function humanize(
       return `Rzut rożny. ${team}.`;
     case 'SUBSTITUTION':
       return 'Zmiana zawodnika.';
-    case 'CARD':
-      return 'Kartka.';
+    case 'CARD': {
+      const payload =
+        e.payload && typeof e.payload === 'object'
+          ? (e.payload as { colour?: string; playerId?: string })
+          : undefined;
+      const name = matchState.players.find((player) => player.id === payload?.playerId)?.name;
+      const who = name ? ` dla ${name}` : '';
+      return payload?.colour === 'red' ? `Czerwona kartka${who}.` : `Żółta kartka${who}.`;
+    }
     default:
       return 'Sytuacja na boisku.';
   }

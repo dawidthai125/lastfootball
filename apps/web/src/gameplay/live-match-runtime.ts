@@ -20,6 +20,7 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { commentaryLine } from '@/lib/match/commentary';
 import type { RosterPlayerSeed } from '@/lib/squad';
+import { matchBooking } from '@/lib/squad/truth';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
 import {
@@ -106,6 +107,11 @@ export class LiveMatchRuntime {
   private readonly sharedWatch: boolean;
   private readonly homeName: string;
   private readonly awayName: string;
+  private readonly booked: readonly {
+    id: string;
+    colour: 'yellow' | 'red';
+    minute: number;
+  }[];
 
   constructor(
     fixture: Fixture,
@@ -125,6 +131,15 @@ export class LiveMatchRuntime {
     const opponentName = fixture.opponent.trim() || 'Rywal';
     this.homeName = fixture.home ? clubName : opponentName;
     this.awayName = fixture.home ? opponentName : clubName;
+    this.booked =
+      leagueFixture && ourXi
+        ? ourXi.flatMap((player) => {
+            const booking = matchBooking(player.id, leagueFixture.id);
+            return booking
+              ? [{ id: player.id, colour: booking.colour, minute: booking.minute }]
+              : [];
+          })
+        : [];
     this.session = resolveSession(
       fixture,
       club,
@@ -331,6 +346,25 @@ export class LiveMatchRuntime {
     const events = replayModel
       ? [...replayModel.events]
       : [...this.session.context().events.history()];
+    if (!replayModel) {
+      for (const booking of this.booked) {
+        if (matchState.clock.displayMinute < booking.minute) continue;
+        const card: EngineEvent = {
+          type: 'CARD',
+          tick: Math.round(booking.minute * 60),
+          payload: { playerId: booking.id, colour: booking.colour, minute: booking.minute },
+        };
+        const at = events.findIndex((event) => {
+          const raw =
+            event.payload && typeof event.payload === 'object' && 'minute' in event.payload
+              ? Number((event.payload as { minute: number }).minute)
+              : Number.NaN;
+          return Number.isFinite(raw) && raw > booking.minute;
+        });
+        if (at === -1) events.push(card);
+        else events.splice(at, 0, card);
+      }
+    }
     const homePossTicks = matchState.statistics.home.possessionTicks;
     const awayPossTicks = matchState.statistics.away.possessionTicks;
     const totalPoss = homePossTicks + awayPossTicks;

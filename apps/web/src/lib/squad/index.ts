@@ -9,6 +9,7 @@ export {
   POSITION_FILTERS,
   STATUS_FILTERS,
   STATUS_LABEL,
+  playerStatusLabel,
   SquadUnavailableError,
   isActivePlayer,
   isSeniorPlayer,

@@ -205,6 +205,24 @@ function resultDelta(result: MatchResult): number {
   return -8;
 }
 
+export type MatchBooking = {
+  readonly colour: 'yellow' | 'red';
+  readonly matches: 1 | 2;
+  readonly minute: number;
+};
+
+/** Same draw the post-match ban uses. Yellow sits one match, red sits two. */
+export function matchBooking(playerId: string, matchKey: string): MatchBooking | null {
+  const minute = 12 + (hash(`${playerId}:${matchKey}:min`) % 70);
+  if (hash(`${playerId}:${matchKey}:y`) % 100 < 12) {
+    return { colour: 'yellow', matches: 1, minute };
+  }
+  if (hash(`${playerId}:${matchKey}:r`) % 100 < 3) {
+    return { colour: 'red', matches: 2, minute };
+  }
+  return null;
+}
+
 function applyOne(
   player: SquadTruthPlayer,
   matchKey: string,
@@ -265,14 +283,12 @@ function applyOne(
     if (status !== 'INJURED' && status !== 'SUSPENDED') {
       const injRoll = hash(`${player.id}:${matchKey}:inj`) % 100;
       const injured = (energy < 45 && injRoll < 8) || (energy < 25 && injRoll < 18);
+      const booking = matchBooking(player.id, matchKey);
       if (injured) {
         status = 'INJURED';
-      } else if (hash(`${player.id}:${matchKey}:y`) % 100 < 12) {
+      } else if (booking) {
         status = 'SUSPENDED';
-        suspensionMatches = 1;
-      } else if (hash(`${player.id}:${matchKey}:r`) % 100 < 3) {
-        status = 'SUSPENDED';
-        suspensionMatches = 2;
+        suspensionMatches = booking.matches;
       }
     }
 

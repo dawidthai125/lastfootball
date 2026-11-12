@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
-import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
+import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
 
 import './squad-decision.css';
@@ -132,7 +132,7 @@ export function PlayerHero({
             flexShrink: 0,
           }}
         >
-          {STATUS_LABEL[player.status]}
+          {playerStatusLabel(player.status, player.suspensionMatches)}
         </span>
       </div>
     </AtmosphereLayer>
@@ -176,7 +176,7 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
         Kariera <strong>{player.careerPhaseLabel}</strong>
       </span>
       <span>
-        Status <strong>{STATUS_LABEL[player.status]}</strong>
+        Status <strong>{playerStatusLabel(player.status, player.suspensionMatches)}</strong>
       </span>
     </div>
   );
