@@ -16,6 +16,13 @@
   min-height: var(--lf-shell-mobile-nav, 52px);
 }
 
+/* Unlayered display:flex above beats Tailwind md:hidden, so the bar stayed on desktop. */
+@media (min-width: 768px) {
+  .lf-mobile-nav {
+    display: none;
+  }
+}
+
 .lf-mobile-nav__slot {
   flex: 1 1 0;
   display: inline-flex;
