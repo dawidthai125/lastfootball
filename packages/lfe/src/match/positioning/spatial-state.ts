@@ -21,7 +21,7 @@ export interface SpatialBall {
   readonly position: Position;
   /** Player the ball is travelling to, or at whose feet it already sits. */
   readonly targetPlayerId: string | null;
-  /** Tick of the pass or shot that chose the target. -1 before the first aim. */
+  /** Tick of the pass that locked this target. -1 before the first aim. */
   readonly aimedTick: number;
 }
 

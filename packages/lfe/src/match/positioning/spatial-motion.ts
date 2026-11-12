@@ -46,10 +46,11 @@ export function reseatSpatialLineup(
  * Deterministic movement Thin for the spatial read model.
  *
  * This is deliberately not the match result. The score still comes from the
- * tick engine. The picture reads that engine: the ball travels to a teammate
- * after a pass, a shot runs at the goal, and the referee runs to a foul.
- * A recent GOAL, CORNER, PENALTY, or FREE_KICK still pulls the ball to that
- * restart for a short window. Canvas and Replay only consume the snapshots.
+ * tick engine. The picture reads that engine: a pass is a straight flight to
+ * one teammate and stays there until the ball arrives, a shot runs at the
+ * goal, and the referee runs to a foul. A recent GOAL, CORNER, PENALTY, or
+ * FREE_KICK still pulls the ball to that restart for a short window.
+ * Canvas and Replay only consume the snapshots.
  */
 export function advanceMatchSpatialState(input: {
   readonly previous: MatchSpatialState;
@@ -89,15 +90,16 @@ export function advanceMatchSpatialState(input: {
     action?.type === 'SHOT' && input.tick - action.tick <= SHOT_FLIGHT_TICKS ? action : undefined;
   const pass = !shot && action?.type === 'PASS' ? action : undefined;
   const aimed = aimBall(players, possession, input.tick, input.previous.ball, pass);
+  const holder = !setPiece && !shot ? playerById(players, aimed.targetPlayerId) : undefined;
   const destination = setPiece
     ? focus
     : shot
       ? goalMouth(shot.side, pitch.length, pitch.width)
-      : (playerById(players, aimed.targetPlayerId)?.position ?? focus);
+      : (holder?.position ?? focus);
   const ballPosition = moveToward(
     input.previous.ball.position,
     destination,
-    setPiece || shot ? 3.4 : 2.6,
+    setPiece ? SET_PIECE_SPEED : shot ? SHOT_SPEED : PASS_SPEED,
   );
   const foul = latestFoul(input.events, input.tick);
   const fouler = foul ? playerById(players, foul.playerId) : undefined;
@@ -138,6 +140,12 @@ function readPlayerId(payload: unknown): string | null {
 
 const SHOT_FLIGHT_TICKS = 16;
 const FOUL_RUN_TICKS = 40;
+/** Metres per tick. A pass used to crawl at 2.6 and retarget every tick. */
+const PASS_SPEED = 12;
+const SHOT_SPEED = 18;
+const SET_PIECE_SPEED = 18;
+/** At or under this distance the ball is at a player's feet and the next pass may leave. */
+const BALL_STICK_METRES = 1.6;
 
 function latestAction(
   events: readonly EngineEvent[],
@@ -182,24 +190,43 @@ function aimBall(
   players: readonly SpatialPlayer[],
   side: 'home' | 'away',
   tick: number,
-  ball: { readonly targetPlayerId?: string | null; readonly aimedTick?: number },
+  ball: {
+    readonly position: { readonly x: number; readonly y: number };
+    readonly targetPlayerId?: string | null;
+    readonly aimedTick?: number;
+  },
   pass: { tick: number; side: 'home' | 'away'; playerId: string | null } | undefined,
 ): { targetPlayerId: string | null; aimedTick: number } {
   const previousTick = ball.aimedTick ?? -1;
   const previousId = ball.targetPlayerId ?? null;
+  const holder = playerById(players, previousId);
+  const inFlight =
+    holder !== undefined &&
+    holder.side === side &&
+    metresBetween(ball.position, holder.position) > BALL_STICK_METRES;
+  if (inFlight) {
+    return { targetPlayerId: previousId, aimedTick: previousTick };
+  }
   if (pass && pass.side === side && pass.tick !== previousTick) {
     return {
       targetPlayerId: pickReceiver(players, side, pass.playerId, pass.tick),
       aimedTick: pass.tick,
     };
   }
-  if (previousId && playerById(players, previousId)?.side === side) {
+  if (previousId && holder?.side === side) {
     return { targetPlayerId: previousId, aimedTick: previousTick };
   }
   return {
     targetPlayerId: pickReceiver(players, side, null, Math.floor(tick / 20)),
     aimedTick: previousTick,
   };
+}
+
+function metresBetween(
+  a: { readonly x: number; readonly y: number },
+  b: { readonly x: number; readonly y: number },
+): number {
+  return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
 function pickReceiver(

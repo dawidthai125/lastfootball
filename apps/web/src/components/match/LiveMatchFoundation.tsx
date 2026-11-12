@@ -2,14 +2,19 @@
 
 import type { FormationCode } from '@lastfootball/lfe';
 import Link from 'next/link';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gameplay/canvas';
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
-import { LIVE_SUB_LIMIT, type LiveMatchSnapshot } from '@/gameplay/live-match-runtime';
+import {
+  LIVE_BALL_INTERP_MS,
+  LIVE_SUB_LIMIT,
+  type LiveMatchSnapshot,
+} from '@/gameplay/live-match-runtime';
+import { pickCommentaryUtterance, polishVoice } from '@/lib/match/commentary';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
 import type { ReplaySpeed } from '@/gameplay/replay';
 import { MatchMomentOverlay } from '@/components/match/MatchMomentOverlay';
@@ -96,6 +101,9 @@ export function LiveMatchFoundation({
     score: string;
   } | null>(null);
   const [seenGoalIds, setSeenGoalIds] = useState<Set<string>>(() => new Set());
+  const [commentatorOn, setCommentatorOn] = useState(false);
+  const spokenIds = useRef<Set<string>>(new Set());
+  const voices = useRef<SpeechSynthesisVoice[]>([]);
 
   const finished = snapshot ? isMatchFinished(snapshot.matchState, snapshot.events) : false;
 
@@ -119,10 +127,58 @@ export function LiveMatchFoundation({
   }, [snapshot, seenGoalIds, finalOpen, postMatchOpen]);
 
   useEffect(() => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const remember = () => {
+      voices.current = synth.getVoices();
+    };
+    remember();
+    synth.addEventListener('voiceschanged', remember);
+    return () => {
+      synth.removeEventListener('voiceschanged', remember);
+      synth.cancel();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (commentatorOn && !postMatchOpen && !finalOpen) return;
+    window.speechSynthesis?.cancel();
+  }, [commentatorOn, postMatchOpen, finalOpen]);
+
+  useEffect(() => {
+    if (!commentatorOn || postMatchOpen || finalOpen) return;
+    const pick = pickCommentaryUtterance(snapshot?.feed ?? [], spokenIds.current);
+    if (!pick) return;
+    for (const id of pick.markIds) spokenIds.current.add(id);
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const utterance = new SpeechSynthesisUtterance(pick.text);
+    utterance.lang = 'pl-PL';
+    utterance.rate = 1.08;
+    const voice = polishVoice(voices.current);
+    if (voice) utterance.voice = voice;
+    synth.cancel();
+    synth.speak(utterance);
+  }, [commentatorOn, snapshot, postMatchOpen, finalOpen]);
+
+  const toggleCommentator = () => {
+    if (commentatorOn) {
+      window.speechSynthesis?.cancel();
+      setCommentatorOn(false);
+      return;
+    }
+    for (const item of snapshot?.feed ?? []) spokenIds.current.add(item.id);
+    window.speechSynthesis?.resume();
+    setCommentatorOn(true);
+  };
+
+  useEffect(() => {
     if (!runtime || postMatchOpen) return;
+    const liveView = snapshot?.replay.source !== 'replay';
     const renderer = createMatchCanvasRenderer({
       viewMode,
-      playbackMode: snapshot?.replay.source === 'replay' ? 'replay' : 'live',
+      playbackMode: liveView ? 'live' : 'replay',
+      interpMs: liveView ? LIVE_BALL_INTERP_MS : 50,
     });
     runtime.canvasHost.attachRenderer(renderer);
     if (snapshot?.replay.source === 'live') {
@@ -439,8 +495,16 @@ export function LiveMatchFoundation({
             className="lf-section-shell__header"
             style={{ flexWrap: 'wrap', gap: 'var(--lf-space-2)' }}
           >
-            <h2 className="lf-section-shell__title">Przebieg</h2>
+            <h2 className="lf-section-shell__title">Komentarz</h2>
             <div style={{ display: 'flex', gap: 'var(--lf-space-1)', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                aria-pressed={commentatorOn}
+                onClick={toggleCommentator}
+                style={chipStyle(commentatorOn)}
+              >
+                {commentatorOn ? 'Komentator włączony' : 'Komentator'}
+              </button>
               {(
                 [
                   ['all', 'Wszystkie'],
@@ -459,6 +523,29 @@ export function LiveMatchFoundation({
               ))}
             </div>
           </header>
+          {snapshot.feed.length > 0 ? (
+            <p
+              aria-live="polite"
+              style={{
+                margin: 0,
+                padding: 'var(--lf-space-2) var(--lf-space-3)',
+                borderBottomWidth: 'var(--lf-border-width-hair)',
+                borderBottomStyle: 'solid',
+                borderBottomColor: 'var(--lf-color-border-subtle)',
+                color: 'var(--lf-color-text-primary)',
+                fontWeight: 600,
+                lineHeight: 1.4,
+              }}
+            >
+              <span
+                className="font-[family-name:var(--font-ui)] tabular-nums"
+                style={{ color: 'var(--lf-color-text-gold)' }}
+              >
+                {snapshot.feed[snapshot.feed.length - 1]?.minute}
+              </span>{' '}
+              {snapshot.feed[snapshot.feed.length - 1]?.text}
+            </p>
+          ) : null}
           <ul
             style={{
               listStyle: 'none',
