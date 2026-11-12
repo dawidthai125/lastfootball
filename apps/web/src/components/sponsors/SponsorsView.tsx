@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { LocationHero, Panel, Button, StateBanner } from '@/components/ui';
 import { acceptSponsorRenewal, claimSponsorBonus } from '@/lib/sponsors/actions';
 import { SPONSOR_ACTION_INITIAL, type ClubSponsorsDto } from '@/lib/sponsors';
+import { formatMoney } from '@/lib/finance/format-money';
 import { UI_COPY } from '@/lib/ui/copy';
 
 function bonusStateLabel(state: ClubSponsorsDto['bonusState']): string {
@@ -23,7 +24,13 @@ function bonusStateLabel(state: ClubSponsorsDto['bonusState']): string {
  * Sponsors Experience — LFE-SPONSORS-01 Thin.
  * Domain only via resolveClubSponsors + server actions (D96 · D97 · D98).
  */
-export function SponsorsView({ sponsors }: { sponsors: ClubSponsorsDto }) {
+export function SponsorsView({
+  sponsors,
+  crowdQuote = null,
+}: {
+  sponsors: ClubSponsorsDto;
+  crowdQuote?: { readonly base: number; readonly bonus: number } | null;
+}) {
   const [claimState, claimAction, claimPending] = useActionState(
     claimSponsorBonus,
     SPONSOR_ACTION_INITIAL,
@@ -48,6 +55,18 @@ export function SponsorsView({ sponsors }: { sponsors: ClubSponsorsDto }) {
           {sponsors.seasonLabel} · przychód bazowy {sponsors.basePayoutLabel}
         </p>
       </header>
+
+      {crowdQuote ? (
+        <div className="mb-3">
+          <Panel title="Wycena od trybun i szczebla" flush>
+            <p className="px-2.5 py-2.5 text-[13px] text-[var(--lf-muted)]">
+              Następny kontrakt: baza {formatMoney(crowdQuote.base)}, bonus{' '}
+              {formatMoney(crowdQuote.bonus)}. Cel górnej połowy zostaje. Frekwencja i szczebel ligi
+              ruszają kwoty dopiero przy odnowieniu sezonu.
+            </p>
+          </Panel>
+        </div>
+      ) : null}
 
       {err ? (
         <div className="mb-3">

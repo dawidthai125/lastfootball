@@ -18,6 +18,10 @@ export type FixtureDto = {
   readonly awayScore: number | null;
   readonly playedAt: string | null;
   readonly createdAt: string;
+  /** Home club pitch, 0 when unknown. Both viewers of a shared match must carry the same value. */
+  readonly homePitchLevel?: number;
+  /** Home club stands, 0 when unknown. */
+  readonly homeStandsLevel?: number;
 };
 
 export type FixtureRow = {

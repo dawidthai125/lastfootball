@@ -12,7 +12,8 @@ import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { hashSeed } from '@/lib/match/hash-seed';
 import { orderForFormation } from '@/lib/match/order-xi';
-import { mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
+import { clampSkill, mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
+import { homePitchBonus } from '@/lib/stadium/levels';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -29,6 +30,12 @@ function conditionFromSeed(p: RosterPlayerSeed) {
     yellowCards: 0,
     hasRedCard: false,
   };
+}
+
+/** Level 0 returns the same skills object, so old sims stay put. */
+function withHomePitch<T extends { reactions: number }>(skills: T, bonus: number): T {
+  if (bonus <= 0) return skills;
+  return { ...skills, reactions: clampSkill(skills.reactions + bonus) };
 }
 
 /** Opponent condition only when the seed actually carries it, so AI matches stay put. */
@@ -69,6 +76,7 @@ export function createSessionFromLeagueFixture(
 
   const ourSide = fixture.isHome ? 'home' : 'away';
   const theirSide = fixture.isHome ? 'away' : 'home';
+  const pitchBonus = homePitchBonus(fixture.homePitchLevel ?? 0);
 
   const ourPlayers = our.map((p) => {
     if (p.skill == null || !Number.isFinite(p.skill)) {
@@ -81,7 +89,10 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      skills: withHomePitch(
+        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+        ourSide === 'home' ? pitchBonus : 0,
+      ),
       condition: conditionFromSeed(p),
     });
   });
@@ -97,7 +108,10 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      skills: withHomePitch(
+        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+        ourSide === 'home' ? pitchBonus : 0,
+      ),
       condition: conditionFromSeed(p),
     });
   });
@@ -112,7 +126,10 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+      skills: withHomePitch(
+        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
+        theirSide === 'home' ? pitchBonus : 0,
+      ),
       ...(conditionForOpponent(p) ? { condition: conditionForOpponent(p) } : {}),
     });
   });

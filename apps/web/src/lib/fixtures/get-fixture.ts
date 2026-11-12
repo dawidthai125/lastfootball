@@ -65,6 +65,49 @@ async function withHumanNames(clubId: string, fixtures: FixtureDto[]): Promise<F
 const FIXTURE_SELECT =
   'id, club_id, matchday, competition, opponent_club_id, is_home, status, home_score, away_score, played_at, created_at';
 
+const CLUB_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function homeClubId(viewerClubId: string, fixture: FixtureDto): string | null {
+  const id = fixture.isHome ? viewerClubId : fixture.opponentClubId;
+  return CLUB_UUID.test(id) ? id : null;
+}
+
+/** Home pitch and stands for the match ground. A missing column leaves fixtures unchanged. */
+async function attachHomeGround(
+  viewerClubId: string,
+  fixtures: FixtureDto[],
+): Promise<FixtureDto[]> {
+  const ids = [
+    ...new Set(
+      fixtures
+        .map((fixture) => homeClubId(viewerClubId, fixture))
+        .filter((id): id is string => id != null),
+    ),
+  ];
+  if (ids.length === 0) return fixtures;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('clubs')
+    .select('id, pitch_level, stands_level')
+    .in('id', ids);
+  if (error || !data) return fixtures;
+  const levels = new Map(
+    (data as { id: string; pitch_level: number; stands_level: number }[]).map((row) => [
+      row.id,
+      {
+        pitch: Math.max(0, Math.min(3, Math.trunc(row.pitch_level ?? 0))),
+        stands: Math.max(0, Math.min(3, Math.trunc(row.stands_level ?? 0))),
+      },
+    ]),
+  );
+  return fixtures.map((fixture) => {
+    const id = homeClubId(viewerClubId, fixture);
+    const ground = id ? levels.get(id) : undefined;
+    if (!ground) return fixture;
+    return { ...fixture, homePitchLevel: ground.pitch, homeStandsLevel: ground.stands };
+  });
+}
+
 export async function listClubFixtures(clubId: string): Promise<FixtureDto[]> {
   if (!env.isSupabaseConfigured) return [];
   const supabase = await createClient();
@@ -75,9 +118,12 @@ export async function listClubFixtures(clubId: string): Promise<FixtureDto[]> {
     .order('matchday', { ascending: true });
 
   if (error || !data) return [];
-  return withHumanNames(
+  return attachHomeGround(
     clubId,
-    await withChallengeNames(clubId, (data as FixtureRow[]).map(mapFixtureRow)),
+    await withHumanNames(
+      clubId,
+      await withChallengeNames(clubId, (data as FixtureRow[]).map(mapFixtureRow)),
+    ),
   );
 }
 
@@ -95,9 +141,12 @@ export async function getFixtureByIdForClub(
     .maybeSingle();
 
   if (error || !data) return null;
-  const [dto] = await withHumanNames(
+  const [dto] = await attachHomeGround(
     clubId,
-    await withChallengeNames(clubId, [mapFixtureRow(data as FixtureRow)]),
+    await withHumanNames(
+      clubId,
+      await withChallengeNames(clubId, [mapFixtureRow(data as FixtureRow)]),
+    ),
   );
   return dto ?? null;
 }

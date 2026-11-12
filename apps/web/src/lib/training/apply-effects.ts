@@ -44,6 +44,7 @@ function skillBoostIds(
   focusId: TrainingFocusId,
   intensityId: TrainingIntensityId,
   impulseKey: string,
+  sessionCap: number,
 ): ReadonlySet<string> {
   if (intensityId === 'light' || focusId === 'regeneration') {
     return new Set();
@@ -69,11 +70,7 @@ function skillBoostIds(
   const rotated = [...sorted.slice(offset), ...sorted.slice(0, offset)];
   const step = intensityId === 'high' ? 2 : 3;
   const toBoost = new Set<string>();
-  for (
-    let i = 0;
-    i < rotated.length && toBoost.size < TRAINING_THIN.SKILL_UP_MAX_PER_SESSION;
-    i += step
-  ) {
+  for (let i = 0; i < rotated.length && toBoost.size < sessionCap; i += step) {
     const id = rotated[i];
     if (!id) continue;
     const row = byId.get(id);
@@ -96,6 +93,7 @@ export function applyTrainingSessionEffects(
   focusId: TrainingFocusId,
   intensityId: TrainingIntensityId,
   impulseKey = 'training',
+  sessionCap: number = TRAINING_THIN.SKILL_UP_MAX_PER_SESSION,
 ): TrainingPlayerSlice[] {
   if (focusId === 'regeneration') {
     return players.map((p) => {
@@ -145,7 +143,8 @@ export function applyTrainingSessionEffects(
     if (id) toTire.add(id);
   }
 
-  const toBoost = skillBoostIds(players, focusId, intensityId, impulseKey);
+  const cap = Math.max(0, Math.trunc(sessionCap));
+  const toBoost = skillBoostIds(players, focusId, intensityId, impulseKey, cap);
 
   return players.map((p) => {
     let status = p.status;

@@ -18,6 +18,7 @@ import {
   runSeasonTransitionHAge,
 } from '@/lib/season/transition';
 import { renewSponsorAndPayBase } from '@/lib/sponsors/actions';
+import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 
@@ -93,10 +94,30 @@ export async function confirmStartNextSeason(
   const nextTier = applyLeagueTierOutcome(currentTier, outcome.kind);
 
   // H-SPONSORS: renew (Accept or auto — same flat Thin) → base payout once (Owner LOCK 2 · 8).
+  const lastHome = fixtures
+    .filter(
+      (fixture) =>
+        fixture.competition === 'league' &&
+        fixture.isHome &&
+        fixture.status === 'played' &&
+        fixture.homeScore != null &&
+        fixture.awayScore != null,
+    )
+    .sort((a, b) => (b.playedAt ?? '').localeCompare(a.playedAt ?? ''))[0];
+  const attendance =
+    lastHome == null || lastHome.homeScore == null || lastHome.awayScore == null
+      ? 'unknown'
+      : lastHome.homeScore > lastHome.awayScore
+        ? 'lively'
+        : lastHome.homeScore < lastHome.awayScore
+          ? 'quiet'
+          : 'steady';
+  const quote = sponsorFromCrowd({ attendance, leagueTier: currentTier });
   const sponsor = await renewSponsorAndPayBase({
     clubId,
     nextSeason,
     currentCash: row.cash_balance ?? 0,
+    quote,
   });
   if (!sponsor.ok) {
     return { error: sponsor.error };

@@ -12,6 +12,8 @@ import type {
 } from '@/lib/training/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+import { groupKeyForFocus } from '@/lib/squad/truth';
+import { applyCoachYield, isCoachGroup, type CoachGroup } from '@/lib/training/coach';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -45,6 +47,8 @@ export async function completeTrainingSession(
     focusId: TrainingFocusId;
     intensityId: TrainingIntensityId;
     today?: string;
+    coachGroup?: CoachGroup | null;
+    sessionCap?: number;
   },
 ): Promise<CompleteTrainingResult> {
   const today = input.today ?? utcDateString();
@@ -87,7 +91,20 @@ export async function completeTrainingSession(
     energy: p.energy,
   }));
   const impulseKey = `${today}:${input.focusId}:${input.intensityId}`;
-  const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId, impulseKey);
+  const coached = input.coachGroup ?? null;
+  const trained = applyTrainingSessionEffects(
+    before,
+    input.focusId,
+    input.intensityId,
+    impulseKey,
+    input.sessionCap,
+  );
+  const after = trained.map((player, index) => {
+    const prev = before[index];
+    if (!prev || player.skill <= prev.skill) return player;
+    const key = groupKeyForFocus(input.focusId, player.pos ?? '');
+    return applyCoachYield(player, coached, isCoachGroup(key) ? key : null);
+  });
   const summary = summarizeTrainingSessionEffects(before, after);
 
   const updates: {

@@ -6,6 +6,7 @@ import { ensureClubFixtures } from '@/lib/fixtures';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import { ensureClubSponsorContract } from '@/lib/sponsors/get-contract';
 import { resolveClubSponsors } from '@/lib/sponsors';
+import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 
 /**
  * Sponsors — fed only by resolveClubSponsors() (LFE-SPONSORS-01 · D96).
@@ -39,5 +40,25 @@ export default async function SponsorsPage() {
     leaguePlayed: playerRow?.played ?? 0,
   });
 
-  return <SponsorsView sponsors={sponsors} />;
+  const lastHome = fixtures
+    .filter(
+      (fixture) =>
+        fixture.competition === 'league' &&
+        fixture.isHome &&
+        fixture.status === 'played' &&
+        fixture.homeScore != null &&
+        fixture.awayScore != null,
+    )
+    .sort((a, b) => (b.playedAt ?? '').localeCompare(a.playedAt ?? ''))[0];
+  const attendance =
+    lastHome == null || lastHome.homeScore == null || lastHome.awayScore == null
+      ? 'unknown'
+      : lastHome.homeScore > lastHome.awayScore
+        ? 'lively'
+        : lastHome.homeScore < lastHome.awayScore
+          ? 'quiet'
+          : 'steady';
+  const crowdQuote = sponsorFromCrowd({ attendance, leagueTier: club.leagueTier });
+
+  return <SponsorsView sponsors={sponsors} crowdQuote={crowdQuote} />;
 }

@@ -6,6 +6,8 @@ import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { readClubBuild } from '@/lib/club/read-build';
+import { trainingSessionCap } from '@/lib/stadium/levels';
 import { completeTrainingSession } from '@/lib/training/complete-session';
 import type { TrainingActionState } from '@/lib/training/action-types';
 import type { TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
@@ -52,6 +54,7 @@ export async function runTrainingSession(
   const clubRow = club as { id: string; last_training_on: string | null };
   const playedCount = await countClubPlayedFixtures(supabase, clubRow.id);
   const activePlayers = await listClubPlayers(clubRow.id);
+  const build = await readClubBuild(supabase, clubRow.id);
 
   const result = await completeTrainingSession(supabase, {
     clubId: clubRow.id,
@@ -60,6 +63,8 @@ export async function runTrainingSession(
     activePlayers,
     focusId,
     intensityId,
+    coachGroup: build.coachGroup,
+    sessionCap: trainingSessionCap(build.levels.trainingCenter),
   });
 
   if (!result.ok) return { error: result.error };

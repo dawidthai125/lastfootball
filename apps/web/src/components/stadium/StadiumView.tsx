@@ -1,8 +1,22 @@
-import Link from 'next/link';
+'use client';
 
-import { LocationHero, Panel } from '@/components/ui';
+import Link from 'next/link';
+import { useActionState } from 'react';
+
+import { LocationHero, Panel, Button } from '@/components/ui';
+import { formatMoney } from '@/lib/finance/format-money';
 import type { ClubStadiumDto, StadiumAttendanceBand } from '@/lib/stadium';
+import { raiseGroundPart, type GroundActionState } from '@/lib/stadium/actions-build';
+import {
+  STADIUM_UPGRADE_COST,
+  stadiumLook,
+  ticketIncome,
+  type StadiumLevels,
+  type StadiumPart,
+} from '@/lib/stadium/levels';
 import { UI_COPY } from '@/lib/ui/copy';
+
+const GROUND_INITIAL: GroundActionState = {};
 
 function bandCaption(band: StadiumAttendanceBand): string {
   switch (band) {
@@ -21,7 +35,44 @@ function bandCaption(band: StadiumAttendanceBand): string {
  * Stadium Experience — LFE-STADIUM-01 Information Thin.
  * Domain only via resolveClubStadium (D109 · D110). No actions / tickets.
  */
-export function StadiumView({ stadium }: { stadium: ClubStadiumDto }) {
+function partLevel(levels: StadiumLevels, part: StadiumPart): number {
+  if (part === 'stands') return levels.stands;
+  if (part === 'pitch') return levels.pitch;
+  return levels.trainingCenter;
+}
+
+export function StadiumView({
+  stadium,
+  ground,
+  cash = 0,
+}: {
+  stadium: ClubStadiumDto;
+  ground?: StadiumLevels;
+  cash?: number;
+}) {
+  const levels = ground ?? { stands: 0, pitch: 0, trainingCenter: 0 };
+  const look = stadiumLook(levels);
+  const [buildState, buildAction, buildPending] = useActionState(raiseGroundPart, GROUND_INITIAL);
+  const parts: { part: StadiumPart; title: string; detail: string }[] = [
+    {
+      part: 'stands',
+      title: look.stands,
+      detail: `Bilety z meczu u siebie przy pełnej frekwencji: ${formatMoney(
+        ticketIncome({ standsLevel: levels.stands, attendance: 'lively' }),
+      )}`,
+    },
+    {
+      part: 'pitch',
+      title: look.pitch,
+      detail: 'Murawa daje lekki bonus gospodarzowi. Obaj widzowie meczu biorą poziom domu.',
+    },
+    {
+      part: 'training_center',
+      title: look.center,
+      detail: 'Ośrodek podnosi limit zawodników, którzy rosną na jednym treningu.',
+    },
+  ];
+
   return (
     <div
       className="lf-sta"
@@ -41,6 +92,47 @@ export function StadiumView({ stadium }: { stadium: ClubStadiumDto }) {
       <Panel title="Dom klubu" flush>
         <p className="px-2.5 py-2.5 text-[13px] text-[var(--lf-muted)]">{stadium.identityNote}</p>
       </Panel>
+
+      <div className="mt-3">
+        <Panel title="Rozbudowa" flush>
+          <div className="space-y-3 px-2.5 py-2.5 text-[13px]">
+            {buildState.error ? (
+              <p className="text-[12px] text-[var(--lf-danger)]" role="alert">
+                {buildState.error}
+              </p>
+            ) : null}
+            {parts.map((item) => {
+              const level = partLevel(levels, item.part);
+              const cost = level >= 3 ? 0 : (STADIUM_UPGRADE_COST[item.part][level] ?? 0);
+              return (
+                <div key={item.part} className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-[var(--lf-text-strong)]">
+                      {item.title} · poziom {level}
+                    </p>
+                    <p className="text-[12px] text-[var(--lf-muted)]">{item.detail}</p>
+                  </div>
+                  {level >= 3 ? (
+                    <span className="text-[12px] text-[var(--lf-muted)]">Maksimum</span>
+                  ) : (
+                    <form action={buildAction}>
+                      <input type="hidden" name="part" value={item.part} />
+                      <Button
+                        type="submit"
+                        variant="default"
+                        size="sm"
+                        disabled={buildPending || cash < cost}
+                      >
+                        {buildPending ? '…' : `Rozbuduj · ${formatMoney(cost)}`}
+                      </Button>
+                    </form>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Panel>
+      </div>
 
       <div className="mt-3">
         <Panel title="Frekwencja (jakościowa)" flush>

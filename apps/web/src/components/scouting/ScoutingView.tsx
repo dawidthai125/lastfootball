@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 
 import { SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
 import { addScoutShortlist, removeScoutShortlist } from '@/lib/scouting/actions';
+import { buyScoutReport } from '@/lib/scouting/actions-report';
 import {
   SCOUTING_ACTION_INITIAL,
   type ScoutingCandidateDto,
@@ -16,11 +17,15 @@ function CandidateRow({
   removeAction,
   addAction,
   pending,
+  reportAction,
+  reportPending,
 }: {
   c: ScoutingCandidateDto;
   removeAction: (payload: FormData) => void;
   addAction: (payload: FormData) => void;
   pending: boolean;
+  reportAction: (payload: FormData) => void;
+  reportPending: boolean;
 }) {
   return (
     <li className="flex flex-wrap items-center justify-between gap-2 px-2.5 py-2.5">
@@ -39,6 +44,14 @@ function CandidateRow({
         >
           {c.ctaLabel} →
         </Link>
+        {c.source === 'market_listed' && c.potentialLabel === 'Sufit ukryty' ? (
+          <form action={reportAction}>
+            <input type="hidden" name="playerId" value={c.playerId} />
+            <Button type="submit" variant="default" size="sm" disabled={reportPending}>
+              {reportPending ? '…' : 'Raport 2 000 EUR'}
+            </Button>
+          </form>
+        ) : null}
         {c.onShortlist ? (
           <form action={removeAction}>
             <input type="hidden" name="playerId" value={c.playerId} />
@@ -72,6 +85,10 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
     removeScoutShortlist,
     SCOUTING_ACTION_INITIAL,
   );
+  const [reportState, reportAction, reportPending] = useActionState(
+    buyScoutReport,
+    SCOUTING_ACTION_INITIAL,
+  );
   const pending = addPending || removePending;
 
   if (!scouting.unlocked) {
@@ -90,9 +107,12 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
     );
   }
 
-  const err = addState.error || removeState.error;
+  const err = addState.error || removeState.error || reportState.error;
   const okMsg =
-    (addState.ok && addState.message) || (removeState.ok && removeState.message) || null;
+    (addState.ok && addState.message) ||
+    (removeState.ok && removeState.message) ||
+    (reportState.ok && reportState.message) ||
+    null;
 
   const marketCandidates = scouting.candidates.filter((c) => c.source === 'market_listed');
   const ownCandidates = scouting.candidates.filter((c) => c.source === 'own_senior');
@@ -136,6 +156,8 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
                 addAction={addAction}
                 removeAction={removeAction}
                 pending={pending}
+                reportAction={reportAction}
+                reportPending={reportPending}
               />
             ))}
           </ul>
@@ -156,6 +178,8 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
                 addAction={addAction}
                 removeAction={removeAction}
                 pending={pending}
+                reportAction={reportAction}
+                reportPending={reportPending}
               />
             ))}
           </ul>
@@ -174,6 +198,8 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
                 addAction={addAction}
                 removeAction={removeAction}
                 pending={pending}
+                reportAction={reportAction}
+                reportPending={reportPending}
               />
             ))}
           </ul>

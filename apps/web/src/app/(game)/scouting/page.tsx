@@ -5,6 +5,7 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listClubFixtures } from '@/lib/fixtures';
 import { resolveHubPhase } from '@/lib/hub';
 import { listScoutShortlistIds } from '@/lib/scouting/get-shortlist';
+import { loadRevealedPlayerIds } from '@/lib/scouting/load-reports';
 import { resolveClubScouting } from '@/lib/scouting';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
@@ -20,11 +21,12 @@ export default async function ScoutingPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
-  const [fixtures, ownPlayers, liveListings, shortlistIds] = await Promise.all([
+  const [fixtures, ownPlayers, liveListings, shortlistIds, revealed] = await Promise.all([
     listClubFixtures(club.id),
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),
     listScoutShortlistIds(club.id),
+    loadRevealedPlayerIds(club.id),
   ]);
 
   const phase = resolveHubPhase(club, { hasFixtures: fixtures.length > 0 });
@@ -36,7 +38,7 @@ export default async function ScoutingPage() {
     liveListings,
   });
 
-  const scouting = resolveClubScouting(club, ownPlayers, market, shortlistIds, phase);
+  const scouting = resolveClubScouting(club, ownPlayers, market, shortlistIds, phase, revealed);
 
   return <ScoutingView scouting={scouting} />;
 }
