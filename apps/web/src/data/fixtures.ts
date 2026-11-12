@@ -74,6 +74,10 @@ export type LiveMatchBundle = {
   viewers: string;
   weather: string;
   stadiumCapacity: string;
+  /** Home stand level. 0 draws the starter ground. */
+  groundStands: number;
+  /** Home pitch level. 0 keeps plain grass. */
+  groundPitch: number;
   possession: { home: number; away: number };
   stats: { label: string; home: number; away: number }[];
   momentum: number[];

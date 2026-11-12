@@ -2,7 +2,9 @@ import { redirect } from 'next/navigation';
 
 import { ClubProfileView } from '@/components/club/ClubProfileView';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { readClubBuild } from '@/lib/club/read-build';
 import { resolveClubProfile } from '@/lib/club/resolve-club-profile';
+import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures';
 import { resolveLeagueTable } from '@/lib/league';
 
@@ -16,7 +18,9 @@ export default async function ClubPage() {
 
   const fixtures = await listClubFixtures(club.id);
   const table = resolveLeagueTable(club, fixtures);
-  const profile = resolveClubProfile({ club, table });
+  const supabase = await createClient();
+  const build = await readClubBuild(supabase, club.id);
+  const profile = resolveClubProfile({ club, table, standsLevel: build.levels.stands });
 
   return <ClubProfileView profile={profile} />;
 }

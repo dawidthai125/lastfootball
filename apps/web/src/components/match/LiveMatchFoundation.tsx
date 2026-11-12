@@ -179,6 +179,8 @@ export function LiveMatchFoundation({
       viewMode,
       playbackMode: liveView ? 'live' : 'replay',
       interpMs: liveView ? LIVE_BALL_INTERP_MS : 50,
+      stands: bundle.groundStands,
+      pitch: bundle.groundPitch,
     });
     runtime.canvasHost.attachRenderer(renderer);
     if (snapshot?.replay.source === 'live') {
@@ -191,7 +193,7 @@ export function LiveMatchFoundation({
       runtime.canvasHost.attachRenderer(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional
-  }, [runtime, viewMode, postMatchOpen]);
+  }, [runtime, viewMode, postMatchOpen, bundle.groundStands, bundle.groundPitch]);
 
   useEffect(() => {
     if (!runtime || postMatchOpen || !snapshot) return;

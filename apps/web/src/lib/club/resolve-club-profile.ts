@@ -1,4 +1,5 @@
 import { STARTER_PACKAGE, type ClubDto } from '@/lib/club/types';
+import { stadiumSeatLabel } from '@/lib/stadium/levels';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { resolvePlayerLeaguePositionLabel, type LeagueTableDto } from '@/lib/league';
@@ -41,6 +42,8 @@ export type ClubProfileDto = {
 export type ResolveClubProfileInput = {
   readonly club: ClubDto;
   readonly table: LeagueTableDto;
+  /** Missing stays the starter ground. */
+  readonly standsLevel?: number;
 };
 
 const PROFILE_LINKS: readonly ClubProfileLinkDto[] = [
@@ -68,7 +71,7 @@ export function resolveClubProfile(input: ResolveClubProfileInput): ClubProfileD
     starter: {
       leagueLabel: resolveLeagueTierLabel(club.leagueTier),
       stadiumLabel: STARTER_PACKAGE.stadiumLabel(club.name),
-      stadiumCapacityLabel: STARTER_PACKAGE.stadiumCapacity,
+      stadiumCapacityLabel: stadiumSeatLabel(input.standsLevel ?? 0),
     },
     organizationLabel: UI_COPY.clubOrganizationStarter,
     cashLabel: formatMoney(club.cashBalance),

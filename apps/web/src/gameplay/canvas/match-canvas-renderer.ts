@@ -5,6 +5,7 @@
  */
 
 import type { MatchCanvasReadModel, MatchCanvasRenderer } from '@/gameplay/canvas-host';
+import { pitchStripeCount, standHasRoof, standInset } from '@/lib/stadium/levels';
 
 import { deriveVisualFrame } from './derive-visual-frame';
 import type {
@@ -49,12 +50,17 @@ export type MatchCanvasRendererOptions = {
   playbackMode?: CanvasPlaybackMode;
   /** Target blend duration between simulation frames (ms). */
   interpMs?: number;
+  /** Home stand level 0..3. Level 0 draws no stand. */
+  stands?: number;
+  /** Home pitch level 0..3. Level 0 keeps plain grass. */
+  pitch?: number;
 };
 
 export type MatchCanvasRendererApi = MatchCanvasRenderer & {
   setViewMode(mode: CanvasViewMode): void;
   setPlaybackMode(mode: CanvasPlaybackMode): void;
   setInterpMs(ms: number): void;
+  setGround(ground: { stands: number; pitch: number }): void;
 };
 
 export function createMatchCanvasRenderer(
@@ -67,6 +73,8 @@ export function createMatchCanvasRenderer(
   let viewMode: CanvasViewMode = options.viewMode ?? 'tactical';
   let playbackMode: CanvasPlaybackMode = options.playbackMode ?? 'live';
   let interpMs = options.interpMs ?? 80;
+  let standsLevel = options.stands ?? 0;
+  let pitchLevel = options.pitch ?? 0;
 
   let from: VisualFrame | null = null;
   let to: VisualFrame | null = null;
@@ -93,6 +101,11 @@ export function createMatchCanvasRenderer(
 
     setInterpMs(ms: number) {
       interpMs = Math.max(16, ms);
+    },
+
+    setGround(ground: { stands: number; pitch: number }) {
+      standsLevel = ground.stands;
+      pitchLevel = ground.pitch;
     },
 
     mount(el: HTMLElement) {
@@ -173,6 +186,8 @@ export function createMatchCanvasRenderer(
     paint(ctx, root.clientWidth || 640, root.clientHeight || 360, displayed, {
       viewMode,
       playbackMode,
+      stands: standsLevel,
+      pitch: pitchLevel,
       fxKind: now < fxUntil ? fxKind : null,
       fxSide,
       fxAlpha: now < fxUntil ? clamp01((fxUntil - now) / 600) : 0,
@@ -185,6 +200,8 @@ export function createMatchCanvasRenderer(
 type PaintFx = {
   viewMode: CanvasViewMode;
   playbackMode: CanvasPlaybackMode;
+  stands: number;
+  pitch: number;
   fxKind: VisualFxKind | null;
   fxSide?: string;
   fxAlpha: number;
@@ -197,16 +214,17 @@ function paint(
   frame: VisualFrame,
   fx: PaintFx,
 ) {
-  const pad = viewPadding(fx.viewMode);
+  const pad = viewPadding(fx.viewMode) + standInset(fx.stands);
   const { sx, sy, ox, oy } = fitPitch(frame.pitchLength, frame.pitchWidth, cssW, cssH, pad);
 
   ctx.clearRect(0, 0, cssW, cssH);
   ctx.fillStyle = TOKENS.void;
   ctx.fillRect(0, 0, cssW, cssH);
 
-  // Pitch body
   const pw = frame.pitchLength * sx;
   const ph = frame.pitchWidth * sy;
+  drawStands(ctx, ox, oy, pw, ph, fx.stands);
+
   const grad = ctx.createLinearGradient(ox, oy, ox, oy + ph);
   grad.addColorStop(0, 'rgba(31, 92, 56, 0.85)');
   grad.addColorStop(0.45, TOKENS.pitch);
@@ -214,6 +232,8 @@ function paint(
   roundRect(ctx, ox, oy, pw, ph, 6);
   ctx.fillStyle = grad;
   ctx.fill();
+  drawPitchStripes(ctx, ox, oy, pw, ph, fx.pitch);
+  roundRect(ctx, ox, oy, pw, ph, 6);
   ctx.strokeStyle = TOKENS.line;
   ctx.lineWidth = 1;
   ctx.stroke();
@@ -270,6 +290,57 @@ function paint(
     ctx.fillText('REPLAY', ox + 44, oy + ph - 19);
     ctx.restore();
   }
+}
+
+function drawStands(
+  ctx: CanvasRenderingContext2D,
+  ox: number,
+  oy: number,
+  pw: number,
+  ph: number,
+  level: number,
+) {
+  const band = standInset(level);
+  if (band <= 0 || pw < 8 || ph < 8) return;
+  const gap = 2;
+  ctx.fillStyle = '#12151c';
+  ctx.fillRect(ox - 2, oy - band - gap, pw + 4, band);
+  ctx.fillRect(ox - 2, oy + ph + gap, pw + 4, band);
+  ctx.fillRect(ox - band - gap, oy, band, ph);
+  ctx.fillRect(ox + pw + gap, oy, band, ph);
+  if (standHasRoof(level)) {
+    ctx.fillStyle = TOKENS.gold;
+    ctx.fillRect(ox - 4, oy - band - gap - 3, pw + 8, 2);
+  }
+  const specks = 6 + level * 8;
+  ctx.fillStyle = level >= 2 ? 'rgba(196, 163, 90, 0.9)' : 'rgba(240, 244, 250, 0.4)';
+  for (let i = 0; i < specks; i += 1) {
+    const x = ox + ((i * 47) % Math.max(1, Math.floor(pw)));
+    const y = oy - band + 2 + (i % 3) * 2;
+    ctx.fillRect(x, y, 2, 2);
+  }
+}
+
+function drawPitchStripes(
+  ctx: CanvasRenderingContext2D,
+  ox: number,
+  oy: number,
+  pw: number,
+  ph: number,
+  level: number,
+) {
+  const bands = pitchStripeCount(level);
+  if (bands <= 0 || ph < 8) return;
+  ctx.save();
+  roundRect(ctx, ox, oy, pw, ph, 6);
+  ctx.clip();
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = '#143d24';
+  const slice = ph / (bands * 2);
+  for (let i = 0; i < bands; i += 1) {
+    ctx.fillRect(ox, oy + slice * (i * 2), pw, slice);
+  }
+  ctx.restore();
 }
 
 function drawPitchMarkings(

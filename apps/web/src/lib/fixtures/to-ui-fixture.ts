@@ -2,7 +2,7 @@ import type { FormationCode } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
-import { stadiumLook } from '@/lib/stadium/levels';
+import { stadiumLook, stadiumSeatLabel } from '@/lib/stadium/levels';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
@@ -197,8 +197,18 @@ export function buildLeaguePreMatchBundle(
   };
 }
 
+function liveGround(dto: FixtureDto): { stands: number; pitch: number } {
+  const cupRound = dto.competition === 'cup' ? cupRoundForMatchday(dto.matchday) : null;
+  if (cupRound === 4) return { stands: 0, pitch: 0 };
+  return {
+    stands: dto.homeStandsLevel ?? 0,
+    pitch: dto.homePitchLevel ?? 0,
+  };
+}
+
 export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatchBundle {
   const fixture = toUiFixture(dto, club);
+  const ground = liveGround(dto);
   return {
     fixture,
     clock: '00:00',
@@ -207,7 +217,9 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
     awayScore: 0,
     viewers: '—',
     weather: '14°C · pochmurnie',
-    stadiumCapacity: STARTER_PACKAGE.stadiumCapacity,
+    stadiumCapacity: stadiumSeatLabel(ground.stands),
+    groundStands: ground.stands,
+    groundPitch: ground.pitch,
     possession: { home: 50, away: 50 },
     stats: [
       { label: 'Strzały', home: 0, away: 0 },
