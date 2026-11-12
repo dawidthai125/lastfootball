@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   applyMatchSquadTruth,
+  matchBooking,
   attributeBars,
   bumpGroup,
   energyAfterTraining,
@@ -214,6 +215,26 @@ describe('applyMatchSquadTruth', () => {
     expect(after?.recentRatings).toEqual([70, 75]);
     expect(after?.skill).toBe(before.skill);
     expect(after?.groups).toEqual(before.groups);
+  });
+
+  it('sits a booked starter for the matches on the card', () => {
+    let found: { id: string; matches: 1 | 2 } | null = null;
+    for (let i = 0; i < 400; i += 1) {
+      const id = `book-${i}`;
+      const booking = matchBooking(id, 'md-9');
+      if (!booking) continue;
+      found = { id, matches: booking.matches };
+      break;
+    }
+    expect(found).not.toBeNull();
+    const [after] = applyMatchSquadTruth([player({ id: found!.id, energy: 80, status: 'READY' })], {
+      matchKey: 'md-9',
+      result: 'draw',
+      roleById: { [found!.id]: 'xi' },
+    });
+    expect(after?.status).toBe('SUSPENDED');
+    expect(after?.suspensionMatches).toBe(found!.matches);
+    expect(matchBooking(found!.id, 'md-9')).toEqual(matchBooking(found!.id, 'md-9'));
   });
 
   it('raises energy for a player left out', () => {

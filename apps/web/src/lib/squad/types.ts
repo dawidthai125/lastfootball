@@ -30,6 +30,7 @@ export type SquadPlayerDto = {
   readonly careerPhase: CareerPhaseId;
   readonly careerPhaseLabel: string;
   readonly status: PlayerStatus;
+  readonly suspensionMatches?: number;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {
@@ -91,6 +92,15 @@ export const STATUS_LABEL: Record<PlayerStatus, string> = {
   SUSPENDED: 'Zawieszony',
   DEPARTED: 'Odszedł',
 };
+
+/** Suspended players say how many matches they sit. */
+export function playerStatusLabel(status: PlayerStatus, suspensionMatches?: number): string {
+  if (status === 'SUSPENDED' && suspensionMatches && suspensionMatches > 0) {
+    const word = suspensionMatches === 1 ? 'mecz' : 'mecze';
+    return `Zawieszony · ${suspensionMatches} ${word}`;
+  }
+  return STATUS_LABEL[status];
+}
 export type SortKey = 'name' | 'position' | 'age' | 'form' | 'energy' | 'skill' | 'status';
 
 export class SquadUnavailableError extends Error {

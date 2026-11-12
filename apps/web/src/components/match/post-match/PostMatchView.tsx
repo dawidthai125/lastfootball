@@ -194,6 +194,14 @@ export function PostMatchView({
             {summary.stats.map((s) => (
               <StatRow key={s.label} {...s} />
             ))}
+            {summary.stats.some(
+              (s) => (s.label === 'Żółte' || s.label === 'Czerwone') && (s.home > 0 || s.away > 0),
+            ) ? (
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--lf-muted)' }}>
+                Kartka zostawia zawodnika na boisku do końca tego meczu. Żółta pauzuje jedną
+                kolejkę, czerwona dwie.
+              </p>
+            ) : null}
           </div>
         </section>
       </div>

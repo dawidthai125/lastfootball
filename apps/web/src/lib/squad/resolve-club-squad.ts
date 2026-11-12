@@ -85,6 +85,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     careerPhase,
     careerPhaseLabel: careerPhaseLabel({ age: row.age }),
     status: row.status,
+    suspensionMatches: row.suspensionMatches,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
