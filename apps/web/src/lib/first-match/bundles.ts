@@ -1,12 +1,28 @@
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
+import {
+  emptyStadiumLevels,
+  stadiumLook,
+  stadiumSeatLabel,
+  type StadiumLevels,
+} from '@/lib/stadium/levels';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
 
-export function buildFirstFixture(club: ClubDto): Fixture {
+function firstStadiumName(club: ClubDto, levels: StadiumLevels): string {
+  const base = STARTER_PACKAGE.stadiumLabel(club.name);
+  if (levels.stands <= 0 && levels.pitch <= 0) return base;
+  const look = stadiumLook(levels);
+  return `${base} · ${look.stands} · ${look.pitch}`;
+}
+
+export function buildFirstFixture(
+  club: ClubDto,
+  levels: StadiumLevels = emptyStadiumLevels(),
+): Fixture {
   const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
   return {
     id: FIRST_MATCH_ID,
@@ -19,7 +35,7 @@ export function buildFirstFixture(club: ClubDto): Fixture {
     opponent: FIRST_MATCH_BOT.name,
     opponentShort: FIRST_MATCH_BOT.shortName,
     home: true,
-    stadium: STARTER_PACKAGE.stadiumLabel(club.name),
+    stadium: firstStadiumName(club, levels),
     status: 'upcoming',
   };
 }
@@ -27,8 +43,9 @@ export function buildFirstFixture(club: ClubDto): Fixture {
 export function buildFirstPreMatchBundle(
   club: ClubDto,
   ourXi: readonly RosterPlayerSeed[],
+  levels: StadiumLevels = emptyStadiumLevels(),
 ): PreMatchBundle {
-  const fixture = buildFirstFixture(club);
+  const fixture = buildFirstFixture(club, levels);
   const our = orderForFormation(ourXi, '4-4-2');
   const their = seedBotSquad();
 
@@ -100,8 +117,11 @@ export function buildFirstPreMatchBundle(
   };
 }
 
-export function buildFirstLiveBundle(club: ClubDto): LiveMatchBundle {
-  const fixture = buildFirstFixture(club);
+export function buildFirstLiveBundle(
+  club: ClubDto,
+  levels: StadiumLevels = emptyStadiumLevels(),
+): LiveMatchBundle {
+  const fixture = buildFirstFixture(club, levels);
   return {
     fixture,
     clock: '00:00',
@@ -110,7 +130,9 @@ export function buildFirstLiveBundle(club: ClubDto): LiveMatchBundle {
     awayScore: 0,
     viewers: '—',
     weather: '18°C · słonecznie',
-    stadiumCapacity: STARTER_PACKAGE.stadiumCapacity,
+    stadiumCapacity: stadiumSeatLabel(levels.stands),
+    groundStands: levels.stands,
+    groundPitch: levels.pitch,
     possession: { home: 50, away: 50 },
     stats: [
       { label: 'Strzały', home: 0, away: 0 },

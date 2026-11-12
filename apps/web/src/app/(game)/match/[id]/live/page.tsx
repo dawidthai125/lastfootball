@@ -2,8 +2,10 @@ import { notFound, redirect } from 'next/navigation';
 
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
 import { EmptyState, LocationHero } from '@/components/ui';
+import { readClubBuild } from '@/lib/club/read-build';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createClient } from '@/lib/supabase/server';
 import { buildFirstLiveBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
@@ -52,9 +54,11 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
       const ourXi = resolveStartingXi(players);
       const ourBench = resolveMatchBench(players);
       const developmentNames = previewMatchDevelopment(players).skillUpNames;
+      const supabase = await createClient();
+      const build = await readClubBuild(supabase, club.id);
       return (
         <LiveMatchFoundation
-          bundle={buildFirstLiveBundle(club)}
+          bundle={buildFirstLiveBundle(club, build.levels)}
           club={club}
           firstMatch
           ourXi={ourXi}

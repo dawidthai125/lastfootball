@@ -10,6 +10,7 @@ import { raiseGroundPart, type GroundActionState } from '@/lib/stadium/actions-b
 import {
   STADIUM_UPGRADE_COST,
   stadiumLook,
+  stadiumSeatLabel,
   ticketIncome,
   type StadiumLevels,
   type StadiumPart,
@@ -86,7 +87,7 @@ export function StadiumView({
         <h1 className="font-[family-name:var(--font-display)] text-[1.25rem] text-[var(--lf-text-strong)]">
           {stadium.name}
         </h1>
-        <p className="mt-1 text-[12px] text-[var(--lf-muted)]">{stadium.capacityLabel}</p>
+        <p className="mt-1 text-[12px] text-[var(--lf-muted)]">{stadiumSeatLabel(levels.stands)}</p>
       </header>
 
       <Panel title="Dom klubu" flush>

@@ -3,8 +3,10 @@ import Link from 'next/link';
 
 import { PreMatchView } from '@/components/match/PreMatchView';
 import { Panel } from '@/components/ui/Panel';
+import { readClubBuild } from '@/lib/club/read-build';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createClient } from '@/lib/supabase/server';
 import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
@@ -41,7 +43,11 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
     if (isFirstMatchCompleted(club)) redirect('/hub');
     try {
       const ourXi = await loadClubStartingXi(club);
-      return <PreMatchView bundle={buildFirstPreMatchBundle(club, ourXi)} firstMatch />;
+      const supabase = await createClient();
+      const build = await readClubBuild(supabase, club.id);
+      return (
+        <PreMatchView bundle={buildFirstPreMatchBundle(club, ourXi, build.levels)} firstMatch />
+      );
     } catch (e) {
       if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
       throw e;

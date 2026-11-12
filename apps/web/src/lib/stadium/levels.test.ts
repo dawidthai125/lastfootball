@@ -3,7 +3,10 @@ import { describe, expect, it } from 'vitest';
 import {
   emptyStadiumLevels,
   homePitchBonus,
+  pitchStripeCount,
   stadiumLook,
+  stadiumSeatLabel,
+  standInset,
   ticketIncome,
   trainingSessionCap,
   upgradePart,
@@ -122,6 +125,25 @@ describe('upgradePart', () => {
         cash: 1,
       }),
     ).toEqual({ ok: false, reason: 'max' });
+  });
+});
+
+describe('stadiumSeatLabel', () => {
+  it('keeps the starter seats at level 0 and grows with the stands', () => {
+    expect(stadiumSeatLabel(0)).toBe('4 200 miejsc');
+    expect(stadiumSeatLabel(1)).toBe('7 200 miejsc');
+    expect(stadiumSeatLabel(2)).toBe('11 000 miejsc');
+    expect(stadiumSeatLabel(3)).toBe('16 000 miejsc');
+    expect(stadiumSeatLabel(9)).toBe('16 000 miejsc');
+  });
+});
+
+describe('standInset', () => {
+  it('adds no margin at level 0 and room for a roof at level 3', () => {
+    expect(standInset(0)).toBe(0);
+    expect(standInset(3)).toBe(20);
+    expect(pitchStripeCount(0)).toBe(0);
+    expect(pitchStripeCount(3)).toBe(5);
   });
 });
 

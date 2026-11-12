@@ -36,6 +36,15 @@ const TRAINING_SESSION_CAP = [
   TRAINING_THIN.SKILL_UP_MAX_PER_SESSION + 3,
 ] as const;
 
+/** Seats the player reads. Level 0 stays the starter ground. */
+const STANDS_SEATS = [4_200, 7_200, 11_000, 16_000] as const;
+
+/** Extra margin around the grass so the stands have room. Level 0 adds none. */
+const STAND_INSET = [0, 8, 14, 20] as const;
+
+/** Darker mowing bands. Level 0 keeps the plain grass. */
+const PITCH_STRIPES = [0, 3, 4, 5] as const;
+
 const STANDS_LOOK = [
   'Trybuny startowe',
   'Trybuny większe',
@@ -169,6 +178,28 @@ export function homePitchBonus(pitchLevel: number): number {
  */
 export function trainingSessionCap(centerLevel: number): number {
   return valueAt(TRAINING_SESSION_CAP, centerLevel);
+}
+
+/** "4 200 miejsc" at level 0, then the bigger grounds. */
+export function stadiumSeatLabel(standsLevel: number): string {
+  const seats = valueAt(STANDS_SEATS, standsLevel);
+  const text = String(seats).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return `${text} miejsc`;
+}
+
+/** Pixels the live picture keeps outside the grass for the stands. */
+export function standInset(standsLevel: number): number {
+  return valueAt(STAND_INSET, standsLevel);
+}
+
+/** How many mowing bands the live grass draws. Zero leaves the grass plain. */
+export function pitchStripeCount(pitchLevel: number): number {
+  return valueAt(PITCH_STRIPES, pitchLevel);
+}
+
+/** A roof line only on the covered stand. */
+export function standHasRoof(standsLevel: number): boolean {
+  return clampStadiumLevel(standsLevel) >= 3;
 }
 
 /** Player-facing Polish labels. Plain words only — no tokens, no cards. */
