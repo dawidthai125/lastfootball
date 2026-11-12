@@ -5,9 +5,10 @@
  */
 
 import type { MatchCanvasReadModel, MatchCanvasRenderer } from '@/gameplay/canvas-host';
-import { pitchStripeCount, standHasRoof, standInset } from '@/lib/stadium/levels';
+import { pitchStripeCount, standInset } from '@/lib/stadium/levels';
 
 import { deriveVisualFrame } from './derive-visual-frame';
+import { paintStandBowl } from './stand-bowl';
 import type {
   CanvasPlaybackMode,
   CanvasViewMode,
@@ -223,7 +224,7 @@ function paint(
 
   const pw = frame.pitchLength * sx;
   const ph = frame.pitchWidth * sy;
-  drawStands(ctx, ox, oy, pw, ph, fx.stands);
+  paintStandBowl(ctx, ox, oy, pw, ph, fx.stands);
 
   const grad = ctx.createLinearGradient(ox, oy, ox, oy + ph);
   grad.addColorStop(0, 'rgba(31, 92, 56, 0.85)');
@@ -280,35 +281,6 @@ function paint(
     ctx.textBaseline = 'middle';
     ctx.fillText('REPLAY', ox + 44, oy + ph - 19);
     ctx.restore();
-  }
-}
-
-function drawStands(
-  ctx: CanvasRenderingContext2D,
-  ox: number,
-  oy: number,
-  pw: number,
-  ph: number,
-  level: number,
-) {
-  const band = standInset(level);
-  if (band <= 0 || pw < 8 || ph < 8) return;
-  const gap = 2;
-  ctx.fillStyle = '#12151c';
-  ctx.fillRect(ox - 2, oy - band - gap, pw + 4, band);
-  ctx.fillRect(ox - 2, oy + ph + gap, pw + 4, band);
-  ctx.fillRect(ox - band - gap, oy, band, ph);
-  ctx.fillRect(ox + pw + gap, oy, band, ph);
-  if (standHasRoof(level)) {
-    ctx.fillStyle = TOKENS.gold;
-    ctx.fillRect(ox - 4, oy - band - gap - 3, pw + 8, 2);
-  }
-  const specks = 6 + level * 8;
-  ctx.fillStyle = level >= 2 ? 'rgba(196, 163, 90, 0.9)' : 'rgba(240, 244, 250, 0.4)';
-  for (let i = 0; i < specks; i += 1) {
-    const x = ox + ((i * 47) % Math.max(1, Math.floor(pw)));
-    const y = oy - band + 2 + (i % 3) * 2;
-    ctx.fillRect(x, y, 2, 2);
   }
 }
 

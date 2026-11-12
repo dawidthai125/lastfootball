@@ -202,6 +202,24 @@ export function standHasRoof(standsLevel: number): boolean {
   return clampStadiumLevel(standsLevel) >= 3;
 }
 
+export type StandCrowd = 'none' | 'sparse' | 'full' | 'covered';
+
+/** How the live picture and the stadium card dress the stands. Level 0 stays bare. */
+export type StandDress = {
+  readonly rows: number;
+  readonly crowd: StandCrowd;
+  readonly roof: boolean;
+  readonly lights: boolean;
+};
+
+export function standDress(level: number): StandDress {
+  const n = clampStadiumLevel(level);
+  if (n <= 0) return { rows: 0, crowd: 'none', roof: false, lights: false };
+  if (n === 1) return { rows: 2, crowd: 'sparse', roof: false, lights: false };
+  if (n === 2) return { rows: 3, crowd: 'full', roof: false, lights: true };
+  return { rows: 4, crowd: 'covered', roof: true, lights: true };
+}
+
 /** Player-facing Polish labels. Plain words only — no tokens, no cards. */
 export function stadiumLook(levels: StadiumLevels): {
   readonly stands: string;

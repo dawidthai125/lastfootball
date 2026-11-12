@@ -6,6 +6,8 @@ import {
   pitchStripeCount,
   stadiumLook,
   stadiumSeatLabel,
+  standDress,
+  standHasRoof,
   standInset,
   ticketIncome,
   trainingSessionCap,
@@ -168,6 +170,17 @@ describe('trainingSessionCap', () => {
   it('keeps 3 at level 0 and reaches 6 at level 3', () => {
     expect(trainingSessionCap(0)).toBe(3);
     expect(trainingSessionCap(3)).toBe(6);
+  });
+});
+
+describe('standDress', () => {
+  it('keeps level 0 bare and grows rows, lights, then a roof', () => {
+    expect(standDress(0)).toEqual({ rows: 0, crowd: 'none', roof: false, lights: false });
+    expect(standDress(1)).toEqual({ rows: 2, crowd: 'sparse', roof: false, lights: false });
+    expect(standDress(2).lights).toBe(true);
+    expect(standDress(2).roof).toBe(false);
+    expect(standDress(3)).toEqual({ rows: 4, crowd: 'covered', roof: true, lights: true });
+    expect(standDress(9).roof).toBe(standHasRoof(9));
   });
 });
 
