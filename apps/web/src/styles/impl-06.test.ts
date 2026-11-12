@@ -28,10 +28,11 @@ describe('LFE-UI-IMPL-06 live layout', () => {
   });
 
   it('puts the pitch first on mobile and the commentary on the picture', () => {
-    expect(liveCss).toContain('order: 1');
     expect(liveCss).toContain('.lf-live__pitch');
     expect(liveCss).toContain('.lf-live__call');
     expect(liveCss).toContain('.lf-live__feed');
+    expect(liveCss).toContain('white-space: nowrap');
+    expect(liveCss).toMatch(/'pitch'\s*'feed'\s*'panel'\s*'more'/);
   });
 });
 

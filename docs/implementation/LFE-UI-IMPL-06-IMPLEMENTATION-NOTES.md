@@ -8,16 +8,16 @@
 
 ## 0. Raport
 
-| Obszar          | Zmiana                                                                                          |
-| --------------- | ----------------------------------------------------------------------------------------------- |
-| Live stage      | `live-match.css` · mobile pitch-first · desktop pitch + panel ≥1024 · commentary on the picture |
-| Scorebug / Live | Klasy Hi-Fi · scarlet chip                                                                      |
-| Half-time       | Soft banner `Przerwa · wynik` gdy `periodLabel=Przerwa`                                         |
-| Loading         | `LoadingFrame` LOD                                                                              |
-| Goal / Final    | Enter fade/slide · reduced-motion                                                               |
-| Post            | Thin HERO-003 · Decision · Primary=continue · soft Replay                                       |
-| Empty XI → Live | `EmptyState` + linki przedmecz / Kadra                                                          |
-| PL residual     | Przebieg / Wszystkie / Po meczu                                                                 |
+| Obszar          | Zmiana                                                                                                                           |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Live stage      | `live-match.css` · viewport grid · phone pitch/feed/panel/more · desktop panel beside ≥1024 · one-line commentary on the picture |
+| Scorebug / Live | Klasy Hi-Fi · scarlet chip                                                                                                       |
+| Half-time       | Soft banner `Przerwa · wynik` gdy `periodLabel=Przerwa`                                                                          |
+| Loading         | `LoadingFrame` LOD                                                                                                               |
+| Goal / Final    | Enter fade/slide · reduced-motion                                                                                                |
+| Post            | Thin HERO-003 · Decision · Primary=continue · soft Replay                                                                        |
+| Empty XI → Live | `EmptyState` + linki przedmecz / Kadra                                                                                           |
+| PL residual     | Przebieg / Wszystkie / Po meczu                                                                                                  |
 
 **Nie zmieniono:** silnik · DTO · DNA · WA assety (użyto istniejących) · IA · `UI_COPY` wartości.
 

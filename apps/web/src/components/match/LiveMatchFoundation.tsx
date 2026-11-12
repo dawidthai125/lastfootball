@@ -320,7 +320,7 @@ export function LiveMatchFoundation({
             {isReplay ? 'Replay' : 'Live'}
           </span>
           <span
-            className="tabular-nums"
+            className="lf-live__viewers tabular-nums"
             style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}
           >
             {bundle.viewers} widzów
@@ -446,7 +446,7 @@ export function LiveMatchFoundation({
           </div>
         </div>
 
-        <div style={{ textAlign: 'right', minWidth: 0 }}>
+        <div className="lf-live__meta" style={{ textAlign: 'right', minWidth: 0 }}>
           <div
             className="truncate font-[family-name:var(--font-ui)] font-semibold uppercase"
             style={{
@@ -482,15 +482,7 @@ export function LiveMatchFoundation({
       {/* Pitch first. Commentary sits on the picture and just under it. */}
       <div className="lf-live__stage">
         {/* Canvas + commentary + timeline + momentum */}
-        <div
-          className="lf-live__pitch"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--lf-space-3)',
-            minHeight: 0,
-          }}
-        >
+        <div className="lf-live__pitch">
           <div
             id={MATCH_CANVAS_ROOT_ID}
             data-lf-canvas-host="true"
@@ -499,17 +491,7 @@ export function LiveMatchFoundation({
             data-match-tick={snapshot.matchState.tick}
             data-view-mode={viewMode}
             aria-label="Obszar boiska (Canvas host)"
-            style={{
-              flex: 1,
-              minHeight: 'calc(var(--lf-space-8) * 8)',
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-subtle)',
-              background: 'var(--lf-color-bg-void)',
-              borderRadius: 'var(--lf-radius-sm)',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
+            className="lf-live__canvas"
           >
             <AtmosphereLayer
               layers={['floodlight', 'vignette', 'grain']}
@@ -534,7 +516,7 @@ export function LiveMatchFoundation({
                 onClick={toggleCommentator}
                 style={chipStyle(commentatorOn)}
               >
-                {commentatorOn ? 'Komentator włączony' : 'Komentator'}
+                Komentator
               </button>
             </div>
 
@@ -652,234 +634,240 @@ export function LiveMatchFoundation({
             </ul>
           </section>
 
-          {/* Timeline with event markers */}
-          <section
-            aria-label="Timeline"
-            className="lf-section-shell"
-            style={{ padding: 'var(--lf-space-3)' }}
-          >
-            <div className="lf-section-shell__title" style={{ marginBottom: 'var(--lf-space-2)' }}>
-              Timeline
-            </div>
-            <div
-              style={{
-                position: 'relative',
-                height: 'var(--lf-space-4)',
-                background: 'var(--lf-color-bg-inset)',
-                borderRadius: 'var(--lf-radius-xs)',
-                overflow: 'hidden',
-              }}
+          <details className="lf-live__more">
+            <summary>Oś czasu i powtórka</summary>
+            {/* Timeline with event markers */}
+            <section
+              aria-label="Timeline"
+              className="lf-section-shell"
+              style={{ padding: 'var(--lf-space-3)' }}
             >
               <div
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: `${playheadPct}%`,
-                  background:
-                    'linear-gradient(90deg, var(--lf-color-status-danger-soft), rgba(196, 163, 90, 0.25))',
-                }}
-              />
+                className="lf-section-shell__title"
+                style={{ marginBottom: 'var(--lf-space-2)' }}
+              >
+                Timeline
+              </div>
               <div
                 style={{
-                  position: 'absolute',
-                  left: `${playheadPct}%`,
-                  top: 0,
-                  bottom: 0,
-                  width: 2,
-                  background: 'var(--lf-color-gold-base)',
-                  transform: 'translateX(-1px)',
+                  position: 'relative',
+                  height: 'var(--lf-space-4)',
+                  background: 'var(--lf-color-bg-inset)',
+                  borderRadius: 'var(--lf-radius-xs)',
+                  overflow: 'hidden',
                 }}
-                title={`Minuta ${snapshot.clockLabel}`}
-              />
-              {goalMarkers.map((e) => (
-                <span
-                  key={`tl-${e.id}`}
-                  title={`${e.minute} ${e.text}`}
+              >
+                <div
                   style={{
                     position: 'absolute',
-                    left: `${minuteLabelToPct(e.minute)}%`,
-                    top: '50%',
-                    width: 8,
-                    height: 8,
-                    borderRadius: 'var(--lf-radius-xs)',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: `${playheadPct}%`,
                     background:
-                      e.kind === 'goal'
-                        ? 'var(--lf-color-text-gold)'
-                        : 'var(--lf-color-status-live)',
-                    border: '1px solid var(--lf-color-bg-void)',
-                    transform: 'translate(-50%, -50%)',
-                    zIndex: 1,
+                      'linear-gradient(90deg, var(--lf-color-status-danger-soft), rgba(196, 163, 90, 0.25))',
                   }}
                 />
-              ))}
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: 'var(--lf-space-1)',
-                fontSize: 'var(--lf-type-label)',
-                color: 'var(--lf-color-text-faint)',
-              }}
-            >
-              <span>0′</span>
-              <span>HT</span>
-              <span>90′</span>
-            </div>
-          </section>
-
-          {/* Replay controls — recorded frames only, no Engine */}
-          <section
-            aria-label="Replay"
-            className="lf-section-shell"
-            style={{ padding: 'var(--lf-space-3)' }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                marginBottom: 'var(--lf-space-2)',
-                gap: 'var(--lf-space-2)',
-              }}
-            >
-              <div className="lf-section-shell__title">Replay</div>
-              <div
-                style={{
-                  fontSize: 'var(--lf-type-label)',
-                  color: 'var(--lf-color-text-muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 'var(--lf-type-tracking-label)',
-                }}
-              >
-                {isReplay ? replay.status : 'live buffer'} · {replay.length} klatek
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: `${playheadPct}%`,
+                    top: 0,
+                    bottom: 0,
+                    width: 2,
+                    background: 'var(--lf-color-gold-base)',
+                    transform: 'translateX(-1px)',
+                  }}
+                  title={`Minuta ${snapshot.clockLabel}`}
+                />
+                {goalMarkers.map((e) => (
+                  <span
+                    key={`tl-${e.id}`}
+                    title={`${e.minute} ${e.text}`}
+                    style={{
+                      position: 'absolute',
+                      left: `${minuteLabelToPct(e.minute)}%`,
+                      top: '50%',
+                      width: 8,
+                      height: 8,
+                      borderRadius: 'var(--lf-radius-xs)',
+                      background:
+                        e.kind === 'goal'
+                          ? 'var(--lf-color-text-gold)'
+                          : 'var(--lf-color-status-live)',
+                      border: '1px solid var(--lf-color-bg-void)',
+                      transform: 'translate(-50%, -50%)',
+                      zIndex: 1,
+                    }}
+                  />
+                ))}
               </div>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={Math.max(0, replay.length - 1)}
-              value={replay.index}
-              aria-label="Replay seek"
-              disabled={replay.length === 0}
-              onChange={(e) => runtime.replaySeek(Number(e.target.value))}
-              style={{
-                width: '100%',
-                accentColor: 'var(--lf-color-gold-base)',
-                marginBottom: 'var(--lf-space-2)',
-              }}
-            />
-            <div
-              style={{
-                height: 3,
-                background: 'var(--lf-color-bg-inset)',
-                borderRadius: 'var(--lf-radius-xs)',
-                marginBottom: 'var(--lf-space-2)',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  width: `${replayRatio}%`,
-                  height: '100%',
-                  background: 'var(--lf-color-gold-base)',
-                }}
-              />
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 'var(--lf-space-1)',
-                alignItems: 'center',
-              }}
-            >
-              <button
-                type="button"
-                style={chipStyle(false)}
-                onClick={() => runtime.enterReplay('start')}
-                disabled={replay.length === 0}
-              >
-                Wejdź
-              </button>
-              <button
-                type="button"
-                style={chipStyle(replay.status === 'playing')}
-                onClick={() =>
-                  replay.status === 'playing' ? runtime.replayPause() : runtime.replayPlay()
-                }
-                disabled={replay.length === 0}
-              >
-                {replay.status === 'playing' ? 'Pause' : 'Play'}
-              </button>
-              <button
-                type="button"
-                style={chipStyle(false)}
-                onClick={() => runtime.replayStop()}
-                disabled={replay.length === 0}
-              >
-                Stop
-              </button>
-              {([0.5, 1, 2, 4] as ReplaySpeed[]).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  style={chipStyle(replay.speed === s)}
-                  onClick={() => runtime.replaySetSpeed(s)}
-                >
-                  {s}×
-                </button>
-              ))}
-              <button
-                type="button"
-                style={chipStyle(!isReplay)}
-                onClick={() => runtime.exitReplay()}
-                disabled={!isReplay}
-              >
-                Wróć do Live
-              </button>
-              {finished ? (
-                <button
-                  type="button"
-                  style={chipStyle(false)}
-                  onClick={() => setPostMatchOpen(true)}
-                >
-                  Po meczu
-                </button>
-              ) : null}
-            </div>
-          </section>
-
-          {/* Momentum */}
-          <section
-            aria-label="Momentum"
-            className="lf-section-shell"
-            style={{ padding: 'var(--lf-space-3)' }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                marginBottom: 'var(--lf-space-2)',
-              }}
-            >
-              <div className="lf-section-shell__title">Momentum</div>
               <div
                 style={{
                   display: 'flex',
-                  gap: 'var(--lf-space-3)',
+                  justifyContent: 'space-between',
+                  marginTop: 'var(--lf-space-1)',
                   fontSize: 'var(--lf-type-label)',
+                  color: 'var(--lf-color-text-faint)',
                 }}
               >
-                <span style={{ color: 'var(--lf-color-status-danger)' }}>{homeShort}</span>
-                <span style={{ color: 'var(--lf-color-text-gold)' }}>{awayShort}</span>
+                <span>0′</span>
+                <span>HT</span>
+                <span>90′</span>
               </div>
-            </div>
-            <MomentumChart values={bundle.momentum} />
-          </section>
+            </section>
+
+            {/* Replay controls — recorded frames only, no Engine */}
+            <section
+              aria-label="Replay"
+              className="lf-section-shell"
+              style={{ padding: 'var(--lf-space-3)' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  marginBottom: 'var(--lf-space-2)',
+                  gap: 'var(--lf-space-2)',
+                }}
+              >
+                <div className="lf-section-shell__title">Replay</div>
+                <div
+                  style={{
+                    fontSize: 'var(--lf-type-label)',
+                    color: 'var(--lf-color-text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: 'var(--lf-type-tracking-label)',
+                  }}
+                >
+                  {isReplay ? replay.status : 'live buffer'} · {replay.length} klatek
+                </div>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={Math.max(0, replay.length - 1)}
+                value={replay.index}
+                aria-label="Replay seek"
+                disabled={replay.length === 0}
+                onChange={(e) => runtime.replaySeek(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  accentColor: 'var(--lf-color-gold-base)',
+                  marginBottom: 'var(--lf-space-2)',
+                }}
+              />
+              <div
+                style={{
+                  height: 3,
+                  background: 'var(--lf-color-bg-inset)',
+                  borderRadius: 'var(--lf-radius-xs)',
+                  marginBottom: 'var(--lf-space-2)',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    width: `${replayRatio}%`,
+                    height: '100%',
+                    background: 'var(--lf-color-gold-base)',
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 'var(--lf-space-1)',
+                  alignItems: 'center',
+                }}
+              >
+                <button
+                  type="button"
+                  style={chipStyle(false)}
+                  onClick={() => runtime.enterReplay('start')}
+                  disabled={replay.length === 0}
+                >
+                  Wejdź
+                </button>
+                <button
+                  type="button"
+                  style={chipStyle(replay.status === 'playing')}
+                  onClick={() =>
+                    replay.status === 'playing' ? runtime.replayPause() : runtime.replayPlay()
+                  }
+                  disabled={replay.length === 0}
+                >
+                  {replay.status === 'playing' ? 'Pause' : 'Play'}
+                </button>
+                <button
+                  type="button"
+                  style={chipStyle(false)}
+                  onClick={() => runtime.replayStop()}
+                  disabled={replay.length === 0}
+                >
+                  Stop
+                </button>
+                {([0.5, 1, 2, 4] as ReplaySpeed[]).map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    style={chipStyle(replay.speed === s)}
+                    onClick={() => runtime.replaySetSpeed(s)}
+                  >
+                    {s}×
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  style={chipStyle(!isReplay)}
+                  onClick={() => runtime.exitReplay()}
+                  disabled={!isReplay}
+                >
+                  Wróć do Live
+                </button>
+                {finished ? (
+                  <button
+                    type="button"
+                    style={chipStyle(false)}
+                    onClick={() => setPostMatchOpen(true)}
+                  >
+                    Po meczu
+                  </button>
+                ) : null}
+              </div>
+            </section>
+
+            {/* Momentum */}
+            <section
+              aria-label="Momentum"
+              className="lf-section-shell"
+              style={{ padding: 'var(--lf-space-3)' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  marginBottom: 'var(--lf-space-2)',
+                }}
+              >
+                <div className="lf-section-shell__title">Momentum</div>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 'var(--lf-space-3)',
+                    fontSize: 'var(--lf-type-label)',
+                  }}
+                >
+                  <span style={{ color: 'var(--lf-color-status-danger)' }}>{homeShort}</span>
+                  <span style={{ color: 'var(--lf-color-text-gold)' }}>{awayShort}</span>
+                </div>
+              </div>
+              <MomentumChart values={bundle.momentum} />
+            </section>
+          </details>
         </div>
 
         {/* Right column */}

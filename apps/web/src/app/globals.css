@@ -257,8 +257,13 @@ textarea {
 }
 
 .lf-app-shell__main--live {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   background: var(--lf-color-bg-void);
-  padding: var(--lf-space-3);
+  padding: var(--lf-space-2);
 }
 
 .lf-chrome-metric {
