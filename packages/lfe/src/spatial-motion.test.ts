@@ -141,7 +141,8 @@ describe('spatial movement thin', () => {
       events: [{ type: 'POSSESSION', tick: 9, payload: { side: 'home' } }],
     });
 
-    expect(corner.ball.position.x).toBeGreaterThan(open.ball.position.x);
+    const flag = { x: base.pitch.length - 1, y: 1 };
+    expect(distance(corner.ball.position, flag)).toBeLessThan(distance(open.ball.position, flag));
   });
 
   it('carries the ball toward a teammate after a pass', () => {
@@ -171,9 +172,109 @@ describe('spatial movement thin', () => {
     expect(target?.playerId).not.toBe('home-6');
     expect(target?.role).not.toBe('GK');
     expect(second.ball.targetPlayerId).toBe(first.ball.targetPlayerId);
+    expect(distance(first.ball.position, base.ball.position)).toBeGreaterThan(8);
     expect(distance(second.ball.position, target!.position)).toBeLessThan(
       distance(base.ball.position, target!.position),
     );
+  });
+
+  it('keeps the same receiver while a pass is still in the air', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const firstPass = {
+      type: 'PASS' as const,
+      tick: 9,
+      payload: { side: 'home' as const, playerId: 'home-6', completed: true },
+    };
+    const first = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [firstPass],
+    });
+    const diverted = advanceMatchSpatialState({
+      previous: first,
+      matchState,
+      tick: 10,
+      events: [
+        firstPass,
+        {
+          type: 'PASS',
+          tick: 10,
+          payload: { side: 'home', playerId: 'home-3', completed: true },
+        },
+      ],
+    });
+
+    expect(distance(first.ball.position, { x: 52.5, y: 34 })).toBeGreaterThan(8);
+    expect(diverted.ball.targetPlayerId).toBe(first.ball.targetPlayerId);
+  });
+
+  it('accepts the next pass only after the ball reaches the receiver', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const firstPass = {
+      type: 'PASS' as const,
+      tick: 9,
+      payload: { side: 'home' as const, playerId: 'home-6', completed: true },
+    };
+    const first = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [firstPass],
+    });
+    const holder = first.players.find((player) => player.playerId === first.ball.targetPlayerId);
+    const atFeet = advanceMatchSpatialState({
+      previous: {
+        ...first,
+        ball: { ...first.ball, position: holder!.position },
+      },
+      matchState,
+      tick: 10,
+      events: [firstPass],
+    });
+    const next = advanceMatchSpatialState({
+      previous: atFeet,
+      matchState,
+      tick: 11,
+      events: [
+        firstPass,
+        {
+          type: 'PASS',
+          tick: 11,
+          payload: { side: 'home', playerId: holder!.playerId, completed: true },
+        },
+      ],
+    });
+
+    expect(atFeet.ball.targetPlayerId).toBe(first.ball.targetPlayerId);
+    expect(
+      distance(
+        atFeet.ball.position,
+        atFeet.players.find((player) => player.playerId === atFeet.ball.targetPlayerId)!.position,
+      ),
+    ).toBeLessThanOrEqual(1.6);
+    expect(next.ball.targetPlayerId).not.toBe(first.ball.targetPlayerId);
+    expect(next.ball.targetPlayerId).not.toBe(holder!.playerId);
+  });
+
+  it('sends a shot toward the goal instead of a teammate', () => {
+    const session = openSession(3);
+    const base = withBall(session.getSpatialState(), 52.5, 34);
+    const matchState = session.getMatchState();
+    const shot = advanceMatchSpatialState({
+      previous: base,
+      matchState,
+      tick: 9,
+      events: [{ type: 'SHOT', tick: 9, payload: { side: 'home', playerId: 'home-9' } }],
+    });
+
+    expect(shot.ball.targetPlayerId).toBeNull();
+    expect(shot.ball.position.x).toBeGreaterThan(52.5 + 12);
+    expect(shot.ball.position.y).toBeCloseTo(34, 5);
   });
 
   it('runs the referee toward the player who fouled', () => {

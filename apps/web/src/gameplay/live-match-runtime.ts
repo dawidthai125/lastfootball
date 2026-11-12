@@ -18,6 +18,7 @@ import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
+import { commentaryLine } from '@/lib/match/commentary';
 import type { RosterPlayerSeed } from '@/lib/squad';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
@@ -54,6 +55,9 @@ export type LiveMatchSnapshot = {
 
 /** Product window from GDD §9.10 while the manager is watching live. */
 export const LIVE_SUB_LIMIT = 3;
+
+/** Live pulses are 200ms apart. Blend across almost the whole gap so the ball travels. */
+export const LIVE_BALL_INTERP_MS = 180;
 
 const FEED_TYPES = new Set([
   'MATCH_START',
@@ -100,6 +104,8 @@ export class LiveMatchRuntime {
   private playbackSource: PlaybackSource = 'live';
   private readonly managerSide: 'home' | 'away';
   private readonly sharedWatch: boolean;
+  private readonly homeName: string;
+  private readonly awayName: string;
 
   constructor(
     fixture: Fixture,
@@ -115,6 +121,10 @@ export class LiveMatchRuntime {
     this.shell = shell;
     this.managerSide = fixture.home ? 'home' : 'away';
     this.sharedWatch = leagueFixture?.competition === 'human';
+    const clubName = club?.name?.trim() || 'Twój klub';
+    const opponentName = fixture.opponent.trim() || 'Rywal';
+    this.homeName = fixture.home ? clubName : opponentName;
+    this.awayName = fixture.home ? opponentName : clubName;
     this.session = resolveSession(
       fixture,
       club,
@@ -237,6 +247,7 @@ export class LiveMatchRuntime {
     this.stopSimulation();
     this.playbackSource = 'replay';
     this.applyRendererPlaybackMode('replay');
+    this.syncReplayInterp();
     if (seekTo === 'end') {
       this.replay.seek(this.replayBuffer.length - 1);
     } else {
@@ -299,6 +310,7 @@ export class LiveMatchRuntime {
   private applyRendererPlaybackMode(mode: 'live' | 'replay'): void {
     const renderer = this.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
     renderer?.setPlaybackMode?.(mode);
+    if (mode === 'live') renderer?.setInterpMs?.(LIVE_BALL_INTERP_MS);
   }
 
   private recordAndMaybePresentLive(): void {
@@ -306,6 +318,8 @@ export class LiveMatchRuntime {
     if (!model) return;
     this.replayBuffer.append(model);
     if (this.playbackSource === 'live') {
+      const renderer = this.canvasHost.getRenderer() as MatchCanvasRendererApi | null;
+      renderer?.setInterpMs?.(LIVE_BALL_INTERP_MS);
       this.canvasHost.present(model);
     }
   }
@@ -340,7 +354,13 @@ export class LiveMatchRuntime {
         return kind !== 'lifecycle' && kind !== 'kickoff';
       })
       .slice(-40)
-      .map(({ e, i }) => mapFeedItem(e, i, matchState.clock.displayMinute, matchState.players));
+      .map(({ e, i }) =>
+        mapFeedItem(e, i, matchState.clock.displayMinute, matchState.players, {
+          homeName: this.homeName,
+          awayName: this.awayName,
+        }),
+      )
+      .filter((item) => item.text.trim().length > 0);
 
     return {
       matchState,
@@ -512,6 +532,7 @@ function mapFeedItem(
   index: number,
   minute: number,
   players: MatchState['players'],
+  teams: { homeName: string; awayName: string },
 ): LiveMatchSnapshot['feed'][number] {
   const rawMinute =
     e.payload && typeof e.payload === 'object' && 'minute' in e.payload
@@ -526,7 +547,7 @@ function mapFeedItem(
     id: `ev-${index}-${e.type}-${e.tick}`,
     minute: `${Math.floor(payloadMinute)}'`,
     kind: eventKind(String(e.type)),
-    text: humanizeEvent(e, players),
+    text: humanizeEvent(e, players, teams),
     highlight: e.type === 'GOAL',
   };
 }
@@ -553,57 +574,19 @@ function nameOf(players: MatchState['players'], id: string): string {
   return players.find((player) => player.id === id)?.name ?? 'zawodnik';
 }
 
-function humanizeEvent(e: EngineEvent, names: MatchState['players']): string {
-  const side =
-    e.payload && typeof e.payload === 'object' && 'side' in e.payload
-      ? String((e.payload as { side: string }).side)
-      : '';
-  switch (e.type) {
-    case 'MATCH_START':
-      return 'Mecz rozpoczęty.';
-    case 'HALF_END':
-      return 'Koniec połowy.';
-    case 'MATCH_END':
-      return 'Koniec meczu.';
-    case 'GOAL':
-      return `GOL! (${side || 'drużyna'})`;
-    case 'SHOT':
-      return `Strzał (${side || '—'})`;
-    case 'ATTACK':
-      return `Atak (${side || '—'})`;
-    case 'FOUL':
-      return 'Faul.';
-    case 'CORNER':
-      return `Rzut rożny (${side || '—'})`;
-    case 'FORMATION_CHANGE': {
-      const code =
-        e.payload && typeof e.payload === 'object' && 'formationCode' in e.payload
-          ? String((e.payload as { formationCode: string }).formationCode)
-          : '';
-      return `Układ ${code || '—'}`;
-    }
-    case 'SUBSTITUTION': {
-      const outId =
-        e.payload && typeof e.payload === 'object' && 'playerOutId' in e.payload
-          ? String((e.payload as { playerOutId: string }).playerOutId)
-          : '';
-      const inId =
-        e.payload && typeof e.payload === 'object' && 'playerInId' in e.payload
-          ? String((e.payload as { playerInId: string }).playerInId)
-          : '';
-      return `${nameOf(names, outId)} ↔ ${nameOf(names, inId)}`;
-    }
-    case 'SYSTEM': {
-      const kind =
-        e.payload && typeof e.payload === 'object' && 'kind' in e.payload
-          ? String((e.payload as { kind: string }).kind)
-          : 'system';
-      if (kind === 'second_half_start') return 'Początek drugiej połowy.';
-      return `Komenda: ${kind}`;
-    }
-    default:
-      return String(e.type);
-  }
+function humanizeEvent(
+  e: EngineEvent,
+  players: MatchState['players'],
+  teams: { homeName: string; awayName: string },
+): string {
+  return commentaryLine(
+    { type: e.type, payload: e.payload },
+    {
+      homeName: teams.homeName,
+      awayName: teams.awayName,
+      playerName: (id) => nameOf(players, id),
+    },
+  );
 }
 
 function resolveSession(
