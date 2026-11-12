@@ -9,13 +9,18 @@ import type { ClubStadiumDto, StadiumAttendanceBand } from '@/lib/stadium';
 import { raiseGroundPart, type GroundActionState } from '@/lib/stadium/actions-build';
 import {
   STADIUM_UPGRADE_COST,
+  homePitchBonus,
   stadiumLook,
   stadiumSeatLabel,
+  standDress,
   ticketIncome,
+  trainingSessionCap,
   type StadiumLevels,
   type StadiumPart,
 } from '@/lib/stadium/levels';
 import { UI_COPY } from '@/lib/ui/copy';
+
+import './stadium-card.css';
 
 const GROUND_INITIAL: GroundActionState = {};
 
@@ -42,6 +47,76 @@ function partLevel(levels: StadiumLevels, part: StadiumPart): number {
   return levels.trainingCenter;
 }
 
+function partDetail(part: StadiumPart, level: number): string {
+  if (part === 'stands') {
+    const seats = stadiumSeatLabel(level);
+    if (level <= 0) {
+      const next = formatMoney(ticketIncome({ standsLevel: 1, attendance: 'lively' }));
+      return `Miejsca: ${seats}. Bilety wchodzą od poziomu 1, przy pełnej frekwencji ${next}.`;
+    }
+    const tickets = formatMoney(ticketIncome({ standsLevel: level, attendance: 'lively' }));
+    if (level >= 3) {
+      return `Miejsca: ${seats}. Bilety przy pełnej frekwencji: ${tickets}. Na boisku widać dach.`;
+    }
+    const nextSeats = stadiumSeatLabel(level + 1);
+    const nextTickets = formatMoney(ticketIncome({ standsLevel: level + 1, attendance: 'lively' }));
+    return `Teraz ${seats}, bilety ${tickets}. Po rozbudowie ${nextSeats}, bilety ${nextTickets}.`;
+  }
+  if (part === 'pitch') {
+    const now = homePitchBonus(level);
+    if (level >= 3) return `Bonus gospodarza +${now}. Obaj widzowie meczu biorą poziom domu.`;
+    if (level <= 0) {
+      return 'Bonus gospodarza wchodzi od poziomu 1. Obaj widzowie meczu biorą poziom domu.';
+    }
+    return `Bonus gospodarza +${now}. Po rozbudowie +${homePitchBonus(level + 1)}.`;
+  }
+  const now = trainingSessionCap(level);
+  if (level >= 3) return `Na jednym treningu rośnie do ${now} zawodników.`;
+  return `Na jednym treningu rośnie do ${now} zawodników. Po rozbudowie do ${trainingSessionCap(level + 1)}.`;
+}
+
+function LevelPips({ level }: { level: number }) {
+  return (
+    <span className="lf-sta-pips" aria-label={`Poziom ${level} z 3`}>
+      {[1, 2, 3].map((step) => (
+        <i key={step} data-on={step <= level ? '1' : '0'} />
+      ))}
+    </span>
+  );
+}
+
+function StandPreview({ level }: { level: number }) {
+  const dress = standDress(level);
+  const look = stadiumLook({ stands: level, pitch: 0, trainingCenter: 0 });
+  return (
+    <div className="lf-sta-bowl">
+      <div
+        className="lf-sta-bowl__frame"
+        data-rows={dress.rows}
+        data-crowd={dress.crowd}
+        aria-hidden
+      >
+        {dress.roof ? <span className="lf-sta-bowl__roof" /> : null}
+        {dress.lights ? (
+          <>
+            <span className="lf-sta-bowl__light lf-sta-bowl__light--left" />
+            <span className="lf-sta-bowl__light lf-sta-bowl__light--right" />
+          </>
+        ) : null}
+        <div className="lf-sta-bowl__pitch" />
+      </div>
+      <div className="lf-sta-bowl__copy">
+        <p className="text-[13px] text-[var(--lf-text-strong)]">
+          {level <= 0 ? 'Bez oprawy trybun' : look.stands}
+        </p>
+        <p className="mt-1 text-[12px] text-[var(--lf-muted)]">
+          Na boisku w meczu u siebie, od następnego wczytania.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function StadiumView({
   stadium,
   ground,
@@ -54,24 +129,10 @@ export function StadiumView({
   const levels = ground ?? { stands: 0, pitch: 0, trainingCenter: 0 };
   const look = stadiumLook(levels);
   const [buildState, buildAction, buildPending] = useActionState(raiseGroundPart, GROUND_INITIAL);
-  const parts: { part: StadiumPart; title: string; detail: string }[] = [
-    {
-      part: 'stands',
-      title: look.stands,
-      detail: `Bilety z meczu u siebie przy pełnej frekwencji: ${formatMoney(
-        ticketIncome({ standsLevel: levels.stands, attendance: 'lively' }),
-      )}`,
-    },
-    {
-      part: 'pitch',
-      title: look.pitch,
-      detail: 'Murawa daje lekki bonus gospodarzowi. Obaj widzowie meczu biorą poziom domu.',
-    },
-    {
-      part: 'training_center',
-      title: look.center,
-      detail: 'Ośrodek podnosi limit zawodników, którzy rosną na jednym treningu.',
-    },
+  const parts: { part: StadiumPart; title: string }[] = [
+    { part: 'stands', title: look.stands },
+    { part: 'pitch', title: look.pitch },
+    { part: 'training_center', title: look.center },
   ];
 
   return (
@@ -95,10 +156,18 @@ export function StadiumView({
       </Panel>
 
       <div className="mt-3">
+        <Panel title="Oprawa trybun" flush>
+          <div className="px-2.5 py-2.5">
+            <StandPreview level={levels.stands} />
+          </div>
+        </Panel>
+      </div>
+
+      <div className="mt-3">
         <Panel title="Rozbudowa" flush>
-          <div className="space-y-3 px-2.5 py-2.5 text-[13px]">
+          <div className="px-2.5 py-2.5 text-[13px]">
             {buildState.error ? (
-              <p className="text-[12px] text-[var(--lf-danger)]" role="alert">
+              <p className="mb-2 text-[12px] text-[var(--lf-danger)]" role="alert">
                 {buildState.error}
               </p>
             ) : null}
@@ -106,12 +175,15 @@ export function StadiumView({
               const level = partLevel(levels, item.part);
               const cost = level >= 3 ? 0 : (STADIUM_UPGRADE_COST[item.part][level] ?? 0);
               return (
-                <div key={item.part} className="flex flex-wrap items-center justify-between gap-2">
+                <div key={item.part} className="lf-sta-row">
                   <div>
                     <p className="text-[var(--lf-text-strong)]">
                       {item.title} · poziom {level}
                     </p>
-                    <p className="text-[12px] text-[var(--lf-muted)]">{item.detail}</p>
+                    <p className="text-[12px] text-[var(--lf-muted)]">
+                      {partDetail(item.part, level)}
+                    </p>
+                    <LevelPips level={level} />
                   </div>
                   {level >= 3 ? (
                     <span className="text-[12px] text-[var(--lf-muted)]">Maksimum</span>
