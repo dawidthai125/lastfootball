@@ -6,7 +6,9 @@ export type FixtureDto = {
   readonly id: string;
   readonly clubId: string;
   readonly matchday: number;
-  readonly competition: 'league' | 'cup' | 'challenge';
+  readonly competition: 'league' | 'cup' | 'challenge' | 'human';
+  /** Liga ludzi: one seed for both clubs. Absent on bot-league fixtures. */
+  readonly sharedSeed?: number;
   /** Catalog id — SSOT for opponent identity. */
   readonly opponentClubId: string;
   readonly opponent: OpponentClub;

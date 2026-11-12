@@ -14,6 +14,7 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
 import { applyMatchSquadTruth, groupsFromSkill, payWages, wageFromSkill } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
@@ -98,14 +99,22 @@ export async function completeFixture(
       .limit(1)
       .maybeSingle();
     const lastAt = (lastPlayed as { played_at: string | null } | null)?.played_at ?? null;
-    const blocked = matchdayBlockReason(lastAt, new Date());
-    if (blocked) return { error: blocked };
+    if (row.competition !== 'human') {
+      const blocked = matchdayBlockReason(lastAt, new Date());
+      if (blocked) return { error: blocked };
+    }
 
     const players = await listClubPlayers(clubId);
     const seniors = filterSeniorPlayers(players);
     const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
-    const home = Math.trunc(homeScore);
-    const away = Math.trunc(awayScore);
+    let home = Math.trunc(homeScore);
+    let away = Math.trunc(awayScore);
+    if (row.competition === 'human') {
+      const official = await authoritativeHumanScore(clubId, row.matchday);
+      if ('error' in official) return official;
+      home = official.home;
+      away = official.away;
+    }
     const ours = row.is_home ? home : away;
     const theirs = row.is_home ? away : home;
     const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
@@ -176,7 +185,7 @@ export async function completeFixture(
     if (updated) {
       let nextBalance = clubRow.cash_balance;
       const reward =
-        row.competition === 'league'
+        row.competition === 'league' || row.competition === 'human'
           ? resolveLeagueMatchReward({
               homeScore: home,
               awayScore: away,

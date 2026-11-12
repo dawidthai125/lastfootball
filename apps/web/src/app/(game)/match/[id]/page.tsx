@@ -10,6 +10,7 @@ import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
+import { prepareHumanLive } from '@/lib/league/human-league-store';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -93,8 +94,20 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
   }
 
   try {
-    const ourXi = await loadClubStartingXi(club);
-    return <PreMatchView bundle={buildLeaguePreMatchBundle(club, dto, ourXi, shape)} />;
+    const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
+    if (human?.block) return <SquadError detail={human.block} />;
+    const ourXi = human ? human.ourXi : await loadClubStartingXi(club);
+    return (
+      <PreMatchView
+        bundle={buildLeaguePreMatchBundle(
+          club,
+          human?.fixture ?? dto,
+          ourXi,
+          shape,
+          human?.theirXi,
+        )}
+      />
+    );
   } catch (e) {
     if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
     throw e;

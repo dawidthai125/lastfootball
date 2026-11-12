@@ -99,6 +99,7 @@ export class LiveMatchRuntime {
   private ticksPerPulse = 1;
   private playbackSource: PlaybackSource = 'live';
   private readonly managerSide: 'home' | 'away';
+  private readonly sharedWatch: boolean;
 
   constructor(
     fixture: Fixture,
@@ -113,6 +114,7 @@ export class LiveMatchRuntime {
     this.fixture = fixture;
     this.shell = shell;
     this.managerSide = fixture.home ? 'home' : 'away';
+    this.sharedWatch = leagueFixture?.competition === 'human';
     this.session = resolveSession(
       fixture,
       club,
@@ -401,6 +403,12 @@ export class LiveMatchRuntime {
   }
 
   substitute(playerOutId: string, playerInId: string): { ok: boolean; error?: string } {
+    if (this.sharedWatch) {
+      return {
+        ok: false,
+        error: 'W lidze ludzi mecz idzie z jednego seeda. Taktyka jest zamknięta.',
+      };
+    }
     if (!this.watchingLive()) {
       return { ok: false, error: 'Zmiany tylko gdy oglądasz mecz na żywo.' };
     }
@@ -431,6 +439,7 @@ export class LiveMatchRuntime {
   }
 
   dispatchUiCommand(commandId: string): boolean {
+    if (this.sharedWatch) return false;
     if (!this.watchingLive()) return false;
     const tick = this.session.context().tick;
     const side = this.managerSide;

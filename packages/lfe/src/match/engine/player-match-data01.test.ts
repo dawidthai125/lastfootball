@@ -334,13 +334,19 @@ describe('LFE-PLAYER-MATCH-DATA-01 / LFE-RATINGS-V2', () => {
     expect(playerRow(s, 'h-bench')!.minutesPlayed).toBeGreaterThan(inMinutesAtSub);
   });
 
-  it('L6: OUT fields (passes/tackles/cards) stay zero after play', () => {
+  it('L6: passes land in the log; tackles and cards stay zero', () => {
     const s = makeSession(5_000, 100);
     openPlay(s);
     s.run(200);
-    for (const row of s.getMatchState().statistics.players) {
-      expect(row.passesAttempted).toBe(0);
-      expect(row.passesCompleted).toBe(0);
+    const players = s.getMatchState().statistics.players;
+    const attempted = players.reduce((sum, row) => sum + row.passesAttempted, 0);
+    const completed = players.reduce((sum, row) => sum + row.passesCompleted, 0);
+    expect(attempted).toBeGreaterThan(0);
+    expect(completed).toBeGreaterThan(0);
+    expect(completed).toBeLessThanOrEqual(attempted);
+    const stats = s.getMatchState().statistics;
+    expect(stats.home.passesAttempted + stats.away.passesAttempted).toBe(attempted);
+    for (const row of players) {
       expect(row.tackles).toBe(0);
       expect(row.yellowCards).toBe(0);
       expect(row.redCards).toBe(0);

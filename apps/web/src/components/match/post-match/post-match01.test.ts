@@ -71,6 +71,7 @@ function fakeState(scoreHome: number, scoreAway: number, phase = 'FINISHED') {
         possessionTicks: 40,
         shots: 8,
         shotsOnTarget: 3,
+        passesCompleted: 40,
         fouls: 2,
         corners: 4,
         yellowCards: 1,
@@ -79,6 +80,7 @@ function fakeState(scoreHome: number, scoreAway: number, phase = 'FINISHED') {
         possessionTicks: 60,
         shots: 5,
         shotsOnTarget: 2,
+        passesCompleted: 30,
         fouls: 3,
         corners: 1,
         yellowCards: 0,
@@ -122,6 +124,10 @@ describe('LFE-POST-MATCH-01', () => {
     expect(subAt).toBeLessThan(laterGoal);
     expect(summary.possession.home + summary.possession.away).toBe(100);
     expect(summary.resultLabel).toContain('gospodarz');
+    expect(summary.report).toHaveLength(3);
+    expect(summary.report[0]).toContain('2:1');
+    expect(summary.report[1]).toContain('Podania celne');
+    expect(summary.stats.some((stat) => stat.label === 'Podania celne')).toBe(true);
   });
 
   it('T9 / W5: summary includes ratings v2 + mvpPlayerId (assists/minutes on view)', () => {

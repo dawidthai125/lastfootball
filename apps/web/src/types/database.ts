@@ -492,6 +492,105 @@ export type Database = {
         };
         Relationships: [];
       };
+      human_league: {
+        Row: {
+          id: number;
+          season_key: string;
+          frozen: boolean;
+        };
+        Insert: {
+          id?: number;
+          season_key: string;
+          frozen?: boolean;
+        };
+        Update: {
+          id?: number;
+          season_key?: string;
+          frozen?: boolean;
+        };
+        Relationships: [];
+      };
+      human_league_seats: {
+        Row: {
+          slot: number;
+          kind: string;
+          ref_id: string;
+          display_name: string;
+          short_name: string;
+        };
+        Insert: {
+          slot: number;
+          kind: string;
+          ref_id: string;
+          display_name: string;
+          short_name: string;
+        };
+        Update: {
+          slot?: number;
+          kind?: string;
+          ref_id?: string;
+          display_name?: string;
+          short_name?: string;
+        };
+        Relationships: [];
+      };
+      human_broadcasts: {
+        Row: {
+          id: string;
+          matchday: number;
+          home_id: string;
+          away_id: string;
+          home_name: string;
+          away_name: string;
+          home_short: string;
+          away_short: string;
+          seed: string;
+          kickoff_on: string;
+          home_xi: Json | null;
+          away_xi: Json | null;
+          home_score: number | null;
+          away_score: number | null;
+          locked_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          matchday: number;
+          home_id: string;
+          away_id: string;
+          home_name: string;
+          away_name: string;
+          home_short: string;
+          away_short: string;
+          seed: string;
+          kickoff_on: string;
+          home_xi?: Json | null;
+          away_xi?: Json | null;
+          home_score?: number | null;
+          away_score?: number | null;
+          locked_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          matchday?: number;
+          home_id?: string;
+          away_id?: string;
+          home_name?: string;
+          away_name?: string;
+          home_short?: string;
+          away_short?: string;
+          seed?: string;
+          kickoff_on?: string;
+          home_xi?: Json | null;
+          away_xi?: Json | null;
+          home_score?: number | null;
+          away_score?: number | null;
+          locked_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       infra_meta: {
         Row: {
           key: string;

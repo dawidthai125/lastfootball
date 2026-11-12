@@ -13,6 +13,7 @@ import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
+import { prepareHumanLive } from '@/lib/league/human-league-store';
 import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
@@ -79,8 +80,12 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
 
   try {
     const players = await listClubPlayers(club.id);
-    const ourXi = resolveStartingXi(players);
-    const ourBench = resolveMatchBench(players);
+    const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
+    if (human?.block) {
+      return <SquadError matchId={id} detail={human.block} />;
+    }
+    const ourXi = human ? human.ourXi : resolveStartingXi(players);
+    const ourBench = human ? [] : resolveMatchBench(players);
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
     const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
     if (dto.competition === 'challenge' && !rival) {
@@ -90,11 +95,11 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
       <LiveMatchFoundation
         bundle={buildLeagueLiveBundle(club, dto)}
         club={club}
-        leagueFixture={dto}
+        leagueFixture={human?.fixture ?? dto}
         ourXi={ourXi}
         ourBench={ourBench}
         ourFormation={ourFormation}
-        theirXi={rival?.xi ?? null}
+        theirXi={human?.theirXi ?? rival?.xi ?? null}
         developmentNames={developmentNames}
       />
     );

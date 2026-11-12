@@ -59,7 +59,44 @@ export function resolvePossessionAction(
   const decision = decideActionFromState(state, side);
 
   if (rng.next() >= decision.attackChance) {
-    return { state, emits };
+    const passerId = attributePlayerForEvent(state, side, 'PASS', tick);
+    const completed = rng.next() < 0.82;
+    emits.push({
+      type: 'PASS',
+      payload: {
+        side,
+        minute: state.clock.displayMinute,
+        completed,
+        ...(passerId !== undefined ? { playerId: passerId } : {}),
+      },
+    });
+    const team = side === 'home' ? state.statistics.home : state.statistics.away;
+    let players = state.statistics.players;
+    if (passerId !== undefined) {
+      const row = players.find((p) => p.playerId === passerId);
+      if (row) {
+        players = bumpPlayerStat(players, passerId, {
+          passesAttempted: row.passesAttempted + 1,
+          passesCompleted: row.passesCompleted + (completed ? 1 : 0),
+        });
+      }
+    }
+    const nextTeam = bumpTeamStat(team, {
+      passesAttempted: team.passesAttempted + 1,
+      passesCompleted: team.passesCompleted + (completed ? 1 : 0),
+    });
+    return {
+      state: Object.freeze({
+        ...state,
+        statistics: Object.freeze({
+          ...state.statistics,
+          home: side === 'home' ? nextTeam : state.statistics.home,
+          away: side === 'away' ? nextTeam : state.statistics.away,
+          players,
+        }),
+      }),
+      emits,
+    };
   }
 
   const actorId = attributePlayerForEvent(state, side, 'SHOT', tick);
