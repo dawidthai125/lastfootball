@@ -82,17 +82,59 @@ export async function completeTrainingSession(
     skill: p.skill,
     potential: p.potential,
     age: p.age,
+    pos: p.pos,
+    groups: p.groups,
+    energy: p.energy,
   }));
   const impulseKey = `${today}:${input.focusId}:${input.intensityId}`;
   const after = applyTrainingSessionEffects(before, input.focusId, input.intensityId, impulseKey);
   const summary = summarizeTrainingSessionEffects(before, after);
 
-  const updates: { id: string; status: string; skill: number }[] = [];
+  const updates: {
+    id: string;
+    status: string;
+    skill: number;
+    attr_attack?: number;
+    attr_passing?: number;
+    attr_defense?: number;
+    attr_physical?: number;
+    attr_goalkeeping?: number;
+    energy?: number;
+  }[] = [];
   for (let i = 0; i < after.length; i++) {
     const next = after[i]!;
     const prev = before[i]!;
-    if (next.status === prev.status && next.skill === prev.skill) continue;
-    updates.push({ id: next.id, status: next.status, skill: next.skill });
+    const groupsChanged =
+      next.groups != null &&
+      (next.groups.attack !== prev.groups?.attack ||
+        next.groups.passing !== prev.groups?.passing ||
+        next.groups.defense !== prev.groups?.defense ||
+        next.groups.physical !== prev.groups?.physical ||
+        next.groups.goalkeeping !== prev.groups?.goalkeeping);
+    const energyChanged = next.energy !== prev.energy;
+    if (
+      next.status === prev.status &&
+      next.skill === prev.skill &&
+      !groupsChanged &&
+      !energyChanged
+    ) {
+      continue;
+    }
+    updates.push({
+      id: next.id,
+      status: next.status,
+      skill: next.skill,
+      ...(next.groups
+        ? {
+            attr_attack: next.groups.attack,
+            attr_passing: next.groups.passing,
+            attr_defense: next.groups.defense,
+            attr_physical: next.groups.physical,
+            attr_goalkeeping: next.groups.goalkeeping,
+          }
+        : {}),
+      ...(typeof next.energy === 'number' ? { energy: next.energy } : {}),
+    });
   }
 
   const { data, error } = await supabase.rpc(

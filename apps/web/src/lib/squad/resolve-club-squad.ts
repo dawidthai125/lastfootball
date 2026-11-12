@@ -1,6 +1,7 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
+import { attributeBars, groupsFromSkill } from '@/lib/squad/truth';
 import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
 import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
@@ -75,8 +76,8 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     shortName: row.name,
     position: displayPosition(row.pos),
     age: row.age,
-    form: formForPlayer(skill, row.status),
-    energy: energyForStatus(row.status, skill),
+    form: typeof row.form === 'number' ? row.form : formForPlayer(skill, row.status),
+    energy: typeof row.energy === 'number' ? row.energy : energyForStatus(row.status, skill),
     skill,
     potentialBand,
     potentialLabel: potentialBandLabel(row.potential),
@@ -84,18 +85,9 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     careerPhaseLabel: careerPhaseLabel({ age: row.age }),
     status: row.status,
     nationality: row.nationality,
-    attributes: [
-      { label: 'Tempo', value: skill - 4 },
-      { label: 'Siła', value: skill - 2 },
-      { label: 'Wytrzymałość', value: skill },
-      { label: 'Podania', value: skill - 1 },
-      { label: 'Strzały', value: skill - 6 },
-      { label: 'Obrona', value: skill - 3 },
-      { label: 'Technika', value: skill - 2 },
-      { label: 'Głowa', value: skill - 5 },
-    ],
+    attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
-      wage: displayWage(skill, row.age),
+      wage: typeof row.wage === 'number' ? row.wage : displayWage(skill, row.age),
       until: '30.06.2028',
       clause: displayClause(skill),
       role: roleLabel(row.pos, row.captain),
@@ -149,6 +141,9 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     starter: true,
     captain: r.captain || undefined,
     skill: r.skill,
+    groups: r.groups,
+    energy: r.energy,
+    form: r.form,
   }));
   if (xi.length !== 11) {
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
@@ -173,6 +168,9 @@ export function resolveMatchBench(rows: readonly PlayerRowDto[]): readonly Roste
       role: row.role as PitchRole,
       starter: false,
       skill: row.skill,
+      groups: row.groups,
+      energy: row.energy,
+      form: row.form,
     }));
 }
 

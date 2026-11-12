@@ -83,6 +83,16 @@ export type Database = {
           transfer_listed_at: string | null;
           academy_track: boolean;
           promoted_at: string | null;
+          attr_attack: number;
+          attr_passing: number;
+          attr_defense: number;
+          attr_physical: number;
+          attr_goalkeeping: number;
+          energy: number;
+          form: number;
+          wage: number;
+          suspension_matches: number;
+          recent_ratings: number[];
         };
         Insert: {
           id: string;
@@ -104,6 +114,16 @@ export type Database = {
           transfer_listed_at?: string | null;
           academy_track?: boolean;
           promoted_at?: string | null;
+          attr_attack?: number;
+          attr_passing?: number;
+          attr_defense?: number;
+          attr_physical?: number;
+          attr_goalkeeping?: number;
+          energy?: number;
+          form?: number;
+          wage?: number;
+          suspension_matches?: number;
+          recent_ratings?: number[];
         };
         Update: {
           id?: string;
@@ -125,6 +145,16 @@ export type Database = {
           transfer_listed_at?: string | null;
           academy_track?: boolean;
           promoted_at?: string | null;
+          attr_attack?: number;
+          attr_passing?: number;
+          attr_defense?: number;
+          attr_physical?: number;
+          attr_goalkeeping?: number;
+          energy?: number;
+          form?: number;
+          wage?: number;
+          suspension_matches?: number;
+          recent_ratings?: number[];
         };
         Relationships: [
           {

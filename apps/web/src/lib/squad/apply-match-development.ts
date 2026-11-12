@@ -4,8 +4,18 @@ import {
   summarizeMatchDevelopment,
   type MatchDevelopmentSummary,
 } from '@/lib/squad/match-development';
+import type { AttrGroups } from '@/lib/squad/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+
+export type MatchTruthPatch = {
+  readonly status?: PlayerRowDto['status'];
+  readonly groups?: AttrGroups;
+  readonly energy?: number;
+  readonly form?: number;
+  readonly suspensionMatches?: number;
+  readonly recentRatings?: readonly number[];
+};
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -35,6 +45,7 @@ export async function applyMatchDevelopment(
     clubId: string;
     matchKey: string;
     activePlayers: readonly PlayerRowDto[];
+    truthById?: Readonly<Record<string, MatchTruthPatch>>;
   },
 ): Promise<ApplyMatchDevelopmentResult> {
   const seniors = filterSeniorPlayers(input.activePlayers);
@@ -49,12 +60,32 @@ export async function applyMatchDevelopment(
   const after = applyMatchDevelopmentEffects(before, input.matchKey);
   const summary = summarizeMatchDevelopment(before, after);
 
-  const updates: { id: string; skill: number }[] = [];
+  const updates: Record<string, unknown>[] = [];
   for (let i = 0; i < after.length; i++) {
     const next = after[i]!;
     const prev = before[i]!;
-    if (next.skill === prev.skill) continue;
-    updates.push({ id: next.id, skill: next.skill });
+    const patch = input.truthById?.[next.id];
+    if (next.skill === prev.skill && !patch) continue;
+    updates.push({
+      id: next.id,
+      skill: next.skill,
+      ...(patch?.status ? { status: patch.status } : {}),
+      ...(patch?.groups
+        ? {
+            attr_attack: patch.groups.attack,
+            attr_passing: patch.groups.passing,
+            attr_defense: patch.groups.defense,
+            attr_physical: patch.groups.physical,
+            attr_goalkeeping: patch.groups.goalkeeping,
+          }
+        : {}),
+      ...(typeof patch?.energy === 'number' ? { energy: patch.energy } : {}),
+      ...(typeof patch?.form === 'number' ? { form: patch.form } : {}),
+      ...(typeof patch?.suspensionMatches === 'number'
+        ? { suspension_matches: patch.suspensionMatches }
+        : {}),
+      ...(patch?.recentRatings ? { recent_ratings: patch.recentRatings } : {}),
+    });
   }
 
   const { data, error } = await supabase.rpc(

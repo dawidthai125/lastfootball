@@ -1,6 +1,14 @@
 import type { CareerPhaseId } from '@/lib/squad/career-phase';
 import type { PotentialBandId } from '@/lib/squad/potential';
 
+export type AttrGroups = {
+  readonly attack: number;
+  readonly passing: number;
+  readonly defense: number;
+  readonly physical: number;
+  readonly goalkeeping: number;
+};
+
 /** Domain player readiness — stored in DB; localized in STATUS_LABEL / UI. */
 export type PlayerStatus = 'READY' | 'INJURED' | 'SUSPENDED' | 'TIRED' | 'DEPARTED';
 
@@ -63,6 +71,13 @@ export type PlayerRowDto = {
   readonly academyTrack: boolean;
   /** Set when promoted from academy; null otherwise. */
   readonly promotedAt: string | null;
+  /** Stored groups. Absent on old test fixtures — UI then derives from skill. */
+  readonly groups?: AttrGroups;
+  readonly energy?: number;
+  readonly form?: number;
+  readonly wage?: number;
+  readonly recentRatings?: readonly number[];
+  readonly suspensionMatches?: number;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;
