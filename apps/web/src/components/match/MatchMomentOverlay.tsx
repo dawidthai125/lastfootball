@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import './match-path.css';
 
@@ -27,11 +27,14 @@ export function MatchMomentOverlay({
   onDismiss,
   autoDismissMs = variant === 'goal' ? 1800 : undefined,
 }: MatchMomentOverlayProps) {
+  const dismissRef = useRef(onDismiss);
+  dismissRef.current = onDismiss;
+
   useEffect(() => {
-    if (!autoDismissMs || !onDismiss) return;
-    const t = window.setTimeout(onDismiss, autoDismissMs);
-    return () => window.clearTimeout(t);
-  }, [autoDismissMs, onDismiss]);
+    if (!autoDismissMs) return;
+    const timer = window.setTimeout(() => dismissRef.current?.(), autoDismissMs);
+    return () => window.clearTimeout(timer);
+  }, [autoDismissMs, title, scoreLine]);
 
   const wa = variant === 'goal' ? 'MOM-002' : 'MOM-003';
   const src =

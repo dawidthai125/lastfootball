@@ -116,6 +116,12 @@
 .lf-live__canvas {
   grid-area: pitch;
   position: relative;
+  justify-self: center;
+  align-self: center;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 105 / 68;
   min-height: 0;
   overflow: hidden;
   border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
@@ -261,7 +267,7 @@
   }
 
   .lf-live__feed {
-    max-height: 8rem;
+    max-height: 5.5rem;
   }
 
   .lf-live__panel {
