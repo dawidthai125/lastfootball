@@ -119,7 +119,10 @@ export function TopBar() {
       </Link>
 
       {cashLabel ? (
-        <div className="lf-chrome-metric hidden md:flex" aria-label="Kasa klubu">
+        <div
+          className="lf-chrome-metric lf-chrome-metric--desk hidden md:flex"
+          aria-label="Kasa klubu"
+        >
           <span className="lf-chrome-metric__label">Kasa</span>
           <span className="lf-chrome-metric__value tabular-nums">{cashLabel}</span>
         </div>
@@ -127,7 +130,10 @@ export function TopBar() {
 
       <div className="ml-auto flex items-center" style={{ gap: 'var(--lf-space-1)' }}>
         {cashLabel ? (
-          <div className="lf-chrome-metric md:hidden" aria-label="Kasa klubu">
+          <div
+            className="lf-chrome-metric lf-chrome-metric--phone md:hidden"
+            aria-label="Kasa klubu"
+          >
             <span className="lf-chrome-metric__value tabular-nums">{cashLabel}</span>
           </div>
         ) : null}

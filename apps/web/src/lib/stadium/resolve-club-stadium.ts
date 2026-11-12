@@ -34,7 +34,7 @@ export type ResolveClubStadiumInput = {
 };
 
 const IDENTITY_NOTE =
-  'Obiekt startowy klubu — stały dom w Thin. Rozbudowa i bilety nie są częścią tej karty.' as const;
+  'Stały dom klubu. Rozbudowa trybun, murawy i ośrodka jest poniżej. Bilety z meczu u siebie biorą poziom trybun.' as const;
 
 function bandFromOutcome(outcome: HomeMatchOutcome | null): StadiumAttendanceBand {
   if (outcome == null) return 'unknown';

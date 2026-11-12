@@ -20,7 +20,8 @@ describe('resolveClubStadium', () => {
     });
     expect(dto.name).toBe(STARTER_PACKAGE.stadiumLabel('Orzeł Test'));
     expect(dto.capacityLabel).toBe(STARTER_PACKAGE.stadiumCapacity);
-    expect(dto.identityNote).toMatch(/startowy/i);
+    expect(dto.identityNote).toMatch(/rozbudowa/i);
+    expect(dto.identityNote).not.toMatch(/nie są częścią/i);
   });
 
   it('uses unknown attendance when no home played (D113)', () => {

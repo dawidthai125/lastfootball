@@ -274,6 +274,19 @@ textarea {
   border-left: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
 }
 
+/* Unlayered display beats Tailwind md:hidden. Hide each readout in CSS. */
+@media (max-width: 767px) {
+  .lf-chrome-metric--desk {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .lf-chrome-metric--phone {
+    display: none;
+  }
+}
+
 .lf-chrome-metric:first-child {
   border-left: none;
   padding-left: 0;
