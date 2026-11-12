@@ -2,6 +2,7 @@ import type { FormationCode } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
+import { stadiumLook } from '@/lib/stadium/levels';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
@@ -9,6 +10,22 @@ import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+
+function groundStadiumLabel(dto: FixtureDto, club: ClubDto): string {
+  const cupRound = cupRoundForMatchday(dto.matchday);
+  const base =
+    dto.competition === 'cup' && cupRound === 4
+      ? 'Stadion finałowy'
+      : dto.isHome
+        ? STARTER_PACKAGE.stadiumLabel(club.name)
+        : `Stadion ${dto.opponent.name}`;
+  const pitch = dto.homePitchLevel ?? 0;
+  const stands = dto.homeStandsLevel ?? 0;
+  if (pitch <= 0 && stands <= 0) return base;
+  if (dto.competition === 'cup' && cupRound === 4) return base;
+  const look = stadiumLook({ stands, pitch, trainingCenter: 0 });
+  return `${base} · ${look.stands} · ${look.pitch}`;
+}
 
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
 export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
@@ -60,12 +77,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     opponentShort: dto.opponent.shortName,
     opponentClubId: dto.opponentClubId,
     home: dto.isHome,
-    stadium:
-      cupRound === 4
-        ? 'Stadion finałowy'
-        : dto.isHome
-          ? STARTER_PACKAGE.stadiumLabel(club.name)
-          : `Stadion ${dto.opponent.name}`,
+    stadium: groundStadiumLabel(dto, club),
     status:
       dto.status === 'played' ? 'played' : dto.status === 'upcoming' ? 'upcoming' : 'scheduled',
     score,

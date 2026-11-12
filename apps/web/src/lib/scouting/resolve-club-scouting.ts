@@ -7,6 +7,7 @@ import {
 } from '@/lib/squad/potential';
 import { filterSeniorPlayers, type PlayerRowDto } from '@/lib/squad/types';
 import type { TransferMarketDto } from '@/lib/transfers/types';
+import { academyCeilingView } from '@/lib/academy/ceiling';
 import { canAddToShortlist } from '@/lib/scouting/shortlist';
 import { SCOUTING_THIN, type ScoutingCandidateDto, type ScoutingDto } from '@/lib/scouting/types';
 
@@ -34,16 +35,22 @@ function fromOwnSenior(row: PlayerRowDto, onShortlist: boolean): ScoutingCandida
 function fromLiveListing(
   listing: TransferMarketDto['liveListings'][number],
   onShortlist: boolean,
+  revealed: boolean | null,
 ): ScoutingCandidateDto {
   /** REUSE D22 helper — presentation band from existing skill/id/age (no second rating). */
   const potential = resolvePlayerPotential(listing.skill, listing.playerId, listing.age);
+  const bandLabel = potentialBandLabel(potential);
+  const ceiling =
+    revealed === null
+      ? { label: bandLabel, hidden: false }
+      : academyCeilingView({ revealed, bandLabel });
   return {
     playerId: listing.playerId,
     name: listing.playerName,
     pos: listing.pos,
     age: listing.age,
-    potentialBand: resolvePotentialBand(potential),
-    potentialLabel: potentialBandLabel(potential),
+    potentialBand: ceiling.hidden ? 'low' : resolvePotentialBand(potential),
+    potentialLabel: ceiling.label,
     listed: true,
     source: 'market_listed',
     onShortlist,
@@ -63,6 +70,7 @@ export function resolveClubScouting(
   market: TransferMarketDto,
   shortlistIds: readonly string[],
   phase: HubPhase,
+  revealedIds?: ReadonlySet<string>,
 ): ScoutingDto {
   const unlocked = phase === 'SEASON' || phase === 'PLAYOFF' || phase === 'OFFSEASON';
   const shortlistSet = new Set(shortlistIds);
@@ -74,7 +82,11 @@ export function resolveClubScouting(
     byId.set(row.id, fromOwnSenior(row, shortlistSet.has(row.id)));
   }
   for (const listing of market.liveListings) {
-    byId.set(listing.playerId, fromLiveListing(listing, shortlistSet.has(listing.playerId)));
+    const revealed = revealedIds == null ? null : revealedIds.has(listing.playerId);
+    byId.set(
+      listing.playerId,
+      fromLiveListing(listing, shortlistSet.has(listing.playerId), revealed),
+    );
   }
 
   const candidates = [...byId.values()];

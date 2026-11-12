@@ -145,6 +145,8 @@ export async function renewSponsorAndPayBase(params: {
   readonly clubId: string;
   readonly nextSeason: number;
   readonly currentCash: number;
+  /** When set, the next contract follows the crowd and the league rung. */
+  readonly quote?: { readonly base: number; readonly bonus: number };
 }): Promise<{ ok: true; nextCash: number } | { ok: false; error: string }> {
   const supabase = await createClient();
   let contract = await getClubSponsorContract(params.clubId);
@@ -157,16 +159,17 @@ export async function renewSponsorAndPayBase(params: {
 
   const nextSeason = Math.max(1, Math.trunc(params.nextSeason));
   const now = new Date().toISOString();
+  const nextBase = params.quote?.base ?? contract.base_amount;
+  const nextBonus = params.quote?.bonus ?? contract.bonus_amount;
 
-  // Flat renew — same Thin brand + amounts (D101 · Owner LOCK 8).
   const { error: renewErr } = await supabase
     .from('club_sponsor_contracts')
     .update({
       season_number: nextSeason,
       brand_key: contract.brand_key,
       brand_name: contract.brand_name,
-      base_amount: contract.base_amount,
-      bonus_amount: contract.bonus_amount,
+      base_amount: nextBase,
+      bonus_amount: nextBonus,
       goal_kind: contract.goal_kind,
       goal_target: contract.goal_target,
       bonus_claimed_at: null,
@@ -183,7 +186,7 @@ export async function renewSponsorAndPayBase(params: {
     return { ok: true, nextCash: params.currentCash };
   }
 
-  const amount = contract.base_amount;
+  const amount = nextBase;
   const nextCash = params.currentCash + amount;
 
   const { data: paid, error: markErr } = await supabase

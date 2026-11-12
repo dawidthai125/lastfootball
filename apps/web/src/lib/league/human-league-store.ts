@@ -546,6 +546,18 @@ export async function prepareHumanLive(
   };
 }
 
+async function homePitchLevel(
+  admin: ReturnType<typeof createAdminClient>,
+  homeId: string,
+): Promise<number> {
+  if (isBotClubId(homeId)) return 0;
+  const row = await admin.from('clubs').select('pitch_level').eq('id', homeId).maybeSingle();
+  if (row.error || !row.data) return 0;
+  const level = (row.data as { pitch_level?: number }).pitch_level;
+  if (typeof level !== 'number' || !Number.isFinite(level)) return 0;
+  return Math.max(0, Math.min(3, Math.trunc(level)));
+}
+
 export async function authoritativeHumanScore(
   clubId: string,
   fixtureMatchday: number,
@@ -624,6 +636,7 @@ export async function authoritativeHumanScore(
       playedAt: null,
       createdAt: broadcast.kickoff_on,
       sharedSeed: Number(broadcast.seed),
+      homePitchLevel: await homePitchLevel(admin, broadcast.home_id),
     },
     homeXi,
     [],

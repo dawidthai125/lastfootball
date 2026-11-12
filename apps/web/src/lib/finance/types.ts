@@ -35,7 +35,11 @@ export type FinanceMovementCategory =
   | 'sponsor_base'
   | 'sponsor_bonus'
   | 'email_confirm'
-  | 'wages';
+  | 'wages'
+  | 'scout_report'
+  | 'ticket_income'
+  | 'stadium_build'
+  | 'coach_hire';
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

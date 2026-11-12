@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
 
 import { StadiumView } from '@/components/stadium/StadiumView';
+import { readClubBuild } from '@/lib/club/read-build';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createClient } from '@/lib/supabase/server';
 import { ensureClubFixtures } from '@/lib/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveClubStadium, type HomeMatchOutcome } from '@/lib/stadium';
@@ -41,5 +43,8 @@ export default async function StadiumPage() {
     homePlayedCount: homePlayed.length,
   });
 
-  return <StadiumView stadium={stadium} />;
+  const supabase = await createClient();
+  const build = await readClubBuild(supabase, club.id);
+
+  return <StadiumView stadium={stadium} ground={build.levels} cash={club.cashBalance} />;
 }

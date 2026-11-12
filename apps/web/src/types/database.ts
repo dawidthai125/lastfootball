@@ -25,6 +25,10 @@ export type Database = {
           season_number: number;
           season_phase: string;
           league_tier: string;
+          coach_group: string | null;
+          stands_level: number;
+          pitch_level: number;
+          training_center_level: number;
         };
         Insert: {
           id?: string;
@@ -42,6 +46,10 @@ export type Database = {
           season_number?: number;
           season_phase?: string;
           league_tier?: string;
+          coach_group?: string | null;
+          stands_level?: number;
+          pitch_level?: number;
+          training_center_level?: number;
         };
         Update: {
           id?: string;
@@ -59,6 +67,94 @@ export type Database = {
           season_number?: number;
           season_phase?: string;
           league_tier?: string;
+          coach_group?: string | null;
+          stands_level?: number;
+          pitch_level?: number;
+          training_center_level?: number;
+        };
+        Relationships: [];
+      };
+      scout_reports: {
+        Row: {
+          id: string;
+          club_id: string;
+          player_id: string;
+          band: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          club_id: string;
+          player_id: string;
+          band: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          club_id?: string;
+          player_id?: string;
+          band?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      transfer_auctions: {
+        Row: {
+          id: string;
+          player_id: string;
+          seller_club_id: string;
+          ask: number;
+          status: string;
+          winner_club_id: string | null;
+          settled_amount: number | null;
+          created_at: string;
+          settled_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          player_id: string;
+          seller_club_id: string;
+          ask: number;
+          status?: string;
+          winner_club_id?: string | null;
+          settled_amount?: number | null;
+          created_at?: string;
+          settled_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          player_id?: string;
+          seller_club_id?: string;
+          ask?: number;
+          status?: string;
+          winner_club_id?: string | null;
+          settled_amount?: number | null;
+          created_at?: string;
+          settled_at?: string | null;
+        };
+        Relationships: [];
+      };
+      transfer_auction_bids: {
+        Row: {
+          id: string;
+          auction_id: string;
+          club_id: string;
+          amount: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          auction_id: string;
+          club_id: string;
+          amount: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          auction_id?: string;
+          club_id?: string;
+          amount?: number;
+          created_at?: string;
         };
         Relationships: [];
       };

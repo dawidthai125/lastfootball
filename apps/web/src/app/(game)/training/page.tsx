@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
 
 import { TrainingView } from '@/components/training/TrainingView';
+import { readClubBuild } from '@/lib/club/read-build';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createClient } from '@/lib/supabase/server';
 import { countPlayedInList, listClubFixtures } from '@/lib/fixtures';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveClubTraining } from '@/lib/training';
@@ -25,5 +27,8 @@ export default async function TrainingPage() {
     activePlayers,
   });
 
-  return <TrainingView training={training} />;
+  const supabase = await createClient();
+  const build = await readClubBuild(supabase, club.id);
+
+  return <TrainingView training={training} coachGroup={build.coachGroup} cash={club.cashBalance} />;
 }

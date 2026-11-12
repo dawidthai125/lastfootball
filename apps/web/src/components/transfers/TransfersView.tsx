@@ -20,6 +20,13 @@ import {
   setTransferListing,
   withdrawLiveTransferOffer,
 } from '@/lib/transfers/actions';
+import {
+  placeAuctionBid,
+  settleAuctionBid,
+  withdrawAuctionBid,
+} from '@/lib/transfers/actions-auction';
+import type { AuctionSnap } from '@/lib/transfers/load-auctions';
+import { AUCTION_THIN } from '@/lib/transfers/auction';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
   resolveCounterAmount,
@@ -490,7 +497,86 @@ type DecisionCase =
  * Transfer Command Center — LFE-UI-IMPL-03 / HF-XFR-01 · HF-XFR-03.
  * Actions / DTO / resolvers unchanged.
  */
-export function TransfersView({ market }: { market: TransferMarketDto }) {
+function AuctionSellerActions({ playerId, canSettle }: { playerId: string; canSettle: boolean }) {
+  const [settleState, settleAction, settlePending] = useActionState(
+    settleAuctionBid,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const [withdrawState, withdrawAction, withdrawPending] = useActionState(
+    withdrawAuctionBid,
+    TRANSFER_ACTION_INITIAL,
+  );
+  const error = settleState.error || withdrawState.error;
+  return (
+    <div className="lf-tx-actions">
+      <form action={settleAction}>
+        <input type="hidden" name="playerId" value={playerId} />
+        <Button type="submit" variant="primary" disabled={!canSettle || settlePending}>
+          {settlePending ? '…' : 'Przyjmij'}
+        </Button>
+      </form>
+      <form action={withdrawAction}>
+        <input type="hidden" name="playerId" value={playerId} />
+        <Button type="submit" variant="default" disabled={withdrawPending}>
+          {withdrawPending ? '…' : 'Cofnij'}
+        </Button>
+      </form>
+      {error ? (
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function AuctionBidForm({
+  playerId,
+  ask,
+  high,
+  disabled,
+}: {
+  playerId: string;
+  ask: number;
+  high: number | null;
+  disabled: boolean;
+}) {
+  const [state, action, pending] = useActionState(placeAuctionBid, TRANSFER_ACTION_INITIAL);
+  const min = high == null ? ask : Math.max(ask, high + AUCTION_THIN.STEP);
+  return (
+    <form action={action} className="lf-tx-actions">
+      <input type="hidden" name="playerId" value={playerId} />
+      <input
+        name="amount"
+        type="number"
+        min={min}
+        step={AUCTION_THIN.STEP}
+        defaultValue={min}
+        className="w-24 text-[12px]"
+        aria-label="Kwota licytacji"
+      />
+      <Button type="submit" variant="default" disabled={disabled || pending}>
+        {pending ? '…' : 'Licytuj'}
+      </Button>
+      {state.error ? (
+        <span className="text-xs text-[var(--lf-danger)]" role="alert">
+          {state.error}
+        </span>
+      ) : null}
+    </form>
+  );
+}
+
+export function TransfersView({
+  market,
+  auctions = [],
+  clubId = '',
+}: {
+  market: TransferMarketDto;
+  auctions?: readonly AuctionSnap[];
+  clubId?: string;
+}) {
+  const auctionByPlayer = new Map(auctions.map((auction) => [auction.playerId, auction]));
   const outgoingOpening = market.outgoingLiveOffers.filter((o) => o.phase === 'opening');
   const outgoingCountered = market.outgoingLiveOffers.filter((o) => o.phase === 'countered');
 
@@ -528,6 +614,34 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
       <LocationHero waId="HERO-005" src="/assets/world-art/hero-005-transfer-night.png" priority />
 
       {/* A — context line (no KPI wall) */}
+      {auctions.some((auction) => auction.sellerClubId === clubId) ? (
+        <section className="lf-tx__section" aria-label="Twoje licytacje">
+          <h2 className="lf-tx__section-title">Licytacje twoich zawodników</h2>
+          <ul className="lf-tx__inbox">
+            {auctions
+              .filter((auction) => auction.sellerClubId === clubId)
+              .map((auction) => (
+                <li key={auction.playerId} className="lf-tx__case">
+                  <p className="lf-tx__case-title">
+                    {market.listedPlayers.find((player) => player.playerId === auction.playerId)
+                      ?.name ?? 'Zawodnik'}
+                  </p>
+                  <p className="lf-tx__case-meta">
+                    Cena {formatMoney(auction.ask)}
+                    {auction.highAmount != null
+                      ? ` · najwyżej ${formatMoney(auction.highAmount)}`
+                      : ' · brak ofert'}
+                  </p>
+                  <AuctionSellerActions
+                    playerId={auction.playerId}
+                    canSettle={auction.highAmount != null}
+                  />
+                </li>
+              ))}
+          </ul>
+        </section>
+      ) : null}
+
       <p className="lf-tx__context" aria-label="Kontekst transferów">
         {windowLabel}
         <span className="lf-tx__dot" aria-hidden>
@@ -692,6 +806,12 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                         disabled={!canLive}
                         envelopeBalance={market.envelopeBalance}
                       />
+                      <AuctionBidForm
+                        playerId={r.playerId}
+                        ask={r.ask}
+                        high={auctionByPlayer.get(r.playerId)?.highAmount ?? null}
+                        disabled={!canLive}
+                      />
                     </div>
                   </article>
                 );
@@ -729,6 +849,12 @@ export function TransfersView({ market }: { market: TransferMarketDto }) {
                             listing={r}
                             disabled={!canLive}
                             envelopeBalance={market.envelopeBalance}
+                          />
+                          <AuctionBidForm
+                            playerId={r.playerId}
+                            ask={r.ask}
+                            high={auctionByPlayer.get(r.playerId)?.highAmount ?? null}
+                            disabled={!canLive}
                           />
                         </div>
                       );

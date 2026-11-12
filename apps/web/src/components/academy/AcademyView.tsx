@@ -5,6 +5,8 @@ import { useActionState } from 'react';
 import { LocationHero, SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
 import { intakeAcademyProspect, promoteAcademyProspect } from '@/lib/academy/actions';
 import { ACADEMY_ACTION_INITIAL, type AcademyDto } from '@/lib/academy';
+import { buyScoutReport } from '@/lib/scouting/actions-report';
+import { SCOUTING_ACTION_INITIAL } from '@/lib/scouting';
 
 function intakeHint(dto: AcademyDto): string {
   if (dto.intakeBlockedReason === 'slots_full') {
@@ -26,6 +28,10 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
     promoteAcademyProspect,
     ACADEMY_ACTION_INITIAL,
   );
+  const [reportState, reportAction, reportPending] = useActionState(
+    buyScoutReport,
+    SCOUTING_ACTION_INITIAL,
+  );
 
   if (!academy.unlocked) {
     return (
@@ -44,9 +50,12 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
     );
   }
 
-  const err = intakeState.error || promoteState.error;
+  const err = intakeState.error || promoteState.error || reportState.error;
   const okMsg =
-    (intakeState.ok && intakeState.message) || (promoteState.ok && promoteState.message) || null;
+    (intakeState.ok && intakeState.message) ||
+    (promoteState.ok && promoteState.message) ||
+    (reportState.ok && reportState.message) ||
+    null;
 
   return (
     <div className="lf-aca" data-lf-impl="LFE-ACADEMY-01">
@@ -121,6 +130,14 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
                     {promotePending ? '…' : 'Promuj'}
                   </Button>
                 </form>
+                {p.potentialLabel === 'Sufit ukryty' ? (
+                  <form action={reportAction}>
+                    <input type="hidden" name="playerId" value={p.id} />
+                    <Button type="submit" variant="default" size="sm" disabled={reportPending}>
+                      {reportPending ? '…' : 'Raport 2 000 EUR'}
+                    </Button>
+                  </form>
+                ) : null}
               </li>
             ))}
           </ul>

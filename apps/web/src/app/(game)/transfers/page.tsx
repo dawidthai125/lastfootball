@@ -5,6 +5,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
+import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
 import { fetchLiveListings } from '@/lib/transfers/fetch-live-listings';
 import { resolveTransferMarket } from '@/lib/transfers';
@@ -18,10 +19,11 @@ export default async function TransfersPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
-  const [activePlayers, liveListings, h2hOffers] = await Promise.all([
+  const [activePlayers, liveListings, h2hOffers, auctions] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),
     fetchLiveH2hOffers(supabase, club.id),
+    loadOpenAuctions(),
   ]);
 
   const market = resolveTransferMarket({
@@ -40,7 +42,7 @@ export default async function TransfersPage() {
         title="Transfery"
         subtitle={market.windowOpen ? 'Centrum decyzji transferowych' : 'Okno zamknięte'}
       />
-      <TransfersView market={market} />
+      <TransfersView market={market} auctions={auctions} clubId={club.id} />
     </div>
   );
 }

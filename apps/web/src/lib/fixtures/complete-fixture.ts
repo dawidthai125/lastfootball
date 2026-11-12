@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
+import { readClubBuild } from '@/lib/club/read-build';
 import { resolveLeagueMatchReward } from '@/lib/finance';
+import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
@@ -184,15 +186,24 @@ export async function completeFixture(
 
     if (updated) {
       let nextBalance = clubRow.cash_balance;
+      const playedHome = (updated as { is_home: boolean }).is_home;
       const reward =
         row.competition === 'league' || row.competition === 'human'
           ? resolveLeagueMatchReward({
               homeScore: home,
               awayScore: away,
-              isHome: (updated as { is_home: boolean }).is_home,
+              isHome: playedHome,
             })
           : null;
       if (reward) nextBalance += reward.amount;
+      const build = await readClubBuild(supabase, clubId);
+      const ticketTake = playedHome
+        ? ticketIncome({
+            standsLevel: build.levels.stands,
+            attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
+          })
+        : 0;
+      nextBalance += ticketTake;
       const wagesKnown = seniors.some((player) => typeof player.wage === 'number');
       const bill = wagesKnown
         ? seniors.reduce(
@@ -228,6 +239,15 @@ export async function completeFixture(
             category: 'wages',
             label: 'Pensje kolejki',
             amount: -paid.paid,
+            fixture_id: row.id,
+          } as never);
+        }
+        if (ticketTake > 0) {
+          await supabase.from('finance_movements').insert({
+            club_id: clubId,
+            category: 'ticket_income',
+            label: 'Bilety',
+            amount: ticketTake,
             fixture_id: row.id,
           } as never);
         }

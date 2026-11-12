@@ -5,8 +5,12 @@ import Link from 'next/link';
 
 import { LocationHero, SoftLockState, StateBanner } from '@/components/ui';
 import { runTrainingSession } from '@/lib/training/actions';
+import { hireClubCoach } from '@/lib/training/actions-coach';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
+import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
+import { formatMoney } from '@/lib/finance/format-money';
+import { Button } from '@/components/ui';
 
 import './training-decision.css';
 
@@ -38,12 +42,32 @@ function lockTitle(dto: TrainingDto): string {
  * Training Experience — LFE-UI-IMPL-03 / HF-TRN-01 · HF-TRN-02 · LFE-TRAINING-02 feedback.
  * Decision-first; domain via resolveClubTraining + runTrainingSession.
  */
-export function TrainingView({ training }: { training: TrainingDto }) {
+const COACH_LABEL: Record<CoachGroup, string> = {
+  attack: 'Atak',
+  passing: 'Podania',
+  defense: 'Obrona',
+  physical: 'Fizyczność',
+  goalkeeping: 'Bramkarstwo',
+};
+
+export function TrainingView({
+  training,
+  coachGroup = null,
+  cash = 0,
+}: {
+  training: TrainingDto;
+  coachGroup?: CoachGroup | null;
+  cash?: number;
+}) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
     training.defaults.intensityId,
   );
   const [state, action, pending] = useActionState(runTrainingSession, TRAINING_ACTION_INITIAL);
+  const [coachState, coachAction, coachPending] = useActionState(
+    hireClubCoach,
+    TRAINING_ACTION_INITIAL,
+  );
 
   if (!training.canTrain) {
     return (
@@ -70,6 +94,36 @@ export function TrainingView({ training }: { training: TrainingDto }) {
   return (
     <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
       <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
+
+      <section className="lf-tr__block" aria-label="Trener">
+        <h3 className="lf-tr__block-title">Trener</h3>
+        <p className="lf-tr__meta">
+          {coachGroup
+            ? `Podnosi plon treningu w grupie: ${COACH_LABEL[coachGroup]}.`
+            : 'Brak trenera. Jeden trener podnosi tylko jedną grupę atrybutów.'}
+        </p>
+        {coachState.error ? (
+          <p className="lf-tr__regen-note" role="alert">
+            {coachState.error}
+          </p>
+        ) : null}
+        <div className="lf-tr__focus-grid">
+          {COACH_GROUPS.map((group) => (
+            <form key={group} action={coachAction}>
+              <input type="hidden" name="group" value={group} />
+              <Button
+                type="submit"
+                variant={coachGroup === group ? 'primary' : 'default'}
+                disabled={coachPending || (coachGroup !== group && cash < COACH_THIN.HIRE_FEE)}
+              >
+                {coachGroup === group
+                  ? COACH_LABEL[group]
+                  : `${COACH_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
+              </Button>
+            </form>
+          ))}
+        </div>
+      </section>
 
       <header className="lf-tr__hero">
         <p className="lf-tr__status">Sesja dostępna</p>
