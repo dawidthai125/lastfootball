@@ -201,6 +201,7 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     expect(home.getMatchState().tacticsSide).toBe('home');
     expect(home.getMatchState().tactics.pressing).toBe(58);
     expect(home.getMatchState().tactics.tempo).toBe(50);
+    expect(home.getMatchState().tactics.width).toBe(50);
 
     const paced = createSessionFromLeagueFixture(
       club('ii'),
@@ -216,6 +217,21 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     );
     expect(awayTempo.getMatchState().tacticsSide).toBe('away');
     expect(awayTempo.getMatchState().tactics.tempo).toBe(58);
+
+    const wide = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), homeStyleWidth: 4 },
+      xi(80),
+    );
+    expect(wide.getMatchState().tactics.width).toBe(58);
+
+    const awayWidth = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), isHome: false, viewerStyleWidth: 4, homeStyleWidth: 8 },
+      xi(80),
+    );
+    expect(awayWidth.getMatchState().tacticsSide).toBe('away');
+    expect(awayWidth.getMatchState().tactics.width).toBe(58);
 
     const awayOwn = createSessionFromLeagueFixture(
       club('ii'),
@@ -248,12 +264,19 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     const quiet = buildLeaguePreMatchBundle(club('ii'), fixture(), xi(80));
     expect(quiet.tactics.find((row) => row.id === 'pressing')?.value).toBe(50);
     expect(quiet.tactics.find((row) => row.id === 'tempo')?.value).toBe(50);
+    expect(quiet.tactics.find((row) => row.id === 'width')?.value).toBe(50);
     const pacedPreview = buildLeaguePreMatchBundle(
       club('ii'),
       { ...fixture(), homeStyleTempo: 4 },
       xi(80),
     );
     expect(pacedPreview.tactics.find((row) => row.id === 'tempo')?.value).toBe(58);
+    const widePreview = buildLeaguePreMatchBundle(
+      club('ii'),
+      { ...fixture(), homeStyleWidth: 4 },
+      xi(80),
+    );
+    expect(widePreview.tactics.find((row) => row.id === 'width')?.value).toBe(58);
   });
 
   it('fails closed when our XI skill is missing', () => {

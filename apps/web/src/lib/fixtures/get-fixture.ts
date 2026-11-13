@@ -142,6 +142,16 @@ async function attachClubStyle(
             clampStyle(row.style_tempo ?? 0),
           ]),
         );
+  const width = await supabase.from('clubs').select('id, style_width').in('id', ids);
+  const widthPoints =
+    width.error || !width.data
+      ? new Map<string, number>()
+      : new Map(
+          (width.data as { id: string; style_width: number }[]).map((row) => [
+            row.id,
+            clampStyle(row.style_width ?? 0),
+          ]),
+        );
   return fixtures.map((fixture) => {
     const homeId = homeClubId(viewerClubId, fixture);
     return {
@@ -150,6 +160,8 @@ async function attachClubStyle(
       viewerStylePressing: points.get(viewerClubId) ?? 0,
       homeStyleTempo: homeId ? (tempoPoints.get(homeId) ?? 0) : 0,
       viewerStyleTempo: tempoPoints.get(viewerClubId) ?? 0,
+      homeStyleWidth: homeId ? (widthPoints.get(homeId) ?? 0) : 0,
+      viewerStyleWidth: widthPoints.get(viewerClubId) ?? 0,
     };
   });
 }

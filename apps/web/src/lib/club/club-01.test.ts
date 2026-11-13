@@ -88,6 +88,22 @@ describe('resolveClubProfile (LFE-CLUB-01)', () => {
     expect(resolveClubProfile({ club, table })).toEqual(resolveClubProfile({ club, table }));
   });
 
+  it('states the season style from the three habits', () => {
+    const club = clubFixture();
+    const table = resolveLeagueTable(club, []);
+    const dto = resolveClubProfile({
+      club,
+      table,
+      stylePressing: 2,
+      styleTempo: 0,
+      styleWidth: 4,
+    });
+
+    expect(dto.styleLabel).toBe(
+      'Styl sezonu: pressing 2/8 (start 54), tempo 0/8 (start 50), szerokość 4/8 (start 58).',
+    );
+  });
+
   it('exposes deep-links without staff', () => {
     const club = clubFixture();
     const table = resolveLeagueTable(club, []);

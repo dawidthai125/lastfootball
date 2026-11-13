@@ -30,6 +30,7 @@ export function buildMatchFromConfig(config: MatchSessionConfig): Match {
     tacticsSide: config.tacticsSide,
     openingPressing: config.openingPressing,
     openingTempo: config.openingTempo,
+    openingWidth: config.openingWidth,
   });
 
   return createMatchModel({

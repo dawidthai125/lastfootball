@@ -80,6 +80,8 @@ export interface CreateMatchStateInput {
   openingPressing?: number;
   /** Kickoff tempo for the tactics owner. Omitted keeps 50. */
   openingTempo?: number;
+  /** Kickoff width for the tactics owner. Omitted keeps 50. */
+  openingWidth?: number;
 }
 
 function openingPressingOf(value: number | undefined): number | undefined {
@@ -121,6 +123,9 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
       ...(openingPressingOf(input.openingTempo) === undefined
         ? {}
         : { tempo: openingPressingOf(input.openingTempo) }),
+      ...(openingPressingOf(input.openingWidth) === undefined
+        ? {}
+        : { width: openingPressingOf(input.openingWidth) }),
     }),
     tacticsSide: input.tacticsSide ?? 'home',
     tick: 0,

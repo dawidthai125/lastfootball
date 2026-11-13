@@ -20,7 +20,14 @@ export default async function ClubPage() {
   const table = resolveLeagueTable(club, fixtures);
   const supabase = await createClient();
   const build = await readClubBuild(supabase, club.id);
-  const profile = resolveClubProfile({ club, table, standsLevel: build.levels.stands });
+  const profile = resolveClubProfile({
+    club,
+    table,
+    standsLevel: build.levels.stands,
+    stylePressing: build.stylePressing,
+    styleTempo: build.styleTempo,
+    styleWidth: build.styleWidth,
+  });
 
   return <ClubProfileView profile={profile} />;
 }

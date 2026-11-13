@@ -44,3 +44,28 @@ export function gainTempo(points: number, focus: string, intensity: string): num
 export function kickoffTempo(points: number): number {
   return kickoffPressing(points);
 }
+
+/**
+ * Physical at normal or high intensity adds one width habit point.
+ * Other foci leave the width habit unchanged.
+ */
+export function gainWidth(points: number, focus: string, intensity: string): number {
+  const current = clampStyle(points);
+  if (focus === 'physical' && (intensity === 'normal' || intensity === 'high')) {
+    return Math.min(STYLE_THIN.CAP, current + 1);
+  }
+  return current;
+}
+
+/** Same kickoff scale as pressing. A missing habit stays at width 50. */
+export function kickoffWidth(points: number): number {
+  return kickoffPressing(points);
+}
+
+/** One line for the club card. Points are 0..8, kickoff dials are 50..66. */
+export function clubStyleSentence(pressing: number, tempo: number, width: number): string {
+  const press = clampStyle(pressing);
+  const pace = clampStyle(tempo);
+  const wide = clampStyle(width);
+  return `Styl sezonu: pressing ${press}/${STYLE_THIN.CAP} (start ${kickoffPressing(press)}), tempo ${pace}/${STYLE_THIN.CAP} (start ${kickoffTempo(pace)}), szerokość ${wide}/${STYLE_THIN.CAP} (start ${kickoffWidth(wide)}).`;
+}
