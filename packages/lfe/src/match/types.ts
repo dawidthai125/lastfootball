@@ -21,6 +21,8 @@ export interface MatchInput {
   tacticsSide?: 'home' | 'away';
   /** Kickoff pressing for the tactics owner. Omitted keeps the default 50. */
   openingPressing?: number;
+  /** Kickoff tempo for the tactics owner. Omitted keeps the default 50. */
+  openingTempo?: number;
 }
 
 export interface MatchEvent {

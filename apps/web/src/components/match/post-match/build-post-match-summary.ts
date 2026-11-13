@@ -10,7 +10,7 @@ import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
 import { threeMatchSentences } from '@/lib/match/match-report';
-import { whyLine } from '@/lib/match/why-line';
+import { emptyPlayerName, latePressFromEvents, whyLine } from '@/lib/match/why-line';
 
 import { computePlayerRatings, type PlayerRatingView } from './player-ratings';
 
@@ -157,6 +157,13 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
 
   const derived = computePlayerRatings(matchState);
   const firstGoal = [...goals].sort((a, b) => a.tick - b.tick)[0] ?? null;
+  const late = latePressFromEvents(events);
+  const goalAfter = late
+    ? goals.some((goal) => {
+        const at = minuteNumber(goal.minute);
+        return at !== null && at >= late.minute;
+      })
+    : false;
 
   return {
     homeName,
@@ -235,6 +242,13 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
       homePassesCompleted: matchState.statistics.home.passesCompleted,
       awayPassesCompleted: matchState.statistics.away.passesCompleted,
       firstGoalMinute: firstGoal ? minuteNumber(firstGoal.minute) : null,
+      latePress: late ? { minute: late.minute, value: late.value, goalAfter } : null,
+      emptyName: emptyPlayerName(
+        matchState.players.map((player) => ({
+          name: player.name,
+          freshness: player.condition?.freshness ?? 100,
+        })),
+      ),
     }),
   };
 }

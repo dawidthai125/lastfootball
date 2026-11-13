@@ -200,6 +200,22 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     );
     expect(home.getMatchState().tacticsSide).toBe('home');
     expect(home.getMatchState().tactics.pressing).toBe(58);
+    expect(home.getMatchState().tactics.tempo).toBe(50);
+
+    const paced = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), homeStyleTempo: 4 },
+      xi(80),
+    );
+    expect(paced.getMatchState().tactics.tempo).toBe(58);
+
+    const awayTempo = createSessionFromLeagueFixture(
+      club('ii'),
+      { ...fixture(), isHome: false, viewerStyleTempo: 4, homeStyleTempo: 8 },
+      xi(80),
+    );
+    expect(awayTempo.getMatchState().tacticsSide).toBe('away');
+    expect(awayTempo.getMatchState().tactics.tempo).toBe(58);
 
     const awayOwn = createSessionFromLeagueFixture(
       club('ii'),
@@ -231,6 +247,13 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     expect(preview.tactics.find((row) => row.id === 'pressing')?.value).toBe(58);
     const quiet = buildLeaguePreMatchBundle(club('ii'), fixture(), xi(80));
     expect(quiet.tactics.find((row) => row.id === 'pressing')?.value).toBe(50);
+    expect(quiet.tactics.find((row) => row.id === 'tempo')?.value).toBe(50);
+    const pacedPreview = buildLeaguePreMatchBundle(
+      club('ii'),
+      { ...fixture(), homeStyleTempo: 4 },
+      xi(80),
+    );
+    expect(pacedPreview.tactics.find((row) => row.id === 'tempo')?.value).toBe(58);
   });
 
   it('fails closed when our XI skill is missing', () => {
