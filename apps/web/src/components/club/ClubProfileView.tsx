@@ -9,7 +9,15 @@ import { UI_COPY } from '@/lib/ui/copy';
  * Renders ClubProfileDto as-is — no business logic / sort / filter.
  */
 export function ClubProfileView({ profile }: { profile: ClubProfileDto }) {
-  const { identity, starter, organizationLabel, cashLabel, leaguePositionLabel, links } = profile;
+  const {
+    identity,
+    starter,
+    organizationLabel,
+    cashLabel,
+    leaguePositionLabel,
+    styleLabel,
+    links,
+  } = profile;
 
   return (
     <div data-lf-impl="LFE-CLUB-01">
@@ -158,6 +166,13 @@ export function ClubProfileView({ profile }: { profile: ClubProfileDto }) {
           ) : null}
         </div>
       </dl>
+
+      <p
+        className="mb-3 font-[family-name:var(--font-ui)]"
+        style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-secondary)' }}
+      >
+        {styleLabel}
+      </p>
 
       <nav aria-label={UI_COPY.clubLinksLabel}>
         <p

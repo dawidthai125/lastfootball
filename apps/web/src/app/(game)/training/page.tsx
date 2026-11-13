@@ -37,6 +37,7 @@ export default async function TrainingPage() {
       cash={club.cashBalance}
       stylePressing={build.stylePressing}
       styleTempo={build.styleTempo}
+      styleWidth={build.styleWidth}
     />
   );
 }

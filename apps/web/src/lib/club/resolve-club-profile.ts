@@ -3,6 +3,7 @@ import { stadiumSeatLabel } from '@/lib/stadium/levels';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { resolvePlayerLeaguePositionLabel, type LeagueTableDto } from '@/lib/league';
+import { clubStyleSentence } from '@/lib/training/style';
 import { UI_COPY } from '@/lib/ui/copy';
 
 /**
@@ -36,6 +37,8 @@ export type ClubProfileDto = {
   readonly organizationLabel: string;
   readonly cashLabel: string;
   readonly leaguePositionLabel: string | null;
+  /** Season habits as one sentence. Points are 0..8. */
+  readonly styleLabel: string;
   readonly links: readonly ClubProfileLinkDto[];
 };
 
@@ -44,6 +47,12 @@ export type ResolveClubProfileInput = {
   readonly table: LeagueTableDto;
   /** Missing stays the starter ground. */
   readonly standsLevel?: number;
+  /** Pressing habit 0..8. Missing stays 0. */
+  readonly stylePressing?: number;
+  /** Tempo habit 0..8. Missing stays 0. */
+  readonly styleTempo?: number;
+  /** Width habit 0..8. Missing stays 0. */
+  readonly styleWidth?: number;
 };
 
 const PROFILE_LINKS: readonly ClubProfileLinkDto[] = [
@@ -76,6 +85,11 @@ export function resolveClubProfile(input: ResolveClubProfileInput): ClubProfileD
     organizationLabel: UI_COPY.clubOrganizationStarter,
     cashLabel: formatMoney(club.cashBalance),
     leaguePositionLabel: resolvePlayerLeaguePositionLabel(table),
+    styleLabel: clubStyleSentence(
+      input.stylePressing ?? 0,
+      input.styleTempo ?? 0,
+      input.styleWidth ?? 0,
+    ),
     links: PROFILE_LINKS,
   };
 }

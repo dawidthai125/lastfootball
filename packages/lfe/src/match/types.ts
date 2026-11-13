@@ -23,6 +23,8 @@ export interface MatchInput {
   openingPressing?: number;
   /** Kickoff tempo for the tactics owner. Omitted keeps the default 50. */
   openingTempo?: number;
+  /** Kickoff width for the tactics owner. Omitted keeps the default 50. */
+  openingWidth?: number;
 }
 
 export interface MatchEvent {

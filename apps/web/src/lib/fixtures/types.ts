@@ -30,6 +30,10 @@ export type FixtureDto = {
   readonly homeStyleTempo?: number;
   /** Viewer club tempo habit. Used when this club owns the away tactics. */
   readonly viewerStyleTempo?: number;
+  /** Home club width habit, 0 when unknown. Shared matches must use the home club. */
+  readonly homeStyleWidth?: number;
+  /** Viewer club width habit. Used when this club owns the away tactics. */
+  readonly viewerStyleWidth?: number;
 };
 
 export type FixtureRow = {

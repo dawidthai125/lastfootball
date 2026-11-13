@@ -9,7 +9,7 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { readClubBuild } from '@/lib/club/read-build';
 import { trainingSessionCap } from '@/lib/stadium/levels';
 import { completeTrainingSession } from '@/lib/training/complete-session';
-import { gainStyle, gainTempo } from '@/lib/training/style';
+import { gainStyle, gainTempo, gainWidth } from '@/lib/training/style';
 import type { TrainingActionState } from '@/lib/training/action-types';
 import type { TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 
@@ -72,6 +72,7 @@ export async function runTrainingSession(
 
   const nextStyle = gainStyle(build.stylePressing, focusId, intensityId);
   const nextTempo = gainTempo(build.styleTempo, focusId, intensityId);
+  const nextWidth = gainWidth(build.styleWidth, focusId, intensityId);
   if (!result.skipped && nextStyle !== build.stylePressing) {
     await supabase
       .from('clubs')
@@ -82,6 +83,12 @@ export async function runTrainingSession(
     await supabase
       .from('clubs')
       .update({ style_tempo: nextTempo } as never)
+      .eq('id', clubRow.id);
+  }
+  if (!result.skipped && nextWidth !== build.styleWidth) {
+    await supabase
+      .from('clubs')
+      .update({ style_width: nextWidth } as never)
       .eq('id', clubRow.id);
   }
 

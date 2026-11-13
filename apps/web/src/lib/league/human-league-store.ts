@@ -582,6 +582,18 @@ async function homeStyleTempo(
   return Math.max(0, Math.min(8, Math.trunc(points)));
 }
 
+async function homeStyleWidth(
+  admin: ReturnType<typeof createAdminClient>,
+  homeId: string,
+): Promise<number> {
+  if (isBotClubId(homeId)) return 0;
+  const row = await admin.from('clubs').select('style_width').eq('id', homeId).maybeSingle();
+  if (row.error || !row.data) return 0;
+  const points = (row.data as { style_width?: number }).style_width;
+  if (typeof points !== 'number' || !Number.isFinite(points)) return 0;
+  return Math.max(0, Math.min(8, Math.trunc(points)));
+}
+
 export async function authoritativeHumanScore(
   clubId: string,
   fixtureMatchday: number,
@@ -663,6 +675,7 @@ export async function authoritativeHumanScore(
       homePitchLevel: await homePitchLevel(admin, broadcast.home_id),
       homeStylePressing: await homeStylePressing(admin, broadcast.home_id),
       homeStyleTempo: await homeStyleTempo(admin, broadcast.home_id),
+      homeStyleWidth: await homeStyleWidth(admin, broadcast.home_id),
     },
     homeXi,
     [],

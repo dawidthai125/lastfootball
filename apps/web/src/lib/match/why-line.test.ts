@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { emptyPlayerName, latePressFromEvents, whyLine } from './why-line';
+import { emptyPlayerName, lateDialFromEvents, latePressFromEvents, whyLine } from './why-line';
 
 describe('whyLine', () => {
   it('returns the late sentence at minute 80 even when shots differ by 10', () => {
@@ -103,6 +103,53 @@ describe('whyLine', () => {
     ).toBe('Pressing 70 od 76. minuty nie zmienił wyniku.');
   });
 
+  it('says a late tempo produced a goal when pressing stayed put', () => {
+    expect(
+      whyLine({
+        homeName: 'Lastovia',
+        awayName: 'Orzeł',
+        homeShots: 5,
+        awayShots: 6,
+        homePassesCompleted: 10,
+        awayPassesCompleted: 12,
+        firstGoalMinute: 12,
+        lateTempo: { minute: 81, value: 64, goalAfter: true },
+      }),
+    ).toBe('Tempo 64 od 81. minuty dało gola.');
+  });
+
+  it('says a late width changed nothing when no goal followed', () => {
+    expect(
+      whyLine({
+        homeName: 'Lastovia',
+        awayName: 'Orzeł',
+        homeShots: 5,
+        awayShots: 6,
+        homePassesCompleted: 10,
+        awayPassesCompleted: 12,
+        firstGoalMinute: null,
+        lateWidth: { minute: 77, value: 60, goalAfter: false },
+      }),
+    ).toBe('Szerokość 60 od 77. minuty nie zmieniła wyniku.');
+  });
+
+  it('keeps the pressing sentence when tempo and width also changed late', () => {
+    expect(
+      whyLine({
+        homeName: 'Lastovia',
+        awayName: 'Orzeł',
+        homeShots: 5,
+        awayShots: 6,
+        homePassesCompleted: 10,
+        awayPassesCompleted: 12,
+        firstGoalMinute: 12,
+        latePress: { minute: 80, value: 75, goalAfter: false },
+        lateTempo: { minute: 81, value: 64, goalAfter: true },
+        lateWidth: { minute: 82, value: 60, goalAfter: true },
+      }),
+    ).toBe('Pressing 75 od 80. minuty nie zmienił wyniku.');
+  });
+
   it('names the emptiest player only when shots and passes show no edge', () => {
     expect(
       whyLine({
@@ -149,6 +196,25 @@ describe('latePressFromEvents', () => {
   it('ignores a pressing change that has no minute', () => {
     expect(
       latePressFromEvents([{ type: 'SYSTEM', payload: { kind: 'pressing', value: 80 } }]),
+    ).toBeNull();
+  });
+
+  it('keeps a late width change and ignores a pressing event of the same minute', () => {
+    expect(
+      lateDialFromEvents(
+        [
+          { type: 'SYSTEM', payload: { kind: 'pressing', minute: 80, value: 70 } },
+          { type: 'SYSTEM', payload: { kind: 'width', minute: 79, value: 60 } },
+          { type: 'SYSTEM', payload: { kind: 'tempo', minute: 40, value: 66 } },
+        ],
+        'width',
+      ),
+    ).toEqual({ minute: 79, value: 60 });
+    expect(
+      lateDialFromEvents(
+        [{ type: 'SYSTEM', payload: { kind: 'tempo', minute: 40, value: 66 } }],
+        'tempo',
+      ),
     ).toBeNull();
   });
 });
