@@ -8,7 +8,7 @@ import { runTrainingSession } from '@/lib/training/actions';
 import { hireClubCoach } from '@/lib/training/actions-coach';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
-import { kickoffPressing, STYLE_THIN } from '@/lib/training/style';
+import { kickoffPressing, kickoffTempo, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
 import { Button } from '@/components/ui';
@@ -56,11 +56,13 @@ export function TrainingView({
   coachGroup = null,
   cash = 0,
   stylePressing = 0,
+  styleTempo = 0,
 }: {
   training: TrainingDto;
   coachGroup?: CoachGroup | null;
   cash?: number;
   stylePressing?: number;
+  styleTempo?: number;
 }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -100,7 +102,9 @@ export function TrainingView({
 
       <p className="lf-tr__meta">
         Pressing klubu: {stylePressing}/{STYLE_THIN.CAP}. Na meczu, który prowadzisz, startuje z{' '}
-        {kickoffPressing(stylePressing)}. Taktyka normalna albo wysoka podnosi to o 1.
+        {kickoffPressing(stylePressing)}. Taktyka normalna albo wysoka podnosi to o 1. Tempo klubu:{' '}
+        {styleTempo}/{STYLE_THIN.CAP}, start z {kickoffTempo(styleTempo)}. Technika normalna albo
+        wysoka podnosi tempo o 1. Oba nawyki zostają na kolejne mecze.
       </p>
 
       <section className="lf-tr__block" aria-label="Trener">

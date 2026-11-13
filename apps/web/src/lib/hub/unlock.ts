@@ -19,6 +19,7 @@ const EARLY_CLUB_OPEN = new Set([
 const SEASON_OPEN = new Set([
   ...EARLY_CLUB_OPEN,
   'league',
+  'cup',
   'finance',
   'academy',
   'scouting',

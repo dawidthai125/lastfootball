@@ -10,7 +10,7 @@ import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
-import { kickoffPressing } from '@/lib/training/style';
+import { kickoffPressing, kickoffTempo } from '@/lib/training/style';
 
 function groundStadiumLabel(dto: FixtureDto, club: ClubDto): string {
   const cupRound = cupRoundForMatchday(dto.matchday);
@@ -35,6 +35,14 @@ function ownerKickoffPressing(dto: FixtureDto): number {
   const habit =
     tacticsSide === 'home' ? (dto.homeStylePressing ?? 0) : (dto.viewerStylePressing ?? 0);
   return kickoffPressing(habit);
+}
+
+/** Same owner rule as pressing. A missing habit stays at tempo 50. */
+function ownerKickoffTempo(dto: FixtureDto): number {
+  const shared = typeof dto.sharedSeed === 'number';
+  const tacticsSide = shared ? 'home' : dto.isHome ? 'home' : 'away';
+  const habit = tacticsSide === 'home' ? (dto.homeStyleTempo ?? 0) : (dto.viewerStyleTempo ?? 0);
+  return kickoffTempo(habit);
 }
 
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
@@ -159,7 +167,7 @@ export function buildLeaguePreMatchBundle(
       { id: 'mentality', label: 'Mentalność', value: 50 },
       { id: 'possession', label: 'Posiadanie', value: 50 },
       { id: 'pressing', label: 'Pressing', value: ownerKickoffPressing(dto) },
-      { id: 'tempo', label: 'Tempo', value: 50 },
+      { id: 'tempo', label: 'Tempo', value: ownerKickoffTempo(dto) },
       { id: 'width', label: 'Szerokość', value: 55 },
       { id: 'density', label: 'Zagęszczenie', value: 50 },
     ],

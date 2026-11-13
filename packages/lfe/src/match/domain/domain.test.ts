@@ -11,7 +11,7 @@ import {
   withMatchState,
 } from './index';
 
-function buildMinimalMatch(openingPressing?: number) {
+function buildMinimalMatch(openingPressing?: number, openingTempo?: number) {
   const home = createTeam({
     id: 't-home',
     name: 'Home FC',
@@ -73,6 +73,7 @@ function buildMinimalMatch(openingPressing?: number) {
     ),
     players: [...homePlayers, ...awayPlayers],
     ...(openingPressing === undefined ? {} : { openingPressing }),
+    ...(openingTempo === undefined ? {} : { openingTempo }),
   });
 
   return createMatchModel({ id: 'm-1', seed: 42, state });
@@ -133,5 +134,11 @@ describe('EPIC-2 match domain', () => {
     expect(buildMinimalMatch(58).state.tactics.pressing).toBe(58);
     expect(buildMinimalMatch(Number.NaN).state.tactics.pressing).toBe(50);
     expect(buildMinimalMatch(140).state.tactics.pressing).toBe(100);
+  });
+
+  it('keeps tempo at 50 unless kickoff tempo is a finite number', () => {
+    expect(buildMinimalMatch().state.tactics.tempo).toBe(50);
+    expect(buildMinimalMatch(undefined, 66).state.tactics.tempo).toBe(66);
+    expect(buildMinimalMatch(undefined, Number.NaN).state.tactics.tempo).toBe(50);
   });
 });

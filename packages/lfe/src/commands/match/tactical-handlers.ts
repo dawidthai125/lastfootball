@@ -104,7 +104,12 @@ export const setPressingHandler: CommandHandler<SetPressingCommand> = {
     const state = ctx.getMatchState()!;
     const value = command.payload!.value;
     ctx.setMatchState(patchTactics(state, { pressing: value }));
-    ctx.recordEvent('SYSTEM', { kind: 'pressing', value, commandId: command.id });
+    ctx.recordEvent('SYSTEM', {
+      kind: 'pressing',
+      value,
+      commandId: command.id,
+      minute: state.clock.displayMinute,
+    });
   },
 };
 
@@ -121,7 +126,12 @@ export const setTempoHandler: CommandHandler<SetTempoCommand> = {
     const state = ctx.getMatchState()!;
     const value = command.payload!.value;
     ctx.setMatchState(patchTactics(state, { tempo: value }));
-    ctx.recordEvent('SYSTEM', { kind: 'tempo', value, commandId: command.id });
+    ctx.recordEvent('SYSTEM', {
+      kind: 'tempo',
+      value,
+      commandId: command.id,
+      minute: state.clock.displayMinute,
+    });
   },
 };
 
@@ -138,7 +148,12 @@ export const setWidthHandler: CommandHandler<SetWidthCommand> = {
     const state = ctx.getMatchState()!;
     const value = command.payload!.value;
     ctx.setMatchState(patchTactics(state, { width: value }));
-    ctx.recordEvent('SYSTEM', { kind: 'width', value, commandId: command.id });
+    ctx.recordEvent('SYSTEM', {
+      kind: 'width',
+      value,
+      commandId: command.id,
+      minute: state.clock.displayMinute,
+    });
   },
 };
 
@@ -155,7 +170,12 @@ export const setMentalityHandler: CommandHandler<SetMentalityCommand> = {
     const state = ctx.getMatchState()!;
     const value = command.payload!.value;
     ctx.setMatchState(patchTactics(state, { mentality: value }));
-    ctx.recordEvent('SYSTEM', { kind: 'mentality', value, commandId: command.id });
+    ctx.recordEvent('SYSTEM', {
+      kind: 'mentality',
+      value,
+      commandId: command.id,
+      minute: state.clock.displayMinute,
+    });
   },
 };
 

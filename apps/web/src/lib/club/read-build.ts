@@ -10,6 +10,8 @@ export type ClubBuild = {
   readonly levels: StadiumLevels;
   /** Pressing habit 0..8. Missing column stays 0. */
   readonly stylePressing: number;
+  /** Tempo habit 0..8. Missing column stays 0. */
+  readonly styleTempo: number;
 };
 
 function clampLevel(value: unknown): number {
@@ -35,8 +37,14 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       ? 0
       : clampStyle((style.data as { style_pressing?: number }).style_pressing ?? 0);
 
+  const tempo = await supabase.from('clubs').select('style_tempo').eq('id', clubId).maybeSingle();
+  const styleTempo =
+    tempo.error || !tempo.data
+      ? 0
+      : clampStyle((tempo.data as { style_tempo?: number }).style_tempo ?? 0);
+
   if (rich.error || !rich.data) {
-    return { coachGroup: null, levels: emptyStadiumLevels(), stylePressing };
+    return { coachGroup: null, levels: emptyStadiumLevels(), stylePressing, styleTempo };
   }
 
   const row = rich.data as {
@@ -53,5 +61,6 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       trainingCenter: clampLevel(row.training_center_level),
     },
     stylePressing,
+    styleTempo,
   };
 }

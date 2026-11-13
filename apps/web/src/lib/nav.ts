@@ -32,6 +32,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: 'Rozgrywki',
     items: [
       { id: 'league', href: '/league', label: 'Liga', shortLabel: 'L' },
+      { id: 'cup', href: '/cup', label: 'Puchar', shortLabel: 'Pu' },
       { id: 'rankings', href: '/rankings', label: 'Ranking', shortLabel: 'R' },
       { id: 'matches', href: '/matches', label: 'Terminarz', shortLabel: 'T' },
       { id: 'rivals', href: '/rivals', label: 'Rywalizacja', shortLabel: 'Rw' },

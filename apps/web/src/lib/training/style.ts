@@ -27,3 +27,20 @@ export function gainStyle(points: number, focus: string, intensity: string): num
 export function kickoffPressing(points: number): number {
   return 50 + clampStyle(points) * STYLE_THIN.PER_POINT;
 }
+
+/**
+ * Technique at normal or high intensity adds one tempo habit point.
+ * Other foci leave the tempo habit unchanged.
+ */
+export function gainTempo(points: number, focus: string, intensity: string): number {
+  const current = clampStyle(points);
+  if (focus === 'technique' && (intensity === 'normal' || intensity === 'high')) {
+    return Math.min(STYLE_THIN.CAP, current + 1);
+  }
+  return current;
+}
+
+/** Same kickoff scale as pressing. A missing habit stays at tempo 50. */
+export function kickoffTempo(points: number): number {
+  return kickoffPressing(points);
+}

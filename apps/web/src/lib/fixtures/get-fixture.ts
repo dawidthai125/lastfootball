@@ -132,12 +132,24 @@ async function attachClubStyle(
       clampStyle(row.style_pressing ?? 0),
     ]),
   );
+  const tempo = await supabase.from('clubs').select('id, style_tempo').in('id', ids);
+  const tempoPoints =
+    tempo.error || !tempo.data
+      ? new Map<string, number>()
+      : new Map(
+          (tempo.data as { id: string; style_tempo: number }[]).map((row) => [
+            row.id,
+            clampStyle(row.style_tempo ?? 0),
+          ]),
+        );
   return fixtures.map((fixture) => {
     const homeId = homeClubId(viewerClubId, fixture);
     return {
       ...fixture,
       homeStylePressing: homeId ? (points.get(homeId) ?? 0) : 0,
       viewerStylePressing: points.get(viewerClubId) ?? 0,
+      homeStyleTempo: homeId ? (tempoPoints.get(homeId) ?? 0) : 0,
+      viewerStyleTempo: tempoPoints.get(viewerClubId) ?? 0,
     };
   });
 }

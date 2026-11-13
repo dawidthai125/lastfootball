@@ -27,6 +27,7 @@ export type Database = {
           league_tier: string;
           coach_group: string | null;
           style_pressing: number;
+          style_tempo: number;
           stands_level: number;
           pitch_level: number;
           training_center_level: number;
@@ -49,6 +50,7 @@ export type Database = {
           league_tier?: string;
           coach_group?: string | null;
           style_pressing?: number;
+          style_tempo?: number;
           stands_level?: number;
           pitch_level?: number;
           training_center_level?: number;
@@ -71,6 +73,7 @@ export type Database = {
           league_tier?: string;
           coach_group?: string | null;
           style_pressing?: number;
+          style_tempo?: number;
           stands_level?: number;
           pitch_level?: number;
           training_center_level?: number;
