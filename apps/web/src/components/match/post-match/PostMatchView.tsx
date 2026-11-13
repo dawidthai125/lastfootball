@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 
 import { ClubCrest, LiveEventIcon } from '@/components/assets';
 import type {
@@ -10,6 +10,7 @@ import type {
 } from '@/components/match/post-match/build-post-match-summary';
 import type { PlayerRatingView } from '@/components/match/post-match/player-ratings';
 import { LocationHero } from '@/components/ui';
+import { writeMatchNote } from '@/lib/match/match-note-action';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './post-match.css';
@@ -42,6 +43,53 @@ export function PostMatchView({
   rewardLine = null,
   developmentNames = [],
 }: PostMatchViewProps) {
+  const [note, setNote] = useState<string | null>(null);
+  const shots = summary.stats.find((row) => row.label === 'Strzały');
+  const passes = summary.stats.find((row) => row.label === 'Podania celne');
+  const goalKey = summary.goals
+    .slice(0, 12)
+    .map((goal) => `${goal.minute}:${goal.side}:${goal.text}`)
+    .join('|');
+  useEffect(() => {
+    let gone = false;
+    void writeMatchNote({
+      homeName: summary.homeName,
+      awayName: summary.awayName,
+      homeScore: summary.homeScore,
+      awayScore: summary.awayScore,
+      homeShots: shots?.home ?? 0,
+      awayShots: shots?.away ?? 0,
+      homePasses: passes?.home ?? 0,
+      awayPasses: passes?.away ?? 0,
+      goals: summary.goals.slice(0, 12).map((goal) => ({
+        minute: goal.minute,
+        side: goal.side,
+        text: goal.text.slice(0, 80),
+      })),
+      why: summary.why,
+    })
+      .then((text) => {
+        if (!gone && text) setNote(text);
+      })
+      .catch(() => undefined);
+    return () => {
+      gone = true;
+    };
+    // Facts are listed. A new summary object from the parent must not call the API again.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    goalKey,
+    passes?.away,
+    passes?.home,
+    shots?.away,
+    shots?.home,
+    summary.awayName,
+    summary.awayScore,
+    summary.homeName,
+    summary.homeScore,
+    summary.why,
+  ]);
+
   const mvp =
     summary.mvpPlayerId == null
       ? null
@@ -113,7 +161,7 @@ export function PostMatchView({
             <li key={index}>{sentence}</li>
           ))}
         </ol>
-        <p className="lf-post__meta">{summary.why}</p>
+        <p className="lf-post__meta">{note ?? summary.why}</p>
       </header>
 
       <div className="lf-post__context">
