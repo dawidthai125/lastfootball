@@ -163,8 +163,7 @@ export async function confirmStartNextSeason(
   }
 
   const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
-  const goalMet =
-    playerRow != null && seasonGoalMet(playerRow.position, table.rows.length);
+  const goalMet = playerRow != null && seasonGoalMet(playerRow.position, table.rows.length);
   const alreadyPaid = row.season_goal_paid_for === endedSeason;
   const goalBonus = goalMet && !alreadyPaid ? SEASON_GOAL_BONUS : 0;
   const goalNote = goalMet ? SEASON_GOAL_MET : SEASON_GOAL_MISSED;

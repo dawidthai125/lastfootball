@@ -5,9 +5,7 @@ import { planSeasonDeparture } from './departure';
 describe('planSeasonDeparture', () => {
   it('does nothing when nobody is 38', () => {
     expect(
-      planSeasonDeparture([
-        { id: 'a', age: 37, skill: 40, academyTrack: false, departed: false },
-      ]),
+      planSeasonDeparture([{ id: 'a', age: 37, skill: 40, academyTrack: false, departed: false }]),
     ).toEqual({ retireId: null, promoteId: null });
   });
 

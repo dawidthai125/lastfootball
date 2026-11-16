@@ -85,9 +85,7 @@ export async function applyMatchDevelopment(
       ...(typeof patch?.suspensionMatches === 'number'
         ? { suspension_matches: patch.suspensionMatches }
         : {}),
-      ...(typeof patch?.injuryMatches === 'number'
-        ? { injury_matches: patch.injuryMatches }
-        : {}),
+      ...(typeof patch?.injuryMatches === 'number' ? { injury_matches: patch.injuryMatches } : {}),
       ...(patch?.recentRatings ? { recent_ratings: patch.recentRatings } : {}),
     });
   }

@@ -176,7 +176,10 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
         Kariera <strong>{player.careerPhaseLabel}</strong>
       </span>
       <span>
-        Status <strong>{playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}</strong>
+        Status{' '}
+        <strong>
+          {playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}
+        </strong>
       </span>
     </div>
   );
