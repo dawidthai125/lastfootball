@@ -21,6 +21,8 @@ export type Fixture = {
   status: MatchStatus;
   score?: string;
   result?: FormResult;
+  /** Saved post-match note. Null when a played match has none. */
+  matchNote?: string | null;
 };
 
 export type TeamSnap = {
