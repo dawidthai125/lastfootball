@@ -1,3 +1,4 @@
+import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { HubCta, HubPhase, HubSession } from '@/lib/hub/types';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -24,6 +25,12 @@ export type ResolveClubDailyGoalInput = {
   readonly lastTrainingOn: string | null;
   /** UTC `YYYY-MM-DD` — injected for determinism (REUSE `utcDateString`). */
   readonly todayUtc: string;
+  /** Email deadline from loadEmailGate. Default false. */
+  readonly matchesBlocked?: boolean;
+  /** Newest played_at. When omitted, lastPlayedFixture.playedAt is used. */
+  readonly lastPlayedAt?: string | null;
+  /** Injected clock for the Warsaw day rule. */
+  readonly now?: Date;
 };
 
 function goal(kind: DailyGoalKind, label: string, href: string, primary: HubCta): ClubDailyGoalDto {
@@ -39,6 +46,23 @@ function matchHref(fixtureId: string): string {
   return `/match/${fixtureId}/tunnel`;
 }
 
+/** Same sentence as the kickoff gate. Never a tunnel link. */
+function blockedMatchLine(
+  input: ResolveClubDailyGoalInput,
+  fixture: FixtureDto,
+): ClubDailyGoalDto | null {
+  const sentence = kickoffBlockReason({
+    matchesBlocked: input.matchesBlocked ?? false,
+    competition: fixture.competition,
+    lastPlayedAt:
+      input.lastPlayedAt !== undefined ? input.lastPlayedAt : input.lastPlayedFixture?.playedAt,
+    now: input.now ?? new Date(),
+  });
+  if (!sentence) return null;
+  if (input.matchesBlocked) return goal('match', sentence, '/profile', input.primary);
+  return goal('fixtures', sentence, '/matches', input.primary);
+}
+
 /**
  * Daily Goal Thin (GDD §20) — pure derive suggestion for Hub warstwa 2.
  * Never mutates domain; never elevates above Primary CTA.
@@ -48,14 +72,18 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
 
   const { session, primary, nextFixture, trainingUnlocked, lastTrainingOn, todayUtc } = input;
 
-  // P1 — matchday: sync with Primary match path
+  // P1 — matchday: sync with Primary match path, unless kickoff is closed
   if (session === 'matchday' && nextFixture) {
+    const blocked = blockedMatchLine(input, nextFixture);
+    if (blocked) return blocked;
     return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
   }
 
   // P2 — post_match: upcoming next (defensive) → match; else squad
   if (session === 'post_match') {
     if (nextFixture?.status === 'upcoming') {
+      const blocked = blockedMatchLine(input, nextFixture);
+      if (blocked) return blocked;
       return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
     }
     return goal('squad', UI_COPY.dailyGoalSquad, '/squad', primary);

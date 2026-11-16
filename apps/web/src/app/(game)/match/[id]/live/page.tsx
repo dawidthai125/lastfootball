@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
+import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
 import { EmptyState, LocationHero } from '@/components/ui';
 import { readClubBuild } from '@/lib/club/read-build';
@@ -16,6 +17,7 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
+import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
@@ -43,6 +45,8 @@ function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
 
 export default async function LiveMatchPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const sentence = await upcomingKickoffSentence(id);
+  if (sentence) return <KickoffBlocked sentence={sentence} />;
   const ourFormation = parseOurFormation((await searchParams).shape);
 
   if (id === FIRST_MATCH_ID) {
