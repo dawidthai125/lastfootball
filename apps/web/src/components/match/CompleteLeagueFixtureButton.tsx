@@ -1,19 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
-
-import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
-import { completeFixture } from '@/lib/fixtures/complete-fixture';
+import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { UI_COPY } from '@/lib/ui/copy';
-
-function saveForm(fixtureId: string, homeScore: number, awayScore: number): FormData {
-  const data = new FormData();
-  data.set('fixtureId', fixtureId);
-  data.set('homeScore', String(homeScore));
-  data.set('awayScore', String(awayScore));
-  data.set('stay', '1');
-  return data;
-}
 
 const buttonStyle = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -33,20 +21,17 @@ export function CompleteLeagueFixtureButton({
   fixtureId,
   homeScore,
   awayScore,
+  state,
+  pending,
+  action,
 }: {
   fixtureId: string;
   homeScore: number;
   awayScore: number;
+  state: CompleteFixtureState;
+  pending: boolean;
+  action: (payload: FormData) => void;
 }) {
-  const [state, action, pending] = useActionState(completeFixture, COMPLETE_FIXTURE_INITIAL);
-  const started = useRef(false);
-
-  useEffect(() => {
-    if (started.current) return;
-    started.current = true;
-    action(saveForm(fixtureId, homeScore, awayScore));
-  }, [action, awayScore, fixtureId, homeScore]);
-
   if (state.saved) {
     return (
       <a href="/hub" style={buttonStyle}>

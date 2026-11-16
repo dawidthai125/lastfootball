@@ -2,7 +2,7 @@
 
 import type { FormationCode } from '@lastfootball/lfe';
 import Link from 'next/link';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useActionState, useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
@@ -27,6 +27,12 @@ import {
 } from '@/components/match/post-match';
 import { CompleteFirstMatchButton } from '@/components/onboarding/CompleteFirstMatchButton';
 import { CompleteLeagueFixtureButton } from '@/components/match/CompleteLeagueFixtureButton';
+import {
+  fixtureStayForm,
+  shouldAutoSaveFinishedFixture,
+} from '@/components/match/fixture-autosave';
+import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
+import { completeFixture } from '@/lib/fixtures/complete-fixture';
 import { LoadingFrame } from '@/components/ui';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveLeagueMatchReward } from '@/lib/finance';
@@ -110,6 +116,31 @@ export function LiveMatchFoundation({
   useEffect(() => {
     if (finished && !postMatchOpen) setFinalOpen(true);
   }, [finished, postMatchOpen]);
+
+  // Owns the single save. The summary button only displays this state.
+  const [fixtureSave, saveFixture, fixtureSavePending] = useActionState(
+    completeFixture,
+    COMPLETE_FIXTURE_INITIAL,
+  );
+  const fixtureSaveStarted = useRef(false);
+
+  useEffect(() => {
+    if (!snapshot || !leagueFixture) return;
+    if (
+      !shouldAutoSaveFinishedFixture({
+        firstMatch,
+        fixtureId: leagueFixture.id,
+        finished,
+        finalOpen,
+        postMatchOpen,
+        started: fixtureSaveStarted.current,
+      })
+    ) {
+      return;
+    }
+    fixtureSaveStarted.current = true;
+    saveFixture(fixtureStayForm(leagueFixture.id, snapshot.homeScore, snapshot.awayScore));
+  }, [snapshot, leagueFixture, firstMatch, finished, finalOpen, postMatchOpen, saveFixture]);
 
   useEffect(() => {
     if (!snapshot || finalOpen || postMatchOpen) return;
@@ -269,6 +300,9 @@ export function LiveMatchFoundation({
               fixtureId={leagueFixture.id}
               homeScore={snapshot.homeScore}
               awayScore={snapshot.awayScore}
+              state={fixtureSave}
+              pending={fixtureSavePending}
+              action={saveFixture}
             />
           ) : undefined
         }
