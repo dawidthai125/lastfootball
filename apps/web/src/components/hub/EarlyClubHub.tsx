@@ -20,6 +20,7 @@ import {
   type HubCupLink,
   type HubCta,
   type HubSession,
+  type LastMatchStripModel,
 } from '@/lib/hub';
 import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -43,6 +44,8 @@ export function EarlyClubHub({
   todayUtc = utcDateString(),
   seasonReport = null,
   cupLink = null,
+  matchesBlocked = false,
+  lastPlayedAt,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -59,13 +62,21 @@ export function EarlyClubHub({
   seasonReport?: SeasonReportDto | null;
   /** Due national-cup tie. Does not replace the league primary action. */
   cupLink?: HubCupLink | null;
+  /** loadEmailGate().matchesBlocked — blocks the next kickoff after the deadline. */
+  matchesBlocked?: boolean;
+  /** Newest played_at across competitions. Omitted falls back to the last league fixture. */
+  lastPlayedAt?: string | null;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
+  const now = new Date();
   const primary = resolvePrimaryCta(phase, session, {
     nextFixture,
     lastPlayedFixture,
     hasFixtures,
+    matchesBlocked,
+    lastPlayedAt,
+    now,
   });
   const dailyGoal = resolveClubDailyGoal({
     phase,
@@ -77,6 +88,9 @@ export function EarlyClubHub({
     trainingUnlocked,
     lastTrainingOn: club.lastTrainingOn,
     todayUtc,
+    matchesBlocked,
+    lastPlayedAt,
+    now,
   });
   const secondary = resolveSecondaryCtas(phase, {
     hasFixtures,
@@ -101,6 +115,8 @@ export function EarlyClubHub({
           title: 'Sezon zakończony',
           meta: `${status.league} · ${status.seasonLabel}`,
           detail: 'Brak meczów ligowych do czasu potwierdzenia nowego sezonu.',
+          scoreHref: null,
+          scoreNote: null,
         }
       : resolveDecisionEvent({
           club,
@@ -129,9 +145,12 @@ export function EarlyClubHub({
           layers={['vignette', 'grain']}
         >
           <p className="lf-hub__decision-eyebrow">{event.eyebrow}</p>
-          <h1 className="lf-hub__decision-title">{event.title}</h1>
+          <h1 className="lf-hub__decision-title">
+            {event.scoreHref ? <Link href={event.scoreHref}>{event.title}</Link> : event.title}
+          </h1>
           <p className="lf-hub__decision-meta">{event.meta}</p>
           {event.detail ? <p className="lf-hub__decision-detail">{event.detail}</p> : null}
+          {event.scoreNote ? <p className="lf-hub__decision-detail">{event.scoreNote}</p> : null}
         </AtmosphereLayer>
 
         {seasonReport ? <SeasonReportView report={seasonReport} /> : null}
@@ -161,6 +180,7 @@ export function EarlyClubHub({
       </div>
 
       <div className="lf-hub__body">
+        {event.scoreHref ? null : <LastMatchStrip model={lastMatch} />}
         <ClubIdentity club={club} status={status} />
         <div className="lf-hub__actions">
           <SecondaryRow actions={secondary} />
@@ -206,7 +226,7 @@ type DecisionBannerProps = {
   club: ClubDto;
   session: HubSession;
   nextFixture: FixtureDto | null;
-  lastMatch: ReturnType<typeof buildLastMatchStrip>;
+  lastMatch: LastMatchStripModel;
   dayLabel: string;
   league: string;
 };
@@ -223,6 +243,9 @@ function resolveDecisionEvent({
   title: string;
   meta: string;
   detail: string | null;
+  /** Headline is the played score. The body strip stays hidden so the score is not repeated. */
+  scoreHref: string | null;
+  scoreNote: string | null;
 } {
   if (session === 'matchday' && nextFixture) {
     const venue = nextFixture.isHome ? 'U siebie' : 'Wyjazd';
@@ -231,6 +254,8 @@ function resolveDecisionEvent({
       title: `${club.shortName} vs ${nextFixture.opponent.shortName}`,
       meta: `Kolejka ${nextFixture.matchday} · ${league} · ${venue}`,
       detail: nextFixture.opponent.name,
+      scoreHref: null,
+      scoreNote: null,
     };
   }
 
@@ -240,6 +265,8 @@ function resolveDecisionEvent({
       title: lastMatch.detail,
       meta: `${league} · ${dayLabel}`,
       detail: null,
+      scoreHref: lastMatch.href,
+      scoreNote: lastMatch.note,
     };
   }
 
@@ -250,6 +277,8 @@ function resolveDecisionEvent({
       title: `vs ${nextFixture.opponent.name}`,
       meta: `Kolejka ${nextFixture.matchday} · ${league} · ${venue}`,
       detail: null,
+      scoreHref: null,
+      scoreNote: null,
     };
   }
 
@@ -258,7 +287,22 @@ function resolveDecisionEvent({
     title: lastMatch.detail,
     meta: `${league} · ${dayLabel}`,
     detail: null,
+    scoreHref: lastMatch.href,
+    scoreNote: lastMatch.note,
   };
+}
+
+function LastMatchStrip({ model }: { model: LastMatchStripModel }) {
+  if (!model.href) return null;
+  return (
+    <section className="lf-hub__last" aria-label={model.title} data-last-match="">
+      <p className="lf-hub__last-label">{model.title}</p>
+      <Link href={model.href} className="lf-hub__last-score">
+        {model.detail}
+      </Link>
+      {model.note ? <p className="lf-hub__last-note">{model.note}</p> : null}
+    </section>
+  );
 }
 
 function ClubIdentity({

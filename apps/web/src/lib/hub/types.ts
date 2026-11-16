@@ -27,6 +27,12 @@ export type HubCtaContext = {
   readonly nextFixture: FixtureDto | null;
   readonly lastPlayedFixture?: FixtureDto | null;
   readonly hasFixtures?: boolean;
+  /** Email deadline from loadEmailGate. Default false. */
+  readonly matchesBlocked?: boolean;
+  /** Newest played_at. When omitted, lastPlayedFixture.playedAt is used. */
+  readonly lastPlayedAt?: string | null;
+  /** Injected clock for the Warsaw day rule. */
+  readonly now?: Date;
 };
 
 /**

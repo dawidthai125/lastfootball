@@ -27,4 +27,5 @@ export {
   buildLastMatchStrip,
   buildWelcomeMessage,
   buildLightStatus,
+  type LastMatchStripModel,
 } from '@/lib/hub/early-club-content';
