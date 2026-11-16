@@ -260,6 +260,20 @@ describe('applyMatchSquadTruth', () => {
     expect(tired?.status).toBe('INJURED');
   });
 
+  it('treats an omitted injury countdown as zero when the player is out', () => {
+    const base = player({ id: 'hurt-omit', status: 'INJURED', energy: 15 });
+    const { injuryMatches: _ignored, ...rest } = base;
+    void _ignored;
+    const [after] = applyMatchSquadTruth([rest as SquadTruthPlayer], {
+      matchKey: 'md-9',
+      result: 'draw',
+      roleById: { 'hurt-omit': 'out' },
+    });
+    expect(after?.injuryMatches).toBe(0);
+    expect(after?.status).toBe('READY');
+    expect(after?.energy).toBe(29);
+  });
+
   it('counts down an injury separately from a suspension', () => {
     const [still] = applyMatchSquadTruth(
       [

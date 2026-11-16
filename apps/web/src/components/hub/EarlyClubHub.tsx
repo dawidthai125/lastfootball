@@ -39,6 +39,7 @@ export function EarlyClubHub({
   leaguePositionLabel = null,
   cashLabel = null,
   trainingUnlocked = false,
+  playedCount = 0,
   todayUtc = utcDateString(),
   seasonReport = null,
   cupLink = null,
@@ -50,6 +51,8 @@ export function EarlyClubHub({
   leaguePositionLabel?: string | null;
   cashLabel?: string | null;
   trainingUnlocked?: boolean;
+  /** League fixtures already played (countPlayedInList). Copy only — not an unlock. */
+  playedCount?: number;
   /** Injected UTC day for Daily Goal determinism (tests / page). */
   todayUtc?: string;
   /** Offseason read-only report (D84 · D86); null outside OFFSEASON. */
@@ -79,6 +82,7 @@ export function EarlyClubHub({
     hasFixtures,
     trainingUnlocked,
     transferWindowOpen: club.transferWindowOpen,
+    playedCount,
   }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
@@ -326,7 +330,9 @@ function SecondaryRow({ actions }: { actions: HubCta[] }) {
             className="lf-hub__secondary-item lf-hub__secondary-item--locked"
             title="Niedostępne w tej fazie"
           >
-            {cta.label} · {UI_COPY.softLockUnavailable}
+            {cta.label.includes(' · ')
+              ? cta.label
+              : `${cta.label} · ${UI_COPY.softLockUnavailable}`}
           </span>
         ) : (
           <Link key={cta.id} href={cta.href} className="lf-hub__secondary-item">
