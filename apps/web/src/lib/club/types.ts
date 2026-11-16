@@ -29,6 +29,10 @@ export type ClubDto = {
   seasonPhase: 'in_season' | 'offseason';
   /** League rung SSOT (LFE-PROMOTION-01 · D88). */
   leagueTier: LeagueTier;
+  /** Season number already paid for the top-half goal. Null until the first payout. */
+  seasonGoalPaidFor?: number | null;
+  /** Sentence written when the manager confirms the next season. */
+  seasonGoalNote?: string | null;
 };
 
 export function isFirstMatchCompleted(club: ClubDto | null | undefined): boolean {

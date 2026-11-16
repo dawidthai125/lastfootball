@@ -19,6 +19,8 @@ type ClubRow = {
   season_number: number | null;
   season_phase: string | null;
   league_tier: string | null;
+  season_goal_paid_for?: number | null;
+  season_goal_note?: string | null;
 };
 
 function mapClub(row: ClubRow): ClubDto {
@@ -39,6 +41,8 @@ function mapClub(row: ClubRow): ClubDto {
     seasonNumber: Math.max(1, Math.trunc(row.season_number ?? 1)),
     seasonPhase: phase,
     leagueTier: parseLeagueTier(row.league_tier),
+    seasonGoalPaidFor: row.season_goal_paid_for ?? null,
+    seasonGoalNote: row.season_goal_note ?? null,
   };
 }
 
@@ -54,7 +58,7 @@ export async function getManagerClub(): Promise<ClubDto | null> {
   const { data, error } = await supabase
     .from('clubs')
     .select(
-      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance, transfer_window_open, last_training_on, season_number, season_phase, league_tier',
+      'id, owner_id, name, short_name, primary_color, secondary_color, crest_template_id, created_at, first_match_completed_at, cash_balance, transfer_window_open, last_training_on, season_number, season_phase, league_tier, season_goal_paid_for, season_goal_note',
     )
     .eq('owner_id', user.id)
     .maybeSingle();

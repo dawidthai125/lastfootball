@@ -24,6 +24,8 @@ export type Database = {
           last_training_on: string | null;
           season_number: number;
           season_phase: string;
+          season_goal_paid_for: number | null;
+          season_goal_note: string | null;
           league_tier: string;
           coach_group: string | null;
           style_pressing: number;
@@ -48,6 +50,8 @@ export type Database = {
           last_training_on?: string | null;
           season_number?: number;
           season_phase?: string;
+          season_goal_paid_for?: number | null;
+          season_goal_note?: string | null;
           league_tier?: string;
           coach_group?: string | null;
           style_pressing?: number;
@@ -72,6 +76,8 @@ export type Database = {
           last_training_on?: string | null;
           season_number?: number;
           season_phase?: string;
+          season_goal_paid_for?: number | null;
+          season_goal_note?: string | null;
           league_tier?: string;
           coach_group?: string | null;
           style_pressing?: number;
