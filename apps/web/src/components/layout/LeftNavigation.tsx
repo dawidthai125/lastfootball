@@ -9,11 +9,13 @@ import {
   useClub,
   useClubMessages,
   useHasFixtures,
+  usePlayedCount,
   useTrainingUnlocked,
 } from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
+import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
 import { UI_COPY } from '@/lib/ui/copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
@@ -39,6 +41,7 @@ export function LeftNavigation() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const trainingUnlocked = useTrainingUnlocked();
+  const playedCount = usePlayedCount();
   const messages = useClubMessages();
   const phase = resolveHubPhase(club, { hasFixtures });
   const navCtx = {
@@ -144,7 +147,9 @@ export function LeftNavigation() {
               const active = isActive(pathname, item.href);
               const access = resolveNavAccess(item.id, phase, navCtx);
               const locked = access === 'soft_locked';
-              const tip = navCollapsed ? item.label : undefined;
+              const lockLabel = resolveNavLockLabel(item.id, item.label, playedCount);
+              const explainedLock = locked && (item.id === 'training' || item.id === 'transfers');
+              const tip = navCollapsed ? (explainedLock ? lockLabel : item.label) : undefined;
               const itemStyle = {
                 color: locked
                   ? 'var(--lf-color-text-faint)'
@@ -161,20 +166,30 @@ export function LeftNavigation() {
                   <button
                     key={item.id}
                     type="button"
-                    aria-label={`${item.label} — ${UI_COPY.softLockUnavailable}`}
+                    aria-label={lockLabel}
                     data-lf-tooltip={tip}
                     className="lf-nav-item lf-nav-item--locked"
                     style={itemStyle}
                     onClick={() => setLockTitle(item.label)}
                   >
                     <span
-                      className="flex items-center truncate font-[family-name:var(--font-ui)]"
+                      className={
+                        explainedLock
+                          ? 'flex min-w-0 items-center font-[family-name:var(--font-ui)]'
+                          : 'flex items-center truncate font-[family-name:var(--font-ui)]'
+                      }
                       style={{ gap: 'var(--lf-space-2)' }}
                     >
                       <NavIcon id={item.id} active={false} size={navCollapsed ? 20 : 16} />
-                      {navCollapsed ? null : item.label}
+                      {navCollapsed ? null : explainedLock ? (
+                        <span className="min-w-0" style={{ whiteSpace: 'normal' }}>
+                          {lockLabel}
+                        </span>
+                      ) : (
+                        item.label
+                      )}
                     </span>
-                    {!navCollapsed ? (
+                    {!navCollapsed && !explainedLock ? (
                       <span
                         style={{
                           fontSize: '9px',

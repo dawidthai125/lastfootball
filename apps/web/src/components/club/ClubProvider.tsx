@@ -15,6 +15,8 @@ type ClubContextValue = {
   readonly hasFixtures: boolean;
   /** Derived: played fixtures >= training unlock (LFE-TRAINING-01). */
   readonly trainingUnlocked: boolean;
+  /** League fixtures with status played. Same count as the shell layout. */
+  readonly playedCount: number;
   /** Derived inbox — resolveClubMessages only (LFE-MESSAGES-01 · D43). */
   readonly messages: ClubMessagesDto;
   /** Invitation Layer — resolveClubInvitations composition (LFE-NOTIFICATIONS-01). */
@@ -25,6 +27,7 @@ const ClubContext = createContext<ClubContextValue>({
   club: null,
   hasFixtures: false,
   trainingUnlocked: false,
+  playedCount: 0,
   messages: EMPTY_MESSAGES,
   invitations: EMPTY_INVITATIONS,
 });
@@ -33,6 +36,7 @@ export function ClubProvider({
   club,
   hasFixtures = false,
   trainingUnlocked = false,
+  playedCount = 0,
   messages = EMPTY_MESSAGES,
   invitations = EMPTY_INVITATIONS,
   children,
@@ -40,12 +44,15 @@ export function ClubProvider({
   club: ClubDto | null;
   hasFixtures?: boolean;
   trainingUnlocked?: boolean;
+  playedCount?: number;
   messages?: ClubMessagesDto;
   invitations?: ClubInvitationsDto;
   children: ReactNode;
 }) {
   return (
-    <ClubContext.Provider value={{ club, hasFixtures, trainingUnlocked, messages, invitations }}>
+    <ClubContext.Provider
+      value={{ club, hasFixtures, trainingUnlocked, playedCount, messages, invitations }}
+    >
       {children}
     </ClubContext.Provider>
   );
@@ -61,6 +68,10 @@ export function useHasFixtures(): boolean {
 
 export function useTrainingUnlocked(): boolean {
   return useContext(ClubContext).trainingUnlocked;
+}
+
+export function usePlayedCount(): number {
+  return useContext(ClubContext).playedCount;
 }
 
 /** Same DTO as /messages — Overlay / nav badge (D43). */

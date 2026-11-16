@@ -41,6 +41,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
   const club = await getManagerClub();
   let hasFixtures = false;
   let trainingUnlocked = false;
+  let playedCount = 0;
   let messages: ClubMessagesDto = EMPTY_MESSAGES;
   let invitations: ClubInvitationsDto = EMPTY_INVITATIONS;
 
@@ -48,7 +49,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
     const leagueFixtures = fixtures.filter((f) => f.competition === 'league');
     hasFixtures = leagueFixtures.length > 0;
-    const playedCount = countPlayedInList(leagueFixtures);
+    playedCount = countPlayedInList(leagueFixtures);
     trainingUnlocked = hasPlayedUnlock(playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
 
     const nextFixture = pickNextUpcoming(leagueFixtures);
@@ -107,6 +108,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       club={club}
       hasFixtures={hasFixtures}
       trainingUnlocked={trainingUnlocked}
+      playedCount={playedCount}
       messages={messages}
       invitations={invitations}
     >
