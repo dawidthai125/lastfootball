@@ -5,9 +5,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavIcon } from '@/components/assets';
-import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import {
+  useClub,
+  useHasFixtures,
+  usePlayedCount,
+  useTrainingUnlocked,
+} from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { NAV_GROUPS, type NavItem } from '@/lib/nav';
+import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -53,6 +59,7 @@ export function MobileNav() {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const trainingUnlocked = useTrainingUnlocked();
+  const playedCount = usePlayedCount();
   const phase = resolveHubPhase(club, { hasFixtures });
   const navCtx = {
     transferWindowOpen: club?.transferWindowOpen,
@@ -100,6 +107,8 @@ export function MobileNav() {
         {primaryItems.map((item) => {
           const active = isActive(pathname, item.href);
           const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
+          const lockLabel = resolveNavLockLabel(item.id, item.label, playedCount);
+          const explainedLock = locked && (item.id === 'training' || item.id === 'transfers');
           const label = PRIMARY_LABEL[item.id as (typeof PRIMARY_IDS)[number]] ?? item.label;
           const className = [
             'lf-mobile-nav__slot',
@@ -115,11 +124,21 @@ export function MobileNav() {
                 key={item.id}
                 type="button"
                 className={className}
-                title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
+                aria-label={lockLabel}
+                title={lockLabel}
                 onClick={() => setLockTitle(item.label)}
               >
                 <NavIcon id={item.id} active={false} size={16} />
-                <span className="font-[family-name:var(--font-ui)]">{label}</span>
+                <span
+                  className="font-[family-name:var(--font-ui)]"
+                  style={
+                    explainedLock
+                      ? { textTransform: 'none', letterSpacing: 'normal', whiteSpace: 'normal' }
+                      : undefined
+                  }
+                >
+                  {explainedLock ? lockLabel : label}
+                </span>
               </button>
             );
           }
@@ -178,21 +197,27 @@ export function MobileNav() {
                     {group.items.map((item) => {
                       const active = isActive(pathname, item.href);
                       const locked = resolveNavAccess(item.id, phase, navCtx) === 'soft_locked';
+                      const lockLabel = resolveNavLockLabel(item.id, item.label, playedCount);
+                      const explainedLock =
+                        locked && (item.id === 'training' || item.id === 'transfers');
                       if (locked) {
                         return (
                           <li key={item.id}>
                             <button
                               type="button"
                               className="lf-mobile-more__item lf-mobile-more__item--locked"
-                              title={`${item.label} — ${UI_COPY.softLockUnavailable}`}
+                              aria-label={lockLabel}
+                              title={lockLabel}
                               onClick={() => {
                                 setMoreOpen(false);
                                 setLockTitle(item.label);
                               }}
                             >
                               <NavIcon id={item.id} active={false} size={16} />
-                              {item.label}
-                              <span className="lf-mobile-more__soon">{UI_COPY.softLockSoon}</span>
+                              {explainedLock ? lockLabel : item.label}
+                              {explainedLock ? null : (
+                                <span className="lf-mobile-more__soon">{UI_COPY.softLockSoon}</span>
+                              )}
                             </button>
                           </li>
                         );
