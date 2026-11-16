@@ -97,6 +97,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
       dto.competition === 'human' ? '18:00' : dto.status === 'upcoming' ? 'Teraz' : undefined,
     competition:
       dto.competition === 'cup' ? 'cup' : dto.competition === 'challenge' ? 'friendly' : 'league',
+    kickoffCompetition: dto.competition,
     competitionLabel:
       dto.competition === 'challenge'
         ? 'Wyzwanie'

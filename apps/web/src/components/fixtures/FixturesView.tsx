@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState, type CSSProperties } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { NextMatchHero } from '@/components/fixtures/NextMatchHero';
 import { ClubCrest } from '@/components/assets';
@@ -13,6 +12,15 @@ import {
   type MatchStatus,
 } from '@/data/fixtures';
 import { pickCalendarHero } from '@/lib/fixtures/calendar-hero';
+import {
+  calendarFixtureHref,
+  fixtureKickoffSentence,
+  playedMatchHref,
+  type CalendarHrefStatus,
+} from '@/lib/fixtures/calendar-href';
+import type { KickoffCompetition } from '@/lib/fixtures/kickoff-gate';
+
+export { playedMatchHref };
 
 const controlStyle: CSSProperties = {
   borderWidth: 'var(--lf-border-width-hair)',
@@ -54,20 +62,30 @@ function statusStyle(status: MatchStatus): { border: string; bg: string; text: s
   }
 }
 
-export function playedMatchHref(id: string): string {
-  return `/match/${id}`;
+function gateCompetition(f: Fixture): KickoffCompetition {
+  if (f.kickoffCompetition) return f.kickoffCompetition;
+  if (f.competition === 'cup') return 'cup';
+  if (f.competition === 'friendly') return 'challenge';
+  return 'league';
 }
 
-function preMatchHref(f: Fixture): string | null {
-  if (f.status === 'played') return null;
-  if (f.status === 'live') return `/match/${f.id}/live`;
-  if (f.status === 'upcoming') return `/match/${f.id}/tunnel`;
-  return null;
-}
-
-function rowHref(f: Fixture): string | null {
-  if (f.status === 'played') return playedMatchHref(f.id);
-  return preMatchHref(f);
+function rowHref(
+  f: Fixture,
+  gate: {
+    readonly matchesBlocked: boolean;
+    readonly lastPlayedAt: string | null;
+    readonly now: Date;
+  },
+): string | null {
+  const status: CalendarHrefStatus = f.status;
+  return calendarFixtureHref({
+    id: f.id,
+    status,
+    competition: gateCompetition(f),
+    matchesBlocked: gate.matchesBlocked,
+    lastPlayedAt: gate.lastPlayedAt,
+    now: gate.now,
+  });
 }
 
 export function FixturesView({
@@ -75,15 +93,38 @@ export function FixturesView({
   clubName,
   clubShortName,
   leagueLabel,
+  kickoffSentence,
+  matchesBlocked,
+  lastPlayedAt,
+  kickoffNow,
 }: {
   fixtures: readonly Fixture[];
   clubName: string;
   clubShortName: string;
   leagueLabel: string;
+  /** kickoffBlockReason for the default hero. Null when that kickoff may start. */
+  kickoffSentence: string | null;
+  matchesBlocked: boolean;
+  lastPlayedAt: string | null;
+  /** Server clock. The client does not sample a second Warsaw day. */
+  kickoffNow: string;
 }) {
-  const router = useRouter();
   const [competition, setCompetition] = useState<CompetitionFilter>('ALL');
+  const now = useMemo(() => new Date(kickoffNow), [kickoffNow]);
+  const gate = useMemo(
+    () => ({ matchesBlocked, lastPlayedAt, now }),
+    [matchesBlocked, lastPlayedAt, now],
+  );
   const next = pickCalendarHero(fixtures, competition);
+  const heroSentence =
+    competition === 'cup' && next
+      ? fixtureKickoffSentence({
+          matchesBlocked,
+          competition: gateCompetition(next),
+          lastPlayedAt,
+          now,
+        })
+      : kickoffSentence;
 
   const rows = useMemo(() => {
     let list = [...fixtures];
@@ -127,7 +168,12 @@ export function FixturesView({
       </header>
 
       {next ? (
-        <NextMatchHero fixture={next} clubName={clubName} clubShortName={clubShortName} />
+        <NextMatchHero
+          fixture={next}
+          clubName={clubName}
+          clubShortName={clubShortName}
+          kickoffSentence={heroSentence}
+        />
       ) : null}
 
       <div
@@ -172,10 +218,7 @@ export function FixturesView({
         rows={upcoming}
         empty="Brak nadchodzących meczów."
         clubShortName={clubShortName}
-        onOpen={(f) => {
-          const href = rowHref(f);
-          if (href) router.push(href);
-        }}
+        hrefFor={(f) => rowHref(f, gate)}
       />
       <FixtureTable
         title="Rozegrane"
@@ -186,27 +229,34 @@ export function FixturesView({
             : 'Brak rozegranych meczów ligowych.'
         }
         clubShortName={clubShortName}
-        onOpen={(f) => {
-          const href = rowHref(f);
-          if (href) router.push(href);
-        }}
+        hrefFor={(f) => rowHref(f, gate)}
       />
     </div>
   );
 }
+
+const rowGrid: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'auto 1fr auto auto',
+  gap: 'var(--lf-space-3)',
+  alignItems: 'center',
+  padding: 'var(--lf-space-3) var(--lf-space-4)',
+  color: 'inherit',
+  textDecoration: 'none',
+};
 
 function FixtureTable({
   title,
   rows,
   empty,
   clubShortName,
-  onOpen,
+  hrefFor,
 }: {
   title: string;
   rows: Fixture[];
   empty: string;
   clubShortName: string;
-  onOpen: (f: Fixture) => void;
+  hrefFor: (f: Fixture) => string | null;
 }) {
   return (
     <section
@@ -248,28 +298,9 @@ function FixtureTable({
         <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {rows.map((f) => {
             const st = statusStyle(f.status);
-            const clickable = Boolean(rowHref(f));
-            return (
-              <li
-                key={f.id}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr auto auto',
-                  gap: 'var(--lf-space-3)',
-                  alignItems: 'center',
-                  padding: 'var(--lf-space-3) var(--lf-space-4)',
-                  borderTopWidth: 'var(--lf-border-width-hair)',
-                  borderTopStyle: 'solid',
-                  borderTopColor: 'var(--lf-color-border-subtle)',
-                  cursor: clickable ? 'pointer' : 'default',
-                }}
-                onClick={() => clickable && onOpen(f)}
-                onKeyDown={(e) => {
-                  if (clickable && (e.key === 'Enter' || e.key === ' ')) onOpen(f);
-                }}
-                role={clickable ? 'link' : undefined}
-                tabIndex={clickable ? 0 : undefined}
-              >
+            const href = hrefFor(f);
+            const body = (
+              <>
                 <ClubCrest shortName={f.opponentShort} clubName={f.opponent} size="sm" />
                 <div style={{ minWidth: 0 }}>
                   <p
@@ -333,6 +364,24 @@ function FixtureTable({
                 >
                   {f.score ?? '—'}
                 </span>
+              </>
+            );
+            return (
+              <li
+                key={f.id}
+                style={{
+                  borderTopWidth: 'var(--lf-border-width-hair)',
+                  borderTopStyle: 'solid',
+                  borderTopColor: 'var(--lf-color-border-subtle)',
+                }}
+              >
+                {href ? (
+                  <a href={href} style={{ ...rowGrid, cursor: 'pointer' }}>
+                    {body}
+                  </a>
+                ) : (
+                  <div style={rowGrid}>{body}</div>
+                )}
               </li>
             );
           })}

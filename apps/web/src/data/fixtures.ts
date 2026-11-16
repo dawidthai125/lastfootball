@@ -11,6 +11,11 @@ export type Fixture = {
   dateLabel?: string;
   kickoff?: string;
   competition: Exclude<CompetitionFilter, 'ALL'>;
+  /**
+   * Domain competition for the kickoff gate.
+   * UI `competition` folds human into league and challenge into friendly.
+   */
+  kickoffCompetition?: 'league' | 'cup' | 'challenge' | 'human';
   competitionLabel: string;
   opponent: string;
   opponentShort: string;

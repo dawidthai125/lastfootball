@@ -7,9 +7,16 @@ type NextMatchHeroProps = {
   fixture: Fixture;
   clubName: string;
   clubShortName: string;
+  /** kickoffBlockReason for this hero. Null when the tunnel may open. */
+  kickoffSentence: string | null;
 };
 
-export function NextMatchHero({ fixture, clubName, clubShortName }: NextMatchHeroProps) {
+export function NextMatchHero({
+  fixture,
+  clubName,
+  clubShortName,
+  kickoffSentence,
+}: NextMatchHeroProps) {
   const homeName = fixture.home ? clubName : fixture.opponent;
   const awayName = fixture.home ? fixture.opponent : clubName;
   const homeShort = fixture.home ? clubShortName : fixture.opponentShort;
@@ -71,7 +78,18 @@ export function NextMatchHero({ fixture, clubName, clubShortName }: NextMatchHer
             {homeName} · {awayName} · {fixture.competitionLabel} · {fixture.stadium}
           </p>
         </div>
-        {fixture.status === 'upcoming' || fixture.status === 'scheduled' ? (
+        {kickoffSentence ? (
+          <p
+            style={{
+              margin: 0,
+              maxWidth: '18rem',
+              fontSize: 'var(--lf-type-caption)',
+              color: 'var(--lf-color-text-muted)',
+            }}
+          >
+            {kickoffSentence}
+          </p>
+        ) : fixture.status === 'upcoming' || fixture.status === 'scheduled' ? (
           <Link
             href={`/match/${fixture.id}/tunnel`}
             className="font-[family-name:var(--font-ui)] font-semibold"
