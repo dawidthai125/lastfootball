@@ -31,6 +31,7 @@ describe('rival challenges', () => {
     });
     expect(dto.competition).toBe('challenge');
     expect(dto.opponent.name).toBe('Rywal');
+    expect(dto.matchNote).toBeNull();
   });
 
   it('plays the rival squad instead of an AI seed', () => {

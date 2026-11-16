@@ -85,6 +85,17 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
             ? `${dto.homeScore}:${dto.awayScore}`
             : '—'}
         </p>
+        {dto.matchNote ? (
+          <p
+            style={{
+              margin: 0,
+              fontSize: 'var(--lf-type-body)',
+              color: 'var(--lf-color-text-primary)',
+            }}
+          >
+            {dto.matchNote}
+          </p>
+        ) : null}
         <Link
           href="/hub"
           style={{ color: 'var(--lf-color-text-gold)', fontSize: 'var(--lf-type-caption)' }}

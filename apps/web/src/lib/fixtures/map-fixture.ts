@@ -33,5 +33,6 @@ export function mapFixtureRow(row: FixtureRow): FixtureDto {
     awayScore: row.away_score,
     playedAt: row.played_at,
     createdAt: row.created_at,
+    matchNote: row.match_note ?? null,
   };
 }

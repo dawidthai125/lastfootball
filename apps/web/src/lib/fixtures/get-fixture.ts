@@ -64,7 +64,7 @@ async function withHumanNames(clubId: string, fixtures: FixtureDto[]): Promise<F
 }
 
 const FIXTURE_SELECT =
-  'id, club_id, matchday, competition, opponent_club_id, is_home, status, home_score, away_score, played_at, created_at';
+  'id, club_id, matchday, competition, opponent_club_id, is_home, status, home_score, away_score, played_at, created_at, match_note';
 
 const CLUB_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

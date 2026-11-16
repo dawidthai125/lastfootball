@@ -161,6 +161,27 @@ async function complete(
   }
 }
 
+export const MATCH_NOTE_SAVE_TRIES = 8;
+export const MATCH_NOTE_SAVE_GAP_MS = 400;
+
+type NoteSaveRow = {
+  readonly status: string;
+  readonly match_note: string | null;
+  readonly home_score: number | null;
+  readonly away_score: number | null;
+};
+
+/** True while the score matches and the fixture is not played yet, so a later try can store the note. */
+export function matchNoteSaveStillWaiting(
+  row: NoteSaveRow | null,
+  homeScore: number,
+  awayScore: number,
+): boolean {
+  if (!row || row.match_note) return false;
+  if (row.home_score !== homeScore || row.away_score !== awayScore) return false;
+  return row.status !== 'played';
+}
+
 /** First accepted note in provider order. No providers or all failures return null. */
 export async function composeMatchNote(
   facts: MatchNoteFacts,

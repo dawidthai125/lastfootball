@@ -27,6 +27,8 @@ type PostMatchViewProps = {
   readonly rewardLine?: string | null;
   /** Match development preview names (LFE-PLAYERS-02) — no potential numbers. */
   readonly developmentNames?: readonly string[];
+  /** League or cup fixture. Absent on the scripted first match. */
+  readonly fixtureId?: string;
 };
 
 /**
@@ -42,6 +44,7 @@ export function PostMatchView({
   continueSlot,
   rewardLine = null,
   developmentNames = [],
+  fixtureId,
 }: PostMatchViewProps) {
   const [note, setNote] = useState<string | null>(null);
   const shots = summary.stats.find((row) => row.label === 'Strzały');
@@ -67,6 +70,7 @@ export function PostMatchView({
         text: goal.text.slice(0, 80),
       })),
       why: summary.why,
+      ...(fixtureId ? { fixtureId } : {}),
     })
       .then((text) => {
         if (!gone && text) setNote(text);
@@ -88,6 +92,7 @@ export function PostMatchView({
     summary.homeName,
     summary.homeScore,
     summary.why,
+    fixtureId,
   ]);
 
   const mvp =
