@@ -53,6 +53,12 @@ function ownerKickoffWidth(dto: FixtureDto): number {
   return kickoffWidth(habit);
 }
 
+/** Saved note only. Blank and missing notes stay empty — never invented. */
+function uiMatchNote(note: string | null | undefined): string | null {
+  if (typeof note !== 'string' || note.trim().length === 0) return null;
+  return note;
+}
+
 /** Adapt FixtureDto → UI Fixture used by Prematch/Live chrome. */
 export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
   const score =
@@ -107,6 +113,7 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
     status:
       dto.status === 'played' ? 'played' : dto.status === 'upcoming' ? 'upcoming' : 'scheduled',
     score,
+    matchNote: dto.status === 'played' ? uiMatchNote(dto.matchNote) : null,
   };
 }
 
