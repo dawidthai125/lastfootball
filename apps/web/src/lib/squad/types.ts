@@ -31,6 +31,7 @@ export type SquadPlayerDto = {
   readonly careerPhaseLabel: string;
   readonly status: PlayerStatus;
   readonly suspensionMatches?: number;
+  readonly injuryMatches?: number;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {
@@ -81,6 +82,7 @@ export type PlayerRowDto = {
   readonly wage?: number;
   readonly recentRatings?: readonly number[];
   readonly suspensionMatches?: number;
+  readonly injuryMatches?: number;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;
@@ -93,11 +95,19 @@ export const STATUS_LABEL: Record<PlayerStatus, string> = {
   DEPARTED: 'Odszedł',
 };
 
-/** Suspended players say how many matches they sit. */
-export function playerStatusLabel(status: PlayerStatus, suspensionMatches?: number): string {
+/** Suspended and injured players say how many matches they sit. */
+export function playerStatusLabel(
+  status: PlayerStatus,
+  suspensionMatches?: number,
+  injuryMatches?: number,
+): string {
   if (status === 'SUSPENDED' && suspensionMatches && suspensionMatches > 0) {
     const word = suspensionMatches === 1 ? 'mecz' : 'mecze';
     return `Zawieszony · ${suspensionMatches} ${word}`;
+  }
+  if (status === 'INJURED' && injuryMatches && injuryMatches > 0) {
+    const word = injuryMatches === 1 ? 'mecz' : 'mecze';
+    return `Kontuzja · ${injuryMatches} ${word}`;
   }
   return STATUS_LABEL[status];
 }

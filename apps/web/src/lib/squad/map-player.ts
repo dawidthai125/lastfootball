@@ -33,6 +33,7 @@ export type PlayerDbRow = {
   form?: number | null;
   wage?: number | null;
   suspension_matches?: number | null;
+  injury_matches?: number | null;
   recent_ratings?: number[] | null;
 };
 
@@ -72,6 +73,7 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     wage: typeof row.wage === 'number' ? row.wage : undefined,
     suspensionMatches:
       typeof row.suspension_matches === 'number' ? row.suspension_matches : undefined,
+    injuryMatches: typeof row.injury_matches === 'number' ? row.injury_matches : undefined,
     recentRatings: Array.isArray(row.recent_ratings) ? row.recent_ratings : undefined,
   };
 }

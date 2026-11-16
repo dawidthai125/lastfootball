@@ -203,6 +203,7 @@ export type Database = {
           form: number;
           wage: number;
           suspension_matches: number;
+          injury_matches: number;
           recent_ratings: number[];
         };
         Insert: {
@@ -234,6 +235,7 @@ export type Database = {
           form?: number;
           wage?: number;
           suspension_matches?: number;
+          injury_matches?: number;
           recent_ratings?: number[];
         };
         Update: {
@@ -265,6 +267,7 @@ export type Database = {
           form?: number;
           wage?: number;
           suspension_matches?: number;
+          injury_matches?: number;
           recent_ratings?: number[];
         };
         Relationships: [

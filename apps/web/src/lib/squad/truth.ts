@@ -27,6 +27,7 @@ export type SquadTruthPlayer = {
   readonly form: number;
   readonly recentRatings: readonly number[];
   readonly suspensionMatches: number;
+  readonly injuryMatches: number;
 };
 
 /** Finite integer in 1..99. Non-finite → 1. */
@@ -150,6 +151,7 @@ export function energyAfterTraining(input: {
   focus: TrainingFocus;
   intensity: TrainingIntensity;
   status: Status;
+  injuryMatches?: number;
 }): { energy: number; status: Status } {
   const energy = clampEnergy(input.energy);
   const { focus, intensity, status } = input;
@@ -160,6 +162,10 @@ export function energyAfterTraining(input: {
 
   if (focus === 'regeneration') {
     const next = Math.min(100, energy + 28);
+    const matchesLeft = input.injuryMatches ?? 0;
+    if (status === 'INJURED' && matchesLeft > 0) {
+      return { energy: next, status };
+    }
     const healed = status === 'TIRED' || status === 'INJURED' ? 'READY' : status;
     return { energy: next, status: healed };
   }
@@ -229,6 +235,16 @@ function applyOne(
   result: MatchResult,
   role: MatchRole,
 ): SquadTruthPlayer {
+  if (player.status === 'INJURED' && role === 'out') {
+    const left = Math.max(0, player.injuryMatches - 1);
+    return {
+      ...player,
+      status: left > 0 ? 'INJURED' : 'READY',
+      injuryMatches: left,
+      energy: Math.min(100, player.energy + 14),
+    };
+  }
+
   if ((player.status === 'SUSPENDED' || player.suspensionMatches > 0) && role !== 'xi') {
     const left = Math.max(0, player.suspensionMatches - 1);
     return {
@@ -237,15 +253,6 @@ function applyOne(
       suspensionMatches: left,
       energy: Math.min(100, player.energy + 14),
       form: formFromRatings(player.recentRatings, player.form),
-    };
-  }
-
-  if (player.status === 'INJURED' && role === 'out') {
-    const heal = hash(`${player.id}:${matchKey}:heal`) % 100 < 55;
-    return {
-      ...player,
-      status: heal ? 'READY' : player.status,
-      energy: Math.min(100, player.energy + 14),
     };
   }
 
@@ -279,6 +286,7 @@ function applyOne(
     const recentRatings = pushRating(player.recentRatings, rating);
     let status: Status = player.status;
     let suspensionMatches = player.suspensionMatches;
+    let injuryMatches = player.injuryMatches;
 
     if (status !== 'INJURED' && status !== 'SUSPENDED') {
       const injRoll = hash(`${player.id}:${matchKey}:inj`) % 100;
@@ -286,6 +294,7 @@ function applyOne(
       const booking = matchBooking(player.id, matchKey);
       if (injured) {
         status = 'INJURED';
+        injuryMatches = energyBefore >= 25 ? 1 : 2;
       } else if (booking) {
         status = 'SUSPENDED';
         suspensionMatches = booking.matches;
@@ -301,6 +310,7 @@ function applyOne(
       form: formFromRatings(recentRatings, player.form),
       status,
       suspensionMatches,
+      injuryMatches,
     };
   }
 

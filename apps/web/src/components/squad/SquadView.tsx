@@ -67,11 +67,11 @@ function attentionRank(p: SquadPlayer): number {
 
 function attentionReason(p: SquadPlayer): string {
   if (p.status === 'INJURED' || p.status === 'SUSPENDED' || p.status === 'TIRED') {
-    return playerStatusLabel(p.status, p.suspensionMatches);
+    return playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches);
   }
   if (p.energy < ENERGY_ATTENTION) return `Energia ${p.energy}`;
   if (p.form < FORM_ATTENTION) return `Forma ${p.form}`;
-  return playerStatusLabel(p.status, p.suspensionMatches);
+  return playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches);
 }
 
 function comparePlayers(
@@ -235,7 +235,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                           color: sc.text,
                         }}
                       >
-                        {playerStatusLabel(p.status, p.suspensionMatches)}
+                        {playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches)}
                       </span>
                     </button>
                   </li>
@@ -349,7 +349,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                       color: sc.text,
                     }}
                   >
-                    {playerStatusLabel(p.status, p.suspensionMatches)}
+                    {playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches)}
                   </span>
                 </button>
               </li>
@@ -438,7 +438,7 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
                           color: sc.text,
                         }}
                       >
-                        {playerStatusLabel(p.status, p.suspensionMatches)}
+                        {playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches)}
                       </span>
                     </td>
                     <td style={{ color: 'var(--lf-color-text-muted)' }}>{p.potentialLabel}</td>
