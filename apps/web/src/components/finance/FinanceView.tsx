@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { EmptyState, LocationHero } from '@/components/ui';
 import { formatMoney, type ClubFinanceDto, type FinanceMovementDto } from '@/lib/finance';
+import { resolveFinanceTransferEntry } from '@/lib/finance/transfer-entry';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './finance-decision.css';
@@ -23,11 +24,30 @@ function lastMovementSummary(m: FinanceMovementDto | null): string {
  * Finances Experience — LFE-UI-IMPL-03 / HF-FIN-01.
  * Decision-first; economy / DTO unchanged.
  */
-export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
+export function FinanceView({
+  finance,
+  transferWindowOpen,
+  playedCount,
+}: {
+  finance: ClubFinanceDto;
+  transferWindowOpen: boolean;
+  playedCount: number;
+}) {
   const movements = finance.recentMovements;
   const hasMovements = movements.length > 0;
   const needsReaction = Boolean(finance.lastMovement && finance.lastMovement.amount < 0);
-  const primaryLabel = needsReaction ? 'Przejdź do transferów' : 'Zobacz rynek transferowy';
+  const primary = resolveFinanceTransferEntry({
+    transferWindowOpen,
+    playedCount,
+    needsReaction,
+    variant: 'primary',
+  });
+  const emptyLink = resolveFinanceTransferEntry({
+    transferWindowOpen,
+    playedCount,
+    needsReaction,
+    variant: 'empty',
+  });
 
   return (
     <div className="lf-fi" data-lf-impl="LFE-UI-IMPL-03">
@@ -41,8 +61,8 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
       </header>
 
       <div className="lf-fi__cta-wrap">
-        <Link href="/transfers" className="lf-fi__primary">
-          {primaryLabel}
+        <Link href={primary.href} className="lf-fi__primary">
+          {primary.label}
         </Link>
         <Link href="/hub" className="lf-fi__secondary">
           {UI_COPY.hubExit}
@@ -71,7 +91,7 @@ export function FinanceView({ finance }: { finance: ClubFinanceDto }) {
             illustrationSrc="/assets/world-art/emp-003-blank-ledger.png"
             title="Księga jeszcze pusta"
             body="Brak zapisanych operacji. Gdy pojawi się ruch kasowy, zobaczysz go tutaj — decyzje transferowe podejmiesz na rynku."
-            links={[{ href: '/transfers', label: 'Transfery' }]}
+            links={[{ href: emptyLink.href, label: emptyLink.label }]}
           />
         ) : (
           <>

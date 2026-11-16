@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { TransfersView } from '@/components/transfers/TransfersView';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { countPlayedInList, ensureClubFixtures } from '@/lib/fixtures';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
 import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
@@ -19,12 +20,14 @@ export default async function TransfersPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
-  const [activePlayers, liveListings, h2hOffers, auctions] = await Promise.all([
+  const [activePlayers, liveListings, h2hOffers, auctions, fixtures] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),
     fetchLiveH2hOffers(supabase, club.id),
     loadOpenAuctions(),
+    ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase }),
   ]);
+  const playedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
 
   const market = resolveTransferMarket({
     clubId: club.id,
@@ -42,7 +45,12 @@ export default async function TransfersPage() {
         title="Transfery"
         subtitle={market.windowOpen ? 'Centrum decyzji transferowych' : 'Okno zamknięte'}
       />
-      <TransfersView market={market} auctions={auctions} clubId={club.id} />
+      <TransfersView
+        market={market}
+        auctions={auctions}
+        clubId={club.id}
+        playedCount={playedCount}
+      />
     </div>
   );
 }

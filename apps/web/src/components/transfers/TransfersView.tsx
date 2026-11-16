@@ -8,6 +8,7 @@ import { ConfirmSubmit, LocationHero, SoftLockState } from '@/components/ui';
 import { UI_COPY } from '@/lib/ui/copy';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
+import { resolveTransfersClosedSoftLock } from '@/lib/finance/transfer-entry';
 import {
   acceptLiveTransferOffer,
   buyLiveTransferPlayer,
@@ -571,10 +572,12 @@ export function TransfersView({
   market,
   auctions = [],
   clubId = '',
+  playedCount,
 }: {
   market: TransferMarketDto;
   auctions?: readonly AuctionSnap[];
   clubId?: string;
+  playedCount: number;
 }) {
   const auctionByPlayer = new Map(auctions.map((auction) => [auction.playerId, auction]));
   const outgoingOpening = market.outgoingLiveOffers.filter((o) => o.phase === 'opening');
@@ -589,6 +592,7 @@ export function TransfersView({
   const windowLabel = market.windowOpen ? 'Okno otwarte' : 'Okno zamknięte';
 
   if (!market.windowOpen) {
+    const closed = resolveTransfersClosedSoftLock(playedCount);
     return (
       <div className="lf-tx" data-pti="PTI-01-XFR-02-M" data-lf-impl="LFE-UI-IMPL-03">
         <LocationHero
@@ -599,8 +603,8 @@ export function TransfersView({
         <SoftLockState
           waId="ILL-003"
           illustrationSrc="/assets/world-art/ill-003-window-closed.png"
-          title="Okno transferowe zamknięte"
-          reason={UI_COPY.transferWindowClosed}
+          title={closed.title}
+          reason={closed.reason}
           unlockHint={`${windowLabel} · Kasa ${market.cashLabel} · Budżet ${market.envelopeLabel}`}
           secondaryHref="/finance"
           secondaryLabel="Finanse"
