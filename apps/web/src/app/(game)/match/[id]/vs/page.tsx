@@ -16,6 +16,7 @@ export default async function MatchVsPage({ params }: PageProps) {
       awayShort={ctx.awayShort}
       awayName={ctx.awayName}
       meta={ctx.meta}
+      rivalLines={ctx.rivalLines}
     />
   );
 }
