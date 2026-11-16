@@ -132,7 +132,7 @@ export function PlayerHero({
             flexShrink: 0,
           }}
         >
-          {playerStatusLabel(player.status, player.suspensionMatches)}
+          {playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}
         </span>
       </div>
     </AtmosphereLayer>
@@ -176,7 +176,7 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
         Kariera <strong>{player.careerPhaseLabel}</strong>
       </span>
       <span>
-        Status <strong>{playerStatusLabel(player.status, player.suspensionMatches)}</strong>
+        Status <strong>{playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}</strong>
       </span>
     </div>
   );

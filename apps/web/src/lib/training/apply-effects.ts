@@ -25,6 +25,7 @@ export type TrainingPlayerSlice = {
   readonly pos?: string;
   readonly groups?: AttrGroups;
   readonly energy?: number;
+  readonly injuryMatches?: number;
 };
 
 function focusSkillOffset(focusId: TrainingFocusId): number {
@@ -104,6 +105,7 @@ export function applyTrainingSessionEffects(
               focus: focusId,
               intensity: intensityId,
               status: p.status,
+              injuryMatches: p.injuryMatches,
             })
           : null;
       if (p.status === 'TIRED' || trained?.status === 'READY') {
@@ -113,6 +115,9 @@ export function applyTrainingSessionEffects(
           skill: p.skill,
           energy: trained?.energy ?? p.energy,
         };
+      }
+      if (trained && trained.energy !== p.energy) {
+        return { ...p, energy: trained.energy, status: trained.status };
       }
       return p;
     });

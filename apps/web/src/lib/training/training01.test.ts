@@ -134,6 +134,28 @@ describe('applyTrainingSessionEffects', () => {
     expect(out.every((p) => p.skill === 60)).toBe(true);
   });
 
+  it('regeneration raises energy but keeps an injury that still has matches', () => {
+    const out = applyTrainingSessionEffects(
+      [
+        {
+          id: 'd',
+          status: 'INJURED' as const,
+          skill: 60,
+          potential: 99,
+          age: 24,
+          energy: 40,
+          injuryMatches: 2,
+        },
+      ],
+      'regeneration',
+      'normal',
+    );
+    expect(out[0]?.status).toBe('INJURED');
+    expect(out[0]?.energy).toBe(68);
+    expect(out[0]?.injuryMatches).toBe(2);
+    expect(out[0]?.skill).toBe(60);
+  });
+
   it('light intensity is a no-op on statuses and skill', () => {
     const out = applyTrainingSessionEffects(base, 'tactics', 'light');
     expect(out).toEqual(base);
