@@ -312,5 +312,8 @@ export async function completeFixture(
   await closeSeasonIfComplete(clubId, fixtures);
 
   revalidatePath('/', 'layout');
+  if (formData.get('stay') === '1') {
+    return { saved: true };
+  }
   redirect('/hub');
 }
