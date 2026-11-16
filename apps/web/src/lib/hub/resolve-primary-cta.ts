@@ -1,6 +1,9 @@
+import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveNavAccess } from '@/lib/hub/unlock';
-import type { HubCta, HubCtaContext, HubPhase, HubSession } from '@/lib/hub/types';
+import type { HubCta, HubCtaContext, HubNavAccess, HubPhase, HubSession } from '@/lib/hub/types';
+import { TRAINING_THIN } from '@/lib/training/types';
+import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
 const DECISION_PHASES = new Set<HubPhase>(['EARLY_CLUB', 'SEASON']);
@@ -9,7 +12,22 @@ export type SecondaryCtaContext = {
   readonly hasFixtures?: boolean;
   readonly trainingUnlocked?: boolean;
   readonly transferWindowOpen?: boolean;
+  /** League fixtures with status played. Same count as the shell layout. */
+  readonly playedCount?: number;
 };
+
+function trainingSecondaryLabel(access: HubNavAccess): string {
+  if (access === 'open') return 'Trening';
+  return `Trening · po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
+}
+
+function transfersSecondaryLabel(access: HubNavAccess, playedCount: number): string {
+  if (access === 'open') return 'Transfery';
+  if (!hasPlayedUnlock(playedCount, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) {
+    return `Transfery · po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
+  }
+  return 'Transfery · okno zamknięte';
+}
 
 /**
  * Exactly one Primary CTA for the Hub decision screen (GDD §23.4).
@@ -59,13 +77,16 @@ export function resolveSecondaryCtas(phase: HubPhase, ctx: SecondaryCtaContext =
     transferWindowOpen: ctx.transferWindowOpen,
   };
   const fixturesOpen = Boolean(ctx.hasFixtures);
+  const playedCount = ctx.playedCount ?? 0;
+  const trainingAccess = resolveNavAccess('training', phase, navCtx);
+  const transfersAccess = resolveNavAccess('transfers', phase, navCtx);
 
   return [
     {
       id: 'training',
-      label: 'Trening',
+      label: trainingSecondaryLabel(trainingAccess),
       href: '/training',
-      access: resolveNavAccess('training', phase, navCtx),
+      access: trainingAccess,
     },
     {
       id: 'squad',
@@ -75,9 +96,9 @@ export function resolveSecondaryCtas(phase: HubPhase, ctx: SecondaryCtaContext =
     },
     {
       id: 'transfers',
-      label: 'Transfery',
+      label: transfersSecondaryLabel(transfersAccess, playedCount),
       href: '/transfers',
-      access: resolveNavAccess('transfers', phase, navCtx),
+      access: transfersAccess,
     },
     {
       id: 'finance',
