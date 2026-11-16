@@ -54,10 +54,8 @@ export default async function HubPage() {
   const finance = resolveClubFinance(club, movements);
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
-  const trainingUnlocked = hasPlayedUnlock(
-    countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
-    TRAINING_THIN.UNLOCK_AFTER_PLAYED,
-  );
+  const leaguePlayedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
+  const trainingUnlocked = hasPlayedUnlock(leaguePlayedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
   const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
   const cupLink =
     phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
@@ -71,6 +69,7 @@ export default async function HubPage() {
       leaguePositionLabel={leaguePositionLabel}
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
+      playedCount={leaguePlayedCount}
       todayUtc={utcDateString()}
       seasonReport={seasonReport}
       cupLink={cupLink}
