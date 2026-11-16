@@ -5,6 +5,7 @@ import { AtmosphereLayer, ClubCrest } from '@/components/assets';
 import { ConfirmStartSeasonButton } from '@/components/season/ConfirmStartSeasonButton';
 import { SeasonReportView } from '@/components/season/SeasonReportView';
 import type { ClubDto } from '@/lib/club/types';
+import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import {
@@ -100,6 +101,12 @@ export function EarlyClubHub({
   }).slice(0, 5);
   const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
+  const kickoffSentence = kickoffBlockReason({
+    matchesBlocked,
+    competition: nextFixture?.competition,
+    lastPlayedAt: lastPlayedAt !== undefined ? lastPlayedAt : lastPlayedFixture?.playedAt,
+    now,
+  });
   const message =
     phase === 'OFFSEASON'
       ? {
@@ -107,7 +114,7 @@ export function EarlyClubHub({
           subject: `${status.seasonLabel} zamknięty`,
           body: 'Sezon ligowy dobiegł końca. Przejrzyj raport i potwierdź start kolejnego sezonu w tej samej lidze.',
         }
-      : buildWelcomeMessage(club, nextFixture);
+      : buildWelcomeMessage(club, nextFixture, kickoffSentence);
   const event =
     phase === 'OFFSEASON'
       ? {
