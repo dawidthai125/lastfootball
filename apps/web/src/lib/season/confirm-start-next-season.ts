@@ -21,15 +21,11 @@ import { buildAcademyIntakeDraft } from '@/lib/academy/intake';
 import { renewSponsorAndPayBase } from '@/lib/sponsors/actions';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import type { PlayerRowDto } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { planSeasonDeparture } from '@/lib/season/departure';
-import {
-  SEASON_GOAL_BONUS,
-  SEASON_GOAL_MET,
-  SEASON_GOAL_MISSED,
-  seasonGoalMet,
-} from '@/lib/season/season-goal';
+import { settleSeasonGoal } from '@/lib/season/season-goal';
 
 /**
  * Confirm N+1 (D82 · D85) — sole path into Season N+1.
@@ -60,7 +56,7 @@ export async function confirmStartNextSeason(
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
     .select(
-      'id, name, short_name, season_number, season_phase, league_tier, cash_balance, season_goal_paid_for',
+      'id, name, short_name, season_number, season_phase, league_tier, cash_balance, season_goal_paid_for, season_goal_note',
     )
     .eq('owner_id', user.id)
     .maybeSingle();
@@ -78,6 +74,7 @@ export async function confirmStartNextSeason(
     league_tier: string | null;
     cash_balance: number;
     season_goal_paid_for: number | null;
+    season_goal_note: string | null;
   };
 
   if (row.season_phase !== 'offseason') {
@@ -135,6 +132,42 @@ export async function confirmStartNextSeason(
     return { error: sponsor.error };
   }
 
+  const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
+  const settlement = settleSeasonGoal({
+    position: playerRow?.position ?? null,
+    rowCount: table.rows.length,
+    endedSeason,
+    paidFor: row.season_goal_paid_for,
+    note: row.season_goal_note,
+  });
+  const goalBonus = settlement.bonus;
+  const goalNote = settlement.note;
+  const nextCash = sponsor.nextCash + goalBonus;
+
+  if (row.season_goal_paid_for !== endedSeason) {
+    const { data: settledRows, error: goalErr } = await supabase
+      .from('clubs')
+      .update({
+        cash_balance: nextCash,
+        season_goal_paid_for: endedSeason,
+        season_goal_note: goalNote,
+      } as never)
+      .eq('id', clubId)
+      .eq('season_phase', 'offseason')
+      .select('id');
+    if (goalErr || !settledRows || settledRows.length === 0) {
+      return { error: 'Nie udało się zapisać celu sezonu.' };
+    }
+    if (goalBonus > 0) {
+      await supabase.from('finance_movements').insert({
+        club_id: clubId,
+        category: 'season_goal',
+        label: 'Cel sezonu · górna połowa',
+        amount: goalBonus,
+      } as never);
+    }
+  }
+
   const { error: delErr } = await supabase.from('fixtures').delete().eq('club_id', clubId);
   if (delErr) {
     return { error: 'Nie udało się wyczyścić terminarza.' };
@@ -162,44 +195,29 @@ export async function confirmStartNextSeason(
     return { error: hAge.error };
   }
 
-  const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
-  const goalMet = playerRow != null && seasonGoalMet(playerRow.position, table.rows.length);
-  const alreadyPaid = row.season_goal_paid_for === endedSeason;
-  const goalBonus = goalMet && !alreadyPaid ? SEASON_GOAL_BONUS : 0;
-  const goalNote = goalMet ? SEASON_GOAL_MET : SEASON_GOAL_MISSED;
-  const nextCash = sponsor.nextCash + goalBonus;
-
   const departure = await applySeasonDeparture(supabase, clubId, endedSeason);
   if (!departure.ok) {
     await revertSeasonTransitionHAge(clubId, hAgePort, hAge.snapshot);
     return { error: departure.error };
   }
 
-  const { error: updErr } = await supabase
+  const { data: opened, error: updErr } = await supabase
     .from('clubs')
     .update({
       season_number: nextSeason,
       season_phase: 'in_season',
       league_tier: nextTier,
       cash_balance: nextCash,
-      season_goal_paid_for: goalBonus > 0 ? endedSeason : row.season_goal_paid_for,
+      season_goal_paid_for: endedSeason,
       season_goal_note: goalNote,
     } as never)
     .eq('id', clubId)
-    .eq('season_phase', 'offseason');
+    .eq('season_phase', 'offseason')
+    .select('id');
 
-  if (updErr) {
+  if (updErr || !opened || opened.length === 0) {
     await revertSeasonTransitionHAge(clubId, hAgePort, hAge.snapshot);
     return { error: 'Nie udało się otworzyć nowego sezonu.' };
-  }
-
-  if (goalBonus > 0) {
-    await supabase.from('finance_movements').insert({
-      club_id: clubId,
-      category: 'season_goal',
-      label: 'Cel sezonu · górna połowa',
-      amount: goalBonus,
-    } as never);
   }
 
   revalidatePath('/', 'layout');
@@ -223,6 +241,7 @@ async function applySeasonDeparture(
   );
   if (!plan.retireId) return { ok: true };
 
+  const retiree = roster.find((player) => player.id === plan.retireId);
   const now = new Date().toISOString();
   const { error: leaveErr } = await supabase
     .from('players')
@@ -231,6 +250,19 @@ async function applySeasonDeparture(
     .eq('club_id', clubId)
     .is('departed_at', null);
   if (leaveErr) return { ok: false, error: 'Nie udało się zakończyć kariery zawodnika.' };
+
+  const restoreRetiree = async () => {
+    if (!retiree) return;
+    await supabase
+      .from('players')
+      .update({
+        status: retiree.status,
+        departed_at: null,
+        starter: retiree.starter,
+      } as never)
+      .eq('id', retiree.id)
+      .eq('club_id', clubId);
+  };
 
   if (plan.promoteId) {
     const { error: promoteErr } = await supabase
@@ -245,12 +277,50 @@ async function applySeasonDeparture(
       .eq('club_id', clubId)
       .eq('academy_track', true)
       .is('departed_at', null);
-    if (promoteErr) return { ok: false, error: 'Nie udało się wprowadzić zawodnika z akademii.' };
+    if (promoteErr) {
+      await restoreRetiree();
+      return { ok: false, error: 'Nie udało się wprowadzić zawodnika z akademii.' };
+    }
     return { ok: true };
   }
 
-  const draft = buildAcademyIntakeDraft(clubId, roster, seasonNumber);
-  if ('error' in draft) return { ok: false, error: draft.error };
+  const { data: shirtRows, error: shirtErr } = await supabase
+    .from('players')
+    .select('shirt_number')
+    .eq('club_id', clubId);
+  if (shirtErr || !shirtRows) {
+    await restoreRetiree();
+    return { ok: false, error: 'Nie udało się uzupełnić kadry.' };
+  }
+  const seen = new Set(roster.map((player) => player.shirtNumber));
+  const blockers: PlayerRowDto[] = (shirtRows as { shirt_number: number | null }[])
+    .map((shirt) => shirt.shirt_number)
+    .filter((shirt): shirt is number => typeof shirt === 'number' && !seen.has(shirt))
+    .map((shirt) => ({
+      id: `shirt-${shirt}`,
+      clubId,
+      name: 'Numer',
+      shirtNumber: shirt,
+      pos: 'N',
+      role: 'ST',
+      starter: false,
+      captain: false,
+      age: 20,
+      skill: 40,
+      potential: 40,
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      departedAt: null,
+      transferListedAt: null,
+      academyTrack: false,
+      promotedAt: null,
+    }));
+  const draft = buildAcademyIntakeDraft(clubId, [...roster, ...blockers], seasonNumber);
+  if ('error' in draft) {
+    await restoreRetiree();
+    return { ok: false, error: draft.error };
+  }
   const { error: insertErr } = await supabase.from('players').insert({
     id: draft.id,
     club_id: clubId,
@@ -270,6 +340,9 @@ async function applySeasonDeparture(
     promoted_at: now,
     transfer_listed_at: null,
   } as never);
-  if (insertErr) return { ok: false, error: 'Nie udało się uzupełnić kadry.' };
+  if (insertErr) {
+    await restoreRetiree();
+    return { ok: false, error: 'Nie udało się uzupełnić kadry.' };
+  }
   return { ok: true };
 }

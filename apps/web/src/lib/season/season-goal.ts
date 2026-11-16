@@ -16,3 +16,24 @@ export function seasonGoalMet(position: number, rowCount: number): boolean {
   if (place < 1 || rows < 1) return false;
   return place <= Math.ceil(rows / 2);
 }
+
+/** Closed seasons stay closed. A retry must not recompute the bonus. */
+export function settleSeasonGoal(input: {
+  readonly position: number | null;
+  readonly rowCount: number;
+  readonly endedSeason: number;
+  readonly paidFor: number | null;
+  readonly note: string | null;
+}): { readonly bonus: number; readonly note: string } {
+  if (input.paidFor === input.endedSeason) {
+    return {
+      bonus: 0,
+      note: input.note === SEASON_GOAL_MET ? SEASON_GOAL_MET : SEASON_GOAL_MISSED,
+    };
+  }
+  const met = input.position != null && seasonGoalMet(input.position, input.rowCount);
+  return {
+    bonus: met ? SEASON_GOAL_BONUS : 0,
+    note: met ? SEASON_GOAL_MET : SEASON_GOAL_MISSED,
+  };
+}
