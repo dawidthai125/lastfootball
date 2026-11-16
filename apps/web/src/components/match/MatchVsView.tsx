@@ -16,6 +16,7 @@ export function MatchVsView({
   awayShort,
   awayName,
   meta,
+  rivalLines,
 }: {
   matchId: string;
   homeShort: string;
@@ -23,6 +24,7 @@ export function MatchVsView({
   awayShort: string;
   awayName: string;
   meta: string;
+  rivalLines: readonly string[];
 }) {
   return (
     <div className="lf-mp lf-mp--immersive" data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-02">
@@ -51,6 +53,12 @@ export function MatchVsView({
           </div>
         </div>
         <p className="lf-mp__meta">{meta}</p>
+        <p className="lf-mp__eyebrow">Rywal</p>
+        {rivalLines.map((line) => (
+          <p className="lf-mp__meta" key={line}>
+            {line}
+          </p>
+        ))}
         <Link href={matchPrePath(matchId)} className="lf-mp__primary">
           Dalej
         </Link>

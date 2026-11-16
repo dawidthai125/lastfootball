@@ -144,6 +144,7 @@ export async function completeFixture(
         form: p.form ?? 60,
         recentRatings: p.recentRatings ?? [],
         suspensionMatches: p.suspensionMatches ?? 0,
+        injuryMatches: p.injuryMatches ?? 0,
       })),
       { matchKey: row.id, result, roleById },
     );
@@ -156,6 +157,7 @@ export async function completeFixture(
           energy: p.energy,
           form: p.form,
           suspensionMatches: p.suspensionMatches,
+          injuryMatches: p.injuryMatches,
           recentRatings: p.recentRatings,
         },
       ]),

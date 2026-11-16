@@ -14,6 +14,7 @@ export type MatchTruthPatch = {
   readonly energy?: number;
   readonly form?: number;
   readonly suspensionMatches?: number;
+  readonly injuryMatches?: number;
   readonly recentRatings?: readonly number[];
 };
 
@@ -84,6 +85,7 @@ export async function applyMatchDevelopment(
       ...(typeof patch?.suspensionMatches === 'number'
         ? { suspension_matches: patch.suspensionMatches }
         : {}),
+      ...(typeof patch?.injuryMatches === 'number' ? { injury_matches: patch.injuryMatches } : {}),
       ...(patch?.recentRatings ? { recent_ratings: patch.recentRatings } : {}),
     });
   }

@@ -4,6 +4,7 @@ import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import {
   getSquadPlayerById,
+  playerStatusLabel,
   resolveClubSquad,
   resolveMatchBench,
   resolveStartingXi,
@@ -34,6 +35,14 @@ function rowsFromSeed(clubId: string) {
 }
 
 describe('squad SSOT (LFE-PLAYERS-01)', () => {
+  it('labels an injury with the same match plural as a suspension', () => {
+    expect(playerStatusLabel('SUSPENDED', 1)).toBe('Zawieszony · 1 mecz');
+    expect(playerStatusLabel('SUSPENDED', 2)).toBe('Zawieszony · 2 mecze');
+    expect(playerStatusLabel('INJURED', undefined, 1)).toBe('Kontuzja · 1 mecz');
+    expect(playerStatusLabel('INJURED', undefined, 3)).toBe('Kontuzja · 3 mecze');
+    expect(playerStatusLabel('INJURED')).toBe('Kontuzja');
+  });
+
   it('seed generator builds 18 with deterministic s-{tag} ids', () => {
     const clubId = '11111111-2222-3333-4444-555555555555';
     const inserts = buildStarterPlayerInserts(clubId);

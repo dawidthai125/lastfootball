@@ -143,6 +143,17 @@ export function EarlyClubHub({
           </Link>
         ) : null}
         <DailyGoalSuggestion goal={dailyGoal} />
+        {phase === 'SEASON' || phase === 'OFFSEASON' ? (
+          <p className="lf-hub__daily" data-season-goal="top-half">
+            Cel sezonu: górna połowa tabeli.
+            {leaguePositionLabel ? ` ${leaguePositionLabel}.` : ''}
+          </p>
+        ) : null}
+        {club.seasonGoalNote ? (
+          <p className="lf-hub__daily" data-season-goal-note="">
+            {club.seasonGoalNote}
+          </p>
+        ) : null}
       </div>
 
       <div className="lf-hub__body">

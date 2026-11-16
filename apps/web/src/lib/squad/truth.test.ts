@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { playerStatusLabel } from './types';
 import {
   applyMatchSquadTruth,
   matchBooking,
@@ -30,6 +31,7 @@ function player(
     form: partial.form ?? 70,
     recentRatings: partial.recentRatings ?? [],
     suspensionMatches: partial.suspensionMatches ?? 0,
+    injuryMatches: partial.injuryMatches ?? 0,
   };
 }
 
@@ -123,6 +125,15 @@ describe('squad truth training energy', () => {
         status: 'INJURED',
       }),
     ).toEqual({ energy: 68, status: 'READY' });
+    expect(
+      energyAfterTraining({
+        energy: 40,
+        focus: 'regeneration',
+        intensity: 'high',
+        status: 'INJURED',
+        injuryMatches: 2,
+      }),
+    ).toEqual({ energy: 68, status: 'INJURED' });
     expect(
       energyAfterTraining({
         energy: 90,
@@ -234,7 +245,71 @@ describe('applyMatchSquadTruth', () => {
     });
     expect(after?.status).toBe('SUSPENDED');
     expect(after?.suspensionMatches).toBe(found!.matches);
+    expect(after?.injuryMatches).toBe(0);
     expect(matchBooking(found!.id, 'md-9')).toEqual(matchBooking(found!.id, 'md-9'));
+  });
+
+  it('sets injuryMatches from energy before the match and does not book a card', () => {
+    const rested = playerWho('INJURED', 40);
+    const tired = playerWho('INJURED', 24);
+    expect(rested?.injuryMatches).toBe(1);
+    expect(rested?.suspensionMatches).toBe(0);
+    expect(matchBooking(rested!.id, 'md-9')).not.toBeNull();
+    expect(tired?.injuryMatches).toBe(2);
+    expect(tired?.suspensionMatches).toBe(0);
+    expect(tired?.status).toBe('INJURED');
+  });
+
+  it('counts down an injury separately from a suspension', () => {
+    const [still] = applyMatchSquadTruth(
+      [
+        player({
+          id: 'hurt-2',
+          status: 'INJURED',
+          injuryMatches: 2,
+          suspensionMatches: 2,
+          energy: 15,
+        }),
+      ],
+      { matchKey: 'md-9', result: 'draw', roleById: { 'hurt-2': 'out' } },
+    );
+    expect(still?.injuryMatches).toBe(1);
+    expect(still?.status).toBe('INJURED');
+    expect(still?.suspensionMatches).toBe(2);
+    expect(still?.energy).toBe(29);
+
+    const [fit] = applyMatchSquadTruth(
+      [
+        player({
+          id: 'hurt-1',
+          status: 'INJURED',
+          injuryMatches: 1,
+          suspensionMatches: 2,
+          energy: 15,
+        }),
+      ],
+      { matchKey: 'md-9', result: 'loss', roleById: { 'hurt-1': 'out' } },
+    );
+    expect(fit?.injuryMatches).toBe(0);
+    expect(fit?.status).toBe('READY');
+    expect(fit?.suspensionMatches).toBe(2);
+    expect(fit?.energy).toBe(29);
+
+    const [banned] = applyMatchSquadTruth(
+      [
+        player({
+          id: 'ban-keep',
+          status: 'SUSPENDED',
+          suspensionMatches: 2,
+          injuryMatches: 2,
+          energy: 40,
+        }),
+      ],
+      { matchKey: 'md-9', result: 'draw', roleById: { 'ban-keep': 'out' } },
+    );
+    expect(banned?.suspensionMatches).toBe(1);
+    expect(banned?.injuryMatches).toBe(2);
+    expect(banned?.status).toBe('SUSPENDED');
   });
 
   it('raises energy for a player left out', () => {
@@ -247,5 +322,30 @@ describe('applyMatchSquadTruth', () => {
     expect(after?.energy).toBe(64);
     expect(after?.recentRatings).toEqual([]);
     expect(after?.status).toBe('READY');
+  });
+});
+
+function playerWho(status: 'INJURED', energyBefore: number): SquadTruthPlayer | undefined {
+  for (let i = 0; i < 2000; i += 1) {
+    const id = `term-${energyBefore}-${i}`;
+    if (!matchBooking(id, 'md-9')) continue;
+    const [after] = applyMatchSquadTruth([player({ id, energy: energyBefore, status: 'READY' })], {
+      matchKey: 'md-9',
+      result: 'draw',
+      roleById: { [id]: 'xi' },
+    });
+    if (after?.status === status) return after;
+  }
+  return undefined;
+}
+
+describe('playerStatusLabel', () => {
+  it('counts injury matches with the same plural as a suspension', () => {
+    expect(playerStatusLabel('INJURED', 0, 1)).toBe('Kontuzja · 1 mecz');
+    expect(playerStatusLabel('INJURED', 0, 2)).toBe('Kontuzja · 2 mecze');
+    expect(playerStatusLabel('INJURED', 3, 4)).toBe('Kontuzja · 4 mecze');
+    expect(playerStatusLabel('INJURED', 2, 0)).toBe('Kontuzja');
+    expect(playerStatusLabel('SUSPENDED', 1, 2)).toBe('Zawieszony · 1 mecz');
+    expect(playerStatusLabel('SUSPENDED', 3)).toBe('Zawieszony · 3 mecze');
   });
 });

@@ -89,6 +89,7 @@ export async function completeTrainingSession(
     pos: p.pos,
     groups: p.groups,
     energy: p.energy,
+    injuryMatches: p.injuryMatches,
   }));
   const impulseKey = `${today}:${input.focusId}:${input.intensityId}`;
   const coached = input.coachGroup ?? null;
