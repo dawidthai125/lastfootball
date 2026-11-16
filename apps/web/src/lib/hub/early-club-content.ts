@@ -73,12 +73,17 @@ export function buildLastMatchStrip(
 export function buildWelcomeMessage(
   club: ClubDto,
   nextFixture: FixtureDto | null = null,
+  kickoffSentence: string | null = null,
 ): HubWelcomeMessage {
   if (nextFixture) {
+    const block = kickoffSentence?.trim() ?? '';
     return {
       from: 'Zarząd',
       subject: `Kolejka ${nextFixture.matchday} czeka`,
-      body: `Następny rywal: ${nextFixture.opponent.name}. Przygotuj skład i wyjdź na boisko — to Twoja sprawa dnia.`,
+      body:
+        block.length > 0
+          ? `${block} Następny rywal: ${nextFixture.opponent.name}.`
+          : `Następny rywal: ${nextFixture.opponent.name}. Przygotuj skład i wyjdź na boisko — to Twoja sprawa dnia.`,
     };
   }
   return {
