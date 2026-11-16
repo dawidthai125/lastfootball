@@ -18,6 +18,8 @@ export type FixtureDto = {
   readonly awayScore: number | null;
   readonly playedAt: string | null;
   readonly createdAt: string;
+  /** Accepted post-match note. Absent or null when the model did not answer. */
+  readonly matchNote?: string | null;
   /** Home club pitch, 0 when unknown. Both viewers of a shared match must carry the same value. */
   readonly homePitchLevel?: number;
   /** Home club stands, 0 when unknown. */
@@ -48,4 +50,5 @@ export type FixtureRow = {
   away_score: number | null;
   played_at: string | null;
   created_at: string;
+  match_note?: string | null;
 };

@@ -4,6 +4,7 @@ import {
   acceptMatchNote,
   composeMatchNote,
   matchNoteProviders,
+  matchNoteSaveStillWaiting,
   type MatchNoteFacts,
 } from './match-note';
 
@@ -81,5 +82,24 @@ describe('composeMatchNote', () => {
       fetchFn,
     );
     expect(note).toBeNull();
+  });
+});
+
+describe('matchNoteSaveStillWaiting', () => {
+  const pending = {
+    status: 'upcoming',
+    match_note: null,
+    home_score: 1,
+    away_score: 0,
+  };
+
+  it('waits only while the same score is not played yet', () => {
+    expect(matchNoteSaveStillWaiting(pending, 1, 0)).toBe(true);
+    expect(matchNoteSaveStillWaiting({ ...pending, status: 'played' }, 1, 0)).toBe(false);
+    expect(
+      matchNoteSaveStillWaiting({ ...pending, match_note: 'Lastovia wygrała 1:0.' }, 1, 0),
+    ).toBe(false);
+    expect(matchNoteSaveStillWaiting(pending, 2, 0)).toBe(false);
+    expect(matchNoteSaveStillWaiting(null, 1, 0)).toBe(false);
   });
 });

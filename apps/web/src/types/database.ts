@@ -521,6 +521,7 @@ export type Database = {
           away_score: number | null;
           played_at: string | null;
           created_at: string;
+          match_note: string | null;
         };
         Insert: {
           id?: string;
@@ -534,6 +535,7 @@ export type Database = {
           away_score?: number | null;
           played_at?: string | null;
           created_at?: string;
+          match_note?: string | null;
         };
         Update: {
           id?: string;
@@ -547,6 +549,7 @@ export type Database = {
           away_score?: number | null;
           played_at?: string | null;
           created_at?: string;
+          match_note?: string | null;
         };
         Relationships: [
           {

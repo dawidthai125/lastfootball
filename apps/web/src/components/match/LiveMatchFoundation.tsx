@@ -260,6 +260,7 @@ export function LiveMatchFoundation({
         onDismiss={() => setPostMatchOpen(false)}
         rewardLine={rewardLine}
         developmentNames={developmentNames}
+        fixtureId={leagueFixture?.id}
         continueSlot={
           firstMatch ? (
             <CompleteFirstMatchButton />
