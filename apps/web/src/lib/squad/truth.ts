@@ -236,7 +236,7 @@ function applyOne(
   role: MatchRole,
 ): SquadTruthPlayer {
   if (player.status === 'INJURED' && role === 'out') {
-    const left = Math.max(0, player.injuryMatches - 1);
+    const left = Math.max(0, (player.injuryMatches ?? 0) - 1);
     return {
       ...player,
       status: left > 0 ? 'INJURED' : 'READY',

@@ -11,6 +11,8 @@ import {
   resolveSecondaryCtas,
   resolveNavAccess,
 } from '@/lib/hub';
+import { TRAINING_THIN } from '@/lib/training/types';
+import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
 function club(partial?: Partial<ClubDto>): ClubDto {
   return {
@@ -133,8 +135,73 @@ describe('hub session + primary CTA', () => {
     expect(secondary.find((c) => c.id === 'training')?.access).toBe('soft_locked');
     expect(secondary.find((c) => c.id === 'transfers')?.access).toBe('soft_locked');
     expect(secondary.find((c) => c.id === 'finance')?.access).toBe('soft_locked');
+    expect(secondary.find((c) => c.id === 'finance')?.label).toBe('Finanse');
     expect(secondary.find((c) => c.id === 'squad')?.access).toBe('open');
     expect(secondary.find((c) => c.id === 'fixtures')?.access).toBe('soft_locked');
+  });
+
+  it('says why Trening and Transfery are locked without opening them earlier', () => {
+    const early = resolveSecondaryCtas('EARLY_CLUB', { hasFixtures: false, playedCount: 0 });
+    expect(early.find((c) => c.id === 'training')).toMatchObject({
+      access: 'soft_locked',
+      label: `Trening · po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`,
+    });
+    expect(early.find((c) => c.id === 'transfers')).toMatchObject({
+      access: 'soft_locked',
+      label: `Transfery · po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`,
+    });
+
+    const beforeThreshold = resolveSecondaryCtas('SEASON', {
+      hasFixtures: true,
+      playedCount: TRANSFERS_THIN.UNLOCK_AFTER_PLAYED - 1,
+      trainingUnlocked: false,
+      transferWindowOpen: false,
+    });
+    expect(beforeThreshold.find((c) => c.id === 'training')?.access).toBe('soft_locked');
+    expect(beforeThreshold.find((c) => c.id === 'training')?.label).toBe(
+      'Trening · po 2 meczach ligowych',
+    );
+    expect(beforeThreshold.find((c) => c.id === 'transfers')).toMatchObject({
+      access: 'soft_locked',
+      label: 'Transfery · po 2 meczach ligowych',
+    });
+
+    const windowClosed = resolveSecondaryCtas('SEASON', {
+      hasFixtures: true,
+      playedCount: TRANSFERS_THIN.UNLOCK_AFTER_PLAYED,
+      trainingUnlocked: true,
+      transferWindowOpen: false,
+    });
+    expect(windowClosed.find((c) => c.id === 'training')).toMatchObject({
+      access: 'open',
+      label: 'Trening',
+    });
+    expect(windowClosed.find((c) => c.id === 'transfers')).toMatchObject({
+      access: 'soft_locked',
+      label: 'Transfery · okno zamknięte',
+    });
+
+    const open = resolveSecondaryCtas('SEASON', {
+      hasFixtures: true,
+      playedCount: 3,
+      trainingUnlocked: true,
+      transferWindowOpen: true,
+    });
+    expect(open.find((c) => c.id === 'training')?.label).toBe('Trening');
+    expect(open.find((c) => c.id === 'transfers')?.label).toBe('Transfery');
+    expect(open.find((c) => c.id === 'transfers')?.access).toBe('open');
+
+    const windowAlreadyOpen = resolveSecondaryCtas('SEASON', {
+      hasFixtures: true,
+      playedCount: 0,
+      trainingUnlocked: false,
+      transferWindowOpen: true,
+    });
+    expect(windowAlreadyOpen.find((c) => c.id === 'transfers')).toMatchObject({
+      access: 'open',
+      label: 'Transfery',
+    });
+    expect(windowAlreadyOpen.find((c) => c.id === 'training')?.access).toBe('soft_locked');
   });
 });
 
