@@ -54,11 +54,20 @@ function statusStyle(status: MatchStatus): { border: string; bg: string; text: s
   }
 }
 
+export function playedMatchHref(id: string): string {
+  return `/match/${id}`;
+}
+
 function preMatchHref(f: Fixture): string | null {
   if (f.status === 'played') return null;
   if (f.status === 'live') return `/match/${f.id}/live`;
   if (f.status === 'upcoming') return `/match/${f.id}/tunnel`;
   return null;
+}
+
+function rowHref(f: Fixture): string | null {
+  if (f.status === 'played') return playedMatchHref(f.id);
+  return preMatchHref(f);
 }
 
 export function FixturesView({
@@ -164,7 +173,7 @@ export function FixturesView({
         empty="Brak nadchodzących meczów."
         clubShortName={clubShortName}
         onOpen={(f) => {
-          const href = preMatchHref(f);
+          const href = rowHref(f);
           if (href) router.push(href);
         }}
       />
@@ -177,7 +186,10 @@ export function FixturesView({
             : 'Brak rozegranych meczów ligowych.'
         }
         clubShortName={clubShortName}
-        onOpen={() => undefined}
+        onOpen={(f) => {
+          const href = rowHref(f);
+          if (href) router.push(href);
+        }}
       />
     </div>
   );
@@ -236,7 +248,7 @@ function FixtureTable({
         <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {rows.map((f) => {
             const st = statusStyle(f.status);
-            const clickable = Boolean(preMatchHref(f));
+            const clickable = Boolean(rowHref(f));
             return (
               <li
                 key={f.id}
@@ -259,7 +271,7 @@ function FixtureTable({
                 tabIndex={clickable ? 0 : undefined}
               >
                 <ClubCrest shortName={f.opponentShort} clubName={f.opponent} size="sm" />
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <p
                     style={{
                       margin: 0,
@@ -281,6 +293,20 @@ function FixtureTable({
                   >
                     {f.competitionLabel} · {f.whenLabel}
                   </p>
+                  {f.status === 'played' && f.matchNote ? (
+                    <p
+                      style={{
+                        margin: 0,
+                        overflow: 'hidden',
+                        fontSize: 'var(--lf-type-caption)',
+                        color: 'var(--lf-color-text-muted)',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {f.matchNote}
+                    </p>
+                  ) : null}
                 </div>
                 <span
                   style={{
