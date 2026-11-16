@@ -88,6 +88,40 @@
   overflow-wrap: anywhere;
 }
 
+.lf-hub__decision-title a {
+  color: inherit;
+  text-underline-offset: 0.12em;
+}
+
+.lf-hub__last {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+  margin: 0;
+}
+
+.lf-hub__last-label {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--lf-type-label);
+  letter-spacing: var(--lf-type-tracking-label);
+  text-transform: uppercase;
+  color: var(--lf-color-text-faint);
+}
+
+.lf-hub__last-score {
+  color: var(--lf-color-text-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lf-hub__last-note {
+  margin: 0;
+  font-size: var(--lf-type-caption);
+  color: var(--lf-color-text-muted);
+}
+
 .lf-hub__decision-meta {
   margin: var(--lf-space-2) 0 0;
   font-size: var(--lf-type-body);

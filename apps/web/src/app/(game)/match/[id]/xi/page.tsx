@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 
+import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { MatchXiView } from '@/components/match/MatchXiView';
 import { EmptyState, LocationHero } from '@/components/ui';
 import { isFirstMatchCompleted } from '@/lib/club/types';
@@ -10,6 +11,7 @@ import { getFixtureByIdForClub } from '@/lib/fixtures';
 import { resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchPrePath } from '@/lib/match/match-path';
+import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
@@ -21,6 +23,8 @@ type PageProps = {
  */
 export default async function MatchXiPage({ params }: PageProps) {
   const { id } = await params;
+  const sentence = await upcomingKickoffSentence(id);
+  if (sentence) return <KickoffBlocked sentence={sentence} />;
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 

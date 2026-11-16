@@ -1,3 +1,4 @@
+import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
 import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveNavAccess } from '@/lib/hub/unlock';
@@ -48,6 +49,29 @@ export function resolvePrimaryCta(
   }
 
   if (DECISION_PHASES.has(phase) && session === 'matchday' && ctx.nextFixture) {
+    const sentence = kickoffBlockReason({
+      matchesBlocked: ctx.matchesBlocked ?? false,
+      competition: ctx.nextFixture.competition,
+      lastPlayedAt:
+        ctx.lastPlayedAt !== undefined ? ctx.lastPlayedAt : ctx.lastPlayedFixture?.playedAt,
+      now: ctx.now ?? new Date(),
+    });
+    if (sentence) {
+      if (ctx.matchesBlocked) {
+        return {
+          id: 'confirm-email',
+          label: 'Potwierdź email',
+          href: '/profile',
+          access: 'open',
+        };
+      }
+      return {
+        id: 'matchday-blocked',
+        label: sentence,
+        href: '/matches',
+        access: 'open',
+      };
+    }
     return {
       id: 'play-next-match',
       label: UI_COPY.goToMatch,

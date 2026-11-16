@@ -8,7 +8,16 @@ import { formatSeasonLabel } from '@/lib/season/types';
 export type LastMatchStripModel = {
   readonly title: string;
   readonly detail: string;
+  /** Played fixture opens on its match page. Null when there is no played fixture. */
+  readonly href: string | null;
+  /** Accepted note. Null when the fixture has none — never invented. */
+  readonly note: string | null;
 };
+
+function noteLine(note: string | null | undefined): string | null {
+  if (!note || note.trim().length === 0) return null;
+  return note;
+}
 
 export type HubWelcomeMessage = {
   readonly from: string;
@@ -33,17 +42,31 @@ export function buildLastMatchStrip(
   club: ClubDto,
   lastPlayed: FixtureDto | null = null,
 ): LastMatchStripModel {
-  if (lastPlayed && lastPlayed.homeScore != null && lastPlayed.awayScore != null) {
-    const us = lastPlayed.isHome ? lastPlayed.homeScore : lastPlayed.awayScore;
-    const them = lastPlayed.isHome ? lastPlayed.awayScore : lastPlayed.homeScore;
+  if (lastPlayed) {
+    const href = `/match/${lastPlayed.id}`;
+    const note = noteLine(lastPlayed.matchNote);
+    if (lastPlayed.homeScore != null && lastPlayed.awayScore != null) {
+      const us = lastPlayed.isHome ? lastPlayed.homeScore : lastPlayed.awayScore;
+      const them = lastPlayed.isHome ? lastPlayed.awayScore : lastPlayed.homeScore;
+      return {
+        title: 'Ostatni mecz',
+        detail: `Kolejka ${lastPlayed.matchday} · ${club.name} ${us}:${them} ${lastPlayed.opponent.name}`,
+        href,
+        note,
+      };
+    }
     return {
       title: 'Ostatni mecz',
-      detail: `Kolejka ${lastPlayed.matchday} · ${club.name} ${us}:${them} ${lastPlayed.opponent.name}`,
+      detail: `Kolejka ${lastPlayed.matchday} · ${club.name} vs ${lastPlayed.opponent.name}`,
+      href,
+      note,
     };
   }
   return {
     title: 'Ostatni mecz',
     detail: `Pierwszy mecz · ${club.name} vs ${FIRST_MATCH_BOT.name} · za tobą`,
+    href: null,
+    note: null,
   };
 }
 

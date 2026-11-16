@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
 
 import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
+import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
 import {
   countPlayedInList,
   ensureClubFixtures,
@@ -50,7 +52,10 @@ export default async function HubPage() {
   const seasonReport =
     phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber, club.leagueTier) : null;
 
-  const movements = await listClubFinanceMovements(club.id, 5);
+  const [movements, emailGate] = await Promise.all([
+    listClubFinanceMovements(club.id, 5),
+    loadEmailGate(club.ownerId),
+  ]);
   const finance = resolveClubFinance(club, movements);
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
@@ -73,6 +78,8 @@ export default async function HubPage() {
       todayUtc={utcDateString()}
       seasonReport={seasonReport}
       cupLink={cupLink}
+      matchesBlocked={emailGate.matchesBlocked}
+      lastPlayedAt={latestPlayedAt(fixtures)}
     />
   );
 }
