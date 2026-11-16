@@ -3,10 +3,16 @@
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { useClub, useHasFixtures, useTrainingUnlocked } from '@/components/club/ClubProvider';
+import {
+  useClub,
+  useHasFixtures,
+  usePlayedCount,
+  useTrainingUnlocked,
+} from '@/components/club/ClubProvider';
 import { SoftLockState } from '@/components/ui/SoftLockState';
 import { resolveHubPhase, isModuleSoftLocked } from '@/lib/hub';
 import { resolveNavItemForPathname } from '@/lib/hub/route-access';
+import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
 import { UI_COPY } from '@/lib/ui/copy';
 
 /**
@@ -19,6 +25,7 @@ export function SoftLockRouteGate({ children }: { children: ReactNode }) {
   const club = useClub();
   const hasFixtures = useHasFixtures();
   const trainingUnlocked = useTrainingUnlocked();
+  const playedCount = usePlayedCount();
   const phase = resolveHubPhase(club, { hasFixtures });
   const ctx = {
     transferWindowOpen: club?.transferWindowOpen,
@@ -34,7 +41,7 @@ export function SoftLockRouteGate({ children }: { children: ReactNode }) {
     <SoftLockState
       waId="ILL-002"
       illustrationSrc="/assets/world-art/ill-002-softlock-training.png"
-      title={UI_COPY.softLockTitle(item.label)}
+      title={resolveNavLockLabel(item.id, item.label, playedCount)}
       reason={UI_COPY.softLockReason}
     />
   );
