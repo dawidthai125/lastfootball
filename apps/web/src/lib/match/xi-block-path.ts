@@ -6,10 +6,10 @@ export function lineupEditorHref(matchId: string): string {
 }
 
 /** VS skip control: legal XI goes live; a blocked XI goes to the editor. */
-export function skipOrLineupLink(input: {
-  matchId: string;
-  xiBlocked: boolean;
-}): { href: string; label: string } {
+export function skipOrLineupLink(input: { matchId: string; xiBlocked: boolean }): {
+  href: string;
+  label: string;
+} {
   if (input.xiBlocked) {
     return { href: lineupEditorHref(input.matchId), label: 'Popraw skład' };
   }
