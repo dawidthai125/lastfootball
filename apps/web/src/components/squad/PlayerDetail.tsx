@@ -5,6 +5,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/lib/finance/format-money';
 import { ContractTalkForm } from '@/components/squad/ContractTalkForm';
 import { LoanButton } from '@/components/squad/LoanButton';
+import { CaptainButton } from '@/components/squad/CaptainButton';
 import { SetPieceButton } from '@/components/squad/SetPieceButton';
 import { demandWage, isTalkPersonality } from '@/lib/squad/contract-talk';
 import { personalityLabel, type Personality } from '@/lib/squad/depth';
@@ -258,6 +259,7 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
         ))}
       </dl>
       <div style={{ marginTop: 'var(--lf-space-3)' }}>
+        <CaptainButton playerId={player.id} active={player.captain === true} />
         <SetPieceButton
           playerId={player.id}
           active={player.setPiece === true}

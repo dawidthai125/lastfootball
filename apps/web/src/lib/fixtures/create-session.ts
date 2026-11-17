@@ -160,6 +160,9 @@ export function createSessionFromLeagueFixture(
     : fixture.isHome
       ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
       : homeIds[0]!;
+  const ourSetPiece = (our.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null;
+  const homeSetPiece = fixture.isHome ? ourSetPiece : null;
+  const awaySetPiece = fixture.isHome ? null : ourSetPiece;
 
   const homeName = fixture.isHome ? club.name : fixture.opponent.name;
   const awayName = fixture.isHome ? fixture.opponent.name : club.name;
@@ -180,11 +183,13 @@ export function createSessionFromLeagueFixture(
       formationCode: homeFormation,
       playerIds: homeIds,
       captainPlayerId: homeCaptain,
+      setPiecePlayerId: homeSetPiece,
     }),
     awayLineup: createLineup({
       side: 'away',
       formationCode: awayFormation,
       playerIds: awayIds,
+      setPiecePlayerId: awaySetPiece,
     }),
     homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),

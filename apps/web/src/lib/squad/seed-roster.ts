@@ -13,6 +13,8 @@ export type RosterPlayerSeed = {
   readonly pos: string;
   readonly role: PitchRole;
   readonly captain?: boolean;
+  /** Club set-piece taker (stałe fragmenty). */
+  readonly setPiece?: boolean;
   /** true = starting XI */
   readonly starter: boolean;
   /**

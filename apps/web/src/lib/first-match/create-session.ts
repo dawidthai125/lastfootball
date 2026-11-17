@@ -63,6 +63,7 @@ export function createSessionFromFirstMatch(
   const homeIds = homePlayers.map((p) => p.id);
   const awayIds = awayPlayers.map((p) => p.id);
   const captain = our.find((p) => p.captain)?.id ?? homeIds[0]!;
+  const setPiecePlayerId = (our.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null;
 
   const session = createMatch({
     seed: hashSeed(`${FIRST_MATCH_ID}:${club.id}`),
@@ -78,11 +79,13 @@ export function createSessionFromFirstMatch(
       formationCode,
       playerIds: homeIds,
       captainPlayerId: captain as PlayerId,
+      setPiecePlayerId,
     }),
     awayLineup: createLineup({
       side: 'away',
       formationCode,
       playerIds: awayIds,
+      setPiecePlayerId: null,
     }),
     homeBench: createBench(
       'home',

@@ -174,6 +174,7 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     role: r.role as PitchRole,
     starter: true,
     captain: r.captain || undefined,
+    setPiece: r.setPiece === true || undefined,
     skill: r.skill,
     groups: r.groups,
     energy: r.energy,

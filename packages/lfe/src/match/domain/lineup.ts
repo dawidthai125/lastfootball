@@ -18,6 +18,8 @@ export interface Lineup {
   readonly slots: readonly LineupSlot[];
   /** Captain, if selected. */
   readonly captainPlayerId: PlayerId | null;
+  /** Set-piece taker, if selected. */
+  readonly setPiecePlayerId: PlayerId | null;
 }
 
 export interface CreateLineupInput {
@@ -26,6 +28,7 @@ export interface CreateLineupInput {
   /** Exactly 11 player ids, order = formation slotIndex 0..10. */
   playerIds: readonly PlayerId[];
   captainPlayerId?: PlayerId | null;
+  setPiecePlayerId?: PlayerId | null;
   formation?: Formation;
 }
 
@@ -54,5 +57,6 @@ export function createLineup(input: CreateLineupInput): Lineup {
     formation,
     slots: Object.freeze(slots),
     captainPlayerId: input.captainPlayerId ?? null,
+    setPiecePlayerId: input.setPiecePlayerId ?? null,
   });
 }

@@ -220,6 +220,7 @@ function parseXi(value: Json | null): RosterPlayerSeed[] | null {
       role: (typeof row.role === 'string' ? row.role : 'CM') as PitchRole,
       starter: true,
       captain: row.captain === true,
+      setPiece: row.setPiece === true || undefined,
       skill: row.skill,
       groups: isGroups(row.groups) ? row.groups : undefined,
       energy: typeof row.energy === 'number' ? row.energy : undefined,

@@ -138,6 +138,13 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     }
   });
 
+  it('wires our set-piece taker into home lineup setPiecePlayerId', () => {
+    const our = xi(80).map((p, i) => (i === 7 ? { ...p, setPiece: true } : p));
+    const session = createSessionFromLeagueFixture(club('ii'), fixture(), our);
+    expect(session.getMatchState().homeLineup.setPiecePlayerId).toBe('p-7');
+    expect(session.getMatchState().awayLineup.setPiecePlayerId).toBeNull();
+  });
+
   it('puts the club bench on the manager side', () => {
     const bench = [
       {
