@@ -39,7 +39,7 @@ export function validateStartingXi(starters: readonly SquadPlayerDto[]): XiValid
   const blocked = active.filter((p) => p.status === 'INJURED' || p.status === 'SUSPENDED');
   if (blocked.length > 0) {
     errors.push(
-      `${blocked.length} zawodnik${blocked.length === 1 ? '' : 'ów'} w XI ma status kontuzji lub zawieszenia — usuń ich ze składu.`,
+      `${blocked.length} zawodnik${blocked.length === 1 ? '' : 'ów'} w XI ma status kontuzji lub zawieszenia — usuń ${blocked.length === 1 ? 'go' : 'ich'} ze składu.`,
     );
   }
 
