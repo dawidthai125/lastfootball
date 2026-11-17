@@ -16,6 +16,7 @@ export type MatchTruthPatch = {
   readonly suspensionMatches?: number;
   readonly injuryMatches?: number;
   readonly recentRatings?: readonly number[];
+  readonly morale?: number;
 };
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
@@ -87,6 +88,7 @@ export async function applyMatchDevelopment(
         : {}),
       ...(typeof patch?.injuryMatches === 'number' ? { injury_matches: patch.injuryMatches } : {}),
       ...(patch?.recentRatings ? { recent_ratings: patch.recentRatings } : {}),
+      ...(typeof patch?.morale === 'number' ? { morale: patch.morale } : {}),
     });
   }
 

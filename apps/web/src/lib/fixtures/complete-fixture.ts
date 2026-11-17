@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { readClubBuild } from '@/lib/club/read-build';
+import { isPersonality } from '@/lib/squad/depth';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
@@ -113,6 +114,7 @@ export async function completeFixture(
     }
 
     const players = await listClubPlayers(clubId);
+    const build = await readClubBuild(supabase, clubId);
     const seniors = filterSeniorPlayers(players);
     const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
     let home = Math.trunc(homeScore);
@@ -145,8 +147,10 @@ export async function completeFixture(
         recentRatings: p.recentRatings ?? [],
         suspensionMatches: p.suspensionMatches ?? 0,
         injuryMatches: p.injuryMatches ?? 0,
+        morale: p.morale ?? 60,
+        personality: isPersonality(p.personality) ? p.personality : 'spokojny',
       })),
-      { matchKey: row.id, result, roleById },
+      { matchKey: row.id, result, roleById, physio: build.physio },
     );
     const truthById = Object.fromEntries(
       afterTruth.map((p) => [
@@ -159,6 +163,7 @@ export async function completeFixture(
           suspensionMatches: p.suspensionMatches,
           injuryMatches: p.injuryMatches,
           recentRatings: p.recentRatings,
+          morale: p.morale,
         },
       ]),
     );

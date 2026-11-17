@@ -87,7 +87,7 @@ describe('resolveClubTraining (LFE-TRAINING-01)', () => {
     expect(dto.lockReason).toBeNull();
     expect(dto.defaults.focusId).toBe('tactics');
     expect(dto.defaults.intensityId).toBe('normal');
-    expect(dto.individualAvailable).toBe(false);
+    expect(dto.individualAvailable).toBe(true);
     expect(dto.readiness.active).toBe(18);
     expect(dto.readiness.ready).toBe(18);
   });

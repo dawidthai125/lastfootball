@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
+import { SetPieceButton } from '@/components/squad/SetPieceButton';
+import { personalityLabel, type Personality } from '@/lib/squad/depth';
 import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
 
@@ -204,6 +206,11 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
     { label: 'Do', value: c.until },
     { label: 'Klauzula', value: formatMoney(c.clause) },
     { label: 'Rola', value: c.role },
+    { label: 'Morale', value: String(player.morale ?? 60) },
+    {
+      label: 'Osobowość',
+      value: personalityLabel((player.personality as Personality | undefined) ?? 'spokojny'),
+    },
   ];
 
   return (
@@ -242,6 +249,13 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
           </div>
         ))}
       </dl>
+      <div style={{ marginTop: 'var(--lf-space-3)' }}>
+        <SetPieceButton
+          playerId={player.id}
+          active={player.setPiece === true}
+          goalkeeper={player.position === 'BR'}
+        />
+      </div>
     </SectionShell>
   );
 }

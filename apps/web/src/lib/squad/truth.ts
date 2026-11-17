@@ -1,3 +1,5 @@
+import { injuryLeft, moraleDelta, nextMorale, type Personality } from '@/lib/squad/depth';
+
 /** Pure squad truth: attributes, wages, training energy, match availability. No I/O. */
 
 type Status = 'READY' | 'INJURED' | 'SUSPENDED' | 'TIRED' | 'DEPARTED';
@@ -28,6 +30,8 @@ export type SquadTruthPlayer = {
   readonly recentRatings: readonly number[];
   readonly suspensionMatches: number;
   readonly injuryMatches: number;
+  readonly morale?: number;
+  readonly personality?: Personality;
 };
 
 /** Finite integer in 1..99. Non-finite → 1. */
@@ -234,9 +238,10 @@ function applyOne(
   matchKey: string,
   result: MatchResult,
   role: MatchRole,
+  physio = false,
 ): SquadTruthPlayer {
   if (player.status === 'INJURED' && role === 'out') {
-    const left = Math.max(0, (player.injuryMatches ?? 0) - 1);
+    const left = injuryLeft(player.injuryMatches ?? 0, physio);
     return {
       ...player,
       status: left > 0 ? 'INJURED' : 'READY',
@@ -323,9 +328,23 @@ export function applyMatchSquadTruth(
     readonly matchKey: string;
     readonly result: MatchResult;
     readonly roleById: Readonly<Record<string, MatchRole>>;
+    readonly physio?: boolean;
   },
 ): SquadTruthPlayer[] {
-  return players.map((player) =>
-    applyOne(player, input.matchKey, input.result, input.roleById[player.id] ?? 'out'),
-  );
+  return players.map((player) => {
+    const role = input.roleById[player.id] ?? 'out';
+    const next = applyOne(player, input.matchKey, input.result, role, input.physio === true);
+    if (typeof player.morale !== 'number') return next;
+    return {
+      ...next,
+      morale: nextMorale(
+        player.morale,
+        moraleDelta({
+          result: input.result,
+          role,
+          personality: player.personality ?? 'spokojny',
+        }),
+      ),
+    };
+  });
 }

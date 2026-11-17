@@ -88,6 +88,6 @@ export function resolveClubTraining(input: ResolveClubTrainingInput): TrainingDt
       focusId: TRAINING_THIN.DEFAULT_FOCUS_ID,
       intensityId: TRAINING_THIN.DEFAULT_INTENSITY_ID,
     },
-    individualAvailable: false,
+    individualAvailable: unlocked,
   };
 }

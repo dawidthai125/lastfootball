@@ -14,6 +14,8 @@ export type ClubBuild = {
   readonly styleTempo: number;
   /** Width habit 0..8. Missing column stays 0. */
   readonly styleWidth: number;
+  readonly physio: boolean;
+  readonly assistantGroup: CoachGroup | null;
 };
 
 function clampLevel(value: unknown): number {
@@ -51,6 +53,18 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       ? 0
       : clampStyle((width.data as { style_width?: number }).style_width ?? 0);
 
+  const staff = await supabase
+    .from('clubs')
+    .select('physio, assistant_group')
+    .eq('id', clubId)
+    .maybeSingle();
+  const staffRow =
+    staff.error || !staff.data
+      ? null
+      : (staff.data as { physio?: boolean | null; assistant_group?: string | null });
+  const physio = staffRow?.physio === true;
+  const assistantGroup = isCoachGroup(staffRow?.assistant_group) ? staffRow.assistant_group : null;
+
   if (rich.error || !rich.data) {
     return {
       coachGroup: null,
@@ -58,6 +72,8 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       stylePressing,
       styleTempo,
       styleWidth,
+      physio,
+      assistantGroup,
     };
   }
 
@@ -77,5 +93,7 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
     stylePressing,
     styleTempo,
     styleWidth,
+    physio,
+    assistantGroup,
   };
 }

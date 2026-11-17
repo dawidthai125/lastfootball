@@ -6,6 +6,7 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { countPlayedInList, listClubFixtures } from '@/lib/fixtures';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { resolveClubTraining } from '@/lib/training';
 
 /**
@@ -29,6 +30,16 @@ export default async function TrainingPage() {
 
   const supabase = await createClient();
   const build = await readClubBuild(supabase, club.id);
+  const press = await supabase
+    .from('fixtures')
+    .select('id, press_tone')
+    .eq('club_id', club.id)
+    .eq('status', 'played')
+    .order('played_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const pressRow =
+    press.error || !press.data ? null : (press.data as { id: string; press_tone: string | null });
 
   return (
     <TrainingView
@@ -38,6 +49,15 @@ export default async function TrainingPage() {
       stylePressing={build.stylePressing}
       styleTempo={build.styleTempo}
       styleWidth={build.styleWidth}
+      physio={build.physio}
+      assistantGroup={build.assistantGroup}
+      players={filterSeniorPlayers(activePlayers).map((player) => ({
+        id: player.id,
+        name: player.name,
+        energy: player.energy ?? 80,
+      }))}
+      pressFixtureId={pressRow?.id ?? null}
+      pressDone={Boolean(pressRow?.press_tone)}
     />
   );
 }

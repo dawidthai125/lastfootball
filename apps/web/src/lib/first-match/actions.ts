@@ -11,6 +11,8 @@ import { env } from '@/config/env';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
+import { readClubBuild } from '@/lib/club/read-build';
+import { isPersonality } from '@/lib/squad/depth';
 import { applyMatchSquadTruth, groupsFromSkill } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
@@ -58,6 +60,7 @@ export async function completeFirstMatch(
     }
 
     const players = await listClubPlayers(row.id);
+    const build = await readClubBuild(supabase, row.id);
     const seniors = filterSeniorPlayers(players);
     const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
     const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
@@ -79,8 +82,10 @@ export async function completeFirstMatch(
         recentRatings: p.recentRatings ?? [],
         suspensionMatches: p.suspensionMatches ?? 0,
         injuryMatches: p.injuryMatches ?? 0,
+        morale: p.morale ?? 60,
+        personality: isPersonality(p.personality) ? p.personality : 'spokojny',
       })),
-      { matchKey: 'first-match', result, roleById },
+      { matchKey: 'first-match', result, roleById, physio: build.physio },
     );
     const truthById = Object.fromEntries(
       afterTruth.map((p) => [
@@ -93,6 +98,7 @@ export async function completeFirstMatch(
           suspensionMatches: p.suspensionMatches,
           injuryMatches: p.injuryMatches,
           recentRatings: p.recentRatings,
+          morale: p.morale,
         },
       ]),
     );
