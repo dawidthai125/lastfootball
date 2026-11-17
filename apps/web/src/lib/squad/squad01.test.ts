@@ -72,6 +72,12 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     expect(squad.players.filter((p) => p.starter)).toHaveLength(11);
     expect(squad.players.find((p) => p.starter)?.history).toEqual(['W zapisanej jedenastce.']);
     expect(squad.players.find((p) => !p.starter)?.history).toEqual(['Poza zapisaną jedenastką.']);
+    const withNotes = rows.map((player) =>
+      player.starter ? { ...player, recentRatings: [80, 71, 64] } : player,
+    );
+    expect(
+      resolveClubSquad({ id: clubId }, withNotes).players.find((p) => p.starter)?.history,
+    ).toEqual(['Ostatnie noty: 80, 71, 64.', 'W zapisanej jedenastce.']);
     expect(squad.players.every((p) => p.history.join(' ').includes(clubId.slice(0, 8)))).toBe(
       false,
     );

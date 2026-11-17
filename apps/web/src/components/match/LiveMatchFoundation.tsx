@@ -294,7 +294,10 @@ export function LiveMatchFoundation({
         fixtureId={leagueFixture?.id}
         continueSlot={
           firstMatch ? (
-            <CompleteFirstMatchButton />
+            <CompleteFirstMatchButton
+              homeScore={snapshot.homeScore}
+              awayScore={snapshot.awayScore}
+            />
           ) : leagueFixture ? (
             <CompleteLeagueFixtureButton
               fixtureId={leagueFixture.id}
