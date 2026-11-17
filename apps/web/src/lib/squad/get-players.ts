@@ -6,6 +6,9 @@ import type { PlayerRowDto } from '@/lib/squad/types';
 const PLAYER_SELECT =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, form, wage, suspension_matches, injury_matches, recent_ratings';
 
+const DEPTH_SELECT =
+  'id, morale, personality, contract_until, release_clause, set_piece, last_individual_on';
+
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
@@ -34,5 +37,18 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
     : full;
 
   if (result.error || !result.data) return [];
-  return (result.data as PlayerDbRow[]).map(mapPlayerRow).filter((p) => p.status !== 'DEPARTED');
+  const depth = await supabase
+    .from('players')
+    .select(DEPTH_SELECT)
+    .eq('club_id', clubId)
+    .is('departed_at', null);
+  const depthById = new Map<string, Partial<PlayerDbRow>>();
+  if (!depth.error && depth.data) {
+    for (const row of depth.data as Partial<PlayerDbRow>[]) {
+      if (row.id) depthById.set(row.id, row);
+    }
+  }
+  return (result.data as PlayerDbRow[])
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }))
+    .filter((p) => p.status !== 'DEPARTED');
 }

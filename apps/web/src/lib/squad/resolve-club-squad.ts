@@ -1,6 +1,7 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
+import { clauseFromSkill, contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
 import { attributeBars, groupsFromSkill } from '@/lib/squad/truth';
 import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
 import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
@@ -97,12 +98,15 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     status: row.status,
     suspensionMatches: row.suspensionMatches,
     injuryMatches: row.injuryMatches,
+    morale: typeof row.morale === 'number' ? row.morale : 60,
+    personality: row.personality ?? personalityFromId(row.id),
+    setPiece: row.setPiece === true,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
       wage: typeof row.wage === 'number' ? row.wage : displayWage(skill, row.age),
-      until: '30.06.2028',
-      clause: displayClause(skill),
+      until: contractUntilLabel(row.contractUntil),
+      clause: typeof row.releaseClause === 'number' ? row.releaseClause : displayClause(skill),
       role: roleLabel(row.pos, row.captain),
     },
     history: historyLines(row),

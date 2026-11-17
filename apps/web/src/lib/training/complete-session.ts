@@ -48,6 +48,7 @@ export async function completeTrainingSession(
     intensityId: TrainingIntensityId;
     today?: string;
     coachGroup?: CoachGroup | null;
+    assistantGroup?: CoachGroup | null;
     sessionCap?: number;
   },
 ): Promise<CompleteTrainingResult> {
@@ -93,6 +94,7 @@ export async function completeTrainingSession(
   }));
   const impulseKey = `${today}:${input.focusId}:${input.intensityId}`;
   const coached = input.coachGroup ?? null;
+  const assistant = input.assistantGroup ?? null;
   const trained = applyTrainingSessionEffects(
     before,
     input.focusId,
@@ -104,7 +106,9 @@ export async function completeTrainingSession(
     const prev = before[index];
     if (!prev || player.skill <= prev.skill) return player;
     const key = groupKeyForFocus(input.focusId, player.pos ?? '');
-    return applyCoachYield(player, coached, isCoachGroup(key) ? key : null);
+    const coachedPlayer = applyCoachYield(player, coached, isCoachGroup(key) ? key : null);
+    if (assistant === null || assistant === coached) return coachedPlayer;
+    return applyCoachYield(coachedPlayer, assistant, isCoachGroup(key) ? key : null);
   });
   const summary = summarizeTrainingSessionEffects(before, after);
 

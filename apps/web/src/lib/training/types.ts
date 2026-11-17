@@ -65,8 +65,8 @@ export type TrainingDto = {
   readonly moraleHint?: undefined;
   /** Future: match-day lock policy. */
   readonly matchDayPolicy?: undefined;
-  /** Future: individual training — always false in Thin. */
-  readonly individualAvailable?: false;
+  /** One player, one attribute group, once a day after the league unlock. */
+  readonly individualAvailable: boolean;
 };
 
 /** Post-session feedback counts (LFE-TRAINING-02). */

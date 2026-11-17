@@ -32,6 +32,9 @@ export type SquadPlayerDto = {
   readonly status: PlayerStatus;
   readonly suspensionMatches?: number;
   readonly injuryMatches?: number;
+  readonly morale?: number;
+  readonly personality?: string;
+  readonly setPiece?: boolean;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {
@@ -83,6 +86,12 @@ export type PlayerRowDto = {
   readonly recentRatings?: readonly number[];
   readonly suspensionMatches?: number;
   readonly injuryMatches?: number;
+  readonly morale?: number;
+  readonly personality?: string;
+  readonly contractUntil?: string | null;
+  readonly releaseClause?: number;
+  readonly setPiece?: boolean;
+  readonly lastIndividualOn?: string | null;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

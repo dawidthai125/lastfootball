@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { LocationHero, SoftLockState, StateBanner } from '@/components/ui';
 import { runTrainingSession } from '@/lib/training/actions';
 import { hireClubCoach } from '@/lib/training/actions-coach';
+import {
+  hireClubAssistant,
+  hireClubPhysio,
+  runIndividualSession,
+  savePressTone,
+} from '@/lib/training/actions-depth';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
@@ -58,6 +64,11 @@ export function TrainingView({
   stylePressing = 0,
   styleTempo = 0,
   styleWidth = 0,
+  physio = false,
+  assistantGroup = null,
+  players = [],
+  pressFixtureId = null,
+  pressDone = false,
 }: {
   training: TrainingDto;
   coachGroup?: CoachGroup | null;
@@ -65,6 +76,11 @@ export function TrainingView({
   stylePressing?: number;
   styleTempo?: number;
   styleWidth?: number;
+  physio?: boolean;
+  assistantGroup?: CoachGroup | null;
+  players?: readonly { id: string; name: string; energy: number }[];
+  pressFixtureId?: string | null;
+  pressDone?: boolean;
 }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -75,8 +91,24 @@ export function TrainingView({
     hireClubCoach,
     TRAINING_ACTION_INITIAL,
   );
+  const [physioState, physioAction, physioPending] = useActionState(
+    hireClubPhysio,
+    TRAINING_ACTION_INITIAL,
+  );
+  const [assistantState, assistantAction, assistantPending] = useActionState(
+    hireClubAssistant,
+    TRAINING_ACTION_INITIAL,
+  );
+  const [individualState, individualAction, individualPending] = useActionState(
+    runIndividualSession,
+    TRAINING_ACTION_INITIAL,
+  );
+  const [pressState, pressAction, pressPending] = useActionState(
+    savePressTone,
+    TRAINING_ACTION_INITIAL,
+  );
 
-  if (!training.canTrain) {
+  if (!training.unlocked || training.lockReason === 'squad_unavailable') {
     return (
       <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
         <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
@@ -141,6 +173,123 @@ export function TrainingView({
         </div>
       </section>
 
+      <section className="lf-tr__block" aria-label="Sztab">
+        <h3 className="lf-tr__block-title">Sztab</h3>
+        <p className="lf-tr__meta">
+          {physio
+            ? 'Fizjoterapeuta skraca kontuzję o jeden mecz.'
+            : `Fizjoterapeuta · ${formatMoney(COACH_THIN.HIRE_FEE)}. Skraca kontuzję o jeden mecz.`}
+          {assistantGroup
+            ? ` Asystent podnosi grupę: ${COACH_LABEL[assistantGroup]}, jeśli to nie grupa trenera.`
+            : ' Asystent podnosi jedną grupę, inną niż trener.'}
+        </p>
+        {physioState.error ? (
+          <p className="lf-tr__regen-note" role="alert">
+            {physioState.error}
+          </p>
+        ) : null}
+        {assistantState.error ? (
+          <p className="lf-tr__regen-note" role="alert">
+            {assistantState.error}
+          </p>
+        ) : null}
+        {!physio ? (
+          <form action={physioAction}>
+            <Button type="submit" disabled={physioPending || cash < COACH_THIN.HIRE_FEE}>
+              {physioPending ? 'Zapisuję…' : `Fizjoterapeuta · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
+            </Button>
+          </form>
+        ) : null}
+        <div className="lf-tr__focus-grid">
+          {COACH_GROUPS.map((group) => (
+            <form key={`assistant-${group}`} action={assistantAction}>
+              <input type="hidden" name="group" value={group} />
+              <Button
+                type="submit"
+                variant={assistantGroup === group ? 'primary' : 'default'}
+                disabled={
+                  assistantPending || (assistantGroup !== group && cash < COACH_THIN.HIRE_FEE)
+                }
+              >
+                {assistantGroup === group
+                  ? `Asystent · ${COACH_LABEL[group]}`
+                  : `Asystent · ${COACH_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
+              </Button>
+            </form>
+          ))}
+        </div>
+      </section>
+
+      {training.individualAvailable && players.length > 0 ? (
+        <section className="lf-tr__block" aria-label="Trening indywidualny">
+          <h3 className="lf-tr__block-title">Trening indywidualny</h3>
+          <p className="lf-tr__meta">
+            Jeden zawodnik, jedna grupa, raz dziennie. Kosztuje 8 energii. Nie rusza ogólnej
+            umiejętności.
+          </p>
+          {individualState.error ? (
+            <p className="lf-tr__regen-note" role="alert">
+              {individualState.error}
+            </p>
+          ) : null}
+          {individualState.ok ? <p className="lf-tr__meta">Zapisane.</p> : null}
+          <form action={individualAction} className="lf-tr__focus-grid">
+            <select name="playerId" defaultValue={players[0]?.id}>
+              {players.map((player) => (
+                <option key={player.id} value={player.id}>
+                  {player.name} · energia {player.energy}
+                </option>
+              ))}
+            </select>
+            <select name="group" defaultValue="attack">
+              {COACH_GROUPS.map((group) => (
+                <option key={group} value={group}>
+                  {COACH_LABEL[group]}
+                </option>
+              ))}
+            </select>
+            <Button type="submit" disabled={individualPending}>
+              {individualPending ? 'Trening…' : 'Trenuj jednego'}
+            </Button>
+          </form>
+        </section>
+      ) : null}
+
+      {pressFixtureId ? (
+        <section className="lf-tr__block" aria-label="Konferencja">
+          <h3 className="lf-tr__block-title">Konferencja</h3>
+          <p className="lf-tr__meta">
+            {pressDone
+              ? 'Po ostatnim meczu już mówiono.'
+              : 'Jedna wypowiedź po meczu rusza morale całej kadry o 2 w górę, w dół, albo wcale.'}
+          </p>
+          {pressState.error ? (
+            <p className="lf-tr__regen-note" role="alert">
+              {pressState.error}
+            </p>
+          ) : null}
+          {!pressDone ? (
+            <div className="lf-tr__focus-grid">
+              {(
+                [
+                  ['praise', 'Pochwała'],
+                  ['calm', 'Spokój'],
+                  ['criticize', 'Krytyka'],
+                ] as const
+              ).map(([tone, label]) => (
+                <form key={tone} action={pressAction}>
+                  <input type="hidden" name="fixtureId" value={pressFixtureId} />
+                  <input type="hidden" name="tone" value={tone} />
+                  <Button type="submit" disabled={pressPending}>
+                    {label}
+                  </Button>
+                </form>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
       <header className="lf-tr__hero">
         <p className="lf-tr__status">Sesja dostępna</p>
         <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
@@ -202,7 +351,8 @@ export function TrainingView({
       <form action={action} className="lf-tr__cta-wrap">
         <input type="hidden" name="focusId" value={focusId} />
         <input type="hidden" name="intensityId" value={intensityId} />
-        <button type="submit" className="lf-tr__primary" disabled={pending}>
+        {!training.canTrain ? <p className="lf-tr__meta">{lockCopy(training)}</p> : null}
+        <button type="submit" className="lf-tr__primary" disabled={pending || !training.canTrain}>
           {pending ? 'Trening…' : 'Przeprowadź trening'}
         </button>
         <Link href="/squad" className="lf-tr__secondary">

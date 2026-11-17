@@ -65,6 +65,7 @@ export async function runTrainingSession(
     focusId,
     intensityId,
     coachGroup: build.coachGroup,
+    assistantGroup: build.assistantGroup,
     sessionCap: trainingSessionCap(build.levels.trainingCenter),
   });
 

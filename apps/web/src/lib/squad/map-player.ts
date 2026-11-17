@@ -1,3 +1,4 @@
+import { isPersonality } from '@/lib/squad/depth';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { AttrGroups, PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
 
@@ -35,6 +36,12 @@ export type PlayerDbRow = {
   suspension_matches?: number | null;
   injury_matches?: number | null;
   recent_ratings?: number[] | null;
+  morale?: number | null;
+  personality?: string | null;
+  contract_until?: string | null;
+  release_clause?: number | null;
+  set_piece?: boolean | null;
+  last_individual_on?: string | null;
 };
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -75,6 +82,12 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
       typeof row.suspension_matches === 'number' ? row.suspension_matches : undefined,
     injuryMatches: typeof row.injury_matches === 'number' ? row.injury_matches : undefined,
     recentRatings: Array.isArray(row.recent_ratings) ? row.recent_ratings : undefined,
+    morale: typeof row.morale === 'number' ? row.morale : undefined,
+    personality: isPersonality(row.personality) ? row.personality : undefined,
+    contractUntil: row.contract_until ?? null,
+    releaseClause: typeof row.release_clause === 'number' ? row.release_clause : undefined,
+    setPiece: row.set_piece === true,
+    lastIndividualOn: row.last_individual_on ?? null,
   };
 }
 
