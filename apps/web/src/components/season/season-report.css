@@ -55,6 +55,23 @@
   color: var(--lf-color-text, #111);
 }
 
+.lf-season-report__departure {
+  margin: 1rem 0 0;
+}
+
+.lf-season-report__departure-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--lf-color-text, #111);
+}
+
+.lf-season-report__departure-body {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--lf-color-text-muted, #6b7280);
+}
+
 .lf-hub__confirm-error {
   margin: 0.5rem 0 0;
   font-size: 0.85rem;

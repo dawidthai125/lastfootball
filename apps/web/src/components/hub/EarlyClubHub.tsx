@@ -23,6 +23,7 @@ import {
   type HubSession,
   type LastMatchStripModel,
 } from '@/lib/hub';
+import type { DeparturePreview } from '@/lib/season/departure';
 import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -44,6 +45,7 @@ export function EarlyClubHub({
   playedCount = 0,
   todayUtc = utcDateString(),
   seasonReport = null,
+  departurePreview = null,
   cupLink = null,
   matchesBlocked = false,
   lastPlayedAt,
@@ -62,6 +64,8 @@ export function EarlyClubHub({
   todayUtc?: string;
   /** Offseason read-only report (D84 · D86); null outside OFFSEASON. */
   seasonReport?: SeasonReportDto | null;
+  /** Offseason foreshadow of Confirm N+1 departure; null outside OFFSEASON. */
+  departurePreview?: DeparturePreview | null;
   /** Due national-cup tie. Does not replace the league primary action. */
   cupLink?: HubCupLink | null;
   /** loadEmailGate().matchesBlocked — blocks the next kickoff after the deadline. */
@@ -163,7 +167,9 @@ export function EarlyClubHub({
           {event.scoreNote ? <p className="lf-hub__decision-detail">{event.scoreNote}</p> : null}
         </AtmosphereLayer>
 
-        {seasonReport ? <SeasonReportView report={seasonReport} /> : null}
+        {seasonReport ? (
+          <SeasonReportView report={seasonReport} departure={departurePreview} />
+        ) : null}
 
         {phase === 'OFFSEASON' && primary.id === 'prepare-next-season' ? (
           <ConfirmStartSeasonButton label={primary.label} />

@@ -58,6 +58,11 @@ export function BoardView({ board }: { board: ClubBoardDto }) {
             <div className="space-y-1.5 px-2.5 py-2.5 text-[13px]">
               <p className="text-[var(--lf-text-strong)]">{board.seasonReview.outcomeLabel}</p>
               <p className="text-[12px] text-[var(--lf-muted)]">{board.seasonReview.summary}</p>
+              {board.departureNote ? (
+                <p className="text-[12px] text-[var(--lf-muted)]" data-board-departure="">
+                  {board.departureNote}
+                </p>
+              ) : null}
             </div>
           </Panel>
         </div>

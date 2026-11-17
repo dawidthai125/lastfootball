@@ -1,3 +1,4 @@
+import type { DeparturePreview } from '@/lib/season/departure';
 import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -7,8 +8,15 @@ import './season-report.css';
  * Season report — Information Thin · read-only (D81 · D84 · D86 · D91).
  * Facts only from resolveSeasonReport; no mutations, no Fake Production.
  * Promotion outcome = derived label only (persist at Confirm · D90).
+ * Optional departure = foreshadow of Confirm N+1 (resolveDeparturePreview).
  */
-export function SeasonReportView({ report }: { report: SeasonReportDto }) {
+export function SeasonReportView({
+  report,
+  departure = null,
+}: {
+  report: SeasonReportDto;
+  departure?: DeparturePreview | null;
+}) {
   return (
     <section
       className="lf-season-report"
@@ -57,6 +65,13 @@ export function SeasonReportView({ report }: { report: SeasonReportDto }) {
             <li key={h.id}>{h.label}</li>
           ))}
         </ul>
+      ) : null}
+
+      {departure ? (
+        <div className="lf-season-report__departure" data-season-departure="">
+          <h3 className="lf-season-report__departure-title">Kadra przy starcie N+1</h3>
+          <p className="lf-season-report__departure-body">{departure.summary}</p>
+        </div>
       ) : null}
 
       <p className="lf-season-report__confirm-hint">{UI_COPY.seasonReportConfirmHint}</p>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { planSeasonDeparture } from './departure';
+import { planSeasonDeparture, resolveDeparturePreview } from './departure';
 
 describe('planSeasonDeparture', () => {
   it('does nothing when nobody is 38', () => {
@@ -28,5 +28,75 @@ describe('planSeasonDeparture', () => {
         { id: 'a', age: 38, skill: 55, academyTrack: false, departed: false },
       ]),
     ).toEqual({ retireId: 'a', promoteId: null });
+  });
+});
+
+describe('resolveDeparturePreview', () => {
+  it('empty plan: null slots and no-retirement summary', () => {
+    const preview = resolveDeparturePreview([
+      { id: 'a', name: 'Młody', age: 37, skill: 40, academyTrack: false, departed: false },
+    ]);
+    expect(preview.retire).toBeNull();
+    expect(preview.promote).toBeNull();
+    expect(preview.summary).toMatch(/nikt nie kończy kariery/i);
+  });
+
+  it('retire + promote: names in Polish summary', () => {
+    const preview = resolveDeparturePreview([
+      {
+        id: 'old-strong',
+        name: 'Silny',
+        age: 39,
+        skill: 80,
+        academyTrack: false,
+        departed: false,
+      },
+      {
+        id: 'old-weak',
+        name: 'Słaby Weteran',
+        age: 40,
+        skill: 50,
+        academyTrack: false,
+        departed: false,
+      },
+      {
+        id: 'b-youth',
+        name: 'B Youth',
+        age: 17,
+        skill: 44,
+        academyTrack: true,
+        departed: false,
+      },
+      {
+        id: 'a-youth',
+        name: 'A Youth',
+        age: 18,
+        skill: 60,
+        academyTrack: true,
+        departed: false,
+      },
+    ]);
+    expect(preview.retire).toMatchObject({
+      id: 'old-weak',
+      name: 'Słaby Weteran',
+      age: 40,
+      skill: 50,
+    });
+    expect(preview.promote).toMatchObject({ id: 'a-youth', name: 'A Youth' });
+    expect(preview.summary).toContain('Słaby Weteran');
+    expect(preview.summary).toContain('lat 40');
+    expect(preview.summary).toContain('A Youth');
+    expect(preview.summary).toMatch(/z akademii wchodzi/i);
+  });
+
+  it('retire only: empty academy copy', () => {
+    const preview = resolveDeparturePreview([
+      { id: 'b', name: 'Beta', age: 38, skill: 55, academyTrack: false, departed: false },
+      { id: 'a', name: 'Alfa', age: 38, skill: 55, academyTrack: false, departed: false },
+    ]);
+    expect(preview.retire).toMatchObject({ id: 'a', name: 'Alfa', age: 38 });
+    expect(preview.promote).toBeNull();
+    expect(preview.summary).toContain('Alfa');
+    expect(preview.summary).toMatch(/akademia jest pusta/i);
   });
 });

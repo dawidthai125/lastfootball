@@ -48,6 +48,7 @@ describe('resolveClubBoard', () => {
     expect(dto.expectation.summary).toMatch(/nie zadanie/i);
     expect(dto.seasonReview).toBeNull();
     expect(dto.hubHint).toBeNull();
+    expect(dto.departureNote).toBeNull();
     expect(dto.standing).not.toHaveProperty('complete');
     expect(dto.standing.trend).toBe('steady');
     expect(dto.tone).toBe('neutral');
@@ -107,6 +108,22 @@ describe('resolveClubBoard', () => {
     expect(dto.seasonReview?.outcomeLabel).toContain('Górny środek');
     expect(dto.tone).toBe('positive');
     expect(dto.hubHint).toMatch(/nie blokuje/i);
+    expect(dto.departureNote).toBeNull();
+  });
+
+  it('passes through departureNote in Offseason when provided', () => {
+    const note =
+      'Przy potwierdzeniu startu N+1 Alfa (lat 38) kończy karierę. Akademia jest pusta — nabór uzupełni skład przy starcie.';
+    const dto = resolveClubBoard({
+      seasonPhase: 'offseason',
+      seasonNumber: 1,
+      playerPosition: 4,
+      tableSize: 12,
+      playedCount: 22,
+      seasonReport: report({ position: 4, zone: 'upper_mid' }),
+      departureNote: note,
+    });
+    expect(dto.departureNote).toBe(note);
   });
 
   it('uses concern tone for bottom-zone Offseason review', () => {
