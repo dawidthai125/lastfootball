@@ -8,6 +8,7 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { completeTransferBuy, completeTransferSell } from '@/lib/transfers/complete-deal';
 import type { TransferActionState } from '@/lib/transfers/action-types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { marketFee } from '@/lib/transfers/market-fee';
 import {
   buildIncomingOfferId,
   resolveIncomingOffers,
@@ -63,7 +64,7 @@ export async function buyTransferPlayer(
   const listing = seedTransferCatalogue(clubRow.id).find((l) => l.marketId === marketId);
   if (!listing) return { error: 'Nie znaleziono oferty rynkowej.' };
 
-  const ask = deriveTransferFee(listing.skill, listing.age);
+  const ask = marketFee(listing.skill, listing.age, listing.clubLabel);
   const active = await listClubPlayers(clubRow.id);
   const activePlayers = active.map((p) => ({
     id: p.id,

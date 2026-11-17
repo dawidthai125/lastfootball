@@ -12,6 +12,7 @@ import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
 import { readClubBuild } from '@/lib/club/read-build';
+import { recordFanMood } from '@/lib/club/record-fan-mood';
 import { isPersonality } from '@/lib/squad/depth';
 import { applyMatchSquadTruth, groupsFromSkill } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
@@ -111,6 +112,7 @@ export async function completeFirstMatch(
     if (!dev.ok) {
       return { error: dev.error };
     }
+    await recordFanMood(supabase, row.id, result);
 
     const { error: updErr } = await supabase
       .from('clubs')

@@ -14,7 +14,8 @@ import { hashSeed } from '@/lib/match/hash-seed';
 import { orderForFormation } from '@/lib/match/order-xi';
 import { clampSkill, mapPlayerSkillToLfeSkills } from '@/lib/match/map-player-skill-to-lfe';
 import { homePitchBonus } from '@/lib/stadium/levels';
-import { kickoffPressing, kickoffTempo, kickoffWidth } from '@/lib/training/style';
+import { kickoffPressingWithLine } from '@/lib/training/press-line';
+import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -80,6 +81,8 @@ export function createSessionFromLeagueFixture(
   const tacticsSide = shared ? 'home' : ourSide;
   const habit =
     tacticsSide === 'home' ? (fixture.homeStylePressing ?? 0) : (fixture.viewerStylePressing ?? 0);
+  const pressLine =
+    tacticsSide === 'home' ? (fixture.homePressLine ?? 'mid') : (fixture.viewerPressLine ?? 'mid');
   const tempoHabit =
     tacticsSide === 'home' ? (fixture.homeStyleTempo ?? 0) : (fixture.viewerStyleTempo ?? 0);
   const widthHabit =
@@ -183,7 +186,7 @@ export function createSessionFromLeagueFixture(
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
     tacticsSide,
-    openingPressing: kickoffPressing(habit),
+    openingPressing: kickoffPressingWithLine(habit, pressLine),
     openingTempo: kickoffTempo(tempoHabit),
     openingWidth: kickoffWidth(widthHabit),
     settings: {

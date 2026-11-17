@@ -2,6 +2,7 @@ import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { marketFee } from '@/lib/transfers/market-fee';
 import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
@@ -194,7 +195,7 @@ export async function completeTransferBuy(
     return { ok: false, error: 'Nie znaleziono oferty rynkowej.' };
   }
 
-  const ask = deriveTransferFee(listing.skill, listing.age);
+  const ask = marketFee(listing.skill, listing.age, listing.clubLabel);
   if (!isAllowedAgreedAmount(ask, input.agreedAmount)) {
     return { ok: false, error: 'Nieprawidłowa kwota negocjacji.' };
   }
@@ -269,16 +270,21 @@ export async function completeTransferBuy(
     return { ok: false, error: 'Nie udało się zaktualizować kasy.' };
   }
 
-  const { error: movErr } = await supabase.from('finance_movements').insert({
-    club_id: input.clubId,
-    category: 'transfer_buy',
-    label: `Transfer: ${listing.name}`,
-    amount: -agreedAmount,
-    fixture_id: null,
-  } as never);
+  if (agreedAmount !== 0) {
+    const { error: movErr } = await supabase.from('finance_movements').insert({
+      club_id: input.clubId,
+      category: 'transfer_buy',
+      label: `Transfer: ${listing.name}`,
+      amount: -agreedAmount,
+      fixture_id: null,
+    } as never);
 
-  if (movErr) {
-    return { ok: false, error: 'Zawodnik dodany, ale wpis finansowy nieudany — odśwież Finanse.' };
+    if (movErr) {
+      return {
+        ok: false,
+        error: 'Zawodnik dodany, ale wpis finansowy nieudany — odśwież Finanse.',
+      };
+    }
   }
 
   const { error: dealErr } = await supabase.from('transfer_deals').insert({

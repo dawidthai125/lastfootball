@@ -74,6 +74,9 @@ function historyLines(row: PlayerRowDto): string[] {
     lines.push(`Ostatnie noty: ${notes.join(', ')}.`);
   }
   lines.push(row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.');
+  if (row.onLoan) {
+    lines.push(row.loanUntil ? `Wypożyczony do ${row.loanUntil}.` : 'Wypożyczony.');
+  }
   return lines;
 }
 
@@ -101,6 +104,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     morale: typeof row.morale === 'number' ? row.morale : 60,
     personality: row.personality ?? personalityFromId(row.id),
     setPiece: row.setPiece === true,
+    onLoan: row.onLoan === true,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {

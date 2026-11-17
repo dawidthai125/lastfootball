@@ -9,6 +9,8 @@ const PLAYER_SELECT =
 const DEPTH_SELECT =
   'id, morale, personality, contract_until, release_clause, set_piece, last_individual_on';
 
+const LOAN_SELECT = 'id, on_loan, loan_until, wage_bank';
+
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
@@ -46,6 +48,17 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
   if (!depth.error && depth.data) {
     for (const row of depth.data as Partial<PlayerDbRow>[]) {
       if (row.id) depthById.set(row.id, row);
+    }
+  }
+  const loan = await supabase
+    .from('players')
+    .select(LOAN_SELECT)
+    .eq('club_id', clubId)
+    .is('departed_at', null);
+  if (!loan.error && loan.data) {
+    for (const row of loan.data as Partial<PlayerDbRow>[]) {
+      if (!row.id) continue;
+      depthById.set(row.id, { ...depthById.get(row.id), ...row });
     }
   }
   return (result.data as PlayerDbRow[])

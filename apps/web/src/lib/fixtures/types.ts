@@ -36,6 +36,10 @@ export type FixtureDto = {
   readonly homeStyleWidth?: number;
   /** Viewer club width habit. Used when this club owns the away tactics. */
   readonly viewerStyleWidth?: number;
+  /** Home press line. Missing means mid. */
+  readonly homePressLine?: string;
+  /** Viewer press line. Missing means mid. */
+  readonly viewerPressLine?: string;
 };
 
 export type FixtureRow = {

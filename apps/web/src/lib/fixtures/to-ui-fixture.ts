@@ -15,7 +15,8 @@ import {
 } from '@/lib/fixtures/pre-match-copy';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
-import { kickoffPressing, kickoffTempo, kickoffWidth } from '@/lib/training/style';
+import { kickoffPressingWithLine } from '@/lib/training/press-line';
+import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 
 function groundStadiumLabel(dto: FixtureDto, club: ClubDto): string {
   const cupRound = cupRoundForMatchday(dto.matchday);
@@ -39,7 +40,9 @@ function ownerKickoffPressing(dto: FixtureDto): number {
   const tacticsSide = shared ? 'home' : dto.isHome ? 'home' : 'away';
   const habit =
     tacticsSide === 'home' ? (dto.homeStylePressing ?? 0) : (dto.viewerStylePressing ?? 0);
-  return kickoffPressing(habit);
+  const line =
+    tacticsSide === 'home' ? (dto.homePressLine ?? 'mid') : (dto.viewerPressLine ?? 'mid');
+  return kickoffPressingWithLine(habit, line);
 }
 
 /** Same owner rule as pressing. A missing habit stays at tempo 50. */

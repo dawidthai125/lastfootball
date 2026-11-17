@@ -5,6 +5,7 @@ import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { marketFee } from '@/lib/transfers/market-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
@@ -41,7 +42,7 @@ export function resolveTransferMarket(input: {
   const canSell = windowOpen && count > TRANSFERS_THIN.MIN_ROSTER;
 
   const listings: MarketListingDto[] = seedTransferCatalogue(input.clubId).map((s) => {
-    const fee = deriveTransferFee(s.skill, s.age);
+    const fee = marketFee(s.skill, s.age, s.clubLabel);
     return {
       marketId: s.marketId,
       name: s.name,

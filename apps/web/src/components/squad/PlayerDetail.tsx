@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatMoney } from '@/data/mock';
+import { ContractTalkForm } from '@/components/squad/ContractTalkForm';
+import { LoanButton } from '@/components/squad/LoanButton';
 import { SetPieceButton } from '@/components/squad/SetPieceButton';
+import { demandWage, isTalkPersonality } from '@/lib/squad/contract-talk';
 import { personalityLabel, type Personality } from '@/lib/squad/depth';
 import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
@@ -11,6 +14,11 @@ import { SectionShell } from '@/components/panel/SectionShell';
 import './squad-decision.css';
 
 type SquadPlayer = SquadPlayerDto;
+
+function talkPersonality(value: string | undefined) {
+  if (value && isTalkPersonality(value)) return value;
+  return 'spokojny' as const;
+}
 
 function statusTone(status: SquadPlayer['status']): {
   border: string;
@@ -254,6 +262,17 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
           playerId={player.id}
           active={player.setPiece === true}
           goalkeeper={player.position === 'BR'}
+        />
+        <ContractTalkForm
+          playerId={player.id}
+          demand={demandWage(c.wage, talkPersonality(player.personality))}
+          extended={c.until.endsWith('2029') || c.until.startsWith('2029')}
+        />
+        <LoanButton
+          playerId={player.id}
+          position={player.position}
+          starter={player.starter}
+          onLoan={player.onLoan === true}
         />
       </div>
     </SectionShell>

@@ -35,6 +35,7 @@ export type SquadPlayerDto = {
   readonly morale?: number;
   readonly personality?: string;
   readonly setPiece?: boolean;
+  readonly onLoan?: boolean;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {
@@ -92,6 +93,9 @@ export type PlayerRowDto = {
   readonly releaseClause?: number;
   readonly setPiece?: boolean;
   readonly lastIndividualOn?: string | null;
+  readonly onLoan?: boolean;
+  readonly loanUntil?: string | null;
+  readonly wageBank?: number;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

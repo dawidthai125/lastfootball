@@ -84,7 +84,11 @@ describe('transfers Thin (LFE-TRANSFERS-01)', () => {
     expect(market.canBuy).toBe(true);
     expect(market.canSell).toBe(false); // exactly MIN_ROSTER 18
     expect(market.envelopeBalance).toBe(500_000);
-    expect(market.listings.every((l) => l.fee > 0 && l.feeLabel.length > 0)).toBe(true);
+    expect(
+      market.listings.every(
+        (l) => (l.clubLabel === 'Wolny agent' ? l.fee === 0 : l.fee > 0) && l.feeLabel.length > 0,
+      ),
+    ).toBe(true);
   });
 
   it('sell candidates appear when roster above min', () => {
