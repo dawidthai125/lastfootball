@@ -141,4 +141,26 @@ describe('resolveClubMessages (LFE-MESSAGES-01)', () => {
     };
     expect(resolveClubMessages(input)).toEqual(resolveClubMessages(input));
   });
+
+  it('seasonDeparture → system info toward /hub', () => {
+    const summary =
+      'Przy potwierdzeniu startu N+1 Słaby Weteran (lat 40) kończy karierę. Z akademii wchodzi A Youth.';
+    const dto = resolveClubMessages({
+      transferWindowOpen: false,
+      incomingOffers: [],
+      incomingLiveOffers: [],
+      outgoingLiveOffers: [],
+      seasonDeparture: { summary },
+    });
+    expect(dto.items).toHaveLength(1);
+    expect(dto.items[0]).toMatchObject({
+      id: 'msg:season-departure',
+      kind: 'system',
+      priority: 'info',
+      href: '/hub',
+      fromLabel: 'Zarząd',
+    });
+    expect(dto.items[0]!.subject.length).toBeLessThanOrEqual(80);
+    expect(dto.items[0]!.subject).toContain('Słaby Weteran');
+  });
 });

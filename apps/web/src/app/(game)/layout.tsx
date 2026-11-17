@@ -12,6 +12,7 @@ import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
+import { resolveDeparturePreview } from '@/lib/season';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
@@ -109,6 +110,19 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= today)
         .map((player) => player.id),
     });
+    const seasonDeparture =
+      club.seasonPhase === 'offseason'
+        ? resolveDeparturePreview(
+            activePlayers.map((player) => ({
+              id: player.id,
+              name: player.name,
+              age: player.age,
+              skill: player.skill,
+              academyTrack: Boolean(player.academyTrack),
+              departed: player.departedAt != null || player.status === 'DEPARTED',
+            })),
+          )
+        : null;
     messages = resolveClubMessages({
       transferWindowOpen: club.transferWindowOpen,
       incomingOffers,
@@ -117,6 +131,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       dressingConflict: dressing ? { conflictId: dressing.id, subject: dressing.subject } : null,
       incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
       intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
+      seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
     });
     invitations = resolveClubInvitations({
       messages,

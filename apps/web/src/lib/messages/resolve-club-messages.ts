@@ -48,6 +48,10 @@ export type MessagesIntlInput = {
   readonly subject: string;
 };
 
+export type MessagesSeasonDepartureInput = {
+  readonly summary: string;
+};
+
 export type ResolveClubMessagesInput = {
   readonly transferWindowOpen: boolean;
   readonly incomingOffers: readonly MessagesIncomingOfferInput[];
@@ -56,7 +60,18 @@ export type ResolveClubMessagesInput = {
   readonly dressingConflict?: MessagesDressingInput | null;
   readonly incomingLoanOffers?: MessagesLoanInInput | null;
   readonly intlCallup?: MessagesIntlInput | null;
+  /** Offseason foreshadow of Confirm N+1 roster change. */
+  readonly seasonDeparture?: MessagesSeasonDepartureInput | null;
 };
+
+const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
+
+function seasonDepartureSubject(summary: string): string {
+  const trimmed = summary.trim();
+  if (!trimmed) return SEASON_DEPARTURE_SUBJECT;
+  if (trimmed.length <= 80) return trimmed;
+  return `${trimmed.slice(0, 77).trimEnd()}…`;
+}
 
 function isPendingActionableSeller(o: MessagesH2hOfferInput): boolean {
   return o.status === 'pending' && o.side === 'incoming' && o.phase === 'opening';
@@ -148,6 +163,17 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       subject: 'Okno transferowe jest otwarte',
       fromLabel: 'System',
       href: '/transfers',
+      priority: 'info',
+    });
+  }
+
+  if (input.seasonDeparture) {
+    items.push({
+      id: 'msg:season-departure',
+      kind: 'system',
+      subject: seasonDepartureSubject(input.seasonDeparture.summary),
+      fromLabel: 'Zarząd',
+      href: '/hub',
       priority: 'info',
     });
   }

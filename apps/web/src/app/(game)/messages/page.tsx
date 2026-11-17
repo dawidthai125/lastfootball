@@ -4,6 +4,7 @@ import { MessagesView } from '@/components/messages/MessagesView';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages } from '@/lib/messages';
+import { resolveDeparturePreview } from '@/lib/season';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
@@ -68,6 +69,20 @@ export default async function MessagesPage() {
       .map((player) => player.id),
   });
 
+  const seasonDeparture =
+    club.seasonPhase === 'offseason'
+      ? resolveDeparturePreview(
+          activePlayers.map((player) => ({
+            id: player.id,
+            name: player.name,
+            age: player.age,
+            skill: player.skill,
+            academyTrack: Boolean(player.academyTrack),
+            departed: player.departedAt != null || player.status === 'DEPARTED',
+          })),
+        )
+      : null;
+
   const messages = resolveClubMessages({
     transferWindowOpen: club.transferWindowOpen,
     incomingOffers,
@@ -76,6 +91,7 @@ export default async function MessagesPage() {
     dressingConflict: dressing ? { conflictId: dressing.id, subject: dressing.subject } : null,
     incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
     intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
+    seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
   });
 
   return (

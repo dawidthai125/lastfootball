@@ -22,7 +22,8 @@ import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveHubCupLink } from '@/lib/hub/cup-link';
 import { resolveLeagueTable, resolvePlayerLeaguePositionLabel } from '@/lib/league';
-import { closeSeasonIfComplete, resolveSeasonReport } from '@/lib/season';
+import { closeSeasonIfComplete, resolveDeparturePreview, resolveSeasonReport } from '@/lib/season';
+import { listClubPlayers } from '@/lib/squad/get-players';
 import { TRAINING_THIN } from '@/lib/training';
 
 /**
@@ -54,10 +55,24 @@ export default async function HubPage() {
   const seasonReport =
     phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber, club.leagueTier) : null;
 
-  const [movements, emailGate] = await Promise.all([
+  const [movements, emailGate, offseasonPlayers] = await Promise.all([
     listClubFinanceMovements(club.id, 5),
     loadEmailGate(club.ownerId),
+    phase === 'OFFSEASON' ? listClubPlayers(club.id) : Promise.resolve([]),
   ]);
+  const departurePreview =
+    phase === 'OFFSEASON'
+      ? resolveDeparturePreview(
+          offseasonPlayers.map((player) => ({
+            id: player.id,
+            name: player.name,
+            age: player.age,
+            skill: player.skill,
+            academyTrack: Boolean(player.academyTrack),
+            departed: player.departedAt != null || player.status === 'DEPARTED',
+          })),
+        )
+      : null;
   const finance = resolveClubFinance(club, movements);
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
@@ -84,6 +99,7 @@ export default async function HubPage() {
       playedCount={leaguePlayedCount}
       todayUtc={utcDateString()}
       seasonReport={seasonReport}
+      departurePreview={departurePreview}
       cupLink={cupLink}
       fanLabel={fanLabel}
       matchesBlocked={emailGate.matchesBlocked}

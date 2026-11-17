@@ -32,6 +32,8 @@ export type ClubBoardDto = {
   readonly tone: BoardTone;
   /** Offseason: Confirm is not blocked by Board. */
   readonly hubHint: string | null;
+  /** Offseason foreshadow when a senior retires at Confirm N+1. */
+  readonly departureNote: string | null;
 };
 
 export type ResolveClubBoardInput = {
@@ -41,6 +43,8 @@ export type ResolveClubBoardInput = {
   readonly tableSize: number;
   readonly playedCount: number;
   readonly seasonReport: SeasonReportDto | null;
+  /** Polish summary from resolveDeparturePreview when a retire is planned. */
+  readonly departureNote?: string | null;
 };
 
 const EXPECTATION = {
@@ -104,7 +108,15 @@ function resolveTone(
  * Information Thin — describe season facts; never mutate.
  */
 export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
-  const { seasonPhase, seasonNumber, playerPosition, tableSize, playedCount, seasonReport } = input;
+  const {
+    seasonPhase,
+    seasonNumber,
+    playerPosition,
+    tableSize,
+    playedCount,
+    seasonReport,
+    departureNote = null,
+  } = input;
 
   const size = Math.max(0, Math.trunc(tableSize));
   const played = Math.max(0, Math.trunc(playedCount));
@@ -142,5 +154,6 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
     hubHint: offseason
       ? 'Start kolejnego sezonu potwierdzasz na Hubie — Zarząd go nie blokuje.'
       : null,
+    departureNote: offseason && departureNote ? departureNote : null,
   };
 }
