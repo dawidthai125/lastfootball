@@ -6,6 +6,7 @@ import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
 import type { SaveXiActionState } from '@/lib/squad/xi-action-state';
 
@@ -61,7 +62,7 @@ export async function saveStartingXi(
     return { error: 'Wybrani zawodnicy nie należą do Twojej kadry.' };
   }
 
-  const validation = validateStartingXi(chosen);
+  const validation = validateStartingXi(chosen, utcDateString());
   if (!validation.ok) {
     return { error: validation.errors[0] ?? 'Skład XI jest nieprawidłowy.' };
   }

@@ -173,6 +173,55 @@ export async function sendEmailConfirmLink(
   return { error: 'Nie udało się wysłać. Spróbuj za chwilę.', info: null };
 }
 
+export async function requestPasswordReset(
+  _prev: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  if (!env.isSupabaseConfigured) {
+    return { error: 'Auth nie jest skonfigurowany (brak Supabase env).', info: null };
+  }
+  const email = String(formData.get('email') ?? '').trim();
+  if (!email) return { error: 'Podaj email.', info: null };
+  const origin = env.appUrl ?? 'https://www.lastfootball.pl';
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`,
+  });
+  if (error) return { error: mapAuthError(error.message), info: null };
+  return {
+    error: null,
+    info: 'Jeśli konto istnieje, link do nowego hasła jest na mailu.',
+  };
+}
+
+export async function updatePasswordFromRecovery(
+  _prev: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  if (!env.isSupabaseConfigured) {
+    return { error: 'Auth nie jest skonfigurowany (brak Supabase env).', info: null };
+  }
+  const password = String(formData.get('password') ?? '');
+  const confirm = String(formData.get('confirm') ?? '');
+  if (password.length < 6) {
+    return { error: 'Hasło musi mieć co najmniej 6 znaków.', info: null };
+  }
+  if (password !== confirm) {
+    return { error: 'Hasła muszą być takie same.', info: null };
+  }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: 'Link wygasł. Poproś o nowy reset hasła.', info: null };
+  }
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: mapAuthError(error.message), info: null };
+  revalidatePath('/', 'layout');
+  redirect('/hub');
+}
+
 export async function signOut(): Promise<void> {
   if (!env.isSupabaseConfigured) {
     redirect('/');
