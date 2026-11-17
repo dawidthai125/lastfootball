@@ -70,6 +70,11 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     const squad = resolveClubSquad({ id: clubId }, rows);
     expect(squad.players.length).toBeGreaterThanOrEqual(18);
     expect(squad.players.filter((p) => p.starter)).toHaveLength(11);
+    expect(squad.players.find((p) => p.starter)?.history).toEqual(['W zapisanej jedenastce.']);
+    expect(squad.players.find((p) => !p.starter)?.history).toEqual(['Poza zapisaną jedenastką.']);
+    expect(squad.players.every((p) => p.history.join(' ').includes(clubId.slice(0, 8)))).toBe(
+      false,
+    );
     expect(squad.players.every((p) => p.status === 'READY')).toBe(true);
     expect(squad.players.every((p) => p.version === 1)).toBe(true);
   });
