@@ -1,6 +1,7 @@
 import { env } from '@/config/env';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
+import { reconcileExpiredIntl } from '@/lib/squad/reconcile-intl';
 import { reconcileExpiredLoans } from '@/lib/squad/reconcile-loans';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
@@ -122,6 +123,29 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
       });
     }
   }
+
+  const afterLoans = (result.data as PlayerDbRow[])
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }))
+    .filter((p) => p.status !== 'DEPARTED');
+
+  const intlPatches = reconcileExpiredIntl(
+    afterLoans.map((row) => ({
+      id: row.id,
+      intlAbsentUntil: row.intlAbsentUntil ?? null,
+    })),
+    today,
+  );
+  for (const patch of intlPatches) {
+    await supabase
+      .from('players')
+      .update({ intl_absent_until: null } as never)
+      .eq('id', patch.id)
+      .eq('club_id', clubId);
+    const depth = depthById.get(patch.id) ?? {};
+    depthById.set(patch.id, { ...depth, intl_absent_until: null });
+  }
+
+  if (intlPatches.length === 0) return afterLoans;
 
   return (result.data as PlayerDbRow[])
     .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }))
