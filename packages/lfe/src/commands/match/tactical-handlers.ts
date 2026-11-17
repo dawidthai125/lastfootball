@@ -318,6 +318,8 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
       ...lineup,
       slots: Object.freeze(nextSlots),
       captainPlayerId: lineup.captainPlayerId === playerOutId ? playerInId : lineup.captainPlayerId,
+      setPiecePlayerId:
+        lineup.setPiecePlayerId === playerOutId ? playerInId : lineup.setPiecePlayerId,
     });
     const nextBenchIds = bench.playerIds.filter((id) => id !== playerInId).concat(playerOutId);
     const nextBench = Object.freeze({

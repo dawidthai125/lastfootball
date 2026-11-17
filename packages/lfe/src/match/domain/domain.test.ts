@@ -130,6 +130,21 @@ describe('EPIC-2 match domain', () => {
     expect(lineup.slots.find((slot) => slot.slotIndex === 10)?.playerId).toBe('p10');
   });
 
+  it('carries setPiecePlayerId on createLineup (default null)', () => {
+    const playerIds = Array.from({ length: 11 }, (_, index) => `p${index}`);
+    expect(
+      createLineup({ side: 'home', formationCode: '4-4-2', playerIds }).setPiecePlayerId,
+    ).toBeNull();
+    expect(
+      createLineup({
+        side: 'home',
+        formationCode: '4-4-2',
+        playerIds,
+        setPiecePlayerId: 'p7',
+      }).setPiecePlayerId,
+    ).toBe('p7');
+  });
+
   it('keeps pressing at 50 unless kickoff pressing is a finite number', () => {
     expect(buildMinimalMatch().state.tactics.pressing).toBe(50);
     expect(buildMinimalMatch(58).state.tactics.pressing).toBe(58);
