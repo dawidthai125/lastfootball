@@ -52,6 +52,10 @@ export type MessagesSeasonDepartureInput = {
   readonly summary: string;
 };
 
+export type MessagesRetirementFarewellInput = {
+  readonly subject: string;
+};
+
 export type ResolveClubMessagesInput = {
   readonly transferWindowOpen: boolean;
   readonly incomingOffers: readonly MessagesIncomingOfferInput[];
@@ -62,6 +66,8 @@ export type ResolveClubMessagesInput = {
   readonly intlCallup?: MessagesIntlInput | null;
   /** Offseason foreshadow of Confirm N+1 roster change. */
   readonly seasonDeparture?: MessagesSeasonDepartureInput | null;
+  /** Post–Confirm Thin farewell (who left / promote). */
+  readonly retirementFarewell?: MessagesRetirementFarewellInput | null;
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -176,6 +182,20 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       href: '/hub',
       priority: 'info',
     });
+  }
+
+  if (input.retirementFarewell) {
+    const subject = input.retirementFarewell.subject.trim();
+    if (subject) {
+      items.push({
+        id: 'msg:retirement-farewell',
+        kind: 'system',
+        subject: subject.length <= 80 ? subject : `${subject.slice(0, 77).trimEnd()}…`,
+        fromLabel: 'Zarząd',
+        href: '/hub',
+        priority: 'info',
+      });
+    }
   }
 
   return { items };

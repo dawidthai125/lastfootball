@@ -12,7 +12,11 @@ import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
-import { resolveDeparturePreview } from '@/lib/season';
+import {
+  listClubRetirementFlash,
+  resolveDeparturePreview,
+  resolveRetirementFarewell,
+} from '@/lib/season';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
@@ -69,16 +73,19 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     });
 
     const supabase = await createClient();
-    const [activePlayers, h2hOffers] = await Promise.all([
+    const today = utcDateString();
+    const [activePlayers, h2hOffers, farewellFlash] = await Promise.all([
       listClubPlayers(club.id),
       fetchLiveH2hOffers(supabase, club.id),
+      club.seasonPhase === 'in_season'
+        ? listClubRetirementFlash(club.id, today)
+        : Promise.resolve([]),
     ]);
     const incomingOffers = resolveIncomingOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
       activePlayers,
     });
-    const today = utcDateString();
     const dressing = resolveDressingConflict(
       activePlayers.map((player) => ({
         id: player.id,
@@ -123,6 +130,8 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
             })),
           )
         : null;
+    const retirementFarewell =
+      club.seasonPhase === 'in_season' ? resolveRetirementFarewell(farewellFlash, today) : null;
     messages = resolveClubMessages({
       transferWindowOpen: club.transferWindowOpen,
       incomingOffers,
@@ -132,6 +141,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
       intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
       seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
+      retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
     });
     invitations = resolveClubInvitations({
       messages,

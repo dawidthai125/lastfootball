@@ -88,3 +88,75 @@ export function resolveDeparturePreview(
     summary: `Przy potwierdzeniu startu N+1 ${retire.name} (lat ${retire.age}) kończy karierę. Akademia jest pusta — nabór uzupełni skład przy starcie.`,
   };
 }
+
+/** Post–Confirm flash: who left (+ promote) this UTC day. */
+export type RetirementFarewellPlayer = {
+  readonly id: string;
+  readonly name: string;
+  readonly departedAt: string | null;
+  readonly promotedAt: string | null;
+  readonly status: string;
+};
+
+export type RetirementFarewell = {
+  readonly retireName: string;
+  readonly promoteName: string | null;
+  readonly subject: string;
+  readonly summary: string;
+};
+
+function onUtcDay(iso: string | null, todayUtc: string): boolean {
+  if (!iso) return false;
+  return iso.slice(0, 10) === todayUtc;
+}
+
+/**
+ * Information Thin farewell after Confirm N+1 departure.
+ * Pure — picks today's DEPARTED senior and optional same-day promote/intake.
+ */
+export function resolveRetirementFarewell(
+  players: readonly RetirementFarewellPlayer[],
+  todayUtc: string,
+): RetirementFarewell | null {
+  const departed = players
+    .filter(
+      (player) =>
+        (player.status === 'DEPARTED' || player.departedAt != null) &&
+        onUtcDay(player.departedAt, todayUtc),
+    )
+    .slice()
+    .sort(
+      (a, b) => (b.departedAt ?? '').localeCompare(a.departedAt ?? '') || a.id.localeCompare(b.id),
+    );
+  const retire = departed[0];
+  if (!retire) return null;
+
+  const promote = players
+    .filter(
+      (player) =>
+        player.id !== retire.id &&
+        player.departedAt == null &&
+        player.status !== 'DEPARTED' &&
+        onUtcDay(player.promotedAt, todayUtc),
+    )
+    .slice()
+    .sort((a, b) => a.id.localeCompare(b.id))[0];
+
+  return formatRetirementFarewell(retire.name, promote?.name ?? null);
+}
+
+/** Build farewell copy from known names (Confirm / openNextSeason return). */
+export function formatRetirementFarewell(
+  retireName: string,
+  promoteName: string | null,
+): RetirementFarewell {
+  const retire = retireName.trim();
+  const promote = promoteName?.trim() || null;
+  const subject = promote
+    ? `${retire} zakończył karierę · wchodzi ${promote}`
+    : `${retire} zakończył karierę`;
+  const summary = promote
+    ? `${retire} zakończył karierę. Z akademii / naboru wchodzi ${promote}.`
+    : `${retire} zakończył karierę.`;
+  return { retireName: retire, promoteName: promote, subject, summary };
+}

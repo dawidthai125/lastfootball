@@ -4,7 +4,11 @@ import { MessagesView } from '@/components/messages/MessagesView';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages } from '@/lib/messages';
-import { resolveDeparturePreview } from '@/lib/season';
+import {
+  listClubRetirementFlash,
+  resolveDeparturePreview,
+  resolveRetirementFarewell,
+} from '@/lib/season';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
@@ -24,9 +28,12 @@ export default async function MessagesPage() {
 
   const supabase = await createClient();
   const today = utcDateString();
-  const [activePlayers, h2hOffers] = await Promise.all([
+  const [activePlayers, h2hOffers, farewellFlash] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveH2hOffers(supabase, club.id),
+    club.seasonPhase === 'in_season'
+      ? listClubRetirementFlash(club.id, today)
+      : Promise.resolve([]),
   ]);
 
   const incomingOffers = resolveIncomingOffers({
@@ -82,6 +89,8 @@ export default async function MessagesPage() {
           })),
         )
       : null;
+  const retirementFarewell =
+    club.seasonPhase === 'in_season' ? resolveRetirementFarewell(farewellFlash, today) : null;
 
   const messages = resolveClubMessages({
     transferWindowOpen: club.transferWindowOpen,
@@ -92,6 +101,7 @@ export default async function MessagesPage() {
     incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
     intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
     seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
+    retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
   });
 
   return (

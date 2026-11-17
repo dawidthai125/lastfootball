@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { planSeasonDeparture, resolveDeparturePreview } from './departure';
+import {
+  formatRetirementFarewell,
+  planSeasonDeparture,
+  resolveDeparturePreview,
+  resolveRetirementFarewell,
+} from './departure';
 
 describe('planSeasonDeparture', () => {
   it('does nothing when nobody is 38', () => {
@@ -98,5 +103,80 @@ describe('resolveDeparturePreview', () => {
     expect(preview.promote).toBeNull();
     expect(preview.summary).toContain('Alfa');
     expect(preview.summary).toMatch(/akademia jest pusta/i);
+  });
+});
+
+describe('resolveRetirementFarewell', () => {
+  const today = '2026-11-17';
+
+  it('null when nobody departed today', () => {
+    expect(
+      resolveRetirementFarewell(
+        [
+          {
+            id: 'a',
+            name: 'Aktywny',
+            status: 'READY',
+            departedAt: null,
+            promotedAt: null,
+          },
+        ],
+        today,
+      ),
+    ).toBeNull();
+  });
+
+  it('retire + promote on same UTC day', () => {
+    const farewell = resolveRetirementFarewell(
+      [
+        {
+          id: 'old',
+          name: 'Słaby Weteran',
+          status: 'DEPARTED',
+          departedAt: `${today}T12:00:00.000Z`,
+          promotedAt: null,
+        },
+        {
+          id: 'youth',
+          name: 'A Youth',
+          status: 'READY',
+          departedAt: null,
+          promotedAt: `${today}T12:00:01.000Z`,
+        },
+        {
+          id: 'old-other-day',
+          name: 'Wczoraj',
+          status: 'DEPARTED',
+          departedAt: '2026-11-16T12:00:00.000Z',
+          promotedAt: null,
+        },
+      ],
+      today,
+    );
+    expect(farewell).toMatchObject({
+      retireName: 'Słaby Weteran',
+      promoteName: 'A Youth',
+    });
+    expect(farewell?.subject).toContain('Słaby Weteran');
+    expect(farewell?.subject).toContain('A Youth');
+    expect(farewell?.summary).toMatch(/zakończył karierę/i);
+  });
+
+  it('retire only when no same-day promote', () => {
+    const farewell = resolveRetirementFarewell(
+      [
+        {
+          id: 'old',
+          name: 'Solo',
+          status: 'DEPARTED',
+          departedAt: `${today}T08:00:00.000Z`,
+          promotedAt: null,
+        },
+      ],
+      today,
+    );
+    expect(farewell).toEqual(formatRetirementFarewell('Solo', null));
+    expect(farewell?.promoteName).toBeNull();
+    expect(farewell?.subject).toBe('Solo zakończył karierę');
   });
 });

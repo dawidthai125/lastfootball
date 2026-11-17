@@ -163,4 +163,25 @@ describe('resolveClubMessages (LFE-MESSAGES-01)', () => {
     expect(dto.items[0]!.subject.length).toBeLessThanOrEqual(80);
     expect(dto.items[0]!.subject).toContain('Słaby Weteran');
   });
+
+  it('retirementFarewell → system info toward /hub', () => {
+    const dto = resolveClubMessages({
+      transferWindowOpen: false,
+      incomingOffers: [],
+      incomingLiveOffers: [],
+      outgoingLiveOffers: [],
+      retirementFarewell: {
+        subject: 'Słaby Weteran zakończył karierę · wchodzi A Youth',
+      },
+    });
+    expect(dto.items).toHaveLength(1);
+    expect(dto.items[0]).toMatchObject({
+      id: 'msg:retirement-farewell',
+      kind: 'system',
+      priority: 'info',
+      href: '/hub',
+      fromLabel: 'Zarząd',
+      subject: 'Słaby Weteran zakończył karierę · wchodzi A Youth',
+    });
+  });
 });

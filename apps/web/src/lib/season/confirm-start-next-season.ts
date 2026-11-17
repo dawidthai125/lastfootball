@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
 import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
@@ -35,7 +34,7 @@ export async function confirmStartNextSeason(
 ): Promise<ConfirmStartNextSeasonState> {
   void _formData;
   if (!env.isSupabaseConfigured) {
-    return { error: 'Supabase nie jest skonfigurowany.' };
+    return { error: 'Supabase nie jest skonfigurowany.', farewell: null };
   }
 
   const supabase = await createClient();
@@ -44,7 +43,7 @@ export async function confirmStartNextSeason(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: 'Sesja wygasła. Zaloguj się ponownie.' };
+    return { error: 'Sesja wygasła. Zaloguj się ponownie.', farewell: null };
   }
 
   const { data: club, error: clubErr } = await supabase
@@ -56,7 +55,7 @@ export async function confirmStartNextSeason(
     .maybeSingle();
 
   if (clubErr || !club) {
-    return { error: 'Nie znaleziono klubu.' };
+    return { error: 'Nie znaleziono klubu.', farewell: null };
   }
 
   const row = club as {
@@ -72,7 +71,7 @@ export async function confirmStartNextSeason(
   };
 
   if (row.season_phase !== 'offseason') {
-    return { error: 'Sezon nie jest zamknięty.' };
+    return { error: 'Sezon nie jest zamknięty.', farewell: null };
   }
 
   const clubId = row.id;
@@ -123,7 +122,7 @@ export async function confirmStartNextSeason(
     quote,
   });
   if (!sponsor.ok) {
-    return { error: sponsor.error };
+    return { error: sponsor.error, farewell: null };
   }
 
   const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
@@ -150,7 +149,7 @@ export async function confirmStartNextSeason(
       .eq('season_phase', 'offseason')
       .select('id');
     if (goalErr || !settledRows || settledRows.length === 0) {
-      return { error: 'Nie udało się zapisać celu sezonu.' };
+      return { error: 'Nie udało się zapisać celu sezonu.', farewell: null };
     }
     if (goalBonus > 0) {
       await supabase.from('finance_movements').insert({
@@ -164,7 +163,7 @@ export async function confirmStartNextSeason(
 
   const { error: delErr } = await supabase.from('fixtures').delete().eq('club_id', clubId);
   if (delErr) {
-    return { error: 'Nie udało się wyczyścić terminarza.' };
+    return { error: 'Nie udało się wyczyścić terminarza.', farewell: null };
   }
 
   const plan = planClubFixtures(clubId, nextTier);
@@ -179,14 +178,14 @@ export async function confirmStartNextSeason(
 
   const { error: insErr } = await supabase.from('fixtures').insert(rows as never);
   if (insErr) {
-    return { error: 'Nie udało się zaplanować nowego sezonu.' };
+    return { error: 'Nie udało się zaplanować nowego sezonu.', farewell: null };
   }
 
   // H-AGE — Season Transition Pipeline step 1 (before in_season persist).
   const hAgePort = createHAgeSupabasePort(supabase);
   const hAge = await runSeasonTransitionHAge(clubId, hAgePort);
   if (!hAge.ok) {
-    return { error: hAge.error };
+    return { error: hAge.error, farewell: null };
   }
 
   const openedSeason = await openNextSeasonAfterDeparture({
@@ -202,9 +201,12 @@ export async function confirmStartNextSeason(
     hAgeSnapshot: hAge.snapshot,
   });
   if (!openedSeason.ok) {
-    return { error: openedSeason.error };
+    return { error: openedSeason.error, farewell: null };
   }
 
   revalidatePath('/', 'layout');
-  redirect('/hub');
+  revalidatePath('/hub');
+  revalidatePath('/messages');
+  // Return farewell DTO for useActionState banner — no redirect (keeps client state).
+  return { error: null, farewell: openedSeason.farewell };
 }

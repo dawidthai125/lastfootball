@@ -172,6 +172,10 @@
 }
 
 /* —— Daily Goal Thin (LFE-DAILY-01) — suggestion under Primary; not hero CTA —— */
+.lf-hub__farewell {
+  margin: 0 0 0.75rem;
+}
+
 .lf-hub__daily {
   margin: 0;
   display: flex;
