@@ -71,19 +71,25 @@ export async function listRivalChallenges(clubId: string): Promise<RivalChalleng
   }));
 }
 
-export async function createRivalChallenge(formData: FormData): Promise<void> {
-  if (!env.isSupabaseConfigured) return;
+export type RivalChallengeState = { readonly error?: string };
+
+export async function createRivalChallenge(
+  _prev: RivalChallengeState,
+  formData: FormData,
+): Promise<RivalChallengeState> {
+  if (!env.isSupabaseConfigured) return { error: 'Supabase nie jest skonfigurowany.' };
   const rivalId = String(formData.get('rivalId') ?? '');
   const club = await getManagerClub();
-  if (!club || !rivalId || rivalId === club.id) return;
+  if (!club) return { error: 'Nie znaleziono klubu.' };
+  if (!rivalId || rivalId === club.id) return { error: 'Nie wybrano rywala.' };
 
   const emailGate = await loadEmailGate(club.ownerId);
-  if (emailGate.rivalsBlocked) redirect('/rivals');
+  if (emailGate.rivalsBlocked) return { error: 'Potwierdź email, żeby wyzwać klub.' };
 
   const supabase = await createClient();
   const rivals = await listRivalClubs();
   const rival = rivals.find((row) => row.id === rivalId);
-  if (!rival) return;
+  if (!rival) return { error: 'Nie znaleziono rywala.' };
 
   const { data: existing } = await supabase
     .from('rival_challenges')
@@ -117,7 +123,7 @@ export async function createRivalChallenge(formData: FormData): Promise<void> {
     .select('id')
     .single();
   const created = fixture as { id: string } | null;
-  if (fixtureErr || !created) return;
+  if (fixtureErr || !created) return { error: 'Nie udało się utworzyć wyzwania.' };
 
   const { error: challengeErr } = await supabase.from('rival_challenges').insert({
     fixture_id: created.id,
@@ -129,7 +135,10 @@ export async function createRivalChallenge(formData: FormData): Promise<void> {
     rival_short: rival.shortName,
     status: 'open',
   } as never);
-  if (challengeErr) return;
+  if (challengeErr) {
+    await supabase.from('fixtures').delete().eq('id', created.id).eq('club_id', club.id);
+    return { error: 'Nie udało się utworzyć wyzwania.' };
+  }
 
   revalidatePath('/rivals');
   redirect(`/match/${created.id}`);
