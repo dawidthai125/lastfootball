@@ -23,3 +23,17 @@ export function resolveNavLockLabel(
   }
   return `${itemLabel} — ${UI_COPY.softLockUnavailable}`;
 }
+
+/** Body copy for soft-lock modal / route gate. Same facts as the nav label. */
+export function resolveNavLockReason(itemId: string, playedCount: number): string {
+  if (itemId === 'training') {
+    return `Trening odblokuje się po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz ${playedCount}).`;
+  }
+  if (itemId === 'transfers') {
+    if (!hasPlayedUnlock(playedCount, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) {
+      return `Transfery odblokują się po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz ${playedCount}).`;
+    }
+    return UI_COPY.transferWindowClosed;
+  }
+  return UI_COPY.softLockReason;
+}

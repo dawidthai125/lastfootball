@@ -13,7 +13,7 @@ import {
 } from '@/components/club/ClubProvider';
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { NAV_GROUPS, type NavItem } from '@/lib/nav';
-import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -66,9 +66,9 @@ export function MobileNav() {
     trainingUnlocked,
   };
   const [moreOpen, setMoreOpen] = useState(false);
-  const [lockTitle, setLockTitle] = useState<string | null>(null);
+  const [lockItem, setLockItem] = useState<{ id: string; label: string } | null>(null);
   const titleId = useId();
-  const closeLock = useCallback(() => setLockTitle(null), []);
+  const closeLock = useCallback(() => setLockItem(null), []);
 
   useEffect(() => {
     setMoreOpen(false);
@@ -126,7 +126,7 @@ export function MobileNav() {
                 className={className}
                 aria-label={lockLabel}
                 title={lockLabel}
-                onClick={() => setLockTitle(item.label)}
+                onClick={() => setLockItem({ id: item.id, label: item.label })}
               >
                 <NavIcon id={item.id} active={false} size={16} />
                 <span
@@ -210,7 +210,7 @@ export function MobileNav() {
                               title={lockLabel}
                               onClick={() => {
                                 setMoreOpen(false);
-                                setLockTitle(item.label);
+                                setLockItem({ id: item.id, label: item.label });
                               }}
                             >
                               <NavIcon id={item.id} active={false} size={16} />
@@ -244,9 +244,9 @@ export function MobileNav() {
       ) : null}
 
       <SoftLockModal
-        open={Boolean(lockTitle)}
-        title={lockTitle ? UI_COPY.softLockTitle(lockTitle) : UI_COPY.softLockTitle('Lokacja')}
-        reason={UI_COPY.softLockReason}
+        open={Boolean(lockItem)}
+        title={lockItem ? UI_COPY.softLockTitle(lockItem.label) : UI_COPY.softLockTitle('Lokacja')}
+        reason={lockItem ? resolveNavLockReason(lockItem.id, playedCount) : UI_COPY.softLockReason}
         onClose={closeLock}
       />
     </>

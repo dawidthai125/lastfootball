@@ -212,7 +212,7 @@ export function TopBar() {
               minHeight: 44,
             }}
           >
-            Wyjdź
+            Wyloguj
           </button>
         </form>
       </div>
