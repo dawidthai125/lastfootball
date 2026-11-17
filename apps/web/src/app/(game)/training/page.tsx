@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { TrainingView } from '@/components/training/TrainingView';
 import { readClubBuild } from '@/lib/club/read-build';
+import { isPressLine } from '@/lib/training/press-line';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { countPlayedInList, listClubFixtures } from '@/lib/fixtures';
@@ -40,6 +41,10 @@ export default async function TrainingPage() {
     .maybeSingle();
   const pressRow =
     press.error || !press.data ? null : (press.data as { id: string; press_tone: string | null });
+  const line = await supabase.from('clubs').select('press_line').eq('id', club.id).maybeSingle();
+  const lineRaw =
+    line.error || !line.data ? 'mid' : (line.data as { press_line?: string }).press_line;
+  const pressLine = isPressLine(lineRaw ?? '') ? lineRaw : 'mid';
 
   return (
     <TrainingView
@@ -58,6 +63,7 @@ export default async function TrainingPage() {
       }))}
       pressFixtureId={pressRow?.id ?? null}
       pressDone={Boolean(pressRow?.press_tone)}
+      pressLine={pressLine}
     />
   );
 }

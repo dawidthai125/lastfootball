@@ -2,7 +2,9 @@ import { redirect } from 'next/navigation';
 
 import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
+import { fanMoodLabel } from '@/lib/club/fans';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
 import {
   countPlayedInList,
@@ -64,6 +66,11 @@ export default async function HubPage() {
   const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
   const cupLink =
     phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
+  const supabase = await createClient();
+  const mood = await supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle();
+  const moodValue = mood.error || !mood.data ? null : (mood.data as { fan_mood?: number }).fan_mood;
+  const fanLabel =
+    typeof moodValue === 'number' ? `Kibice: ${fanMoodLabel(moodValue)} ${moodValue}` : null;
 
   return (
     <EarlyClubHub
@@ -78,6 +85,7 @@ export default async function HubPage() {
       todayUtc={utcDateString()}
       seasonReport={seasonReport}
       cupLink={cupLink}
+      fanLabel={fanLabel}
       matchesBlocked={emailGate.matchesBlocked}
       lastPlayedAt={latestPlayedAt(fixtures)}
     />

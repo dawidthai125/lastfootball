@@ -12,8 +12,10 @@ import {
   runIndividualSession,
   savePressTone,
 } from '@/lib/training/actions-depth';
+import { savePressLine } from '@/lib/training/actions-press-line';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
+import { pressLineLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
@@ -69,6 +71,7 @@ export function TrainingView({
   players = [],
   pressFixtureId = null,
   pressDone = false,
+  pressLine = 'mid',
 }: {
   training: TrainingDto;
   coachGroup?: CoachGroup | null;
@@ -81,6 +84,7 @@ export function TrainingView({
   players?: readonly { id: string; name: string; energy: number }[];
   pressFixtureId?: string | null;
   pressDone?: boolean;
+  pressLine?: string;
 }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -105,6 +109,10 @@ export function TrainingView({
   );
   const [pressState, pressAction, pressPending] = useActionState(
     savePressTone,
+    TRAINING_ACTION_INITIAL,
+  );
+  const [lineState, lineAction, linePending] = useActionState(
+    savePressLine,
     TRAINING_ACTION_INITIAL,
   );
 
@@ -254,6 +262,39 @@ export function TrainingView({
           </form>
         </section>
       ) : null}
+
+      <section className="lf-tr__block" aria-label="Linia pressingu">
+        <h3 className="lf-tr__block-title">Linia pressingu</h3>
+        <p className="lf-tr__meta">
+          Teraz: {pressLineLabel(pressLine)}. Wysoka linia podnosi pressing na rozpoczęcie o 4,
+          niska obniża o 4.
+        </p>
+        {lineState.error ? (
+          <p className="lf-tr__regen-note" role="alert">
+            {lineState.error}
+          </p>
+        ) : null}
+        <div className="lf-tr__focus-grid">
+          {(
+            [
+              ['high', 'Wysoki'],
+              ['mid', 'Środek'],
+              ['low', 'Niski'],
+            ] as const
+          ).map(([line, label]) => (
+            <form key={line} action={lineAction}>
+              <input type="hidden" name="line" value={line} />
+              <Button
+                type="submit"
+                variant={pressLine === line ? 'primary' : 'default'}
+                disabled={linePending}
+              >
+                {label}
+              </Button>
+            </form>
+          ))}
+        </div>
+      </section>
 
       {pressFixtureId ? (
         <section className="lf-tr__block" aria-label="Konferencja">

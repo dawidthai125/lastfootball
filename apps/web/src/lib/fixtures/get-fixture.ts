@@ -152,6 +152,16 @@ async function attachClubStyle(
             clampStyle(row.style_width ?? 0),
           ]),
         );
+  const press = await supabase.from('clubs').select('id, press_line').in('id', ids);
+  const lines =
+    press.error || !press.data
+      ? new Map<string, string>()
+      : new Map(
+          (press.data as { id: string; press_line: string }[]).map((row) => [
+            row.id,
+            row.press_line === 'high' || row.press_line === 'low' ? row.press_line : 'mid',
+          ]),
+        );
   return fixtures.map((fixture) => {
     const homeId = homeClubId(viewerClubId, fixture);
     return {
@@ -162,6 +172,8 @@ async function attachClubStyle(
       viewerStyleTempo: tempoPoints.get(viewerClubId) ?? 0,
       homeStyleWidth: homeId ? (widthPoints.get(homeId) ?? 0) : 0,
       viewerStyleWidth: widthPoints.get(viewerClubId) ?? 0,
+      homePressLine: homeId ? (lines.get(homeId) ?? 'mid') : 'mid',
+      viewerPressLine: lines.get(viewerClubId) ?? 'mid',
     };
   });
 }

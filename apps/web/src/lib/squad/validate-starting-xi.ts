@@ -43,6 +43,11 @@ export function validateStartingXi(starters: readonly SquadPlayerDto[]): XiValid
     );
   }
 
+  const loaned = active.filter((p) => p.onLoan);
+  if (loaned.length > 0) {
+    errors.push('Wypożyczony zawodnik nie może grać w XI.');
+  }
+
   const tired = active.filter((p) => p.status === 'TIRED');
   if (tired.length >= 4) {
     warnings.push('Wielu zmęczonych w XI — rozważ rotację.');

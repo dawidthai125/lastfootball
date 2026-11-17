@@ -47,6 +47,7 @@ export function EarlyClubHub({
   cupLink = null,
   matchesBlocked = false,
   lastPlayedAt,
+  fanLabel = null,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -67,6 +68,8 @@ export function EarlyClubHub({
   matchesBlocked?: boolean;
   /** Newest played_at across competitions. Omitted falls back to the last league fixture. */
   lastPlayedAt?: string | null;
+  /** Fan mood sentence. Omitted when the column is missing. */
+  fanLabel?: string | null;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -191,7 +194,7 @@ export function EarlyClubHub({
         <ClubIdentity club={club} status={status} />
         <div className="lf-hub__actions">
           <SecondaryRow actions={secondary} />
-          <LightStatus status={status} />
+          <LightStatus status={status} fanLabel={fanLabel} />
         </div>
       </div>
 
@@ -395,12 +398,19 @@ function SecondaryRow({ actions }: { actions: HubCta[] }) {
   );
 }
 
-function LightStatus({ status }: { status: ReturnType<typeof buildLightStatus> }) {
+function LightStatus({
+  status,
+  fanLabel,
+}: {
+  status: ReturnType<typeof buildLightStatus>;
+  fanLabel?: string | null;
+}) {
   const parts = [
     status.clubLevelLabel,
     status.league,
     status.leaguePositionLabel,
     status.cashLabel,
+    fanLabel,
     status.stadium,
   ].filter((v): v is string => Boolean(v));
 

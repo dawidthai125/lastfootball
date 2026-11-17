@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { readClubBuild } from '@/lib/club/read-build';
+import { recordFanMood } from '@/lib/club/record-fan-mood';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolveLeagueMatchReward } from '@/lib/finance';
 import { ticketIncome } from '@/lib/stadium/levels';
@@ -265,6 +266,14 @@ export async function completeFixture(
           } as never);
         }
       }
+
+      const ours = playedHome ? home : away;
+      const theirs = playedHome ? away : home;
+      await recordFanMood(
+        supabase,
+        clubId,
+        ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw',
+      );
 
       if (row.competition === 'league') {
         const { data: next } = await supabase
