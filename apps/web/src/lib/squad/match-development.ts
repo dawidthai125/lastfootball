@@ -1,6 +1,6 @@
 import { resolveCareerPhase } from '@/lib/squad/career-phase';
 import { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
-import { allowGrowthImpulse } from '@/lib/squad/growth-gate';
+import { allowGrowthImpulse, resolveGrowthSkillDelta } from '@/lib/squad/growth-gate';
 
 export type MatchDevPlayerSlice = {
   readonly id: string;
@@ -56,7 +56,9 @@ export function applyMatchDevelopmentEffects(
 
   return players.map((p) => {
     if (!toBoost.has(p.id)) return { id: p.id, skill: p.skill };
-    const next = Math.min(99, p.potential, p.skill + DEVELOPMENT_THIN.SKILL_UP_MAX_PER_PLAYER);
+    const phase = resolveCareerPhase({ age: p.age });
+    const delta = resolveGrowthSkillDelta(p.id, impulseKey, phase);
+    const next = Math.min(99, p.potential, p.skill + delta);
     return { id: p.id, skill: next };
   });
 }
