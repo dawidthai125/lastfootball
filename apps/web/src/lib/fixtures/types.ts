@@ -40,6 +40,10 @@ export type FixtureDto = {
   readonly homePressLine?: string;
   /** Viewer press line. Missing means mid. */
   readonly viewerPressLine?: string;
+  /** Home press shape. Missing means flat. */
+  readonly homePressShape?: string;
+  /** Viewer press shape. Missing means flat. */
+  readonly viewerPressShape?: string;
 };
 
 export type FixtureRow = {

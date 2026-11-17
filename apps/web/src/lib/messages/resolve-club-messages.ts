@@ -34,11 +34,28 @@ export type MessagesIncomingOfferInput = {
   readonly playerName: string;
 };
 
+export type MessagesDressingInput = {
+  readonly conflictId: string;
+  readonly subject: string;
+};
+
+export type MessagesLoanInInput = {
+  readonly count: number;
+};
+
+export type MessagesIntlInput = {
+  readonly playerId: string;
+  readonly subject: string;
+};
+
 export type ResolveClubMessagesInput = {
   readonly transferWindowOpen: boolean;
   readonly incomingOffers: readonly MessagesIncomingOfferInput[];
   readonly incomingLiveOffers: readonly MessagesH2hOfferInput[];
   readonly outgoingLiveOffers: readonly MessagesH2hOfferInput[];
+  readonly dressingConflict?: MessagesDressingInput | null;
+  readonly incomingLoanOffers?: MessagesLoanInInput | null;
+  readonly intlCallup?: MessagesIntlInput | null;
 };
 
 function isPendingActionableSeller(o: MessagesH2hOfferInput): boolean {
@@ -86,6 +103,40 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       subject: n === 1 ? 'Masz ofertę przychodzącą' : `Masz oferty przychodzące (${n})`,
       fromLabel: 'Transfery',
       href: '/transfers',
+      priority: 'decision',
+    });
+  }
+
+  if (input.dressingConflict) {
+    items.push({
+      id: `msg:dress:${input.dressingConflict.conflictId}`,
+      kind: 'offer_brief',
+      subject: input.dressingConflict.subject,
+      fromLabel: 'Szatnia',
+      href: '/messages',
+      priority: 'decision',
+    });
+  }
+
+  if (input.incomingLoanOffers && input.incomingLoanOffers.count > 0) {
+    const n = input.incomingLoanOffers.count;
+    items.push({
+      id: 'msg:loan-in',
+      kind: 'offer_brief',
+      subject: n === 1 ? 'Oferta wypożyczenia' : `Oferty wypożyczenia (${n})`,
+      fromLabel: 'Transfery',
+      href: '/transfers',
+      priority: 'decision',
+    });
+  }
+
+  if (input.intlCallup) {
+    items.push({
+      id: `msg:intl:${input.intlCallup.playerId}`,
+      kind: 'offer_brief',
+      subject: input.intlCallup.subject,
+      fromLabel: 'Reprezentacja',
+      href: '/messages',
       priority: 'decision',
     });
   }

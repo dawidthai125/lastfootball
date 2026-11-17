@@ -83,6 +83,10 @@ export function createSessionFromLeagueFixture(
     tacticsSide === 'home' ? (fixture.homeStylePressing ?? 0) : (fixture.viewerStylePressing ?? 0);
   const pressLine =
     tacticsSide === 'home' ? (fixture.homePressLine ?? 'mid') : (fixture.viewerPressLine ?? 'mid');
+  const pressShape =
+    tacticsSide === 'home'
+      ? (fixture.homePressShape ?? 'flat')
+      : (fixture.viewerPressShape ?? 'flat');
   const tempoHabit =
     tacticsSide === 'home' ? (fixture.homeStyleTempo ?? 0) : (fixture.viewerStyleTempo ?? 0);
   const widthHabit =
@@ -186,7 +190,7 @@ export function createSessionFromLeagueFixture(
     awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
     tacticsSide,
-    openingPressing: kickoffPressingWithLine(habit, pressLine),
+    openingPressing: kickoffPressingWithLine(habit, pressLine, pressShape),
     openingTempo: kickoffTempo(tempoHabit),
     openingWidth: kickoffWidth(widthHabit),
     settings: {

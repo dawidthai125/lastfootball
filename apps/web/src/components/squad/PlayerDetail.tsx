@@ -273,6 +273,7 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
           position={player.position}
           starter={player.starter}
           onLoan={player.onLoan === true}
+          loanedIn={player.loanedIn === true}
         />
       </div>
     </SectionShell>

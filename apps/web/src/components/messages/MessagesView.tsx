@@ -1,14 +1,38 @@
-import Link from 'next/link';
+'use client';
 
+import Link from 'next/link';
+import { useActionState } from 'react';
+
+import { Button } from '@/components/ui/Button';
 import type { ClubMessagesDto } from '@/lib/messages';
+import { settleDressingConflict, type DressingState } from '@/lib/squad/actions-dressing-room';
+import { acceptIntlCallup, type IntlState } from '@/lib/squad/actions-intl-callup';
 import { UI_COPY } from '@/lib/ui/copy';
+
+const DRESS_INITIAL: DressingState = {};
+const INTL_INITIAL: IntlState = {};
+
+export type MessagesDeskProps = {
+  readonly messages: ClubMessagesDto;
+  readonly dressingConflictId?: string | null;
+  readonly intlPlayerId?: string | null;
+};
 
 /**
  * Messages inbox — presentation only.
  * Renders resolveClubMessages order as-is (no sort/filter in UI).
  */
-export function MessagesView({ messages }: { messages: ClubMessagesDto }) {
+export function MessagesView({
+  messages,
+  dressingConflictId = null,
+  intlPlayerId = null,
+}: MessagesDeskProps) {
   const { items } = messages;
+  const [dressState, dressAction, dressPending] = useActionState(
+    settleDressingConflict,
+    DRESS_INITIAL,
+  );
+  const [intlState, intlAction, intlPending] = useActionState(acceptIntlCallup, INTL_INITIAL);
 
   return (
     <div>
@@ -26,6 +50,58 @@ export function MessagesView({ messages }: { messages: ClubMessagesDto }) {
           {UI_COPY.messagesSubtitle}
         </p>
       </header>
+
+      {dressingConflictId ? (
+        <section className="mb-4" aria-label="Konflikt w szatni">
+          <p
+            className="mb-2 font-[family-name:var(--font-ui)]"
+            style={{ fontSize: 'var(--lf-type-table)', color: 'var(--lf-color-text-primary)' }}
+          >
+            Dwóch wybuchowych w jedenastce ma niski nastrój. Porozmawiaj (+3) albo odpuść (−2).
+          </p>
+          {dressState.error ? (
+            <p role="alert" style={{ color: 'var(--lf-color-text-muted)' }}>
+              {dressState.error}
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-2">
+            <form action={dressAction}>
+              <input type="hidden" name="intent" value="mediate" />
+              <Button type="submit" disabled={dressPending}>
+                Porozmawiaj
+              </Button>
+            </form>
+            <form action={dressAction}>
+              <input type="hidden" name="intent" value="ignore" />
+              <Button type="submit" variant="default" disabled={dressPending}>
+                Odpuść
+              </Button>
+            </form>
+          </div>
+        </section>
+      ) : null}
+
+      {intlPlayerId ? (
+        <section className="mb-4" aria-label="Powołanie">
+          <p
+            className="mb-2 font-[family-name:var(--font-ui)]"
+            style={{ fontSize: 'var(--lf-type-table)', color: 'var(--lf-color-text-primary)' }}
+          >
+            Reprezentacja bierze zawodnika na kilka dni. Zdejmie go z jedenastki.
+          </p>
+          {intlState.error ? (
+            <p role="alert" style={{ color: 'var(--lf-color-text-muted)' }}>
+              {intlState.error}
+            </p>
+          ) : null}
+          <form action={intlAction}>
+            <input type="hidden" name="playerId" value={intlPlayerId} />
+            <Button type="submit" disabled={intlPending}>
+              Zwolnij do kadry
+            </Button>
+          </form>
+        </section>
+      ) : null}
 
       {items.length === 0 ? (
         <p

@@ -42,7 +42,9 @@ function ownerKickoffPressing(dto: FixtureDto): number {
     tacticsSide === 'home' ? (dto.homeStylePressing ?? 0) : (dto.viewerStylePressing ?? 0);
   const line =
     tacticsSide === 'home' ? (dto.homePressLine ?? 'mid') : (dto.viewerPressLine ?? 'mid');
-  return kickoffPressingWithLine(habit, line);
+  const shape =
+    tacticsSide === 'home' ? (dto.homePressShape ?? 'flat') : (dto.viewerPressShape ?? 'flat');
+  return kickoffPressingWithLine(habit, line, shape);
 }
 
 /** Same owner rule as pressing. A missing habit stays at tempo 50. */

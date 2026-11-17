@@ -152,7 +152,7 @@ async function attachClubStyle(
             clampStyle(row.style_width ?? 0),
           ]),
         );
-  const press = await supabase.from('clubs').select('id, press_line').in('id', ids);
+  const press = await supabase.from('clubs').select('id, press_line, press_shape').in('id', ids);
   const lines =
     press.error || !press.data
       ? new Map<string, string>()
@@ -160,6 +160,24 @@ async function attachClubStyle(
           (press.data as { id: string; press_line: string }[]).map((row) => [
             row.id,
             row.press_line === 'high' || row.press_line === 'low' ? row.press_line : 'mid',
+          ]),
+        );
+  const shapes =
+    press.error || !press.data
+      ? new Map<string, string>()
+      : new Map(
+          (
+            press.data as {
+              id: string;
+              press_shape: string | null;
+            }[]
+          ).map((row) => [
+            row.id,
+            row.press_shape === 'left_high' ||
+            row.press_shape === 'right_high' ||
+            row.press_shape === 'split'
+              ? row.press_shape
+              : 'flat',
           ]),
         );
   return fixtures.map((fixture) => {
@@ -174,6 +192,8 @@ async function attachClubStyle(
       viewerStyleWidth: widthPoints.get(viewerClubId) ?? 0,
       homePressLine: homeId ? (lines.get(homeId) ?? 'mid') : 'mid',
       viewerPressLine: lines.get(viewerClubId) ?? 'mid',
+      homePressShape: homeId ? (shapes.get(homeId) ?? 'flat') : 'flat',
+      viewerPressShape: shapes.get(viewerClubId) ?? 'flat',
     };
   });
 }

@@ -10,7 +10,12 @@ import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fi
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
+import { isPersonality } from '@/lib/squad/depth';
+import { resolveDressingConflict } from '@/lib/squad/dressing-room';
+import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
+import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
 import { TRAINING_THIN } from '@/lib/training/types';
@@ -72,11 +77,46 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       transferWindowOpen: club.transferWindowOpen,
       activePlayers,
     });
+    const today = utcDateString();
+    const dressing = resolveDressingConflict(
+      activePlayers.map((player) => ({
+        id: player.id,
+        name: player.name,
+        starter: player.starter,
+        morale: typeof player.morale === 'number' ? player.morale : 60,
+        personality: isPersonality(player.personality) ? player.personality : 'spokojny',
+      })),
+    );
+    const loanOffers = resolveIncomingLoanOffers({
+      clubId: club.id,
+      transferWindowOpen: club.transferWindowOpen,
+      rosterCount: activePlayers.length,
+      today,
+    });
+    const intl = resolveIntlCallup({
+      clubId: club.id,
+      today,
+      players: activePlayers.map((player) => ({
+        id: player.id,
+        name: player.name,
+        skill: player.skill,
+        nationality: player.nationality,
+        starter: player.starter,
+        onLoan: player.onLoan === true,
+        loanedIn: player.loanedIn === true,
+      })),
+      alreadyAbsentIds: activePlayers
+        .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= today)
+        .map((player) => player.id),
+    });
     messages = resolveClubMessages({
       transferWindowOpen: club.transferWindowOpen,
       incomingOffers,
       incomingLiveOffers: h2hOffers.incoming,
       outgoingLiveOffers: h2hOffers.outgoing,
+      dressingConflict: dressing ? { conflictId: dressing.id, subject: dressing.subject } : null,
+      incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
+      intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
     });
     invitations = resolveClubInvitations({
       messages,

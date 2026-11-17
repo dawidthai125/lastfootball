@@ -9,7 +9,8 @@ const PLAYER_SELECT =
 const DEPTH_SELECT =
   'id, morale, personality, contract_until, release_clause, set_piece, last_individual_on';
 
-const LOAN_SELECT = 'id, on_loan, loan_until, wage_bank';
+const LOAN_SELECT =
+  'id, on_loan, loan_until, wage_bank, loaned_in, loan_partner_label, intl_absent_until';
 
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';

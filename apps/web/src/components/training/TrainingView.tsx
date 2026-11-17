@@ -13,9 +13,10 @@ import {
   savePressTone,
 } from '@/lib/training/actions-depth';
 import { savePressLine } from '@/lib/training/actions-press-line';
+import { savePressShape } from '@/lib/training/actions-press-shape';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
 import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
-import { pressLineLabel } from '@/lib/training/press-line';
+import { pressLineLabel, pressShapeLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
@@ -72,6 +73,7 @@ export function TrainingView({
   pressFixtureId = null,
   pressDone = false,
   pressLine = 'mid',
+  pressShape = 'flat',
 }: {
   training: TrainingDto;
   coachGroup?: CoachGroup | null;
@@ -85,6 +87,7 @@ export function TrainingView({
   pressFixtureId?: string | null;
   pressDone?: boolean;
   pressLine?: string;
+  pressShape?: string;
 }) {
   const [focusId, setFocusId] = useState<TrainingFocusId>(training.defaults.focusId);
   const [intensityId, setIntensityId] = useState<TrainingIntensityId>(
@@ -113,6 +116,10 @@ export function TrainingView({
   );
   const [lineState, lineAction, linePending] = useActionState(
     savePressLine,
+    TRAINING_ACTION_INITIAL,
+  );
+  const [shapeState, shapeAction, shapePending] = useActionState(
+    savePressShape,
     TRAINING_ACTION_INITIAL,
   );
 
@@ -288,6 +295,40 @@ export function TrainingView({
                 type="submit"
                 variant={pressLine === line ? 'primary' : 'default'}
                 disabled={linePending}
+              >
+                {label}
+              </Button>
+            </form>
+          ))}
+        </div>
+      </section>
+
+      <section className="lf-tr__block" aria-label="Kształt pressingu">
+        <h3 className="lf-tr__block-title">Kształt pressingu</h3>
+        <p className="lf-tr__meta">
+          Teraz: {pressShapeLabel(pressShape)}. Lewa albo prawa wysoko dodaje 2 do startu,
+          rozciągnięty dodaje 1.
+        </p>
+        {shapeState.error ? (
+          <p className="lf-tr__regen-note" role="alert">
+            {shapeState.error}
+          </p>
+        ) : null}
+        <div className="lf-tr__focus-grid">
+          {(
+            [
+              ['flat', 'Równo'],
+              ['left_high', 'Lewa'],
+              ['right_high', 'Prawa'],
+              ['split', 'Rozciągnięty'],
+            ] as const
+          ).map(([shape, label]) => (
+            <form key={shape} action={shapeAction}>
+              <input type="hidden" name="shape" value={shape} />
+              <Button
+                type="submit"
+                variant={pressShape === shape ? 'primary' : 'default'}
+                disabled={shapePending}
               >
                 {label}
               </Button>

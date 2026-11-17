@@ -26,6 +26,7 @@ const PROTECTED_PREFIXES = [
   '/sponsors',
   '/board',
   '/messages',
+  '/inbox',
   '/achievements',
   '/profile',
   '/settings',

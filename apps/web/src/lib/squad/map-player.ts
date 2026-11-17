@@ -45,6 +45,9 @@ export type PlayerDbRow = {
   on_loan?: boolean | null;
   loan_until?: string | null;
   wage_bank?: number | null;
+  loaned_in?: boolean | null;
+  loan_partner_label?: string | null;
+  intl_absent_until?: string | null;
 };
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -94,6 +97,9 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     onLoan: row.on_loan === true,
     loanUntil: row.loan_until ?? null,
     wageBank: typeof row.wage_bank === 'number' ? row.wage_bank : undefined,
+    loanedIn: row.loaned_in === true,
+    loanPartnerLabel: row.loan_partner_label ?? null,
+    intlAbsentUntil: row.intl_absent_until ?? null,
   };
 }
 
