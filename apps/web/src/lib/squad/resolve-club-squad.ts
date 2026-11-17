@@ -95,7 +95,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
       clause: displayClause(skill),
       role: roleLabel(row.pos, row.captain),
     },
-    history: [`Skład startowy ${row.clubId.slice(0, 8)}`, row.starter ? 'XI' : 'Ławka'],
+    history: [row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.'],
     starter: row.starter,
     captain: row.captain,
     version: row.version,
