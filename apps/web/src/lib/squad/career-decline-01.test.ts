@@ -6,7 +6,11 @@ import {
   resolveCareerPhaseView,
 } from '@/lib/squad/career-phase';
 import { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
-import { allowGrowthImpulse, resolveGrowthCoefficient } from '@/lib/squad/growth-gate';
+import {
+  allowGrowthImpulse,
+  resolveGrowthCoefficient,
+  resolveGrowthSkillDelta,
+} from '@/lib/squad/growth-gate';
 import { applyMatchDevelopmentEffects } from '@/lib/squad/match-development';
 import { applySeasonAgeEffects } from '@/lib/squad/season-age';
 
@@ -41,13 +45,14 @@ describe('LFE-CAREER-DECLINE-01 Career Phase', () => {
 });
 
 describe('LFE-CAREER-DECLINE-01 Growth Gate', () => {
-  it('coefficients stay in (0, 1]', () => {
+  it('coefficients stay >0; soft gates ≤1; prime may exceed 1 (Owner GO)', () => {
     for (const phase of ['youth', 'rising', 'prime', 'decline', 'late'] as const) {
       const c = resolveGrowthCoefficient(phase);
       expect(c).toBeGreaterThan(0);
-      expect(c).toBeLessThanOrEqual(1);
     }
     expect(resolveGrowthCoefficient('youth')).toBe(1);
+    expect(resolveGrowthCoefficient('prime')).toBe(DEVELOPMENT_THIN.GROWTH_COEFF_PRIME);
+    expect(DEVELOPMENT_THIN.GROWTH_COEFF_PRIME).toBe(1.1);
     expect(resolveGrowthCoefficient('decline')).toBe(DEVELOPMENT_THIN.GROWTH_COEFF_DECLINE);
     expect(resolveGrowthCoefficient('late')).toBe(DEVELOPMENT_THIN.GROWTH_COEFF_LATE);
   });
@@ -58,6 +63,14 @@ describe('LFE-CAREER-DECLINE-01 Growth Gate', () => {
     const a = allowGrowthImpulse('veteran', 'match:42', 'late');
     const b = allowGrowthImpulse('veteran', 'match:42', 'late');
     expect(a).toBe(b);
+  });
+
+  it('prime skill delta is 1 or 2 and deterministic (×1.1 bonus roll)', () => {
+    const d1 = resolveGrowthSkillDelta('prime-p', 'match:1', 'prime');
+    const d2 = resolveGrowthSkillDelta('prime-p', 'match:1', 'prime');
+    expect(d1).toBe(d2);
+    expect(d1 === 1 || d1 === 2).toBe(true);
+    expect(resolveGrowthSkillDelta('rising-p', 'match:1', 'rising')).toBe(1);
   });
 
   it('decline/late gate reduces boosts vs rising on same pool', () => {

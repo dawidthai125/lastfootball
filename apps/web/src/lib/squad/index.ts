@@ -54,7 +54,11 @@ export {
   careerPhaseLabel,
 } from '@/lib/squad/career-phase';
 export type { CareerPhaseId, CareerPhaseInput, CareerPhaseView } from '@/lib/squad/career-phase';
-export { resolveGrowthCoefficient, allowGrowthImpulse } from '@/lib/squad/growth-gate';
+export {
+  resolveGrowthCoefficient,
+  allowGrowthImpulse,
+  resolveGrowthSkillDelta,
+} from '@/lib/squad/growth-gate';
 export {
   applyMatchDevelopmentEffects,
   summarizeMatchDevelopment,

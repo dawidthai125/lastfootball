@@ -1,6 +1,6 @@
 import type { PlayerStatus } from '@/lib/squad/types';
 import { resolveCareerPhase } from '@/lib/squad/career-phase';
-import { allowGrowthImpulse } from '@/lib/squad/growth-gate';
+import { allowGrowthImpulse, resolveGrowthSkillDelta } from '@/lib/squad/growth-gate';
 import {
   bumpGroup,
   energyAfterTraining,
@@ -162,10 +162,12 @@ export function applyTrainingSessionEffects(
     let skill = p.skill;
     let groups = p.groups;
     if (toBoost.has(p.id)) {
-      skill = Math.min(99, p.potential, p.skill + TRAINING_THIN.SKILL_UP_MAX_PER_PLAYER);
+      const phase = resolveCareerPhase({ age: p.age });
+      const delta = resolveGrowthSkillDelta(p.id, impulseKey, phase);
+      skill = Math.min(99, p.potential, p.skill + delta);
       const key = groupKeyForFocus(focusId, p.pos ?? '');
       if (groups && key) {
-        groups = bumpGroup(groups, key, 1, p.potential);
+        groups = bumpGroup(groups, key, delta, p.potential);
       }
     }
 

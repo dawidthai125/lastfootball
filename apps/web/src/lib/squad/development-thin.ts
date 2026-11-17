@@ -19,10 +19,15 @@ export const DEVELOPMENT_THIN = {
   PHASE_RISING_MAX: 27,
   PHASE_PRIME_MAX: 31,
   PHASE_DECLINE_MAX: 37,
-  /** Growth Gate coefficients ∈ (0, 1] — never 0 (LOCK hard-ban OUT). */
+  /**
+   * Growth Gate coefficients — never 0 (LOCK hard-ban OUT).
+   * Values in (0, 1] soft-gate impulse chance; >1 (Owner GO Prime) boosts delta
+   * via resolveGrowthSkillDelta (base + fractional bonus roll).
+   */
   GROWTH_COEFF_YOUTH: 1,
   GROWTH_COEFF_RISING: 1,
-  GROWTH_COEFF_PRIME: 1,
+  /** Owner GO 2026-11-17: Growth ×1.1 in prime (peak ages). */
+  GROWTH_COEFF_PRIME: 1.1,
   GROWTH_COEFF_DECLINE: 0.5,
   GROWTH_COEFF_LATE: 0.25,
   /** Season age skill Δ by phase after age++. */
