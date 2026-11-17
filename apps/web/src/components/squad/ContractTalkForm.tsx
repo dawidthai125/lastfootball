@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 
+import { formatMoney } from '@/lib/finance/format-money';
 import { saveContractTalk, type ContractTalkState } from '@/lib/squad/actions-contract';
 
 const INITIAL: ContractTalkState = {};
@@ -30,7 +31,7 @@ export function ContractTalkForm({
     >
       <input type="hidden" name="playerId" value={playerId} />
       <label style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-        Nowa pensja, minimum {demand} €
+        Nowa pensja, minimum {formatMoney(demand)}
         <input name="offer" type="number" min={demand} step={1} defaultValue={demand} required />
       </label>
       <button type="submit" disabled={pending}>

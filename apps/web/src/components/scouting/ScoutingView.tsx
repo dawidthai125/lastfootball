@@ -100,8 +100,6 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
           title="Skauting wkrótce"
           reason="Porządkowanie informacji o kadrze i rynku odblokuje się w sezonie."
           unlockHint="Skauting jest opcjonalny — decyzje podejmujesz Ty, nie raport."
-          secondaryHref="/hub"
-          secondaryLabel="Hub"
         />
       </div>
     );

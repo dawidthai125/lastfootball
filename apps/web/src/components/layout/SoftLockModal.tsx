@@ -40,7 +40,7 @@ export function SoftLockModal({ open, title, reason, onClose }: SoftLockModalPro
       <button
         type="button"
         className="lf-slm__backdrop"
-        aria-label={UI_COPY.close}
+        aria-label="Zamknij okno"
         onClick={onClose}
       />
       <div className="lf-slm__panel" role="dialog" aria-modal="true" aria-labelledby={titleId}>

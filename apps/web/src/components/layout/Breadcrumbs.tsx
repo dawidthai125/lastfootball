@@ -7,7 +7,7 @@ type BreadcrumbItem = {
 
 export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   return (
-    <nav aria-label="Breadcrumb" style={{ marginBottom: 'var(--lf-space-3)' }}>
+    <nav aria-label="Ścieżka nawigacji" style={{ marginBottom: 'var(--lf-space-3)' }}>
       <ol
         style={{
           display: 'flex',
