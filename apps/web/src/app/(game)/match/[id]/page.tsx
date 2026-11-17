@@ -11,6 +11,7 @@ import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { parseOurFormation } from '@/lib/match/our-formation';
+import { lineupEditorHref } from '@/lib/match/xi-block-path';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
 
@@ -19,11 +20,15 @@ type PageProps = {
   searchParams: Promise<{ shape?: string | string[] }>;
 };
 
-function SquadError({ detail }: { detail?: string }) {
+function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
   return (
     <Panel title="Kadra niedostępna">
       <p style={{ margin: 0, color: 'var(--lf-color-text-muted)' }}>
-        {detail ?? 'Nie można przygotować meczu — brak składu w bazie.'} Wróć do{' '}
+        {detail ?? 'Nie można przygotować meczu — brak składu w bazie.'}{' '}
+        <Link href={lineupEditorHref(matchId)} style={{ color: 'var(--lf-color-text-gold)' }}>
+          Popraw skład
+        </Link>
+        . Wróć do{' '}
         <Link href="/squad" style={{ color: 'var(--lf-color-text-gold)' }}>
           kadry
         </Link>{' '}
@@ -49,7 +54,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
         <PreMatchView bundle={buildFirstPreMatchBundle(club, ourXi, build.levels)} firstMatch />
       );
     } catch (e) {
-      if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
+      if (e instanceof SquadUnavailableError) return <SquadError matchId={id} detail={e.message} />;
       throw e;
     }
   }
@@ -112,7 +117,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
 
   try {
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
-    if (human?.block) return <SquadError detail={human.block} />;
+    if (human?.block) return <SquadError matchId={id} detail={human.block} />;
     const ourXi = human ? human.ourXi : await loadClubStartingXi(club);
     return (
       <PreMatchView
@@ -126,7 +131,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
       />
     );
   } catch (e) {
-    if (e instanceof SquadUnavailableError) return <SquadError detail={e.message} />;
+    if (e instanceof SquadUnavailableError) return <SquadError matchId={id} detail={e.message} />;
     throw e;
   }
 }

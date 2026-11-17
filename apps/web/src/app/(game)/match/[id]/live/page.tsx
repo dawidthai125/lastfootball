@@ -11,6 +11,7 @@ import { buildFirstLiveBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { matchPrePath } from '@/lib/match/match-path';
+import { lineupEditorHref } from '@/lib/match/xi-block-path';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -35,6 +36,7 @@ function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
         title="Kadra niedostępna"
         body={detail ?? 'Nie można rozpocząć meczu — brak składu. Wróć do przedmeczu i ustaw XI.'}
         links={[
+          { href: lineupEditorHref(matchId), label: 'Popraw skład' },
           { href: matchPrePath(matchId), label: UI_COPY.backToPrematch },
           { href: '/squad', label: UI_COPY.squadNav },
         ]}

@@ -2,7 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { CrestMonogram } from '@/components/match/CrestMonogram';
-import { matchLivePath, matchPrePath } from '@/lib/match/match-path';
+import { matchPrePath } from '@/lib/match/match-path';
+import { skipOrLineupLink } from '@/lib/match/xi-block-path';
 
 import './match-path.css';
 
@@ -17,6 +18,7 @@ export function MatchVsView({
   awayName,
   meta,
   rivalLines,
+  xiBlocked,
 }: {
   matchId: string;
   homeShort: string;
@@ -25,7 +27,9 @@ export function MatchVsView({
   awayName: string;
   meta: string;
   rivalLines: readonly string[];
+  xiBlocked: boolean;
 }) {
+  const skip = skipOrLineupLink({ matchId, xiBlocked });
   return (
     <div className="lf-mp lf-mp--immersive" data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-02">
       <div className="lf-mp__hero" data-wa="HERO-003">
@@ -62,8 +66,8 @@ export function MatchVsView({
         <Link href={matchPrePath(matchId)} className="lf-mp__primary">
           Dalej
         </Link>
-        <Link href={matchLivePath(matchId)} className="lf-mp__soft">
-          Pomiń checklistę · Start
+        <Link href={skip.href} className="lf-mp__soft">
+          {skip.label}
         </Link>
       </div>
     </div>
