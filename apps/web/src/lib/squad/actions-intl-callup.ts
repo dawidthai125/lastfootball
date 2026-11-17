@@ -9,10 +9,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export type IntlState = { readonly error?: string; readonly ok?: boolean };
 
-export async function acceptIntlCallup(
-  _prev: IntlState,
-  formData: FormData,
-): Promise<IntlState> {
+export async function acceptIntlCallup(_prev: IntlState, formData: FormData): Promise<IntlState> {
   if (!env.isSupabaseConfigured) return { error: 'Supabase nie jest skonfigurowany.' };
   const playerId = String(formData.get('playerId') ?? '');
   if (!playerId) return { error: 'Nie wybrano zawodnika.' };

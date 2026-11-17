@@ -5,10 +5,7 @@ import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import type { ClubMessagesDto } from '@/lib/messages';
-import {
-  settleDressingConflict,
-  type DressingState,
-} from '@/lib/squad/actions-dressing-room';
+import { settleDressingConflict, type DressingState } from '@/lib/squad/actions-dressing-room';
 import { acceptIntlCallup, type IntlState } from '@/lib/squad/actions-intl-callup';
 import { UI_COPY } from '@/lib/ui/copy';
 

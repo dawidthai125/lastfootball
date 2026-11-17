@@ -306,8 +306,8 @@ export function TrainingView({
       <section className="lf-tr__block" aria-label="Kształt pressingu">
         <h3 className="lf-tr__block-title">Kształt pressingu</h3>
         <p className="lf-tr__meta">
-          Teraz: {pressShapeLabel(pressShape)}. Lewa albo prawa wysoko dodaje 2 do startu, rozciągnięty
-          dodaje 1.
+          Teraz: {pressShapeLabel(pressShape)}. Lewa albo prawa wysoko dodaje 2 do startu,
+          rozciągnięty dodaje 1.
         </p>
         {shapeState.error ? (
           <p className="lf-tr__regen-note" role="alert">

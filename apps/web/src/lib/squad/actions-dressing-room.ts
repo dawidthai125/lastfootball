@@ -40,15 +40,16 @@ export async function settleDressingConflict(
     .eq('club_id', clubId)
     .is('departed_at', null);
   if (readErr) return { error: 'Konflikt szatni nie jest jeszcze w bazie.' };
-  const rows = (players as
-    | {
-        id: string;
-        name: string;
-        starter: boolean;
-        morale: number | null;
-        personality: string | null;
-      }[]
-    | null) ?? [];
+  const rows =
+    (players as
+      | {
+          id: string;
+          name: string;
+          starter: boolean;
+          morale: number | null;
+          personality: string | null;
+        }[]
+      | null) ?? [];
   const conflict = resolveDressingConflict(
     rows.map((row) => ({
       id: row.id,
@@ -59,10 +60,7 @@ export async function settleDressingConflict(
     })),
   );
   if (!conflict) return { error: 'Nie ma konfliktu w szatni.' };
-  const next =
-    intent === 'mediate'
-      ? mediateConflictMorale
-      : ignoreConflictMorale;
+  const next = intent === 'mediate' ? mediateConflictMorale : ignoreConflictMorale;
   for (const id of [conflict.aId, conflict.bId]) {
     const row = rows.find((r) => r.id === id);
     const current = typeof row?.morale === 'number' ? row.morale : 60;

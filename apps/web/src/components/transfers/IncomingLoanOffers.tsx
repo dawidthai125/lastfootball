@@ -3,10 +3,7 @@
 import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
-import {
-  acceptIncomingLoan,
-  type IncomingLoanState,
-} from '@/lib/squad/actions-loan-incoming';
+import { acceptIncomingLoan, type IncomingLoanState } from '@/lib/squad/actions-loan-incoming';
 import type { IncomingLoanOffer } from '@/lib/squad/incoming-loan';
 
 const INITIAL: IncomingLoanState = {};

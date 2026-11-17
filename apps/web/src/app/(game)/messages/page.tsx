@@ -73,13 +73,9 @@ export default async function MessagesPage() {
     incomingOffers,
     incomingLiveOffers: h2hOffers.incoming,
     outgoingLiveOffers: h2hOffers.outgoing,
-    dressingConflict: dressing
-      ? { conflictId: dressing.id, subject: dressing.subject }
-      : null,
+    dressingConflict: dressing ? { conflictId: dressing.id, subject: dressing.subject } : null,
     incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
-    intlCallup: intl
-      ? { playerId: intl.playerId, subject: intl.subject }
-      : null,
+    intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
   });
 
   return (

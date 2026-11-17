@@ -8,9 +8,7 @@ export function isPressLine(value: string): value is PressLine {
 }
 
 export function isPressShape(value: string): value is PressShape {
-  return (
-    value === 'flat' || value === 'left_high' || value === 'right_high' || value === 'split'
-  );
+  return value === 'flat' || value === 'left_high' || value === 'right_high' || value === 'split';
 }
 
 export function pressLineShift(line: string): number {

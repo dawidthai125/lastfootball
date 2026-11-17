@@ -3,10 +3,7 @@
 import { useActionState } from 'react';
 
 import { savePlayerLoan, type LoanState } from '@/lib/squad/actions-loan';
-import {
-  returnIncomingLoan,
-  type IncomingLoanState,
-} from '@/lib/squad/actions-loan-incoming';
+import { returnIncomingLoan, type IncomingLoanState } from '@/lib/squad/actions-loan-incoming';
 
 const INITIAL: LoanState = {};
 const IN_INITIAL: IncomingLoanState = {};

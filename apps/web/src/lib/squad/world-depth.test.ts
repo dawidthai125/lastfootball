@@ -4,10 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { mediateConflictMorale, resolveDressingConflict } from '@/lib/squad/dressing-room';
-import {
-  incomingLoanBlock,
-  resolveIncomingLoanOffers,
-} from '@/lib/squad/incoming-loan';
+import { incomingLoanBlock, resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { intlBlocksLineup, resolveIntlCallup } from '@/lib/squad/intl-callup';
 import {
   kickoffPressingWithLine,
@@ -113,9 +110,10 @@ describe('world depth', () => {
     expect(NEGOTIATION_THIN.FINAL_PCT).toBe(97);
     expect(resolveFinalAmount(1000)).toBe(970);
     expect(listAllowedAgreedAmounts(1000)).toContain(970);
-    expect(
-      resolveNegotiationStep({ ask: 1000, phase: 'counter', playerAction: 'final' }),
-    ).toEqual({ kind: 'final', finalAmount: 970 });
+    expect(resolveNegotiationStep({ ask: 1000, phase: 'counter', playerAction: 'final' })).toEqual({
+      kind: 'final',
+      finalAmount: 970,
+    });
     expect(negotiationBundleLabel('fee_wage')).toContain('pensja');
   });
 });

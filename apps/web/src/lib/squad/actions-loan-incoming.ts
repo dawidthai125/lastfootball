@@ -4,10 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
-import {
-  incomingLoanBlock,
-  resolveIncomingLoanOffers,
-} from '@/lib/squad/incoming-loan';
+import { incomingLoanBlock, resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import { createClient } from '@/lib/supabase/server';
 
@@ -56,7 +53,8 @@ export async function acceptIncomingLoan(
     .select('id, shirt_number, loaned_in')
     .eq('club_id', clubRow.id)
     .is('departed_at', null);
-  const rows = (players as { id: string; shirt_number: number; loaned_in: boolean | null }[] | null) ?? [];
+  const rows =
+    (players as { id: string; shirt_number: number; loaned_in: boolean | null }[] | null) ?? [];
   const blocked = incomingLoanBlock({
     rosterCount: rows.length,
     alreadyLoanedIn: rows.filter((r) => r.loaned_in === true).length,

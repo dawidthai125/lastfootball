@@ -152,10 +152,7 @@ async function attachClubStyle(
             clampStyle(row.style_width ?? 0),
           ]),
         );
-  const press = await supabase
-    .from('clubs')
-    .select('id, press_line, press_shape')
-    .in('id', ids);
+  const press = await supabase.from('clubs').select('id, press_line, press_shape').in('id', ids);
   const lines =
     press.error || !press.data
       ? new Map<string, string>()
