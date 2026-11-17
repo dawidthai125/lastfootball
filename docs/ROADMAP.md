@@ -110,16 +110,15 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## IN PROGRESS 🔄
 
-| Item | Notatka |
-| ---- | ------- |
-| —    | Brak    |
+| Item              | Notatka                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| LFE-RETIREMENT-01 | Thin farewell after Confirm N+1 · [`implementation/LFE-RETIREMENT-01-PLAN.md`](implementation/LFE-RETIREMENT-01-PLAN.md) |
 
 ## PLANNED ⬜
 
 | Item                            | Zależność                                                                                                      |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | LFE-ACADEMY-02                  | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) |
-| LFE-RETIREMENT-01               | Owner GO                                                                                                       |
 | Kanał push / email (§22 Future) | osobny Owner GO                                                                                                |
 | Career Prime                    | Owner GO                                                                                                       |
 | LFE `/advanced` subpath         | Owner GO · defer                                                                                               |
@@ -161,7 +160,7 @@ Academy 02 nie wraca do kolejki bez zmiany GDD §16 i liczb §26.
 | ------------------------------- | --------------- |
 | LFE-ACADEMY-02                  | SCOPE LOCK      |
 | LFE-SPATIAL-EVENTS-01           | `4377677`       |
-| LFE-RETIREMENT-01               | brak kontraktu  |
+| LFE-RETIREMENT-01               | Thin farewell in progress · PLAN |
 | Kanał push / email (§22 Future) | osobny kontrakt |
 | Career Prime                    | brak kontraktu  |
 | LFE `/advanced`                 | defer           |

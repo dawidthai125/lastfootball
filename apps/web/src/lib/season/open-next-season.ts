@@ -1,6 +1,10 @@
 import { buildAcademyIntakeDraft } from '@/lib/academy/intake';
 import type { LeagueTier } from '@/lib/league/league-tier';
-import { planSeasonDeparture } from '@/lib/season/departure';
+import {
+  formatRetirementFarewell,
+  planSeasonDeparture,
+  type RetirementFarewell,
+} from '@/lib/season/departure';
 import { revertSeasonTransitionHAge, type HAgePlayersPort } from '@/lib/season/transition/h-age';
 import type { SeasonAgePlayerSlice } from '@/lib/squad/season-age';
 import type { PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
@@ -41,9 +45,14 @@ export type OpenNextSeasonInput = {
  * If that update does not land, the club is still offseason — undo the squad write, then H-AGE.
  * A failed departure already restored inside apply; this path must not undo again.
  */
+export type OpenNextSeasonOk = {
+  readonly ok: true;
+  readonly farewell: RetirementFarewell | null;
+};
+
 export async function openNextSeasonAfterDeparture(
   input: OpenNextSeasonInput,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<OpenNextSeasonOk | { ok: false; error: string }> {
   const departure = await applySeasonDeparture(
     input.supabase,
     input.clubId,
@@ -75,15 +84,21 @@ export async function openNextSeasonAfterDeparture(
     return { ok: false, error: 'Nie udało się otworzyć nowego sezonu.' };
   }
 
-  return { ok: true };
+  return { ok: true, farewell: departure.farewell };
 }
+
+type DepartureApplyOk = {
+  readonly ok: true;
+  readonly undo: SeasonDepartureUndo | null;
+  readonly farewell: RetirementFarewell | null;
+};
 
 async function applySeasonDeparture(
   supabase: SeasonDb,
   clubId: string,
   seasonNumber: number,
   loadRoster: (clubId: string) => Promise<readonly PlayerRowDto[]>,
-): Promise<{ ok: true; undo: SeasonDepartureUndo | null } | { ok: false; error: string }> {
+): Promise<DepartureApplyOk | { ok: false; error: string }> {
   const roster = await loadRoster(clubId);
   const plan = planSeasonDeparture(
     roster.map((player) => ({
@@ -94,7 +109,7 @@ async function applySeasonDeparture(
       departed: player.departedAt != null || player.status === 'DEPARTED',
     })),
   );
-  if (!plan.retireId) return { ok: true, undo: null };
+  if (!plan.retireId) return { ok: true, undo: null, farewell: null };
 
   const retiree = roster.find((player) => player.id === plan.retireId);
   const now = new Date().toISOString();
@@ -123,6 +138,7 @@ async function applySeasonDeparture(
     clubId,
     retiree: retiree ? { id: retiree.id, status: retiree.status, starter: retiree.starter } : null,
   };
+  const retireName = retiree?.name?.trim() || 'Zawodnik';
 
   if (plan.promoteId) {
     const prospect = roster.find((player) => player.id === plan.promoteId);
@@ -152,6 +168,7 @@ async function applySeasonDeparture(
           starter: prospect ? prospect.starter : null,
         },
       },
+      farewell: formatRetirementFarewell(retireName, prospect?.name ?? null),
     };
   }
 
@@ -221,6 +238,7 @@ async function applySeasonDeparture(
       ...undoBase,
       replacement: { kind: 'insert', id: draft.id },
     },
+    farewell: formatRetirementFarewell(retireName, draft.name),
   };
 }
 

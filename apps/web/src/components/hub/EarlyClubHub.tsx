@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { AtmosphereLayer, ClubCrest } from '@/components/assets';
-import { ConfirmStartSeasonButton } from '@/components/season/ConfirmStartSeasonButton';
+import { SeasonFarewellHost } from '@/components/season/SeasonFarewellHost';
 import { SeasonReportView } from '@/components/season/SeasonReportView';
 import type { ClubDto } from '@/lib/club/types';
 import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
@@ -23,7 +23,7 @@ import {
   type HubSession,
   type LastMatchStripModel,
 } from '@/lib/hub';
-import type { DeparturePreview } from '@/lib/season/departure';
+import type { DeparturePreview, RetirementFarewell } from '@/lib/season/departure';
 import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -46,6 +46,7 @@ export function EarlyClubHub({
   todayUtc = utcDateString(),
   seasonReport = null,
   departurePreview = null,
+  retirementFarewell = null,
   cupLink = null,
   matchesBlocked = false,
   lastPlayedAt,
@@ -66,6 +67,8 @@ export function EarlyClubHub({
   seasonReport?: SeasonReportDto | null;
   /** Offseason foreshadow of Confirm N+1 departure; null outside OFFSEASON. */
   departurePreview?: DeparturePreview | null;
+  /** Post–Confirm Thin farewell (LFE-RETIREMENT-01); in_season flash. */
+  retirementFarewell?: RetirementFarewell | null;
   /** Due national-cup tie. Does not replace the league primary action. */
   cupLink?: HubCupLink | null;
   /** loadEmailGate().matchesBlocked — blocks the next kickoff after the deadline. */
@@ -171,9 +174,12 @@ export function EarlyClubHub({
           <SeasonReportView report={seasonReport} departure={departurePreview} />
         ) : null}
 
-        {phase === 'OFFSEASON' && primary.id === 'prepare-next-season' ? (
-          <ConfirmStartSeasonButton label={primary.label} />
-        ) : (
+        <SeasonFarewellHost
+          showConfirm={phase === 'OFFSEASON' && primary.id === 'prepare-next-season'}
+          confirmLabel={primary.label}
+          serverFarewell={retirementFarewell}
+        />
+        {phase === 'OFFSEASON' && primary.id === 'prepare-next-season' ? null : (
           <PrimaryCta cta={primary} />
         )}
         {cupLink ? (

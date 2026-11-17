@@ -22,7 +22,13 @@ import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveHubCupLink } from '@/lib/hub/cup-link';
 import { resolveLeagueTable, resolvePlayerLeaguePositionLabel } from '@/lib/league';
-import { closeSeasonIfComplete, resolveDeparturePreview, resolveSeasonReport } from '@/lib/season';
+import {
+  closeSeasonIfComplete,
+  listClubRetirementFlash,
+  resolveDeparturePreview,
+  resolveRetirementFarewell,
+  resolveSeasonReport,
+} from '@/lib/season';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { TRAINING_THIN } from '@/lib/training';
 
@@ -55,10 +61,12 @@ export default async function HubPage() {
   const seasonReport =
     phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber, club.leagueTier) : null;
 
-  const [movements, emailGate, offseasonPlayers] = await Promise.all([
+  const todayUtc = utcDateString();
+  const [movements, emailGate, offseasonPlayers, farewellFlash] = await Promise.all([
     listClubFinanceMovements(club.id, 5),
     loadEmailGate(club.ownerId),
     phase === 'OFFSEASON' ? listClubPlayers(club.id) : Promise.resolve([]),
+    phase === 'SEASON' ? listClubRetirementFlash(club.id, todayUtc) : Promise.resolve([]),
   ]);
   const departurePreview =
     phase === 'OFFSEASON'
@@ -73,6 +81,8 @@ export default async function HubPage() {
           })),
         )
       : null;
+  const retirementFarewell =
+    phase === 'SEASON' ? resolveRetirementFarewell(farewellFlash, todayUtc) : null;
   const finance = resolveClubFinance(club, movements);
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
@@ -97,9 +107,10 @@ export default async function HubPage() {
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
       playedCount={leaguePlayedCount}
-      todayUtc={utcDateString()}
+      todayUtc={todayUtc}
       seasonReport={seasonReport}
       departurePreview={departurePreview}
+      retirementFarewell={retirementFarewell}
       cupLink={cupLink}
       fanLabel={fanLabel}
       matchesBlocked={emailGate.matchesBlocked}

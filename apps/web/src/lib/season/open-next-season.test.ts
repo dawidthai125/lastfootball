@@ -181,6 +181,54 @@ function hAge(ops: Op[], snapshot: readonly SeasonAgePlayerSlice[]) {
 const snapshot: SeasonAgePlayerSlice[] = [{ id: 'retiree', age: 39, skill: 44, potential: 70 }];
 
 describe('openNextSeasonAfterDeparture', () => {
+  it('returns farewell names when departure + club open succeed', async () => {
+    const roster = [
+      player({
+        id: 'retiree',
+        age: 40,
+        skill: 40,
+        academyTrack: false,
+        starter: true,
+      }),
+      player({
+        id: 'prospect',
+        age: 17,
+        skill: 48,
+        academyTrack: true,
+        starter: false,
+        shirtNumber: 91,
+      }),
+    ];
+    const db = fakeDb(roster, null);
+    const result = await openNextSeasonAfterDeparture({
+      supabase: db.supabase as never,
+      clubId: 'club-1',
+      endedSeason: 3,
+      loadRoster: async () => roster,
+      nextSeason: 4,
+      nextTier: 'iii',
+      nextCash: 1200,
+      goalNote: 'miss',
+      hAgePort: hAge(db.ops, snapshot),
+      hAgeSnapshot: snapshot,
+    });
+
+    expect(result).toMatchObject({
+      ok: true,
+      farewell: {
+        retireName: 'retiree',
+        promoteName: 'prospect',
+      },
+    });
+    expect(db.players.find((row) => row.id === 'retiree')).toMatchObject({
+      status: 'DEPARTED',
+      starter: false,
+    });
+    expect(db.players.find((row) => row.id === 'prospect')).toMatchObject({
+      academy_track: false,
+    });
+  });
+
   it('undoes a promotion when the club update fails and still reverts H-AGE', async () => {
     const roster = [
       player({
