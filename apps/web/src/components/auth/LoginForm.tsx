@@ -58,6 +58,12 @@ export function LoginForm({ nextPath, bannerError }: LoginFormProps) {
       </button>
 
       <p className="lf-auth-form__switch">
+        <Link href="/forgot-password" className="lf-auth-form__link">
+          Nie pamiętam hasła
+        </Link>
+      </p>
+
+      <p className="lf-auth-form__switch">
         Nie masz konta?{' '}
         <Link href="/register" className="lf-auth-form__link">
           Załóż klub

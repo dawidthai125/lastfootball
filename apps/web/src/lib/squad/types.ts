@@ -37,6 +37,7 @@ export type SquadPlayerDto = {
   readonly setPiece?: boolean;
   readonly onLoan?: boolean;
   readonly loanedIn?: boolean;
+  readonly intlAbsentUntil?: string | null;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {

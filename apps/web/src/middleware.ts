@@ -3,7 +3,16 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { isFirstMatchTunnelPath, FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
 import { updateSession } from '@/lib/supabase/middleware';
 
-const PUBLIC_PREFIXES = ['/login', '/register', '/auth', '/regulamin', '/prywatnosc', '/status'];
+const PUBLIC_PREFIXES = [
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/reset-password',
+  '/auth',
+  '/regulamin',
+  '/prywatnosc',
+  '/status',
+];
 
 /** In-game / onboarding — require session. */
 const PROTECTED_PREFIXES = [

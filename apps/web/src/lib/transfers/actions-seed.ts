@@ -39,7 +39,7 @@ export async function buyTransferPlayer(
   if (!marketId) return { error: 'Brak oferty.' };
 
   const phaseRaw = String(formData.get('phase') ?? 'opening');
-  const phase = phaseRaw === 'counter' ? 'counter' : 'opening';
+  const phase = phaseRaw === 'counter' ? 'counter' : phaseRaw === 'final' ? 'final' : 'opening';
 
   const supabase = await createClient();
   const {
@@ -107,15 +107,31 @@ export async function buyTransferPlayer(
           marketId,
           ask,
           counterAmount: step.counterAmount,
+          step: 'counter',
         },
       };
     }
     return { error: 'Nieoczekiwany wynik negocjacji.' };
   }
 
+  if (phase === 'final') {
+    const playerActionRaw = String(formData.get('playerAction') ?? '');
+    if (playerActionRaw !== 'accept' && playerActionRaw !== 'reject') {
+      return { error: 'Wybierz akceptację lub odrzucenie ostatecznej oferty.' };
+    }
+    const step = resolveNegotiationStep({
+      ask,
+      phase: 'final',
+      playerAction: playerActionRaw,
+    });
+    if (step.kind === 'rejected') return { ok: true };
+    if (step.kind === 'accepted') return settle(step.agreedAmount);
+    return { error: 'Nieoczekiwany wynik negocjacji.' };
+  }
+
   const playerActionRaw = String(formData.get('playerAction') ?? '');
-  if (playerActionRaw !== 'accept' && playerActionRaw !== 'reject') {
-    return { error: 'Wybierz akceptację lub odrzucenie kontroferty.' };
+  if (playerActionRaw !== 'accept' && playerActionRaw !== 'reject' && playerActionRaw !== 'final') {
+    return { error: 'Wybierz akceptację, ostateczną ofertę albo odrzucenie.' };
   }
 
   const step = resolveNegotiationStep({
@@ -129,6 +145,16 @@ export async function buyTransferPlayer(
   }
   if (step.kind === 'accepted') {
     return settle(step.agreedAmount);
+  }
+  if (step.kind === 'final') {
+    return {
+      negotiation: {
+        marketId,
+        ask,
+        finalAmount: step.finalAmount,
+        step: 'final',
+      },
+    };
   }
   return { error: 'Nieoczekiwany wynik negocjacji.' };
 }

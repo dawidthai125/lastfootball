@@ -17,13 +17,17 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
+      const next = sanitizeNextPath(nextParam, '/hub');
+      if (next === '/reset-password' || next.startsWith('/reset-password?')) {
+        return NextResponse.redirect(new URL('/reset-password', origin));
+      }
       const fallback = await getPostAuthPath(data.user.id);
-      const next = sanitizeNextPath(nextParam, fallback);
-      if (next.startsWith('/auth/email-confirmed')) {
-        return NextResponse.redirect(new URL(next, origin));
+      const safeNext = sanitizeNextPath(nextParam, fallback);
+      if (safeNext.startsWith('/auth/email-confirmed')) {
+        return NextResponse.redirect(new URL(safeNext, origin));
       }
       const destination =
-        fallback === '/welcome' || fallback === '/onboarding/first-match' ? fallback : next;
+        fallback === '/welcome' || fallback === '/onboarding/first-match' ? fallback : safeNext;
       return NextResponse.redirect(new URL(destination, origin));
     }
   }

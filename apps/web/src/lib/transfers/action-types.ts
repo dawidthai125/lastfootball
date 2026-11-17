@@ -1,7 +1,11 @@
 export type TransferNegotiationState = {
   readonly marketId: string;
   readonly ask: number;
-  readonly counterAmount: number;
+  /** First seller counter (95%). */
+  readonly counterAmount?: number;
+  /** Last seller step (97%). */
+  readonly finalAmount?: number;
+  readonly step: 'counter' | 'final';
 };
 
 /** Stateless seller counter (Incoming S2) — UI-only until Accept/Reject. */

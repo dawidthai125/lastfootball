@@ -72,7 +72,44 @@ function BuyNegotiate({
   const [state, action, pending] = useActionState(buyTransferPlayer, TRANSFER_ACTION_INITIAL);
   const counter = state.negotiation?.marketId === marketId ? state.negotiation : null;
 
-  if (counter) {
+  if (counter?.step === 'final' && typeof counter.finalAmount === 'number') {
+    const canAccept = canBuy && envelopeBalance >= counter.finalAmount;
+    return (
+      <div className="lf-tx-actions">
+        <p className="lf-tx-actions__hint">
+          Ostateczna oferta:{' '}
+          <span className="text-[var(--lf-gold)] tabular-nums">
+            {formatMoney(counter.finalAmount)}
+          </span>
+        </p>
+        {state.error ? (
+          <span className="text-xs text-[var(--lf-danger)]" role="alert">
+            {state.error}
+          </span>
+        ) : null}
+        <div className="lf-tx-actions__row">
+          <form action={action} className="inline">
+            <input type="hidden" name="marketId" value={marketId} />
+            <input type="hidden" name="phase" value="final" />
+            <input type="hidden" name="playerAction" value="accept" />
+            <Button type="submit" variant="primary" disabled={!canAccept || pending}>
+              {pending ? '…' : 'Akceptuj 97%'}
+            </Button>
+          </form>
+          <form action={action} className="inline">
+            <input type="hidden" name="marketId" value={marketId} />
+            <input type="hidden" name="phase" value="final" />
+            <input type="hidden" name="playerAction" value="reject" />
+            <Button type="submit" variant="default" disabled={pending}>
+              Odrzuć
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  if (counter?.step === 'counter' && typeof counter.counterAmount === 'number') {
     const canAccept = canBuy && envelopeBalance >= counter.counterAmount;
     return (
       <div className="lf-tx-actions">
@@ -94,6 +131,14 @@ function BuyNegotiate({
             <input type="hidden" name="playerAction" value="accept" />
             <Button type="submit" variant="primary" disabled={!canAccept || pending}>
               {pending ? '…' : 'Akceptuj'}
+            </Button>
+          </form>
+          <form action={action} className="inline">
+            <input type="hidden" name="marketId" value={marketId} />
+            <input type="hidden" name="phase" value="counter" />
+            <input type="hidden" name="playerAction" value="final" />
+            <Button type="submit" variant="default" disabled={pending}>
+              Ostateczna (97%)
             </Button>
           </form>
           <form action={action} className="inline">
