@@ -6,6 +6,7 @@ import {
   listAllowedAgreedAmounts,
   NEGOTIATION_THIN,
   resolveCounterAmount,
+  resolveFinalAmount,
   resolveNegotiationStep,
   resolveOfferAmount,
   scaleAskAmount,
@@ -19,6 +20,7 @@ describe('negotiation Thin (LFE-TRANSFERS-02-N1)', () => {
     expect(NEGOTIATION_THIN.PRESET_NORMAL_PCT).toBe(100);
     expect(NEGOTIATION_THIN.PRESET_HIGH_PCT).toBe(110);
     expect(NEGOTIATION_THIN.COUNTER_PCT).toBe(95);
+    expect(NEGOTIATION_THIN.FINAL_PCT).toBe(97);
   });
 
   it('scaleAskAmount is deterministic', () => {
@@ -66,6 +68,7 @@ describe('negotiation Thin (LFE-TRANSFERS-02-N1)', () => {
       resolveOfferAmount(ask, 'normal'),
       resolveOfferAmount(ask, 'high'),
       resolveCounterAmount(ask),
+      resolveFinalAmount(ask),
     ]);
     for (const a of allowed) {
       expect(isAllowedAgreedAmount(ask, a)).toBe(true);

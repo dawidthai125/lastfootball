@@ -1,9 +1,12 @@
 import { redirect } from 'next/navigation';
 
+import { IncomingLoanOffers } from '@/components/transfers/IncomingLoanOffers';
 import { TransfersView } from '@/components/transfers/TransfersView';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { countPlayedInList, ensureClubFixtures } from '@/lib/fixtures';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { createClient } from '@/lib/supabase/server';
 import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
@@ -39,12 +42,20 @@ export default async function TransfersPage() {
     outgoingLiveOffers: h2hOffers.outgoing,
   });
 
+  const loanOffers = resolveIncomingLoanOffers({
+    clubId: club.id,
+    transferWindowOpen: club.transferWindowOpen,
+    rosterCount: activePlayers.length,
+    today: utcDateString(),
+  });
+
   return (
     <div>
       <SectionHeader
         title="Transfery"
         subtitle={market.windowOpen ? 'Centrum decyzji transferowych' : 'Okno zamknięte'}
       />
+      <IncomingLoanOffers offers={loanOffers} />
       <TransfersView
         market={market}
         auctions={auctions}

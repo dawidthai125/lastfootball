@@ -36,6 +36,7 @@ export type SquadPlayerDto = {
   readonly personality?: string;
   readonly setPiece?: boolean;
   readonly onLoan?: boolean;
+  readonly loanedIn?: boolean;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
   readonly contract: {
@@ -96,6 +97,9 @@ export type PlayerRowDto = {
   readonly onLoan?: boolean;
   readonly loanUntil?: string | null;
   readonly wageBank?: number;
+  readonly loanedIn?: boolean;
+  readonly loanPartnerLabel?: string | null;
+  readonly intlAbsentUntil?: string | null;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

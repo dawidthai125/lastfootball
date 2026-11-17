@@ -77,6 +77,17 @@ function historyLines(row: PlayerRowDto): string[] {
   if (row.onLoan) {
     lines.push(row.loanUntil ? `Wypożyczony do ${row.loanUntil}.` : 'Wypożyczony.');
   }
+  if (row.loanedIn) {
+    const partner = row.loanPartnerLabel ? ` z ${row.loanPartnerLabel}` : '';
+    lines.push(
+      row.loanUntil
+        ? `Wypożyczony do nas${partner} do ${row.loanUntil}.`
+        : `Wypożyczony do nas${partner}.`,
+    );
+  }
+  if (row.intlAbsentUntil) {
+    lines.push(`Powołanie do ${row.intlAbsentUntil}.`);
+  }
   return lines;
 }
 
@@ -105,6 +116,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     personality: row.personality ?? personalityFromId(row.id),
     setPiece: row.setPiece === true,
     onLoan: row.onLoan === true,
+    loanedIn: row.loanedIn === true,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {

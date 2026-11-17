@@ -99,7 +99,7 @@ describe('LFE-TRANSFERS-09 parity gate (TD-01)', () => {
       const ts = deriveTransferFee(skill, age);
       expect(ts).toBe(sqlDeriveFeeMirror(skill, age));
       expect(isAllowedAgreedAmount(ts, ts)).toBe(true);
-      expect(listAllowedAgreedAmounts(ts)).toHaveLength(4);
+      expect(listAllowedAgreedAmounts(ts)).toHaveLength(5);
     }
   });
 });
