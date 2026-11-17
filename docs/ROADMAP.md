@@ -106,22 +106,23 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | **LFE-AUTH-UX-01**                                     | **CLOSED** · Login Modal · AuthStage `/login` `/register` · prior presentation `9dc834a`                                   |
 | **LFE-UI-MOTION-01**                                   | **CLOSED** · Presentation motion Thin · Hub/Match · Guide §8 · **`9fd14fc`** · CI GREEN · PRODUCTION VERIFIED              |
 | **LFE-NOTIFICATIONS-01**                               | **CLOSED** · In-App Invitation Layer · `resolveClubInvitations` · D125 · feat **`54ae7b3`** · style `cb1511e` · CI GREEN   |
+| **LFE-RETIREMENT-01**                                  | **CLOSED** · Thin farewell after Confirm N+1 · PLAN · Owner GO 2026-11-17                                                  |
+| **Career Prime ×1.1**                                  | **CLOSED** · `GROWTH_COEFF_PRIME=1.1` · bonus skill delta · Owner GO 2026-11-17                                            |
 | **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                                 |
 
 ## IN PROGRESS 🔄
 
-| Item              | Notatka                                                                                                                  |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| LFE-RETIREMENT-01 | Thin farewell after Confirm N+1 · [`implementation/LFE-RETIREMENT-01-PLAN.md`](implementation/LFE-RETIREMENT-01-PLAN.md) |
+| Item | Notatka |
+| ---- | ------- |
+| —    | —       |
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                                                                                                      |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| LFE-ACADEMY-02                  | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) |
-| Kanał push / email (§22 Future) | osobny Owner GO                                                                                                |
-| Career Prime                    | Owner GO                                                                                                       |
-| LFE `/advanced` subpath         | Owner GO · defer                                                                                               |
+| Item                            | Zależność                                                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| LFE-ACADEMY-02                  | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) · czeka na §26 |
+| Kanał push / email (§22 Future) | Owner GO odłożony · najpierw liczby / provider                                                                                |
+| LFE `/advanced` subpath         | Owner GO · defer                                                                                                              |
 
 ## FUTURE
 
@@ -151,19 +152,19 @@ Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** za
 ### Oficjalna kolejność
 
 ```
-LFE-SPATIAL-EVENTS-01  ·  Retirement  ·  §22 push/email  ·  Career Prime
+LFE-SPATIAL-EVENTS-01  ·  Retirement (Thin CLOSED)  ·  Career Prime ×1.1 (Owner GO)  ·  §22 push/email (later)
 ```
 
 Academy 02 nie wraca do kolejki bez zmiany GDD §16 i liczb §26.
 
-| EPIC                            | Notatka                          |
-| ------------------------------- | -------------------------------- |
-| LFE-ACADEMY-02                  | SCOPE LOCK                       |
-| LFE-SPATIAL-EVENTS-01           | `4377677`                        |
-| LFE-RETIREMENT-01               | Thin farewell in progress · PLAN |
-| Kanał push / email (§22 Future) | osobny kontrakt                  |
-| Career Prime                    | brak kontraktu                   |
-| LFE `/advanced`                 | defer                            |
+| EPIC                            | Notatka                                      |
+| ------------------------------- | -------------------------------------------- |
+| LFE-ACADEMY-02                  | SCOPE LOCK · §26                             |
+| LFE-SPATIAL-EVENTS-01           | `4377677`                                    |
+| LFE-RETIREMENT-01               | Thin farewell CLOSED · PLAN                  |
+| Career Prime                    | GROWTH_COEFF_PRIME=1.1 · Owner GO 2026-11-17 |
+| Kanał push / email (§22 Future) | odłożony                                     |
+| LFE `/advanced`                 | defer                                        |
 
 **Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · Youth Depth.  
 Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTION **`9fd14fc`**.
