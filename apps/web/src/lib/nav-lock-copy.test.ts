@@ -5,7 +5,7 @@ import { TRAINING_THIN } from '@/lib/training/types';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
-import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 
 function secondaryLabel(
   id: 'training' | 'transfers',
@@ -69,5 +69,26 @@ describe('resolveNavLockLabel', () => {
     );
     expect(resolveNavLockLabel('league', 'Liga', 0)).toBe(`Liga — ${UI_COPY.softLockUnavailable}`);
     expect(UI_COPY.softLockUnavailable).toBe('niedostępne');
+  });
+});
+
+describe('resolveNavLockReason', () => {
+  it('states the match threshold for trening and transfery', () => {
+    expect(resolveNavLockReason('training', 1)).toBe(
+      `Trening odblokuje się po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz 1).`,
+    );
+    expect(resolveNavLockReason('transfers', 1)).toBe(
+      `Transfery odblokują się po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz 1).`,
+    );
+  });
+
+  it('uses okno zamknięte after transfer unlock matches', () => {
+    expect(resolveNavLockReason('transfers', TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)).toBe(
+      UI_COPY.transferWindowClosed,
+    );
+  });
+
+  it('falls back to generic soft-lock reason for other modules', () => {
+    expect(resolveNavLockReason('finance', 4)).toBe(UI_COPY.softLockReason);
   });
 });

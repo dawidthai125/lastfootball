@@ -15,7 +15,7 @@ import {
 import { SoftLockModal } from '@/components/layout/SoftLockModal';
 import { useShell } from '@/components/layout/ShellProvider';
 import { DEV_NAV, NAV_GROUPS } from '@/lib/nav';
-import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { UI_COPY } from '@/lib/ui/copy';
 import { resolveHubPhase, resolveNavAccess } from '@/lib/hub';
 
@@ -49,11 +49,11 @@ export function LeftNavigation() {
     trainingUnlocked,
   };
   const showDev = process.env.NODE_ENV === 'development';
-  const [lockTitle, setLockTitle] = useState<string | null>(null);
+  const [lockItem, setLockItem] = useState<{ id: string; label: string } | null>(null);
   const clubName = club?.name ?? 'Klub';
   const messagesBadge = messages.items.length > 0;
 
-  const closeLock = useCallback(() => setLockTitle(null), []);
+  const closeLock = useCallback(() => setLockItem(null), []);
 
   return (
     <aside
@@ -170,7 +170,7 @@ export function LeftNavigation() {
                     data-lf-tooltip={tip}
                     className="lf-nav-item lf-nav-item--locked"
                     style={itemStyle}
-                    onClick={() => setLockTitle(item.label)}
+                    onClick={() => setLockItem({ id: item.id, label: item.label })}
                   >
                     <span
                       className={
@@ -293,9 +293,9 @@ export function LeftNavigation() {
       ) : null}
 
       <SoftLockModal
-        open={Boolean(lockTitle)}
-        title={lockTitle ? UI_COPY.softLockTitle(lockTitle) : UI_COPY.softLockTitle('Lokacja')}
-        reason={UI_COPY.softLockReason}
+        open={Boolean(lockItem)}
+        title={lockItem ? UI_COPY.softLockTitle(lockItem.label) : UI_COPY.softLockTitle('Lokacja')}
+        reason={lockItem ? resolveNavLockReason(lockItem.id, playedCount) : UI_COPY.softLockReason}
         onClose={closeLock}
       />
     </aside>

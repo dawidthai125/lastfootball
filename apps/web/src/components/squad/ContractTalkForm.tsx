@@ -18,9 +18,18 @@ export function ContractTalkForm({
   const [state, action, pending] = useActionState(saveContractTalk, INITIAL);
   if (extended) return <p style={{ margin: '0.5rem 0 0' }}>Kontrakt jest już przedłużony.</p>;
   return (
-    <form action={action} style={{ marginTop: '0.75rem' }}>
+    <form
+      action={action}
+      style={{
+        marginTop: '0.75rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+        alignItems: 'flex-start',
+      }}
+    >
       <input type="hidden" name="playerId" value={playerId} />
-      <label>
+      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
         Nowa pensja, minimum {demand} €
         <input name="offer" type="number" min={demand} step={1} defaultValue={demand} required />
       </label>
@@ -28,11 +37,11 @@ export function ContractTalkForm({
         {pending ? 'Zapisuję…' : 'Przedłuż do 30.06.2029'}
       </button>
       {state.error ? (
-        <p role="alert" style={{ margin: '0.25rem 0 0' }}>
+        <p role="alert" style={{ margin: 0 }}>
           {state.error}
         </p>
       ) : null}
-      {state.ok ? <p style={{ margin: '0.25rem 0 0' }}>Kontrakt przedłużony.</p> : null}
+      {state.ok ? <p style={{ margin: 0 }}>Kontrakt przedłużony.</p> : null}
     </form>
   );
 }
