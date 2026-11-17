@@ -43,6 +43,29 @@ describe('live H2H pending offers Thin (LFE-TRANSFERS-07)', () => {
     expect(a[0]!.askAtCreate).toBe(askAtCreate);
   });
 
+  it('hides a missing player name instead of the id', () => {
+    const [offer] = resolveLiveH2hOffers(
+      [
+        {
+          id: 'off-noname',
+          player_id: '11111111-2222-3333-4444-555555555555',
+          seller_club_id: clubId,
+          buyer_club_id: 'b1',
+          current_amount: 1000,
+          opening_amount: 1000,
+          ask_at_create: 1000,
+          phase: 'opening',
+          last_actor: 'buyer',
+          status: 'pending',
+          created_at: '2026-01-01T00:00:00.000Z',
+        },
+      ],
+      'incoming',
+    );
+    expect(offer?.playerName).toBe('Zawodnik');
+    expect(offer?.playerName).not.toContain('1111');
+  });
+
   it('Accept validation: amount must stay on NEGOTIATION_THIN allow-list vs re-derived ask', () => {
     const ask = deriveTransferFee(61, 22);
     for (const preset of ['low', 'normal', 'high'] as const) {

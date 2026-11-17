@@ -41,6 +41,11 @@ export function resolveLeagueTierLabel(tier: LeagueTier): string {
   return TIER_LABEL[tier];
 }
 
+/** Genitive for “dla IV ligi”. */
+export function leagueTierGenitive(tier: LeagueTier): string {
+  return TIER_GENITIVE[tier];
+}
+
 export function parseLeagueTier(raw: string | null | undefined): LeagueTier {
   if (raw === 'iii' || raw === 'ii' || raw === 'i' || raw === 'iv') return raw;
   return 'iv';
