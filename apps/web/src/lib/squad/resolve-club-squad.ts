@@ -66,6 +66,16 @@ function displayClause(skill: number): number {
   return 100_000 + skill * 5_000;
 }
 
+function historyLines(row: PlayerRowDto): string[] {
+  const notes = (row.recentRatings ?? []).filter((n) => Number.isFinite(n)).slice(-5);
+  const lines: string[] = [];
+  if (notes.length > 0) {
+    lines.push(`Ostatnie noty: ${notes.join(', ')}.`);
+  }
+  lines.push(row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.');
+  return lines;
+}
+
 function toDto(row: PlayerRowDto): SquadPlayerDto {
   const skill = row.skill;
   const potentialBand = resolvePotentialBand(row.potential);
@@ -95,7 +105,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
       clause: displayClause(skill),
       role: roleLabel(row.pos, row.captain),
     },
-    history: [row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.'],
+    history: historyLines(row),
     starter: row.starter,
     captain: row.captain,
     version: row.version,
