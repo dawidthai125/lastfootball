@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
+import { formatMoney } from '@/lib/finance/format-money';
 import { acceptIncomingLoan, type IncomingLoanState } from '@/lib/squad/actions-loan-incoming';
 import type { IncomingLoanOffer } from '@/lib/squad/incoming-loan';
 
@@ -27,7 +28,7 @@ export function IncomingLoanOffers({ offers }: { offers: readonly IncomingLoanOf
             <div>
               <strong>{offer.name}</strong> · {offer.pos} · {offer.skill} · {offer.partnerLabel}
               <div className="lf-tx__meta">
-                Pensja {offer.wage} € · do {offer.until}
+                Pensja {formatMoney(offer.wage)} · ważny do {offer.until}
               </div>
             </div>
             <form action={action}>

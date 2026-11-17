@@ -18,14 +18,24 @@ export function RivalChallengeForm({
   const [state, action, pending] = useActionState(createRivalChallenge, INITIAL);
 
   return (
-    <form action={action}>
+    <form
+      action={action}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+        alignItems: 'flex-start',
+      }}
+    >
       <input type="hidden" name="rivalId" value={rivalId} />
-      {rivalName} ({rivalShort}){' '}
+      <span>
+        {rivalName} ({rivalShort})
+      </span>
       <button type="submit" disabled={pending}>
         {pending ? 'Zapisuję…' : 'Wyzwij'}
       </button>
       {state.error ? (
-        <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: '0.25rem 0 0' }}>
+        <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: 0 }}>
           {state.error}
         </p>
       ) : null}

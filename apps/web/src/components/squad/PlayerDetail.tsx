@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { AtmosphereLayer, ClubCrest, PlayerPortrait } from '@/components/assets';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { formatMoney } from '@/data/mock';
+import { formatMoney } from '@/lib/finance/format-money';
 import { ContractTalkForm } from '@/components/squad/ContractTalkForm';
 import { LoanButton } from '@/components/squad/LoanButton';
 import { SetPieceButton } from '@/components/squad/SetPieceButton';
@@ -65,7 +65,7 @@ export function PlayerHero({
   const tone = statusTone(player.status);
 
   return (
-    <AtmosphereLayer aria-label="Player Hero" className="lf-sq-detail__hero">
+    <AtmosphereLayer aria-label="Bohater zawodnika" className="lf-sq-detail__hero">
       <div
         style={{
           display: 'flex',
@@ -211,7 +211,7 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
   const c = player.contract;
   const rows = [
     { label: 'Wynagrodzenie', value: `${formatMoney(c.wage)} / tydz.` },
-    { label: 'Do', value: c.until },
+    { label: 'Ważny do', value: c.until },
     { label: 'Klauzula', value: formatMoney(c.clause) },
     { label: 'Rola', value: c.role },
     { label: 'Morale', value: String(player.morale ?? 60) },

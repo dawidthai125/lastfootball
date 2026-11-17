@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { reconcileExpiredIntl } from '@/lib/squad/reconcile-intl';
 import { reconcileExpiredLoans } from '@/lib/squad/reconcile-loans';
 import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
 import type { SquadPlayerDto } from '@/lib/squad/types';
@@ -66,6 +67,19 @@ describe('play polish', () => {
       { id: 'out', kind: 'recall', wage: 1000 },
       { id: 'in', kind: 'return_in' },
     ]);
+  });
+
+  it('clears national call-up after intl_absent_until', () => {
+    expect(
+      reconcileExpiredIntl(
+        [
+          { id: 'gone', intlAbsentUntil: '2026-11-10' },
+          { id: 'active', intlAbsentUntil: '2026-11-20' },
+          { id: 'none', intlAbsentUntil: null },
+        ],
+        '2026-11-17',
+      ),
+    ).toEqual([{ id: 'gone' }]);
   });
 
   it('blocks XI when a starter is on national call-up', () => {

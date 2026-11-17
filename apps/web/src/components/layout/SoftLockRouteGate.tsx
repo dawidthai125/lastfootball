@@ -12,7 +12,9 @@ import {
 import { SoftLockState } from '@/components/ui/SoftLockState';
 import { resolveHubPhase, isModuleSoftLocked } from '@/lib/hub';
 import { resolveNavItemForPathname } from '@/lib/hub/route-access';
-import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
+import { resolveNavLockReason } from '@/lib/nav-lock-copy';
+import { UI_COPY } from '@/lib/ui/copy';
+import { resolveSoftLockIllustration } from '@/lib/ui/soft-lock-illustration';
 
 /**
  * Generic route soft-lock gate (LFE-SOFTLOCK-01 · D63–D67).
@@ -36,11 +38,13 @@ export function SoftLockRouteGate({ children }: { children: ReactNode }) {
     return children;
   }
 
+  const art = resolveSoftLockIllustration(item.id);
+
   return (
     <SoftLockState
-      waId="ILL-002"
-      illustrationSrc="/assets/world-art/ill-002-softlock-training.png"
-      title={resolveNavLockLabel(item.id, item.label, playedCount)}
+      waId={art.waId}
+      illustrationSrc={art.illustrationSrc}
+      title={UI_COPY.softLockTitle(item.label)}
       reason={resolveNavLockReason(item.id, playedCount)}
     />
   );
