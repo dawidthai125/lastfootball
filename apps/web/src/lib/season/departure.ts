@@ -126,8 +126,7 @@ export function resolveRetirementFarewell(
     )
     .slice()
     .sort(
-      (a, b) =>
-        (b.departedAt ?? '').localeCompare(a.departedAt ?? '') || a.id.localeCompare(b.id),
+      (a, b) => (b.departedAt ?? '').localeCompare(a.departedAt ?? '') || a.id.localeCompare(b.id),
     );
   const retire = departed[0];
   if (!retire) return null;

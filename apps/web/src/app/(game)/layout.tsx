@@ -131,9 +131,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
           )
         : null;
     const retirementFarewell =
-      club.seasonPhase === 'in_season'
-        ? resolveRetirementFarewell(farewellFlash, today)
-        : null;
+      club.seasonPhase === 'in_season' ? resolveRetirementFarewell(farewellFlash, today) : null;
     messages = resolveClubMessages({
       transferWindowOpen: club.transferWindowOpen,
       incomingOffers,
@@ -143,9 +141,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       incomingLoanOffers: loanOffers.length > 0 ? { count: loanOffers.length } : null,
       intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
       seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
-      retirementFarewell: retirementFarewell
-        ? { subject: retirementFarewell.subject }
-        : null,
+      retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
     });
     invitations = resolveClubInvitations({
       messages,

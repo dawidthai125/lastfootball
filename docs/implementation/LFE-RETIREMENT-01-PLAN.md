@@ -20,8 +20,8 @@
 
 ## OUT
 
-- New age tables · cash/XP · Prestige · Prime buff · Academy depth · push/email  
-- Inventing thresholds (keep **age ≥ 38** from `departure.ts`)  
+- New age tables · cash/XP · Prestige · Prime buff · Academy depth · push/email
+- Inventing thresholds (keep **age ≥ 38** from `departure.ts`)
 - Tickets · playing matches · second mutation path
 
 ## Success
