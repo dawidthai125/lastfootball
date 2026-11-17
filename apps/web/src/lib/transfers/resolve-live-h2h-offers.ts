@@ -34,7 +34,7 @@ export function resolveLiveH2hOffers(
   return rows.map((r) => ({
     offerId: r.id,
     playerId: r.player_id,
-    playerName: r.player_name ?? r.player_id,
+    playerName: r.player_name?.trim() || 'Zawodnik',
     pos: displayPos(r.pos ?? ''),
     sellerClubId: r.seller_club_id,
     buyerClubId: r.buyer_club_id,
