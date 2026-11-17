@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { RivalChallengeForm } from '@/components/rivals/RivalChallengeForm';
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { createRivalChallenge, listRivalChallenges, listRivalClubs } from '@/lib/rivals/actions';
+import { listRivalChallenges, listRivalClubs } from '@/lib/rivals/actions';
 
 export default async function RivalsPage() {
   const club = await getManagerClub();
@@ -25,10 +26,11 @@ export default async function RivalsPage() {
           <ul style={{ margin: 0, paddingLeft: '1.1rem' }}>
             {rivals.map((rival) => (
               <li key={rival.id} style={{ marginBottom: '0.4rem' }}>
-                <form action={createRivalChallenge}>
-                  <input type="hidden" name="rivalId" value={rival.id} />
-                  {rival.name} ({rival.shortName}) <button type="submit">Wyzwij</button>
-                </form>
+                <RivalChallengeForm
+                  rivalId={rival.id}
+                  rivalName={rival.name}
+                  rivalShort={rival.shortName}
+                />
               </li>
             ))}
           </ul>

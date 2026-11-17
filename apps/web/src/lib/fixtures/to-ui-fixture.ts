@@ -8,6 +8,7 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
 import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
+import { preMatchStakeValue, preMatchWeatherNote } from '@/lib/fixtures/pre-match-copy';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 import { kickoffPressing, kickoffTempo, kickoffWidth } from '@/lib/training/style';
@@ -136,7 +137,7 @@ export function buildLeaguePreMatchBundle(
     fixture,
     weather: 'Pochmurnie',
     weatherDetail: 'Warunki typowe dla IV ligi',
-    weatherNote: 'Mecz ligowy — bez wpływu pogody na silnik (Thin A)',
+    weatherNote: preMatchWeatherNote(dto.competition),
     temperature: '14°C',
     attendance: dto.isHome ? '2 400' : '1 800',
     referee: 'Piotr Malinowski',
@@ -159,7 +160,7 @@ export function buildLeaguePreMatchBundle(
       {
         id: 'league',
         label: 'Rozgrywki',
-        value: dto.competition === 'human' ? 'Liga ludzi' : resolveLeagueTierLabel(club.leagueTier),
+        value: preMatchStakeValue(dto.competition, resolveLeagueTierLabel(club.leagueTier)),
       },
       {
         id: 'md',
