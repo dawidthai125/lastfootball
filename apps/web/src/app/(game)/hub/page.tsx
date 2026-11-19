@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { resolveHubFanLabel } from '@/lib/club/fans';
+import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
@@ -137,6 +138,12 @@ export default async function HubPage() {
         }
       : null,
   );
+  const playerRow = table.rows.find((row) => row.isPlayer);
+  const seasonGoalLine = resolveSeasonGoalProgressLine({
+    position: playerRow?.position ?? null,
+    tableSize: table.rows.length,
+    playedCount: leaguePlayedCount,
+  });
 
   return (
     <EarlyClubHub
@@ -147,6 +154,7 @@ export default async function HubPage() {
       leaguePositionLabel={leaguePositionLabel}
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
+      seasonGoalLine={seasonGoalLine}
       playedCount={leaguePlayedCount}
       todayUtc={todayUtc}
       seasonReport={seasonReport}
