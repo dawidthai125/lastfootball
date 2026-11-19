@@ -9,8 +9,8 @@ describe('resolveSoftLockIllustration', () => {
       illustrationSrc: '/assets/world-art/ill-002-softlock-training.png',
     });
     expect(resolveSoftLockIllustration('transfers')).toEqual({
-      waId: 'ILL-003',
-      illustrationSrc: '/assets/world-art/ill-003-window-closed.png',
+      waId: 'ILL-002',
+      illustrationSrc: '/assets/world-art/ill-002-softlock-training.png',
     });
     expect(resolveSoftLockIllustration('academy')).toEqual({
       waId: 'ILL-009',

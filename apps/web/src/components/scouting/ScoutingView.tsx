@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
+import { formatMoney } from '@/lib/finance/format-money';
 import { addScoutShortlist, removeScoutShortlist } from '@/lib/scouting/actions';
 import { buyScoutReport } from '@/lib/scouting/actions-report';
 import {
@@ -11,6 +12,8 @@ import {
   type ScoutingCandidateDto,
   type ScoutingDto,
 } from '@/lib/scouting';
+import { SCOUT_REPORT_FEE } from '@/lib/scouting/reveal';
+import { resolveSoftLockIllustration } from '@/lib/ui/soft-lock-illustration';
 
 function CandidateRow({
   c,
@@ -48,7 +51,7 @@ function CandidateRow({
           <form action={reportAction}>
             <input type="hidden" name="playerId" value={c.playerId} />
             <Button type="submit" variant="default" size="sm" disabled={reportPending}>
-              {reportPending ? '…' : 'Raport 2 000 EUR'}
+              {reportPending ? '…' : `Raport ${formatMoney(SCOUT_REPORT_FEE)}`}
             </Button>
           </form>
         ) : null}
@@ -92,11 +95,12 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
   const pending = addPending || removePending;
 
   if (!scouting.unlocked) {
+    const art = resolveSoftLockIllustration('scouting');
     return (
       <div className="lf-sco" data-lf-impl="LFE-SCOUTING-01">
         <SoftLockState
-          waId="ILL-003"
-          illustrationSrc="/assets/world-art/ill-003-window-closed.png"
+          waId={art.waId}
+          illustrationSrc={art.illustrationSrc}
           title="Skauting wkrótce"
           reason="Porządkowanie informacji o kadrze i rynku odblokuje się w sezonie."
           unlockHint="Skauting jest opcjonalny — decyzje podejmujesz Ty, nie raport."

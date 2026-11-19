@@ -21,7 +21,7 @@ export function OverlayRoot() {
     <div className="fixed inset-0" style={{ zIndex: 'var(--lf-z-modal)' }} role="presentation">
       <button
         type="button"
-        aria-label="Zamknij overlay"
+        aria-label={UI_COPY.close}
         className="absolute inset-0 border-0"
         style={{
           background: 'var(--lf-color-overlay-scrim)',
@@ -78,7 +78,7 @@ export function OverlayRoot() {
                 borderRadius: 'var(--lf-radius-sm)',
               }}
             >
-              Zamknij
+              {UI_COPY.close}
             </button>
           </header>
 

@@ -43,7 +43,7 @@ export default async function RivalsPage() {
           <ul style={{ margin: 0, paddingLeft: '1.1rem' }}>
             {challenges.map((challenge) => (
               <li key={challenge.id}>
-                {challenge.incoming ? 'Od' : 'Z'} {challenge.rivalName}
+                {challenge.incoming ? 'Od' : 'Do'} {challenge.rivalName}
                 {challenge.status === 'played' &&
                 challenge.homeScore != null &&
                 challenge.awayScore != null

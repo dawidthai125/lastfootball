@@ -186,7 +186,7 @@ export function MobileNav() {
                 className="lf-mobile-more__close"
                 onClick={() => setMoreOpen(false)}
               >
-                Zamknij
+                {UI_COPY.close}
               </button>
             </header>
             <div className="lf-mobile-more__body">
