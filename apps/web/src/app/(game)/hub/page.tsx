@@ -29,7 +29,10 @@ import {
   resolveRetirementFarewell,
   resolveSeasonReport,
 } from '@/lib/season';
+import { isPersonality } from '@/lib/squad/depth';
+import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { TRAINING_THIN } from '@/lib/training';
 
 /**
@@ -62,16 +65,16 @@ export default async function HubPage() {
     phase === 'OFFSEASON' ? resolveSeasonReport(table, club.seasonNumber, club.leagueTier) : null;
 
   const todayUtc = utcDateString();
-  const [movements, emailGate, offseasonPlayers, farewellFlash] = await Promise.all([
+  const [movements, emailGate, activePlayers, farewellFlash] = await Promise.all([
     listClubFinanceMovements(club.id, 5),
     loadEmailGate(club.ownerId),
-    phase === 'OFFSEASON' ? listClubPlayers(club.id) : Promise.resolve([]),
+    listClubPlayers(club.id),
     phase === 'SEASON' ? listClubRetirementFlash(club.id, todayUtc) : Promise.resolve([]),
   ]);
   const departurePreview =
     phase === 'OFFSEASON'
       ? resolveDeparturePreview(
-          offseasonPlayers.map((player) => ({
+          activePlayers.map((player) => ({
             id: player.id,
             name: player.name,
             age: player.age,
@@ -83,6 +86,35 @@ export default async function HubPage() {
       : null;
   const retirementFarewell =
     phase === 'SEASON' ? resolveRetirementFarewell(farewellFlash, todayUtc) : null;
+  const dressingConflict = Boolean(
+    resolveDressingConflict(
+      activePlayers.map((player) => ({
+        id: player.id,
+        name: player.name,
+        starter: player.starter,
+        morale: typeof player.morale === 'number' ? player.morale : 60,
+        personality: isPersonality(player.personality) ? player.personality : 'spokojny',
+      })),
+    ),
+  );
+  const intlCallup = Boolean(
+    resolveIntlCallup({
+      clubId: club.id,
+      today: todayUtc,
+      players: activePlayers.map((player) => ({
+        id: player.id,
+        name: player.name,
+        skill: player.skill,
+        nationality: player.nationality,
+        starter: player.starter,
+        onLoan: player.onLoan === true,
+        loanedIn: player.loanedIn === true,
+      })),
+      alreadyAbsentIds: activePlayers
+        .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= todayUtc)
+        .map((player) => player.id),
+    }),
+  );
   const finance = resolveClubFinance(club, movements);
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
@@ -115,6 +147,8 @@ export default async function HubPage() {
       fanLabel={fanLabel}
       matchesBlocked={emailGate.matchesBlocked}
       lastPlayedAt={latestPlayedAt(fixtures)}
+      dressingConflict={dressingConflict}
+      intlCallup={intlCallup}
     />
   );
 }

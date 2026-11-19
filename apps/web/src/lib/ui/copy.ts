@@ -35,6 +35,9 @@ export const UI_COPY = {
   dailyGoalMatch: 'Dokończ przygotowanie meczu',
   dailyGoalSquad: 'Sprawdź kadrę',
   dailyGoalTraining: 'Przeprowadź trening',
+  dailyGoalDressing: 'Załatw sprawę w szatni',
+  dailyGoalIntl: 'Sprawdź powołanie reprezentacji',
+  dailyGoalDressingIntl: 'Szatnia i reprezentacja czekają',
 
   /** LFE-MESSAGES-01 — derived inbox (no mocks / workflow) */
   messagesTitle: 'Wiadomości',

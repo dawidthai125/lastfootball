@@ -51,6 +51,8 @@ export function EarlyClubHub({
   matchesBlocked = false,
   lastPlayedAt,
   fanLabel = null,
+  dressingConflict = false,
+  intlCallup = false,
 }: {
   club: ClubDto;
   nextFixture?: FixtureDto | null;
@@ -77,6 +79,10 @@ export function EarlyClubHub({
   lastPlayedAt?: string | null;
   /** Fan mood sentence. Omitted when the column is missing. */
   fanLabel?: string | null;
+  /** Pending dressing conflict → Daily Goal /messages. */
+  dressingConflict?: boolean;
+  /** Pending intl call-up → Daily Goal /messages. */
+  intlCallup?: boolean;
 }) {
   const phase = resolveHubPhase(club, { hasFixtures });
   const session = resolveHubSession(phase, nextFixture, lastPlayedFixture);
@@ -102,6 +108,8 @@ export function EarlyClubHub({
     matchesBlocked,
     lastPlayedAt,
     now,
+    dressingConflict,
+    intlCallup,
   });
   const secondary = resolveSecondaryCtas(phase, {
     hasFixtures,

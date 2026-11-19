@@ -31,6 +31,10 @@ export type ResolveClubDailyGoalInput = {
   readonly lastPlayedAt?: string | null;
   /** Injected clock for the Warsaw day rule. */
   readonly now?: Date;
+  /** Dressing conflict pending in messages (REUSE msg:dress). */
+  readonly dressingConflict?: boolean;
+  /** National call-up pending in messages (REUSE msg:intl). */
+  readonly intlCallup?: boolean;
 };
 
 function goal(kind: DailyGoalKind, label: string, href: string, primary: HubCta): ClubDailyGoalDto {
@@ -79,15 +83,21 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
     return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
   }
 
-  // P2 — post_match: upcoming next (defensive) → match; else squad
+  // P2 — post_match: upcoming next (defensive) → match; else messages/squad
   if (session === 'post_match') {
     if (nextFixture?.status === 'upcoming') {
       const blocked = blockedMatchLine(input, nextFixture);
       if (blocked) return blocked;
       return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
     }
+    const desk = messagesDeskGoal(input, primary);
+    if (desk) return desk;
     return goal('squad', UI_COPY.dailyGoalSquad, '/squad', primary);
   }
+
+  // P2b — idle desk: dressing / intl before training nudge
+  const desk = messagesDeskGoal(input, primary);
+  if (desk) return desk;
 
   // P3 — training available today (UTC slot; soft-lock aware)
   if (trainingUnlocked && lastTrainingOn !== todayUtc) {
@@ -98,4 +108,20 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
   void input.hasFixtures;
   void input.lastPlayedFixture;
   return goal('squad', UI_COPY.dailyGoalSquad, '/squad', primary);
+}
+
+function messagesDeskGoal(
+  input: ResolveClubDailyGoalInput,
+  primary: HubCta,
+): ClubDailyGoalDto | null {
+  const dressing = Boolean(input.dressingConflict);
+  const intl = Boolean(input.intlCallup);
+  if (!dressing && !intl) return null;
+  const label =
+    dressing && intl
+      ? UI_COPY.dailyGoalDressingIntl
+      : dressing
+        ? UI_COPY.dailyGoalDressing
+        : UI_COPY.dailyGoalIntl;
+  return goal('squad', label, '/messages', primary);
 }

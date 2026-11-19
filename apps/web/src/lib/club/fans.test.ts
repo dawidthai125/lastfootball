@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { fanMoodLabel, nextFanMood } from '@/lib/club/fans';
+import {
+  describeFanMoodChange,
+  fanMoodLabel,
+  fanResultFromScores,
+  nextFanMood,
+} from '@/lib/club/fans';
 
 describe('fans', () => {
   it('moves mood by the result and stays inside 0..100', () => {
@@ -13,5 +18,16 @@ describe('fans', () => {
     expect(fanMoodLabel(75)).toBe('Gorący');
     expect(fanMoodLabel(49)).toBe('Zniecierpliwieni');
     expect(fanMoodLabel(10)).toBe('Wściekli');
+  });
+
+  it('describes the post-match mood delta', () => {
+    expect(describeFanMoodChange(60, 'win')).toBe('Kibice: Spokojni 66 (+6)');
+    expect(describeFanMoodChange(60, 'loss')).toBe('Kibice: Spokojni 54 (-6)');
+  });
+
+  it('maps scores to our result', () => {
+    expect(fanResultFromScores(2, 1, true)).toBe('win');
+    expect(fanResultFromScores(2, 1, false)).toBe('loss');
+    expect(fanResultFromScores(1, 1, true)).toBe('draw');
   });
 });

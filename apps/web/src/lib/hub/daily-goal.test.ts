@@ -149,6 +149,58 @@ describe('resolveClubDailyGoal', () => {
     expect(goal!.href).toBe('/squad');
   });
 
+  it('dressing conflict nudges /messages ahead of training', () => {
+    const phase = phaseSeason;
+    const session = resolveHubSession(phase, null, null);
+    const primary = resolvePrimaryCta(phase, session, {
+      nextFixture: null,
+      lastPlayedFixture: null,
+      hasFixtures: true,
+    });
+    const goal = resolveClubDailyGoal({
+      phase,
+      session,
+      primary,
+      nextFixture: null,
+      lastPlayedFixture: null,
+      hasFixtures: true,
+      trainingUnlocked: true,
+      lastTrainingOn: null,
+      todayUtc: today,
+      dressingConflict: true,
+    });
+    expect(goal).toEqual({
+      kind: 'squad',
+      label: 'Załatw sprawę w szatni',
+      href: '/messages',
+      syncedWithPrimary: false,
+    });
+  });
+
+  it('matchday stays on match even with dressing conflict', () => {
+    const next = fixture();
+    const phase = phaseSeason;
+    const session = resolveHubSession(phase, next, null);
+    const primary = resolvePrimaryCta(phase, session, {
+      nextFixture: next,
+      lastPlayedFixture: null,
+      hasFixtures: true,
+    });
+    const goal = resolveClubDailyGoal({
+      phase,
+      session,
+      primary,
+      nextFixture: next,
+      trainingUnlocked: true,
+      lastTrainingOn: null,
+      todayUtc: today,
+      dressingConflict: true,
+      intlCallup: true,
+    });
+    expect(goal!.kind).toBe('match');
+    expect(goal!.href).toContain('/tunnel');
+  });
+
   it('already trained today UTC → fallback squad', () => {
     const { goal } = resolve({
       trainingUnlocked: true,

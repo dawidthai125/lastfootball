@@ -62,6 +62,17 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
       const developmentNames = previewMatchDevelopment(players).skillUpNames;
       const supabase = await createClient();
       const build = await readClubBuild(supabase, club.id);
+      const moodRow = await supabase
+        .from('clubs')
+        .select('fan_mood')
+        .eq('id', club.id)
+        .maybeSingle();
+      const fanMoodBefore =
+        moodRow.error || !moodRow.data
+          ? 60
+          : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
+            ? (moodRow.data as { fan_mood: number }).fan_mood
+            : 60;
       return (
         <LiveMatchFoundation
           bundle={buildFirstLiveBundle(club, build.levels)}
@@ -70,6 +81,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
           ourXi={ourXi}
           ourBench={ourBench}
           developmentNames={developmentNames}
+          fanMoodBefore={fanMoodBefore}
         />
       );
     } catch (e) {
@@ -101,6 +113,14 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     if (dto.competition === 'challenge' && !rival) {
       return <SquadError matchId={id} detail="Rywal nie ma pełnej jedenastki." />;
     }
+    const supabase = await createClient();
+    const moodRow = await supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle();
+    const fanMoodBefore =
+      moodRow.error || !moodRow.data
+        ? 60
+        : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
+          ? (moodRow.data as { fan_mood: number }).fan_mood
+          : 60;
     return (
       <LiveMatchFoundation
         bundle={buildLeagueLiveBundle(club, dto)}
@@ -111,6 +131,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         ourFormation={ourFormation}
         theirXi={human?.theirXi ?? rival?.xi ?? null}
         developmentNames={developmentNames}
+        fanMoodBefore={fanMoodBefore}
       />
     );
   } catch (e) {

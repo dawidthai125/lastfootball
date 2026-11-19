@@ -25,6 +25,8 @@ type PostMatchViewProps = {
   readonly continueSlot?: ReactNode;
   /** One-line match reward (LFE-ECONOMY-01); league only. */
   readonly rewardLine?: string | null;
+  /** Fan mood Δ after the result (Information Thin). */
+  readonly fanMoodLine?: string | null;
   /** Match development preview names (LFE-PLAYERS-02) — no potential numbers. */
   readonly developmentNames?: readonly string[];
   /** League or cup fixture. Absent on the scripted first match. */
@@ -43,6 +45,7 @@ export function PostMatchView({
   onDismiss,
   continueSlot,
   rewardLine = null,
+  fanMoodLine = null,
   developmentNames = [],
   fixtureId,
 }: PostMatchViewProps) {
@@ -119,6 +122,11 @@ export function PostMatchView({
         <p className="lf-post__eyebrow">Po meczu</p>
         <p className="lf-post__insight">{insight}</p>
         {rewardLine ? <p className="lf-post__reward">{rewardLine}</p> : null}
+        {fanMoodLine ? (
+          <p className="lf-post__reward" aria-label="Nastrój kibiców">
+            {fanMoodLine}
+          </p>
+        ) : null}
         {developmentNames.length > 0 ? (
           <p className="lf-post__reward" aria-label="Rozwój po meczu">
             Rozwój: {developmentNames.join(', ')} (+1 umiejętność)
