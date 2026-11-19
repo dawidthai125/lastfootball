@@ -5,6 +5,11 @@ export type {
   SeasonResultZone,
 } from '@/lib/season/types';
 export { formatSeasonLabel, isSeasonCompleteTrigger } from '@/lib/season/types';
+export {
+  SEASON_GOAL_LABEL,
+  resolveSeasonGoalProgressLine,
+  seasonGoalMet,
+} from '@/lib/season/season-goal';
 export { resolveSeasonReport } from '@/lib/season/resolve-season-report';
 export { closeSeasonIfComplete } from '@/lib/season/close-season';
 export { confirmStartNextSeason } from '@/lib/season/confirm-start-next-season';

@@ -24,6 +24,7 @@ import {
   type LastMatchStripModel,
 } from '@/lib/hub';
 import type { DeparturePreview, RetirementFarewell } from '@/lib/season/departure';
+import { SEASON_GOAL_LABEL } from '@/lib/season/season-goal';
 import type { SeasonReportDto } from '@/lib/season/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -51,6 +52,7 @@ export function EarlyClubHub({
   matchesBlocked = false,
   lastPlayedAt,
   fanLabel = null,
+  seasonGoalLine = null,
   dressingConflict = false,
   intlCallup = false,
 }: {
@@ -61,6 +63,8 @@ export function EarlyClubHub({
   leaguePositionLabel?: string | null;
   cashLabel?: string | null;
   trainingUnlocked?: boolean;
+  /** Mid-season season-goal track (resolveSeasonGoalProgressLine). */
+  seasonGoalLine?: string | null;
   /** League fixtures already played (countPlayedInList). Copy only — not an unlock. */
   playedCount?: number;
   /** Injected UTC day for Daily Goal determinism (tests / page). */
@@ -198,8 +202,7 @@ export function EarlyClubHub({
         <DailyGoalSuggestion goal={dailyGoal} />
         {phase === 'SEASON' || phase === 'OFFSEASON' ? (
           <p className="lf-hub__daily" data-season-goal="top-half">
-            Cel sezonu: górna połowa tabeli.
-            {leaguePositionLabel ? ` ${leaguePositionLabel}.` : ''}
+            {seasonGoalLine ?? SEASON_GOAL_LABEL}
           </p>
         ) : null}
         {club.seasonGoalNote ? (

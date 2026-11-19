@@ -17,6 +17,30 @@ export function seasonGoalMet(position: number, rowCount: number): boolean {
   return place <= Math.ceil(rows / 2);
 }
 
+/**
+ * Mid-season Hub / Liga line — REUSE seasonGoalMet (Information Thin, no payout).
+ * Before the first league match: label only.
+ */
+export function resolveSeasonGoalProgressLine(input: {
+  readonly position: number | null;
+  readonly tableSize: number;
+  readonly playedCount: number;
+}): string {
+  if (
+    input.playedCount < 1 ||
+    input.position == null ||
+    !Number.isFinite(input.position) ||
+    !Number.isFinite(input.tableSize)
+  ) {
+    return SEASON_GOAL_LABEL;
+  }
+  const place = Math.trunc(input.position);
+  const size = Math.trunc(input.tableSize);
+  if (place < 1 || size < 1) return SEASON_GOAL_LABEL;
+  const track = seasonGoalMet(place, size) ? 'W górnej połowie' : 'Poniżej celu';
+  return `${SEASON_GOAL_LABEL} ${track} · ${place}. miejsce / ${size}.`;
+}
+
 /** Closed seasons stay closed. A retry must not recompute the bonus. */
 export function settleSeasonGoal(input: {
   readonly position: number | null;

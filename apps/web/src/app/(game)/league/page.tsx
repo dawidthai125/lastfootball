@@ -12,6 +12,7 @@ import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
 import { loadHumanLeagueCard } from '@/lib/league/human-league-store';
+import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 
 /**
  * League table — fed only by resolveLeagueTable() (LFE-LEAGUE-02).
@@ -23,6 +24,12 @@ export default async function LeaguePage() {
   const seeded = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const fixtures = await ensurePlayerCupTie(club, seeded);
   const table = resolveLeagueTable(club, fixtures);
+  const playerRow = table.rows.find((row) => row.isPlayer);
+  const seasonGoalLine = resolveSeasonGoalProgressLine({
+    position: playerRow?.position ?? null,
+    tableSize: table.rows.length,
+    playedCount: playerRow?.played ?? 0,
+  });
   const human = await loadHumanLeagueCard(club).catch(() => null);
   const cup = resolveNationalCup(club, fixtures);
   const playable = cup.playerTie?.due
@@ -37,6 +44,16 @@ export default async function LeaguePage() {
   return (
     <div>
       <SectionHeader title="Liga" subtitle={`${table.leagueLabel} · ${table.seasonLabel}`} />
+      <p
+        data-season-goal="top-half"
+        style={{
+          margin: '0 0 var(--lf-space-3)',
+          color: 'var(--lf-color-text-muted)',
+          fontSize: 'var(--lf-type-body)',
+        }}
+      >
+        {seasonGoalLine}
+      </p>
       {human ? (
         <Panel title="Liga ludzi">
           <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
