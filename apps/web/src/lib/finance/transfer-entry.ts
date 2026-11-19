@@ -1,5 +1,5 @@
 import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
-import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -38,8 +38,10 @@ export function resolveTransfersClosedSoftLock(playedCount: number): {
   readonly reason: string;
 } {
   if (!hasPlayedUnlock(playedCount, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) {
-    const label = resolveNavLockLabel('transfers', 'Transfery', playedCount);
-    return { title: label, reason: label };
+    return {
+      title: resolveNavLockLabel('transfers', 'Transfery', playedCount),
+      reason: resolveNavLockReason('transfers', playedCount),
+    };
   }
   return { title: CLOSED_WINDOW_TITLE, reason: UI_COPY.transferWindowClosed };
 }

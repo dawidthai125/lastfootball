@@ -1,10 +1,8 @@
 import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
-import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveNavAccess } from '@/lib/hub/unlock';
 import type { HubCta, HubCtaContext, HubNavAccess, HubPhase, HubSession } from '@/lib/hub/types';
-import { TRAINING_THIN } from '@/lib/training/types';
-import { TRANSFERS_THIN } from '@/lib/transfers/types';
+import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
 import { UI_COPY } from '@/lib/ui/copy';
 
 const DECISION_PHASES = new Set<HubPhase>(['EARLY_CLUB', 'SEASON']);
@@ -17,17 +15,14 @@ export type SecondaryCtaContext = {
   readonly playedCount?: number;
 };
 
-function trainingSecondaryLabel(access: HubNavAccess): string {
+function trainingSecondaryLabel(access: HubNavAccess, playedCount: number): string {
   if (access === 'open') return 'Trening';
-  return `Trening · po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
+  return resolveNavLockLabel('training', 'Trening', playedCount);
 }
 
 function transfersSecondaryLabel(access: HubNavAccess, playedCount: number): string {
   if (access === 'open') return 'Transfery';
-  if (!hasPlayedUnlock(playedCount, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) {
-    return `Transfery · po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
-  }
-  return 'Transfery · okno zamknięte';
+  return resolveNavLockLabel('transfers', 'Transfery', playedCount);
 }
 
 /**
@@ -108,7 +103,7 @@ export function resolveSecondaryCtas(phase: HubPhase, ctx: SecondaryCtaContext =
   return [
     {
       id: 'training',
-      label: trainingSecondaryLabel(trainingAccess),
+      label: trainingSecondaryLabel(trainingAccess, playedCount),
       href: '/training',
       access: trainingAccess,
     },

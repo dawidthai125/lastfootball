@@ -20,6 +20,7 @@ import { pressLineLabel, pressShapeLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
+import { resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { Button } from '@/components/ui';
 
 import './training-decision.css';
@@ -27,7 +28,7 @@ import './training-decision.css';
 function lockCopy(dto: TrainingDto): string {
   switch (dto.lockReason) {
     case 'not_unlocked':
-      return `Trening odblokuje się po ${dto.playedRequired} rozegranych meczach ligowych (masz ${dto.playedCount}).`;
+      return resolveNavLockReason('training', dto.playedCount);
     case 'already_trained_today':
       return 'Dzisiejsza sesja już odbyta. Wróć jutro (dzień UTC).';
     case 'squad_unavailable':
