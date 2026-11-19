@@ -12,8 +12,7 @@ import {
 import { SoftLockState } from '@/components/ui/SoftLockState';
 import { resolveHubPhase, isModuleSoftLocked } from '@/lib/hub';
 import { resolveNavItemForPathname } from '@/lib/hub/route-access';
-import { resolveNavLockReason } from '@/lib/nav-lock-copy';
-import { UI_COPY } from '@/lib/ui/copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { resolveSoftLockIllustration } from '@/lib/ui/soft-lock-illustration';
 
 /**
@@ -44,7 +43,7 @@ export function SoftLockRouteGate({ children }: { children: ReactNode }) {
     <SoftLockState
       waId={art.waId}
       illustrationSrc={art.illustrationSrc}
-      title={UI_COPY.softLockTitle(item.label)}
+      title={resolveNavLockLabel(item.id, item.label, playedCount)}
       reason={resolveNavLockReason(item.id, playedCount)}
     />
   );
