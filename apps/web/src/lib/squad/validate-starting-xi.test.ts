@@ -88,6 +88,21 @@ describe('LFE-UI-IMPL-05 validateStartingXi', () => {
     expect(v.ok).toBe(true);
     expect(v.warnings.length).toBeGreaterThan(0);
   });
+
+  it('warns when two explosive low-morale starters create a dressing conflict', () => {
+    const xi = Array.from({ length: 11 }, (_, i) =>
+      player({
+        id: `d${i}`,
+        position: i === 0 ? 'BR' : 'N',
+        starter: true,
+        morale: i === 1 || i === 2 ? 40 : 70,
+        personality: i === 1 || i === 2 ? 'wybuchowy' : 'spokojny',
+      }),
+    );
+    const v = validateStartingXi(xi);
+    expect(v.ok).toBe(true);
+    expect(v.warnings.some((w) => w.includes('Szatnia'))).toBe(true);
+  });
 });
 
 describe('LFE-UI-IMPL-05 applyXiSelection', () => {

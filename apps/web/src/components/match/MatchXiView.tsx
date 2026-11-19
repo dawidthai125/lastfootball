@@ -14,6 +14,7 @@ import {
   sortXiPlayers,
   validateStartingXi,
 } from '@/lib/squad/validate-starting-xi';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { matchLivePath, matchPrePath } from '@/lib/match/match-path';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -25,9 +26,12 @@ import './match-xi.css';
 export function MatchXiView({
   matchId,
   players: initialPlayers,
+  todayUtc = utcDateString(),
 }: {
   matchId: string;
   players: readonly SquadPlayerDto[];
+  /** Inject for tests; defaults to UTC today (intl gate parity with save). */
+  todayUtc?: string;
 }) {
   const router = useRouter();
   const [players, setPlayers] = useState(() => initialPlayers.map((p) => ({ ...p })));
@@ -42,7 +46,7 @@ export function MatchXiView({
     () => sortXiPlayers(players.filter((p) => !p.starter && p.status !== 'DEPARTED')),
     [players],
   );
-  const validation = useMemo(() => validateStartingXi(starters), [starters]);
+  const validation = useMemo(() => validateStartingXi(starters, todayUtc), [starters, todayUtc]);
 
   useEffect(() => {
     if (state.ok) {
@@ -164,13 +168,14 @@ function XiRow({
           .join(' ')}
         onClick={onSelect}
         aria-pressed={selected}
-        aria-label={`${player.name}, ${player.position}, ${STATUS_LABEL[player.status]}`}
+        aria-label={`${player.name}, ${player.position}, ${STATUS_LABEL[player.status]}${player.captain ? ', kapitan' : ''}${player.setPiece ? ', stałe fragmenty' : ''}`}
       >
         <PlayerPortrait playerId={player.id} name={player.name} size="sm" />
         <span className="lf-xi__row-body">
           <span className="lf-xi__row-name">
             {player.name}
             {player.captain ? <span className="lf-xi__cap">C</span> : null}
+            {player.setPiece ? <span className="lf-xi__cap lf-xi__cap--sf">SF</span> : null}
           </span>
           <span className="lf-xi__row-meta">
             {player.position} · {STATUS_LABEL[player.status]} · {player.skill}

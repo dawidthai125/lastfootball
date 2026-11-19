@@ -15,12 +15,13 @@ import {
   type SortKey,
   type SquadPlayerDto,
 } from '@/lib/squad';
+import { MORALE_ATTENTION } from '@/lib/squad/morale-hint';
 
 import './squad-decision.css';
 
 type SquadPlayer = SquadPlayerDto;
 
-/** UI-only attention thresholds (presentation — not domain). */
+/** UI-only attention thresholds (presentation — morale threshold REUSE dressing SSOT). */
 const ENERGY_ATTENTION = 45;
 const FORM_ATTENTION = 50;
 const ATTENTION_LIMIT = 5;
@@ -62,6 +63,7 @@ function attentionRank(p: SquadPlayer): number {
   if (p.status === 'TIRED') return 2;
   if (p.energy < ENERGY_ATTENTION) return 3;
   if (p.form < FORM_ATTENTION) return 4;
+  if (typeof p.morale === 'number' && p.morale < MORALE_ATTENTION) return 5;
   return 999;
 }
 
@@ -71,6 +73,9 @@ function attentionReason(p: SquadPlayer): string {
   }
   if (p.energy < ENERGY_ATTENTION) return `Energia ${p.energy}`;
   if (p.form < FORM_ATTENTION) return `Forma ${p.form}`;
+  if (typeof p.morale === 'number' && p.morale < MORALE_ATTENTION) {
+    return `Morale ${p.morale}`;
+  }
   return playerStatusLabel(p.status, p.suspensionMatches, p.injuryMatches);
 }
 

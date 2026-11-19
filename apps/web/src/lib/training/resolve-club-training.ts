@@ -1,4 +1,5 @@
 import { hasPlayedUnlock, utcDateString } from '@/lib/fixtures/played-unlock';
+import { resolveMoraleHint } from '@/lib/squad/morale-hint';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import {
@@ -88,6 +89,7 @@ export function resolveClubTraining(input: ResolveClubTrainingInput): TrainingDt
       focusId: TRAINING_THIN.DEFAULT_FOCUS_ID,
       intensityId: TRAINING_THIN.DEFAULT_INTENSITY_ID,
     },
+    moraleHint: resolveMoraleHint(seniors),
     individualAvailable: unlocked,
   };
 }
