@@ -177,6 +177,11 @@
   padding: 0 4px;
 }
 
+.lf-xi__cap--sf {
+  color: var(--lf-color-text-secondary);
+  border-color: var(--lf-color-border-subtle);
+}
+
 .lf-xi__row-meta {
   font-size: var(--lf-type-caption);
   color: var(--lf-color-text-muted);

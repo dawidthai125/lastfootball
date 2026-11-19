@@ -149,6 +149,15 @@ export function TrainingView({
     <div className="lf-tr" data-lf-impl="LFE-UI-IMPL-03">
       <LocationHero waId="HERO-006" src="/assets/world-art/hero-006-training.png" priority />
 
+      {training.moraleHint ? (
+        <StateBanner tone="info">
+          {training.moraleHint}{' '}
+          <Link href="/messages" className="lf-tr__morale-link">
+            Wiadomości
+          </Link>
+        </StateBanner>
+      ) : null}
+
       <p className="lf-tr__meta">
         Pressing klubu: {stylePressing}/{STYLE_THIN.CAP}. Na meczu, który prowadzisz, startuje z{' '}
         {kickoffPressing(stylePressing)}. Taktyka normalna albo wysoka podnosi to o 1. Tempo klubu:{' '}

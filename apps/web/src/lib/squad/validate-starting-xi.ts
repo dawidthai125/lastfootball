@@ -1,3 +1,5 @@
+import { resolveDressingConflict } from '@/lib/squad/dressing-room';
+import type { Personality } from '@/lib/squad/depth';
 import type { PlayerStatus, SquadPlayerDto } from '@/lib/squad/types';
 
 export type XiValidation = {
@@ -7,6 +9,11 @@ export type XiValidation = {
   readonly warnings: readonly string[];
   readonly errors: readonly string[];
 };
+
+function asPersonality(value: string | undefined): Personality {
+  if (value === 'lider' || value === 'wybuchowy' || value === 'spokojny') return value;
+  return 'spokojny';
+}
 
 const GK_POSITIONS = new Set(['BR']);
 
@@ -66,6 +73,19 @@ export function validateStartingXi(
   const tired = active.filter((p) => p.status === 'TIRED');
   if (tired.length >= 4) {
     warnings.push('Wielu zmęczonych w XI — rozważ rotację.');
+  }
+
+  const conflict = resolveDressingConflict(
+    active.map((p) => ({
+      id: p.id,
+      name: p.name,
+      morale: typeof p.morale === 'number' ? p.morale : 60,
+      personality: asPersonality(p.personality),
+      starter: true,
+    })),
+  );
+  if (conflict) {
+    warnings.push(`${conflict.subject} — napięcie w szatni.`);
   }
 
   return {

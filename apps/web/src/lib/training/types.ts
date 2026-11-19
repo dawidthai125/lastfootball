@@ -61,8 +61,8 @@ export type TrainingDto = {
   };
   /** Future: qualitative preview before confirm. */
   readonly sessionPreview?: undefined;
-  /** Future: morale hint strip. */
-  readonly moraleHint?: undefined;
+  /** Qualitative morale strip (LFE play-depth) — null when quiet. */
+  readonly moraleHint: string | null;
   /** Future: match-day lock policy. */
   readonly matchDayPolicy?: undefined;
   /** One player, one attribute group, once a day after the league unlock. */

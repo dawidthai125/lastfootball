@@ -90,6 +90,21 @@ describe('resolveClubTraining (LFE-TRAINING-01)', () => {
     expect(dto.individualAvailable).toBe(true);
     expect(dto.readiness.active).toBe(18);
     expect(dto.readiness.ready).toBe(18);
+    expect(dto.moraleHint).toBeNull();
+  });
+
+  it('fills moraleHint when a starter is under attention threshold', () => {
+    const rows = activeRows(clubId).map((r, i) =>
+      i === 0 ? { ...r, starter: true, morale: 40, name: 'Niski' } : r,
+    );
+    const dto = resolveClubTraining({
+      clubId,
+      playedCount: 2,
+      lastTrainingOn: null,
+      activePlayers: rows,
+      today,
+    });
+    expect(dto.moraleHint).toBe('Niski: niskie morale (40).');
   });
 
   it('locks already_trained_today', () => {
