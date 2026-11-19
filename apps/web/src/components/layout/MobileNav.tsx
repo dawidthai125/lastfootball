@@ -245,7 +245,11 @@ export function MobileNav() {
 
       <SoftLockModal
         open={Boolean(lockItem)}
-        title={lockItem ? UI_COPY.softLockTitle(lockItem.label) : UI_COPY.softLockTitle('Lokacja')}
+        title={
+          lockItem
+            ? resolveNavLockLabel(lockItem.id, lockItem.label, playedCount)
+            : UI_COPY.softLockTitle('Lokacja')
+        }
         reason={lockItem ? resolveNavLockReason(lockItem.id, playedCount) : UI_COPY.softLockReason}
         onClose={closeLock}
       />

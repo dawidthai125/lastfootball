@@ -20,7 +20,7 @@ import { pressLineLabel, pressShapeLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
-import { resolveNavLockReason } from '@/lib/nav-lock-copy';
+import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { Button } from '@/components/ui';
 
 import './training-decision.css';
@@ -40,6 +40,8 @@ function lockCopy(dto: TrainingDto): string {
 
 function lockTitle(dto: TrainingDto): string {
   switch (dto.lockReason) {
+    case 'not_unlocked':
+      return resolveNavLockLabel('training', 'Trening', dto.playedCount);
     case 'already_trained_today':
       return 'Trening na dziś zakończony';
     case 'squad_unavailable':

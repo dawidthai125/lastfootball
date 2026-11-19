@@ -75,6 +75,17 @@ describe('resolveNavLockLabel', () => {
 });
 
 describe('resolveNavLockReason', () => {
+  it('pairs progress title with masz-N reason for soft-lock surfaces', () => {
+    expect(resolveNavLockLabel('training', 'Trening', 1)).toBe(
+      `Trening · 1/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`,
+    );
+    expect(resolveNavLockReason('training', 1)).toContain('(masz 1)');
+    expect(resolveNavLockLabel('transfers', 'Transfery', 1)).toBe(
+      `Transfery · 1/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`,
+    );
+    expect(resolveNavLockReason('transfers', 1)).toContain('(masz 1)');
+  });
+
   it('states the match threshold for trening and transfery', () => {
     expect(resolveNavLockReason('training', 1)).toBe(
       `Trening odblokuje się po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz 1).`,
