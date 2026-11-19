@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
-import { fanMoodLabel } from '@/lib/club/fans';
+import { resolveHubFanLabel } from '@/lib/club/fans';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
@@ -126,8 +126,17 @@ export default async function HubPage() {
   const supabase = await createClient();
   const mood = await supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle();
   const moodValue = mood.error || !mood.data ? null : (mood.data as { fan_mood?: number }).fan_mood;
-  const fanLabel =
-    typeof moodValue === 'number' ? `Kibice: ${fanMoodLabel(moodValue)} ${moodValue}` : null;
+  const fanLabel = resolveHubFanLabel(
+    typeof moodValue === 'number' ? moodValue : null,
+    lastPlayed
+      ? {
+          id: lastPlayed.id,
+          homeScore: lastPlayed.homeScore,
+          awayScore: lastPlayed.awayScore,
+          isHome: lastPlayed.isHome,
+        }
+      : null,
+  );
 
   return (
     <EarlyClubHub

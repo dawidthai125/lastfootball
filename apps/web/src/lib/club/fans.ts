@@ -64,3 +64,31 @@ export function resolvePlayedFixtureFanLine(input: {
   const result = fanResultFromScores(input.homeScore, input.awayScore, input.isHome);
   return describeFanMoodAfterResult(input.storedMood, result);
 }
+
+/**
+ * Hub strip label — REUSE played-fixture Kibice line when the last match has scores.
+ * Falls back to mood label only (no second Δ formula).
+ */
+export function resolveHubFanLabel(
+  storedMood: number | null | undefined,
+  lastPlayed: {
+    readonly id: string;
+    readonly homeScore: number | null;
+    readonly awayScore: number | null;
+    readonly isHome: boolean;
+  } | null,
+): string | null {
+  if (typeof storedMood !== 'number' || !Number.isFinite(storedMood)) return null;
+  if (lastPlayed) {
+    const withDelta = resolvePlayedFixtureFanLine({
+      fixtureId: lastPlayed.id,
+      latestPlayedId: lastPlayed.id,
+      homeScore: lastPlayed.homeScore,
+      awayScore: lastPlayed.awayScore,
+      isHome: lastPlayed.isHome,
+      storedMood,
+    });
+    if (withDelta) return withDelta;
+  }
+  return `Kibice: ${fanMoodLabel(storedMood)} ${Math.trunc(storedMood)}`;
+}
