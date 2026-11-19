@@ -144,11 +144,11 @@ describe('hub session + primary CTA', () => {
     const early = resolveSecondaryCtas('EARLY_CLUB', { hasFixtures: false, playedCount: 0 });
     expect(early.find((c) => c.id === 'training')).toMatchObject({
       access: 'soft_locked',
-      label: `Trening · po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`,
+      label: `Trening · 0/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`,
     });
     expect(early.find((c) => c.id === 'transfers')).toMatchObject({
       access: 'soft_locked',
-      label: `Transfery · po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`,
+      label: `Transfery · 0/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`,
     });
 
     const beforeThreshold = resolveSecondaryCtas('SEASON', {
@@ -159,11 +159,11 @@ describe('hub session + primary CTA', () => {
     });
     expect(beforeThreshold.find((c) => c.id === 'training')?.access).toBe('soft_locked');
     expect(beforeThreshold.find((c) => c.id === 'training')?.label).toBe(
-      'Trening · po 2 meczach ligowych',
+      `Trening · ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED - 1}/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`,
     );
     expect(beforeThreshold.find((c) => c.id === 'transfers')).toMatchObject({
       access: 'soft_locked',
-      label: 'Transfery · po 2 meczach ligowych',
+      label: `Transfery · ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED - 1}/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`,
     });
 
     const windowClosed = resolveSecondaryCtas('SEASON', {

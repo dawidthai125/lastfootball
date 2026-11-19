@@ -15,12 +15,13 @@ function secondaryLabel(
 }
 
 describe('resolveNavLockLabel', () => {
-  it('uses the same three hub phrases and does not drift', () => {
-    const trainingLocked = `Trening · po ${TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
-    const transfersBefore = `Transfery · po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych`;
+  it('uses progress labels and does not drift from hub secondary', () => {
+    const trainingAt0 = `Trening · 0/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`;
+    const trainingAt1 = `Trening · 1/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`;
+    const transfersBefore = `Transfery · ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED - 1}/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`;
     const windowClosed = 'Transfery · okno zamknięte';
 
-    expect(resolveNavLockLabel('training', 'Trening', 0)).toBe(trainingLocked);
+    expect(resolveNavLockLabel('training', 'Trening', 0)).toBe(trainingAt0);
     expect(resolveNavLockLabel('training', 'Trening', 0)).toBe(
       secondaryLabel('training', {
         playedCount: 0,
@@ -28,8 +29,9 @@ describe('resolveNavLockLabel', () => {
         transferWindowOpen: false,
       }),
     );
+    expect(resolveNavLockLabel('training', 'Trening', 1)).toBe(trainingAt1);
     expect(resolveNavLockLabel('training', 'Trening', TRAINING_THIN.UNLOCK_AFTER_PLAYED)).toBe(
-      trainingLocked,
+      `Trening · ${TRAINING_THIN.UNLOCK_AFTER_PLAYED}/${TRAINING_THIN.UNLOCK_AFTER_PLAYED}`,
     );
 
     const before = TRANSFERS_THIN.UNLOCK_AFTER_PLAYED - 1;

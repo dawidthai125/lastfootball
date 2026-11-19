@@ -24,7 +24,7 @@ describe('resolveFinanceTransferEntry', () => {
           variant,
         });
         expect(entry).toEqual({ href: '/hub', label: lockedLabel });
-        expect(entry.label).toContain('po 2 meczach ligowych');
+        expect(entry.label).toBe(`Transfery · ${before}/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`);
         expect(entry.label).not.toBe('Zobacz rynek transferowy');
         expect(entry.label).not.toBe('Przejdź do transferów');
       }
@@ -75,9 +75,10 @@ describe('resolveTransfersClosedSoftLock', () => {
   it('says the league-match lock before the window has opened', () => {
     const copy = resolveTransfersClosedSoftLock(before);
     expect(copy.title).toBe(lockedLabel);
-    expect(copy.reason).toBe(lockedLabel);
-    expect(copy.title).toContain('po 2 meczach ligowych');
-    expect(copy.reason).toContain('po 2 meczach ligowych');
+    expect(copy.title).toBe(`Transfery · ${before}/${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED}`);
+    expect(copy.reason).toBe(
+      `Transfery odblokują się po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz ${before}).`,
+    );
     expect(copy.title).not.toBe('Okno transferowe zamknięte');
     expect(copy.reason).not.toBe(UI_COPY.transferWindowClosed);
     expect(TRANSFERS_THIN.UNLOCK_AFTER_PLAYED).toBe(2);
