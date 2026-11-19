@@ -6,6 +6,7 @@ import { useActionState, useEffect, useRef, useState, type CSSProperties } from 
 
 import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
+import { describeFanMoodChange, fanResultFromScores } from '@/lib/club/fans';
 import type { ClubDto } from '@/lib/club/types';
 import { createMatchCanvasRenderer, type MatchCanvasRendererApi } from '@/gameplay/canvas';
 import { MATCH_CANVAS_ROOT_ID } from '@/gameplay/canvas-host';
@@ -53,6 +54,7 @@ export function LiveMatchFoundation({
   ourFormation = '4-4-2',
   theirXi = null,
   developmentNames = [],
+  fanMoodBefore = 60,
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
@@ -64,6 +66,8 @@ export function LiveMatchFoundation({
   theirXi?: readonly RosterPlayerSeed[] | null;
   /** Post Match development signals (LFE-PLAYERS-02). */
   developmentNames?: readonly string[];
+  /** Fan mood before settle — Post Match Δ line (Information Thin). */
+  fanMoodBefore?: number;
 }) {
   const { fixture } = bundle;
   const {
@@ -269,6 +273,12 @@ export function LiveMatchFoundation({
       }).line
     : null;
 
+  const isHomeSide = leagueFixture?.isHome ?? fixture.home ?? true;
+  const fanMoodLine = describeFanMoodChange(
+    fanMoodBefore,
+    fanResultFromScores(snapshot.homeScore, snapshot.awayScore, isHomeSide),
+  );
+
   const openReplayAt = (item?: PostMatchTimelineItem) => {
     setPostMatchOpen(false);
     if (item) {
@@ -290,6 +300,7 @@ export function LiveMatchFoundation({
         onJumpToEvent={(item) => openReplayAt(item)}
         onDismiss={() => setPostMatchOpen(false)}
         rewardLine={rewardLine}
+        fanMoodLine={fanMoodLine}
         developmentNames={developmentNames}
         fixtureId={leagueFixture?.id}
         continueSlot={
