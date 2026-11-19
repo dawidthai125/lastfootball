@@ -6,6 +6,7 @@ import {
   fanMoodLabel,
   fanResultFromScores,
   nextFanMood,
+  resolveHubFanLabel,
   resolvePlayedFixtureFanLine,
 } from '@/lib/club/fans';
 
@@ -58,5 +59,19 @@ describe('fans', () => {
         storedMood: 54,
       }),
     ).toBeNull();
+  });
+
+  it('resolveHubFanLabel reuses the played-fixture Kibice line', () => {
+    // Away loss 5:7 → home 7, away 5, isHome false (Probny MD1 shape).
+    expect(
+      resolveHubFanLabel(54, {
+        id: 'fx-1',
+        homeScore: 7,
+        awayScore: 5,
+        isHome: false,
+      }),
+    ).toBe('Kibice: Spokojni 54 (-6)');
+    expect(resolveHubFanLabel(54, null)).toBe('Kibice: Spokojni 54');
+    expect(resolveHubFanLabel(null, null)).toBeNull();
   });
 });
