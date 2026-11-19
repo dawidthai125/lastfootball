@@ -9,7 +9,12 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { buildLeaguePreMatchBundle, getFixtureByIdForClub } from '@/lib/fixtures';
+import { resolvePlayedFixtureFanLine } from '@/lib/club/fans';
+import {
+  buildLeaguePreMatchBundle,
+  getFixtureByIdForClub,
+  getLastPlayedFixture,
+} from '@/lib/fixtures';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { lineupEditorHref } from '@/lib/match/xi-block-path';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
@@ -66,6 +71,25 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
   if (!dto) notFound();
 
   if (dto.status === 'played') {
+    const supabase = await createClient();
+    const [latestPlayed, moodRow] = await Promise.all([
+      getLastPlayedFixture(club.id),
+      supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle(),
+    ]);
+    const storedMood =
+      moodRow.error || !moodRow.data
+        ? null
+        : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
+          ? (moodRow.data as { fan_mood: number }).fan_mood
+          : null;
+    const fanLine = resolvePlayedFixtureFanLine({
+      fixtureId: dto.id,
+      latestPlayedId: latestPlayed?.id ?? null,
+      homeScore: dto.homeScore,
+      awayScore: dto.awayScore,
+      isHome: dto.isHome,
+      storedMood,
+    });
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-3)' }}>
         <h1
@@ -90,6 +114,18 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
             ? `${dto.homeScore}:${dto.awayScore}`
             : '—'}
         </p>
+        {fanLine ? (
+          <p
+            style={{
+              margin: 0,
+              fontSize: 'var(--lf-type-body)',
+              color: 'var(--lf-color-text-primary)',
+            }}
+            aria-label="Nastrój kibiców"
+          >
+            {fanLine}
+          </p>
+        ) : null}
         {dto.matchNote ? (
           <p
             style={{

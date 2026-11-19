@@ -11,9 +11,19 @@ import { UI_COPY } from '@/lib/ui/copy';
  * Peek skrzynki — ≠ Invitation Layer (LFE-NOTIFICATIONS-01).
  * No runtime mocks · no mark-as-read workflow.
  */
+function deskNudge(items: readonly { id: string }[]): string | null {
+  const dressing = items.some((item) => item.id.startsWith('msg:dress:'));
+  const intl = items.some((item) => item.id.startsWith('msg:intl:'));
+  if (dressing && intl) return UI_COPY.messagesDeskNudgeBoth;
+  if (dressing) return UI_COPY.messagesDeskNudgeDressing;
+  if (intl) return UI_COPY.messagesDeskNudgeIntl;
+  return null;
+}
+
 export function OverlayRoot() {
   const { active, close } = useOverlay();
   const messages = useClubMessages();
+  const nudge = deskNudge(messages.items);
 
   if (!active) return null;
 
@@ -81,6 +91,22 @@ export function OverlayRoot() {
               {UI_COPY.close}
             </button>
           </header>
+
+          {nudge ? (
+            <p
+              role="status"
+              style={{
+                margin: 0,
+                padding: 'var(--lf-space-2) var(--lf-space-3)',
+                borderBottom: '1px solid var(--lf-color-border-subtle)',
+                fontSize: 'var(--lf-type-caption)',
+                color: 'var(--lf-color-text-secondary)',
+                background: 'var(--lf-color-bg-inset)',
+              }}
+            >
+              {nudge}
+            </p>
+          ) : null}
 
           <ul className="flex-1 overflow-y-auto" style={{ padding: 'var(--lf-space-2)' }}>
             {messages.items.length === 0 ? (
