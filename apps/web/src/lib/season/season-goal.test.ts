@@ -11,18 +11,18 @@ import {
 
 describe('resolveSeasonGoalProgressLine', () => {
   it('keeps the label only before the first league match', () => {
-    expect(
-      resolveSeasonGoalProgressLine({ position: 10, tableSize: 12, playedCount: 0 }),
-    ).toBe(SEASON_GOAL_LABEL);
+    expect(resolveSeasonGoalProgressLine({ position: 10, tableSize: 12, playedCount: 0 })).toBe(
+      SEASON_GOAL_LABEL,
+    );
   });
 
   it('tracks Probny-shaped mid-season places', () => {
-    expect(
-      resolveSeasonGoalProgressLine({ position: 10, tableSize: 12, playedCount: 1 }),
-    ).toBe(`${SEASON_GOAL_LABEL} Poniżej celu · 10. miejsce / 12.`);
-    expect(
-      resolveSeasonGoalProgressLine({ position: 5, tableSize: 12, playedCount: 1 }),
-    ).toBe(`${SEASON_GOAL_LABEL} W górnej połowie · 5. miejsce / 12.`);
+    expect(resolveSeasonGoalProgressLine({ position: 10, tableSize: 12, playedCount: 1 })).toBe(
+      `${SEASON_GOAL_LABEL} Poniżej celu · 10. miejsce / 12.`,
+    );
+    expect(resolveSeasonGoalProgressLine({ position: 5, tableSize: 12, playedCount: 1 })).toBe(
+      `${SEASON_GOAL_LABEL} W górnej połowie · 5. miejsce / 12.`,
+    );
   });
 });
 
