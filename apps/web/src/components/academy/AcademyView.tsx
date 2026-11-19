@@ -5,8 +5,10 @@ import { useActionState } from 'react';
 import { LocationHero, SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
 import { intakeAcademyProspect, promoteAcademyProspect } from '@/lib/academy/actions';
 import { ACADEMY_ACTION_INITIAL, type AcademyDto } from '@/lib/academy';
+import { formatMoney } from '@/lib/finance/format-money';
 import { buyScoutReport } from '@/lib/scouting/actions-report';
 import { SCOUTING_ACTION_INITIAL } from '@/lib/scouting';
+import { SCOUT_REPORT_FEE } from '@/lib/scouting/reveal';
 
 function intakeHint(dto: AcademyDto): string {
   if (dto.intakeBlockedReason === 'slots_full') {
@@ -134,7 +136,7 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
                   <form action={reportAction}>
                     <input type="hidden" name="playerId" value={p.id} />
                     <Button type="submit" variant="default" size="sm" disabled={reportPending}>
-                      {reportPending ? '…' : 'Raport 2 000 EUR'}
+                      {reportPending ? '…' : `Raport ${formatMoney(SCOUT_REPORT_FEE)}`}
                     </Button>
                   </form>
                 ) : null}

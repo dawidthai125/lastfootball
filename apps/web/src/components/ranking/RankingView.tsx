@@ -52,7 +52,7 @@ export function RankingView({ ranking }: { ranking: ClubRankingDto }) {
               {r.position}
             </span>
             <div className="lf-rank__body">
-              <span className={`lf-rank__name${r.isPlayer ? 'lf-rank__name--self' : ''}`}>
+              <span className={r.isPlayer ? 'lf-rank__name lf-rank__name--self' : 'lf-rank__name'}>
                 {r.name}
               </span>
               <span className="lf-rank__band">{bandLabel(r.band)}</span>
