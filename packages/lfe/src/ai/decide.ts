@@ -29,7 +29,7 @@ export function scorePhaseModifier(side: MatchAiSideContext, displayMinute: numb
 }
 
 /**
- * MATCH-BALANCE-01 — sole SSOT for match rates (about 1800 play ticks per match).
+ * MATCH-BALANCE-01 — sole SSOT for match rates, per tick of a 45 s half (about 1800 play ticks).
  * Equal teams, default tactics: ~2.7 goals, ~25 shots, ~25% draws, home ~55% of goals.
  * Guarded by match-balance01.test.ts. Modifiers multiply, so they scale with the base.
  */
@@ -47,10 +47,15 @@ export const MATCH_BALANCE = Object.freeze({
   STRENGTH_ON_TARGET: 0.5,
   STRENGTH_GOAL: 0.75,
   FRESHNESS_ATTACK: 0.35,
-  SCORE_ATTACK: 0.6,
-  SCORE_GOAL: 0.2,
+  SCORE_ATTACK: 1,
+  SCORE_GOAL: 0.3,
   EXPOSURE_MENTALITY: 0.75,
   EXPOSURE_FORMATION: 0.3,
+  EXPOSURE_TEMPO: 0.42,
+  EXPOSURE_WIDTH: 0.12,
+  EXPOSURE_PRESSING: 0.15,
+  /** Half length the rates are tuned for. */
+  REFERENCE_HALF_MS: 45_000,
 });
 
 /** 4-4-2 shape value — the neutral formation for exposure and attack. */
@@ -91,14 +96,17 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
 }
 
 /**
- * How open our own shape leaves us. Attacking mentality and forward formations
- * raise the rival's chances; deep setups lower them.
+ * How open our own setup leaves us. Attacking mentality, forward formations, tempo,
+ * width and pressing raise the rival's chances; deep, slow setups lower them.
  */
 function exposure(side: MatchAiSideContext): number {
   return factor(
     1 +
       (side.tactics.mentality / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_MENTALITY +
-      (side.formationAggressiveness - NEUTRAL_SHAPE) * MATCH_BALANCE.EXPOSURE_FORMATION,
+      (side.formationAggressiveness - NEUTRAL_SHAPE) * MATCH_BALANCE.EXPOSURE_FORMATION +
+      (side.tactics.tempo / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_TEMPO +
+      (side.tactics.width / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_WIDTH +
+      (side.tactics.pressing / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_PRESSING,
   );
 }
 
@@ -152,6 +160,12 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
     cornerChance,
     goalChance,
   });
+}
+
+/** A shorter match (onboarding) keeps full-match goal totals: more attacks per tick. */
+export function attackScaleForHalf(halfDurationMs: number): number {
+  if (!(halfDurationMs > 0)) return 1;
+  return Math.max(1, Math.min(4, MATCH_BALANCE.REFERENCE_HALF_MS / halfDurationMs));
 }
 
 export function decidePossessionFromState(state: MatchState): MatchAiPossessionDecision {

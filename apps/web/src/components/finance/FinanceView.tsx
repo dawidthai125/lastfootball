@@ -8,11 +8,11 @@ import { UI_COPY } from '@/lib/ui/copy';
 import './finance-decision.css';
 
 function amountClass(amount: number): string {
-  return amount >= 0 ? 'lf-fi__amount--in' : 'lf-fi__amount--out';
+  return amount > 0 ? 'lf-fi__amount--in' : 'lf-fi__amount--out';
 }
 
 function formatSignedAmount(amount: number): string {
-  return `${amount >= 0 ? '+' : ''}${formatMoney(amount)}`;
+  return `${amount > 0 ? '+' : ''}${formatMoney(amount)}`;
 }
 
 function lastMovementSummary(m: FinanceMovementDto | null): string {
@@ -35,7 +35,9 @@ export function FinanceView({
 }) {
   const movements = finance.recentMovements;
   const hasMovements = movements.length > 0;
-  const needsReaction = Boolean(finance.lastMovement && finance.lastMovement.amount < 0);
+  const needsReaction = Boolean(
+    finance.wageNote || (finance.lastMovement && finance.lastMovement.amount < 0),
+  );
   const primary = resolveFinanceTransferEntry({
     transferWindowOpen,
     playedCount,

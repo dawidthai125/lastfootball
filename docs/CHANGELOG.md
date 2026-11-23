@@ -23,9 +23,9 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 ### Product
 
 - Silnik: równe składy dają ok. 2,7 gola i 26 strzałów, ok. 27% remisów (było ok. 11 goli, 91 strzałów, ponad 40% remisów). Stawki w `MATCH_BALANCE` (`packages/lfe/src/ai/decide.ts`), pilnuje ich `match-balance01.test.ts`.
-- Lepszy skład wygrywa wyraźnie częściej, gospodarz strzela ok. 55% goli, zmęczenie zmniejsza liczbę ataków. Ofensywna mentalność i ustawienie odsłaniają własną bramkę, więc nie są już darmową przewagą.
-- Rozegrane mecze zostają bez zmian.
-- Kasa po meczu zapisuje się z kontrolą współbieżności: równoległy transfer nie ginie.
+- Lepszy skład wygrywa wyraźnie częściej, gospodarz strzela ok. 55% goli, zmęczenie zmniejsza liczbę ataków. Ofensywna mentalność, ustawienie, tempo, szerokość i pressing odsłaniają własną bramkę, więc nie są już darmową przewagą.
+- Krótszy pierwszy mecz ma stawki przeliczone na swój czas. Rozegrane mecze zostają bez zmian.
+- Zapis kasy po meczu sprawdza, czy saldo się nie zmieniło, i w razie czego liczy od nowa (compare-and-set). Pozostałe zapisy kasy bez zmian.
 
 ---
 

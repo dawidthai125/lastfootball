@@ -22,13 +22,22 @@ type Side = {
   readonly freshness?: number;
   readonly mentality?: number;
   readonly formation?: string;
+  readonly tempo?: number;
+  readonly width?: number;
+  readonly pressing?: number;
 };
 
 function sideContext(side: 'home' | 'away', s: Side): MatchAiSideContext {
   const formationCode = s.formation ?? '4-4-2';
   return {
     side,
-    tactics: { formationCode, mentality: s.mentality ?? 50, pressing: 50, tempo: 50, width: 50 },
+    tactics: {
+      formationCode,
+      mentality: s.mentality ?? 50,
+      pressing: s.pressing ?? 50,
+      tempo: s.tempo ?? 50,
+      width: s.width ?? 50,
+    },
     strength: s.skill / 100,
     freshness: s.freshness ?? 1,
     goalsFor: 0,
@@ -116,6 +125,8 @@ describe('MATCH-BALANCE-01', () => {
       { mentality: 20 },
       { formation: '4-3-3' },
       { formation: '5-4-1' },
+      { tempo: 90, width: 90, pressing: 90 },
+      { tempo: 10, width: 10, pressing: 10 },
     ]) {
       const r = sample({ skill: 50, ...setup }, { skill: 50 });
       expect(Math.abs(points(r) - points(base)), JSON.stringify(setup)).toBeLessThan(0.16);
@@ -125,50 +136,70 @@ describe('MATCH-BALANCE-01', () => {
     expect(open.away).toBeGreaterThan(base.away);
   });
 
-  it('the real session stays near the model', { timeout: 60_000 }, () => {
-    let goals = 0;
-    const matches = 24;
-    for (let seed = 1; seed <= matches; seed += 1) {
-      const ids = (side: string) => Array.from({ length: 11 }, (_, i) => `${side}${i}`);
-      const session = createMatch({
-        seed: seed * 7919,
-        homeTeamId: 'home',
-        awayTeamId: 'away',
-        homeLineup: createLineup({ side: 'home', formationCode: '4-4-2', playerIds: ids('h') }),
-        awayLineup: createLineup({ side: 'away', formationCode: '4-4-2', playerIds: ids('a') }),
-        homeBench: createBench('home', []),
-        awayBench: createBench('away', []),
-        players: (['home', 'away'] as const).flatMap((side) =>
-          ids(side[0]!).map((id, i) =>
-            createPlayer({
-              id,
-              teamId: side,
-              side,
-              name: id,
-              shirtNumber: i + 1,
-              preferredRole: 'CM',
-            }),
-          ),
-        ),
-        settings: {
-          halfDurationMs: 45_000,
-          halfTimeDurationMs: 100,
-          enableExtraTime: false,
-          enablePenalties: false,
-        },
-      });
-      session.start();
-      session.step();
-      session.dispatch(createKickoffCommand({ tick: session.context().tick, source: 'system' }));
-      session.step();
-      for (let i = 0; i < 4000 && session.getMatchState().phase !== 'FINISHED'; i += 1) {
-        session.step();
-      }
-      const { home, away } = session.getMatchState().score;
-      goals += home + away;
-      session.dispose();
-    }
-    expect(goals / matches).toBeGreaterThan(1.5);
-    expect(goals / matches).toBeLessThan(4.2);
+  it('trailing teams push, most of all late', () => {
+    const attack = (scoreDiff: number, displayMinute: number) =>
+      decideAction(
+        {
+          phase: 'SECOND_HALF',
+          displayMinute,
+          home: { ...sideContext('home', { skill: 50 }), scoreDiff },
+          away: { ...sideContext('away', { skill: 50 }), scoreDiff: -scoreDiff },
+        } as MatchAiContext,
+        'home',
+      ).attackChance;
+    expect(attack(-1, 30)).toBeGreaterThan(attack(0, 30));
+    expect(attack(-1, 86)).toBeGreaterThan(attack(0, 86) * 1.08);
+    expect(attack(1, 86)).toBeLessThan(attack(0, 86));
   });
+
+  it.each([45_000, 20_000])(
+    'a real session with %i ms halves stays near the model',
+    { timeout: 60_000 },
+    (halfDurationMs) => {
+      let goals = 0;
+      const matches = 24;
+      for (let seed = 1; seed <= matches; seed += 1) {
+        const ids = (side: string) => Array.from({ length: 11 }, (_, i) => `${side}${i}`);
+        const session = createMatch({
+          seed: seed * 7919,
+          homeTeamId: 'home',
+          awayTeamId: 'away',
+          homeLineup: createLineup({ side: 'home', formationCode: '4-4-2', playerIds: ids('h') }),
+          awayLineup: createLineup({ side: 'away', formationCode: '4-4-2', playerIds: ids('a') }),
+          homeBench: createBench('home', []),
+          awayBench: createBench('away', []),
+          players: (['home', 'away'] as const).flatMap((side) =>
+            ids(side[0]!).map((id, i) =>
+              createPlayer({
+                id,
+                teamId: side,
+                side,
+                name: id,
+                shirtNumber: i + 1,
+                preferredRole: 'CM',
+              }),
+            ),
+          ),
+          settings: {
+            halfDurationMs,
+            halfTimeDurationMs: 100,
+            enableExtraTime: false,
+            enablePenalties: false,
+          },
+        });
+        session.start();
+        session.step();
+        session.dispatch(createKickoffCommand({ tick: session.context().tick, source: 'system' }));
+        session.step();
+        for (let i = 0; i < 4000 && session.getMatchState().phase !== 'FINISHED'; i += 1) {
+          session.step();
+        }
+        const { home, away } = session.getMatchState().score;
+        goals += home + away;
+        session.dispose();
+      }
+      expect(goals / matches).toBeGreaterThan(1.5);
+      expect(goals / matches).toBeLessThan(4.2);
+    },
+  );
 });

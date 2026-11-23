@@ -1,6 +1,7 @@
 import type { MatchLifecycleEvent } from '../state-machine';
 import { createScore, type MatchState } from '../domain';
 import type { Rng } from '../../rng';
+import { attackScaleForHalf } from '../../ai';
 
 import { advanceMatchClock, isHalfComplete } from './clock';
 import { reconcileMinutesPlayed } from './minutes-played';
@@ -158,7 +159,13 @@ export function simulateMatchTick(
   });
   next = withPossessionTick(next, side);
 
-  const resolved = resolvePossessionAction(next, side, input.rng, input.tick);
+  const resolved = resolvePossessionAction(
+    next,
+    side,
+    input.rng,
+    input.tick,
+    attackScaleForHalf(input.halfDurationMs),
+  );
   next = resolved.state;
   emits.push(...resolved.emits);
 

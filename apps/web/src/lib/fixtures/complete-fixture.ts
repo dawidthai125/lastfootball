@@ -230,6 +230,7 @@ export async function completeFixture(
           .maybeSingle();
         cashSaved = stored != null;
         if (!cashSaved) {
+          await new Promise((done) => setTimeout(done, 80 * (attempt + 1)));
           const { data: fresh } = await supabase
             .from('clubs')
             .select('cash_balance')
@@ -237,6 +238,9 @@ export async function completeFixture(
             .maybeSingle();
           cashRead = (fresh as { cash_balance: number } | null)?.cash_balance ?? cashRead;
         }
+      }
+      if (!cashSaved) {
+        console.error('completeFixture: settlement not saved', { fixtureId: row.id });
       }
       const moraleHit = unpaidWageMoraleDelta(wageDue, paid.paid);
 
@@ -278,12 +282,17 @@ export async function completeFixture(
               'id',
               seniors.map((player) => player.id),
             );
-          for (const mood of (moods ?? []) as { id: string; morale: number | null }[]) {
-            await supabase
-              .from('players')
-              .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
-              .eq('id', mood.id)
-              .eq('club_id', clubId);
+          const hits = await Promise.all(
+            ((moods ?? []) as { id: string; morale: number | null }[]).map((mood) =>
+              supabase
+                .from('players')
+                .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
+                .eq('id', mood.id)
+                .eq('club_id', clubId),
+            ),
+          );
+          if (hits.length < seniors.length || hits.some((hit) => hit.error)) {
+            console.error('completeFixture: unpaid-wage morale incomplete', { fixtureId: row.id });
           }
         }
       }
