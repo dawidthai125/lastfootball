@@ -7,6 +7,7 @@ import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { nextChallengeMatchday } from '@/lib/rivals/matchday';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 export type RivalClub = {
@@ -110,7 +111,8 @@ export async function createRivalChallenge(
     ((days ?? []) as { matchday: number }[]).map((row) => row.matchday),
   );
 
-  const { data: fixture, error: fixtureErr } = await supabase
+  const admin = createAdminClient();
+  const { data: fixture, error: fixtureErr } = await admin
     .from('fixtures')
     .insert({
       club_id: club.id,
@@ -136,7 +138,7 @@ export async function createRivalChallenge(
     status: 'open',
   } as never);
   if (challengeErr) {
-    await supabase.from('fixtures').delete().eq('id', created.id).eq('club_id', club.id);
+    await admin.from('fixtures').delete().eq('id', created.id).eq('club_id', club.id);
     return { error: 'Nie udało się utworzyć wyzwania.' };
   }
 

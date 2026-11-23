@@ -763,9 +763,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** Bilety → kasa działają (`ticket_income`, trybuny 0–3) i zastępują D112. Nagrody i bilety pokrywają pensje wg GDD §26.8; pensje zapisane w `players.wage` bez zmian. Nagroda rośnie z ligą o połowę kroku `LEAGUE_RUNG_MULT`; liga ludzi = stawka IV ligi; puchar i wyzwania bez nagrody, pensje jak dotąd; wyzwania bez biletów. Niepełna wypłata obniża morale seniorów (1..8) przez `nextMorale`. Komunikat i ostrzeżenie = derive `ClubFinanceDto.wageNote` z ruchu `wages` (Hub · Finanse · Wiadomości).  
 **OUT:** migracje · dług klubu · nagrody pucharowe · zmiana pensji.
 
+### D127 — Wynik i kasa należą do serwera · Owner GO 2026-11-23
+
+**Dlaczego:** Wynik ligi, pucharu i wyzwania przychodził z przeglądarki, a RLS pozwalał sesji gracza wpisać kasę, wynik i poziom ligi we własnym klubie. Zapisy kasy nadpisywały się przy równoczesnych akcjach.  
+**Zasada:** Przeglądarka wysyła tylko decyzje (`managerLog`) i ustawienie. `authoritativeManagerScore` buduje tę samą sesję z bazy i odtwarza mecz; jej wynik jest oficjalny. Kasę zapisuje wyłącznie `club-cash.ts` (compare-and-set, service role po sprawdzeniu właściciela). Triggery `lf_guard_*` odrzucają z sesji gracza: kasę, ligę, sezon, poziomy, sztab, nastrój kibiców, terminarz i wyniki, kontrakty sponsora, wyniki wyzwań. Funkcje SECURITY DEFINER działają dalej. Nieudane rozliczenie otwiera mecz ponownie.  
+**OUT:** ochrona `players` (skill, energia) i pierwszego meczu — osobny EPIC.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D125 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D127 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

@@ -1,5 +1,6 @@
 import type { ClubSponsorContractRow } from '@/lib/sponsors/types';
 import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { env } from '@/config/env';
 
@@ -29,7 +30,7 @@ export async function ensureClubSponsorContract(
   if (existing) return existing;
   if (!env.isSupabaseConfigured) return null;
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const insert = buildStarterSponsorContractInsert(clubId, seasonNumber);
   const { data, error } = await supabase
     .from('club_sponsor_contracts')

@@ -6,6 +6,7 @@ import { env } from '@/config/env';
 import { readClubBuild } from '@/lib/club/read-build';
 import { hireCoach } from '@/lib/training/coach';
 import type { TrainingActionState } from '@/lib/training/action-types';
+import { CASH_STALE_ERROR, writeClubCash } from '@/lib/finance/club-cash';
 import { createClient } from '@/lib/supabase/server';
 
 const GROUP_LABEL: Record<string, string> = {
@@ -52,11 +53,14 @@ export async function hireClubCoach(
     return { ok: true };
   }
 
-  const { error: updErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: hired.cashAfter, coach_group: hired.group } as never)
-    .eq('id', clubRow.id);
-  if (updErr) return { error: 'Trener nie jest jeszcze włączony.' };
+  const written = await writeClubCash({
+    clubId: clubRow.id,
+    expected: clubRow.cash_balance,
+    next: hired.cashAfter,
+    extra: { coach_group: hired.group },
+  });
+  if (written === 'stale') return { error: CASH_STALE_ERROR };
+  if (written === 'error') return { error: 'Trener nie jest jeszcze włączony.' };
 
   await supabase.from('finance_movements').insert({
     club_id: clubRow.id,

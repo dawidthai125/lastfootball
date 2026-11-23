@@ -22,6 +22,10 @@ import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
 import { applyMatchSquadTruth, groupsFromSkill, matchWageDue, payWages } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
+import { settleClubCash } from '@/lib/finance/club-cash';
+import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
+import { parseManagerLog } from '@/lib/match/manager-commands';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
@@ -39,11 +43,15 @@ export async function completeFixture(
   }
 
   const fixtureId = String(formData.get('fixtureId') ?? '');
-  const homeScore = Number(formData.get('homeScore'));
-  const awayScore = Number(formData.get('awayScore'));
+  // D127: no score from the browser. Decisions are replayed below.
+  const managerLog = parseManagerLog(formData.get('managerLog'));
+  const shape = formData.get('shape');
 
-  if (!fixtureId || !Number.isFinite(homeScore) || !Number.isFinite(awayScore)) {
-    return { error: 'Brak wyniku meczu.' };
+  if (!fixtureId) {
+    return { error: 'Brak meczu.' };
+  }
+  if (!managerLog) {
+    return { error: 'Nie da się odtworzyć decyzji z meczu. Wejdź w mecz jeszcze raz.' };
   }
 
   const supabase = await createClient();
@@ -57,7 +65,7 @@ export async function completeFixture(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, cash_balance, league_tier')
+    .select('id, league_tier')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -65,12 +73,12 @@ export async function completeFixture(
     return { error: 'Nie znaleziono klubu.' };
   }
 
-  const clubRow = club as { id: string; cash_balance: number; league_tier: string | null };
+  const clubRow = club as { id: string; league_tier: string | null };
   const clubId = clubRow.id;
 
   const { data: fixture, error: loadErr } = await supabase
     .from('fixtures')
-    .select('id, club_id, matchday, status, is_home, competition')
+    .select('id, club_id, matchday, status, is_home, competition, home_score, away_score')
     .eq('id', fixtureId)
     .eq('club_id', clubId)
     .maybeSingle();
@@ -86,7 +94,14 @@ export async function completeFixture(
     status: string;
     is_home: boolean;
     competition: FixtureDto['competition'];
+    home_score: number | null;
+    away_score: number | null;
   };
+  const admin = createAdminClient();
+  let official =
+    row.home_score != null && row.away_score != null
+      ? { home: row.home_score, away: row.away_score }
+      : null;
 
   if (row.status !== 'played') {
     const emailGate = await loadEmailGate(user.id);
@@ -115,14 +130,13 @@ export async function completeFixture(
     const build = await readClubBuild(supabase, clubId);
     const seniors = filterSeniorPlayers(players);
     const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
-    let home = Math.trunc(homeScore);
-    let away = Math.trunc(awayScore);
-    if (row.competition === 'human') {
-      const official = await authoritativeHumanScore(clubId, row.matchday);
-      if ('error' in official) return official;
-      home = official.home;
-      away = official.away;
-    }
+    if (row.status !== 'upcoming') return { error: 'Ten mecz nie jest jeszcze otwarty.' };
+    const scored =
+      row.competition === 'human'
+        ? await authoritativeHumanScore(clubId, row.matchday)
+        : await authoritativeManagerScore(row.id, players, managerLog, shape);
+    if ('error' in scored) return scored;
+    const { home, away } = scored;
     const ours = row.is_home ? home : away;
     const theirs = row.is_home ? away : home;
     const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
@@ -177,7 +191,7 @@ export async function completeFixture(
 
     const playedAt = new Date().toISOString();
 
-    const { data: updated, error: updErr } = await supabase
+    const { data: updated, error: updErr } = await admin
       .from('fixtures')
       .update({
         status: 'played',
@@ -196,6 +210,7 @@ export async function completeFixture(
     }
 
     if (updated) {
+      official = { home, away };
       const playedHome = (updated as { is_home: boolean }).is_home;
       const reward = resolveFixtureReward({
         competition: row.competition,
@@ -215,95 +230,73 @@ export async function completeFixture(
           : 0;
       const wageDue = matchWageDue(seniors);
       const income = (reward?.amount ?? 0) + ticketTake;
-      let paid = payWages(clubRow.cash_balance + income, wageDue);
-      let cashSaved = false;
-      let cashRead = clubRow.cash_balance;
-      // Compare-and-set: a transfer settled during this save must not be overwritten.
-      for (let attempt = 0; attempt < 4 && !cashSaved; attempt += 1) {
-        paid = payWages(cashRead + income, wageDue);
-        const { data: stored } = await supabase
-          .from('clubs')
-          .update({ cash_balance: paid.nextCash } as never)
-          .eq('id', clubId)
-          .eq('cash_balance', cashRead)
-          .select('id')
-          .maybeSingle();
-        cashSaved = stored != null;
-        if (!cashSaved) {
-          await new Promise((done) => setTimeout(done, 80 * (attempt + 1)));
-          const { data: fresh } = await supabase
-            .from('clubs')
-            .select('cash_balance')
-            .eq('id', clubId)
-            .maybeSingle();
-          cashRead = (fresh as { cash_balance: number } | null)?.cash_balance ?? cashRead;
-        }
-      }
-      if (!cashSaved) {
+      const settled = await settleClubCash(clubId, (cash) => payWages(cash + income, wageDue));
+      if (!settled) {
+        // Not paid means not played: reopen, so the next save settles it once.
+        await admin
+          .from('fixtures')
+          .update({ status: 'upcoming', home_score: null, away_score: null, played_at: null })
+          .eq('id', row.id)
+          .eq('club_id', clubId);
         console.error('completeFixture: settlement not saved', { fixtureId: row.id });
+        return { error: 'Nie udało się rozliczyć meczu. Wejdź w mecz jeszcze raz.' };
       }
-      const moraleHit = unpaidWageMoraleDelta(wageDue, paid.paid);
+      const moraleHit = unpaidWageMoraleDelta(wageDue, settled.paid);
 
-      if (cashSaved) {
-        if (reward) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'match_reward',
-            label: reward.label,
-            amount: reward.amount,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (wageDue > 0) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'wages',
-            label: wagesMovementLabel(wageDue - paid.paid),
-            amount: paid.paid > 0 ? -paid.paid : 0,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (ticketTake > 0) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'ticket_income',
-            label: 'Bilety',
-            amount: ticketTake,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (moraleHit < 0) {
-          // Read back: the development step above already stored this match's morale.
-          const { data: moods } = await supabase
-            .from('players')
-            .select('id, morale')
-            .eq('club_id', clubId)
-            .in(
-              'id',
-              seniors.map((player) => player.id),
-            );
-          const hits = await Promise.all(
-            ((moods ?? []) as { id: string; morale: number | null }[]).map((mood) =>
-              supabase
-                .from('players')
-                .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
-                .eq('id', mood.id)
-                .eq('club_id', clubId),
-            ),
+      if (reward) {
+        await supabase.from('finance_movements').insert({
+          club_id: clubId,
+          category: 'match_reward',
+          label: reward.label,
+          amount: reward.amount,
+          fixture_id: row.id,
+        } as never);
+      }
+      if (wageDue > 0) {
+        await supabase.from('finance_movements').insert({
+          club_id: clubId,
+          category: 'wages',
+          label: wagesMovementLabel(wageDue - settled.paid),
+          amount: settled.paid > 0 ? -settled.paid : 0,
+          fixture_id: row.id,
+        } as never);
+      }
+      if (ticketTake > 0) {
+        await supabase.from('finance_movements').insert({
+          club_id: clubId,
+          category: 'ticket_income',
+          label: 'Bilety',
+          amount: ticketTake,
+          fixture_id: row.id,
+        } as never);
+      }
+      if (moraleHit < 0) {
+        // Read back: the development step above already stored this match's morale.
+        const { data: moods } = await supabase
+          .from('players')
+          .select('id, morale')
+          .eq('club_id', clubId)
+          .in(
+            'id',
+            seniors.map((player) => player.id),
           );
-          if (hits.length < seniors.length || hits.some((hit) => hit.error)) {
-            console.error('completeFixture: unpaid-wage morale incomplete', { fixtureId: row.id });
-          }
+        const hits = await Promise.all(
+          ((moods ?? []) as { id: string; morale: number | null }[]).map((mood) =>
+            supabase
+              .from('players')
+              .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
+              .eq('id', mood.id)
+              .eq('club_id', clubId),
+          ),
+        );
+        if (hits.length < seniors.length || hits.some((hit) => hit.error)) {
+          console.error('completeFixture: unpaid-wage morale incomplete', { fixtureId: row.id });
         }
       }
 
       const ours = playedHome ? home : away;
       const theirs = playedHome ? away : home;
-      await recordFanMood(
-        supabase,
-        clubId,
-        ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw',
-      );
+      await recordFanMood(clubId, ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw');
 
       if (row.competition === 'league') {
         const { data: next } = await supabase
@@ -318,7 +311,7 @@ export async function completeFixture(
 
         if (next) {
           const nextId = (next as { id: string }).id;
-          await supabase
+          await admin
             .from('fixtures')
             .update({ status: 'upcoming' } as never)
             .eq('id', nextId)
@@ -331,14 +324,14 @@ export async function completeFixture(
     }
   }
 
-  if (row.competition === 'challenge') {
+  if (row.competition === 'challenge' && official) {
     const playedAt = new Date().toISOString();
-    const { error: challengeErr } = await supabase
+    const { error: challengeErr } = await admin
       .from('rival_challenges')
       .update({
         status: 'played',
-        home_score: Math.trunc(homeScore),
-        away_score: Math.trunc(awayScore),
+        home_score: official.home,
+        away_score: official.away,
         played_at: playedAt,
       } as never)
       .eq('fixture_id', row.id)
@@ -357,7 +350,7 @@ export async function completeFixture(
 
   revalidatePath('/', 'layout');
   if (formData.get('stay') === '1') {
-    return { saved: true };
+    return official ? { saved: true, score: official } : { saved: true };
   }
   redirect('/hub');
 }

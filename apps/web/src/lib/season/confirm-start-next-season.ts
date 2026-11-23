@@ -12,9 +12,10 @@ import {
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import type { ConfirmStartNextSeasonState } from '@/lib/season/action-types';
 import { createHAgeSupabasePort, runSeasonTransitionHAge } from '@/lib/season/transition';
-import { renewSponsorAndPayBase } from '@/lib/sponsors/actions';
+import { renewSponsorAndPayBase } from '@/lib/sponsors/renew';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { openNextSeasonAfterDeparture } from '@/lib/season/open-next-season';
@@ -133,12 +134,14 @@ export async function confirmStartNextSeason(
     paidFor: row.season_goal_paid_for,
     note: row.season_goal_note,
   });
+  // Same schema; the two factories only differ in generic defaults.
+  const admin = createAdminClient() as unknown as typeof supabase;
   const goalBonus = settlement.bonus;
   const goalNote = settlement.note;
   const nextCash = sponsor.nextCash + goalBonus;
 
   if (row.season_goal_paid_for !== endedSeason) {
-    const { data: settledRows, error: goalErr } = await supabase
+    const { data: settledRows, error: goalErr } = await admin
       .from('clubs')
       .update({
         cash_balance: nextCash,
@@ -147,6 +150,7 @@ export async function confirmStartNextSeason(
       } as never)
       .eq('id', clubId)
       .eq('season_phase', 'offseason')
+      .eq('cash_balance', sponsor.nextCash)
       .select('id');
     if (goalErr || !settledRows || settledRows.length === 0) {
       return { error: 'Nie udało się zapisać celu sezonu.', farewell: null };
@@ -161,7 +165,7 @@ export async function confirmStartNextSeason(
     }
   }
 
-  const { error: delErr } = await supabase.from('fixtures').delete().eq('club_id', clubId);
+  const { error: delErr } = await admin.from('fixtures').delete().eq('club_id', clubId);
   if (delErr) {
     return { error: 'Nie udało się wyczyścić terminarza.', farewell: null };
   }
@@ -176,26 +180,25 @@ export async function confirmStartNextSeason(
     status: p.status,
   }));
 
-  const { error: insErr } = await supabase.from('fixtures').insert(rows as never);
+  const { error: insErr } = await admin.from('fixtures').insert(rows as never);
   if (insErr) {
     return { error: 'Nie udało się zaplanować nowego sezonu.', farewell: null };
   }
 
   // H-AGE — Season Transition Pipeline step 1 (before in_season persist).
-  const hAgePort = createHAgeSupabasePort(supabase);
+  const hAgePort = createHAgeSupabasePort(admin);
   const hAge = await runSeasonTransitionHAge(clubId, hAgePort);
   if (!hAge.ok) {
     return { error: hAge.error, farewell: null };
   }
 
   const openedSeason = await openNextSeasonAfterDeparture({
-    supabase,
+    supabase: admin,
     clubId,
     endedSeason,
     loadRoster: listClubPlayers,
     nextSeason,
     nextTier,
-    nextCash,
     goalNote,
     hAgePort,
     hAgeSnapshot: hAge.snapshot,

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { env } from '@/config/env';
 import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -33,7 +33,7 @@ export async function ensureClubFixtures(
 
   if (!env.isSupabaseConfigured) return existing;
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const rows = inserts.map((p) => ({
     club_id: clubId,
     matchday: p.matchday,

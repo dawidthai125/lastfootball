@@ -112,7 +112,7 @@ export async function completeFirstMatch(
     if (!dev.ok) {
       return { error: dev.error };
     }
-    await recordFanMood(supabase, row.id, result);
+    await recordFanMood(row.id, result);
 
     const { error: updErr } = await supabase
       .from('clubs')

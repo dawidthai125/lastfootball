@@ -1,3 +1,4 @@
+import { CASH_STALE_ERROR, creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
@@ -252,12 +253,13 @@ export async function completeTransferBuy(
     return { ok: false, error: 'Nie udało się dodać zawodnika.' };
   }
 
-  const { error: cashErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: nextCash } as never)
-    .eq('id', input.clubId);
+  const written = await writeClubCash({
+    clubId: input.clubId,
+    expected: input.cashBalance,
+    next: nextCash,
+  });
 
-  if (cashErr) {
+  if (written !== 'ok') {
     await supabase
       .from('players')
       .update({
@@ -267,7 +269,10 @@ export async function completeTransferBuy(
       } as never)
       .eq('id', playerId)
       .eq('club_id', input.clubId);
-    return { ok: false, error: 'Nie udało się zaktualizować kasy.' };
+    return {
+      ok: false,
+      error: written === 'stale' ? CASH_STALE_ERROR : 'Nie udało się zaktualizować kasy.',
+    };
   }
 
   if (agreedAmount !== 0) {
@@ -376,7 +381,7 @@ export async function completeTransferSell(
   }
 
   const departedAt = new Date().toISOString();
-  const { error: updErr } = await supabase
+  const { data: departed, error: updErr } = await supabase
     .from('players')
     .update({
       status: 'DEPARTED',
@@ -387,19 +392,16 @@ export async function completeTransferSell(
     } as never)
     .eq('id', input.playerId)
     .eq('club_id', input.clubId)
-    .is('departed_at', null);
+    .is('departed_at', null)
+    .select('id')
+    .maybeSingle();
 
-  if (updErr) {
+  // No row means a parallel sale already took this player: never credit twice.
+  if (updErr || !departed) {
     return { ok: false, error: 'Nie udało się oznaczyć odejścia zawodnika.' };
   }
 
-  const nextCash = input.cashBalance + agreedAmount;
-  const { error: cashErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: nextCash } as never)
-    .eq('id', input.clubId);
-
-  if (cashErr) {
+  if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
     return { ok: false, error: 'Odejście zapisane, ale kasa nie zaktualizowana — odśwież.' };
   }
 

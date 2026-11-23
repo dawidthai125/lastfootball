@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — Wynik i kasa po stronie serwera (D127)
+
+### Product
+
+- Wynik ligi, pucharu i wyzwania liczy serwer, odtwarzając decyzje z meczu. Przeglądarka nie podaje wyniku.
+- Wydatek i przychód nie nadpisują się nawzajem. Gdy kasa zmieniła się w trakcie, gra prosi o ponowienie. Ten sam zawodnik nie sprzeda się dwa razy.
+- Baza odrzuca zapis kasy, wyników, ligi i kontraktu sponsora z sesji gracza. Migracja `20261124090000_protect_results_and_cash.sql`.
+
+---
+
 ## [2026-11-23] — Gotowość do meczu
 
 ### Product
