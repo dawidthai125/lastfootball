@@ -204,8 +204,14 @@ export function PreMatchView({
         <div className="lf-ko__context-block">
           <p className="lf-ko__context-label">Pogoda</p>
           <p className="lf-ko__context-value">
-            {bundle.temperature} · {bundle.weatherDetail}
+            {bundle.temperature} · {bundle.weather.toLowerCase()} · {bundle.weatherDetail}
             {bundle.weatherNote ? ` — ${bundle.weatherNote}` : ''}
+          </p>
+        </div>
+        <div className="lf-ko__context-block">
+          <p className="lf-ko__context-label">Sędzia i widownia</p>
+          <p className="lf-ko__context-value">
+            {bundle.referee} · {bundle.attendance} widzów
           </p>
         </div>
         {bundle.stakes.length > 0 ? (

@@ -3,6 +3,7 @@ import {
   createLineup,
   createMatch,
   createPlayer,
+  DEFAULT_PLAYER_CONDITION,
   type FormationCode,
   type MatchSession,
 } from '@lastfootball/lfe';
@@ -20,12 +21,27 @@ import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 
+/** An average week: the form a level season settles at and the starting morale. */
+const NEUTRAL_FORM = 65;
+const NEUTRAL_MORALE = 60;
+
+/**
+ * What the engine reads as morale: half stored form, half stored morale, centred so an
+ * ordinary player equals the default condition of an AI opponent. No stored morale → neutral.
+ */
+export function teamSpiritFromSeed(p: Pick<RosterPlayerSeed, 'form' | 'morale'>): number {
+  const neutral = DEFAULT_PLAYER_CONDITION.morale;
+  if (typeof p.morale !== 'number') return neutral;
+  const form = p.form ?? NEUTRAL_FORM;
+  const spirit = neutral + (form - NEUTRAL_FORM + (p.morale - NEUTRAL_MORALE)) / 2;
+  return Math.max(0, Math.min(100, Math.round(spirit)));
+}
+
 function conditionFromSeed(p: RosterPlayerSeed) {
   const energy = p.energy ?? 80;
-  const form = p.form ?? 70;
   return {
     energy,
-    morale: form,
+    morale: teamSpiritFromSeed(p),
     freshness: energy,
     isInjured: false,
     isSuspended: false,

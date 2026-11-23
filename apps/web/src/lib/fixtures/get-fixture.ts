@@ -101,11 +101,24 @@ async function attachHomeGround(
       },
     ]),
   );
+  // Separate read: a missing mood must not hide the pitch, which the match uses.
+  const mood = await supabase.from('clubs').select('id, fan_mood').in('id', ids);
+  const moods =
+    mood.error || !mood.data
+      ? new Map<string, number>()
+      : new Map(
+          (mood.data as { id: string; fan_mood: number }[]).map((row) => [row.id, row.fan_mood]),
+        );
   return fixtures.map((fixture) => {
     const id = homeClubId(viewerClubId, fixture);
     const ground = id ? levels.get(id) : undefined;
-    if (!ground) return fixture;
-    return { ...fixture, homePitchLevel: ground.pitch, homeStandsLevel: ground.stands };
+    if (!id || !ground) return fixture;
+    return {
+      ...fixture,
+      homePitchLevel: ground.pitch,
+      homeStandsLevel: ground.stands,
+      homeFanMood: moods.get(id),
+    };
   });
 }
 

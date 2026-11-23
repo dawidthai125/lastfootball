@@ -1,5 +1,5 @@
 import { resolvePlayerPotential } from '@/lib/squad/potential';
-import { seedClubRoster } from '@/lib/squad/seed-roster';
+import { seedClubRoster, type RosterPlayerSeed } from '@/lib/squad/seed-roster';
 
 /** DB insert payload for starter package — generator only (create / backfill / tests). */
 export type PlayerInsertRow = {
@@ -19,14 +19,36 @@ export type PlayerInsertRow = {
   version: 1;
 };
 
+function shirtSkill(p: RosterPlayerSeed): number {
+  return 55 + (p.number % 20);
+}
+
+/**
+ * The same skills as the shirt numbers give, but the best of each position start.
+ * Only permuted within a position, so total skill and the (linear) wage bill stay put.
+ */
+function starterFirstSkills(roster: readonly RosterPlayerSeed[]): ReadonlyMap<string, number> {
+  const out = new Map<string, number>();
+  for (const pos of new Set(roster.map((p) => p.pos))) {
+    const players = roster
+      .filter((p) => p.pos === pos)
+      .sort((a, b) => Number(b.starter) - Number(a.starter) || shirtSkill(b) - shirtSkill(a));
+    const skills = players.map(shirtSkill).sort((a, b) => b - a);
+    players.forEach((p, i) => out.set(p.id, skills[i]!));
+  }
+  return out;
+}
+
 /**
  * Builds 18 player rows from deterministic seed (ids `s-{tag}-…`).
  * Not for runtime product reads — use listClubPlayers + resolveClubSquad.
  */
 export function buildStarterPlayerInserts(clubId: string): PlayerInsertRow[] {
-  return seedClubRoster(clubId).map((p) => {
+  const roster = seedClubRoster(clubId);
+  const skills = starterFirstSkills(roster);
+  return roster.map((p) => {
     const age = 22 + (p.number % 12);
-    const skill = 55 + (p.number % 20);
+    const skill = skills.get(p.id)!;
     return {
       id: p.id,
       club_id: clubId,

@@ -54,6 +54,35 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     expect(inserts.map((p) => p.id)).toEqual(seedClubRoster(clubId).map((p) => p.id));
   });
 
+  it('new clubs start their best player of every position, same skills and wages in total', () => {
+    const inserts = buildStarterPlayerInserts('club-1');
+    const avg = (list: readonly { skill: number }[]) =>
+      list.reduce((sum, p) => sum + p.skill, 0) / list.length;
+    const xi = inserts.filter((p) => p.starter);
+    const bench = inserts.filter((p) => !p.starter);
+    expect(avg(xi)).toBeGreaterThan(avg(bench) + 5);
+    for (const sub of bench) {
+      const rivals = xi.filter((p) => p.pos === sub.pos);
+      expect(rivals.length, sub.pos).toBeGreaterThan(0);
+      expect(Math.min(...rivals.map((p) => p.skill))).toBeGreaterThanOrEqual(sub.skill);
+    }
+    const wage = (p: { skill: number; age: number }) =>
+      1200 + p.skill * 35 + Math.max(0, 32 - p.age) * 50;
+    const byShirt = inserts.map((p) => ({ ...p, skill: 55 + (p.shirt_number % 20) }));
+    const sorted = (list: readonly { skill: number }[]) => list.map((p) => p.skill).sort();
+    expect(sorted(inserts)).toEqual(sorted(byShirt));
+    expect(inserts.reduce((sum, p) => sum + wage(p), 0)).toBe(
+      byShirt.reduce((sum, p) => sum + wage(p), 0),
+    );
+  });
+
+  it('match seeds carry stored morale for the XI and the bench', () => {
+    const rows = rowsFromSeed('club-1').map((row) => ({ ...row, morale: 33 }));
+    expect(resolveStartingXi(rows).every((p) => p.morale === 33)).toBe(true);
+    expect(resolveMatchBench(rows).every((p) => p.morale === 33)).toBe(true);
+    expect(resolveStartingXi(rowsFromSeed('club-1'))[0]!.morale).toBeUndefined();
+  });
+
   it('resolveMatchBench is the fit non-starters, capped at 7', () => {
     const rows = rowsFromSeed('club-1');
     const bench = resolveMatchBench(rows);

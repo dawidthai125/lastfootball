@@ -2,8 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import { playedMatchHref } from '@/components/fixtures/FixturesView';
 import type { ClubDto } from '@/lib/club/types';
-import { toUiFixture } from '@/lib/fixtures/to-ui-fixture';
+import {
+  buildLeagueLiveBundle,
+  buildLeaguePreMatchBundle,
+  toUiFixture,
+} from '@/lib/fixtures/to-ui-fixture';
+import { resolveMatchFacts } from '@/lib/fixtures/match-facts';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { seedOpponentSquad } from '@/lib/squad';
+import { stadiumSeats } from '@/lib/stadium/levels';
 
 const club: ClubDto = {
   id: 'c1',
@@ -51,5 +58,70 @@ describe('played fixture note', () => {
     expect(withNote.score).toBe('1:0');
     expect(withoutNote.score).toBe('1:0');
     expect(playedMatchHref(withNote.id)).toBe('/match/fx-played');
+  });
+});
+
+describe('match facts', () => {
+  const upcoming = (id: string, patch: Partial<FixtureDto> = {}): FixtureDto => ({
+    ...played(),
+    id,
+    status: 'upcoming',
+    homeScore: null,
+    awayScore: null,
+    ...patch,
+  });
+  const seats = (text: string) => Number(text.replace(/ /g, ''));
+  const many = (patch: Partial<FixtureDto>, stands = 0) =>
+    Array.from({ length: 200 }, (_, i) =>
+      resolveMatchFacts(upcoming(`fx-${i}-${patch.matchday ?? 0}`, patch), stands),
+    );
+
+  it('pre-match and live show the same facts for one fixture', () => {
+    for (const patch of [
+      {},
+      { isHome: false },
+      { homeStandsLevel: 3, homeFanMood: 90 },
+      { competition: 'cup' as const, matchday: 104, homeStandsLevel: 2 },
+      { competition: 'human' as const, matchday: 301, sharedSeed: 77 },
+    ]) {
+      const dto = upcoming('fx-same', patch);
+      const pre = buildLeaguePreMatchBundle(club, dto, seedOpponentSquad('xi'));
+      const live = buildLeagueLiveBundle(club, dto);
+      expect(live.viewers).toBe(pre.attendance);
+      expect(live.weather).toBe(`${pre.temperature} · ${pre.weather.toLowerCase()}`);
+    }
+  });
+
+  it('varies by fixture and never sells more than the seats', () => {
+    for (const stands of [0, 3]) {
+      const facts = many({ homeFanMood: 100, matchday: 5 }, stands);
+      expect(new Set(facts.map((f) => f.referee)).size).toBeGreaterThan(8);
+      expect(new Set(facts.map((f) => f.attendance)).size).toBeGreaterThan(50);
+      for (const f of facts) {
+        expect(seats(f.attendance)).toBeGreaterThan(0);
+        expect(seats(f.attendance)).toBeLessThanOrEqual(stadiumSeats(stands));
+      }
+    }
+    const avg = (mood: number) =>
+      many({ homeFanMood: mood }).reduce((sum, f) => sum + seats(f.attendance), 0) / 200;
+    expect(avg(90)).toBeGreaterThan(avg(60));
+    expect(avg(60)).toBeGreaterThan(avg(20));
+  });
+
+  it('plays August warm and the winter weeks cold', () => {
+    const degrees = (matchday: number) =>
+      many({ matchday }).map((f) => Number.parseInt(f.temperature, 10));
+    expect(Math.min(...degrees(1))).toBeGreaterThanOrEqual(17);
+    expect(Math.max(...degrees(11))).toBeLessThanOrEqual(10);
+    expect(Math.max(...degrees(12))).toBeLessThanOrEqual(8);
+    expect(Math.min(...degrees(22))).toBeGreaterThanOrEqual(13);
+    expect(many({ matchday: 1 }).some((f) => f.weather === 'Śnieg')).toBe(false);
+  });
+
+  it('both human-league viewers read the same facts', () => {
+    const human = { competition: 'human' as const, matchday: 301, sharedSeed: 9 };
+    const home = upcoming('a', { ...human, clubId: 'h', opponentClubId: 'v', homeFanMood: 10 });
+    const away = upcoming('b', { ...human, clubId: 'v', opponentClubId: 'h', isHome: false });
+    expect(resolveMatchFacts(home, 1)).toEqual(resolveMatchFacts(away, 1));
   });
 });
