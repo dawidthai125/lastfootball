@@ -3,12 +3,13 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
+import { creditClubCash } from '@/lib/finance/club-cash';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubSponsorContract, getClubSponsorContract } from '@/lib/sponsors/get-contract';
 import { resolveClubSponsors, type SponsorActionState } from '@/lib/sponsors/types';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
  * Idempotent bonus claim (Owner LOCK 7) — finance ledger only (D97).
@@ -28,6 +29,10 @@ export async function claimSponsorBonus(
 
   const contract = await ensureClubSponsorContract(club.id, club.seasonNumber);
   if (!contract) return { error: 'Brak kontraktu sponsora.' };
+  // Renewed for the next season already: this season's bonus window is over.
+  if (contract.season_number > club.seasonNumber) {
+    return { error: 'Bonus nie jest jeszcze dostępny.' };
+  }
 
   if (contract.bonus_claimed_at) {
     return { error: null };
@@ -48,18 +53,7 @@ export async function claimSponsorBonus(
     return { error: 'Bonus nie jest jeszcze dostępny.' };
   }
 
-  const supabase = await createClient();
-  const { data: clubRow, error: cashReadErr } = await supabase
-    .from('clubs')
-    .select('cash_balance')
-    .eq('id', club.id)
-    .maybeSingle();
-
-  if (cashReadErr || !clubRow) {
-    return { error: 'Nie udało się odczytać kasy.' };
-  }
-
-  const cash = (clubRow as { cash_balance: number }).cash_balance ?? 0;
+  const supabase = createAdminClient();
   const amount = contract.bonus_amount;
   const claimedAt = new Date().toISOString();
 
@@ -67,6 +61,7 @@ export async function claimSponsorBonus(
     .from('club_sponsor_contracts')
     .update({ bonus_claimed_at: claimedAt, updated_at: claimedAt } as never)
     .eq('id', contract.id)
+    .eq('season_number', contract.season_number)
     .is('bonus_claimed_at', null)
     .select('id')
     .maybeSingle();
@@ -78,12 +73,13 @@ export async function claimSponsorBonus(
     return { error: null };
   }
 
-  const { error: cashErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: cash + amount } as never)
-    .eq('id', club.id);
-
-  if (cashErr) {
+  if ((await creditClubCash(club.id, amount)) == null) {
+    // Give the claim back, so the bonus is not lost.
+    await supabase
+      .from('club_sponsor_contracts')
+      .update({ bonus_claimed_at: null } as never)
+      .eq('id', contract.id)
+      .eq('bonus_claimed_at', claimedAt);
     return { error: 'Nie udało się wypłacić bonusu.' };
   }
 
@@ -122,7 +118,7 @@ export async function acceptSponsorRenewal(
     return { error: null };
   }
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const now = new Date().toISOString();
   const { error } = await supabase
     .from('club_sponsor_contracts')
@@ -135,94 +131,4 @@ export async function acceptSponsorRenewal(
 
   revalidatePath('/', 'layout');
   return { error: null };
-}
-
-/**
- * Flat renew + base payout once for nextSeason (Owner LOCK 2 · 8).
- * Called only from confirmStartNextSeason.
- */
-export async function renewSponsorAndPayBase(params: {
-  readonly clubId: string;
-  readonly nextSeason: number;
-  readonly currentCash: number;
-  /** When set, the next contract follows the crowd and the league rung. */
-  readonly quote?: { readonly base: number; readonly bonus: number };
-}): Promise<{ ok: true; nextCash: number } | { ok: false; error: string }> {
-  const supabase = await createClient();
-  let contract = await getClubSponsorContract(params.clubId);
-  if (!contract) {
-    contract = await ensureClubSponsorContract(params.clubId, Math.max(1, params.nextSeason - 1));
-  }
-  if (!contract) {
-    return { ok: false, error: 'Brak kontraktu sponsora.' };
-  }
-
-  const nextSeason = Math.max(1, Math.trunc(params.nextSeason));
-  const now = new Date().toISOString();
-  const nextBase = params.quote?.base ?? contract.base_amount;
-  const nextBonus = params.quote?.bonus ?? contract.bonus_amount;
-
-  const { error: renewErr } = await supabase
-    .from('club_sponsor_contracts')
-    .update({
-      season_number: nextSeason,
-      brand_key: contract.brand_key,
-      brand_name: contract.brand_name,
-      base_amount: nextBase,
-      bonus_amount: nextBonus,
-      goal_kind: contract.goal_kind,
-      goal_target: contract.goal_target,
-      bonus_claimed_at: null,
-      renewal_accepted_at: null,
-      updated_at: now,
-    } as never)
-    .eq('id', contract.id);
-
-  if (renewErr) {
-    return { ok: false, error: 'Nie udało się odnowić kontraktu.' };
-  }
-
-  if (contract.base_paid_season_number === nextSeason) {
-    return { ok: true, nextCash: params.currentCash };
-  }
-
-  const amount = nextBase;
-  const nextCash = params.currentCash + amount;
-
-  const { data: paid, error: markErr } = await supabase
-    .from('club_sponsor_contracts')
-    .update({
-      base_paid_season_number: nextSeason,
-      updated_at: now,
-    } as never)
-    .eq('id', contract.id)
-    .or(`base_paid_season_number.is.null,base_paid_season_number.neq.${nextSeason}`)
-    .select('id')
-    .maybeSingle();
-
-  if (markErr) {
-    return { ok: false, error: 'Nie udało się zarejestrować wypłaty bazowej.' };
-  }
-
-  if (!paid) {
-    return { ok: true, nextCash: params.currentCash };
-  }
-
-  const { error: cashErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: nextCash } as never)
-    .eq('id', params.clubId);
-
-  if (cashErr) {
-    return { ok: false, error: 'Nie udało się wypłacić przychodu sponsora.' };
-  }
-
-  await supabase.from('finance_movements').insert({
-    club_id: params.clubId,
-    category: 'sponsor_base',
-    label: `Przychód sponsorski · ${contract.brand_name} · Sezon ${nextSeason}`,
-    amount,
-  } as never);
-
-  return { ok: true, nextCash };
 }

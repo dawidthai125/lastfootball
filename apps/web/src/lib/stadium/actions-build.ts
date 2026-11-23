@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { readClubBuild } from '@/lib/club/read-build';
 import { upgradePart, type StadiumPart } from '@/lib/stadium/levels';
+import { CASH_STALE_ERROR, writeClubCash } from '@/lib/finance/club-cash';
 import { createClient } from '@/lib/supabase/server';
 
 export type GroundActionState = { error?: string; ok?: boolean };
@@ -66,11 +67,14 @@ export async function raiseGroundPart(
       : part === 'pitch'
         ? next.levels.pitch
         : next.levels.trainingCenter;
-  const { error: updErr } = await supabase
-    .from('clubs')
-    .update({ cash_balance: next.cashAfter, [column]: level } as never)
-    .eq('id', clubRow.id);
-  if (updErr) return { error: 'Rozbudowa nie jest jeszcze włączona.' };
+  const written = await writeClubCash({
+    clubId: clubRow.id,
+    expected: clubRow.cash_balance,
+    next: next.cashAfter,
+    extra: { [column]: level },
+  });
+  if (written === 'stale') return { error: CASH_STALE_ERROR };
+  if (written === 'error') return { error: 'Rozbudowa nie jest jeszcze włączona.' };
 
   await supabase.from('finance_movements').insert({
     club_id: clubRow.id,

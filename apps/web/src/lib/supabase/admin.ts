@@ -21,3 +21,8 @@ export function createAdminClient() {
     },
   });
 }
+
+/** Null without the service key (local, some previews): callers skip or report, never crash. */
+export function tryAdminClient(): ReturnType<typeof createAdminClient> | null {
+  return env.supabaseUrl && env.supabaseServiceRoleKey ? createAdminClient() : null;
+}

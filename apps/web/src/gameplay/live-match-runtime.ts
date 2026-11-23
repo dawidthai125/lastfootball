@@ -1,15 +1,5 @@
 import type { EngineEvent, FormationCode, MatchSession, MatchState } from '@lastfootball/lfe';
-import {
-  createChangeFormationCommand,
-  createKickoffCommand,
-  createPauseMatchCommand,
-  createResumeMatchCommand,
-  createSetMentalityCommand,
-  createSetPressingCommand,
-  createSetTempoCommand,
-  createSetWidthCommand,
-  createSubstitutePlayerCommand,
-} from '@lastfootball/lfe';
+import { createPauseMatchCommand, createResumeMatchCommand } from '@lastfootball/lfe';
 
 import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
@@ -20,6 +10,15 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { commentaryLine } from '@/lib/match/commentary';
 import type { RosterPlayerSeed } from '@/lib/squad';
+import {
+  LIVE_SUB_LIMIT,
+  MANAGER_LOG_MAX,
+  SUB_COMMAND,
+  managerCommand,
+  managerSubstitution,
+  type ManagerLogEntry,
+} from '@/lib/match/manager-commands';
+import { kickOffSession } from '@/lib/match/replay-manager-match';
 import { matchBooking } from '@/lib/squad/truth';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
@@ -55,7 +54,7 @@ export type LiveMatchSnapshot = {
 };
 
 /** Product window from GDD §9.10 while the manager is watching live. */
-export const LIVE_SUB_LIMIT = 3;
+export { LIVE_SUB_LIMIT };
 
 /** Live pulses are 200ms apart. Blend across almost the whole gap so the ball travels. */
 export const LIVE_BALL_INTERP_MS = 180;
@@ -105,6 +104,8 @@ export class LiveMatchRuntime {
   private playbackSource: PlaybackSource = 'live';
   private readonly managerSide: 'home' | 'away';
   private readonly sharedWatch: boolean;
+  /** Accepted decisions — the server replays them for the official score. */
+  private readonly managerLog: ManagerLogEntry[] = [];
   private readonly homeName: string;
   private readonly awayName: string;
   private readonly booked: readonly {
@@ -191,12 +192,7 @@ export class LiveMatchRuntime {
   }
 
   private bootstrapMatch(): void {
-    this.session.start();
-    this.session.step();
-    this.session.dispatch(
-      createKickoffCommand({ tick: this.session.context().tick, source: 'system' }),
-    );
-    this.session.step();
+    kickOffSession(this.session);
     this.flushEvents();
     this.recordAndMaybePresentLive();
     this.bump();
@@ -474,18 +470,14 @@ export class LiveMatchRuntime {
     if (used >= LIVE_SUB_LIMIT) {
       return { ok: false, error: 'Wykorzystałeś 3 zmiany.' };
     }
+    const tick = this.session.context().tick;
     const result = this.session.dispatch(
-      createSubstitutePlayerCommand({
-        tick: this.session.context().tick,
-        source: 'ui',
-        side: this.managerSide,
-        playerOutId,
-        playerInId,
-      }),
+      managerSubstitution(playerOutId, playerInId, tick, this.managerSide),
     );
     if (!result.ok) {
       return { ok: false, error: 'Ta zmiana nie weszła. Wybierz kogoś z boiska i kogoś z ławki.' };
     }
+    this.managerLog.push({ t: tick, c: SUB_COMMAND, o: playerOutId, i: playerInId });
     this.flushEvents();
     this.recordAndMaybePresentLive();
     this.bump();
@@ -496,27 +488,21 @@ export class LiveMatchRuntime {
     if (this.sharedWatch) return false;
     if (!this.watchingLive()) return false;
     const tick = this.session.context().tick;
-    const side = this.managerSide;
-    const factories: Record<string, () => Parameters<MatchSession['dispatch']>[0]> = {
-      press: () => createSetPressingCommand({ tick, source: 'ui', value: 75, side }),
-      tempo: () => createSetTempoCommand({ tick, source: 'ui', value: 70, side }),
-      wide: () => createSetWidthCommand({ tick, source: 'ui', value: 70, side }),
-      attack: () => createSetMentalityCommand({ tick, source: 'ui', value: 70, side }),
-      defend: () => createSetMentalityCommand({ tick, source: 'ui', value: 30, side }),
-      balance: () => createSetMentalityCommand({ tick, source: 'ui', value: 50, side }),
-      'form-442': () =>
-        createChangeFormationCommand({ tick, source: 'ui', side, formationCode: '4-4-2' }),
-      'form-433': () =>
-        createChangeFormationCommand({ tick, source: 'ui', side, formationCode: '4-3-3' }),
-    };
-    const factory = factories[commandId];
-    if (!factory) return false;
-    const result = this.session.dispatch(factory());
+    const command = managerCommand(commandId, tick, this.managerSide);
+    // Same cap as the server; the last places stay free for substitutions.
+    if (!command || this.managerLog.length >= MANAGER_LOG_MAX - LIVE_SUB_LIMIT) return false;
+    const result = this.session.dispatch(command);
     if (!result.ok) return false;
+    this.managerLog.push({ t: tick, c: commandId });
     this.flushEvents();
     this.recordAndMaybePresentLive();
     this.bump();
     return true;
+  }
+
+  /** JSON for completeFixture. No score in it. */
+  serializeManagerLog(): string {
+    return JSON.stringify(this.managerLog);
   }
 
   private watchingLive(): boolean {

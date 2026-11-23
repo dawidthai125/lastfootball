@@ -129,7 +129,7 @@ export function LiveMatchFoundation({
   const fixtureSaveStarted = useRef(false);
 
   useEffect(() => {
-    if (!snapshot || !leagueFixture) return;
+    if (!snapshot || !runtime || !leagueFixture) return;
     if (
       !shouldAutoSaveFinishedFixture({
         firstMatch,
@@ -143,8 +143,20 @@ export function LiveMatchFoundation({
       return;
     }
     fixtureSaveStarted.current = true;
-    saveFixture(fixtureStayForm(leagueFixture.id, snapshot.homeScore, snapshot.awayScore));
-  }, [snapshot, leagueFixture, firstMatch, finished, finalOpen, postMatchOpen, saveFixture]);
+    saveFixture(
+      fixtureStayForm(leagueFixture.id, runtime.serializeManagerLog(), ourFormation ?? '4-4-2'),
+    );
+  }, [
+    snapshot,
+    runtime,
+    ourFormation,
+    leagueFixture,
+    firstMatch,
+    finished,
+    finalOpen,
+    postMatchOpen,
+    saveFixture,
+  ]);
 
   useEffect(() => {
     if (!snapshot || finalOpen || postMatchOpen) return;
@@ -265,11 +277,13 @@ export function LiveMatchFoundation({
     awayShort,
   });
 
+  // The server owns the saved score; it differs only if a squad changed during the match.
+  const official = fixtureSave.score ?? { home: snapshot.homeScore, away: snapshot.awayScore };
   const rewardLine = leagueFixture
     ? (resolveFixtureReward({
         competition: leagueFixture.competition,
-        homeScore: snapshot.homeScore,
-        awayScore: snapshot.awayScore,
+        homeScore: official.home,
+        awayScore: official.away,
         isHome: leagueFixture.isHome,
         leagueTier: club?.leagueTier ?? 'iv',
       })?.line ?? null)
@@ -278,7 +292,7 @@ export function LiveMatchFoundation({
   const isHomeSide = leagueFixture?.isHome ?? fixture.home ?? true;
   const fanMoodLine = describeFanMoodChange(
     fanMoodBefore,
-    fanResultFromScores(snapshot.homeScore, snapshot.awayScore, isHomeSide),
+    fanResultFromScores(official.home, official.away, isHomeSide),
   );
 
   const openReplayAt = (item?: PostMatchTimelineItem) => {
@@ -316,6 +330,8 @@ export function LiveMatchFoundation({
               fixtureId={leagueFixture.id}
               homeScore={snapshot.homeScore}
               awayScore={snapshot.awayScore}
+              managerLog={runtime?.serializeManagerLog() ?? '[]'}
+              formation={ourFormation ?? '4-4-2'}
               state={fixtureSave}
               pending={fixtureSavePending}
               action={saveFixture}

@@ -20,12 +20,16 @@ export function shouldAutoSaveFinishedFixture(input: FixtureAutoSaveInput): bool
   return input.finalOpen || input.postMatchOpen;
 }
 
-/** stay=1 keeps the manager on the match screen. */
-export function fixtureStayForm(fixtureId: string, homeScore: number, awayScore: number): FormData {
+/** Decisions only: the server owns the score. stay=1 keeps the manager on the match screen. */
+export function fixtureStayForm(
+  fixtureId: string,
+  managerLog: string,
+  formation: string,
+): FormData {
   const data = new FormData();
   data.set('fixtureId', fixtureId);
-  data.set('homeScore', String(homeScore));
-  data.set('awayScore', String(awayScore));
+  data.set('managerLog', managerLog);
+  data.set('shape', formation);
   data.set('stay', '1');
   return data;
 }

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /** Mark the cup tie as the match you can enter, then open its pre-match screen. */
@@ -39,7 +40,7 @@ export async function openCupTie(formData: FormData): Promise<void> {
   if (row.status === 'played') redirect(`/match/${row.id}`);
 
   if (row.status === 'scheduled') {
-    await supabase
+    await createAdminClient()
       .from('fixtures')
       .update({ status: 'upcoming' } as never)
       .eq('id', row.id)

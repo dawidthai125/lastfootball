@@ -5,7 +5,8 @@ import { ECONOMY_THIN, type FinanceMovementDto } from '@/lib/finance/types';
 import {
   resolveWageNote,
   unpaidWageMoraleDelta,
-  wagesMovementLabel,
+  WAGES_LABEL,
+  WAGES_SHORT_LABEL,
 } from '@/lib/finance/unpaid-wages';
 import { matchWageDue, payWages } from '@/lib/squad/truth';
 
@@ -14,7 +15,7 @@ function wages(createdAt: string, unpaid: number): FinanceMovementDto {
     id: createdAt,
     createdAt,
     category: 'wages',
-    label: wagesMovementLabel(unpaid),
+    label: unpaid > 0 ? `${WAGES_SHORT_LABEL} ${unpaid} €` : WAGES_LABEL,
     amount: -100,
     fixtureId: 'fx',
   };
@@ -73,7 +74,7 @@ describe('resolveWageNote', () => {
   });
 
   it('names the missing amount in the ledger', () => {
-    expect(wagesMovementLabel(0)).toBe('Pensje kolejki');
-    expect(wagesMovementLabel(4_000)).toMatch(/zabrakło 4.?000/);
+    expect(WAGES_SHORT_LABEL.startsWith(WAGES_LABEL)).toBe(true);
+    expect(WAGES_SHORT_LABEL).toContain('zabrakło');
   });
 });

@@ -34,7 +34,6 @@ export type OpenNextSeasonInput = {
   readonly loadRoster: (clubId: string) => Promise<readonly PlayerRowDto[]>;
   readonly nextSeason: number;
   readonly nextTier: LeagueTier;
-  readonly nextCash: number;
   readonly goalNote: string;
   readonly hAgePort: HAgePlayersPort;
   readonly hAgeSnapshot: readonly SeasonAgePlayerSlice[];
@@ -70,7 +69,6 @@ export async function openNextSeasonAfterDeparture(
       season_number: input.nextSeason,
       season_phase: 'in_season',
       league_tier: input.nextTier,
-      cash_balance: input.nextCash,
       season_goal_paid_for: input.endedSeason,
       season_goal_note: input.goalNote,
     } as never)

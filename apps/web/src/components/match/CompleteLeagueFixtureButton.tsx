@@ -21,30 +21,45 @@ export function CompleteLeagueFixtureButton({
   fixtureId,
   homeScore,
   awayScore,
+  managerLog,
+  formation,
   state,
   pending,
   action,
 }: {
   fixtureId: string;
+  /** Score on screen. Display only: the server owns the saved one. */
   homeScore: number;
   awayScore: number;
+  managerLog: string;
+  formation: string;
   state: CompleteFixtureState;
   pending: boolean;
   action: (payload: FormData) => void;
 }) {
   if (state.saved) {
+    const differs =
+      state.score && (state.score.home !== homeScore || state.score.away !== awayScore);
     return (
-      <a href="/hub" style={buttonStyle}>
-        {UI_COPY.hubExit}
-      </a>
+      <>
+        {differs && state.score ? (
+          <p role="status" style={{ margin: '0 0 0.5rem' }}>
+            Oficjalny wynik: {state.score.home}:{state.score.away}. Skład zmienił się w trakcie
+            meczu.
+          </p>
+        ) : null}
+        <a href="/hub" style={buttonStyle}>
+          {UI_COPY.hubExit}
+        </a>
+      </>
     );
   }
 
   return (
     <form action={action} style={{ display: 'inline' }}>
       <input type="hidden" name="fixtureId" value={fixtureId} />
-      <input type="hidden" name="homeScore" value={homeScore} />
-      <input type="hidden" name="awayScore" value={awayScore} />
+      <input type="hidden" name="managerLog" value={managerLog} />
+      <input type="hidden" name="shape" value={formation} />
       <input type="hidden" name="stay" value="1" />
       {state.error ? (
         <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: '0 0 0.5rem' }}>

@@ -58,10 +58,12 @@ describe('shouldAutoSaveFinishedFixture', () => {
   });
 
   it('keeps the manager on the match screen', () => {
-    const form = fixtureStayForm('fx-cup', 2, 1);
+    const form = fixtureStayForm('fx-cup', '[]', '4-3-3');
     expect(form.get('fixtureId')).toBe('fx-cup');
-    expect(form.get('homeScore')).toBe('2');
-    expect(form.get('awayScore')).toBe('1');
+    expect(form.get('managerLog')).toBe('[]');
+    expect(form.get('shape')).toBe('4-3-3');
+    expect(form.has('homeScore')).toBe(false);
+    expect(form.has('awayScore')).toBe(false);
     expect(form.get('stay')).toBe('1');
   });
 });

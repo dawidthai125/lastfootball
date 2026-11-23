@@ -1,15 +1,10 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN, type FinanceMovementDto } from '@/lib/finance/types';
 
-const WAGES_LABEL = 'Pensje kolejki';
-const WAGES_SHORT_LABEL = 'Pensje kolejki niepełne, zabrakło';
+export const WAGES_LABEL = 'Pensje kolejki';
+export const WAGES_SHORT_LABEL = 'Pensje kolejki niepełne, zabrakło';
 
 const ARREARS_NOTE = 'Kasa nie pokryła pensji za ostatni mecz. Morale kadry spadło.';
-
-/** Ledger label. A short payment is named here, so the note needs no second store. */
-export function wagesMovementLabel(unpaid: number): string {
-  return unpaid > 0 ? `${WAGES_SHORT_LABEL} ${formatMoney(unpaid)}` : WAGES_LABEL;
-}
 
 /** 0 when paid in full, else -1..-UNPAID_WAGE_MORALE_MAX by the unpaid share. */
 export function unpaidWageMoraleDelta(due: number, paid: number): number {

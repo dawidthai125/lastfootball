@@ -15,6 +15,7 @@ import {
 } from '@/lib/squad/depth';
 import type { TrainingActionState } from '@/lib/training/action-types';
 import { hireCoach, isCoachGroup } from '@/lib/training/coach';
+import { CASH_STALE_ERROR, writeClubCash } from '@/lib/finance/club-cash';
 import { createClient } from '@/lib/supabase/server';
 
 const GROUP_COLUMN = {
@@ -51,11 +52,14 @@ export async function hireClubPhysio(
   const hired = hireOnce({ cash: owned.club.cash_balance, owned: build.physio });
   if (!hired.ok) return { error: 'Za mało środków na fizjoterapeutę.' };
   if (hired.fee === 0) return { ok: true };
-  const { error } = await owned.supabase
-    .from('clubs')
-    .update({ cash_balance: hired.cashAfter, physio: true } as never)
-    .eq('id', owned.club.id);
-  if (error) return { error: 'Fizjoterapeuta nie jest jeszcze włączony.' };
+  const written = await writeClubCash({
+    clubId: owned.club.id,
+    expected: owned.club.cash_balance,
+    next: hired.cashAfter,
+    extra: { physio: true },
+  });
+  if (written === 'stale') return { error: CASH_STALE_ERROR };
+  if (written === 'error') return { error: 'Fizjoterapeuta nie jest jeszcze włączony.' };
   await owned.supabase.from('finance_movements').insert({
     club_id: owned.club.id,
     category: 'physio_hire',
@@ -90,11 +94,14 @@ export async function hireClubAssistant(
     };
   }
   if (hired.fee === 0) return { ok: true };
-  const { error } = await owned.supabase
-    .from('clubs')
-    .update({ cash_balance: hired.cashAfter, assistant_group: hired.group } as never)
-    .eq('id', owned.club.id);
-  if (error) return { error: 'Asystent nie jest jeszcze włączony.' };
+  const written = await writeClubCash({
+    clubId: owned.club.id,
+    expected: owned.club.cash_balance,
+    next: hired.cashAfter,
+    extra: { assistant_group: hired.group },
+  });
+  if (written === 'stale') return { error: CASH_STALE_ERROR };
+  if (written === 'error') return { error: 'Asystent nie jest jeszcze włączony.' };
   await owned.supabase.from('finance_movements').insert({
     club_id: owned.club.id,
     category: 'assistant_hire',

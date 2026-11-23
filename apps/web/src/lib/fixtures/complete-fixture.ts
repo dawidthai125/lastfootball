@@ -9,7 +9,7 @@ import { readClubBuild } from '@/lib/club/read-build';
 import { recordFanMood } from '@/lib/club/record-fan-mood';
 import { isPersonality, nextMorale } from '@/lib/squad/depth';
 import { resolveFixtureReward } from '@/lib/finance';
-import { unpaidWageMoraleDelta, wagesMovementLabel } from '@/lib/finance/unpaid-wages';
+import { unpaidWageMoraleDelta, WAGES_LABEL, WAGES_SHORT_LABEL } from '@/lib/finance/unpaid-wages';
 import { parseLeagueTier } from '@/lib/league/league-tier';
 import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
@@ -19,9 +19,12 @@ import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
-import { applyMatchSquadTruth, groupsFromSkill, matchWageDue, payWages } from '@/lib/squad/truth';
+import { applyMatchSquadTruth, groupsFromSkill, matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
+import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
+import { parseManagerLog } from '@/lib/match/manager-commands';
+import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
@@ -39,11 +42,15 @@ export async function completeFixture(
   }
 
   const fixtureId = String(formData.get('fixtureId') ?? '');
-  const homeScore = Number(formData.get('homeScore'));
-  const awayScore = Number(formData.get('awayScore'));
+  // D127: no score from the browser. Decisions are replayed below.
+  const managerLog = parseManagerLog(formData.get('managerLog'));
+  const shape = formData.get('shape');
 
-  if (!fixtureId || !Number.isFinite(homeScore) || !Number.isFinite(awayScore)) {
-    return { error: 'Brak wyniku meczu.' };
+  if (!fixtureId) {
+    return { error: 'Brak meczu.' };
+  }
+  if (!managerLog) {
+    return { error: 'Nie da się odtworzyć decyzji z meczu. Wejdź w mecz jeszcze raz.' };
   }
 
   const supabase = await createClient();
@@ -57,7 +64,7 @@ export async function completeFixture(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, cash_balance, league_tier')
+    .select('id, league_tier')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -65,12 +72,12 @@ export async function completeFixture(
     return { error: 'Nie znaleziono klubu.' };
   }
 
-  const clubRow = club as { id: string; cash_balance: number; league_tier: string | null };
+  const clubRow = club as { id: string; league_tier: string | null };
   const clubId = clubRow.id;
 
   const { data: fixture, error: loadErr } = await supabase
     .from('fixtures')
-    .select('id, club_id, matchday, status, is_home, competition')
+    .select('id, club_id, matchday, status, is_home, competition, home_score, away_score')
     .eq('id', fixtureId)
     .eq('club_id', clubId)
     .maybeSingle();
@@ -86,9 +93,22 @@ export async function completeFixture(
     status: string;
     is_home: boolean;
     competition: FixtureDto['competition'];
+    home_score: number | null;
+    away_score: number | null;
   };
+  const admin = tryAdminClient();
+  if (!admin) return { error: 'Zapis wyniku nie jest skonfigurowany na serwerze.' };
 
-  if (row.status !== 'played') {
+  const players = await listClubPlayers(clubId);
+  const build = await readClubBuild(supabase, clubId);
+  const seniors = filterSeniorPlayers(players);
+  const wageDue = matchWageDue(seniors);
+
+  let score: { home: number; away: number };
+  if (row.status === 'played' && row.home_score != null && row.away_score != null) {
+    // A repeated save: the stored result stands, only unfinished steps run again.
+    score = { home: row.home_score, away: row.away_score };
+  } else {
     const emailGate = await loadEmailGate(user.id);
     if (!emailGate.confirmed && row.competition === 'challenge') {
       return { error: 'Potwierdź email, żeby grać w rywalizacji.' };
@@ -110,243 +130,113 @@ export async function completeFixture(
       const blocked = matchdayBlockReason(lastAt, new Date());
       if (blocked) return { error: blocked };
     }
+    if (row.status !== 'upcoming') return { error: 'Ten mecz nie jest jeszcze otwarty.' };
 
-    const players = await listClubPlayers(clubId);
-    const build = await readClubBuild(supabase, clubId);
-    const seniors = filterSeniorPlayers(players);
-    const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
-    let home = Math.trunc(homeScore);
-    let away = Math.trunc(awayScore);
-    if (row.competition === 'human') {
-      const official = await authoritativeHumanScore(clubId, row.matchday);
-      if ('error' in official) return official;
-      home = official.home;
-      away = official.away;
-    }
-    const ours = row.is_home ? home : away;
-    const theirs = row.is_home ? away : home;
-    const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
-    const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
-    for (const p of seniors) {
-      if (p.starter && p.status !== 'INJURED' && p.status !== 'SUSPENDED') roleById[p.id] = 'xi';
-      else if (benchIds.has(p.id)) roleById[p.id] = 'bench';
-      else roleById[p.id] = 'out';
-    }
-    const afterTruth = applyMatchSquadTruth(
-      seniors.map((p) => ({
-        id: p.id,
-        pos: p.pos,
+    const scored =
+      row.competition === 'human'
+        ? await authoritativeHumanScore(clubId, row.matchday)
+        : await authoritativeManagerScore(row.id, players, managerLog, shape);
+    if ('error' in scored) return scored;
+    score = { home: scored.home, away: scored.away };
+  }
+
+  const { home, away } = score;
+  const ours = row.is_home ? home : away;
+  const theirs = row.is_home ? away : home;
+  const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
+  const reward = resolveFixtureReward({
+    competition: row.competition,
+    homeScore: home,
+    awayScore: away,
+    isHome: row.is_home,
+    leagueTier: parseLeagueTier(clubRow.league_tier),
+  });
+  // Challenges are always at home and repeatable, so they sell no tickets.
+  const ticketTake =
+    row.is_home && row.competition !== 'challenge'
+      ? ticketIncome({
+          standsLevel: build.levels.stands,
+          attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
+        })
+      : 0;
+
+  // Result, cash, ledger and the next fixture land together or not at all.
+  const { data: settledRaw, error: settleErr } = await admin.rpc(
+    'settle_fixture' as never,
+    {
+      p_fixture_id: row.id,
+      p_club_id: clubId,
+      p_home: home,
+      p_away: away,
+      p_reward: reward?.amount ?? 0,
+      p_reward_label: reward?.label ?? '',
+      p_tickets: ticketTake,
+      p_wage_due: wageDue,
+      p_wage_label: WAGES_LABEL,
+      p_wage_short_label: WAGES_SHORT_LABEL,
+    } as never,
+  );
+  const settled = settledRaw as { applied: boolean; paid: number } | null;
+  if (settleErr || !settled) {
+    console.error('completeFixture: settlement failed', { fixtureId: row.id });
+    return { error: 'Nie udało się rozliczyć meczu. Spróbuj ponownie.' };
+  }
+
+  // Idempotent by match key, so a repeated save finishes a development that failed before.
+  const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
+  const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
+  for (const p of seniors) {
+    if (p.starter && p.status !== 'INJURED' && p.status !== 'SUSPENDED') roleById[p.id] = 'xi';
+    else if (benchIds.has(p.id)) roleById[p.id] = 'bench';
+    else roleById[p.id] = 'out';
+  }
+  const moraleHit = unpaidWageMoraleDelta(wageDue, settled.paid);
+  const afterTruth = applyMatchSquadTruth(
+    seniors.map((p) => ({
+      id: p.id,
+      pos: p.pos,
+      status: p.status,
+      skill: p.skill,
+      potential: p.potential,
+      groups: p.groups ?? groupsFromSkill(p.skill),
+      energy: p.energy ?? 80,
+      form: p.form ?? 60,
+      recentRatings: p.recentRatings ?? [],
+      suspensionMatches: p.suspensionMatches ?? 0,
+      injuryMatches: p.injuryMatches ?? 0,
+      morale: p.morale ?? 60,
+      personality: isPersonality(p.personality) ? p.personality : 'spokojny',
+    })),
+    { matchKey: row.id, result, roleById, physio: build.physio },
+  );
+  const truthById = Object.fromEntries(
+    afterTruth.map((p) => [
+      p.id,
+      {
         status: p.status,
-        skill: p.skill,
-        potential: p.potential,
-        groups: p.groups ?? groupsFromSkill(p.skill),
-        energy: p.energy ?? 80,
-        form: p.form ?? 60,
-        recentRatings: p.recentRatings ?? [],
-        suspensionMatches: p.suspensionMatches ?? 0,
-        injuryMatches: p.injuryMatches ?? 0,
-        morale: p.morale ?? 60,
-        personality: isPersonality(p.personality) ? p.personality : 'spokojny',
-      })),
-      { matchKey: row.id, result, roleById, physio: build.physio },
-    );
-    const truthById = Object.fromEntries(
-      afterTruth.map((p) => [
-        p.id,
-        {
-          status: p.status,
-          groups: p.groups,
-          energy: p.energy,
-          form: p.form,
-          suspensionMatches: p.suspensionMatches,
-          injuryMatches: p.injuryMatches,
-          recentRatings: p.recentRatings,
-          morale: p.morale,
-        },
-      ]),
-    );
-    const dev = await applyMatchDevelopment(supabase, {
-      clubId,
-      matchKey: row.id,
-      activePlayers: players,
-      truthById,
-    });
-    if (!dev.ok) {
-      return { error: dev.error };
-    }
-
-    const playedAt = new Date().toISOString();
-
-    const { data: updated, error: updErr } = await supabase
-      .from('fixtures')
-      .update({
-        status: 'played',
-        home_score: home,
-        away_score: away,
-        played_at: playedAt,
-      } as never)
-      .eq('id', row.id)
-      .eq('club_id', clubId)
-      .neq('status', 'played')
-      .select('id, is_home')
-      .maybeSingle();
-
-    if (updErr) {
-      return { error: 'Nie udało się zapisać wyniku.' };
-    }
-
-    if (updated) {
-      const playedHome = (updated as { is_home: boolean }).is_home;
-      const reward = resolveFixtureReward({
-        competition: row.competition,
-        homeScore: home,
-        awayScore: away,
-        isHome: playedHome,
-        leagueTier: parseLeagueTier(clubRow.league_tier),
-      });
-      const build = await readClubBuild(supabase, clubId);
-      // Challenges are always at home and repeatable, so they sell no tickets.
-      const ticketTake =
-        playedHome && row.competition !== 'challenge'
-          ? ticketIncome({
-              standsLevel: build.levels.stands,
-              attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
-            })
-          : 0;
-      const wageDue = matchWageDue(seniors);
-      const income = (reward?.amount ?? 0) + ticketTake;
-      let paid = payWages(clubRow.cash_balance + income, wageDue);
-      let cashSaved = false;
-      let cashRead = clubRow.cash_balance;
-      // Compare-and-set: a transfer settled during this save must not be overwritten.
-      for (let attempt = 0; attempt < 4 && !cashSaved; attempt += 1) {
-        paid = payWages(cashRead + income, wageDue);
-        const { data: stored } = await supabase
-          .from('clubs')
-          .update({ cash_balance: paid.nextCash } as never)
-          .eq('id', clubId)
-          .eq('cash_balance', cashRead)
-          .select('id')
-          .maybeSingle();
-        cashSaved = stored != null;
-        if (!cashSaved) {
-          await new Promise((done) => setTimeout(done, 80 * (attempt + 1)));
-          const { data: fresh } = await supabase
-            .from('clubs')
-            .select('cash_balance')
-            .eq('id', clubId)
-            .maybeSingle();
-          cashRead = (fresh as { cash_balance: number } | null)?.cash_balance ?? cashRead;
-        }
-      }
-      if (!cashSaved) {
-        console.error('completeFixture: settlement not saved', { fixtureId: row.id });
-      }
-      const moraleHit = unpaidWageMoraleDelta(wageDue, paid.paid);
-
-      if (cashSaved) {
-        if (reward) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'match_reward',
-            label: reward.label,
-            amount: reward.amount,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (wageDue > 0) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'wages',
-            label: wagesMovementLabel(wageDue - paid.paid),
-            amount: paid.paid > 0 ? -paid.paid : 0,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (ticketTake > 0) {
-          await supabase.from('finance_movements').insert({
-            club_id: clubId,
-            category: 'ticket_income',
-            label: 'Bilety',
-            amount: ticketTake,
-            fixture_id: row.id,
-          } as never);
-        }
-        if (moraleHit < 0) {
-          // Read back: the development step above already stored this match's morale.
-          const { data: moods } = await supabase
-            .from('players')
-            .select('id, morale')
-            .eq('club_id', clubId)
-            .in(
-              'id',
-              seniors.map((player) => player.id),
-            );
-          const hits = await Promise.all(
-            ((moods ?? []) as { id: string; morale: number | null }[]).map((mood) =>
-              supabase
-                .from('players')
-                .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
-                .eq('id', mood.id)
-                .eq('club_id', clubId),
-            ),
-          );
-          if (hits.length < seniors.length || hits.some((hit) => hit.error)) {
-            console.error('completeFixture: unpaid-wage morale incomplete', { fixtureId: row.id });
-          }
-        }
-      }
-
-      const ours = playedHome ? home : away;
-      const theirs = playedHome ? away : home;
-      await recordFanMood(
-        supabase,
-        clubId,
-        ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw',
-      );
-
-      if (row.competition === 'league') {
-        const { data: next } = await supabase
-          .from('fixtures')
-          .select('id')
-          .eq('club_id', clubId)
-          .eq('competition', 'league')
-          .eq('status', 'scheduled')
-          .order('matchday', { ascending: true })
-          .limit(1)
-          .maybeSingle();
-
-        if (next) {
-          const nextId = (next as { id: string }).id;
-          await supabase
-            .from('fixtures')
-            .update({ status: 'upcoming' } as never)
-            .eq('id', nextId)
-            .eq('club_id', clubId)
-            .eq('status', 'scheduled');
-        }
-
-        await ensureTransferWindow(supabase, clubId);
-      }
-    }
+        groups: p.groups,
+        energy: p.energy,
+        form: p.form,
+        suspensionMatches: p.suspensionMatches,
+        injuryMatches: p.injuryMatches,
+        recentRatings: p.recentRatings,
+        morale:
+          moraleHit < 0 && typeof p.morale === 'number'
+            ? nextMorale(p.morale, moraleHit)
+            : p.morale,
+      },
+    ]),
+  );
+  const dev = await applyMatchDevelopment(supabase, {
+    clubId,
+    matchKey: row.id,
+    activePlayers: players,
+    truthById,
+  });
+  if (!dev.ok) {
+    return { error: dev.error };
   }
-
-  if (row.competition === 'challenge') {
-    const playedAt = new Date().toISOString();
-    const { error: challengeErr } = await supabase
-      .from('rival_challenges')
-      .update({
-        status: 'played',
-        home_score: Math.trunc(homeScore),
-        away_score: Math.trunc(awayScore),
-        played_at: playedAt,
-      } as never)
-      .eq('fixture_id', row.id)
-      .eq('challenger_club_id', clubId);
-    if (challengeErr) {
-      return { error: 'Wynik jest zapisany, ale nie doszedł do rywala.' };
-    }
-  }
+  if (settled.applied) await recordFanMood(clubId, result);
 
   // Also open window if already played earlier and threshold now met (idempotent).
   await ensureTransferWindow(supabase, clubId);
@@ -357,7 +247,7 @@ export async function completeFixture(
 
   revalidatePath('/', 'layout');
   if (formData.get('stay') === '1') {
-    return { saved: true };
+    return { saved: true, score };
   }
   redirect('/hub');
 }
