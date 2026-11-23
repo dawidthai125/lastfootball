@@ -55,6 +55,7 @@ export function EarlyClubHub({
   seasonGoalLine = null,
   wageNote = null,
   dressingConflict = false,
+  lineupBlocked = false,
   intlCallup = false,
 }: {
   club: ClubDto;
@@ -86,6 +87,8 @@ export function EarlyClubHub({
   lastPlayedAt?: string | null;
   /** Fan mood sentence. Omitted when the column is missing. */
   fanLabel?: string | null;
+  /** Starting XI cannot play → Daily Goal to the XI screen. */
+  lineupBlocked?: boolean;
   /** Pending dressing conflict → Daily Goal /messages. */
   dressingConflict?: boolean;
   /** Pending intl call-up → Daily Goal /messages. */
@@ -115,6 +118,7 @@ export function EarlyClubHub({
     matchesBlocked,
     lastPlayedAt,
     now,
+    lineupBlocked,
     dressingConflict,
     intlCallup,
   });

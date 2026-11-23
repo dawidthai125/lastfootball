@@ -5,8 +5,10 @@ import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { resolveHubFanLabel } from '@/lib/club/fans';
 import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
 import { matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
 import {
@@ -118,11 +120,14 @@ export default async function HubPage() {
         .map((player) => player.id),
     }),
   );
-  const finance = resolveClubFinance(
-    club,
-    movements,
-    matchWageDue(filterSeniorPlayers(activePlayers)),
-  );
+  const seniors = filterSeniorPlayers(activePlayers);
+  const lineupBlocked =
+    seniors.length > 0 &&
+    !validateStartingXi(
+      resolveClubSquad(club, seniors).players.filter((player) => player.starter),
+      todayUtc,
+    ).ok;
+  const finance = resolveClubFinance(club, movements, matchWageDue(seniors));
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const leaguePlayedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
@@ -171,6 +176,7 @@ export default async function HubPage() {
       fanLabel={fanLabel}
       matchesBlocked={emailGate.matchesBlocked}
       lastPlayedAt={latestPlayedAt(fixtures)}
+      lineupBlocked={lineupBlocked}
       dressingConflict={dressingConflict}
       intlCallup={intlCallup}
     />

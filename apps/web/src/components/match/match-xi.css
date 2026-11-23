@@ -72,6 +72,10 @@
 }
 
 .lf-xi__soft {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;

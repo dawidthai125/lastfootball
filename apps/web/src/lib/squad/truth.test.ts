@@ -215,14 +215,14 @@ describe('applyMatchSquadTruth', () => {
     expect(after?.recentRatings).toEqual([66]);
   });
 
-  it('lowers xi energy by 22 and adds one rating', () => {
+  it('lowers xi energy by 14 and adds one rating', () => {
     const before = player({ id: 'xi-1', energy: 80, recentRatings: [70] });
     const [after] = applyMatchSquadTruth([before], {
       matchKey: 'md-9',
       result: 'win',
       roleById: { 'xi-1': 'xi' },
     });
-    expect(after?.energy).toBe(58);
+    expect(after?.energy).toBe(66);
     expect(after?.recentRatings).toEqual([70, 75]);
     expect(after?.skill).toBe(before.skill);
     expect(after?.groups).toEqual(before.groups);
@@ -233,7 +233,7 @@ describe('applyMatchSquadTruth', () => {
     for (let i = 0; i < 400; i += 1) {
       const id = `book-${i}`;
       const booking = matchBooking(id, 'md-9');
-      if (!booking) continue;
+      if (!booking || booking.matches === 0) continue;
       found = { id, matches: booking.matches };
       break;
     }
@@ -247,6 +247,27 @@ describe('applyMatchSquadTruth', () => {
     expect(after?.suspensionMatches).toBe(found!.matches);
     expect(after?.injuryMatches).toBe(0);
     expect(matchBooking(found!.id, 'md-9')).toEqual(matchBooking(found!.id, 'md-9'));
+  });
+
+  it('keeps a player with a plain yellow available and bans under one in ten', () => {
+    let plain: string | null = null;
+    let banned = 0;
+    const total = 4000;
+    for (let i = 0; i < total; i += 1) {
+      const booking = matchBooking(`card-${i}`, 'md-9');
+      if (!booking) continue;
+      if (booking.matches === 0) plain ??= `card-${i}`;
+      else banned += 1;
+    }
+    expect(banned / total).toBeGreaterThan(0.02);
+    expect(banned / total).toBeLessThan(0.1);
+    const [after] = applyMatchSquadTruth([player({ id: plain!, energy: 80, status: 'READY' })], {
+      matchKey: 'md-9',
+      result: 'draw',
+      roleById: { [plain!]: 'xi' },
+    });
+    expect(after?.status).toBe('READY');
+    expect(after?.suspensionMatches).toBe(0);
   });
 
   it('sets injuryMatches from energy before the match and does not book a card', () => {

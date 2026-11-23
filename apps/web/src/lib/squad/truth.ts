@@ -232,21 +232,28 @@ function resultDelta(result: MatchResult): number {
 
 export type MatchBooking = {
   readonly colour: 'yellow' | 'red';
-  readonly matches: 1 | 2;
+  /** Matches out. A plain yellow is 0; every fourth one stands for a full card count. */
+  readonly matches: 0 | 1 | 2;
   readonly minute: number;
 };
 
-/** Same draw the post-match ban uses. Yellow sits one match, red sits two. */
+/** Same draw the post-match ban uses. One yellow in four sits one match, red sits two. */
 export function matchBooking(playerId: string, matchKey: string): MatchBooking | null {
   const minute = 12 + (hash(`${playerId}:${matchKey}:min`) % 70);
   if (hash(`${playerId}:${matchKey}:y`) % 100 < 12) {
-    return { colour: 'yellow', matches: 1, minute };
+    const full = hash(`${playerId}:${matchKey}:count`) % 4 === 0;
+    return { colour: 'yellow', matches: full ? 1 : 0, minute };
   }
   if (hash(`${playerId}:${matchKey}:r`) % 100 < 3) {
     return { colour: 'red', matches: 2, minute };
   }
   return null;
 }
+
+/** One regeneration session (+28) covers two matches in the XI. */
+const XI_ENERGY_COST = 14;
+/** Sitting on the bench is a light rest; a day off gives 14. */
+const BENCH_ENERGY_GAIN = 4;
 
 function applyOne(
   player: SquadTruthPlayer,
@@ -283,7 +290,7 @@ function applyOne(
   }
 
   if (role === 'bench') {
-    const energy = Math.max(10, player.energy - 8);
+    const energy = Math.min(100, player.energy + BENCH_ENERGY_GAIN);
     const recentRatings = pushRating(player.recentRatings, 60);
     const status = energy < 34 && player.status === 'READY' ? 'TIRED' : player.status;
     return {
@@ -297,7 +304,7 @@ function applyOne(
 
   if (role === 'xi') {
     const energyBefore = player.energy;
-    const energy = Math.max(10, energyBefore - 22);
+    const energy = Math.max(10, energyBefore - XI_ENERGY_COST);
     const rating = clampBand(
       62 + resultDelta(result) + Math.round((energyBefore - 50) / 10),
       20,
@@ -315,7 +322,7 @@ function applyOne(
       if (injured) {
         status = 'INJURED';
         injuryMatches = energyBefore >= 25 ? 1 : 2;
-      } else if (booking) {
+      } else if (booking && booking.matches > 0) {
         status = 'SUSPENDED';
         suspensionMatches = booking.matches;
       }

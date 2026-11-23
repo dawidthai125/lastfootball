@@ -180,3 +180,43 @@ export function applyXiSelection(
   tapped.starter = !tapped.starter;
   return { players: list, selectedId: null };
 }
+
+function isUnavailable(player: SquadPlayerDto, today: string): boolean {
+  return (
+    player.status === 'INJURED' ||
+    player.status === 'SUSPENDED' ||
+    player.onLoan === true ||
+    Boolean(player.intlAbsentUntil && player.intlAbsentUntil.slice(0, 10) >= today)
+  );
+}
+
+/**
+ * Manager-triggered fix on the XI screen: each unavailable starter swaps with the best
+ * free bench player, same position first. A goalkeeper only swaps with a goalkeeper.
+ * Nothing is saved here and a starter without a replacement stays, so the gate still holds.
+ */
+export function replaceUnavailableStarters(
+  players: readonly SquadPlayerDto[],
+  today: string,
+): SquadPlayerDto[] {
+  let list = players.map((p) => ({ ...p }));
+  for (const out of players) {
+    if (!out.starter || out.status === 'DEPARTED' || !isUnavailable(out, today)) continue;
+    const best = list
+      .filter(
+        (p) =>
+          !p.starter &&
+          p.status !== 'DEPARTED' &&
+          !isUnavailable(p, today) &&
+          isGoalkeeper(p) === isGoalkeeper(out),
+      )
+      .sort(
+        (a, b) =>
+          Number(b.position === out.position) - Number(a.position === out.position) ||
+          Number(a.status === 'TIRED') - Number(b.status === 'TIRED') ||
+          b.skill - a.skill,
+      )[0];
+    if (best) list = applyXiSelection(list, out.id, best.id).players;
+  }
+  return list;
+}

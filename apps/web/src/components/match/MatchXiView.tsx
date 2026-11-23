@@ -11,6 +11,7 @@ import { SAVE_XI_INITIAL } from '@/lib/squad/xi-action-state';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import {
   applyXiSelection,
+  replaceUnavailableStarters,
   sortXiPlayers,
   validateStartingXi,
 } from '@/lib/squad/validate-starting-xi';
@@ -54,6 +55,17 @@ export function MatchXiView({
     }
   }, [state.ok, matchId, router]);
 
+  const repaired = useMemo(
+    () => replaceUnavailableStarters(players, todayUtc),
+    [players, todayUtc],
+  );
+  const canRepair = repaired.some((p, i) => p.starter !== players[i]?.starter);
+
+  function onRepair() {
+    setPlayers(repaired);
+    setSelectedId(null);
+  }
+
   function onTap(id: string) {
     const next = applyXiSelection(players, selectedId, id);
     setPlayers(next.players);
@@ -88,6 +100,11 @@ export function MatchXiView({
         <button type="submit" className="lf-xi__primary" disabled={!validation.ok || pending}>
           {pending ? UI_COPY.saving : UI_COPY.saveAndContinue}
         </button>
+        {canRepair ? (
+          <button type="button" className="lf-xi__soft" onClick={onRepair}>
+            {UI_COPY.replaceUnavailable}
+          </button>
+        ) : null}
         <Link href={matchPrePath(matchId)} className="lf-xi__soft">
           {UI_COPY.backToChecklist}
         </Link>

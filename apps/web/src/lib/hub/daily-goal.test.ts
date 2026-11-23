@@ -201,6 +201,27 @@ describe('resolveClubDailyGoal', () => {
     expect(goal!.href).toContain('/tunnel');
   });
 
+  it('matchday with a blocked XI points at the XI screen', () => {
+    const next = fixture();
+    const session = resolveHubSession(phaseSeason, next, null);
+    const goal = resolveClubDailyGoal({
+      phase: phaseSeason,
+      session,
+      primary: resolvePrimaryCta(phaseSeason, session, {
+        nextFixture: next,
+        lastPlayedFixture: null,
+        hasFixtures: true,
+      }),
+      nextFixture: next,
+      trainingUnlocked: true,
+      lastTrainingOn: null,
+      todayUtc: today,
+      lineupBlocked: true,
+    });
+    expect(goal!.kind).toBe('match');
+    expect(goal!.href).toBe(`/match/${next.id}/xi`);
+  });
+
   it('already trained today UTC → fallback squad', () => {
     const { goal } = resolve({
       trainingUnlocked: true,

@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SquadPlayerDto } from '@/lib/squad/types';
-import { applyXiSelection, validateStartingXi } from '@/lib/squad/validate-starting-xi';
+import {
+  applyXiSelection,
+  replaceUnavailableStarters,
+  validateStartingXi,
+} from '@/lib/squad/validate-starting-xi';
 
 function player(
   partial: Partial<SquadPlayerDto> & Pick<SquadPlayerDto, 'id' | 'position' | 'starter'>,
@@ -136,5 +140,44 @@ describe('LFE-UI-IMPL-05 applyXiSelection', () => {
     expect(swapped.players.find((p) => p.id === 's1')?.starter).toBe(false);
     expect(swapped.players.find((p) => p.id === 'bench')?.starter).toBe(true);
     expect(swapped.selectedId).toBeNull();
+  });
+});
+
+describe('replaceUnavailableStarters', () => {
+  const xi = (over: Record<number, Partial<SquadPlayerDto>> = {}) =>
+    Array.from({ length: 11 }, (_, i) =>
+      player({
+        id: `x${i}`,
+        position: i === 0 ? 'BR' : i > 8 ? 'N' : 'ŚP',
+        starter: true,
+        ...over[i],
+      }),
+    );
+
+  it('swaps banned, injured and called-up starters for the best fit', () => {
+    const squad = [
+      ...xi({
+        0: { status: 'SUSPENDED' },
+        3: { status: 'INJURED' },
+        9: { intlAbsentUntil: '2026-11-30' },
+      }),
+      player({ id: 'gk', position: 'BR', starter: false }),
+      player({ id: 'mid', position: 'ŚP', starter: false, skill: 50 }),
+      player({ id: 'fwd', position: 'N', starter: false, skill: 80 }),
+    ];
+    const fixed = replaceUnavailableStarters(squad, '2026-11-23');
+    const starters = fixed.filter((p) => p.starter);
+    expect(validateStartingXi(starters, '2026-11-23').ok).toBe(true);
+    expect(starters.map((p) => p.id)).toEqual(expect.arrayContaining(['gk', 'mid', 'fwd']));
+    expect(squad[0]!.starter).toBe(true);
+  });
+
+  it('keeps the gate closed when no keeper is free', () => {
+    const squad = [
+      ...xi({ 0: { status: 'SUSPENDED' } }),
+      player({ id: 'mid', position: 'ŚP', starter: false }),
+    ];
+    const fixed = replaceUnavailableStarters(squad, '2026-11-23');
+    expect(validateStartingXi(fixed.filter((p) => p.starter)).ok).toBe(false);
   });
 });
