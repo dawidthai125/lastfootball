@@ -7,22 +7,19 @@ import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { readClubBuild } from '@/lib/club/read-build';
 import { recordFanMood } from '@/lib/club/record-fan-mood';
-import { isPersonality } from '@/lib/squad/depth';
-import { resolveLeagueMatchReward } from '@/lib/finance';
+import { isPersonality, nextMorale } from '@/lib/squad/depth';
+import { resolveFixtureReward } from '@/lib/finance';
+import { unpaidWageMoraleDelta, wagesMovementLabel } from '@/lib/finance/unpaid-wages';
+import { parseLeagueTier } from '@/lib/league/league-tier';
 import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
+import type { FixtureDto } from '@/lib/fixtures/types';
 import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
-import {
-  applyMatchSquadTruth,
-  groupsFromSkill,
-  payWages,
-  wageFromSkill,
-  weeklyMatchWage,
-} from '@/lib/squad/truth';
+import { applyMatchSquadTruth, groupsFromSkill, matchWageDue, payWages } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
@@ -60,7 +57,7 @@ export async function completeFixture(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, cash_balance')
+    .select('id, cash_balance, league_tier')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -68,7 +65,7 @@ export async function completeFixture(
     return { error: 'Nie znaleziono klubu.' };
   }
 
-  const clubRow = club as { id: string; cash_balance: number };
+  const clubRow = club as { id: string; cash_balance: number; league_tier: string | null };
   const clubId = clubRow.id;
 
   const { data: fixture, error: loadErr } = await supabase
@@ -88,7 +85,7 @@ export async function completeFixture(
     matchday: number;
     status: string;
     is_home: boolean;
-    competition: string;
+    competition: FixtureDto['competition'];
   };
 
   if (row.status !== 'played') {
@@ -201,35 +198,27 @@ export async function completeFixture(
     if (updated) {
       let nextBalance = clubRow.cash_balance;
       const playedHome = (updated as { is_home: boolean }).is_home;
-      const reward =
-        row.competition === 'league' || row.competition === 'human'
-          ? resolveLeagueMatchReward({
-              homeScore: home,
-              awayScore: away,
-              isHome: playedHome,
-            })
-          : null;
+      const reward = resolveFixtureReward({
+        competition: row.competition,
+        homeScore: home,
+        awayScore: away,
+        isHome: playedHome,
+        leagueTier: parseLeagueTier(clubRow.league_tier),
+      });
       if (reward) nextBalance += reward.amount;
       const build = await readClubBuild(supabase, clubId);
-      const ticketTake = playedHome
-        ? ticketIncome({
-            standsLevel: build.levels.stands,
-            attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
-          })
-        : 0;
+      // Challenges are always at home and repeatable, so they sell no tickets.
+      const ticketTake =
+        playedHome && row.competition !== 'challenge'
+          ? ticketIncome({
+              standsLevel: build.levels.stands,
+              attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
+            })
+          : 0;
       nextBalance += ticketTake;
-      const wagesKnown = seniors.some((player) => typeof player.wage === 'number');
-      const bill = wagesKnown
-        ? seniors.reduce(
-            (sum, player) =>
-              sum +
-              (typeof player.wage === 'number'
-                ? player.wage
-                : wageFromSkill(player.skill, player.age)),
-            0,
-          )
-        : 0;
-      const paid = payWages(nextBalance, weeklyMatchWage(bill));
+      const wageDue = matchWageDue(seniors);
+      const paid = payWages(nextBalance, wageDue);
+      const moraleHit = unpaidWageMoraleDelta(wageDue, paid.paid);
       nextBalance = paid.nextCash;
 
       const { error: cashErr } = await supabase
@@ -247,12 +236,12 @@ export async function completeFixture(
             fixture_id: row.id,
           } as never);
         }
-        if (paid.paid > 0) {
+        if (wageDue > 0) {
           await supabase.from('finance_movements').insert({
             club_id: clubId,
             category: 'wages',
-            label: 'Pensje kolejki',
-            amount: -paid.paid,
+            label: wagesMovementLabel(wageDue - paid.paid),
+            amount: paid.paid > 0 ? -paid.paid : 0,
             fixture_id: row.id,
           } as never);
         }
@@ -264,6 +253,24 @@ export async function completeFixture(
             amount: ticketTake,
             fixture_id: row.id,
           } as never);
+        }
+        if (moraleHit < 0) {
+          // Read back: the development step above already stored this match's morale.
+          const { data: moods } = await supabase
+            .from('players')
+            .select('id, morale')
+            .eq('club_id', clubId)
+            .in(
+              'id',
+              seniors.map((player) => player.id),
+            );
+          for (const mood of (moods ?? []) as { id: string; morale: number | null }[]) {
+            await supabase
+              .from('players')
+              .update({ morale: nextMorale(mood.morale ?? 60, moraleHit) } as never)
+              .eq('id', mood.id)
+              .eq('club_id', clubId);
+          }
         }
       }
 

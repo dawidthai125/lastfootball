@@ -108,7 +108,7 @@
 | **D109** | Stadium UI Sole Resolver   | UI tylko `resolveClubStadium`.                                                    |
 | **D110** | Stadium Information Thin   | Pure derive · zero persist / mutacji Stadium.                                     |
 | **D111** | Soft Unlock Stadium Only   | `/stadium` open SEASON+OFFSEASON.                                                 |
-| **D112** | No Ticket Economy Thin     | Brak biletów → kasa · brak nowych finance categories.                             |
+| **D112** | No Ticket Economy Thin     | Zastąpione przez D126: bilety → kasa (GDD §26.8).                                 |
 | **D113** | Qualitative Attendance     | Pasmo jakościowe · unknown bez home · zero RNG.                                   |
 | **D114** | Starter Package Facts      | Nazwa + pojemność = `STARTER_PACKAGE`.                                            |
 | **D115** | No Match Engine Coupling   | Zero wpływu na LFE Match / PreMatch / Canvas.                                     |

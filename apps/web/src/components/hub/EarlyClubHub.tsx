@@ -53,6 +53,7 @@ export function EarlyClubHub({
   lastPlayedAt,
   fanLabel = null,
   seasonGoalLine = null,
+  wageNote = null,
   dressingConflict = false,
   intlCallup = false,
 }: {
@@ -65,6 +66,8 @@ export function EarlyClubHub({
   trainingUnlocked?: boolean;
   /** Mid-season season-goal track (resolveSeasonGoalProgressLine). */
   seasonGoalLine?: string | null;
+  /** Unpaid wages or a short runway — ClubFinanceDto.wageNote. */
+  wageNote?: string | null;
   /** League fixtures already played (countPlayedInList). Copy only — not an unlock. */
   playedCount?: number;
   /** Injected UTC day for Daily Goal determinism (tests / page). */
@@ -203,6 +206,11 @@ export function EarlyClubHub({
         {phase === 'SEASON' || phase === 'OFFSEASON' ? (
           <p className="lf-hub__daily" data-season-goal="top-half">
             {seasonGoalLine ?? SEASON_GOAL_LABEL}
+          </p>
+        ) : null}
+        {wageNote ? (
+          <p className="lf-hub__daily" data-wage-note="">
+            {wageNote}
           </p>
         ) : null}
         {club.seasonGoalNote ? (

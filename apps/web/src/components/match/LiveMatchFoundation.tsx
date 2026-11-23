@@ -36,7 +36,7 @@ import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
 import { completeFixture } from '@/lib/fixtures/complete-fixture';
 import { LoadingFrame } from '@/components/ui';
 import type { FixtureDto } from '@/lib/fixtures/types';
-import { resolveLeagueMatchReward } from '@/lib/finance';
+import { resolveFixtureReward } from '@/lib/finance';
 import type { RosterPlayerSeed } from '@/lib/squad';
 
 import './live-match.css';
@@ -266,11 +266,13 @@ export function LiveMatchFoundation({
   });
 
   const rewardLine = leagueFixture
-    ? resolveLeagueMatchReward({
+    ? (resolveFixtureReward({
+        competition: leagueFixture.competition,
         homeScore: snapshot.homeScore,
         awayScore: snapshot.awayScore,
         isHome: leagueFixture.isHome,
-      }).line
+        leagueTier: club?.leagueTier ?? 'iv',
+      })?.line ?? null)
     : null;
 
   const isHomeSide = leagueFixture?.isHome ?? fixture.home ?? true;

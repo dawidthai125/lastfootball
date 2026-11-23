@@ -46,6 +46,12 @@ function crowdMultiplier(attendance: string): number | null {
   return null;
 }
 
+/** Match reward at the club's rung, whole 500 EUR. An unknown rung pays the IV-league amount. */
+export function rewardForLeagueRung(amount: number, tier: string): number {
+  const step = (rungMultiplier(tier) ?? 1) - 1;
+  return roundTo500(amount * (1 + step * ECONOMY_THIN.REWARD_RUNG_SHARE));
+}
+
 export function sponsorFromCrowd(input: {
   readonly attendance: AttendanceBand;
   readonly leagueTier: LeagueRung;

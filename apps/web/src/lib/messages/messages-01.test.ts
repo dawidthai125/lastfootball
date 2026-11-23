@@ -30,6 +30,19 @@ describe('resolveClubMessages (LFE-MESSAGES-01)', () => {
     });
   });
 
+  it('wage note → board info → /finance', () => {
+    const dto = resolveClubMessages({
+      transferWindowOpen: false,
+      incomingOffers: [],
+      incomingLiveOffers: [],
+      outgoingLiveOffers: [],
+      wageNote: 'Kasa nie pokryła pensji.',
+    });
+    expect(dto.items).toMatchObject([
+      { id: 'msg:wages', priority: 'info', href: '/finance', fromLabel: 'Zarząd' },
+    ]);
+  });
+
   it('E2: incoming AI offers → one offer_brief decision', () => {
     const dto = resolveClubMessages({
       transferWindowOpen: false,

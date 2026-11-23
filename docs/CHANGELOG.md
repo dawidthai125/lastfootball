@@ -18,6 +18,17 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — Bilans sezonu i niewypłacone pensje
+
+### Product
+
+- Nagrody ligowe w IV lidze: 13 000 / 6 000 / 4 000 EUR (było 5 000 / 2 500 / 1 000), wyżej rosną z ligą. Bilety od trybun 0: 1 500 / 4 000 / 9 000 / 17 500 EUR za mecz `steady`. Klub ze środka IV ligi kończy sezon blisko zera.
+- Gdy kasa nie pokrywa pensji, morale seniorów spada o 1–8. Hub, Finanse i Wiadomości mówią o tym; ostrzegają też, gdy kasa starczy na mniej niż 3 wypłaty.
+- Ekran po meczu nie pokazuje już nagrody w pucharze i wyzwaniu, bo jej tam nie ma. Wyzwania nie sprzedają biletów.
+- Liczby: GDD §26.8. Decyzja: D126 (zastępuje D112). Bez migracji.
+
+---
+
 ## [2026-11-10] — Cup on the hub and calendar
 
 ### Product

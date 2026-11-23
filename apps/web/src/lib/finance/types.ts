@@ -4,9 +4,16 @@
  */
 export const ECONOMY_THIN = {
   STARTER_CASH: 100_000,
-  REWARD_WIN: 5_000,
-  REWARD_DRAW: 2_500,
-  REWARD_LOSS: 1_000,
+  /** League match rewards at the IV-league rung. Higher rungs scale, see REWARD_RUNG_SHARE. */
+  REWARD_WIN: 13_000,
+  REWARD_DRAW: 6_000,
+  REWARD_LOSS: 4_000,
+  /** Part of the LEAGUE_RUNG_MULT step rewards take: wages rise far slower than the sponsor quote. */
+  REWARD_RUNG_SHARE: 0.5,
+  /** Morale a senior loses when a match pays no wages at all. Partial pay costs a share of it. */
+  UNPAID_WAGE_MORALE_MAX: 8,
+  /** Warn when cash covers fewer match wage payments than this. */
+  WAGE_WARNING_MATCHES: 3,
   /** Sole currency for finance + transfers UI (GDD §26). */
   CURRENCY: 'EUR',
   /**
@@ -61,6 +68,8 @@ export type ClubFinanceDto = {
   readonly envelopeLabel: string;
   readonly lastMovement: FinanceMovementDto | null;
   readonly recentMovements: readonly FinanceMovementDto[];
+  /** Unpaid wages after the last match, or a short runway. Null when wages are safe. */
+  readonly wageNote: string | null;
 };
 
 export type MatchRewardDto = {
