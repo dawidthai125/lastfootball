@@ -24,7 +24,7 @@ export function resolveLeagueStrengthProfile(tier: LeagueTier): LeagueStrengthPr
 
 /**
  * Deterministic AI player skill within profile band.
- * skill = min + (hash(oppId:index) % (max - min + 1))
+ * skill = min + (hash(oppId:index) % (max - min + 1)) + club offset, kept inside the band
  */
 export function resolveOpponentPlayerSkill(
   opponentClubId: string,
@@ -35,7 +35,15 @@ export function resolveOpponentPlayerSkill(
   const max = profile.maxSkill;
   const span = max - min + 1;
   const h = stableHash(`${opponentClubId}:${slotIndex}`);
-  return min + (h % span);
+  return Math.max(min, Math.min(max, min + (h % span) + opponentClubOffset(opponentClubId)));
+}
+
+/** Fixed club class inside the band: -4..4 skill points. XI averages alone sit within ~2. */
+function opponentClubOffset(opponentClubId: string): number {
+  let h = stableHash(`${opponentClubId}|ai-strength`);
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return (((h ^ (h >>> 16)) >>> 0) % 9) - 4;
 }
 
 function stableHash(key: string): number {

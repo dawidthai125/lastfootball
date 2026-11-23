@@ -78,6 +78,11 @@ export function FinanceView({
           {' · '}
           Ostatnia operacja <strong>{lastMovementSummary(finance.lastMovement)}</strong>
         </p>
+        {finance.wageNote ? (
+          <p className="lf-fi__status-line" data-wage-note="">
+            {finance.wageNote}
+          </p>
+        ) : null}
       </section>
 
       <section className="lf-fi__browse" aria-labelledby="lf-fi-browse-title">

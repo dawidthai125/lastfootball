@@ -10,6 +10,8 @@ import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fi
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
+import { resolveClubFinance } from '@/lib/finance';
+import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
 import {
@@ -22,6 +24,8 @@ import { resolveDressingConflict } from '@/lib/squad/dressing-room';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { matchWageDue } from '@/lib/squad/truth';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { TRAINING_THIN } from '@/lib/training/types';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
@@ -74,12 +78,13 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
 
     const supabase = await createClient();
     const today = utcDateString();
-    const [activePlayers, h2hOffers, farewellFlash] = await Promise.all([
+    const [activePlayers, h2hOffers, farewellFlash, movements] = await Promise.all([
       listClubPlayers(club.id),
       fetchLiveH2hOffers(supabase, club.id),
       club.seasonPhase === 'in_season'
         ? listClubRetirementFlash(club.id, today)
         : Promise.resolve([]),
+      listClubFinanceMovements(club.id),
     ]);
     const incomingOffers = resolveIncomingOffers({
       clubId: club.id,
@@ -142,6 +147,11 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
       seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
       retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
+      wageNote: resolveClubFinance(
+        club,
+        movements,
+        matchWageDue(filterSeniorPlayers(activePlayers)),
+      ).wageNote,
     });
     invitations = resolveClubInvitations({
       messages,

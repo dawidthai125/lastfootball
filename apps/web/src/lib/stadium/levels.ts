@@ -24,7 +24,8 @@ export const STADIUM_UPGRADE_COST = {
   training_center: [30_000, 60_000, 100_000, 0],
 } as const;
 
-const TICKET_BASE_EUR = [0, 1_500, 3_000, 5_000] as const;
+/** Steady home gate. Each step repays its cost in about 1.7 to 2.4 seasons (GDD §26.8). */
+const TICKET_BASE_EUR = [1_500, 3_500, 7_000, 12_000] as const;
 
 const HOME_PITCH_BONUS = [0, 1, 2, 3] as const;
 
@@ -152,14 +153,12 @@ export function upgradePart(input: {
   };
 }
 
-/** Whole EUR. Level 0 is always 0, before the attendance multiplier. */
+/** Whole EUR for one home match. */
 export function ticketIncome(input: {
   readonly standsLevel: number;
   readonly attendance: AttendanceBand;
 }): number {
-  const level = clampStadiumLevel(input.standsLevel);
-  if (level === 0) return 0;
-  const base = valueAt(TICKET_BASE_EUR, level);
+  const base = valueAt(TICKET_BASE_EUR, input.standsLevel);
   return Math.max(0, Math.round(base * attendanceMultiplier(input.attendance)));
 }
 

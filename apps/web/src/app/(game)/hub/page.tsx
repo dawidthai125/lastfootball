@@ -5,6 +5,8 @@ import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { resolveHubFanLabel } from '@/lib/club/fans';
 import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { matchWageDue } from '@/lib/squad/truth';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
 import {
@@ -67,7 +69,7 @@ export default async function HubPage() {
 
   const todayUtc = utcDateString();
   const [movements, emailGate, activePlayers, farewellFlash] = await Promise.all([
-    listClubFinanceMovements(club.id, 5),
+    listClubFinanceMovements(club.id),
     loadEmailGate(club.ownerId),
     listClubPlayers(club.id),
     phase === 'SEASON' ? listClubRetirementFlash(club.id, todayUtc) : Promise.resolve([]),
@@ -116,7 +118,11 @@ export default async function HubPage() {
         .map((player) => player.id),
     }),
   );
-  const finance = resolveClubFinance(club, movements);
+  const finance = resolveClubFinance(
+    club,
+    movements,
+    matchWageDue(filterSeniorPlayers(activePlayers)),
+  );
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const leaguePlayedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
@@ -155,6 +161,7 @@ export default async function HubPage() {
       cashLabel={cashLabel}
       trainingUnlocked={trainingUnlocked}
       seasonGoalLine={seasonGoalLine}
+      wageNote={phase === 'SEASON' ? finance.wageNote : null}
       playedCount={leaguePlayedCount}
       todayUtc={todayUtc}
       seasonReport={seasonReport}

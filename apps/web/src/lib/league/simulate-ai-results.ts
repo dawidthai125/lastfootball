@@ -27,9 +27,7 @@ export type AiSeasonContext = {
 const BASE_HOME_GOALS = 1.43;
 const BASE_AWAY_GOALS = 1.17;
 /** How strongly one skill point of difference moves the expected goals. */
-const STRENGTH_WEIGHT = 0.08;
-/** Table-only club offset, ± skill points. XI averages alone sit within ~2 points. */
-const STRENGTH_OFFSET = 4;
+const STRENGTH_WEIGHT = 0.09;
 const MAX_GOALS = 9;
 
 /**
@@ -71,17 +69,15 @@ function scorePair(
 const strengthCache = new Map<string, number>();
 
 /**
- * Average skill of the XI the manager faces (`seedOpponentSquad`) plus a fixed
- * per-club offset. The offset never reaches the match squads.
+ * Average skill of the XI the manager faces (`seedOpponentSquad`), so the table
+ * and the pitch agree on who is strong.
  */
 export function aiTableStrength(clubId: string, tier: LeagueTier): number {
   const key = `${tier}|${clubId}`;
   const cached = strengthCache.get(key);
   if (cached !== undefined) return cached;
   const xi = seedOpponentSquad(clubId, tier);
-  const average = xi.reduce((sum, p) => sum + (p.skill ?? 0), 0) / xi.length;
-  const offset = (unitHash(`${clubId}|ai-strength`) * 2 - 1) * STRENGTH_OFFSET;
-  const strength = average + offset;
+  const strength = xi.reduce((sum, p) => sum + (p.skill ?? 0), 0) / xi.length;
   strengthCache.set(key, strength);
   return strength;
 }

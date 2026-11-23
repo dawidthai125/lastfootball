@@ -150,9 +150,9 @@ describe('standInset', () => {
 });
 
 describe('ticketIncome', () => {
-  it('is 0 at level 0, 4200 for level 2 lively, and quiet pays less than steady', () => {
-    expect(ticketIncome({ standsLevel: 0, attendance: 'lively' })).toBe(0);
-    expect(ticketIncome({ standsLevel: 2, attendance: 'lively' })).toBe(4_200);
+  it('is small at level 0, 9800 for level 2 lively, and quiet pays less than steady', () => {
+    expect(ticketIncome({ standsLevel: 0, attendance: 'lively' })).toBe(2_100);
+    expect(ticketIncome({ standsLevel: 2, attendance: 'lively' })).toBe(9_800);
     expect(ticketIncome({ standsLevel: 2, attendance: 'quiet' })).toBeLessThan(
       ticketIncome({ standsLevel: 2, attendance: 'steady' }),
     );

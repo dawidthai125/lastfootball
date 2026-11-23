@@ -50,10 +50,6 @@ function partLevel(levels: StadiumLevels, part: StadiumPart): number {
 function partDetail(part: StadiumPart, level: number): string {
   if (part === 'stands') {
     const seats = stadiumSeatLabel(level);
-    if (level <= 0) {
-      const next = formatMoney(ticketIncome({ standsLevel: 1, attendance: 'lively' }));
-      return `Miejsca: ${seats}. Bilety wchodzą od poziomu 1, przy pełnej frekwencji ${next}.`;
-    }
     const tickets = formatMoney(ticketIncome({ standsLevel: level, attendance: 'lively' }));
     if (level >= 3) {
       return `Miejsca: ${seats}. Bilety przy pełnej frekwencji: ${tickets}. Na boisku widać dach.`;

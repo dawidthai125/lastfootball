@@ -20,6 +20,7 @@ Kasa klubu i historia ruchów (Finance Thin).
 
 - Seed `STARTER_CASH` przy create club.
 - Nagroda W/D/L tylko przy pierwszym `fixture` → `played`.
+- Pensje i bilety przy rozliczeniu meczu; niepełne pensje obniżają morale, `wageNote` mówi o tym graczowi (D126 · GDD §26.8).
 - Kategorie m.in. `starter`, `match_reward`, `transfer_buy`, `transfer_sell`, `sponsor_base`, `sponsor_bonus`.
 - **§26 = SSOT liczb**; **D18 = SSOT implementacji**.
 - Envelope Thin (E1): `ENVELOPE_RATIO = 1` → envelope === cash; jedyny wzór w `resolveTransferEnvelope`.
@@ -33,7 +34,7 @@ Sponsors: D95–D101 · [`../game-design/GDD-SPONSORS-01.md`](../game-design/GDD
 
 ## Poza Thin
 
-Pensje, bilety, ratio ≠ 1, negotiation, suwak alokacji, marketplace sponsorów.
+Ratio ≠ 1, negotiation, suwak alokacji, marketplace sponsorów.
 
 ## UI (presentation)
 
