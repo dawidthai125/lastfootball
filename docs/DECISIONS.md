@@ -321,7 +321,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło:** LFE-LEAGUE-04 (feat `9027baf`).  
 **Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).  
-**Dopisek 2026-11-10:** tabela liczy pary AI↔AI tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. D28 zostaje CLOSED.
+**Dopisek 2026-11-10:** tabela liczy pary AI↔AI tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. D28 zostaje CLOSED.  
+**Dopisek 2026-11-23:** wynik AI↔AI = gole Poissona z siły klubu (`aiTableStrength`), seed `ai-v3` = sezon + para u gospodarza (zastępuje `ai-v2`). Sezon i liga zawsze z `club.seasonNumber` / `club.leagueTier`; zamknięcie sezonu N liczy tabelę z N. Nadal derive, bez Match Engine i standings DB.
 
 ### D38 — Transfer public API compatibility (Buy/Sell + live RPC Args) · CLOSED
 
