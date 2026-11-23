@@ -9437,7 +9437,7 @@ Ustalić **jedyny SSOT produktu dla liczb ekonomicznych** żyjącej ścieżki Th
 3. **Wariant A (promocja Thin):** pierwsze liczby §26 = wartości już na produkcji (`ECONOMY_THIN` + live `deriveTransferFee`).
 4. **Model środków Thin:** **jedna kasa**, rozliczenia transferów **cash-only** (zgodne z D20). Envelope z §14 = Future / poza §26A.
 5. **Kategorie > nowe sinki:** §14 opisuje kategorie UX; §26 dostarcza tylko kwoty dla ścieżki już zaimplementowanej.
-6. Soft/hard currency, Premium, inflacja sezonowa, pensje, bilety, sponsorzy — **OUT** tego etapu (§27 / Future).
+6. Soft/hard currency, Premium, inflacja sezonowa — **OUT** tego etapu (§27 / Future). Pensje, bilety i sponsor: liczby w §26.8 (D126).
 
 **Szybki kontrakt MVP (SSOT liczb)**
 
@@ -9446,9 +9446,9 @@ Ustalić **jedyny SSOT produktu dla liczb ekonomicznych** żyjącej ścieżki Th
 | Waluta UX / kod     | **EUR**                                                      |
 | Model kasy Thin     | **1 kasa** · cash-only (bez envelope)                        |
 | Starter przy create | **100 000**                                                  |
-| Nagroda zwycięstwo  | **5 000**                                                    |
-| Nagroda remis       | **2 500**                                                    |
-| Nagroda porażka     | **1 000**                                                    |
+| Nagroda zwycięstwo  | **13 000** (IV liga, §26.8)                                  |
+| Nagroda remis       | **6 000** (IV liga, §26.8)                                   |
+| Nagroda porażka     | **4 000** (IV liga, §26.8)                                   |
 | Fee transferu       | derive ze skill + age (poniżej) — brak trwałego market value |
 | Implementacja       | `ECONOMY_THIN` = §26 (GDD-§26B CLOSED); fee ← `TRANSFER_FEE` |
 
@@ -9494,15 +9494,17 @@ Bufor Sezon 1 (§14 soft landing) — bez tutorialowego bankruta.
 
 Nagroda kredytowana **tylko** przy pierwszym przejściu fixture → `played` (D18). Wynik z perspektywy klubu gracza.
 
-| Wynik      | Klucz         | Kwota |
-| ---------- | ------------- | ----- |
-| Zwycięstwo | `REWARD_WIN`  | 5 000 |
-| Remis      | `REWARD_DRAW` | 2 500 |
-| Porażka    | `REWARD_LOSS` | 1 000 |
+| Wynik      | Klucz         | IV liga | III liga | II liga | I liga |
+| ---------- | ------------- | ------- | -------- | ------- | ------ |
+| Zwycięstwo | `REWARD_WIN`  | 13 000  | 14 000   | 15 500  | 17 000 |
+| Remis      | `REWARD_DRAW` | 6 000   | 6 500    | 7 000   | 8 000  |
+| Porażka    | `REWARD_LOSS` | 4 000   | 4 500    | 4 500   | 5 000  |
+
+Wyższe ligi biorą połowę kroku `LEAGUE_RUNG_MULT` (`REWARD_RUNG_SHARE` 0,5), do pełnych 500 EUR. Liga ludzi zawsze płaci stawkę IV ligi. Puchar i wyzwania nie płacą nagrody.
 
 Remis i porażka dają **> 0** (ochrona early — spójne z pytaniem otwartym §14.2).
 
-**Poza §26A:** nagrody pozycyjne / sezonowe (§10), pucharowe (§11), bilety, sponsorzy.
+**Poza §26A:** nagrody pozycyjne (§10), pucharowe (§11).
 
 ---
 
@@ -9538,9 +9540,7 @@ Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
 | ----------------------------- | ----------------------------------------------------- |
 | Transfer envelope (§14 / §12) | Future — poza Thin; live = cash-only (D20)            |
 | Negotiation / kontroferta UI  | Poza Thin (D20)                                       |
-| Pensje / utrzymanie kadry     | Future (§14.10 + liczby później)                      |
-| Bilety / frekwencja           | Future (§14.9)                                        |
-| Sponsorzy (kwoty)             | Future (§15)                                          |
+| Pensje · bilety · sponsor     | Live — liczby §26.8 (D126)                            |
 | Soft / hard currency          | Future                                                |
 | Premium / monetyzacja         | §27                                                   |
 | Koszt cash treningu           | Poza Training Thin (D21)                              |
@@ -9558,8 +9558,38 @@ Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
 - [x] Formuła fee + floor + round
 - [x] Relacja §26 (liczby) vs D18/D20 (implementacja)
 - [x] OUT OF SCOPE jawne
-- [ ] Soft/hard · Premium · pensje · bilety · sponsorzy — Future
+- [x] Pensje · bilety · sponsor · niewypłacone pensje (§26.8)
+- [ ] Soft/hard · Premium — Future
 - [x] GDD-§26B — sync kodu (`ECONOMY_THIN` / fee constants)
+
+---
+
+### 26.8 Bilans sezonu (Owner GO 2026-11-23 · D126)
+
+**Pensje:** po każdym rozegranym meczu 1/7 tygodniowej sumy pensji seniorów. Kadra 18 graczy ze skillem 65 płaci ok. 9 580 EUR za mecz. Płaci też mecz pucharowy, ligi ludzi i wyzwanie; pierwszy mecz nie.
+
+**Bilety (mecz u siebie, frekwencja `steady`):** `quiet` × 0,6 · `lively` × 1,4. Wyzwania nie sprzedają biletów.
+
+| Trybuny | Bilety za mecz | Koszt rozbudowy do poziomu | Zwrot (środek tabeli) |
+| ------- | -------------- | -------------------------- | --------------------- |
+| 0       | 1 500          | —                          | —                     |
+| 1       | 3 500          | 40 000                     | 1,7 sezonu            |
+| 2       | 7 000          | 80 000                     | 1,9 sezonu            |
+| 3       | 12 000         | 140 000                    | 2,4 sezonu            |
+
+**Sponsor:** baza 15 000 i bonus 10 000 za górną połowę, × `LEAGUE_RUNG_MULT` i frekwencja. **Cel sezonu:** 10 000 (poza bilansem niżej).
+
+**Bilans sezonu** (22 mecze, trybuny 0, sponsor `steady`, bez kasy startowej i transferów; skill kadry IV i III 65, II 70, I 78):
+
+| Profil              | IV liga | III liga | II liga  | I liga   |
+| ------------------- | ------- | -------- | -------- | -------- |
+| Mistrz (16-4-2)     | +76 162 | +99 162  | +120 262 | +139 422 |
+| Środek (8-6-8)      | −6 038  | +11 462  | +19 562  | +29 222  |
+| Dół tabeli (3-5-14) | −56 638 | −41 638  | −41 538  | −37 378  |
+
+Cele IV ligi: mistrz +60..+110 tys., środek −15..+10 tys., dół −70..−35 tys. Pilnuje ich `season-projection.test.ts`.
+
+**Niewypłacone pensje:** kasa nie schodzi poniżej 0, długu nie ma. Brakująca część pensji obniża morale każdego seniora o 1..8 (`UNPAID_WAGE_MORALE_MAX` × udział, w górę). Ruch w księdze mówi, ile zabrakło; komunikat znika po pełnej wypłacie. Ostrzeżenie: kasa mniejsza niż 3 wypłaty meczowe (`WAGE_WARNING_MATCHES`).
 
 ---
 

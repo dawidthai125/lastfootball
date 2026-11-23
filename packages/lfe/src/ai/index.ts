@@ -15,6 +15,7 @@ export type {
 export { buildMatchAiContext, formationAggressiveness, sideContext } from './context';
 
 export {
+  attackScaleForHalf,
   decideAction,
   decideActionFromState,
   decidePossession,

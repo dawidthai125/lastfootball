@@ -54,11 +54,12 @@ export function resolvePossessionAction(
   side: PitchSide,
   rng: Rng,
   tick: number = 0,
+  attackScale: number = 1,
 ): { state: MatchState; emits: MatchEngineEmit[] } {
   const emits: MatchEngineEmit[] = [];
   const decision = decideActionFromState(state, side);
 
-  if (rng.next() >= decision.attackChance) {
+  if (rng.next() >= decision.attackChance * attackScale) {
     const passerId = attributePlayerForEvent(state, side, 'PASS', tick);
     const completed = rng.next() < 0.82;
     emits.push({

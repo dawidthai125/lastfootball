@@ -18,6 +18,38 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — MATCH-BALANCE-01: wyniki meczów jak w piłce
+
+### Product
+
+- Silnik: równe składy dają ok. 2,7 gola i 26 strzałów, ok. 27% remisów (było ok. 11 goli, 91 strzałów, ponad 40% remisów). Stawki w `MATCH_BALANCE` (`packages/lfe/src/ai/decide.ts`), pilnuje ich `match-balance01.test.ts`.
+- Lepszy skład wygrywa wyraźnie częściej, gospodarz strzela ok. 55% goli, zmęczenie zmniejsza liczbę ataków. Ofensywna mentalność, ustawienie, tempo, szerokość i pressing odsłaniają własną bramkę, więc nie są już darmową przewagą.
+- Krótszy pierwszy mecz ma stawki przeliczone na swój czas. Rozegrane mecze zostają bez zmian.
+- Zapis kasy po meczu sprawdza, czy saldo się nie zmieniło, i w razie czego liczy od nowa (compare-and-set). Pozostałe zapisy kasy bez zmian.
+
+---
+
+## [2026-11-23] — Wyniki AI↔AI z siły klubu i sezonu
+
+### Product
+
+- Wyniki AI↔AI w tabeli to deterministyczne gole Poissona z siły klubu (średnia XI z `seedOpponentSquad` + stała siła klubu ±4). Średnio ok. 2,7 gola, 55/45 dla gospodarzy, ok. 24% remisów.
+- Seed `ai-v3` zawiera numer sezonu, więc pary mają inne wyniki w każdym sezonie. Ta sama siła klubu działa w składzie rywala w meczu, w paśmie ligi. Bez migracji.
+- Tabele trwających sezonów przeliczą się po wdrożeniu (derive, brak standings DB).
+
+---
+
+## [2026-11-23] — Bilans sezonu i niewypłacone pensje
+
+### Product
+
+- Nagrody ligowe w IV lidze: 13 000 / 6 000 / 4 000 EUR (było 5 000 / 2 500 / 1 000), wyżej rosną z ligą. Bilety od trybun 0: 1 500 / 3 500 / 7 000 / 12 000 EUR za mecz `steady`. Klub ze środka IV ligi kończy sezon blisko zera.
+- Gdy kasa nie pokrywa pensji, morale seniorów spada o 1–8. Hub, Finanse i Wiadomości mówią o tym; ostrzegają też, gdy kasa starczy na mniej niż 3 wypłaty.
+- Ekran po meczu nie pokazuje już nagrody w pucharze i wyzwaniu, bo jej tam nie ma. Wyzwania nie sprzedają biletów.
+- Liczby: GDD §26.8. Decyzja: D126 (zastępuje D112). Bez migracji.
+
+---
+
 ## [2026-11-10] — Cup on the hub and calendar
 
 ### Product

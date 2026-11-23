@@ -1,6 +1,7 @@
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { ECONOMY_THIN, type ClubFinanceDto, type FinanceMovementDto } from '@/lib/finance/types';
+import { resolveWageNote } from '@/lib/finance/unpaid-wages';
 
 const RECENT_LIMIT = 10;
 
@@ -11,6 +12,7 @@ const RECENT_LIMIT = 10;
 export function resolveClubFinance(
   club: { readonly id: string; readonly cashBalance: number },
   movements: readonly FinanceMovementDto[],
+  nextWage = 0,
 ): ClubFinanceDto {
   const sorted = [...movements].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   const recent = sorted.slice(0, RECENT_LIMIT);
@@ -23,6 +25,7 @@ export function resolveClubFinance(
     envelopeLabel: envelope.envelopeLabel,
     lastMovement: recent[0] ?? null,
     recentMovements: recent,
+    wageNote: resolveWageNote({ cash: club.cashBalance, nextWage, movements }),
   };
 }
 

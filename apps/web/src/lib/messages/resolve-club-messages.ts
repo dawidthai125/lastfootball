@@ -68,6 +68,8 @@ export type ResolveClubMessagesInput = {
   readonly seasonDeparture?: MessagesSeasonDepartureInput | null;
   /** Post–Confirm Thin farewell (who left / promote). */
   readonly retirementFarewell?: MessagesRetirementFarewellInput | null;
+  /** ClubFinanceDto.wageNote — REUSE resolveClubFinance. */
+  readonly wageNote?: string | null;
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -159,6 +161,17 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       fromLabel: 'Reprezentacja',
       href: '/messages',
       priority: 'decision',
+    });
+  }
+
+  if (input.wageNote) {
+    items.push({
+      id: 'msg:wages',
+      kind: 'system',
+      subject: input.wageNote,
+      fromLabel: 'Zarząd',
+      href: '/finance',
+      priority: 'info',
     });
   }
 

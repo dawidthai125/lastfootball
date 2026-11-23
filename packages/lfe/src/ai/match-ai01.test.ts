@@ -83,10 +83,10 @@ describe('MATCH-AI-01', () => {
     expect(formationAggressiveness('4-3-3')).toBeGreaterThan(formationAggressiveness('5-4-1'));
   });
 
-  it('baseline possession ≈ ENGINE-01 default (~0.48)', () => {
+  it('baseline possession = MATCH_BALANCE home share', () => {
     const ctx = buildMatchAiContext(makeState());
     const d = decidePossession(ctx);
-    expect(d.homeChance).toBeCloseTo(0.48, 2);
+    expect(d.homeChance).toBeCloseTo(0.51, 2);
   });
 
   it('higher mentality increases attack and goal chances', () => {

@@ -15,7 +15,7 @@ function clamp01(n: number): number {
 
 /**
  * Score / clock pressure: trailing → attack more; leading → sit deeper.
- * Neutral (0–0, early) → 0 so ENGINE-01 baselines stay intact.
+ * Neutral (0–0, early) → 0 so MATCH_BALANCE bases stay intact.
  */
 export function scorePhaseModifier(side: MatchAiSideContext, displayMinute: number): number {
   let m = 0;
@@ -28,18 +28,46 @@ export function scorePhaseModifier(side: MatchAiSideContext, displayMinute: numb
   return m;
 }
 
-function freshnessModifier(freshness: number): number {
-  // Fresh teams press/attack slightly more; tired reduce chance.
-  return (freshness - 1) * 0.06;
-}
+/**
+ * MATCH-BALANCE-01 — sole SSOT for match rates, per tick of a 45 s half (about 1800 play ticks).
+ * Equal teams, default tactics: ~2.7 goals, ~25 shots, ~25% draws, home ~55% of goals.
+ * Guarded by match-balance01.test.ts. Modifiers multiply, so they scale with the base.
+ */
+export const MATCH_BALANCE = Object.freeze({
+  HOME_POSSESSION: 0.51,
+  ATTACK: 0.0385,
+  SHOT: 0.37,
+  ON_TARGET: 0.36,
+  GOAL: 0.3,
+  FOUL: 0.5,
+  CORNER: 0.3,
+  HOME_ATTACK_EDGE: 0.07,
+  STRENGTH_POSSESSION: 0.25,
+  STRENGTH_ATTACK: 0.7,
+  STRENGTH_ON_TARGET: 0.5,
+  STRENGTH_GOAL: 0.75,
+  FRESHNESS_ATTACK: 0.35,
+  SCORE_ATTACK: 1,
+  SCORE_GOAL: 0.3,
+  EXPOSURE_MENTALITY: 0.75,
+  EXPOSURE_FORMATION: 0.3,
+  EXPOSURE_TEMPO: 0.42,
+  EXPOSURE_WIDTH: 0.12,
+  EXPOSURE_PRESSING: 0.15,
+  /** Half length the rates are tuned for. */
+  REFERENCE_HALF_MS: 45_000,
+});
 
-function strengthDelta(ours: number, theirs: number): number {
-  return (ours - theirs) * 0.08;
+/** 4-4-2 shape value — the neutral formation for exposure and attack. */
+const NEUTRAL_SHAPE = 0.35 * 0.5 + 0.65 * (2 / 3);
+
+function factor(n: number): number {
+  return Math.max(0.2, Math.min(2.2, n));
 }
 
 /**
  * Who keeps the ball — both sides' strength, tactics, fatigue, score.
- * At default equal teams / 0–0 → ~0.48 (ENGINE-01 home baseline).
+ * At default equal teams / 0–0 → MATCH_BALANCE.HOME_POSSESSION.
  */
 export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision {
   const h = ctx.home;
@@ -50,17 +78,17 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
   const awayMentality = a.tactics.mentality / 100;
   const awayPressing = a.tactics.pressing / 100;
   let homeChance =
-    0.48 +
-    (homeMentality - 0.5) * 0.12 +
+    MATCH_BALANCE.HOME_POSSESSION +
+    (homeMentality - 0.5) * 0.04 +
     (homePressing - 0.5) * 0.06 -
-    (awayMentality - 0.5) * 0.12 -
+    (awayMentality - 0.5) * 0.04 -
     (awayPressing - 0.5) * 0.06;
 
-  homeChance += strengthDelta(h.strength, a.strength);
+  homeChance += (h.strength - a.strength) * MATCH_BALANCE.STRENGTH_POSSESSION;
   homeChance += (h.freshness - a.freshness) * 0.04;
   homeChance += (h.formationAggressiveness - a.formationAggressiveness) * 0.03;
-  homeChance += scorePhaseModifier(h, ctx.displayMinute) * 0.5;
-  homeChance -= scorePhaseModifier(a, ctx.displayMinute) * 0.5;
+  homeChance += scorePhaseModifier(h, ctx.displayMinute) * 0.2;
+  homeChance -= scorePhaseModifier(a, ctx.displayMinute) * 0.2;
   // Slight continuity of current possession share
   homeChance += (h.possessionShare - 0.5) * 0.04;
 
@@ -68,30 +96,60 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
 }
 
 /**
+ * How open our own setup leaves us. Attacking mentality, forward formations, tempo,
+ * width and pressing raise the rival's chances; deep, slow setups lower them.
+ */
+function exposure(side: MatchAiSideContext): number {
+  return factor(
+    1 +
+      (side.tactics.mentality / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_MENTALITY +
+      (side.formationAggressiveness - NEUTRAL_SHAPE) * MATCH_BALANCE.EXPOSURE_FORMATION +
+      (side.tactics.tempo / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_TEMPO +
+      (side.tactics.width / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_WIDTH +
+      (side.tactics.pressing / 100 - 0.5) * MATCH_BALANCE.EXPOSURE_PRESSING,
+  );
+}
+
+/**
  * In-possession action ladder for `side`.
- * Baseline matches MATCH-ENGINE-01 when tactics default & score neutral.
+ * Default tactics, equal teams, level score → MATCH_BALANCE bases.
  */
 export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActionDecision {
   const ours = sideContext(ctx, side);
   const theirs = sideContext(ctx, side === 'home' ? 'away' : 'home');
   const t = ours.tactics;
   const pressure = scorePhaseModifier(ours, ctx.displayMinute);
-  const fresh = freshnessModifier(ours.freshness);
-  const str = strengthDelta(ours.strength, theirs.strength);
-  const form = (ours.formationAggressiveness - 0.5) * 0.06;
-  const width = (t.width / 100 - 0.5) * 0.04;
-  const tempo = t.tempo / 100;
-  const mentality = t.mentality / 100;
+  const gap = ours.strength - theirs.strength;
+  const shape = ours.formationAggressiveness - NEUTRAL_SHAPE;
+  const width = t.width / 100 - 0.5;
+  const tempo = t.tempo / 100 - 0.5;
+  const mentality = t.mentality / 100 - 0.5;
   const pressing = t.pressing / 100;
+  const homeEdge =
+    side === 'home' ? MATCH_BALANCE.HOME_ATTACK_EDGE : -MATCH_BALANCE.HOME_ATTACK_EDGE;
 
   const attackChance = clamp01(
-    0.08 + tempo * 0.06 + pressure * 0.6 + fresh + str * 0.5 + form + width * 0.5,
+    MATCH_BALANCE.ATTACK *
+      factor(1 + homeEdge) *
+      factor(1 + gap * MATCH_BALANCE.STRENGTH_ATTACK) *
+      factor(1 + (ours.freshness - 1) * MATCH_BALANCE.FRESHNESS_ATTACK) *
+      factor(1 + pressure * MATCH_BALANCE.SCORE_ATTACK) *
+      factor(1 + tempo * 0.5 + shape * 0.35 + width * 0.2) *
+      exposure(theirs),
   );
-  const shotChance = clamp01(0.35 + mentality * 0.15 + pressure * 0.5 + str * 0.4 + form * 0.5);
-  const foulChance = clamp01(0.12 + (pressing - 0.5) * 0.06 + (1 - ours.freshness) * 0.04);
-  const onTargetChance = clamp01(0.45 + str * 0.5 + (ours.strength - 0.5) * 0.1);
-  const cornerChance = clamp01(0.25 + width * 0.5 + (t.width / 100 - 0.5) * 0.05);
-  const goalChance = clamp01(0.22 + mentality * 0.08 + pressure * 0.35 + str * 0.6 + form * 0.4);
+  const shotChance = clamp01(MATCH_BALANCE.SHOT * factor(1 + mentality * 0.35));
+  const foulChance = clamp01(
+    MATCH_BALANCE.FOUL * factor(1 + (pressing - 0.5) * 0.5 + (1 - ours.freshness) * 0.3),
+  );
+  const onTargetChance = clamp01(
+    MATCH_BALANCE.ON_TARGET * factor(1 + gap * MATCH_BALANCE.STRENGTH_ON_TARGET),
+  );
+  const cornerChance = clamp01(MATCH_BALANCE.CORNER * factor(1 + width * 0.4));
+  const goalChance = clamp01(
+    MATCH_BALANCE.GOAL *
+      factor(1 + gap * MATCH_BALANCE.STRENGTH_GOAL) *
+      factor(1 + mentality * 0.2 + pressure * MATCH_BALANCE.SCORE_GOAL),
+  );
 
   return Object.freeze({
     side,
@@ -102,6 +160,12 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
     cornerChance,
     goalChance,
   });
+}
+
+/** A shorter match (onboarding) keeps full-match goal totals: more attacks per tick. */
+export function attackScaleForHalf(halfDurationMs: number): number {
+  if (!(halfDurationMs > 0)) return 1;
+  return Math.max(1, Math.min(4, MATCH_BALANCE.REFERENCE_HALF_MS / halfDurationMs));
 }
 
 export function decidePossessionFromState(state: MatchState): MatchAiPossessionDecision {

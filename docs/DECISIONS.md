@@ -321,7 +321,8 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 **Źródło:** LFE-LEAGUE-04 (feat `9027baf`).  
 **Operacyjne:** Brak migracji schematu (`unique(club_id, matchday)` już pozwala na MD12–22).  
-**Dopisek 2026-11-10:** tabela liczy pary AI↔AI tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. D28 zostaje CLOSED.
+**Dopisek 2026-11-10:** tabela liczy pary AI↔AI tylko dla kolejek, które menedżer już rozegrał (`planAiMatchesForPlayedWeeks`). Po 22 kolejkach zbiór par = `planAiVsAiMatches`. D28 zostaje CLOSED.  
+**Dopisek 2026-11-23:** wynik AI↔AI = gole Poissona z siły klubu (`aiTableStrength`), seed `ai-v3` = sezon + para u gospodarza (zastępuje `ai-v2`). Sezon i liga zawsze z `club.seasonNumber` / `club.leagueTier`; zamknięcie sezonu N liczy tabelę z N. Nadal derive, bez Match Engine i standings DB.
 
 ### D38 — Transfer public API compatibility (Buy/Sell + live RPC Args) · CLOSED
 
@@ -664,7 +665,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Unlock „przy okazji” innych domen.  
 **Zasada:** `/stadium` open SEASON+OFFSEASON; Sponsors/Board bez zmian (D99/D105).
 
-### D112 — No Ticket Economy Thin · CLOSED
+### D112 — No Ticket Economy Thin · SUPERSEDED BY D126
 
 **Dlaczego:** Bilety → kasa = osobny tor ekonomii (§14.9 / §26 Future).  
 **Zasada:** Brak Ticket Economy · brak nowych kategorii `finance_movements`.
@@ -755,6 +756,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Relacja:** §22 polityka · §21 Messages (D40–D46) · §23 Hub Primary nadrzędny.
 
 **Źródło D125:** LFE-NOTIFICATIONS-01 · feat **`54ae7b3`** · style `cb1511e` · PLAN [`implementation/LFE-NOTIFICATIONS-01-PLAN.md`](./implementation/LFE-NOTIFICATIONS-01-PLAN.md) · CI GREEN · PRODUCTION VERIFY PASS · DOCS CLOSE.
+
+### D126 — Match Economy: wages, tickets, unpaid wages · Owner GO 2026-11-23
+
+**Dlaczego:** Klub ze środka tabeli tracił ok. 6 700 EUR na meczu i kończył z zerem ok. 17. kolejki, a zero kasy nic nie zmieniało. D112 nie opisywało już stanu kodu.  
+**Zasada:** Bilety → kasa działają (`ticket_income`, trybuny 0–3) i zastępują D112. Nagrody i bilety pokrywają pensje wg GDD §26.8; pensje zapisane w `players.wage` bez zmian. Nagroda rośnie z ligą o połowę kroku `LEAGUE_RUNG_MULT`; liga ludzi = stawka IV ligi; puchar i wyzwania bez nagrody, pensje jak dotąd; wyzwania bez biletów. Niepełna wypłata obniża morale seniorów (1..8) przez `nextMorale`. Komunikat i ostrzeżenie = derive `ClubFinanceDto.wageNote` z ruchu `wages` (Hub · Finanse · Wiadomości).  
+**OUT:** migracje · dług klubu · nagrody pucharowe · zmiana pensji.
 
 ## Najważniejsze decyzje (meta)
 

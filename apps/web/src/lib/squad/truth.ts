@@ -138,6 +138,21 @@ export function weeklyMatchWage(bill: number): number {
   return Math.round(due / 7);
 }
 
+/** Next match payment for the squad. Zero when no wage is stored yet. */
+export function matchWageDue(
+  players: readonly { readonly wage?: number; readonly skill: number; readonly age: number }[],
+): number {
+  if (!players.some((player) => typeof player.wage === 'number')) return 0;
+  return weeklyMatchWage(
+    players.reduce(
+      (sum, player) =>
+        sum +
+        (typeof player.wage === 'number' ? player.wage : wageFromSkill(player.skill, player.age)),
+      0,
+    ),
+  );
+}
+
 export function payWages(cash: number, bill: number): { paid: number; nextCash: number } {
   const available = Number.isFinite(cash) ? Math.max(0, cash) : 0;
   const due = Number.isFinite(bill) ? Math.max(0, bill) : 0;

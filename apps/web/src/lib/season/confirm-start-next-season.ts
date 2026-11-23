@@ -75,7 +75,8 @@ export async function confirmStartNextSeason(
   }
 
   const clubId = row.id;
-  const nextSeason = Math.max(1, Math.trunc(row.season_number ?? 1)) + 1;
+  const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
+  const nextSeason = endedSeason + 1;
   const currentTier = parseLeagueTier(row.league_tier);
 
   const fixtures = await listClubFixtures(clubId);
@@ -85,7 +86,7 @@ export async function confirmStartNextSeason(
       name: row.name,
       shortName: row.short_name,
       leagueTier: currentTier,
-      seasonNumber: row.season_number,
+      seasonNumber: endedSeason,
     },
     fixtures,
   );
@@ -125,7 +126,6 @@ export async function confirmStartNextSeason(
     return { error: sponsor.error, farewell: null };
   }
 
-  const endedSeason = Math.max(1, Math.trunc(row.season_number ?? 1));
   const settlement = settleSeasonGoal({
     position: playerRow?.position ?? null,
     rowCount: table.rows.length,

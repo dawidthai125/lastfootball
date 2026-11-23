@@ -10,9 +10,9 @@ import type { FinanceMovementDto } from '@/lib/finance/types';
 describe('ECONOMY_THIN constants', () => {
   it('matches GDD §26 amounts', () => {
     expect(ECONOMY_THIN.STARTER_CASH).toBe(100_000);
-    expect(ECONOMY_THIN.REWARD_WIN).toBe(5_000);
-    expect(ECONOMY_THIN.REWARD_DRAW).toBe(2_500);
-    expect(ECONOMY_THIN.REWARD_LOSS).toBe(1_000);
+    expect(ECONOMY_THIN.REWARD_WIN).toBe(13_000);
+    expect(ECONOMY_THIN.REWARD_DRAW).toBe(6_000);
+    expect(ECONOMY_THIN.REWARD_LOSS).toBe(4_000);
     expect(ECONOMY_THIN.CURRENCY).toBe('EUR');
     expect(ECONOMY_THIN.ENVELOPE_RATIO).toBe(1);
     expect(ECONOMY_THIN.SPONSOR_BASE).toBe(15_000);
