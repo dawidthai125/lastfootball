@@ -18,6 +18,17 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — Gotowość do meczu
+
+### Product
+
+- Hub, ekran VS i ekran XI mówią o niedostępnym zawodniku przed wyjściem na boisko. Przycisk „Zastąp niedostępnych” na ekranie XI proponuje zmiany; zapis robi menedżer.
+- Zwykła żółta kartka nie zawiesza. Pauzuje co czwarta żółta (1 mecz) i czerwona (2 mecze).
+- Mecz w XI kosztuje 14 energii (było 22), ławka daje +4 (było −8). Jedna regeneracja starcza na dwa mecze.
+- Przed meczem widać prawdziwy skill i kondycję XI zamiast stałych 60 i 82%.
+
+---
+
 ## [2026-11-23] — MATCH-BALANCE-01: wyniki meczów jak w piłce
 
 ### Product

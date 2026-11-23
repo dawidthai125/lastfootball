@@ -63,12 +63,23 @@ export function MatchVsView({
             {line}
           </p>
         ))}
-        <Link href={matchPrePath(matchId)} className="lf-mp__primary">
-          Dalej
-        </Link>
-        <Link href={skip.href} className="lf-mp__soft">
-          {skip.label}
-        </Link>
+        {xiBlocked ? (
+          <>
+            <p className="lf-mp__meta">Ktoś z wyjściowej 11 nie może grać.</p>
+            <Link href={skip.href} className="lf-mp__primary">
+              {skip.label}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href={matchPrePath(matchId)} className="lf-mp__primary">
+              Dalej
+            </Link>
+            <Link href={skip.href} className="lf-mp__soft">
+              {skip.label}
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

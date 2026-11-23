@@ -13,6 +13,7 @@ export const UI_COPY = {
   viewSquad: 'Zobacz kadrę',
   setLineup: 'Ustaw skład',
   lineupTitle: 'Ustaw skład (XI)',
+  replaceUnavailable: 'Zastąp niedostępnych',
   goToMatch: 'Idź do meczu',
   playMatch: 'Zagraj mecz',
   playFirstMatch: 'Rozpocznij pierwszy mecz',
@@ -33,6 +34,7 @@ export const UI_COPY = {
   /** LFE-DAILY-01 — Daily Goal Thin (suggestion only; not Primary) */
   dailyGoalEyebrow: 'Dziś warto',
   dailyGoalMatch: 'Dokończ przygotowanie meczu',
+  dailyGoalLineup: 'Popraw skład: ktoś z XI nie może grać',
   dailyGoalSquad: 'Sprawdź kadrę',
   dailyGoalTraining: 'Przeprowadź trening',
   dailyGoalDressing: 'Załatw sprawę w szatni',

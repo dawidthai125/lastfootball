@@ -31,6 +31,8 @@ export type ResolveClubDailyGoalInput = {
   readonly lastPlayedAt?: string | null;
   /** Injected clock for the Warsaw day rule. */
   readonly now?: Date;
+  /** Starting XI fails validateStartingXi (ban, injury, call-up, loan). */
+  readonly lineupBlocked?: boolean;
   /** Dressing conflict pending in messages (REUSE msg:dress). */
   readonly dressingConflict?: boolean;
   /** National call-up pending in messages (REUSE msg:intl). */
@@ -44,6 +46,10 @@ function goal(kind: DailyGoalKind, label: string, href: string, primary: HubCta)
     href,
     syncedWithPrimary: primary.href === href,
   };
+}
+
+function lineupHref(fixtureId: string): string {
+  return `/match/${fixtureId}/xi`;
 }
 
 function matchHref(fixtureId: string): string {
@@ -80,6 +86,9 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
   if (session === 'matchday' && nextFixture) {
     const blocked = blockedMatchLine(input, nextFixture);
     if (blocked) return blocked;
+    if (input.lineupBlocked) {
+      return goal('match', UI_COPY.dailyGoalLineup, lineupHref(nextFixture.id), primary);
+    }
     return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
   }
 
@@ -88,6 +97,9 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
     if (nextFixture?.status === 'upcoming') {
       const blocked = blockedMatchLine(input, nextFixture);
       if (blocked) return blocked;
+      if (input.lineupBlocked) {
+        return goal('match', UI_COPY.dailyGoalLineup, lineupHref(nextFixture.id), primary);
+      }
       return goal('match', UI_COPY.dailyGoalMatch, matchHref(nextFixture.id), primary);
     }
     const desk = messagesDeskGoal(input, primary);

@@ -128,6 +128,14 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
   };
 }
 
+/** Average stored energy of the XI — the same number the engine starts from. */
+function teamCondition(xi: readonly RosterPlayerSeed[]): { label: string; value: number } {
+  const value =
+    xi.length === 0 ? 80 : Math.round(xi.reduce((sum, p) => sum + (p.energy ?? 80), 0) / xi.length);
+  const label = value >= 70 ? 'Gotowa' : value >= 45 ? 'Podmęczona' : 'Zmęczona';
+  return { label, value };
+}
+
 export function buildLeaguePreMatchBundle(
   club: ClubDto,
   dto: FixtureDto,
@@ -201,8 +209,8 @@ export function buildLeaguePreMatchBundle(
       pos: p.pos,
       name: p.name,
       number: p.number,
-      rating: 60,
-      condition: 4,
+      rating: p.skill ?? 60,
+      condition: Math.max(1, Math.min(5, Math.round((p.energy ?? 80) / 20))),
       id: p.id,
       captain: p.captain,
     })),
@@ -212,7 +220,7 @@ export function buildLeaguePreMatchBundle(
       number: p.number,
     })),
     pitchSlots: pitchSlotsFor(our, formationCode),
-    teamCondition: { label: 'Gotowa', value: 82 },
+    teamCondition: teamCondition(our),
     ticker:
       dto.competition === 'cup'
         ? `${club.name} · Puchar Krajowy vs ${dto.opponent.name}.`
