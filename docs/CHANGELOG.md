@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — Wyniki AI↔AI z siły klubu i sezonu
+
+### Product
+
+- Wyniki AI↔AI w tabeli to deterministyczne gole Poissona z siły klubu (średnia XI z `seedOpponentSquad` + stały offset ±4 tylko do tabeli). Średnio ok. 2,7 gola, 55/45 dla gospodarzy, ok. 24% remisów.
+- Seed `ai-v3` zawiera numer sezonu, więc pary mają inne wyniki w każdym sezonie. Składy rywali w meczach bez zmian, bez migracji.
+- Tabele trwających sezonów przeliczą się po wdrożeniu (derive, brak standings DB).
+
+---
+
 ## [2026-11-10] — Cup on the hub and calendar
 
 ### Product

@@ -26,12 +26,11 @@ type Acc = {
  * Sole league table SSOT for product UI (LFE-LEAGUE-02).
  * Player results from fixtures. AI↔AI derive only for matchdays the manager
  * has already played — no standings DB. A finished 22-week season is the full double RR.
+ * AI↔AI scores follow club.seasonNumber + club.leagueTier of the season in the fixtures.
  * League label from club.leagueTier (LFE-PROMOTION-01 · D88).
  */
 export function resolveLeagueTable(
-  club: Pick<ClubDto, 'id' | 'name' | 'shortName' | 'leagueTier'> & {
-    readonly seasonNumber?: number;
-  },
+  club: Pick<ClubDto, 'id' | 'name' | 'shortName' | 'leagueTier' | 'seasonNumber'>,
   fixtures: readonly FixtureDto[],
 ): LeagueTableDto {
   const members = resolveLeagueMembers(club);
@@ -65,7 +64,11 @@ export function resolveLeagueTable(
   for (const f of fixtures) {
     if (f.competition === 'league' && f.status === 'played') playedDays.add(f.matchday);
   }
-  for (const m of planAiMatchesForPlayedWeeks(club.id, playedDays)) {
+  const aiMatches = planAiMatchesForPlayedWeeks(club.id, playedDays, {
+    seasonNumber: club.seasonNumber,
+    tier: club.leagueTier,
+  });
+  for (const m of aiMatches) {
     applyResult(byId, m.homeId, m.awayId, m.homeScore, m.awayScore);
   }
 
@@ -87,7 +90,7 @@ export function resolveLeagueTable(
 
   return {
     leagueLabel: resolveLeagueTierLabel(club.leagueTier),
-    seasonLabel: formatSeasonLabel(club.seasonNumber ?? 1),
+    seasonLabel: formatSeasonLabel(club.seasonNumber),
     rows,
   };
 }
