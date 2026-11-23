@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
 import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
@@ -14,8 +14,8 @@ export async function ensureTransferWindow(supabase: AppSupabase, clubId: string
   const count = await countClubPlayedFixtures(supabase, clubId);
   if (!hasPlayedUnlock(count, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) return;
 
-  await createAdminClient()
-    .from('clubs')
+  await tryAdminClient()
+    ?.from('clubs')
     .update({ transfer_window_open: true } as never)
     .eq('id', clubId)
     .eq('transfer_window_open', false);

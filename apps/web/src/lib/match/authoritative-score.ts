@@ -22,12 +22,11 @@ export async function authoritativeManagerScore(
   const dto = club ? await getFixtureByIdForClub(club.id, fixtureId) : null;
   if (!club || !dto) return { error: 'Nie znaleziono meczu.' };
 
-  const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
-  if (dto.competition === 'challenge' && !rival) {
-    return { error: 'Rywal nie ma pełnej jedenastki.' };
-  }
-
   try {
+    const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
+    if (dto.competition === 'challenge' && !rival) {
+      return { error: 'Rywal nie ma pełnej jedenastki.' };
+    }
     const session = createSessionFromLeagueFixture(
       club,
       dto,

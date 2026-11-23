@@ -29,26 +29,6 @@ export async function renewSponsorAndPayBase(params: {
   const nextBase = params.quote?.base ?? contract.base_amount;
   const nextBonus = params.quote?.bonus ?? contract.bonus_amount;
 
-  const { error: renewErr } = await supabase
-    .from('club_sponsor_contracts')
-    .update({
-      season_number: nextSeason,
-      brand_key: contract.brand_key,
-      brand_name: contract.brand_name,
-      base_amount: nextBase,
-      bonus_amount: nextBonus,
-      goal_kind: contract.goal_kind,
-      goal_target: contract.goal_target,
-      bonus_claimed_at: null,
-      renewal_accepted_at: null,
-      updated_at: now,
-    } as never)
-    .eq('id', contract.id);
-
-  if (renewErr) {
-    return { ok: false, error: 'Nie udało się odnowić kontraktu.' };
-  }
-
   if (contract.base_paid_season_number === nextSeason) {
     return { ok: true, nextCash: params.currentCash };
   }
@@ -58,6 +38,11 @@ export async function renewSponsorAndPayBase(params: {
   const { data: paid, error: markErr } = await supabase
     .from('club_sponsor_contracts')
     .update({
+      season_number: nextSeason,
+      base_amount: nextBase,
+      bonus_amount: nextBonus,
+      bonus_claimed_at: null,
+      renewal_accepted_at: null,
       base_paid_season_number: nextSeason,
       updated_at: now,
     } as never)
@@ -78,7 +63,14 @@ export async function renewSponsorAndPayBase(params: {
   if (nextCash == null) {
     await supabase
       .from('club_sponsor_contracts')
-      .update({ base_paid_season_number: contract.base_paid_season_number } as never)
+      .update({
+        season_number: contract.season_number,
+        base_amount: contract.base_amount,
+        bonus_amount: contract.bonus_amount,
+        bonus_claimed_at: contract.bonus_claimed_at,
+        renewal_accepted_at: contract.renewal_accepted_at,
+        base_paid_season_number: contract.base_paid_season_number,
+      } as never)
       .eq('id', contract.id);
     return { ok: false, error: 'Nie udało się wypłacić przychodu sponsora.' };
   }

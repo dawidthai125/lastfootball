@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient } from '@/lib/supabase/admin';
 import { env } from '@/config/env';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { isSeasonCompleteTrigger } from '@/lib/season/types';
@@ -15,7 +15,8 @@ export async function closeSeasonIfComplete(
   if (!isSeasonCompleteTrigger(fixtures)) return false;
   if (!env.isSupabaseConfigured) return false;
 
-  const supabase = createAdminClient();
+  const supabase = tryAdminClient();
+  if (!supabase) return false;
   const { data, error } = await supabase
     .from('clubs')
     .update({ season_phase: 'offseason' } as never)

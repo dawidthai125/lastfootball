@@ -15,6 +15,7 @@ import { createHAgeSupabasePort, runSeasonTransitionHAge } from '@/lib/season/tr
 import { renewSponsorAndPayBase } from '@/lib/sponsors/renew';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { creditClubCash } from '@/lib/finance/club-cash';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -138,24 +139,28 @@ export async function confirmStartNextSeason(
   const admin = createAdminClient() as unknown as typeof supabase;
   const goalBonus = settlement.bonus;
   const goalNote = settlement.note;
-  const nextCash = sponsor.nextCash + goalBonus;
 
   if (row.season_goal_paid_for !== endedSeason) {
+    // Mark first, then pay: a parallel confirm cannot pay the goal twice.
     const { data: settledRows, error: goalErr } = await admin
       .from('clubs')
-      .update({
-        cash_balance: nextCash,
-        season_goal_paid_for: endedSeason,
-        season_goal_note: goalNote,
-      } as never)
+      .update({ season_goal_paid_for: endedSeason, season_goal_note: goalNote } as never)
       .eq('id', clubId)
       .eq('season_phase', 'offseason')
-      .eq('cash_balance', sponsor.nextCash)
+      .or(`season_goal_paid_for.is.null,season_goal_paid_for.neq.${endedSeason}`)
       .select('id');
-    if (goalErr || !settledRows || settledRows.length === 0) {
+    if (goalErr || !settledRows) {
       return { error: 'Nie udało się zapisać celu sezonu.', farewell: null };
     }
-    if (goalBonus > 0) {
+    if (goalBonus > 0 && settledRows.length > 0) {
+      if ((await creditClubCash(clubId, goalBonus)) == null) {
+        await admin
+          .from('clubs')
+          .update({ season_goal_paid_for: row.season_goal_paid_for } as never)
+          .eq('id', clubId)
+          .eq('season_phase', 'offseason');
+        return { error: 'Nie udało się wypłacić celu sezonu.', farewell: null };
+      }
       await supabase.from('finance_movements').insert({
         club_id: clubId,
         category: 'season_goal',

@@ -231,6 +231,18 @@ export async function completeTransferBuy(
   const shirt = nextShirt(input.activePlayers.map((p) => p.shirt_number));
   const nextCash = input.cashBalance - agreedAmount;
 
+  const written = await writeClubCash({
+    clubId: input.clubId,
+    expected: input.cashBalance,
+    next: nextCash,
+  });
+  if (written !== 'ok') {
+    return {
+      ok: false,
+      error: written === 'stale' ? CASH_STALE_ERROR : 'Nie udało się zaktualizować kasy.',
+    };
+  }
+
   const { error: playerErr } = await supabase.from('players').insert({
     id: playerId,
     club_id: input.clubId,
@@ -250,29 +262,10 @@ export async function completeTransferBuy(
   } as never);
 
   if (playerErr) {
+    if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
+      console.error('completeTransferBuy: refund failed', { clubId: input.clubId });
+    }
     return { ok: false, error: 'Nie udało się dodać zawodnika.' };
-  }
-
-  const written = await writeClubCash({
-    clubId: input.clubId,
-    expected: input.cashBalance,
-    next: nextCash,
-  });
-
-  if (written !== 'ok') {
-    await supabase
-      .from('players')
-      .update({
-        status: 'DEPARTED',
-        departed_at: new Date().toISOString(),
-        starter: false,
-      } as never)
-      .eq('id', playerId)
-      .eq('club_id', input.clubId);
-    return {
-      ok: false,
-      error: written === 'stale' ? CASH_STALE_ERROR : 'Nie udało się zaktualizować kasy.',
-    };
   }
 
   if (agreedAmount !== 0) {
@@ -380,6 +373,15 @@ export async function completeTransferSell(
     return { ok: true, playerId: row.player_id, amount: row.amount };
   }
 
+  const { data: before } = await supabase
+    .from('players')
+    .select('status, starter, captain, transfer_listed_at')
+    .eq('id', input.playerId)
+    .eq('club_id', input.clubId)
+    .is('departed_at', null)
+    .maybeSingle();
+  if (!before) return { ok: false, error: 'Nie znaleziono zawodnika w kadrze.' };
+
   const departedAt = new Date().toISOString();
   const { data: departed, error: updErr } = await supabase
     .from('players')
@@ -402,7 +404,14 @@ export async function completeTransferSell(
   }
 
   if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
-    return { ok: false, error: 'Odejście zapisane, ale kasa nie zaktualizowana — odśwież.' };
+    // Not paid means not sold.
+    await supabase
+      .from('players')
+      .update({ ...(before as object), departed_at: null } as never)
+      .eq('id', input.playerId)
+      .eq('club_id', input.clubId)
+      .eq('departed_at', departedAt);
+    return { ok: false, error: 'Nie udało się rozliczyć sprzedaży. Spróbuj ponownie.' };
   }
 
   await supabase.from('finance_movements').insert({

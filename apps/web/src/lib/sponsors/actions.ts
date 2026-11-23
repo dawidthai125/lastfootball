@@ -29,6 +29,10 @@ export async function claimSponsorBonus(
 
   const contract = await ensureClubSponsorContract(club.id, club.seasonNumber);
   if (!contract) return { error: 'Brak kontraktu sponsora.' };
+  // Renewed for the next season already: this season's bonus window is over.
+  if (contract.season_number > club.seasonNumber) {
+    return { error: 'Bonus nie jest jeszcze dostępny.' };
+  }
 
   if (contract.bonus_claimed_at) {
     return { error: null };
@@ -57,6 +61,7 @@ export async function claimSponsorBonus(
     .from('club_sponsor_contracts')
     .update({ bonus_claimed_at: claimedAt, updated_at: claimedAt } as never)
     .eq('id', contract.id)
+    .eq('season_number', contract.season_number)
     .is('bonus_claimed_at', null)
     .select('id')
     .maybeSingle();

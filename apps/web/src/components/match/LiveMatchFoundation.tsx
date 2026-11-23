@@ -277,11 +277,13 @@ export function LiveMatchFoundation({
     awayShort,
   });
 
+  // The server owns the saved score; it differs only if a squad changed during the match.
+  const official = fixtureSave.score ?? { home: snapshot.homeScore, away: snapshot.awayScore };
   const rewardLine = leagueFixture
     ? (resolveFixtureReward({
         competition: leagueFixture.competition,
-        homeScore: snapshot.homeScore,
-        awayScore: snapshot.awayScore,
+        homeScore: official.home,
+        awayScore: official.away,
         isHome: leagueFixture.isHome,
         leagueTier: club?.leagueTier ?? 'iv',
       })?.line ?? null)
@@ -290,7 +292,7 @@ export function LiveMatchFoundation({
   const isHomeSide = leagueFixture?.isHome ?? fixture.home ?? true;
   const fanMoodLine = describeFanMoodChange(
     fanMoodBefore,
-    fanResultFromScores(snapshot.homeScore, snapshot.awayScore, isHomeSide),
+    fanResultFromScores(official.home, official.away, isHomeSide),
   );
 
   const openReplayAt = (item?: PostMatchTimelineItem) => {

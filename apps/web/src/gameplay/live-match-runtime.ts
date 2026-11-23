@@ -12,6 +12,7 @@ import { commentaryLine } from '@/lib/match/commentary';
 import type { RosterPlayerSeed } from '@/lib/squad';
 import {
   LIVE_SUB_LIMIT,
+  MANAGER_LOG_MAX,
   SUB_COMMAND,
   managerCommand,
   managerSubstitution,
@@ -488,7 +489,8 @@ export class LiveMatchRuntime {
     if (!this.watchingLive()) return false;
     const tick = this.session.context().tick;
     const command = managerCommand(commandId, tick, this.managerSide);
-    if (!command) return false;
+    // Same cap as the server; the last places stay free for substitutions.
+    if (!command || this.managerLog.length >= MANAGER_LOG_MAX - LIVE_SUB_LIMIT) return false;
     const result = this.session.dispatch(command);
     if (!result.ok) return false;
     this.managerLog.push({ t: tick, c: commandId });

@@ -1,10 +1,11 @@
-import { createAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient } from '@/lib/supabase/admin';
 
 import { nextFanMood, type FanResult } from '@/lib/club/fans';
 
 /** Moves stored fan mood. A missing column leaves the match save alone. */
 export async function recordFanMood(clubId: string, result: FanResult): Promise<void> {
-  const supabase = createAdminClient();
+  const supabase = tryAdminClient();
+  if (!supabase) return;
   const read = await supabase.from('clubs').select('fan_mood').eq('id', clubId).maybeSingle();
   if (read.error || !read.data) return;
   const current = (read.data as { fan_mood?: number }).fan_mood;

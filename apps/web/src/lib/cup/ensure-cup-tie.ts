@@ -3,7 +3,7 @@ import type { ClubDto } from '@/lib/club/types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveNationalCup } from '@/lib/cup/resolve-national-cup';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient } from '@/lib/supabase/admin';
 
 /**
  * Insert the manager's current cup tie once the league anchor is reached.
@@ -23,7 +23,8 @@ export async function ensurePlayerCupTie(
   if (existing) return fixtures;
   if (!env.isSupabaseConfigured) return fixtures;
 
-  const supabase = createAdminClient();
+  const supabase = tryAdminClient();
+  if (!supabase) return fixtures;
   const { error } = await supabase.from('fixtures').insert({
     club_id: club.id,
     matchday: tie.matchday,

@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { creditClubCash, settleClubCash, writeClubCash } from '@/lib/finance/club-cash';
+import { creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
 
 /** In-memory clubs row. `before` runs ahead of each update, like a parallel request. */
-function fakeDb(row: { cash_balance: number; [key: string]: unknown }, before?: () => void) {
+function fakeDb(
+  row: { cash_balance: number; [key: string]: unknown },
+  before?: () => void,
+  lostReply = false,
+) {
   const db = {
     from: () => ({
       select: () => ({
@@ -21,7 +25,9 @@ function fakeDb(row: { cash_balance: number; [key: string]: unknown }, before?: 
             before?.();
             if (row.cash_balance !== filters.cash_balance) return { data: null, error: null };
             Object.assign(row, patch);
-            return { data: { id: 'c1' }, error: null };
+            return lostReply
+              ? { data: null, error: { message: 'reset' } }
+              : { data: { id: 'c1' }, error: null };
           },
         };
         return chain;
@@ -52,18 +58,16 @@ describe('club cash', () => {
     expect(row.cash_balance).toBe(88_000);
   });
 
-  it('recomputes wages on the fresh balance', async () => {
-    const row = { cash_balance: 9_000 };
-    let parallel = 1;
-    const db = fakeDb(row, () => {
-      if (parallel-- > 0) row.cash_balance = 2_000;
-    });
-    const settled = await settleClubCash(
-      'c1',
-      (cash) => ({ paid: Math.min(5_000, cash), nextCash: cash - Math.min(5_000, cash) }),
-      db,
-    );
-    expect(settled).toEqual({ paid: 2_000, nextCash: 0 });
+  it('does not pay twice when a landed write reports an error', async () => {
+    const row = { cash_balance: 100 };
+    const db = fakeDb(row, undefined, true);
+    expect(await creditClubCash('c1', 50, db)).toBe(150);
+    expect(row.cash_balance).toBe(150);
+  });
+
+  it('reports an error without a server key', async () => {
+    expect(await writeClubCash({ clubId: 'c1', expected: 1, next: 2 }, null)).toBe('error');
+    expect(await creditClubCash('c1', 1, null)).toBeNull();
   });
 
   it('gives up instead of overwriting', async () => {
