@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import { buildAcademyIntakeDraft } from '@/lib/academy/intake';
 import type { LeagueTier } from '@/lib/league/league-tier';
 import {
@@ -111,7 +112,7 @@ async function applySeasonDeparture(
 
   const retiree = roster.find((player) => player.id === plan.retireId);
   const now = new Date().toISOString();
-  const { error: leaveErr } = await supabase
+  const { error: leaveErr } = await serverDb(supabase)
     .from('players')
     .update({ status: 'DEPARTED', departed_at: now, starter: false } as never)
     .eq('id', plan.retireId)
@@ -121,7 +122,7 @@ async function applySeasonDeparture(
 
   const restoreRetiree = async () => {
     if (!retiree) return;
-    await supabase
+    await serverDb(supabase)
       .from('players')
       .update({
         status: retiree.status,
@@ -140,7 +141,7 @@ async function applySeasonDeparture(
 
   if (plan.promoteId) {
     const prospect = roster.find((player) => player.id === plan.promoteId);
-    const { error: promoteErr } = await supabase
+    const { error: promoteErr } = await serverDb(supabase)
       .from('players')
       .update({
         academy_track: false,
@@ -207,25 +208,27 @@ async function applySeasonDeparture(
     await restoreRetiree();
     return { ok: false, error: draft.error };
   }
-  const { error: insertErr } = await supabase.from('players').insert({
-    id: draft.id,
-    club_id: clubId,
-    name: draft.name,
-    shirt_number: draft.shirtNumber,
-    pos: draft.pos,
-    role: draft.role,
-    starter: false,
-    captain: false,
-    age: draft.age,
-    skill: draft.skill,
-    potential: draft.potential,
-    status: 'READY',
-    nationality: 'POL',
-    version: 1,
-    academy_track: false,
-    promoted_at: now,
-    transfer_listed_at: null,
-  } as never);
+  const { error: insertErr } = await serverDb(supabase)
+    .from('players')
+    .insert({
+      id: draft.id,
+      club_id: clubId,
+      name: draft.name,
+      shirt_number: draft.shirtNumber,
+      pos: draft.pos,
+      role: draft.role,
+      starter: false,
+      captain: false,
+      age: draft.age,
+      skill: draft.skill,
+      potential: draft.potential,
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      academy_track: false,
+      promoted_at: now,
+      transfer_listed_at: null,
+    } as never);
   if (insertErr) {
     await restoreRetiree();
     return { ok: false, error: 'Nie udało się uzupełnić kadry.' };
@@ -247,7 +250,7 @@ async function undoSeasonDeparture(
   if (!undo) return;
 
   if (undo.retiree) {
-    await supabase
+    await serverDb(supabase)
       .from('players')
       .update({
         status: undo.retiree.status,
@@ -268,7 +271,7 @@ async function undoSeasonDeparture(
       promoted_at: null,
     };
     if (undo.replacement.starter !== null) patch.starter = undo.replacement.starter;
-    await supabase
+    await serverDb(supabase)
       .from('players')
       .update(patch as never)
       .eq('id', undo.replacement.id)
@@ -276,5 +279,9 @@ async function undoSeasonDeparture(
     return;
   }
 
-  await supabase.from('players').delete().eq('id', undo.replacement.id).eq('club_id', undo.clubId);
+  await serverDb(supabase)
+    .from('players')
+    .delete()
+    .eq('id', undo.replacement.id)
+    .eq('club_id', undo.clubId);
 }

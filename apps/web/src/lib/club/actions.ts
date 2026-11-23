@@ -11,7 +11,7 @@ import { grantEmailConfirmBonus } from '@/lib/auth/email-confirm';
 import { ECONOMY_THIN } from '@/lib/finance';
 import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
-import { tryAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient, serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createClub(
@@ -79,13 +79,17 @@ export async function createClub(
 
   const clubId = (created as { id: string } | null)?.id;
   if (clubId) {
-    await supabase.from('finance_movements').insert({
-      club_id: clubId,
-      category: 'starter',
-      label: 'Kapitał startowy',
-      amount: ECONOMY_THIN.STARTER_CASH,
-    } as never);
-    await supabase.from('players').insert(buildStarterPlayerInserts(clubId) as never);
+    await serverDb(supabase)
+      .from('finance_movements')
+      .insert({
+        club_id: clubId,
+        category: 'starter',
+        label: 'Kapitał startowy',
+        amount: ECONOMY_THIN.STARTER_CASH,
+      } as never);
+    await serverDb(supabase)
+      .from('players')
+      .insert(buildStarterPlayerInserts(clubId) as never);
     // LFE-SPONSORS-01: seed Thin contract · no base payout at create (Owner LOCK 2).
     await tryAdminClient()
       ?.from('club_sponsor_contracts')

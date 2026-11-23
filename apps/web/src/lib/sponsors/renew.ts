@@ -1,6 +1,6 @@
 import { creditClubCash } from '@/lib/finance/club-cash';
 import { ensureClubSponsorContract, getClubSponsorContract } from '@/lib/sponsors/get-contract';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, serverDb } from '@/lib/supabase/admin';
 
 // Not a 'use server' module on purpose: it takes a club id and writes with the admin client.
 
@@ -75,12 +75,14 @@ export async function renewSponsorAndPayBase(params: {
     return { ok: false, error: 'Nie udało się wypłacić przychodu sponsora.' };
   }
 
-  await supabase.from('finance_movements').insert({
-    club_id: params.clubId,
-    category: 'sponsor_base',
-    label: `Przychód sponsorski · ${contract.brand_name} · Sezon ${nextSeason}`,
-    amount,
-  } as never);
+  await serverDb(supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: params.clubId,
+      category: 'sponsor_base',
+      label: `Przychód sponsorski · ${contract.brand_name} · Sezon ${nextSeason}`,
+      amount,
+    } as never);
 
   return { ok: true, nextCash };
 }

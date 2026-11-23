@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -63,7 +64,7 @@ export async function setTransferListing(
       return { error: 'Nie można wystawić tego zawodnika (okno / kadra / bramkarz).' };
     }
 
-    const { error } = await supabase
+    const { error } = await serverDb(supabase)
       .from('players')
       .update({ transfer_listed_at: new Date().toISOString() } as never)
       .eq('id', playerId)

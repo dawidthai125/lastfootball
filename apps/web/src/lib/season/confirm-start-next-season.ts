@@ -16,7 +16,7 @@ import { renewSponsorAndPayBase } from '@/lib/sponsors/renew';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { creditClubCash } from '@/lib/finance/club-cash';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { openNextSeasonAfterDeparture } from '@/lib/season/open-next-season';
@@ -161,12 +161,14 @@ export async function confirmStartNextSeason(
           .eq('season_phase', 'offseason');
         return { error: 'Nie udało się wypłacić celu sezonu.', farewell: null };
       }
-      await supabase.from('finance_movements').insert({
-        club_id: clubId,
-        category: 'season_goal',
-        label: 'Cel sezonu · górna połowa',
-        amount: goalBonus,
-      } as never);
+      await serverDb(supabase)
+        .from('finance_movements')
+        .insert({
+          club_id: clubId,
+          category: 'season_goal',
+          label: 'Cel sezonu · górna połowa',
+          amount: goalBonus,
+        } as never);
     }
   }
 

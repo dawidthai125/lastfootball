@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -49,25 +50,27 @@ export async function intakeAcademyProspect(
   if ('error' in draft) return { error: draft.error };
 
   const supabase = await createClient();
-  const { error } = await supabase.from('players').insert({
-    id: draft.id,
-    club_id: club.id,
-    name: draft.name,
-    shirt_number: draft.shirtNumber,
-    pos: draft.pos,
-    role: draft.role,
-    starter: false,
-    captain: false,
-    age: draft.age,
-    skill: draft.skill,
-    potential: draft.potential,
-    status: 'READY',
-    nationality: 'POL',
-    version: 1,
-    academy_track: true,
-    promoted_at: null,
-    transfer_listed_at: null,
-  } as never);
+  const { error } = await serverDb(supabase)
+    .from('players')
+    .insert({
+      id: draft.id,
+      club_id: club.id,
+      name: draft.name,
+      shirt_number: draft.shirtNumber,
+      pos: draft.pos,
+      role: draft.role,
+      starter: false,
+      captain: false,
+      age: draft.age,
+      skill: draft.skill,
+      potential: draft.potential,
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      academy_track: true,
+      promoted_at: null,
+      transfer_listed_at: null,
+    } as never);
 
   if (error) {
     return { error: 'Nie udało się przeprowadzić naboru.' };
@@ -95,7 +98,7 @@ export async function promoteAcademyProspect(
 
   const supabase = await createClient();
   const now = new Date().toISOString();
-  const { data, error } = await supabase
+  const { data, error } = await serverDb(supabase)
     .from('players')
     .update({
       academy_track: false,

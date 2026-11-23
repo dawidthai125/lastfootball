@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -64,7 +65,7 @@ export async function settleDressingConflict(
   for (const id of [conflict.aId, conflict.bId]) {
     const row = rows.find((r) => r.id === id);
     const current = typeof row?.morale === 'number' ? row.morale : 60;
-    const { error } = await supabase
+    const { error } = await serverDb(supabase)
       .from('players')
       .update({ morale: next(current) } as never)
       .eq('id', id)

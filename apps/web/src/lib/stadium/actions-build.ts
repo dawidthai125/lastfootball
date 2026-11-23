@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -76,13 +77,15 @@ export async function raiseGroundPart(
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Rozbudowa nie jest jeszcze włączona.' };
 
-  await supabase.from('finance_movements').insert({
-    club_id: clubRow.id,
-    category: 'stadium_build',
-    label: PART_LABEL[part],
-    amount: -next.cost,
-    fixture_id: null,
-  } as never);
+  await serverDb(supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: clubRow.id,
+      category: 'stadium_build',
+      label: PART_LABEL[part],
+      amount: -next.cost,
+      fixture_id: null,
+    } as never);
 
   revalidatePath('/stadium');
   revalidatePath('/finance');

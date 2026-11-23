@@ -9,7 +9,7 @@ import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubSponsorContract, getClubSponsorContract } from '@/lib/sponsors/get-contract';
 import { resolveClubSponsors, type SponsorActionState } from '@/lib/sponsors/types';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, serverDb } from '@/lib/supabase/admin';
 
 /**
  * Idempotent bonus claim (Owner LOCK 7) — finance ledger only (D97).
@@ -83,12 +83,14 @@ export async function claimSponsorBonus(
     return { error: 'Nie udało się wypłacić bonusu.' };
   }
 
-  await supabase.from('finance_movements').insert({
-    club_id: club.id,
-    category: 'sponsor_bonus',
-    label: `Bonus sponsorski · ${contract.brand_name}`,
-    amount,
-  } as never);
+  await serverDb(supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: club.id,
+      category: 'sponsor_bonus',
+      label: `Bonus sponsorski · ${contract.brand_name}`,
+      amount,
+    } as never);
 
   revalidatePath('/', 'layout');
   return { error: null };

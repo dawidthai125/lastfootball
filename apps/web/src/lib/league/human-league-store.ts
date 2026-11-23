@@ -248,7 +248,7 @@ async function snapshotXi(
     : full;
   if (result.error || !result.data) return { error: 'Nie mogę odczytać składu.' };
   try {
-    return resolveStartingXi((result.data as PlayerDbRow[]).map(mapPlayerRow));
+    return resolveStartingXi((result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row)));
   } catch (error: unknown) {
     if (error instanceof SquadUnavailableError) return { error: error.message };
     throw error;

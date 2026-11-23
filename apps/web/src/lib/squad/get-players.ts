@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import { env } from '@/config/env';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
@@ -10,7 +11,7 @@ const PLAYER_SELECT =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, form, wage, suspension_matches, injury_matches, recent_ratings';
 
 const DEPTH_SELECT =
-  'id, morale, personality, contract_until, release_clause, set_piece, last_individual_on';
+  'id, energy_on, morale, personality, contract_until, release_clause, set_piece, last_individual_on';
 
 const LOAN_SELECT =
   'id, on_loan, loan_until, wage_bank, loaned_in, loan_partner_label, intl_absent_until';
@@ -83,7 +84,7 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
   );
   for (const patch of patches) {
     if (patch.kind === 'recall') {
-      await supabase
+      await serverDb(supabase)
         .from('players')
         .update({
           on_loan: false,
@@ -102,7 +103,7 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
         wage_bank: null,
       });
     } else {
-      await supabase
+      await serverDb(supabase)
         .from('players')
         .update({
           status: 'DEPARTED',
@@ -136,7 +137,7 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
     today,
   );
   for (const patch of intlPatches) {
-    await supabase
+    await serverDb(supabase)
       .from('players')
       .update({ intl_absent_until: null } as never)
       .eq('id', patch.id)

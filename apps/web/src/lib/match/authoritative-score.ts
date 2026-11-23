@@ -1,4 +1,5 @@
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import { getFixtureByIdForClub } from '@/lib/fixtures/get-fixture';
 import type { ManagerLogEntry } from '@/lib/match/manager-commands';
@@ -36,6 +37,28 @@ export async function authoritativeManagerScore(
       rival?.xi ?? null,
     );
     const score = replayManagerMatch(session, dto.isHome ? 'home' : 'away', log);
+    session.dispose();
+    return score ?? { error: 'Nie udało się policzyć wyniku. Spróbuj ponownie.' };
+  } catch (e) {
+    if (e instanceof SquadUnavailableError) return { error: e.message };
+    throw e;
+  }
+}
+
+/** Onboarding match: same rule, no money in it. */
+export async function authoritativeFirstMatchScore(
+  players: readonly PlayerRowDto[],
+  log: readonly ManagerLogEntry[],
+): Promise<{ home: number; away: number } | { error: string }> {
+  const club = await getManagerClub();
+  if (!club) return { error: 'Nie znaleziono klubu.' };
+  try {
+    const session = createSessionFromFirstMatch(
+      club,
+      resolveStartingXi(players),
+      resolveMatchBench(players),
+    );
+    const score = replayManagerMatch(session, 'home', log);
     session.dispose();
     return score ?? { error: 'Nie udało się policzyć wyniku. Spróbuj ponownie.' };
   } catch (e) {

@@ -16,6 +16,9 @@ import { recordFanMood } from '@/lib/club/record-fan-mood';
 import { isPersonality } from '@/lib/squad/depth';
 import { applyMatchSquadTruth, groupsFromSkill } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
+import { authoritativeFirstMatchScore } from '@/lib/match/authoritative-score';
+import { parseManagerLog } from '@/lib/match/manager-commands';
+import { serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
@@ -51,16 +54,18 @@ export async function completeFirstMatch(
   const row = club as { id: string; first_match_completed_at: string | null };
 
   if (!row.first_match_completed_at) {
-    const homeRaw = formData.get('homeScore');
-    const awayRaw = formData.get('awayScore');
-    const home = typeof homeRaw === 'string' && homeRaw !== '' ? Number(homeRaw) : Number.NaN;
-    const away = typeof awayRaw === 'string' && awayRaw !== '' ? Number(awayRaw) : Number.NaN;
-    const result = clubHomeResult(home, away);
+    const managerLog = parseManagerLog(formData.get('managerLog'));
+    if (!managerLog) {
+      return { error: 'Nie da się odtworzyć decyzji z meczu. Wejdź w mecz jeszcze raz.' };
+    }
+    const players = await listClubPlayers(row.id);
+    const score = await authoritativeFirstMatchScore(players, managerLog);
+    if ('error' in score) return score;
+    const result = clubHomeResult(score.home, score.away);
     if (!result) {
       return { error: 'Brak wyniku meczu.' };
     }
 
-    const players = await listClubPlayers(row.id);
     const build = await readClubBuild(supabase, row.id);
     const seniors = filterSeniorPlayers(players);
     const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
@@ -114,7 +119,7 @@ export async function completeFirstMatch(
     }
     await recordFanMood(row.id, result);
 
-    const { error: updErr } = await supabase
+    const { error: updErr } = await serverDb(supabase)
       .from('clubs')
       .update({ first_match_completed_at: new Date().toISOString() } as never)
       .eq('id', row.id)

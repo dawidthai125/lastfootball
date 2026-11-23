@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import { CASH_STALE_ERROR, creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
@@ -243,23 +244,25 @@ export async function completeTransferBuy(
     };
   }
 
-  const { error: playerErr } = await supabase.from('players').insert({
-    id: playerId,
-    club_id: input.clubId,
-    name: listing.name,
-    shirt_number: shirt,
-    pos: listing.pos,
-    role: listing.role,
-    starter: false,
-    captain: false,
-    age: listing.age,
-    skill: listing.skill,
-    potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
-    status: 'READY',
-    nationality: 'POL',
-    version: 1,
-    departed_at: null,
-  } as never);
+  const { error: playerErr } = await serverDb(supabase)
+    .from('players')
+    .insert({
+      id: playerId,
+      club_id: input.clubId,
+      name: listing.name,
+      shirt_number: shirt,
+      pos: listing.pos,
+      role: listing.role,
+      starter: false,
+      captain: false,
+      age: listing.age,
+      skill: listing.skill,
+      potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      departed_at: null,
+    } as never);
 
   if (playerErr) {
     if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
@@ -269,13 +272,15 @@ export async function completeTransferBuy(
   }
 
   if (agreedAmount !== 0) {
-    const { error: movErr } = await supabase.from('finance_movements').insert({
-      club_id: input.clubId,
-      category: 'transfer_buy',
-      label: `Transfer: ${listing.name}`,
-      amount: -agreedAmount,
-      fixture_id: null,
-    } as never);
+    const { error: movErr } = await serverDb(supabase)
+      .from('finance_movements')
+      .insert({
+        club_id: input.clubId,
+        category: 'transfer_buy',
+        label: `Transfer: ${listing.name}`,
+        amount: -agreedAmount,
+        fixture_id: null,
+      } as never);
 
     if (movErr) {
       return {
@@ -285,15 +290,17 @@ export async function completeTransferBuy(
     }
   }
 
-  const { error: dealErr } = await supabase.from('transfer_deals').insert({
-    club_id: input.clubId,
-    kind: 'buy',
-    player_id: playerId,
-    market_id: input.marketId,
-    amount: agreedAmount,
-    idempotency_key: idempotencyKey,
-    completed_at: new Date().toISOString(),
-  } as never);
+  const { error: dealErr } = await serverDb(supabase)
+    .from('transfer_deals')
+    .insert({
+      club_id: input.clubId,
+      kind: 'buy',
+      player_id: playerId,
+      market_id: input.marketId,
+      amount: agreedAmount,
+      idempotency_key: idempotencyKey,
+      completed_at: new Date().toISOString(),
+    } as never);
 
   if (dealErr && dealErr.code !== '23505') {
     return { ok: false, error: 'Transfer zapisany częściowo — sprawdź kadrę i finanse.' };
@@ -383,7 +390,7 @@ export async function completeTransferSell(
   if (!before) return { ok: false, error: 'Nie znaleziono zawodnika w kadrze.' };
 
   const departedAt = new Date().toISOString();
-  const { data: departed, error: updErr } = await supabase
+  const { data: departed, error: updErr } = await serverDb(supabase)
     .from('players')
     .update({
       status: 'DEPARTED',
@@ -405,7 +412,7 @@ export async function completeTransferSell(
 
   if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
     // Not paid means not sold.
-    await supabase
+    await serverDb(supabase)
       .from('players')
       .update({ ...(before as object), departed_at: null } as never)
       .eq('id', input.playerId)
@@ -414,23 +421,27 @@ export async function completeTransferSell(
     return { ok: false, error: 'Nie udało się rozliczyć sprzedaży. Spróbuj ponownie.' };
   }
 
-  await supabase.from('finance_movements').insert({
-    club_id: input.clubId,
-    category: 'transfer_sell',
-    label: `Sprzedaż: ${player.name}`,
-    amount: agreedAmount,
-    fixture_id: null,
-  } as never);
+  await serverDb(supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: input.clubId,
+      category: 'transfer_sell',
+      label: `Sprzedaż: ${player.name}`,
+      amount: agreedAmount,
+      fixture_id: null,
+    } as never);
 
-  const { error: dealErr } = await supabase.from('transfer_deals').insert({
-    club_id: input.clubId,
-    kind: 'sell',
-    player_id: input.playerId,
-    market_id: null,
-    amount: agreedAmount,
-    idempotency_key: idempotencyKey,
-    completed_at: departedAt,
-  } as never);
+  const { error: dealErr } = await serverDb(supabase)
+    .from('transfer_deals')
+    .insert({
+      club_id: input.clubId,
+      kind: 'sell',
+      player_id: input.playerId,
+      market_id: null,
+      amount: agreedAmount,
+      idempotency_key: idempotencyKey,
+      completed_at: departedAt,
+    } as never);
 
   if (dealErr && dealErr.code !== '23505') {
     return { ok: false, error: 'Sprzedaż częściowa — sprawdź kadrę i finanse.' };

@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import {
   applyMatchDevelopmentEffects,
@@ -92,7 +93,7 @@ export async function applyMatchDevelopment(
     });
   }
 
-  const { data, error } = await supabase.rpc(
+  const { data, error } = await serverDb(supabase).rpc(
     'apply_match_development' as never,
     {
       p_club_id: input.clubId,

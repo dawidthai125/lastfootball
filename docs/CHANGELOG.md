@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Zawodnicy po stronie serwera i odpoczynek (D128)
+
+### Product
+
+- Sesja gracza zmienia w kadrze tylko skład, kapitana, stałe fragmenty i numer. Umiejętności, energię, pensje, transfery i księgę zapisuje serwer. Migracje `20261124100000` i `20261124101000`.
+- Pierwszy mecz też liczy serwer z decyzji menedżera.
+- Zawodnik odzyskuje 5 energii za każdy dzień bez meczu i treningu. Od 60 energii zmęczony jest znów gotowy.
+
+---
+
 ## [2026-11-23] — Wynik i kasa po stronie serwera (D127)
 
 ### Product

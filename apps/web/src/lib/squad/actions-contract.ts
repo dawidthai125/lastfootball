@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -61,7 +62,7 @@ export async function saveContractTalk(
     today: utcDateString(),
   });
   if (!decision.ok) return { error: decision.reason };
-  const { error } = await supabase
+  const { error } = await serverDb(supabase)
     .from('players')
     .update({ wage: decision.wage, contract_until: decision.contractUntil } as never)
     .eq('id', playerId)
