@@ -17,6 +17,7 @@ import {
 import {
   changedPrefs,
   NOTIFICATION_KINDS,
+  PUSH_ENABLED,
   type NotificationActionResult,
   type NotificationKind,
   type NotificationSettings,
@@ -220,43 +221,45 @@ export function NotificationSettingsPanel({ settings }: { settings: Notification
         8:00. Wszystko, o czym piszą, jest też w grze.
       </p>
 
-      <div className="space-y-1.5">
-        <h3 className="m-0 text-[12px] font-semibold">Na telefonie i komputerze</h3>
-        {vapidPublicKey ? (
-          <>
-            {note ? <p className="m-0">{note}</p> : null}
-            <div className="flex flex-wrap gap-1.5">
-              {device === 'off' ? (
-                <Button variant="primary" size="md" disabled={pending} onClick={enable}>
-                  Włącz na tym urządzeniu
-                </Button>
-              ) : null}
-              {device === 'on' ? (
-                <Button size="md" disabled={pending} onClick={disable}>
-                  Wyłącz na tym urządzeniu
-                </Button>
-              ) : null}
-              {device === 'on' || deviceCount > 0 ? (
-                <Button size="md" disabled={pending} onClick={() => run(sendTestPush)}>
-                  Wyślij próbne powiadomienie
-                </Button>
-              ) : null}
-              {deviceCount > (device === 'on' ? 1 : 0) ? (
-                <Button variant="ghost" size="md" disabled={pending} onClick={disableAll}>
-                  Wyłącz wszędzie ({deviceCount})
-                </Button>
-              ) : null}
-            </div>
-          </>
-        ) : (
-          <p className="m-0">Powiadomienia na urządzeniu są teraz niedostępne.</p>
-        )}
-      </div>
+      {PUSH_ENABLED ? (
+        <div className="space-y-1.5">
+          <h3 className="m-0 text-[12px] font-semibold">Na telefonie i komputerze</h3>
+          {vapidPublicKey ? (
+            <>
+              {note ? <p className="m-0">{note}</p> : null}
+              <div className="flex flex-wrap gap-1.5">
+                {device === 'off' ? (
+                  <Button variant="primary" size="md" disabled={pending} onClick={enable}>
+                    Włącz na tym urządzeniu
+                  </Button>
+                ) : null}
+                {device === 'on' ? (
+                  <Button size="md" disabled={pending} onClick={disable}>
+                    Wyłącz na tym urządzeniu
+                  </Button>
+                ) : null}
+                {device === 'on' || deviceCount > 0 ? (
+                  <Button size="md" disabled={pending} onClick={() => run(sendTestPush)}>
+                    Wyślij próbne powiadomienie
+                  </Button>
+                ) : null}
+                {deviceCount > (device === 'on' ? 1 : 0) ? (
+                  <Button variant="ghost" size="md" disabled={pending} onClick={disableAll}>
+                    Wyłącz wszędzie ({deviceCount})
+                  </Button>
+                ) : null}
+              </div>
+            </>
+          ) : (
+            <p className="m-0">Powiadomienia na urządzeniu są teraz niedostępne.</p>
+          )}
+        </div>
+      ) : null}
 
       <div className="space-y-1.5">
         <h3 className="m-0 text-[12px] font-semibold">E-mail</h3>
         <Checkbox
-          label="Wysyłaj też na e-mail"
+          label={PUSH_ENABLED ? 'Wysyłaj też na e-mail' : 'Wysyłaj na e-mail'}
           checked={email}
           disabled={pending || (emailState !== 'ready' && !email)}
           onChange={(event) => setEmail(event.target.checked)}

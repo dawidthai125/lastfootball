@@ -21,6 +21,7 @@ import { listPushDevices, sendPushToDevices, type PushDevice } from '@/lib/notif
 import type { ClaimResult, NotifyDeps, NotifyPage, SendResult } from '@/lib/notifications/run';
 import { loadVapidKeys } from '@/lib/notifications/server-secrets';
 import { ensureUnsubscribeToken } from '@/lib/notifications/unsubscribe';
+import { PUSH_ENABLED } from '@/lib/notifications/types';
 import { tryAdminClient } from '@/lib/supabase/admin';
 
 type Admin = NonNullable<ReturnType<typeof tryAdminClient>>;
@@ -493,7 +494,7 @@ export async function createNotifyDeps(admin: Admin | null): Promise<NotifyDeps 
   if (!admin) return null;
   const vapid = await loadVapidKeys(admin);
   const provider = emailProvider();
-  const channels = { push: vapid !== null, email: provider !== null };
+  const channels = { push: PUSH_ENABLED && vapid !== null, email: provider !== null };
   if (!channels.push && !channels.email) return null;
   const context: PageContext = {
     devices: new Map(),
@@ -530,7 +531,7 @@ export async function createNotifyDeps(admin: Admin | null): Promise<NotifyDeps 
         return sendEmail ? sendLetter(admin, context, sendEmail, item) : 'stop';
       }
       const devices = context.devices.get(item.userId);
-      if (!vapid || !devices) return 'lost';
+      if (!PUSH_ENABLED || !vapid || !devices) return 'lost';
       const ttl = pushTtlSeconds(item.kind, item.ref, new Date());
       // The run dragged past the end of this matter: say nothing.
       if (ttl <= 0) return 'retry';
