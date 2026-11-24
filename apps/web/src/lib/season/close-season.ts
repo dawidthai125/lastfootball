@@ -19,7 +19,7 @@ export async function closeSeasonIfComplete(
   if (!supabase) return false;
   const { data, error } = await supabase
     .from('clubs')
-    .update({ season_phase: 'offseason' } as never)
+    .update({ season_phase: 'offseason', transfer_window_open: true } as never)
     .eq('id', clubId)
     .eq('season_phase', 'in_season')
     .select('id')

@@ -905,7 +905,22 @@ Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabas
 4. Funkcje RPC tylko dla zalogowanych; `supersede_pending_transfer_offers` tylko dla bazy.
 5. `/jak-grac`, polskie strony błędów, `/status` tylko dla operatora. Z meczu usunięte instrukcje, które nic nie robiły.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D150 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D151 — Pełne zasady meczu i talenty · Owner GO 2026-11-24
+
+1. Silnik ma `MatchState.rules`. Z zasadami: faul może dać kartkę (druga żółta i czerwona zdejmują z boiska), karny albo wolny; spalone, gole po rożnych, kontuzje w meczu, zmęczenie z minutami. Balans bramek i strzałów bez zmian (`match-rules01.test.ts`).
+2. Kontuzjowanego zastępuje od razu najlepszy rezerwowy w ramach 3 zmian; bez zmian drużyna gra w osłabieniu, bez żadnej ławki zawodnik zostaje. Kto zszedł, nie wraca.
+3. Rywal komputerowy i obie strony Ligi ludzi robią zmiany same (`autoSides`). Rywal AI ma ławkę (`seedOpponentBench`), ławki Ligi ludzi są zamrożone w `home_setup`.
+4. Kapitan (osobowość, wiek, talent) i wykonawca stałych fragmentów działają w silniku.
+5. Pauzy i kontuzje po meczu pochodzą z meczu; energia spada według minut. Mecz otwarty wcześniej (kopia bez `rules: 2`, transmisja bez ławek) kończy się na starych zasadach.
+6. Talenty (GDD 7.16): 0–2, stałe z id i pozycji (`talentsOf`), bez zapisu w bazie. Na rynku niewidoczne, bo id powstaje przy zakupie.
+
+### D152 — Świat graczy · Owner GO 2026-11-24
+
+1. Okno transferowe (GDD 12.2): przerwa i początek sezonu do 8. meczu, zima od 11. do 16. meczu ligowego; sezon 1 od 2. meczu. `isTransferWindowOpen`, zapis w `clubs.transfer_window_open`.
+2. Ranking graczy: 30 dni, liga 3/1 razy waga ligi, puchar 4, Liga ludzi 6/2, wyzwania 0, zablokowani poza listą. RPC `player_ranking` tylko dla serwera.
+3. Profil klubu `/clubs/[id]`: nazwa, herb, liga, bilans, 5 meczów, trofea, nazwiska pierwszego składu. Bez kasy, taktyki, umiejętności i właściciela. Polityka prywatności, rozdział 4, uzupełniona.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D152 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

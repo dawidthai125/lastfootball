@@ -7,6 +7,7 @@ import { ECONOMY_THIN } from '@/lib/finance/types';
 import { HUMAN_AWARD_MIN_PLAYED, HUMAN_PRIZES } from '@/lib/league/human-awards';
 import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
 import { TRAINING_THIN } from '@/lib/training/types';
+import { TRANSFER_WINDOWS } from '@/lib/transfers/window';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
 export const metadata: Metadata = {
@@ -38,6 +39,14 @@ export default function HelpPage() {
           <li>
             Na wynik działają umiejętności, energia, forma i morale zawodników oraz Twoje decyzje.
           </li>
+          <li>
+            Czerwona kartka i kontuzja dzieją się w meczu. Po czerwonej grasz w osłabieniu.
+            Kontuzjowanego od razu zastępuje najlepszy rezerwowy, dopóki masz zmiany.
+          </li>
+          <li>
+            Kapitan z charakterem niesie drużynę, najmocniej gdy przegrywa. Wykonawca stałych
+            fragmentów strzela karne i wolne i dośrodkowuje z rożnych.
+          </li>
         </ul>
       </LegalSection>
       <LegalSection title="Kadra">
@@ -45,6 +54,10 @@ export default function HelpPage() {
           <li>Mecz zabiera energię. Wraca ona z każdą nocą i przy regeneracji na treningu.</li>
           <li>
             Zmęczeni częściej łapią kontuzje. Kartki i kontuzje oznaczają pauzę w kolejnych meczach.
+          </li>
+          <li>
+            Część zawodników ma talenty, na przykład Egzekutor albo Żelazne płuca. Widać je w
+            profilu zawodnika.
           </li>
           <li>Trening odblokujesz po {TRAINING_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych.</li>
           <li>Kontrakty są na sezony. Przed ich końcem porozmawiaj z zawodnikiem.</li>
@@ -65,9 +78,11 @@ export default function HelpPage() {
       </LegalSection>
       <LegalSection title="Transfery">
         <p>
-          Rynek otwiera się po {TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych. Kupujesz,
-          sprzedajesz, wypożyczasz i negocjujesz z innymi klubami. Kadra ma najwyżej{' '}
-          {TRANSFERS_THIN.MAX_ROSTER} zawodników.
+          Rynek otwiera się po {TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} meczach ligowych. Okno zamyka
+          się po {TRANSFER_WINDOWS.AUTUMN_CLOSES}. meczu ligowym, zimą jest otwarte od{' '}
+          {TRANSFER_WINDOWS.WINTER_OPENS}. do {TRANSFER_WINDOWS.WINTER_CLOSES}. meczu i wraca w
+          przerwie między sezonami. Kupujesz, sprzedajesz, wypożyczasz i negocjujesz z innymi
+          klubami. Kadra ma najwyżej {TRANSFERS_THIN.MAX_ROSTER} zawodników.
         </p>
       </LegalSection>
       <LegalSection title="Liga i puchar">
@@ -90,7 +105,8 @@ export default function HelpPage() {
             Za miejsca 1–{HUMAN_PRIZES.length} są nagrody, jeśli rozegrasz co najmniej{' '}
             {HUMAN_AWARD_MIN_PLAYED} z 22 kolejek.
           </li>
-          <li>Klub z niewłaściwą nazwą lub nieuczciwą grą zgłosisz w Rywalizacji.</li>
+          <li>W Rankingu zobaczysz najlepszych graczy i profile ich klubów.</li>
+          <li>Klub z niewłaściwą nazwą lub nieuczciwą grą zgłosisz w jego profilu.</li>
         </ul>
       </LegalSection>
       <LegalSection title="Konto">

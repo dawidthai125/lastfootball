@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Table } from '@/components/ui/Table';
 import type { HumanTableRow } from '@/lib/league/human-table';
 
@@ -25,7 +27,7 @@ export function HumanStandings({
           header: 'Klub',
           render: (r) => (
             <span className={r.id === clubId ? 'font-semibold text-[var(--lf-gold)]' : undefined}>
-              {r.name}
+              {r.isBot ? r.name : <Link href={`/clubs/${r.id}`}>{r.name}</Link>}
               {r.isBot ? ' · bot' : ''}
               {r.id === clubId ? ' · Ty' : ''}
             </span>

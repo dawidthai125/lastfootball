@@ -85,8 +85,8 @@ export default function PrivacyPage() {
       </LegalSection>
       <LegalSection title="4. Co widzą inni gracze">
         <p>
-          Nazwę klubu, herb, skład i wyniki. Nie widzą Twojego e-maila. Nie wpisuj danych osobowych
-          w nazwie klubu.
+          Nazwę klubu, herb, datę założenia klubu, ligę, skład, wyniki, trofea i miejsce w rankingu
+          graczy. Nie widzą Twojego e-maila. Nie wpisuj danych osobowych w nazwie klubu.
         </p>
       </LegalSection>
       <LegalSection title="5. Ciasteczka i pamięć przeglądarki">

@@ -117,6 +117,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     injuryMatches: row.injuryMatches,
     morale: typeof row.morale === 'number' ? row.morale : 60,
     personality: row.personality ?? personalityFromId(row.id),
+    ...traits(row),
     setPiece: row.setPiece === true,
     onLoan: row.onLoan === true,
     loanedIn: row.loanedIn === true,

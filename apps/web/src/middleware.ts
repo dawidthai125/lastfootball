@@ -29,6 +29,7 @@ const PROTECTED_PREFIXES = [
   '/matches',
   '/match',
   '/rivals',
+  '/clubs',
   '/training',
   '/academy',
   '/scouting',

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { resolveNavLockLabel } from '@/lib/nav-lock-copy';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
-import { UI_COPY } from '@/lib/ui/copy';
+import { closedWindowSentence } from '@/lib/transfers/window';
 
 import {
   resolveFinanceTransferEntry,
@@ -80,18 +80,18 @@ describe('resolveTransfersClosedSoftLock', () => {
       `Transfery odblokują się po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz ${before}).`,
     );
     expect(copy.title).not.toBe('Okno transferowe zamknięte');
-    expect(copy.reason).not.toBe(UI_COPY.transferWindowClosed);
+    expect(copy.reason).not.toContain('zamknięte');
     expect(TRANSFERS_THIN.UNLOCK_AFTER_PLAYED).toBe(2);
   });
 
   it('keeps the closed-window copy after the unlock', () => {
     expect(resolveTransfersClosedSoftLock(unlock)).toEqual({
       title: 'Okno transferowe zamknięte',
-      reason: UI_COPY.transferWindowClosed,
+      reason: closedWindowSentence(unlock),
     });
     expect(resolveTransfersClosedSoftLock(unlock + 3)).toEqual({
       title: 'Okno transferowe zamknięte',
-      reason: UI_COPY.transferWindowClosed,
+      reason: closedWindowSentence(unlock + 3),
     });
   });
 });

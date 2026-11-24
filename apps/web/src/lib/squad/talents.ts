@@ -112,3 +112,10 @@ export function leadershipOf(input: {
   const age = input.age >= 28 ? 8 : input.age <= 20 ? -8 : 0;
   return Math.max(0, Math.min(100, base + age + (input.talents.includes('przywodca') ? 20 : 0)));
 }
+
+export function captainLabel(leadership: number): string {
+  if (leadership >= 80) return 'bardzo mocno niesie drużynę';
+  if (leadership >= 60) return 'niesie drużynę';
+  if (leadership >= 45) return 'nie zmienia gry drużyny';
+  return 'osłabia drużynę';
+}

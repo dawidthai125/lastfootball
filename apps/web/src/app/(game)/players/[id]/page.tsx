@@ -9,6 +9,7 @@ import {
   PlayerHistory,
   PlayerStats,
   PlayerStatus,
+  PlayerTalents,
 } from '@/components/squad/PlayerDetail';
 import { ShirtNumberForm } from '@/components/squad/ShirtNumberForm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
@@ -53,6 +54,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
       <PlayerActions player={player} />
       <PlayerStatus player={player} />
       <PlayerAttributes player={player} />
+      <PlayerTalents player={player} />
       <div className="lf-sq-detail__context">
         <PlayerContract player={player} season={club.seasonNumber} />
         <PlayerStats totals={totals} season={club.seasonNumber} />

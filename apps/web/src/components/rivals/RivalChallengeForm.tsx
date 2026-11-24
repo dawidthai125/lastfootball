@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Link from 'next/link';
 
 import { createRivalChallenge, type RivalChallengeState } from '@/lib/rivals/actions';
 
@@ -29,7 +30,7 @@ export function RivalChallengeForm({
     >
       <input type="hidden" name="rivalId" value={rivalId} />
       <span>
-        {rivalName} ({rivalShort})
+        <Link href={`/clubs/${rivalId}`}>{rivalName}</Link> ({rivalShort})
       </span>
       <button type="submit" disabled={pending}>
         {pending ? 'Zapisuję…' : 'Wyzwij'}

@@ -307,12 +307,11 @@ export async function completeFixture(
     await payFirstSponsorBase(clubId, clubRow.season_number ?? 1);
   }
 
-  // Also open window if already played earlier and threshold now met (idempotent).
-  await ensureTransferWindow(supabase, clubId);
-
   // Season End Thin: after MD22 → Season Closed → OFFSEASON (D70 · D78).
   const fixtures = await listClubFixtures(clubId);
   await closeSeasonIfComplete(clubId, fixtures);
+  // After the phase, which decides the window too (D152). Idempotent.
+  await ensureTransferWindow(supabase, clubId);
 
   revalidatePath('/', 'layout');
   if (formData.get('stay') === '1') {

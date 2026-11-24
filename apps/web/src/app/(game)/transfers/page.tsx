@@ -13,6 +13,7 @@ import { createClient } from '@/lib/supabase/server';
 import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
 import { fetchLiveListings } from '@/lib/transfers/fetch-live-listings';
+import { windowClosesSentence } from '@/lib/transfers/window';
 import { resolveTransferMarket } from '@/lib/transfers';
 
 /**
@@ -57,7 +58,13 @@ export default async function TransfersPage() {
     <div>
       <SectionHeader
         title="Transfery"
-        subtitle={market.windowOpen ? 'Centrum decyzji transferowych' : 'Okno zamknięte'}
+        subtitle={
+          market.windowOpen
+            ? ['Okno otwarte.', windowClosesSentence(playedCount, club.seasonPhase === 'offseason')]
+                .filter(Boolean)
+                .join(' ')
+            : 'Okno zamknięte'
+        }
       />
       <IncomingLoanOffers offers={loanOffers} />
       <TransfersView
