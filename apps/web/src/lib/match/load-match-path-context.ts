@@ -5,6 +5,7 @@ import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { getFixtureByIdForClub, listClubFixtures } from '@/lib/fixtures';
+import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { buildRivalCardLines, lastRivalResult, type RivalCardInput } from '@/lib/match/rival-card';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -127,7 +128,9 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
     meta:
       dto.competition === 'cup'
         ? `Puchar · ${dto.matchday === 104 ? 'Neutralny' : dto.isHome ? 'U siebie' : 'Wyjazd'}`
-        : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
+        : dto.competition === 'human'
+          ? `Liga ludzi · Kolejka ${humanRoundFromFixture(dto.matchday) ?? dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`
+          : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
     firstMatch: false,
     rivalLines: await rivalLinesFor(club.id, dto.opponentClubId),
   };

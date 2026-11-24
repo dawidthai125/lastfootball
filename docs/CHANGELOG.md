@@ -18,6 +18,15 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Podsumowanie po meczu
+
+### Product
+
+- Po zapisie wyniku ekran meczu zostaje, więc menedżer widzi podsumowanie, nagrodę i kibiców. Rozegrany mecz otwarty na nowo prowadzi do swojego wyniku.
+- Ekran VS w Lidze ludzi pokazuje numer kolejki zamiast technicznego 301.
+
+---
+
 ## [2026-11-24] — Zawodnicy po stronie serwera i odpoczynek (D128)
 
 ### Product
