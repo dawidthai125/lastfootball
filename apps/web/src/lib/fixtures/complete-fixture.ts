@@ -23,6 +23,7 @@ import { applyMatchSquadTruth, groupsFromSkill, matchWageDue } from '@/lib/squad
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
+import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
 import { parseManagerLog } from '@/lib/match/manager-commands';
@@ -107,7 +108,8 @@ export async function completeFixture(
   const seniors = filterSeniorPlayers(players);
   const wageDue = matchWageDue(seniors);
 
-  const kickoff = await loadKickoff(formData.get('kickoffId'), row.id, clubId);
+  const lookup = await loadKickoff(row.id, clubId);
+  const kickoff = lookup.kind === 'found' ? lookup.snapshot : null;
 
   let score: { home: number; away: number };
   if (row.status === 'played' && row.home_score != null && row.away_score != null) {
@@ -136,6 +138,19 @@ export async function completeFixture(
       if (blocked) return { error: blocked };
     }
     if (row.status !== 'upcoming') return { error: 'Ten mecz nie jest jeszcze otwarty.' };
+
+    if (row.competition !== 'human') {
+      if (lookup.kind === 'error') {
+        return { error: 'Nie udało się odczytać początku meczu. Spróbuj ponownie.' };
+      }
+      if (lookup.kind === 'expired') {
+        return { error: 'Mecz trwał zbyt długo. Wejdź w mecz jeszcze raz.' };
+      }
+      const gone = kickoff ? leftDuringMatch(kickoff, seniors) : null;
+      if (gone) {
+        return { error: `${gone} odszedł w trakcie meczu. Wejdź w mecz jeszcze raz.` };
+      }
+    }
 
     const scored =
       row.competition === 'human'
@@ -241,14 +256,15 @@ export async function completeFixture(
   const dev = await applyMatchDevelopment(supabase, {
     clubId,
     matchKey: row.id,
-    activePlayers: players,
+    // Growth goes to the players who played, not to a lineup changed meanwhile.
+    activePlayers: xiIds ? players.map((p) => ({ ...p, starter: xiIds.has(p.id) })) : players,
     truthById,
   });
   if (!dev.ok) {
     return { error: dev.error };
   }
   if (settled.applied) await recordFanMood(clubId, result);
-  await clearKickoffs(row.id, clubId);
+  await clearKickoffs(clubId);
 
   // Also open window if already played earlier and threshold now met (idempotent).
   await ensureTransferWindow(supabase, clubId);

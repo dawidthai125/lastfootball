@@ -62,6 +62,19 @@ function conditionForOpponent(p: RosterPlayerSeed) {
   return conditionFromSeed(p);
 }
 
+/** AI rival of this fixture. Also frozen in the kickoff copy (D130). */
+export function resolveOpponentXi(
+  club: Pick<ClubDto, 'leagueTier'>,
+  fixture: Pick<FixtureDto, 'competition' | 'opponentClubId'>,
+): readonly RosterPlayerSeed[] {
+  return seedOpponentSquad(
+    fixture.opponentClubId,
+    fixture.competition === 'cup'
+      ? cupOpponentTier(fixture.opponentClubId, club.leagueTier)
+      : club.leagueTier,
+  );
+}
+
 /**
  * League fixture → MatchSession.
  * Our XI skills from DB (`players.skill`); AI from League Strength Profile (tier).
@@ -78,13 +91,7 @@ export function createSessionFromLeagueFixture(
   const formation: FormationCode = shared ? '4-4-2' : ourFormation;
   const our = orderForFormation(ourXi, formation);
   const cup = fixture.competition === 'cup';
-  const theirSource =
-    theirXi && theirXi.length === 11
-      ? theirXi
-      : seedOpponentSquad(
-          fixture.opponentClubId,
-          cup ? cupOpponentTier(fixture.opponentClubId, club.leagueTier) : club.leagueTier,
-        );
+  const theirSource = theirXi && theirXi.length === 11 ? theirXi : resolveOpponentXi(club, fixture);
   const their = orderForFormation(theirSource, '4-4-2');
   const homeFormation: FormationCode = fixture.isHome ? formation : '4-4-2';
   const awayFormation: FormationCode = fixture.isHome ? '4-4-2' : formation;

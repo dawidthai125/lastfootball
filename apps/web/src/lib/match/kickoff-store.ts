@@ -5,56 +5,57 @@ import {
 } from '@/lib/match/kickoff-snapshot';
 import { tryAdminClient } from '@/lib/supabase/admin';
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/** Null when it cannot be stored; the save then falls back to the stored squad. */
-export async function storeKickoff(snapshot: KickoffSnapshot): Promise<string | null> {
-  const admin = tryAdminClient();
-  if (!admin) return null;
-  // Abandoned starts of this match are useless once they are too old to finish.
-  await admin
-    .from('match_kickoffs' as never)
-    .delete()
-    .eq('fixture_id', snapshot.fixture.id)
-    .lt('started_at', new Date(Date.now() - KICKOFF_VALID_MS).toISOString());
-  const { data, error } = await admin
-    .from('match_kickoffs' as never)
-    .insert({
-      fixture_id: snapshot.fixture.id,
-      club_id: snapshot.club.id,
-      snapshot,
-    } as never)
-    .select('id')
-    .maybeSingle();
-  return error || !data ? null : (data as { id: string }).id;
+/**
+ * One open match per club: opening a match replaces the copy before it. The client never
+ * names a copy, so it cannot choose between starts or opt out.
+ */
+export async function storeKickoff(snapshot: KickoffSnapshot): Promise<void> {
+  const { error } =
+    (await tryAdminClient()
+      ?.from('match_kickoffs' as never)
+      .upsert(
+        {
+          club_id: snapshot.club.id,
+          fixture_id: snapshot.fixture.id,
+          started_at: new Date().toISOString(),
+          snapshot,
+        } as never,
+        { onConflict: 'club_id' },
+      )) ?? {};
+  if (error) console.error('storeKickoff failed', { fixtureId: snapshot.fixture.id });
 }
 
+export type KickoffLookup =
+  | { readonly kind: 'found'; readonly snapshot: KickoffSnapshot }
+  /** Never stored, or another match was opened since: the stored squad counts. */
+  | { readonly kind: 'none' }
+  | { readonly kind: 'expired' }
+  | { readonly kind: 'error' };
+
 export async function loadKickoff(
-  kickoffId: unknown,
   fixtureId: string,
   clubId: string,
   now: Date = new Date(),
-): Promise<KickoffSnapshot | null> {
-  if (typeof kickoffId !== 'string' || !UUID.test(kickoffId)) return null;
+): Promise<KickoffLookup> {
   const admin = tryAdminClient();
-  if (!admin) return null;
+  if (!admin) return { kind: 'none' };
   const { data, error } = await admin
     .from('match_kickoffs' as never)
-    .select('snapshot')
-    .eq('id', kickoffId)
-    .eq('fixture_id', fixtureId)
+    .select('fixture_id, started_at, snapshot')
     .eq('club_id', clubId)
-    .gte('started_at', new Date(now.getTime() - KICKOFF_VALID_MS).toISOString())
     .maybeSingle();
-  if (error || !data) return null;
-  return readKickoffSnapshot((data as { snapshot: unknown }).snapshot, fixtureId, clubId);
+  if (error) return { kind: 'error' };
+  const row = data as { fixture_id: string; started_at: string; snapshot: unknown } | null;
+  if (!row || row.fixture_id !== fixtureId) return { kind: 'none' };
+  if (now.getTime() - Date.parse(row.started_at) > KICKOFF_VALID_MS) return { kind: 'expired' };
+  const snapshot = readKickoffSnapshot(row.snapshot, fixtureId, clubId);
+  return snapshot ? { kind: 'found', snapshot } : { kind: 'error' };
 }
 
-/** The result is stored; the copies are no longer needed. */
-export async function clearKickoffs(fixtureId: string, clubId: string): Promise<void> {
+/** Any settled match ends the open one, so no start survives another match. */
+export async function clearKickoffs(clubId: string): Promise<void> {
   await tryAdminClient()
     ?.from('match_kickoffs' as never)
     .delete()
-    .eq('fixture_id', fixtureId)
     .eq('club_id', clubId);
 }

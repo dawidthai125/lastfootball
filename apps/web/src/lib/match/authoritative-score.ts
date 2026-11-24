@@ -47,7 +47,7 @@ export async function authoritativeManagerScore(
       club,
       dto,
       resolveStartingXi(players),
-      resolveMatchBench(players),
+      resolveMatchBench(players, today),
       parseOurFormation(typeof shape === 'string' ? shape : null),
       rival?.xi ?? null,
     );

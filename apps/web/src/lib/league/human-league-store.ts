@@ -476,7 +476,7 @@ export async function loadHumanLeagueCard(
     return cardFrom(club, table, {
       round,
       opponentName: opponent.name,
-      windowSentence: kickoffWindowSentence(window),
+      windowSentence: null,
       note: locked.error,
     });
   }

@@ -17,7 +17,7 @@ export type KickoffSnapshot = {
 };
 
 /** A started match can be finished for this long; later the stored squad counts again. */
-export const KICKOFF_VALID_MS = 3 * 60 * 60 * 1000;
+export const KICKOFF_VALID_MS = 6 * 60 * 60 * 1000;
 
 function isRoster(value: unknown): value is readonly RosterPlayerSeed[] {
   return (
@@ -58,4 +58,13 @@ export function sessionFromKickoff(s: KickoffSnapshot): MatchSession {
     s.formation,
     s.theirXi,
   );
+}
+
+/** Name of a player who started or sat on the bench and is no longer available, or null. */
+export function leftDuringMatch(
+  s: KickoffSnapshot,
+  seniors: readonly { readonly id: string; readonly onLoan?: boolean }[],
+): string | null {
+  const here = new Set(seniors.filter((p) => p.onLoan !== true).map((p) => p.id));
+  return [...s.ourXi, ...s.ourBench].find((p) => !here.has(p.id))?.name ?? null;
 }

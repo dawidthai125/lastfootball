@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import type { ClubDto } from '@/lib/club/types';
-import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
+import { createSessionFromLeagueFixture, resolveOpponentXi } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
-import { readKickoffSnapshot, sessionFromKickoff } from '@/lib/match/kickoff-snapshot';
+import {
+  leftDuringMatch,
+  readKickoffSnapshot,
+  sessionFromKickoff,
+} from '@/lib/match/kickoff-snapshot';
 import { replayManagerMatch } from '@/lib/match/replay-manager-match';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 
@@ -42,6 +46,28 @@ describe('kickoff snapshot', () => {
     const live = createSessionFromLeagueFixture(club, fixture, xi, [], '4-3-3', null);
     expect(replayManagerMatch(sessionFromKickoff(stored!), 'away', log)).toEqual(
       replayManagerMatch(live, 'away', log),
+    );
+  });
+
+  it('names a player who was sold or loaned out meanwhile', () => {
+    const stored = readKickoffSnapshot(JSON.parse(JSON.stringify(snapshot)), 'fx-1', 'c1')!;
+    const squad = xi.map((p) => ({ id: p.id, onLoan: false }));
+    expect(leftDuringMatch(stored, squad)).toBeNull();
+    expect(leftDuringMatch(stored, squad.slice(1))).toBe('P0');
+    expect(
+      leftDuringMatch(
+        stored,
+        squad.map((p) => ({ ...p, onLoan: p.id === 'p-3' })),
+      ),
+    ).toBe('P3');
+  });
+
+  it('freezes the AI rival without changing the match', { timeout: 60_000 }, () => {
+    const frozen = { ...snapshot, theirXi: resolveOpponentXi(club, fixture) };
+    const stored = readKickoffSnapshot(JSON.parse(JSON.stringify(frozen)), 'fx-1', 'c1')!;
+    const live = createSessionFromLeagueFixture(club, fixture, xi, [], '4-3-3', null);
+    expect(replayManagerMatch(sessionFromKickoff(stored), 'away', [])).toEqual(
+      replayManagerMatch(live, 'away', []),
     );
   });
 
