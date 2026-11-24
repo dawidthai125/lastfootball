@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { signUpWithPassword } from '@/lib/auth/actions';
 import { TurnstileField } from '@/components/auth/TurnstileField';
+import { LEGAL } from '@/lib/legal';
 import { Checkbox, Field, Input } from '@/components/ui/FormControls';
 
 export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
@@ -51,6 +52,15 @@ export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | 
       {turnstileSiteKey ? (
         <TurnstileField siteKey={turnstileSiteKey} resetKey={state.error ?? ''} />
       ) : null}
+
+      <div className="lf-auth-form__terms">
+        <Checkbox
+          name="age"
+          required
+          disabled={pending}
+          label={`Mam ukończone ${LEGAL.minAge} lat`}
+        />
+      </div>
 
       <div className="lf-auth-form__terms">
         <Checkbox name="terms" required disabled={pending} label="Akceptuję" />

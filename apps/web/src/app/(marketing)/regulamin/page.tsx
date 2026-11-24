@@ -27,7 +27,7 @@ export default function TermsPage() {
       <LegalSection title="3. Czego potrzebujesz">
         <p>
           Aktualnej przeglądarki, połączenia z internetem i adresu e-mail. Grać mogą osoby, które
-          ukończyły {LEGAL.minAge} lat.
+          ukończyły {LEGAL.minAge} lat. Potwierdzasz to przy zakładaniu konta.
         </p>
       </LegalSection>
       <LegalSection title="4. Konto">
