@@ -26,12 +26,18 @@ export default async function TransfersPage() {
 
   const supabase = await createClient();
   await settleDueAuctions();
-  const [activePlayers, liveListings, h2hOffers, auctions, fixtures] = await Promise.all([
+  const [activePlayers, liveListings, h2hOffers, auctions, fixtures, bought] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),
     fetchLiveH2hOffers(supabase, club.id),
     loadOpenAuctions(),
     ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase }),
+    supabase
+      .from('transfer_deals')
+      .select('market_id')
+      .eq('club_id', club.id)
+      .eq('kind', 'buy')
+      .not('market_id', 'is', null),
   ]);
   const playedCount = unlockPlayedCount(
     countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
@@ -46,6 +52,9 @@ export default async function TransfersPage() {
     liveListings,
     incomingLiveOffers: h2hOffers.incoming,
     outgoingLiveOffers: h2hOffers.outgoing,
+    boughtMarketIds: new Set(
+      ((bought.data ?? []) as { market_id: string }[]).map((row) => row.market_id),
+    ),
   });
 
   const loanOffers = resolveIncomingLoanOffers({

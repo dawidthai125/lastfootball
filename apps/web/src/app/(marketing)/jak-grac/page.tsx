@@ -82,7 +82,8 @@ export default function HelpPage() {
           się po {TRANSFER_WINDOWS.AUTUMN_CLOSES}. meczu ligowym, zimą jest otwarte od{' '}
           {TRANSFER_WINDOWS.WINTER_OPENS}. do {TRANSFER_WINDOWS.WINTER_CLOSES}. meczu i wraca w
           przerwie między sezonami. Kupujesz, sprzedajesz, wypożyczasz i negocjujesz z innymi
-          klubami. Kadra ma najwyżej {TRANSFERS_THIN.MAX_ROSTER} zawodników.
+          klubami. Kadra ma najwyżej {TRANSFERS_THIN.MAX_ROSTER} zawodników. Licytacja trwa 24
+          godziny od pierwszej oferty i rozlicza się sama.
         </p>
       </LegalSection>
       <LegalSection title="Liga i puchar">
@@ -101,9 +102,10 @@ export default function HelpPage() {
             pensji.
           </li>
           <li>
-            Liga ludzi: 12 klubów, wspólny początek o 18:00. Taktyka jest zamknięta, decyduje skład.
-            Za miejsca 1–{HUMAN_PRIZES.length} są nagrody, jeśli rozegrasz co najmniej{' '}
-            {HUMAN_AWARD_MIN_PLAYED} z 22 kolejek.
+            Liga ludzi: 12 klubów, wspólny początek o 18:00. Gdy przybywa graczy, kolejne ligi
+            otwierają się same. Taktyka jest zamknięta, decyduje skład. Za miejsca 1–
+            {HUMAN_PRIZES.length} są nagrody, jeśli rozegrasz co najmniej {HUMAN_AWARD_MIN_PLAYED} z
+            22 kolejek.
           </li>
           <li>W Rankingu zobaczysz najlepszych graczy i profile ich klubów.</li>
           <li>Klub z niewłaściwą nazwą lub nieuczciwą grą zgłosisz w jego profilu.</li>

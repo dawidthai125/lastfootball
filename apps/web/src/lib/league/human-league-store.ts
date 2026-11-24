@@ -719,9 +719,11 @@ export async function loadHumanLeagueCard(
     return card({
       note: playedHumanToday
         ? 'Kolejka ludzi na dziś już rozegrana.'
-        : today > kickoffDate(table.seasonKey, HUMAN_ROUND_COUNT)
-          ? `Sezon ${table.cycle} rozegrany. Nowy sezon od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}, wolne miejsca biorą nowe kluby.`
-          : 'Sezon ligi ludzi nie ma teraz meczu do rozegrania.',
+        : today < table.seasonKey
+          ? `Liga startuje ${dayLabel(table.seasonKey)} o 18:00. Do tego czasu mogą dołączyć kolejne kluby.`
+          : today > kickoffDate(table.seasonKey, HUMAN_ROUND_COUNT)
+            ? `Sezon ${table.cycle} rozegrany. Nowy sezon od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}, wolne miejsca biorą nowe kluby.`
+            : 'Sezon ligi ludzi nie ma teraz meczu do rozegrania.',
     });
   }
 

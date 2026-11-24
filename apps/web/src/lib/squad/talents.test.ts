@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { boughtPlayerId } from '@/lib/transfers/seed-catalogue';
+import { resolveTransferMarket } from '@/lib/transfers/resolve-transfer-market';
+
 import { applyMatchSquadTruth, banFor, groupsFromSkill, type SquadTruthPlayer } from './truth';
 import { leadershipOf, TALENTS, talentsOf, withTalentSkills, type Talent } from './talents';
 
@@ -105,5 +108,19 @@ describe('squad after a full-rules match (D151)', () => {
     const banned = ids.filter((id) => banFor('yellow', id, 'm3') === 1).length;
     expect(banned / ids.length).toBeCloseTo(0.25, 1);
     expect(banFor(undefined, 'x', 'm3')).toBe(0);
+  });
+});
+
+describe('talents on the market (D153)', () => {
+  it('are the ones the bought player has, and a bought row is gone', () => {
+    const clubId = '1be439c0-9530-400a-a437-ceaccf61d482';
+    const input = { clubId, cashBalance: 0, transferWindowOpen: true, activePlayers: [] };
+    const all = resolveTransferMarket(input).listings;
+    const row = all.find((l) => l.talents.length > 0)!;
+    expect(boughtPlayerId(row.marketId)).toMatch(/^t-1be439c0-m\d+$/);
+    expect(new Set(all.map((l) => boughtPlayerId(l.marketId))).size).toBe(all.length);
+    const left = resolveTransferMarket({ ...input, boughtMarketIds: new Set([row.marketId]) });
+    expect(left.listings.map((l) => l.marketId)).not.toContain(row.marketId);
+    expect(left.listings).toHaveLength(all.length - 1);
   });
 });
