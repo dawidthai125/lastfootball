@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { DeleteAccountForm } from '@/components/account/DeleteAccountForm';
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { SignOutForm } from '@/components/auth/SignOutForm';
 import { NotificationSettingsPanel } from '@/components/notifications/NotificationSettingsPanel';
@@ -49,6 +50,9 @@ export default async function SettingsPage() {
           Głos jest z przeglądarki, język pl-PL. Czyta tylko nowe zdania po włączeniu. Starych zdań
           i podań nie czyta.
         </p>
+      </Panel>
+      <Panel title="Usunięcie konta" className="mt-3">
+        <DeleteAccountForm clubName={club.name} />
       </Panel>
     </div>
   );

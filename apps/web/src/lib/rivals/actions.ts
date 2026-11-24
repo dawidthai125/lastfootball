@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { env } from '@/config/env';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { nextChallengeMatchday } from '@/lib/rivals/matchday';
+import { openChallenge } from '@/lib/rivals/open-challenge';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
@@ -100,49 +100,12 @@ export async function createRivalChallenge(
     .eq('rival_club_id', rival.id)
     .eq('status', 'open')
     .maybeSingle();
-  const openChallenge = existing as { fixture_id: string } | null;
-  if (openChallenge?.fixture_id) redirect(`/match/${openChallenge.fixture_id}`);
+  const alreadyOpen = existing as { fixture_id: string } | null;
+  if (alreadyOpen?.fixture_id) redirect(`/match/${alreadyOpen.fixture_id}`);
 
-  const { data: days } = await supabase
-    .from('fixtures')
-    .select('matchday')
-    .eq('club_id', club.id)
-    .eq('competition', 'challenge');
-  const matchday = nextChallengeMatchday(
-    ((days ?? []) as { matchday: number }[]).map((row) => row.matchday),
-  );
-
-  const admin = createAdminClient();
-  const { data: fixture, error: fixtureErr } = await admin
-    .from('fixtures')
-    .insert({
-      club_id: club.id,
-      matchday,
-      competition: 'challenge',
-      opponent_club_id: rival.id,
-      is_home: true,
-      status: 'upcoming',
-    } as never)
-    .select('id')
-    .single();
-  const created = fixture as { id: string } | null;
-  if (fixtureErr || !created) return { error: 'Nie udało się utworzyć wyzwania.' };
-
-  const { error: challengeErr } = await supabase.from('rival_challenges').insert({
-    fixture_id: created.id,
-    challenger_club_id: club.id,
-    challenger_name: club.name,
-    challenger_short: club.shortName,
-    rival_club_id: rival.id,
-    rival_name: rival.name,
-    rival_short: rival.shortName,
-    status: 'open',
-  } as never);
-  if (challengeErr) {
-    await admin.from('fixtures').delete().eq('id', created.id).eq('club_id', club.id);
-    return { error: 'Nie udało się utworzyć wyzwania.' };
-  }
+  const fixtureId = await openChallenge(createAdminClient(), club, rival);
+  if (!fixtureId) return { error: 'Nie udało się utworzyć wyzwania.' };
 
   revalidatePath('/rivals');
-  redirect(`/match/${created.id}`);
+  redirect(`/match/${fixtureId}`);
 }

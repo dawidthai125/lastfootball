@@ -9,6 +9,8 @@ import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
 import { matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
+import { resolveStarterPath } from '@/lib/starter/steps';
+import { loadStarterProgress } from '@/lib/starter/store';
 import { contractPreview } from '@/lib/season/contract-expiry';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
@@ -170,6 +172,10 @@ export default async function HubPage() {
         }
       : null,
   );
+  const starterPath =
+    phase === 'SEASON' && club.seasonNumber <= 2
+      ? resolveStarterPath(await loadStarterProgress(club.id))
+      : null;
   const playerRow = table.rows.find((row) => row.isPlayer);
   const seasonGoalLine = resolveSeasonGoalProgressLine({
     position: playerRow?.position ?? null,
@@ -195,6 +201,7 @@ export default async function HubPage() {
       retirementFarewell={retirementFarewell}
       cupLink={cupLink}
       fanLabel={fanLabel}
+      starterPath={starterPath}
       matchesBlocked={emailGate.matchesBlocked}
       lastPlayedAt={latestPlayedAt(fixtures)}
       lineupBlocked={lineupBlocked}

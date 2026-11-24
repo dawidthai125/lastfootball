@@ -328,6 +328,8 @@ async function snapshotXi(
         .is('departed_at', null)
     : full;
   if (result.error || !result.data) return { error: 'Nie mogę odczytać składu.' };
+  // The account was deleted: its seat plays on like a bot until the season ends.
+  if (result.data.length === 0) return [...seedOpponentSquad(clubId, 'iv')];
   try {
     // A rival's injured starter must not cancel the match for both clubs.
     const rows = repairLineup(

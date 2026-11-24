@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { CREST_TEMPLATES } from '@/lib/club/catalog';
@@ -9,6 +10,8 @@ import { validateClubIdentity } from '@/lib/club/validation';
 import { env } from '@/config/env';
 import { grantEmailConfirmBonus } from '@/lib/auth/email-confirm';
 import { ECONOMY_THIN } from '@/lib/finance';
+import { INVITE_COOKIE } from '@/lib/invites/code';
+import { acceptInvite } from '@/lib/invites/store';
 import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
 import { tryAdminClient, serverDb } from '@/lib/supabase/admin';
@@ -104,6 +107,16 @@ export async function createClub(
       ?.from('club_sponsor_contracts')
       .insert(buildStarterSponsorContractInsert(clubId, 1) as never);
     await grantEmailConfirmBonus(user.id);
+    const jar = await cookies();
+    const invite = jar.get(INVITE_COOKIE)?.value;
+    if (invite) {
+      await acceptInvite(invite, {
+        id: clubId,
+        name: parsed.value.name,
+        shortName: parsed.value.shortName,
+      });
+      jar.delete(INVITE_COOKIE);
+    }
   }
 
   // Clear legacy smoke/dev metadata flag if present

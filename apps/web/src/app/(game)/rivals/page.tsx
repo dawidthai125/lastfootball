@@ -1,9 +1,13 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { InvitePanel } from '@/components/rivals/InvitePanel';
 import { RivalChallengeForm } from '@/components/rivals/RivalChallengeForm';
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { env } from '@/config/env';
+import { invitePath } from '@/lib/invites/code';
+import { loadInvite } from '@/lib/invites/store';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listRivalChallenges, listRivalClubs } from '@/lib/rivals/actions';
 
@@ -12,6 +16,14 @@ export default async function RivalsPage() {
   if (!club) redirect('/welcome');
 
   const [rivals, challenges] = await Promise.all([listRivalClubs(), listRivalChallenges(club.id)]);
+
+  const mine = await loadInvite(club.id);
+  const invite = mine
+    ? {
+        link: `${env.appUrl ?? 'https://www.lastfootball.pl'}${invitePath(mine.code)}`,
+        used: mine.used,
+      }
+    : null;
 
   return (
     <div>
@@ -60,6 +72,7 @@ export default async function RivalsPage() {
           </ul>
         )}
       </Panel>
+      {invite ? <InvitePanel link={invite.link} used={invite.used} /> : null}
     </div>
   );
 }
