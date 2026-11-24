@@ -27,6 +27,7 @@ import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
 import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
+import { toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
 import { parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
@@ -120,6 +121,7 @@ export async function completeFixture(
   const kickoff = lookup.kind === 'found' ? lookup.snapshot : null;
 
   let score: { home: number; away: number };
+  let lines: readonly MatchPlayerLine[] = [];
   if (row.status === 'played' && row.home_score != null && row.away_score != null) {
     // A repeated save: the stored result stands, only unfinished steps run again.
     score = { home: row.home_score, away: row.away_score };
@@ -173,6 +175,7 @@ export async function completeFixture(
         : await authoritativeManagerScore(row.id, players, managerLog, shape, today, kickoff);
     if ('error' in scored) return scored;
     score = { home: scored.home, away: scored.away };
+    lines = scored.players;
   }
 
   const { home, away } = score;
@@ -197,7 +200,7 @@ export async function completeFixture(
       : 0;
 
   // Result, cash, ledger and the next fixture land together or not at all.
-  const settled = await settleFixture(admin, {
+  const settlement = {
     p_fixture_id: row.id,
     p_club_id: clubId,
     p_home: home,
@@ -209,7 +212,12 @@ export async function completeFixture(
     p_wage_label: WAGES_LABEL,
     p_wage_short_label: WAGES_SHORT_LABEL,
     ...(friendly ? { p_upkeep_by_level: [] } : {}),
-  });
+  };
+  const settled = await settleFixture(
+    admin,
+    settlement,
+    toStoredPlayers(lines, row.is_home ? 'home' : 'away'),
+  );
   if (!settled) {
     console.error('completeFixture: settlement failed', { fixtureId: row.id });
     return { error: 'Nie udało się rozliczyć meczu. Spróbuj ponownie.' };

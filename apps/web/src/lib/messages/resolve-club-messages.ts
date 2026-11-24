@@ -3,6 +3,8 @@
  * Derive only from domain facts · no DB · no workflow · no second offer process.
  */
 
+import type { MatchEventMessage } from '@/lib/messages/match-events';
+
 export type ClubMessageKind = 'system' | 'offer_brief';
 
 export type ClubMessagePriority = 'decision' | 'info';
@@ -76,6 +78,8 @@ export type ResolveClubMessagesInput = {
   readonly academyAgeNote?: string | null;
   /** Last season of a contract, and contracts that ended today (D139). */
   readonly contractNotes?: readonly string[];
+  /** Matches other clubs played with ours (D143) — REUSE resolveMatchEvents. */
+  readonly matchEvents?: readonly MatchEventMessage[];
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -168,6 +172,10 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       href: '/messages',
       priority: 'decision',
     });
+  }
+
+  for (const event of input.matchEvents ?? []) {
+    items.push({ ...event, kind: 'system', priority: 'info' });
   }
 
   if (input.wageNote) {

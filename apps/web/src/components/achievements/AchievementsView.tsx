@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { AchievementCategory, ClubAchievementsDto } from '@/lib/achievements';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -30,7 +32,13 @@ function formatOccurredAt(value: string | null): string | null {
  * Achievements history — LFE-ACHIEVEMENTS-01 Information Thin.
  * Read-only derive view; no claim / XP / score.
  */
-export function AchievementsView({ achievements }: { achievements: ClubAchievementsDto }) {
+export function AchievementsView({
+  achievements,
+  children,
+}: {
+  achievements: ClubAchievementsDto;
+  children?: ReactNode;
+}) {
   const { milestones } = achievements;
   const onlyFounded = milestones.length === 1 && milestones[0]?.id === 'club_founded';
 
@@ -42,6 +50,9 @@ export function AchievementsView({ achievements }: { achievements: ClubAchieveme
         <p className="lf-ach__subtitle">{UI_COPY.achievementsSubtitle}</p>
       </header>
 
+      {children}
+
+      <h2 className="lf-ach__section">Kamienie milowe</h2>
       {onlyFounded ? <p className="lf-ach__hint">{UI_COPY.achievementsEmptyHint}</p> : null}
 
       <ol className="lf-ach__list" aria-label={UI_COPY.achievementsTitle}>

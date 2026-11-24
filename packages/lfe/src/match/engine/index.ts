@@ -19,7 +19,11 @@ export {
 export type { MatchEngineEmit } from './resolve';
 export {
   attributePlayerForEvent,
+  ASSIST_SHARE,
+  assistWeight,
   attributeAssistForGoal,
+  goalWeight,
+  pickByWeight,
   stableEventKindHash,
 } from './attribute-player';
 export type { AttributeEventKind } from './attribute-player';

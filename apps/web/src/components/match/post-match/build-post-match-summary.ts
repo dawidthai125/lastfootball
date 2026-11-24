@@ -389,8 +389,14 @@ function humanize(
       return 'Koniec połowy.';
     case 'MATCH_END':
       return 'Koniec meczu.';
-    case 'GOAL':
-      return `Gol! ${team}.`;
+    case 'GOAL': {
+      const payload = (e.payload ?? {}) as { playerId?: string; assistPlayerId?: string };
+      const named = (id?: string) => matchState.players.find((player) => player.id === id)?.name;
+      const scorer = named(payload.playerId);
+      const assist = named(payload.assistPlayerId);
+      if (!scorer) return `Gol! ${team}.`;
+      return `Gol! ${team}: ${scorer}${assist ? `, asysta ${assist}` : ''}.`;
+    }
     case 'SHOT':
       return `Strzał. ${team}.`;
     case 'ATTACK':

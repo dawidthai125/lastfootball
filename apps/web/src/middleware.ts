@@ -43,6 +43,7 @@ const PROTECTED_PREFIXES = [
   '/players',
   '/player',
   '/rankings',
+  '/stats',
 ];
 
 function startsWithAny(pathname: string, prefixes: string[]): boolean {

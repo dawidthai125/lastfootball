@@ -7,11 +7,13 @@ import {
   PlayerContract,
   PlayerHero,
   PlayerHistory,
+  PlayerStats,
   PlayerStatus,
 } from '@/components/squad/PlayerDetail';
 import { ShirtNumberForm } from '@/components/squad/ShirtNumberForm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { getSquadPlayerById, resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
+import { loadPlayerTotals } from '@/lib/stats/store';
 import { listClubPlayers } from '@/lib/squad/get-players';
 
 type PageProps = {
@@ -33,6 +35,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
     throw e;
   }
   if (!player) notFound();
+  const totals = await loadPlayerTotals(club.id, { playerId: player.id });
 
   return (
     <div className="lf-sq-detail" data-pti="PTI-01-SQD-03-M" data-lf-impl="LFE-UI-IMPL-01">
@@ -52,6 +55,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
       <PlayerAttributes player={player} />
       <div className="lf-sq-detail__context">
         <PlayerContract player={player} season={club.seasonNumber} />
+        <PlayerStats totals={totals} season={club.seasonNumber} />
         <PlayerHistory player={player} />
       </div>
     </div>

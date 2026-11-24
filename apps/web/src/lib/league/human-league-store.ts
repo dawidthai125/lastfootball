@@ -40,6 +40,11 @@ import {
   type HumanTableRow,
 } from '@/lib/league/human-table';
 import { parseHomeSetup, type HumanHomeSetup } from '@/lib/league/human-home-setup';
+import { resolveHumanScorers } from '@/lib/league/human-scorers';
+import type { ScorerRow } from '@/lib/stats/scorers';
+import { humanAwards } from '@/lib/league/human-awards';
+import { parsePlayerLines } from '@/lib/match/match-players';
+import type { ReplayedMatch } from '@/lib/match/replay-manager-match';
 import { finishSharedSession } from './human-play';
 
 const PLAYER_SELECT =
@@ -85,6 +90,7 @@ type BroadcastRow = {
   away_score: number | null;
   locked_at: string | null;
   home_setup: Json | null;
+  stats: Json | null;
 };
 
 type SeatTable = {
@@ -153,17 +159,34 @@ async function readSeats(): Promise<HumanSeat[] | null> {
   }));
 }
 
-/** Table of a season that closes now, with every missing match decided. Null = no seats to read. */
-async function finalStandings(
-  season: number,
-  seasonKey: string,
-  now: Date,
-): Promise<readonly HumanTableRow[] | null> {
+/** Rounds each club played itself. The archive keeps them when a club season deletes fixtures. */
+async function playedRoundsByClub(season: number): Promise<ReadonlyMap<string, number> | null> {
+  const { data, error } = await createAdminClient()
+    .from('club_matches' as never)
+    .select('club_id, matchday')
+    .eq('competition', 'human')
+    .gte('matchday', humanFixtureMatchday(1, season))
+    .lte('matchday', humanFixtureMatchday(HUMAN_ROUND_COUNT, season));
+  if (error || !data) return null;
+  const rounds = new Map<string, Set<number>>();
+  for (const row of data as unknown as { club_id: string; matchday: number }[]) {
+    rounds.set(row.club_id, (rounds.get(row.club_id) ?? new Set()).add(row.matchday));
+  }
+  return new Map([...rounds].map(([id, days]) => [id, days.size]));
+}
+
+/**
+ * Table of a season that closes now, with every missing match decided, and its awards.
+ * Null = there is no full set of seats. 'error' = a failed read: the season closes later.
+ */
+async function finalStandings(season: number, seasonKey: string, now: Date) {
   const seats = await readSeats();
   if (!seats) return null;
-  const results = await seasonResults(season);
-  const missing = settleMissing({ seats, seasonKey, results });
-  return resolveHumanTable({ seats, seasonKey, results: [...results, ...missing], now });
+  const [stored, played] = await Promise.all([storedResults(season), playedRoundsByClub(season)]);
+  if (!stored || !played) return 'error' as const;
+  const results = [...stored, ...settleMissing({ seats, seasonKey, results: stored })];
+  const standings = resolveHumanTable({ seats, seasonKey, results, now });
+  return { standings, awards: humanAwards(standings, played) };
 }
 
 /** The season before this one, for the card. */
@@ -180,7 +203,7 @@ async function lastSeason(season: number, clubId: string): Promise<HumanLeagueCa
   return { season: season - 1, champion: rows[0].name, place: place > 0 ? place : null };
 }
 
-async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null> {
+async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | 'empty' | null> {
   if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
   const admin = createAdminClient();
   const existing = await admin
@@ -217,12 +240,15 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
 
   const nextKey = dueHumanSeasonKey(seasonKey, now);
   if (nextKey) {
+    const final = await finalStandings(season, seasonKey, now);
+    if (final === 'error') return null;
     const rolled = await admin.rpc(
       'close_human_season' as never,
       {
         p_season: season,
         p_key: nextKey,
-        p_standings: await finalStandings(season, seasonKey, now),
+        p_standings: final?.standings ?? null,
+        p_awards: final?.awards ?? null,
       } as never,
     );
     // Next remembers equal reads while it renders one page, so the call itself returns the state.
@@ -241,6 +267,8 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
     const rows = clubs.data as
       { id: string; name: string; short_name: string; created_at: string }[] | null;
     if (clubs.error || !rows) return null;
+    // Eleven bots: without one active club there is no league of twelve.
+    if (rows.length === 0) return 'empty';
     const seats = fillHumanSeats(
       rows.map((row) => ({
         id: row.id,
@@ -360,7 +388,7 @@ async function readBroadcast(season: number, pair: HumanPairing): Promise<Broadc
   const { data, error } = await admin
     .from('human_broadcasts')
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup, stats',
     )
     .eq('season', season)
     .eq('matchday', pair.matchday)
@@ -445,7 +473,7 @@ async function lockBroadcast(
       .update(payload)
       .eq('id', existing.id)
       .select(
-        'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
+        'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup, stats',
       )
       .maybeSingle();
     if (updated.error || !updated.data) return { error: 'Nie udało się zamknąć składów.' };
@@ -457,7 +485,7 @@ async function lockBroadcast(
     .from('human_broadcasts')
     .insert(payload)
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup, stats',
     )
     .maybeSingle();
   if (inserted.error || !inserted.data) {
@@ -517,12 +545,16 @@ function dayLabel(date: string): string {
 
 /** Scores somebody already played, for the standings. */
 async function seasonResults(season: number): Promise<HumanResult[]> {
+  return (await storedResults(season)) ?? [];
+}
+
+async function storedResults(season: number): Promise<HumanResult[] | null> {
   const { data, error } = await createAdminClient()
     .from('human_broadcasts')
     .select('matchday, home_id, away_id, home_score, away_score')
     .eq('season', season)
     .not('home_score', 'is', null);
-  if (error || !data) return [];
+  if (error || !data) return null;
   return data.flatMap((row) =>
     row.home_score == null || row.away_score == null
       ? []
@@ -568,6 +600,17 @@ export async function loadHumanLeagueCard(
   now = new Date(),
 ): Promise<HumanLeagueCard> {
   const table = await ensureSeatTable(now);
+  if (table === 'empty') {
+    const note =
+      'Liga ludzi czeka na kluby, które grały albo trenowały w ostatnich 14 dniach. Zagraj mecz, a zajmiesz miejsce.';
+    return {
+      ...previewCard(club, note),
+      seats: [],
+      round: null,
+      opponentName: null,
+      windowSentence: null,
+    };
+  }
   if (table === null || table === 'missing') {
     return previewCard(
       club,
@@ -677,6 +720,37 @@ export async function loadHumanLeagueCard(
   });
 }
 
+/** Scorers of the running human season. Reads only. Null = nothing to show. */
+export async function loadHumanScorers(
+  clubId: string,
+  now = new Date(),
+): Promise<readonly ScorerRow[] | null> {
+  if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
+  const admin = createAdminClient();
+  const [league, seats] = await Promise.all([
+    admin.from('human_league').select('season_key, season_number').eq('id', 1).maybeSingle(),
+    readSeats(),
+  ]);
+  if (!league.data || !seats) return null;
+  const { data, error } = await admin
+    .from('human_broadcasts')
+    .select('home_id, away_id, stats')
+    .eq('season', league.data.season_number)
+    .not('stats', 'is', null);
+  if (error || !data) return null;
+  return resolveHumanScorers({
+    seats,
+    seasonKey: league.data.season_key,
+    broadcasts: data.map((row) => ({
+      homeId: row.home_id,
+      awayId: row.away_id,
+      stats: row.stats,
+    })),
+    now,
+    clubId,
+  });
+}
+
 export type HumanLiveReady = {
   readonly fixture: FixtureDto;
   readonly ourXi: readonly RosterPlayerSeed[];
@@ -698,7 +772,7 @@ export async function prepareHumanLive(
   const round = humanRoundFromFixture(dto.matchday);
   if (!round) return blocked('To nie jest mecz ligi ludzi.');
   const table = await ensureSeatTable(now);
-  if (table === null || table === 'missing') {
+  if (table === null || table === 'missing' || table === 'empty') {
     return blocked('Liga ludzi nie jest jeszcze włączona na bazie.');
   }
   if (humanSeasonFromFixture(dto.matchday) !== table.season) {
@@ -739,7 +813,7 @@ export async function prepareHumanLive(
 export async function authoritativeHumanScore(
   clubId: string,
   fixtureMatchday: number,
-): Promise<{ home: number; away: number } | { error: string }> {
+): Promise<ReplayedMatch | { error: string }> {
   const round = humanRoundFromFixture(fixtureMatchday);
   if (!round) return { error: 'To nie jest mecz ligi ludzi.' };
   if (!env.supabaseServiceRoleKey) return { error: 'Brak zapisu wyniku ligi ludzi.' };
@@ -747,7 +821,7 @@ export async function authoritativeHumanScore(
   const found = await admin
     .from('human_broadcasts')
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup, stats',
     )
     .eq('season', humanSeasonFromFixture(fixtureMatchday))
     .eq('matchday', round)
@@ -756,7 +830,11 @@ export async function authoritativeHumanScore(
   if (found.error || !found.data) return { error: 'Nie ma wspólnego meczu do zapisania.' };
   const broadcast = found.data as BroadcastRow;
   if (broadcast.home_score != null && broadcast.away_score != null) {
-    return { home: broadcast.home_score, away: broadcast.away_score };
+    return {
+      home: broadcast.home_score,
+      away: broadcast.away_score,
+      players: parsePlayerLines(broadcast.stats) ?? [],
+    };
   }
   if (!broadcast.locked_at) return { error: 'Składy tej kolejki nie są jeszcze zamknięte.' };
 
@@ -826,21 +904,33 @@ export async function authoritativeHumanScore(
   session.dispose();
   const saved = await admin
     .from('human_broadcasts')
-    .update({ home_score: played.home, away_score: played.away })
+    .update({
+      home_score: played.home,
+      away_score: played.away,
+      stats: played.players as unknown as Json,
+    })
     .eq('id', broadcast.id)
     .is('home_score', null)
-    .select('home_score, away_score')
+    .select('home_score, away_score, stats')
     .maybeSingle();
   if (saved.data?.home_score != null && saved.data.away_score != null) {
-    return { home: saved.data.home_score, away: saved.data.away_score };
+    return {
+      home: saved.data.home_score,
+      away: saved.data.away_score,
+      players: parsePlayerLines(saved.data.stats) ?? [],
+    };
   }
   const again = await admin
     .from('human_broadcasts')
-    .select('home_score, away_score')
+    .select('home_score, away_score, stats')
     .eq('id', broadcast.id)
     .maybeSingle();
   if (again.data?.home_score != null && again.data?.away_score != null) {
-    return { home: again.data.home_score, away: again.data.away_score };
+    return {
+      home: again.data.home_score,
+      away: again.data.away_score,
+      players: parsePlayerLines(again.data.stats) ?? [],
+    };
   }
-  return { home: played.home, away: played.away };
+  return { home: played.home, away: played.away, players: played.players };
 }

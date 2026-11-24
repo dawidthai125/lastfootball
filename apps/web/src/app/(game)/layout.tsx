@@ -23,6 +23,7 @@ import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { loadMatchEvents } from '@/lib/messages/load-match-events';
 import { resolveClubMessages, type ClubMessagesDto } from '@/lib/messages';
 import {
   listClubRetirementFlash,
@@ -90,16 +91,18 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
 
     const supabase = await createClient();
     const today = utcDateString();
-    const [activePlayers, h2hOffers, farewellFlash, movements, board, upkeep] = await Promise.all([
-      listClubPlayers(club.id),
-      fetchLiveH2hOffers(supabase, club.id),
-      club.seasonPhase === 'in_season'
-        ? listClubRetirementFlash(club.id, today)
-        : Promise.resolve([]),
-      listClubFinanceMovements(club.id),
-      loadBoardState(club, fixtures),
-      loadAcademyUpkeep(supabase, club.id),
-    ]);
+    const [activePlayers, h2hOffers, farewellFlash, movements, board, upkeep, matchEvents] =
+      await Promise.all([
+        listClubPlayers(club.id),
+        fetchLiveH2hOffers(supabase, club.id),
+        club.seasonPhase === 'in_season'
+          ? listClubRetirementFlash(club.id, today)
+          : Promise.resolve([]),
+        listClubFinanceMovements(club.id),
+        loadBoardState(club, fixtures),
+        loadAcademyUpkeep(supabase, club.id),
+        loadMatchEvents(club.id),
+      ]);
     const incomingOffers = resolveIncomingOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
@@ -173,6 +176,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         contractFarewell(contractLeavers(farewellFlash, today)),
       ].filter((note) => note !== null),
       academyAgeNote: juniorAgeNote(activePlayers.filter(isAcademyProspect)),
+      matchEvents,
     });
     invitations = resolveClubInvitations({
       messages,

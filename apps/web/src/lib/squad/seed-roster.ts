@@ -1,5 +1,6 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
+import { opponentNames } from '@/lib/squad/opponent-names';
 import type { LeagueTier } from '@/lib/league/league-tier';
 import {
   resolveLeagueStrengthProfile,
@@ -102,19 +103,7 @@ export function seedOpponentSquad(
 ): readonly RosterPlayerSeed[] {
   const tag = opponentClubId.replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'opp';
   const profile = resolveLeagueStrengthProfile(tier);
-  const names = [
-    'A. Rywal',
-    'B. Rywal',
-    'C. Rywal',
-    'D. Rywal',
-    'E. Rywal',
-    'F. Rywal',
-    'G. Rywal',
-    'H. Rywal',
-    'I. Rywal',
-    'J. Rywal',
-    'K. Rywal',
-  ];
+  const names = opponentNames(opponentClubId);
   const roles: { pos: string; role: PitchRole; number: number }[] = [
     { pos: 'BR', role: 'GK', number: 1 },
     { pos: 'PO', role: 'RB', number: 2 },

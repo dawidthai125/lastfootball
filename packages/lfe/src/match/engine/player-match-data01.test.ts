@@ -8,7 +8,12 @@ import {
   createPlayer,
   createSubstitutePlayerCommand,
 } from '../../testing';
-import { attributeAssistForGoal, attributePlayerForEvent } from './attribute-player';
+import {
+  attributeAssistForGoal,
+  attributePlayerForEvent,
+  goalWeight,
+  pickByWeight,
+} from './attribute-player';
 
 function makeSession(halfDurationMs = 2_000, halfTimeDurationMs = 200) {
   const homeIds = Array.from({ length: 11 }, (_, i) => `h${i}`);
@@ -80,6 +85,25 @@ function runToFinished(session: ReturnType<typeof makeSession>, steps = 5_000) {
 }
 
 describe('LFE-PLAYER-MATCH-DATA-01 / LFE-RATINGS-V2', () => {
+  it('D143: strikers shoot most, the goalkeeper never, skill counts', () => {
+    const s = makeSession();
+    openPlay(s);
+    const state = s.getMatchState();
+    const shots = new Map<string, number>();
+    for (let tick = 0; tick < 4000; tick += 1) {
+      const id = attributePlayerForEvent(state, 'home', 'SHOT', tick)!;
+      const role = state.homeLineup.slots.find((x) => x.playerId === id)!.role;
+      shots.set(role, (shots.get(role) ?? 0) + 1);
+    }
+    expect(shots.get('GK') ?? 0).toBe(0);
+    expect(shots.get('ST')! / 4000).toBeGreaterThan(0.45);
+    expect(shots.get('ST')!).toBeGreaterThan(shots.get('CM')! * 2);
+    expect(goalWeight('ST', 80)).toBeGreaterThan(goalWeight('ST', 60) * 1.5);
+    expect(pickByWeight([0, 0, 0], 0.99)).toBe(2);
+    expect(pickByWeight([1, 0, 3], 0.2)).toBe(0);
+    expect(pickByWeight([1, 0, 3], 0.3)).toBe(2);
+  });
+
   it('T1: createMatch initializes statistics.players for full roster', () => {
     const s = makeSession();
     const state = s.getMatchState();
@@ -268,9 +292,13 @@ describe('LFE-PLAYER-MATCH-DATA-01 / LFE-RATINGS-V2', () => {
     openPlay(s);
     const state = s.getMatchState();
     const scorer = state.homeLineup.slots[0]!.playerId;
-    const assist = attributeAssistForGoal(state, 'home', scorer, 10);
-    expect(assist).toBeDefined();
-    expect(assist).not.toBe(scorer);
+    const assists = Array.from({ length: 400 }, (_, tick) =>
+      attributeAssistForGoal(state, 'home', scorer, tick),
+    );
+    expect(assists).not.toContain(scorer);
+    const share = assists.filter((id) => id !== undefined).length / assists.length;
+    expect(share).toBeGreaterThan(0.65);
+    expect(share).toBeLessThan(0.85);
 
     const solo = {
       ...state,

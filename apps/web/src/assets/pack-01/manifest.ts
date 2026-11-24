@@ -127,6 +127,7 @@ export const NAV_ITEM_ICON: Record<string, NavIconId> = {
   squad: 'squad',
   stadium: 'stadium',
   league: 'league',
+  stats: 'status',
   matches: 'matches',
   training: 'training',
   academy: 'academy',

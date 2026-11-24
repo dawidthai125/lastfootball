@@ -50,6 +50,7 @@ export type FinanceMovementCategory =
   | 'stadium_build'
   | 'coach_hire'
   | 'board_task'
+  | 'human_prize'
   | 'academy_build'
   | 'academy_upkeep'
   | 'academy_training';

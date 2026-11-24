@@ -97,3 +97,33 @@
   font-size: var(--lf-type-caption);
   color: var(--lf-color-text-muted);
 }
+
+.lf-ach__section {
+  margin: 0 0 var(--lf-space-3);
+  font-size: var(--lf-type-h2, 1.125rem);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-ach__records {
+  margin: 0;
+}
+
+.lf-ach__record {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--lf-space-1) var(--lf-space-3);
+  padding-block: var(--lf-space-2);
+  border-bottom: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  font-size: var(--lf-type-body);
+}
+
+.lf-ach__record dt {
+  color: var(--lf-color-text-muted);
+}
+
+.lf-ach__record dd {
+  margin: 0;
+  color: var(--lf-color-text-primary);
+}
