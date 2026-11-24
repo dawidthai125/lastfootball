@@ -1,4 +1,4 @@
-import type { PitchSide } from '../match/domain';
+import { DEFAULT_PLAYER_CONDITION, type PitchSide } from '../match/domain';
 
 import { buildMatchAiContext, sideContext } from './context';
 import type {
@@ -47,6 +47,12 @@ export const MATCH_BALANCE = Object.freeze({
   STRENGTH_ON_TARGET: 0.5,
   STRENGTH_GOAL: 0.75,
   FRESHNESS_ATTACK: 0.35,
+  /** The default condition, carried by every opponent without stored morale. */
+  MORALE_NEUTRAL: DEFAULT_PLAYER_CONDITION.morale,
+  /** Points from neutral to the full effect, up and down. */
+  MORALE_SPAN: 30,
+  MORALE_ATTACK: 0.06,
+  MORALE_GOAL: 0.06,
   SCORE_ATTACK: 1,
   SCORE_GOAL: 0.3,
   EXPOSURE_MENTALITY: 0.75,
@@ -63,6 +69,12 @@ const NEUTRAL_SHAPE = 0.35 * 0.5 + 0.65 * (2 / 3);
 
 function factor(n: number): number {
   return Math.max(0.2, Math.min(2.2, n));
+}
+
+/** -1 (broken team) … 0 (neutral) … 1 (flying). */
+function moraleEdge(side: MatchAiSideContext): number {
+  const edge = (side.morale - MATCH_BALANCE.MORALE_NEUTRAL) / MATCH_BALANCE.MORALE_SPAN;
+  return Math.max(-1, Math.min(1, edge));
 }
 
 /**
@@ -120,6 +132,7 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
   const t = ours.tactics;
   const pressure = scorePhaseModifier(ours, ctx.displayMinute);
   const gap = ours.strength - theirs.strength;
+  const morale = moraleEdge(ours);
   const shape = ours.formationAggressiveness - NEUTRAL_SHAPE;
   const width = t.width / 100 - 0.5;
   const tempo = t.tempo / 100 - 0.5;
@@ -133,6 +146,7 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
       factor(1 + homeEdge) *
       factor(1 + gap * MATCH_BALANCE.STRENGTH_ATTACK) *
       factor(1 + (ours.freshness - 1) * MATCH_BALANCE.FRESHNESS_ATTACK) *
+      factor(1 + morale * MATCH_BALANCE.MORALE_ATTACK) *
       factor(1 + pressure * MATCH_BALANCE.SCORE_ATTACK) *
       factor(1 + tempo * 0.5 + shape * 0.35 + width * 0.2) *
       exposure(theirs),
@@ -148,6 +162,7 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
   const goalChance = clamp01(
     MATCH_BALANCE.GOAL *
       factor(1 + gap * MATCH_BALANCE.STRENGTH_GOAL) *
+      factor(1 + morale * MATCH_BALANCE.MORALE_GOAL) *
       factor(1 + mentality * 0.2 + pressure * MATCH_BALANCE.SCORE_GOAL),
   );
 

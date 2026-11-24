@@ -25,6 +25,8 @@ export type RosterPlayerSeed = {
   readonly groups?: import('@/lib/squad/types').AttrGroups;
   readonly energy?: number;
   readonly form?: number;
+  /** Stored morale 0..100. Absent = the match treats the player as neutral. */
+  readonly morale?: number;
 };
 
 const XI_BASE: Omit<RosterPlayerSeed, 'id' | 'starter'>[] = [

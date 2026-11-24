@@ -8,6 +8,8 @@ export type MatchAiSideContext = {
   readonly strength: number;
   /** 0–1 remaining energy/freshness (1 = fresh). */
   readonly freshness: number;
+  /** 0–100 average player morale. `MATCH_BALANCE.MORALE_NEUTRAL` changes nothing. */
+  readonly morale: number;
   readonly goalsFor: number;
   readonly goalsAgainst: number;
   /** goalsFor - goalsAgainst */

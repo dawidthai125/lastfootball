@@ -123,7 +123,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
           : 60;
     return (
       <LiveMatchFoundation
-        bundle={buildLeagueLiveBundle(club, dto)}
+        bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
         club={club}
         leagueFixture={human?.fixture ?? dto}
         ourXi={ourXi}
