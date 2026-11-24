@@ -12,7 +12,7 @@ import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
-import { HUMAN_PRIZES, humanPrizeLine } from '@/lib/league/human-awards';
+import { humanPrizeLine } from '@/lib/league/human-awards';
 import { loadHumanLeagueCard } from '@/lib/league/human-league-store';
 import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 
@@ -62,9 +62,9 @@ export default async function LeaguePage() {
             12 miejsc, wolne zajmują boty. Oba kluby oglądają ten sam mecz. Gdy przybywa klubów,
             kolejna liga otwiera się sama. Lig: {human.leagues}, klubów graczy: {human.clubs}.
           </p>
-          {HUMAN_PRIZES.length > 0 ? (
+          {human.prizes.some((amount) => amount > 0) ? (
             <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
-              {humanPrizeLine()}
+              {humanPrizeLine(human.prizes)}
             </p>
           ) : null}
           {human.lastSeason ? (

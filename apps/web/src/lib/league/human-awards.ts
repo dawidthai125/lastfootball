@@ -4,8 +4,17 @@ import type { HumanTableRow } from '@/lib/league/human-table';
 /** A club has to play half of the season itself: nobody is paid for walkovers of others. */
 export const HUMAN_AWARD_MIN_PLAYED = 11;
 
-/** € by place 1–6, paid once when the season closes (D143). */
+/** € by place 1–6 in a league of at least `HUMAN_FULL_PRIZE_CLUBS` (D143, D155). */
 export const HUMAN_PRIZES: readonly number[] = [30_000, 20_000, 12_000, 6_000, 6_000, 6_000];
+
+/** With fewer player clubs the prizes shrink, so many small leagues add no extra money. */
+export const HUMAN_FULL_PRIZE_CLUBS = 8;
+
+/** Prizes of a league with this many player clubs, in steps of 500 €. */
+export function humanPrizes(clubs: number): readonly number[] {
+  const share = Math.max(0, Math.min(1, clubs / HUMAN_FULL_PRIZE_CLUBS));
+  return HUMAN_PRIZES.map((amount) => Math.round((amount * share) / 500) * 500);
+}
 
 /** "Nagrody: 1. miejsce 30 000 €, …" Equal neighbours share one entry. */
 export function humanPrizeLine(prizes: readonly number[] = HUMAN_PRIZES): string {
@@ -31,11 +40,12 @@ export type HumanAward = {
 export function humanAwards(
   standings: readonly HumanTableRow[],
   playedByClub: ReadonlyMap<string, number>,
+  prizes: readonly number[] = HUMAN_PRIZES,
 ): readonly HumanAward[] {
   return standings.flatMap((row, index) => {
     const played = playedByClub.get(row.id) ?? 0;
     if (row.isBot || played < HUMAN_AWARD_MIN_PLAYED) return [];
-    return [{ club_id: row.id, place: index + 1, amount: HUMAN_PRIZES[index] ?? 0, played }];
+    return [{ club_id: row.id, place: index + 1, amount: prizes[index] ?? 0, played }];
   });
 }
 
