@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 
+import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { PreMatchView } from '@/components/match/PreMatchView';
 import { Panel } from '@/components/ui/Panel';
 import { readClubBuild } from '@/lib/club/read-build';
@@ -18,6 +19,7 @@ import {
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { lineupEditorHref } from '@/lib/match/xi-block-path';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
+import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
 
 type PageProps = {
@@ -150,6 +152,9 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
   if (dto.status !== 'upcoming') {
     redirect('/hub');
   }
+
+  const blocked = await upcomingKickoffSentence(id);
+  if (blocked) return <KickoffBlocked sentence={blocked} />;
 
   try {
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;

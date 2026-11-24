@@ -9,6 +9,18 @@ export function warsawDateKey(date: Date): string {
   }).format(date);
 }
 
+/** One challenge per Warsaw calendar day, on its own clock (D141). */
+export function challengeBlockReason(
+  lastChallengeAt: string | null | undefined,
+  now: Date,
+): string | null {
+  if (!lastChallengeAt) return null;
+  const last = new Date(lastChallengeAt);
+  if (Number.isNaN(last.getTime())) return null;
+  if (warsawDateKey(last) !== warsawDateKey(now)) return null;
+  return 'Wyzwanie na dziś już rozegrane. Następne od jutra.';
+}
+
 /** Null when the club may play. A sentence when today's match is already done. */
 export function matchdayBlockReason(
   lastPlayedAt: string | null | undefined,

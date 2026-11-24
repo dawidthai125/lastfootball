@@ -23,6 +23,7 @@ export async function upcomingKickoffSentence(matchId: string): Promise<string |
     matchesBlocked: gate.matchesBlocked,
     competition: fixture.competition,
     lastPlayedAt: latestPlayedAt(fixtures),
+    lastChallengeAt: latestPlayedAt(fixtures, 'challenge'),
     now: new Date(),
   });
 }

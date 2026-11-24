@@ -20,7 +20,7 @@ export async function settleFixture(
     'settle_fixture' as never,
     {
       ...args,
-      p_upkeep_by_level: ACADEMY_UPKEEP,
+      p_upkeep_by_level: args.p_upkeep_by_level ?? ACADEMY_UPKEEP,
       p_upkeep_label: UPKEEP_LABEL,
       p_upkeep_short_label: UPKEEP_SHORT_LABEL,
     } as never,

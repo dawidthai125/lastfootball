@@ -16,7 +16,7 @@ import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { settleFixture } from '@/lib/fixtures/settle-fixture';
-import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
+import { challengeBlockReason, matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
@@ -112,7 +112,9 @@ export async function completeFixture(
   const players = await listClubPlayers(clubId, today);
   const build = await readClubBuild(supabase, clubId);
   const seniors = filterSeniorPlayers(players);
-  const wageDue = matchWageDue(seniors);
+  // A challenge is a friendly: no wages and no academy upkeep (D141).
+  const friendly = row.competition === 'challenge';
+  const wageDue = friendly ? 0 : matchWageDue(seniors);
 
   const lookup = await loadKickoff(row.id, clubId);
   const kickoff = lookup.kind === 'found' ? lookup.snapshot : null;
@@ -130,18 +132,24 @@ export async function completeFixture(
       return { error: 'Potwierdź email, żeby rozgrywać kolejne mecze.' };
     }
 
-    const { data: lastPlayed } = await supabase
-      .from('fixtures')
-      .select('played_at')
-      .eq('club_id', clubId)
-      .eq('status', 'played')
-      .neq('competition', 'human')
-      .order('played_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    const lastAt = (lastPlayed as { played_at: string | null } | null)?.played_at ?? null;
     if (row.competition !== 'human') {
-      const blocked = matchdayBlockReason(lastAt, new Date());
+      // League and cup share one Warsaw day. A challenge has its own (D141).
+      const clock = row.competition === 'challenge' ? ['challenge'] : ['league', 'cup'];
+      const { data: lastPlayed, error: lastErr } = await supabase
+        .from('fixtures')
+        .select('played_at')
+        .eq('club_id', clubId)
+        .eq('status', 'played')
+        .in('competition', clock)
+        .order('played_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (lastErr) return { error: 'Nie udało się sprawdzić dnia meczu. Spróbuj ponownie.' };
+      const lastAt = (lastPlayed as { played_at: string | null } | null)?.played_at ?? null;
+      const blocked =
+        row.competition === 'challenge'
+          ? challengeBlockReason(lastAt, new Date())
+          : matchdayBlockReason(lastAt, new Date());
       if (blocked) return { error: blocked };
     }
     if (row.status !== 'upcoming') return { error: 'Ten mecz nie jest jeszcze otwarty.' };
@@ -200,6 +208,7 @@ export async function completeFixture(
     p_wage_due: wageDue,
     p_wage_label: WAGES_LABEL,
     p_wage_short_label: WAGES_SHORT_LABEL,
+    ...(friendly ? { p_upkeep_by_level: [] } : {}),
   });
   if (!settled) {
     console.error('completeFixture: settlement failed', { fixtureId: row.id });

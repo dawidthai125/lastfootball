@@ -24,6 +24,7 @@ export default async function MatchesPage() {
   const fixtures = await ensurePlayerCupTie(club, seeded);
   const emailGate = await loadEmailGate(club.ownerId);
   const lastPlayedAt = latestPlayedAt(fixtures);
+  const lastChallengeAt = latestPlayedAt(fixtures, 'challenge');
   const now = new Date();
   const hero = pickCalendarHero(
     fixtures.map((fixture) => ({
@@ -39,6 +40,7 @@ export default async function MatchesPage() {
         matchesBlocked: emailGate.matchesBlocked,
         competition: hero.domain,
         lastPlayedAt,
+        lastChallengeAt,
         now,
       })
     : null;
@@ -53,6 +55,7 @@ export default async function MatchesPage() {
       kickoffSentence={kickoffSentence}
       matchesBlocked={emailGate.matchesBlocked}
       lastPlayedAt={lastPlayedAt}
+      lastChallengeAt={lastChallengeAt}
       kickoffNow={now.toISOString()}
     />
   );
