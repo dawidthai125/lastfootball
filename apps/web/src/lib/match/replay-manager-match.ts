@@ -7,6 +7,13 @@ import {
   managerSubstitution,
   type ManagerLogEntry,
 } from '@/lib/match/manager-commands';
+import { matchPlayerLines, type MatchPlayerLine } from '@/lib/match/match-players';
+
+export type ReplayedMatch = {
+  readonly home: number;
+  readonly away: number;
+  readonly players: readonly MatchPlayerLine[];
+};
 
 const MAX_STEPS = 12_000;
 
@@ -27,12 +34,18 @@ export function replayManagerMatch(
   session: MatchSession,
   side: PitchSide,
   log: readonly ManagerLogEntry[],
-): { home: number; away: number } | null {
+): ReplayedMatch | null {
   kickOffSession(session);
   let next = 0;
   for (let step = 0; step < MAX_STEPS; step += 1) {
     const state = session.getMatchState();
-    if (state.phase === 'FINISHED') return { home: state.score.home, away: state.score.away };
+    if (state.phase === 'FINISHED') {
+      return {
+        home: state.score.home,
+        away: state.score.away,
+        players: matchPlayerLines(state),
+      };
+    }
     const tick = session.context().tick;
     while (next < log.length && log[next]!.t <= tick) {
       apply(session, side, log[next]!, tick);

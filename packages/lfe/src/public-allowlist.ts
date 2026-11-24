@@ -69,6 +69,11 @@ export const LFE_PUBLIC_ALLOWLIST = [
   'DEFAULT_PLAYER_ATTRIBUTES',
   'DEFAULT_PLAYER_SKILLS',
   'DEFAULT_PLAYER_CONDITION',
+  // D143 — scorer weights shared with the league scorer list
+  'ASSIST_SHARE',
+  'assistWeight',
+  'goalWeight',
+  'pickByWeight',
   // §3.6 Commands
   'Command',
   'CommandResult',

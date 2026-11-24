@@ -103,7 +103,11 @@ describe('replayManagerMatch', () => {
     const live = playLive(id, home, plan, pulse);
     expect(live.log.length).toBe(5);
     const sent = parseManagerLog(JSON.stringify(live.log))!;
-    expect(replayManagerMatch(session(id, home), home ? 'home' : 'away', sent)).toEqual(live.score);
+    const replayed = replayManagerMatch(session(id, home), home ? 'home' : 'away', sent)!;
+    expect({ home: replayed.home, away: replayed.away }).toEqual(live.score);
+    const goals = (side: 'home' | 'away') =>
+      replayed.players.filter((p) => p.side === side).reduce((sum, p) => sum + p.goals, 0);
+    expect({ home: goals('home'), away: goals('away') }).toEqual(live.score);
   });
 
   it('ignores unknown commands and a fourth substitution', { timeout: 60_000 }, () => {

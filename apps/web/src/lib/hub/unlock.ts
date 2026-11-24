@@ -20,6 +20,7 @@ const SEASON_OPEN = new Set([
   ...EARLY_CLUB_OPEN,
   'league',
   'cup',
+  'stats',
   'finance',
   'academy',
   'scouting',

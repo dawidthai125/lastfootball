@@ -16,6 +16,8 @@ import {
 import { personalityLabel, type Personality } from '@/lib/squad/depth';
 import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
+import type { PlayerTotals } from '@/lib/stats/store';
+import { sumByPlayer } from '@/lib/stats/totals';
 
 import './squad-decision.css';
 
@@ -284,6 +286,44 @@ export function PlayerContract({ player, season }: { player: SquadPlayer; season
           loanedIn={player.loanedIn === true}
         />
       </div>
+    </SectionShell>
+  );
+}
+
+/** Goals and assists for this club (D143). Null = the read failed. */
+export function PlayerStats({
+  totals,
+  season,
+}: {
+  totals: readonly PlayerTotals[] | null;
+  season: number;
+}) {
+  const lines = [
+    {
+      label: 'Ten sezon',
+      line: totals && sumByPlayer(totals.filter((r) => r.season === season))[0],
+    },
+    { label: 'W klubie', line: totals && sumByPlayer(totals)[0] },
+  ];
+  return (
+    <SectionShell title="Statystyki">
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+        {lines.map(({ label, line }) => (
+          <li
+            key={label}
+            style={{
+              paddingBlock: 'var(--lf-space-2)',
+              fontSize: 'var(--lf-type-table)',
+              color: 'var(--lf-color-text-muted)',
+            }}
+          >
+            {label}:{' '}
+            {totals
+              ? `mecze ${line?.matches ?? 0}, gole ${line?.goals ?? 0}, asysty ${line?.assists ?? 0}`
+              : 'nie udało się wczytać'}
+          </li>
+        ))}
+      </ul>
     </SectionShell>
   );
 }

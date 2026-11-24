@@ -12,6 +12,7 @@ import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
 import { resolveLeagueTable } from '@/lib/league';
 import type { LeagueTableRowDto } from '@/lib/league';
+import { HUMAN_PRIZES, humanPrizeLine } from '@/lib/league/human-awards';
 import { loadHumanLeagueCard } from '@/lib/league/human-league-store';
 import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 
@@ -60,6 +61,11 @@ export default async function LeaguePage() {
           <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
             12 miejsc. Wolne miejsca zajmują boty. Oba kluby oglądają ten sam mecz z jednego seeda.
           </p>
+          {HUMAN_PRIZES.length > 0 ? (
+            <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
+              {humanPrizeLine()}
+            </p>
+          ) : null}
           {human.lastSeason ? (
             <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
               Mistrz sezonu {human.lastSeason.season}: {human.lastSeason.champion}.
@@ -105,6 +111,11 @@ export default async function LeaguePage() {
           )}
         </Panel>
       ) : null}
+      <p style={{ margin: 'var(--lf-space-2) 0' }}>
+        <Link href="/stats" style={{ color: 'var(--lf-color-text-gold)' }}>
+          Strzelcy i statystyki
+        </Link>
+      </p>
       <Panel title="Tabela" flush>
         <Table
           rowKey={(r) => r.clubId}

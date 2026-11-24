@@ -66,6 +66,8 @@ export {
   DEFAULT_PLAYER_CONDITION,
 } from './match/domain';
 
+export { ASSIST_SHARE, assistWeight, goalWeight, pickByWeight } from './match/engine';
+
 export type { LfeConfig, DeepPartial } from './config';
 export { DEFAULT_LFE_CONFIG } from './config';
 export type { LogLevel } from './core';

@@ -56,7 +56,7 @@ export function settleMissing(input: {
   return out;
 }
 
-function botScore(seasonKey: string, round: number, homeId: string, awayId: string) {
+export function botScore(seasonKey: string, round: number, homeId: string, awayId: string) {
   return scoreFromStrength({
     gap: aiTableStrength(homeId, 'iv') - aiTableStrength(awayId, 'iv'),
     seed: `human-table|${seasonKey}|${round}|${homeId}|${awayId}`,

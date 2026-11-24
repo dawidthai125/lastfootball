@@ -33,6 +33,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'league', href: '/league', label: 'Liga', shortLabel: 'L' },
       { id: 'cup', href: '/cup', label: 'Puchar', shortLabel: 'Pu' },
+      { id: 'stats', href: '/stats', label: 'Statystyki', shortLabel: 'St' },
       { id: 'rankings', href: '/rankings', label: 'Ranking', shortLabel: 'R' },
       { id: 'matches', href: '/matches', label: 'Terminarz', shortLabel: 'T' },
       { id: 'rivals', href: '/rivals', label: 'Rywalizacja', shortLabel: 'Rw' },
@@ -72,7 +73,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'system',
     label: 'System',
     items: [
-      { id: 'achievements', href: '/achievements', label: 'Osiągnięcia', shortLabel: 'O' },
+      { id: 'achievements', href: '/achievements', label: 'Gablota', shortLabel: 'G' },
       { id: 'profile', href: '/profile', label: 'Profil', shortLabel: 'Pr' },
       { id: 'settings', href: '/settings', label: 'Ustawienia', shortLabel: 'U' },
     ],

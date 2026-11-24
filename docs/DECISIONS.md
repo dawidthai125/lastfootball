@@ -863,7 +863,17 @@ Wyzwanie: jedno na dzień (czas warszawski), własny zegar, nie zajmuje dnia lig
 3. Zaproszenie: link klubu, po założeniu klubu od razu otwarte wyzwanie z zapraszającym. Bez nagród.
 4. Statystyki: tylko dni gry konta (`account_activity`) i zliczenia (`player_report`, tylko serwer).
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D142 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D143 — Statystyki, gablota, wiadomości o meczach, nagrody Ligi ludzi · Owner GO 2026-11-24
+
+1. Strzelcy i asysty z tego samego odtworzenia meczu, które liczy wynik. Zapis w jednej transakcji z rozliczeniem (`settle_match`). Wyzwania się nie liczą.
+2. Strzelec i asystent: waga roli × umiejętność (`goalWeight`, `assistWeight`). Wyniki meczów bez zmian: to nie jest losowanie meczu.
+3. Gole klubów AI w tabeli strzelców wyprowadzone z tych samych wyników co tabela ligi. Zawodnicy rywali mają nazwiska (`opponentNames`).
+4. Wyniki zostają w `club_matches` po skasowaniu terminarza. Rekordy z nich, trofea z `club_season_history` i nagród Ligi ludzi.
+5. Wiadomości o wyzwaniu i Lidze ludzi są wyprowadzane (`resolveMatchEvents`), bez stanu przeczytania i bez wyniku nierozegranej kolejki.
+6. Nagrody Ligi ludzi (`HUMAN_PRIZES`) płacone raz przy zamknięciu sezonu, klubom z co najmniej 11 własnymi kolejkami.
+7. Nowy sezon klubu nie kasuje rozegranych kolejek trwającej Ligi ludzi (wcześniej można je było zagrać i dostać nagrodę drugi raz).
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D143 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

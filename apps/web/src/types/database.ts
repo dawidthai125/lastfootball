@@ -687,9 +687,27 @@ export type Database = {
         Relationships: [];
       };
       human_league_history: {
-        Row: { season: number; season_key: string; standings: Json; closed_at: string };
-        Insert: { season: number; season_key: string; standings: Json; closed_at?: string };
-        Update: { season?: number; season_key?: string; standings?: Json; closed_at?: string };
+        Row: {
+          season: number;
+          season_key: string;
+          standings: Json;
+          awards: Json | null;
+          closed_at: string;
+        };
+        Insert: {
+          season: number;
+          season_key: string;
+          standings: Json;
+          awards?: Json | null;
+          closed_at?: string;
+        };
+        Update: {
+          season?: number;
+          season_key?: string;
+          standings?: Json;
+          awards?: Json | null;
+          closed_at?: string;
+        };
         Relationships: [];
       };
       human_broadcasts: {
@@ -711,6 +729,7 @@ export type Database = {
           away_score: number | null;
           locked_at: string | null;
           home_setup: Json | null;
+          stats: Json | null;
           created_at: string;
         };
         Insert: {
@@ -731,6 +750,7 @@ export type Database = {
           away_score?: number | null;
           locked_at?: string | null;
           home_setup?: Json | null;
+          stats?: Json | null;
           created_at?: string;
         };
         Update: {
@@ -751,6 +771,7 @@ export type Database = {
           away_score?: number | null;
           locked_at?: string | null;
           home_setup?: Json | null;
+          stats?: Json | null;
           created_at?: string;
         };
         Relationships: [];

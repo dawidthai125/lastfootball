@@ -10,6 +10,7 @@ import { resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { loadMatchEvents } from '@/lib/messages/load-match-events';
 import { resolveClubMessages } from '@/lib/messages';
 import {
   listClubRetirementFlash,
@@ -39,16 +40,18 @@ export default async function MessagesPage() {
 
   const supabase = await createClient();
   const today = utcDateString();
-  const [activePlayers, h2hOffers, farewellFlash, movements, fixtures, upkeep] = await Promise.all([
-    listClubPlayers(club.id),
-    fetchLiveH2hOffers(supabase, club.id),
-    club.seasonPhase === 'in_season'
-      ? listClubRetirementFlash(club.id, today)
-      : Promise.resolve([]),
-    listClubFinanceMovements(club.id),
-    listClubFixtures(club.id),
-    loadAcademyUpkeep(supabase, club.id),
-  ]);
+  const [activePlayers, h2hOffers, farewellFlash, movements, fixtures, upkeep, matchEvents] =
+    await Promise.all([
+      listClubPlayers(club.id),
+      fetchLiveH2hOffers(supabase, club.id),
+      club.seasonPhase === 'in_season'
+        ? listClubRetirementFlash(club.id, today)
+        : Promise.resolve([]),
+      listClubFinanceMovements(club.id),
+      listClubFixtures(club.id),
+      loadAcademyUpkeep(supabase, club.id),
+      loadMatchEvents(club.id),
+    ]);
   const board = await loadBoardState(club, fixtures);
 
   const incomingOffers = resolveIncomingOffers({
@@ -129,6 +132,7 @@ export default async function MessagesPage() {
       contractFarewell(contractLeavers(farewellFlash, today)),
     ].filter((note) => note !== null),
     academyAgeNote: juniorAgeNote(activePlayers.filter(isAcademyProspect)),
+    matchEvents,
   });
 
   return (

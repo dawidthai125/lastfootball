@@ -5,7 +5,7 @@ import { getFixtureByIdForClub } from '@/lib/fixtures/get-fixture';
 import { sessionFromKickoff, type KickoffSnapshot } from '@/lib/match/kickoff-snapshot';
 import type { ManagerLogEntry } from '@/lib/match/manager-commands';
 import { parseOurFormation } from '@/lib/match/our-formation';
-import { replayManagerMatch } from '@/lib/match/replay-manager-match';
+import { replayManagerMatch, type ReplayedMatch } from '@/lib/match/replay-manager-match';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { lineupProblem } from '@/lib/squad/lineup-problem';
@@ -23,7 +23,7 @@ export async function authoritativeManagerScore(
   shape: unknown,
   today: string,
   kickoff: KickoffSnapshot | null = null,
-): Promise<{ home: number; away: number } | { error: string }> {
+): Promise<ReplayedMatch | { error: string }> {
   if (kickoff) {
     const session = sessionFromKickoff(kickoff);
     const score = replayManagerMatch(session, kickoff.fixture.isHome ? 'home' : 'away', log);

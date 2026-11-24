@@ -63,8 +63,8 @@ export const UI_COPY = {
   invitationAria: 'Zaproszenie do decyzji',
 
   /** LFE-ACHIEVEMENTS-01 — history Thin (no XP / rewards) */
-  achievementsTitle: 'Osiągnięcia',
-  achievementsSubtitle: 'Kamienie milowe kariery i klubu',
+  achievementsTitle: 'Gablota',
+  achievementsSubtitle: 'Trofea, rekordy i kamienie milowe klubu',
   achievementsEmptyHint: 'Historia zbuduje się wraz z karierą.',
   achievementClubFoundedTitle: 'Klub założony',
   achievementClubFoundedDetail: 'Tożsamość klubu zapisana w lidze.',
@@ -95,7 +95,7 @@ export const UI_COPY = {
   clubLinkSquad: 'Kadra',
   clubLinkFinance: 'Finanse',
   clubLinkLeague: 'Liga',
-  clubLinkAchievements: 'Osiągnięcia',
+  clubLinkAchievements: 'Gablota',
   clubLinkRankings: 'Ranking',
   clubCashLabel: 'Kasa',
   clubLeaguePositionLabel: 'Pozycja',

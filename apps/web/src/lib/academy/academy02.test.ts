@@ -370,24 +370,26 @@ describe('upkeep and senior matches', () => {
       const calls: Record<string, unknown>[] = [];
       const settled = await settleFixture(
         {
-          rpc: async (_name: string, args: Record<string, unknown>) => {
+          rpc: async (name: string, args: Record<string, unknown>) => {
             calls.push(args);
-            return code && 'p_upkeep_by_level' in args
+            return code && name === 'settle_match'
               ? { data: null, error: { code } }
               : { data: { applied: true, paid: 1 }, error: null };
           },
         } as never,
         { p_home: 1 },
+        [{ id: 'p', name: 'P', mine: true, goals: 1, assists: 0 }],
       );
       return { settled, calls };
     };
     expect(ACADEMY_UPKEEP).toEqual([0, 500, 1_000, 1_500]);
     const normal = await run(null);
+    const full = expect.objectContaining({ p_home: 1, p_upkeep_by_level: [0, 500, 1_000, 1_500] });
     expect(normal.calls).toEqual([
-      expect.objectContaining({ p_home: 1, p_upkeep_by_level: [0, 500, 1_000, 1_500] }),
+      { p_args: full, p_players: [expect.objectContaining({ id: 'p', goals: 1 })] },
     ]);
     const older = await run('PGRST202');
-    expect(older.calls[1]).toEqual({ p_home: 1 });
+    expect(older.calls[1]).toEqual(full);
     expect(older.settled).toEqual({ applied: true, paid: 1 });
     const failed = await run('57014');
     expect(failed.settled).toBeNull();

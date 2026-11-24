@@ -1,5 +1,7 @@
 import { createKickoffCommand, type MatchSession } from '@lastfootball/lfe';
 
+import { matchPlayerLines } from '@/lib/match/match-players';
+
 /** Play a shared seed with no manager commands. Both clubs must call this the same way. */
 export function finishSharedSession(session: MatchSession, maxSteps = 8000) {
   session.start();
@@ -16,6 +18,7 @@ export function finishSharedSession(session: MatchSession, maxSteps = 8000) {
     seed: session.context().seed,
     home: state.score.home,
     away: state.score.away,
+    players: matchPlayerLines(state),
     homePasses: state.statistics.home.passesCompleted,
     awayPasses: state.statistics.away.passesCompleted,
     homeAttempted: state.statistics.home.passesAttempted,
