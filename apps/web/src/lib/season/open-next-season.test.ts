@@ -446,4 +446,66 @@ describe('openNextSeasonAfterDeparture', () => {
     // The club row did not open: everybody is back for the next try.
     expect(await run('club')).toMatchObject({ ok: false, left: [] });
   });
+
+  it('decides on the age before the tick and reports an undo that failed (D134)', async () => {
+    const roster = [
+      player({ id: 'a-1', age: 19, skill: 50, academyTrack: true, starter: false }),
+      player({ id: 'a-2', age: 20, skill: 50, academyTrack: true, starter: false }),
+    ];
+    const db = fakeDb(roster, 'club');
+    const reverted: string[] = [];
+    const result = await openNextSeasonAfterDeparture({
+      supabase: db.supabase as never,
+      clubId: 'club-1',
+      endedSeason: 3,
+      loadRoster: async () => roster,
+      nextSeason: 4,
+      nextTier: 'iii',
+      goalNote: 'miss',
+      hAgePort: {
+        async listActiveClubPlayers() {
+          return [];
+        },
+        async writePlayerAgeSkill(_clubId, row) {
+          reverted.push(row.id);
+          return row.id === 'a-1' ? { ok: false, error: 'down' } : { ok: true };
+        },
+      },
+      // a-2 was aged by an earlier run: 20 now, 19 before.
+      hAgeSnapshot: [
+        { id: 'a-1', age: 18, skill: 50, potential: 70, agedForSeason: 2 },
+        { id: 'x', age: 25, skill: 50, potential: 70, agedForSeason: 2 },
+      ],
+    });
+    expect(db.ops.filter((op) => op.op === 'update').map((op) => op.filters[0]?.value)).toEqual([
+      'a-2',
+      'a-2',
+    ]);
+    expect(reverted).toEqual(['a-1', 'x']);
+    expect(result).toEqual({
+      ok: false,
+      error: 'Nie udało się otworzyć nowego sezonu. Części zmian w kadrze nie udało się cofnąć.',
+    });
+  });
+
+  it('retires nobody else when an interrupted start already brought the replacement', async () => {
+    const roster = [
+      player({ id: 'late', age: 39, skill: 40, academyTrack: false, starter: true }),
+      player({ id: 'a-club1-3', age: 17, skill: 45, academyTrack: false, starter: false }),
+    ];
+    const db = fakeDb(roster, null);
+    const result = await openNextSeasonAfterDeparture({
+      supabase: db.supabase as never,
+      clubId: 'club-1',
+      endedSeason: 3,
+      loadRoster: async () => roster,
+      nextSeason: 4,
+      nextTier: 'iii',
+      goalNote: 'miss',
+      hAgePort: hAge(db.ops, snapshot),
+      hAgeSnapshot: snapshot,
+    });
+    expect(result).toEqual({ ok: true, farewell: null });
+    expect(db.ops.map((op) => op.op)).toEqual(['club']);
+  });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  allocateAcademyShirt,
   generateAcademyCandidates,
   intakeWaitDays,
   isAcademyId,
@@ -14,11 +15,13 @@ import {
   isLastAcademySeason,
   juniorAgeNote,
   juniorTrainingBlock,
-  leavesAcademy,
+  ACADEMY_UPKEEP,
 } from '@/lib/academy/levels';
 import { resolveClubAcademy } from '@/lib/academy/resolve-club-academy';
 import { loadAcademyRecords } from '@/lib/academy/store';
 import type { AcademyState } from '@/lib/academy/types';
+import { settleFixture } from '@/lib/fixtures/settle-fixture';
+import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolveWageNote } from '@/lib/finance/unpaid-wages';
 import { resolveClubMessages } from '@/lib/messages/resolve-club-messages';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
@@ -181,20 +184,18 @@ describe('academy records', () => {
     }
   });
 
-  it('counts juniors of the old academy, not when a chosen one joined', async () => {
+  it('counts old juniors until the first stored intake, never a season replacement', async () => {
     const players = {
       data: [
-        { id: 'a-11111111-mabc123', created_at: '2026-11-23T12:00:00Z' },
+        { id: 'a-11111111-mabc1234', created_at: '2026-11-23T12:00:00Z' },
+        { id: 'a-11111111-3', created_at: '2026-11-24T11:00:00Z' },
         { id: 'a-11111111-n3-0', created_at: '2026-11-24T11:00:00Z' },
       ],
     };
-    expect(
-      await loadAcademyRecords(
-        fakeDb({ ...base, players, academy_intakes: { data: [] } }),
-        CLUB,
-        NOW,
-      ),
-    ).toMatchObject({ lastSeq: 0, waitDays: 5 });
+    const wait = async (rows: unknown[]) =>
+      loadAcademyRecords(fakeDb({ ...base, players, academy_intakes: { data: rows } }), CLUB, NOW);
+    expect(await wait([])).toMatchObject({ lastSeq: 0, waitDays: 5 });
+    expect(await wait([{ ...last, status: 'taken' }])).toMatchObject({ waitDays: 4 });
   });
 
   it('tells a missing migration from a failed read', async () => {
@@ -298,9 +299,8 @@ describe('junior training', () => {
 });
 
 describe('age rule', () => {
-  it('warns at 19 and parts at 20', () => {
+  it('warns in the season a junior is 19', () => {
     expect([18, 19, 20].map(isLastAcademySeason)).toEqual([false, true, true]);
-    expect([18, 19, 20].map(leavesAcademy)).toEqual([false, false, true]);
     expect(juniorAgeNote([{ name: 'A. Lis', age: 18 }])).toBeNull();
     const note = juniorAgeNote([{ name: 'A. Lis', age: 19 }]);
     expect(note).toContain('A. Lis odejdzie');
@@ -349,5 +349,63 @@ describe('upkeep and senior matches', () => {
       ['s-1', true],
       ['s-2', undefined],
     ]);
+  });
+
+  it('turns a refused row into the Polish error, whatever the database said', async () => {
+    for (const [code, error] of [
+      ['P0001', 'Nie udało się zaktualizować zawodnika.'],
+      ['57014', 'Nie udało się zapisać rozwoju.'],
+    ]) {
+      expect(
+        await applyMatchDevelopment(
+          { rpc: async () => ({ data: null, error: { code, message: 'x' } }) } as never,
+          { clubId: CLUB, matchKey: 'm1', activePlayers: [] },
+        ),
+      ).toEqual({ ok: false, error });
+    }
+  });
+
+  it('sends the upkeep of every level and falls back only for an older database', async () => {
+    const run = async (code: string | null) => {
+      const calls: Record<string, unknown>[] = [];
+      const settled = await settleFixture(
+        {
+          rpc: async (_name: string, args: Record<string, unknown>) => {
+            calls.push(args);
+            return code && 'p_upkeep_by_level' in args
+              ? { data: null, error: { code } }
+              : { data: { applied: true, paid: 1 }, error: null };
+          },
+        } as never,
+        { p_home: 1 },
+      );
+      return { settled, calls };
+    };
+    expect(ACADEMY_UPKEEP).toEqual([0, 500, 1_000, 1_500]);
+    const normal = await run(null);
+    expect(normal.calls).toEqual([
+      expect.objectContaining({ p_home: 1, p_upkeep_by_level: [0, 500, 1_000, 1_500] }),
+    ]);
+    const older = await run('PGRST202');
+    expect(older.calls[1]).toEqual({ p_home: 1 });
+    expect(older.settled).toEqual({ applied: true, paid: 1 });
+    const failed = await run('57014');
+    expect(failed.settled).toBeNull();
+    expect(failed.calls).toHaveLength(1);
+  });
+});
+
+describe('shirt numbers', () => {
+  it('are free again after a departure', () => {
+    const rows = Array.from({ length: 99 }, (_, i) => ({
+      shirt_number: i + 1,
+      departed_at: i + 1 === 40 ? '2026-11-01T00:00:00Z' : null,
+    }));
+    expect(freeShirt(rows)).toBe(40);
+    expect(freeShirt(rows.slice(0, 98))).toBe(99);
+    expect(freeShirt(rows.map((r) => ({ ...r, departed_at: null })))).toBeNull();
+    const used = new Set(Array.from({ length: 98 }, (_, i) => i + 1));
+    expect(allocateAcademyShirt(used, new Set([99]))).toBe(99);
+    expect(allocateAcademyShirt(new Set(), new Set([90]))).toBe(91);
   });
 });

@@ -4,8 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
-import { UPKEEP_LABEL, UPKEEP_SHORT_LABEL } from '@/lib/academy/levels';
-import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { readClubBuild } from '@/lib/club/read-build';
 import { recordFanMood } from '@/lib/club/record-fan-mood';
@@ -17,6 +15,7 @@ import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { settleFixture } from '@/lib/fixtures/settle-fixture';
 import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -183,31 +182,19 @@ export async function completeFixture(
       : 0;
 
   // Result, cash, ledger and the next fixture land together or not at all.
-  const upkeep = await loadAcademyUpkeep(admin, clubId);
-  const { data: settledRaw, error: settleErr } = await admin.rpc(
-    'settle_fixture' as never,
-    {
-      p_fixture_id: row.id,
-      p_club_id: clubId,
-      p_home: home,
-      p_away: away,
-      p_reward: reward?.amount ?? 0,
-      p_reward_label: reward?.label ?? '',
-      p_tickets: ticketTake,
-      p_wage_due: wageDue,
-      p_wage_label: WAGES_LABEL,
-      p_wage_short_label: WAGES_SHORT_LABEL,
-      ...(upkeep > 0
-        ? {
-            p_upkeep: upkeep,
-            p_upkeep_label: UPKEEP_LABEL,
-            p_upkeep_short_label: UPKEEP_SHORT_LABEL,
-          }
-        : {}),
-    } as never,
-  );
-  const settled = settledRaw as { applied: boolean; paid: number } | null;
-  if (settleErr || !settled) {
+  const settled = await settleFixture(admin, {
+    p_fixture_id: row.id,
+    p_club_id: clubId,
+    p_home: home,
+    p_away: away,
+    p_reward: reward?.amount ?? 0,
+    p_reward_label: reward?.label ?? '',
+    p_tickets: ticketTake,
+    p_wage_due: wageDue,
+    p_wage_label: WAGES_LABEL,
+    p_wage_short_label: WAGES_SHORT_LABEL,
+  });
+  if (!settled) {
     console.error('completeFixture: settlement failed', { fixtureId: row.id });
     return { error: 'Nie udało się rozliczyć meczu. Spróbuj ponownie.' };
   }

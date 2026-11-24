@@ -21,6 +21,9 @@ const LEVELS: readonly [AcademyLevel, AcademyLevel, AcademyLevel, AcademyLevel] 
   { cost: 110_000, upkeep: 1_500, slots: 6, intakeEveryDays: 4, candidates: 3, skill: [46, 56] },
 ];
 
+/** Sent with every settlement; the database picks the amount of the club's level. */
+export const ACADEMY_UPKEEP: readonly number[] = LEVELS.map((level) => level.upkeep);
+
 export const JUNIOR_TRAINING = { COST: 1_000, SEASON_GAIN: 6 } as const;
 
 /** A junior this old has his last academy season: the next one starts without him. */
@@ -64,13 +67,9 @@ export function homegrownSaleShare(seniorMatches: number | null | undefined): nu
   return SALE_SHARES.find((step) => played >= step.matches)?.share ?? 0.1;
 }
 
+/** Age before the tick of the season start: the next season would find him too old. */
 export function isLastAcademySeason(age: number): boolean {
   return age >= JUNIOR_MAX_AGE;
-}
-
-/** After the age tick of the season start. */
-export function leavesAcademy(age: number): boolean {
-  return age > JUNIOR_MAX_AGE;
 }
 
 /** One line for Messages. Null when every junior may stay. */

@@ -109,7 +109,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const loanOffers = resolveIncomingLoanOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
-      rosterCount: activePlayers.length,
+      rosterCount: filterSeniorPlayers(activePlayers).length,
       today,
     });
     const intl = resolveIntlCallup({

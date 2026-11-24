@@ -21,6 +21,13 @@ const ACADEMY_SELECT = 'id, senior_matches, academy_trained_on, academy_gain, ac
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
+const MISSING_COLUMN = new Set(['42703', 'PGRST204']);
+
+/** A missing column is an older database. Anything else means we do not know. */
+function isFailedRead(error: { readonly code?: string } | null): boolean {
+  return error != null && !MISSING_COLUMN.has(error.code ?? '');
+}
+
 /**
  * Club players from DB (SSOT) including academy prospects.
  * Excludes DEPARTED / departed_at. Empty array if missing — no seed fallback.
@@ -55,6 +62,7 @@ export async function listClubPlayers(
     .eq('club_id', clubId)
     .is('departed_at', null);
   const depthById = new Map<string, Partial<PlayerDbRow>>();
+  let saleUnknown = isFailedRead(depth.error);
   if (!depth.error && depth.data) {
     for (const row of depth.data as Partial<PlayerDbRow>[]) {
       if (row.id) depthById.set(row.id, row);
@@ -65,11 +73,19 @@ export async function listClubPlayers(
       supabase.from('players').select(columns).eq('club_id', clubId).is('departed_at', null),
     ),
   );
+  const [, academy] = extras;
+  saleUnknown ||= isFailedRead(academy?.error ?? null);
   for (const extra of extras) {
     if (extra.error || !extra.data) continue;
     for (const row of extra.data as unknown as Partial<PlayerDbRow>[]) {
       if (!row.id) continue;
       depthById.set(row.id, { ...depthById.get(row.id), ...row });
+    }
+  }
+
+  if (saleUnknown) {
+    for (const row of result.data as PlayerDbRow[]) {
+      depthById.set(row.id, { ...depthById.get(row.id), sale_unknown: true });
     }
   }
 

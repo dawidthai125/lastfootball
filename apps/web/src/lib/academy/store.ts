@@ -1,9 +1,4 @@
-import {
-  intakeWaitDays,
-  isAcademyId,
-  isCandidateId,
-  type AcademyCandidate,
-} from '@/lib/academy/intake';
+import { intakeWaitDays, isOldIntakeId, type AcademyCandidate } from '@/lib/academy/intake';
 import { academyLevel, clampAcademyLevel } from '@/lib/academy/levels';
 import type { tryAdminClient } from '@/lib/supabase/admin';
 
@@ -60,19 +55,17 @@ export async function loadAcademyRecords(
 
   const level = clampAcademyLevel((club.data as { academy_level?: number }).academy_level);
   const last = ((intakes.data ?? []) as unknown as IntakeRow[])[0] ?? null;
-  // Juniors of the old academy count until a stored intake takes over.
-  const older = ((joined.data ?? []) as { id: string; created_at: string }[])
-    .filter((p) => isAcademyId(p.id, clubId) && !isCandidateId(p.id, clubId))
-    .map((p) => p.created_at);
+  // Juniors of the old academy count only until the first stored intake.
+  const dates = last
+    ? [last.created_at]
+    : ((joined.data ?? []) as { id: string; created_at: string }[])
+        .filter((p) => isOldIntakeId(p.id, clubId))
+        .map((p) => p.created_at);
   return {
     status: 'ok',
     level,
     lastSeq: last?.seq ?? 0,
     open: last?.status === 'open' ? { seq: last.seq, candidates: last.candidates } : null,
-    waitDays: intakeWaitDays(
-      last ? [...older, last.created_at] : older,
-      now,
-      academyLevel(level).intakeEveryDays,
-    ),
+    waitDays: intakeWaitDays(dates, now, academyLevel(level).intakeEveryDays),
   };
 }

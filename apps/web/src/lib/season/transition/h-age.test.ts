@@ -44,7 +44,7 @@ describe('LFE-AGE-01 H-AGE transition', () => {
       },
     ]);
 
-    const result = await runSeasonTransitionHAge('club-1', port);
+    const result = await runSeasonTransitionHAge('club-1', port, 3);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.updatedCount).toBe(3);
@@ -79,7 +79,7 @@ describe('LFE-AGE-01 H-AGE transition', () => {
       },
     };
 
-    const result = await runSeasonTransitionHAge('club-1', port);
+    const result = await runSeasonTransitionHAge('club-1', port, 3);
     expect(result.ok).toBe(false);
     expect(writes).toBeGreaterThan(1);
     expect(store.get('ok')).toMatchObject({ age: 20, skill: 50 });
@@ -88,7 +88,7 @@ describe('LFE-AGE-01 H-AGE transition', () => {
 
   it('revertSeasonTransitionHAge restores snapshot after Confirm failure', async () => {
     const { port, store } = memoryPort([{ id: 'p1', age: 30, skill: 66, potential: 70 }]);
-    const aged = await runSeasonTransitionHAge('club-1', port);
+    const aged = await runSeasonTransitionHAge('club-1', port, 3);
     expect(aged.ok).toBe(true);
     if (!aged.ok) return;
     expect(store.get('p1')?.age).toBe(31);
@@ -103,8 +103,60 @@ describe('LFE-AGE-01 H-AGE transition', () => {
       listActiveClubPlayers: vi.fn(async () => []),
       writePlayerAgeSkill: vi.fn(async () => ({ ok: true as const })),
     };
-    const result = await runSeasonTransitionHAge('club-1', port);
+    const result = await runSeasonTransitionHAge('club-1', port, 3);
     expect(result).toEqual({ ok: true, updatedCount: 0, snapshot: [] });
     expect(port.writePlayerAgeSkill).not.toHaveBeenCalled();
+  });
+
+  it('ages a player once per season end, also after an interrupted run (D134)', async () => {
+    const store = new Map<string, SeasonAgePlayerSlice>(
+      ['a', 'b'].map((id) => [id, { id, age: 18, skill: 50, potential: 60, agedForSeason: null }]),
+    );
+    const broken = new Set<string>();
+    const port: HAgePlayersPort = {
+      async listActiveClubPlayers() {
+        return [...store.values()];
+      },
+      async writePlayerAgeSkill(_clubId, row, unlessAgedFor) {
+        const prev = store.get(row.id)!;
+        if (broken.has(row.id)) return { ok: false, error: 'down' };
+        if (unlessAgedFor !== undefined && prev.agedForSeason === unlessAgedFor) {
+          return { ok: false, error: 'aged already' };
+        }
+        store.set(row.id, { ...prev, ...row });
+        return { ok: true };
+      },
+    };
+    const ages = () => [...store.values()].map((p) => [p.age, p.agedForSeason]);
+
+    const first = await runSeasonTransitionHAge('c', port, 3);
+    expect(first).toMatchObject({ ok: true, updatedCount: 2 });
+    expect(ages()).toEqual([
+      [19, 3],
+      [19, 3],
+    ]);
+    // The request died here: the next one finds everybody aged.
+    expect(await runSeasonTransitionHAge('c', port, 3)).toEqual({
+      ok: true,
+      updatedCount: 0,
+      snapshot: [],
+    });
+    expect(ages()[0]).toEqual([19, 3]);
+
+    // A revert goes on past a failed row. That row keeps its marker and is not aged again.
+    if (!first.ok) return;
+    broken.add('a');
+    const reverted = await revertSeasonTransitionHAge('c', port, first.snapshot);
+    expect(reverted.ok).toBe(false);
+    expect(ages()).toEqual([
+      [19, 3],
+      [18, null],
+    ]);
+    broken.clear();
+    expect(await runSeasonTransitionHAge('c', port, 3)).toMatchObject({ updatedCount: 1 });
+    expect(ages()).toEqual([
+      [19, 3],
+      [19, 3],
+    ]);
   });
 });

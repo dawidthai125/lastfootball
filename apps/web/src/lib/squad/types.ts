@@ -81,6 +81,8 @@ export type PlayerRowDto = {
   readonly joinedAt?: string | null;
   /** Matches in the starting eleven since he joined the seniors (D134). */
   readonly seniorMatches?: number;
+  /** Origin or matches could not be read, so his price is unknown: no sale now. */
+  readonly saleUnknown?: boolean;
   /** UTC day of the last academy training. */
   readonly academyTrainedOn?: string | null;
   readonly academyGain?: number;

@@ -34,7 +34,8 @@ export async function assignShirtNumber(
   const { data, error } = await supabase
     .from('players')
     .select('id, name, shirt_number')
-    .eq('club_id', clubId);
+    .eq('club_id', clubId)
+    .is('departed_at', null);
   if (error || !data) return { error: 'Nie udało się odczytać kadry.' };
 
   const plan = planShirtAssignment(

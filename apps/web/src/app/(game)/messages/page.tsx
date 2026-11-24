@@ -68,7 +68,7 @@ export default async function MessagesPage() {
   const loanOffers = resolveIncomingLoanOffers({
     clubId: club.id,
     transferWindowOpen: club.transferWindowOpen,
-    rosterCount: activePlayers.length,
+    rosterCount: filterSeniorPlayers(activePlayers).length,
     today,
   });
 

@@ -107,7 +107,14 @@ export async function applyMatchDevelopment(
   );
 
   if (error) {
-    return { ok: false, error: error.message || 'Nie udało się zapisać rozwoju.' };
+    // P0001: the function refused a row and rolled everything back.
+    return {
+      ok: false,
+      error:
+        error.code === 'P0001'
+          ? 'Nie udało się zaktualizować zawodnika.'
+          : 'Nie udało się zapisać rozwoju.',
+    };
   }
 
   const row = data as RpcResult | null;

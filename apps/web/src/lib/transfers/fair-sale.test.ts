@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
-import { aiSaleAsk, saleBlock } from '@/lib/transfers/fair-sale';
+import { aiSaleAsk, saleBlock, saleShownPriceError } from '@/lib/transfers/fair-sale';
 
 const NOW = new Date('2026-11-24T12:00:00Z');
 
@@ -43,5 +43,14 @@ describe('fair sale', () => {
     expect(saleBlock({ ...p, joinedAt: '2026-11-17T11:00:00Z' }, NOW)).toBeNull();
     expect(saleBlock({ ...p, loanedIn: true }, NOW)).toContain('Wypożyczonego');
     expect(saleBlock({ ...p, onLoan: true }, NOW)).toContain('wypożyczeniu');
+  });
+
+  it('sells nobody whose sale facts are unknown, nor at an outdated price (D134)', () => {
+    expect(saleBlock({ skill: 60, age: 20, saleUnknown: true }, NOW)).toContain('Spróbuj ponownie');
+    expect(saleShownPriceError('12000', 12_000)).toBeNull();
+    for (const shown of [null, '', '11000', 'x']) {
+      expect(saleShownPriceError(shown, 12_000)).toBe('Cena się zmieniła, odśwież.');
+    }
+    expect(saleShownPriceError('', 0)).not.toBeNull();
   });
 });

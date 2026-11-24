@@ -75,6 +75,7 @@ function LevelPanel({
                 Poziom {academy.level + 1}: {upgrade.effects}
               </p>
               <form action={action}>
+                <input type="hidden" name="level" value={academy.level} />
                 <Button type="submit" disabled={pending || !upgrade.affordable}>
                   {`Rozbuduj · ${formatMoney(upgrade.cost)}`}
                 </Button>

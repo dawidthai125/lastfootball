@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { incomingLoanBlock, resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
+import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import { createClient } from '@/lib/supabase/server';
 
@@ -21,13 +22,6 @@ function nextLoanId(clubId: string, existingIds: readonly string[]): string {
     if (Number.isFinite(n)) max = Math.max(max, n);
   }
   return `${prefix}${max + 1}`;
-}
-
-function nextShirt(used: readonly number[]): number {
-  for (let n = 1; n <= 99; n++) {
-    if (!used.includes(n)) return n;
-  }
-  return 99;
 }
 
 export async function acceptIncomingLoan(
@@ -51,11 +45,11 @@ export async function acceptIncomingLoan(
   if (!clubRow?.id) return { error: 'Nie znaleziono klubu.' };
   const { data: players } = await supabase
     .from('players')
-    .select('id, shirt_number, loaned_in')
+    .select('id, loaned_in')
     .eq('club_id', clubRow.id)
+    .eq('academy_track', false)
     .is('departed_at', null);
-  const rows =
-    (players as { id: string; shirt_number: number; loaned_in: boolean | null }[] | null) ?? [];
+  const rows = (players as { id: string; loaned_in: boolean | null }[] | null) ?? [];
   const blocked = incomingLoanBlock({
     rosterCount: rows.length,
     alreadyLoanedIn: rows.filter((r) => r.loaned_in === true).length,
@@ -68,17 +62,19 @@ export async function acceptIncomingLoan(
     today: utcDateString(),
   }).find((o) => o.offerId === offerId);
   if (!offer) return { error: 'Oferta wypożyczenia wygasła.' };
-  // Ids and numbers of players who left stay taken (unique per club).
-  const { data: everyone } = await supabase
+  // Ids of players who left stay taken, their numbers do not.
+  const { data: everyone, error: everyErr } = await supabase
     .from('players')
-    .select('id, shirt_number')
+    .select('id, shirt_number, departed_at')
     .eq('club_id', clubRow.id);
-  const taken = (everyone as { id: string; shirt_number: number }[] | null) ?? rows;
+  if (everyErr || !everyone) return { error: 'Nie udało się odczytać kadry.' };
+  const taken = everyone as { id: string; shirt_number: number; departed_at: string | null }[];
   const playerId = nextLoanId(
     clubRow.id,
     taken.map((r) => r.id),
   );
-  const shirt = nextShirt(taken.map((r) => r.shirt_number));
+  const shirt = freeShirt(taken);
+  if (shirt == null) return { error: 'Brak wolnego numeru koszulki.' };
   const { error } = await serverDb(supabase)
     .from('players')
     .insert({

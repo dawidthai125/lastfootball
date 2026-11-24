@@ -8,7 +8,7 @@ import {
   buildAcademyIntakeDraft,
   generateAcademyCandidates,
   intakeWaitDays,
-  isAcademyId,
+  isOldIntakeId,
   canPromoteProspect,
 } from '@/lib/academy/intake';
 import {
@@ -21,7 +21,6 @@ import { readAcademyLevel } from '@/lib/academy/read-level';
 import { loadAcademyRecords } from '@/lib/academy/store';
 import type { AcademyActionState } from '@/lib/academy/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { CASH_STALE_ERROR, writeClubCash } from '@/lib/finance/club-cash';
 import { listClubFixtures } from '@/lib/fixtures';
 import { resolveHubPhase } from '@/lib/hub';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -62,7 +61,7 @@ async function intakeWithoutOffers(
   rows: readonly PlayerRowDto[],
 ): Promise<AcademyActionState> {
   const supabase = await createClient();
-  // Everyone who ever joined: numbers stay taken, and a promoted or sold junior still counts.
+  // Everyone who ever joined: a promoted or sold junior still counts.
   const { data: everyone, error: historyErr } = await serverDb(supabase)
     .from('players')
     .select('id, shirt_number, created_at')
@@ -70,7 +69,7 @@ async function intakeWithoutOffers(
   if (historyErr) return { error: 'Nie udało się sprawdzić naboru.' };
   const history = (everyone ?? []) as { id: string; shirt_number: number; created_at: string }[];
   const wait = intakeWaitDays(
-    history.filter((p) => isAcademyId(p.id, club.id)).map((p) => p.created_at),
+    history.filter((p) => isOldIntakeId(p.id, club.id)).map((p) => p.created_at),
     new Date(),
   );
   if (wait > 0) {
@@ -162,10 +161,12 @@ export async function intakeAcademyProspect(
   return { ok: true, message: 'Skauci pokazali kandydatów. Wybierz jednego.' };
 }
 
+const INTAKE_CLOSED = 'Ten nabór jest już zamknięty.';
+
 const TAKE_ERRORS: Readonly<Record<string, string>> = {
   slots: 'Brak wolnego miejsca w akademii.',
   shirt: 'Brak wolnego numeru koszulki.',
-  closed: 'Ten nabór jest już zamknięty.',
+  closed: INTAKE_CLOSED,
 };
 
 export async function takeAcademyCandidate(
@@ -210,53 +211,49 @@ export async function declineAcademyIntake(
   if (!Number.isInteger(seq)) return { error: 'Brak naboru.' };
   const admin = tryAdminClient();
   if (!admin) return { error: NOT_SAVED };
-  const { error } = await admin.rpc(
+  const { data, error } = await admin.rpc(
     'decline_academy_intake' as never,
     { p_club_id: gate.club.id, p_seq: seq } as never,
   );
   if (error) return { error: NOT_SAVED };
+  if (data !== true) return { error: INTAKE_CLOSED };
   revalidateAcademyPaths();
   return { ok: true, message: 'Nabór zamknięty bez wyboru.' };
 }
 
+const UPGRADE_ERRORS: Readonly<Record<string, string>> = {
+  moved: 'Poziom akademii się zmienił, odśwież.',
+  max: 'Akademia jest już na najwyższym poziomie.',
+  cash: 'Za mało środków w kasie.',
+};
+
+/** The level on the button decides the price; the database refuses when it moved since. */
 export async function upgradeAcademy(
   _prev: AcademyActionState,
-  _formData: FormData,
+  formData: FormData,
 ): Promise<AcademyActionState> {
-  void _prev;
-  void _formData;
   const gate = await requireSeasonClub();
   if ('error' in gate) return { error: gate.error };
   const { club } = gate;
-  const supabase = await createClient();
-  const level = await readAcademyLevel(supabase, club.id);
-  if (level == null) return { error: 'Rozbudowa nie jest jeszcze włączona.' };
+  const level = Number(formData.get('level') ?? -1);
+  if (!Number.isInteger(level) || level < 0) return { error: 'Brak poziomu akademii.' };
   const next = academyUpgrade({ level, cash: club.cashBalance });
-  if (!next.ok) {
-    return {
-      error:
-        next.reason === 'cash'
-          ? 'Za mało środków w kasie.'
-          : 'Akademia jest już na najwyższym poziomie.',
-    };
-  }
-  const written = await writeClubCash({
-    clubId: club.id,
-    expected: club.cashBalance,
-    next: next.cashAfter,
-    extra: { academy_level: next.level },
-  });
-  if (written === 'stale') return { error: CASH_STALE_ERROR };
-  if (written === 'error') return { error: 'Rozbudowa nie jest jeszcze włączona.' };
-  await serverDb(supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: club.id,
-      category: 'academy_build',
-      label: `Akademia · poziom ${next.level}`,
-      amount: -next.cost,
-      fixture_id: null,
-    } as never);
+  if (!next.ok) return { error: UPGRADE_ERRORS[next.reason] };
+  const admin = tryAdminClient();
+  if (!admin) return { error: NOT_SAVED };
+  const { data, error } = await admin.rpc(
+    'upgrade_academy' as never,
+    {
+      p_club_id: club.id,
+      p_expected_level: level,
+      p_cost: next.cost,
+      p_label: `Akademia · poziom ${next.level}`,
+    } as never,
+  );
+  if (error?.code === 'PGRST202') return { error: 'Rozbudowa nie jest jeszcze włączona.' };
+  const row = data as { ok?: boolean; reason?: string } | null;
+  if (error || !row) return { error: NOT_SAVED };
+  if (row.ok !== true) return { error: UPGRADE_ERRORS[row.reason ?? ''] ?? NOT_SAVED };
   revalidateAcademyPaths();
   revalidatePath('/finance');
   return { ok: true, message: `Akademia ma poziom ${next.level}.` };

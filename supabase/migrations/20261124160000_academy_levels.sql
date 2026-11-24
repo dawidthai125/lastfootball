@@ -1,4 +1,5 @@
--- D134 (LFE-ACADEMY-02): academy level, stored intake offers, daily junior training, upkeep.
+-- D134 (LFE-ACADEMY-02): academy level, stored intake offers, daily junior training, upkeep,
+-- age tick marker, shirt numbers of departed players, junior-free roster counts.
 -- Additive; run it before the deploy, in one transaction. The deployed code keeps working:
 -- settle_fixture still answers the old ten named arguments with no upkeep.
 
@@ -40,7 +41,9 @@ alter table public.players
   add column if not exists senior_matches integer not null default 0,
   add column if not exists academy_trained_on date,
   add column if not exists academy_gain smallint not null default 0,
-  add column if not exists academy_gain_season integer;
+  add column if not exists academy_gain_season integer,
+  -- Season whose end already added a year, so a retried season start cannot add another.
+  add column if not exists aged_for_season integer;
 
 alter table public.players drop constraint if exists players_senior_matches_check;
 alter table public.players
@@ -48,6 +51,118 @@ alter table public.players
 alter table public.players drop constraint if exists players_academy_gain_check;
 alter table public.players
   add constraint players_academy_gain_check check (academy_gain between 0 and 6);
+
+-- A number is taken only while its player is in the club.
+alter table public.players drop constraint if exists players_club_shirt_unique;
+create unique index if not exists players_club_shirt_active_unique
+  on public.players (club_id, shirt_number) where departed_at is null;
+
+-- An undone departure finds a free number when somebody else wears the old one.
+create or replace function public.lf_return_shirt()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+declare
+  v_shirt integer;
+begin
+  if not exists (
+    select 1 from public.players p
+    where p.club_id = new.club_id and p.shirt_number = new.shirt_number
+      and p.departed_at is null and p.id <> new.id
+  ) then
+    return new;
+  end if;
+  select n into v_shirt
+  from generate_series(1, 99) as n
+  where not exists (
+    select 1 from public.players p
+    where p.club_id = new.club_id and p.shirt_number = n and p.departed_at is null
+  )
+  order by n
+  limit 1;
+  if v_shirt is null then
+    raise exception 'no free shirt number';
+  end if;
+  new.shirt_number := v_shirt;
+  return new;
+end;
+$$;
+
+drop trigger if exists lf_return_shirt on public.players;
+create trigger lf_return_shirt
+  before update of departed_at on public.players
+  for each row
+  when (old.departed_at is not null and new.departed_at is null)
+  execute function public.lf_return_shirt();
+
+-- A move between clubs does not turn a home-grown or free player into a bought one.
+create or replace function public.lf_stamp_player_move()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.club_id is distinct from old.club_id then
+    new.origin := case when old.origin in ('academy', 'free') then old.origin else 'bought' end;
+    new.joined_at := now();
+  end if;
+  return new;
+end;
+$$;
+
+-- Roster limits (22, 18, last goalkeeper) count seniors, numbers count players in the club.
+do $$
+declare
+  v_job record;
+  d text;
+  v_old text;
+begin
+  for v_job in
+    select * from (values
+      (
+        'public.complete_live_h2h_transfer(uuid,uuid,text,integer,uuid)',
+        array[
+          'where club_id = p_buyer_club_id and departed_at is null;',
+          'where club_id = p_seller_club_id and departed_at is null;'
+        ]
+      ),
+      (
+        'public.complete_auction_transfer(text)',
+        array[
+          'where club_id = v_buyer.id and departed_at is null;',
+          'where club_id = v_seller.id and departed_at is null;'
+        ]
+      )
+    ) as t(f, counts)
+  loop
+    d := pg_get_functiondef(v_job.f::regprocedure);
+    if position('not academy_track' in d) > 0 then
+      continue;
+    end if;
+    foreach v_old in array v_job.counts || array[
+      'and (pos = ''BR'' or role = ''GK'');',
+      'and shirt_number = v_shirt',
+      'and shirt_number = i'
+    ]
+    loop
+      if length(d) - length(replace(d, v_old, '')) <> length(v_old) then
+        raise exception 'unexpected body of %: %', v_job.f, v_old;
+      end if;
+      d := replace(
+        d,
+        v_old,
+        case
+          when v_old like 'and shirt%' then v_old || ' and departed_at is null'
+          when v_old like 'and (pos%' then 'and not academy_track ' || v_old
+          else replace(v_old, ';', ' and not academy_track;')
+        end
+      );
+    end loop;
+    execute d;
+  end loop;
+end;
+$$;
 
 alter table public.finance_movements
   drop constraint if exists finance_movements_category_check;
@@ -184,11 +299,12 @@ begin
     return jsonb_build_object('ok', false, 'reason', 'slots');
   end if;
 
-  -- 90..99 first, then the lowest free one. A number stays taken after a departure.
+  -- 90..99 first, then the lowest free one.
   select n into v_shirt
   from generate_series(1, 99) as n
   where not exists (
-    select 1 from public.players p where p.club_id = p_club_id and p.shirt_number = n
+    select 1 from public.players p
+    where p.club_id = p_club_id and p.shirt_number = n and p.departed_at is null
   )
   order by (n < 90), n
   limit 1;
@@ -317,18 +433,63 @@ begin
 end;
 $$;
 
+-- Level, cash and ledger in one transaction. A page that shows an older level is refused.
+create or replace function public.upgrade_academy(
+  p_club_id uuid,
+  p_expected_level integer,
+  p_cost integer,
+  p_label text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_cash integer;
+  v_level integer;
+begin
+  if p_cost is null or p_cost < 1 then
+    raise exception 'academy cost out of range';
+  end if;
+  select cash_balance, academy_level into v_cash, v_level
+  from public.clubs where id = p_club_id for update;
+  if not found then
+    raise exception 'club not found';
+  end if;
+  if v_level is distinct from p_expected_level then
+    return jsonb_build_object('ok', false, 'reason', 'moved');
+  end if;
+  if v_level >= 3 then
+    return jsonb_build_object('ok', false, 'reason', 'max');
+  end if;
+  if v_cash < p_cost then
+    return jsonb_build_object('ok', false, 'reason', 'cash');
+  end if;
+  update public.clubs
+  set academy_level = v_level + 1, cash_balance = v_cash - p_cost
+  where id = p_club_id;
+  insert into public.finance_movements (club_id, category, label, amount)
+  values (p_club_id, 'academy_build', p_label, -p_cost);
+  return jsonb_build_object('ok', true, 'level', v_level + 1);
+end;
+$$;
+
 revoke all on function public.open_academy_intake(uuid, integer, jsonb),
   public.take_academy_candidate(uuid, integer, integer, integer),
   public.decline_academy_intake(uuid, integer),
-  public.train_academy_junior(uuid, text, text, integer, integer, integer, text)
+  public.train_academy_junior(uuid, text, text, integer, integer, integer, text),
+  public.upgrade_academy(uuid, integer, integer, text)
   from public, anon, authenticated;
 grant execute on function public.open_academy_intake(uuid, integer, jsonb),
   public.take_academy_candidate(uuid, integer, integer, integer),
   public.decline_academy_intake(uuid, integer),
-  public.train_academy_junior(uuid, text, text, integer, integer, integer, text)
+  public.train_academy_junior(uuid, text, text, integer, integer, integer, text),
+  public.upgrade_academy(uuid, integer, integer, text)
   to service_role;
 
--- Upkeep joins the settlement. One function only, so the old named call stays unambiguous.
+-- Upkeep joins the settlement: the app sends the amount per level, the level is read under the
+-- club lock. One function only, so the old named call stays unambiguous and pays no upkeep.
 drop function if exists public.settle_fixture(
   uuid, uuid, integer, integer, integer, text, integer, integer, text, text
 );
@@ -344,7 +505,7 @@ create or replace function public.settle_fixture(
   p_wage_due integer,
   p_wage_label text,
   p_wage_short_label text,
-  p_upkeep integer default 0,
+  p_upkeep_by_level jsonb default null,
   p_upkeep_label text default 'Utrzymanie akademii',
   p_upkeep_short_label text default 'Utrzymanie akademii niepełne, zabrakło'
 )
@@ -359,13 +520,18 @@ declare
   v_competition text;
   v_income integer := greatest(0, coalesce(p_reward, 0)) + greatest(0, coalesce(p_tickets, 0));
   v_due integer := greatest(0, coalesce(p_wage_due, 0));
-  v_upkeep integer := greatest(0, coalesce(p_upkeep, 0));
+  v_level integer;
+  v_upkeep integer := 0;
   v_paid integer;
   v_upkeep_paid integer;
 begin
-  select cash_balance into v_cash from public.clubs where id = p_club_id for update;
+  select cash_balance, academy_level into v_cash, v_level
+  from public.clubs where id = p_club_id for update;
   if not found then
     raise exception 'club not found';
+  end if;
+  if jsonb_typeof(p_upkeep_by_level) = 'array' then
+    v_upkeep := greatest(0, coalesce((p_upkeep_by_level ->> v_level)::integer, 0));
   end if;
 
   select status, competition into v_status, v_competition
@@ -453,34 +619,41 @@ end;
 $$;
 
 revoke all on function public.settle_fixture(
-  uuid, uuid, integer, integer, integer, text, integer, integer, text, text, integer, text, text
+  uuid, uuid, integer, integer, integer, text, integer, integer, text, text, jsonb, text, text
 ) from public, anon, authenticated;
 grant execute on function public.settle_fixture(
-  uuid, uuid, integer, integer, integer, text, integer, integer, text, text, integer, text, text
+  uuid, uuid, integer, integer, integer, text, integer, integer, text, text, jsonb, text, text
 ) to service_role;
 
--- Matches in the starting eleven of the senior team, once per match key.
+-- Matches in the starting eleven of the senior team, once per match key. A refused row now
+-- rolls the whole call back, so a repeat cannot count the same match twice.
 do $$
 declare
   f constant text := 'public.apply_match_development(uuid,text,jsonb)';
   d text := pg_get_functiondef(f::regprocedure);
-  v_old constant text := 'morale = coalesce((v_item->>''morale'')::integer, morale)';
-  n text;
+  v_old text;
+  v_new text;
 begin
   if position('senior_matches' in d) > 0 then
     return;
   end if;
-  n := replace(
-    d,
-    v_old,
-    v_old || ',
+  foreach v_old in array array[
+    'morale = coalesce((v_item->>''morale'')::integer, morale)',
+    'return jsonb_build_object(''ok'', false, ''error'', ''Nie udało się zaktualizować zawodnika.'');'
+  ]
+  loop
+    if length(d) - length(replace(d, v_old, '')) <> length(v_old) then
+      raise exception 'unexpected body of %: %', f, v_old;
+    end if;
+    v_new := case
+      when v_old like 'morale%' then v_old || ',
         senior_matches = senior_matches
           + case when coalesce((v_item->>''played'')::boolean, false) then 1 else 0 end'
-  );
-  if n = d then
-    raise exception 'unexpected body of %', f;
-  end if;
-  execute n;
+      else 'raise exception ''Nie udało się zaktualizować zawodnika.'';'
+    end;
+    d := replace(d, v_old, v_new);
+  end loop;
+  execute d;
 end;
 $$;
 
