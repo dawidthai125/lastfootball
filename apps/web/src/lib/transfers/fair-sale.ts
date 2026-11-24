@@ -14,7 +14,7 @@ export type SalePlayer = {
 /** Days a newcomer (academy, free agent, purchase) stays before he can be sold or listed. */
 export const SALE_COOLDOWN_DAYS = 7;
 /** Computer clubs pay this share for players the club got for nothing. */
-export const FREE_ORIGIN_SHARE = 0.25;
+export const FREE_ORIGIN_SHARE = 0.1;
 
 const DAY_MS = 86_400_000;
 

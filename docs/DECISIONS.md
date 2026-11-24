@@ -789,7 +789,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 ### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
 
 **Dlaczego:** Darmowy nabór bez limitu i sprzedaż juniora, wolnego agenta lub wypożyczonego za pełną cenę dawały nieograniczoną kasę.  
-**Zasada:** `players.origin` (academy · free · bought · loan; null = start) i `joined_at`. `saleBlock`: wypożyczeni nigdy, nowi po 7 dniach. `aiSaleAsk`: 25% ceny dla academy i free; handel między menedżerami bez zmian. Nabór co 7 dni (`intakeWaitDays`), liczony z całej historii klubu. Zmiana klubu stempluje trigger `lf_stamp_player_move`.
+**Zasada:** `players.origin` (academy · free · bought · loan; null = start) i `joined_at`. `saleBlock`: wypożyczeni nigdy, nowi po 7 dniach. `aiSaleAsk`: 10% ceny dla academy i free; handel między menedżerami bez zmian. Nabór co 7 dni (`intakeWaitDays`), liczony z całej historii klubu. Zmiana klubu stempluje trigger `lf_stamp_player_move`.
 
 ## Najważniejsze decyzje (meta)
 

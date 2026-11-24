@@ -6,10 +6,10 @@ import { aiSaleAsk, saleBlock } from '@/lib/transfers/fair-sale';
 const NOW = new Date('2026-11-24T12:00:00Z');
 
 describe('fair sale', () => {
-  it('pays a quarter for players who came for nothing', () => {
+  it('pays a tenth for players who came for nothing', () => {
     const junior = { skill: 46, age: 17, origin: 'academy' };
     expect(deriveTransferFee(46, 17)).toBeGreaterThan(100_000);
-    expect(aiSaleAsk(junior)).toBeLessThan(30_000);
+    expect(aiSaleAsk(junior)).toBeLessThan(15_000);
     expect(aiSaleAsk({ ...junior, origin: 'free' })).toBe(aiSaleAsk(junior));
   });
 
