@@ -9,4 +9,4 @@ export const OPERATOR = {
 } as const;
 
 /** Minimum age and how long letters to the contact address are kept. */
-export const LEGAL = { minAge: 16, lettersMonths: 12, since: 'dnia publikacji' } as const;
+export const LEGAL = { minAge: 16, lettersMonths: 12, since: '24 listopada 2026' } as const;
