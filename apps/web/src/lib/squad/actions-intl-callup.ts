@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -64,7 +65,7 @@ export async function acceptIntlCallup(_prev: IntlState, formData: FormData): Pr
   if (!callup || callup.playerId !== playerId) {
     return { error: 'To powołanie już nie obowiązuje.' };
   }
-  const { error } = await supabase
+  const { error } = await serverDb(supabase)
     .from('players')
     .update({
       intl_absent_until: callup.until,

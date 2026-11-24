@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import type { HAgePlayersPort } from '@/lib/season/transition/h-age';
 import type { SeasonAgePlayerSlice, SeasonAgeResultSlice } from '@/lib/squad/season-age';
 import { createClient } from '@/lib/supabase/server';
@@ -37,7 +38,7 @@ export function createHAgeSupabasePort(supabase: PlayersClient): HAgePlayersPort
     },
 
     async writePlayerAgeSkill(clubId, row: SeasonAgeResultSlice) {
-      const { data, error } = await supabase
+      const { data, error } = await serverDb(supabase)
         .from('players')
         .update({ age: row.age, skill: row.skill } as never)
         .eq('id', row.id)

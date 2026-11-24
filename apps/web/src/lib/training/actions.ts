@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -75,19 +76,19 @@ export async function runTrainingSession(
   const nextTempo = gainTempo(build.styleTempo, focusId, intensityId);
   const nextWidth = gainWidth(build.styleWidth, focusId, intensityId);
   if (!result.skipped && nextStyle !== build.stylePressing) {
-    await supabase
+    await serverDb(supabase)
       .from('clubs')
       .update({ style_pressing: nextStyle } as never)
       .eq('id', clubRow.id);
   }
   if (!result.skipped && nextTempo !== build.styleTempo) {
-    await supabase
+    await serverDb(supabase)
       .from('clubs')
       .update({ style_tempo: nextTempo } as never)
       .eq('id', clubRow.id);
   }
   if (!result.skipped && nextWidth !== build.styleWidth) {
-    await supabase
+    await serverDb(supabase)
       .from('clubs')
       .update({ style_width: nextWidth } as never)
       .eq('id', clubRow.id);

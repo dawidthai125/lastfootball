@@ -1,3 +1,4 @@
+import { lineupProblem } from '@/lib/squad/lineup-problem';
 import type { PitchRole } from '@lastfootball/lfe';
 
 import { env } from '@/config/env';
@@ -30,7 +31,7 @@ import {
 import { finishSharedSession } from './human-play';
 
 const PLAYER_SELECT =
-  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, form, wage, suspension_matches, injury_matches, recent_ratings';
+  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, energy_on, form, wage, suspension_matches, injury_matches, recent_ratings';
 
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
@@ -248,7 +249,10 @@ async function snapshotXi(
     : full;
   if (result.error || !result.data) return { error: 'Nie mogę odczytać składu.' };
   try {
-    return resolveStartingXi((result.data as PlayerDbRow[]).map(mapPlayerRow));
+    const rows = (result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row));
+    const xi = resolveStartingXi(rows);
+    const problem = lineupProblem(clubId, rows);
+    return problem ? { error: problem } : xi;
   } catch (error: unknown) {
     if (error instanceof SquadUnavailableError) return { error: error.message };
     throw error;

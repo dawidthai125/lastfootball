@@ -1,3 +1,5 @@
+import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { restedEnergy, restedStatus } from '@/lib/squad/rest';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { AttrGroups, PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
@@ -31,6 +33,7 @@ export type PlayerDbRow = {
   attr_physical?: number | null;
   attr_goalkeeping?: number | null;
   energy?: number | null;
+  energy_on?: string | null;
   form?: number | null;
   wage?: number | null;
   suspension_matches?: number | null;
@@ -57,7 +60,10 @@ function mapStatus(raw: string): PlayerStatus {
   return 'READY';
 }
 
-export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
+export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()): PlayerRowDto {
+  const energy =
+    typeof row.energy === 'number' ? restedEnergy(row.energy, row.energy_on, today) : undefined;
+  const status = mapStatus(row.status);
   return {
     id: row.id,
     clubId: row.club_id,
@@ -73,7 +79,7 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
       typeof row.potential === 'number' && row.potential >= 1
         ? Math.min(99, Math.max(row.skill, row.potential))
         : resolvePlayerPotential(row.skill, row.id, row.age),
-    status: mapStatus(row.status),
+    status: energy === undefined ? status : restedStatus(status, row.energy ?? energy, energy),
     nationality: row.nationality,
     version: row.version,
     departedAt: row.departed_at,
@@ -81,7 +87,7 @@ export function mapPlayerRow(row: PlayerDbRow): PlayerRowDto {
     academyTrack: Boolean(row.academy_track),
     promotedAt: row.promoted_at ?? null,
     groups: groupsFromRow(row),
-    energy: typeof row.energy === 'number' ? row.energy : undefined,
+    energy,
     form: typeof row.form === 'number' ? row.form : undefined,
     wage: typeof row.wage === 'number' ? row.wage : undefined,
     suspensionMatches:

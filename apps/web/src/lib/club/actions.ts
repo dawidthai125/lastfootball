@@ -11,7 +11,7 @@ import { grantEmailConfirmBonus } from '@/lib/auth/email-confirm';
 import { ECONOMY_THIN } from '@/lib/finance';
 import { buildStarterSponsorContractInsert } from '@/lib/sponsors/types';
 import { buildStarterPlayerInserts } from '@/lib/squad/build-player-inserts';
-import { tryAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient, serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createClub(
@@ -55,6 +55,10 @@ export async function createClub(
     redirect(row.first_match_completed_at ? '/hub' : '/onboarding/first-match');
   }
 
+  if (!tryAdminClient()) {
+    return { error: 'Tworzenie klubu nie jest skonfigurowane na serwerze.' };
+  }
+
   // Database typings lag migrations in CI/local until regen — insert payload validated above.
   const { data: created, error } = await supabase
     .from('clubs')
@@ -79,13 +83,22 @@ export async function createClub(
 
   const clubId = (created as { id: string } | null)?.id;
   if (clubId) {
-    await supabase.from('finance_movements').insert({
-      club_id: clubId,
-      category: 'starter',
-      label: 'Kapitał startowy',
-      amount: ECONOMY_THIN.STARTER_CASH,
-    } as never);
-    await supabase.from('players').insert(buildStarterPlayerInserts(clubId) as never);
+    const { error: squadErr } = await serverDb(supabase)
+      .from('players')
+      .insert(buildStarterPlayerInserts(clubId) as never);
+    if (squadErr) {
+      // A club without players cannot continue; the row cascades and the form can be sent again.
+      await serverDb(supabase).from('clubs').delete().eq('id', clubId).eq('owner_id', user.id);
+      return { error: 'Nie udało się przygotować kadry. Spróbuj ponownie.' };
+    }
+    await serverDb(supabase)
+      .from('finance_movements')
+      .insert({
+        club_id: clubId,
+        category: 'starter',
+        label: 'Kapitał startowy',
+        amount: ECONOMY_THIN.STARTER_CASH,
+      } as never);
     // LFE-SPONSORS-01: seed Thin contract · no base payout at create (Owner LOCK 2).
     await tryAdminClient()
       ?.from('club_sponsor_contracts')

@@ -769,6 +769,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** Przeglądarka wysyła tylko decyzje (`managerLog`) i ustawienie. `authoritativeManagerScore` buduje tę samą sesję z bazy i odtwarza mecz; jej wynik jest oficjalny. Kasę zapisuje wyłącznie `club-cash.ts` (compare-and-set, service role po sprawdzeniu właściciela). Triggery `lf_guard_*` odrzucają z sesji gracza: kasę, ligę, sezon, poziomy, sztab, nastrój kibiców, terminarz i wyniki, kontrakty sponsora, wyniki wyzwań. Funkcje SECURITY DEFINER działają dalej. Nieudane rozliczenie otwiera mecz ponownie.  
 **OUT:** ochrona `players` (skill, energia) i pierwszego meczu — osobny EPIC.
 
+### D128 — Kadra i księga należą do serwera · Owner GO 2026-11-23
+
+**Dlaczego:** RLS pozwalał sesji gracza zmienić skill, energię i pensje własnych zawodników oraz wpisać ruchy finansowe, więc wynik serwera (D127) dało się obejść.  
+**Zasada:** `lf_guard_players` przepuszcza z sesji gracza tylko `starter`, `captain`, `set_piece`, `shirt_number`. Resztę pisze `serverDb(session)` po sprawdzeniu właściciela i zawsze z filtrem `club_id`. `apply_match_development` i `complete_training_session` wykonuje tylko service role. `finance_movements` i `transfer_deals` = tylko serwer. Odpoczynek: `players.energy_on` stempluje trigger, `restedEnergy` to czysty derive (5 / dzień).  
+**OUT:** oferty transferowe i aukcje (własne funkcje SQL z kontrolą kwot).
+
 ### D129 — Głębia meczu: morale, fakty meczowe, puchar, start kadry · Owner GO 2026-11-23
 
 **Dlaczego:** Morale nie działało w silniku, sędzia/pogoda/frekwencja były stałym tekstem, puchar AI losował wyniki bez siły, a ławka nowego klubu była lepsza od jedenastki.  

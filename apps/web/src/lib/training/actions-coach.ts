@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -62,13 +63,15 @@ export async function hireClubCoach(
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Trener nie jest jeszcze włączony.' };
 
-  await supabase.from('finance_movements').insert({
-    club_id: clubRow.id,
-    category: 'coach_hire',
-    label: `Trener: ${GROUP_LABEL[hired.group] ?? hired.group}`,
-    amount: -hired.fee,
-    fixture_id: null,
-  } as never);
+  await serverDb(supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: clubRow.id,
+      category: 'coach_hire',
+      label: `Trener: ${GROUP_LABEL[hired.group] ?? hired.group}`,
+      amount: -hired.fee,
+      fixture_id: null,
+    } as never);
 
   revalidatePath('/training');
   revalidatePath('/finance');

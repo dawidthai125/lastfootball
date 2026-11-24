@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import {
@@ -159,7 +160,7 @@ export async function completeTrainingSession(
     });
   }
 
-  const { data, error } = await supabase.rpc(
+  const { data, error } = await serverDb(supabase).rpc(
     'complete_training_session' as never,
     {
       p_club_id: input.clubId,

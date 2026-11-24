@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -47,7 +48,7 @@ export async function savePlayerLoan(_prev: LoanState, formData: FormData): Prom
   const current = typeof row.wage === 'number' ? row.wage : 0;
   if (intent === 'recall') {
     if (row.on_loan !== true) return { error: 'Nie jest wypożyczony.' };
-    const { error } = await supabase
+    const { error } = await serverDb(supabase)
       .from('players')
       .update({
         on_loan: false,
@@ -65,7 +66,7 @@ export async function savePlayerLoan(_prev: LoanState, formData: FormData): Prom
       onLoan: row.on_loan === true,
     });
     if (blocked) return { error: blocked };
-    const { error } = await supabase
+    const { error } = await serverDb(supabase)
       .from('players')
       .update({
         on_loan: true,

@@ -5,19 +5,12 @@ import { useActionState } from 'react';
 import { COMPLETE_FIRST_MATCH_INITIAL } from '@/lib/first-match/action-types';
 import { completeFirstMatch } from '@/lib/first-match/actions';
 
-export function CompleteFirstMatchButton({
-  homeScore,
-  awayScore,
-}: {
-  readonly homeScore: number;
-  readonly awayScore: number;
-}) {
+export function CompleteFirstMatchButton({ managerLog }: { readonly managerLog: string }) {
   const [state, action, pending] = useActionState(completeFirstMatch, COMPLETE_FIRST_MATCH_INITIAL);
 
   return (
     <form action={action} style={{ display: 'inline' }}>
-      <input type="hidden" name="homeScore" value={homeScore} />
-      <input type="hidden" name="awayScore" value={awayScore} />
+      <input type="hidden" name="managerLog" value={managerLog} />
       {state.error ? (
         <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: '0 0 0.5rem' }}>
           {state.error}

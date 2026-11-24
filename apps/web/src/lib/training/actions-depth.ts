@@ -1,5 +1,8 @@
 'use server';
 
+import { restedEnergy, restedStatus } from '@/lib/squad/rest';
+import type { PlayerStatus } from '@/lib/squad/types';
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -60,13 +63,15 @@ export async function hireClubPhysio(
   });
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Fizjoterapeuta nie jest jeszcze włączony.' };
-  await owned.supabase.from('finance_movements').insert({
-    club_id: owned.club.id,
-    category: 'physio_hire',
-    label: 'Fizjoterapeuta',
-    amount: -hired.fee,
-    fixture_id: null,
-  } as never);
+  await serverDb(owned.supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: owned.club.id,
+      category: 'physio_hire',
+      label: 'Fizjoterapeuta',
+      amount: -hired.fee,
+      fixture_id: null,
+    } as never);
   revalidatePath('/training');
   revalidatePath('/finance');
   return { ok: true };
@@ -102,13 +107,15 @@ export async function hireClubAssistant(
   });
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Asystent nie jest jeszcze włączony.' };
-  await owned.supabase.from('finance_movements').insert({
-    club_id: owned.club.id,
-    category: 'assistant_hire',
-    label: 'Asystent trenera',
-    amount: -STAFF_FEE,
-    fixture_id: null,
-  } as never);
+  await serverDb(owned.supabase)
+    .from('finance_movements')
+    .insert({
+      club_id: owned.club.id,
+      category: 'assistant_hire',
+      label: 'Asystent trenera',
+      amount: -STAFF_FEE,
+      fixture_id: null,
+    } as never);
   revalidatePath('/training');
   revalidatePath('/finance');
   return { ok: true };
@@ -127,7 +134,7 @@ export async function runIndividualSession(
   const { data: player, error } = await owned.supabase
     .from('players')
     .select(
-      'id, energy, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
+      'id, status, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
     )
     .eq('id', playerId)
     .eq('club_id', owned.club.id)
@@ -135,7 +142,9 @@ export async function runIndividualSession(
     .maybeSingle();
   if (error || !player) return { error: 'Nie znaleziono zawodnika.' };
   const row = player as {
+    status: PlayerStatus;
     energy: number;
+    energy_on: string | null;
     potential: number;
     last_individual_on: string | null;
     attr_attack: number;
@@ -145,8 +154,9 @@ export async function runIndividualSession(
     attr_goalkeeping: number;
   };
   const column = GROUP_COLUMN[group];
+  const rested = restedEnergy(row.energy, row.energy_on, utcDateString());
   const step = individualStep({
-    energy: row.energy,
+    energy: rested,
     group: row[column],
     potential: row.potential,
     lastOn: row.last_individual_on,
@@ -157,11 +167,12 @@ export async function runIndividualSession(
       error: step.reason === 'today' ? 'Ten zawodnik już trenował dziś.' : 'Za mało energii.',
     };
   }
-  const { error: updErr } = await owned.supabase
+  const { error: updErr } = await serverDb(owned.supabase)
     .from('players')
     .update({
       [column]: step.group,
       energy: step.energy,
+      status: restedStatus(row.status, row.energy, rested),
       last_individual_on: utcDateString(),
     } as never)
     .eq('id', playerId)
@@ -205,7 +216,7 @@ export async function savePressTone(
       .eq('club_id', owned.club.id)
       .is('departed_at', null);
     for (const player of (players ?? []) as { id: string; morale: number }[]) {
-      await owned.supabase
+      await serverDb(owned.supabase)
         .from('players')
         .update({ morale: nextMorale(player.morale ?? 60, delta) } as never)
         .eq('id', player.id)

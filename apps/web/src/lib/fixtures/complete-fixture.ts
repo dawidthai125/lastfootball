@@ -23,6 +23,7 @@ import { applyMatchSquadTruth, groupsFromSkill, matchWageDue } from '@/lib/squad
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
+import { kickoffDay } from '@/lib/match/kickoff-day';
 import { parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
@@ -99,7 +100,8 @@ export async function completeFixture(
   const admin = tryAdminClient();
   if (!admin) return { error: 'Zapis wyniku nie jest skonfigurowany na serwerze.' };
 
-  const players = await listClubPlayers(clubId);
+  const today = kickoffDay(formData.get('startedOn'));
+  const players = await listClubPlayers(clubId, today);
   const build = await readClubBuild(supabase, clubId);
   const seniors = filterSeniorPlayers(players);
   const wageDue = matchWageDue(seniors);
@@ -135,7 +137,7 @@ export async function completeFixture(
     const scored =
       row.competition === 'human'
         ? await authoritativeHumanScore(clubId, row.matchday)
-        : await authoritativeManagerScore(row.id, players, managerLog, shape);
+        : await authoritativeManagerScore(row.id, players, managerLog, shape, today);
     if ('error' in scored) return scored;
     score = { home: scored.home, away: scored.away };
   }

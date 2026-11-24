@@ -1,5 +1,6 @@
 'use server';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -67,33 +68,41 @@ export async function acceptIncomingLoan(
     today: utcDateString(),
   }).find((o) => o.offerId === offerId);
   if (!offer) return { error: 'Oferta wypożyczenia wygasła.' };
+  // Ids and numbers of players who left stay taken (unique per club).
+  const { data: everyone } = await supabase
+    .from('players')
+    .select('id, shirt_number')
+    .eq('club_id', clubRow.id);
+  const taken = (everyone as { id: string; shirt_number: number }[] | null) ?? rows;
   const playerId = nextLoanId(
     clubRow.id,
-    rows.map((r) => r.id),
+    taken.map((r) => r.id),
   );
-  const shirt = nextShirt(rows.map((r) => r.shirt_number));
-  const { error } = await supabase.from('players').insert({
-    id: playerId,
-    club_id: clubRow.id,
-    name: offer.name,
-    shirt_number: shirt,
-    pos: offer.pos,
-    role: offer.role,
-    starter: false,
-    captain: false,
-    age: offer.age,
-    skill: offer.skill,
-    potential: resolvePlayerPotential(offer.skill, playerId, offer.age),
-    status: 'READY',
-    nationality: 'POL',
-    version: 1,
-    departed_at: null,
-    wage: offer.wage,
-    loaned_in: true,
-    loan_partner_label: offer.partnerLabel,
-    loan_until: offer.until,
-    on_loan: false,
-  } as never);
+  const shirt = nextShirt(taken.map((r) => r.shirt_number));
+  const { error } = await serverDb(supabase)
+    .from('players')
+    .insert({
+      id: playerId,
+      club_id: clubRow.id,
+      name: offer.name,
+      shirt_number: shirt,
+      pos: offer.pos,
+      role: offer.role,
+      starter: false,
+      captain: false,
+      age: offer.age,
+      skill: offer.skill,
+      potential: resolvePlayerPotential(offer.skill, playerId, offer.age),
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      departed_at: null,
+      wage: offer.wage,
+      loaned_in: true,
+      loan_partner_label: offer.partnerLabel,
+      loan_until: offer.until,
+      on_loan: false,
+    } as never);
   if (error) return { error: 'Wypożyczenie przychodzące nie jest jeszcze w bazie.' };
   revalidatePath('/transfers');
   revalidatePath('/squad');
@@ -130,7 +139,7 @@ export async function returnIncomingLoan(
   if (!player || (player as { loaned_in: boolean | null }).loaned_in !== true) {
     return { error: 'To nie jest wypożyczenie przychodzące.' };
   }
-  const { error } = await supabase
+  const { error } = await serverDb(supabase)
     .from('players')
     .update({
       status: 'DEPARTED',
