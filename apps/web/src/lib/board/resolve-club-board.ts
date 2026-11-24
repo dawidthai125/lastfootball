@@ -32,7 +32,7 @@ export type ClubBoardDto = {
     readonly summary: string;
   } | null;
   readonly tone: BoardTone;
-  /** Offseason: Confirm is not blocked by Board. */
+  /** Offseason: where the season starts. A failed task payout can stop that start (D131). */
   readonly hubHint: string | null;
   /** Offseason foreshadow when a senior retires at Confirm N+1. */
   readonly departureNote: string | null;
@@ -160,9 +160,7 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
     },
     seasonReview,
     tone,
-    hubHint: offseason
-      ? 'Start kolejnego sezonu potwierdzasz na Hubie — Zarząd go nie blokuje.'
-      : null,
+    hubHint: offseason ? 'Start kolejnego sezonu potwierdzasz na Hubie.' : null,
     departureNote: offseason && departureNote ? departureNote : null,
     prestige,
     tasks,

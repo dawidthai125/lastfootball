@@ -1,6 +1,5 @@
 import {
   fromSeasonHistoryRow,
-  toSeasonHistoryRow,
   type SeasonHistory,
   type SeasonHistoryRow,
 } from '@/lib/board/season-history';
@@ -20,7 +19,7 @@ export type BoardRecords =
       readonly history: readonly SeasonHistory[];
       readonly claims: readonly BoardTaskClaim[];
     }
-  /** The migration did not run yet: the feature stays hidden. */
+  /** The migration did not run yet: pages hide the feature, a season start waits. */
   | { readonly status: 'missing' }
   | { readonly status: 'error' };
 
@@ -85,20 +84,4 @@ export async function payBoardTask(
     return false;
   }
   return true;
-}
-
-/** Written once per season. A retry keeps the first row. */
-export async function saveSeasonHistory(
-  db: BoardWriteDb,
-  clubId: string,
-  history: SeasonHistory,
-): Promise<boolean> {
-  const { error } = await db
-    .from('club_season_history' as never)
-    .upsert({ club_id: clubId, ...toSeasonHistoryRow(history) } as never, {
-      onConflict: 'club_id,season_number',
-      ignoreDuplicates: true,
-    });
-  if (error) console.error('saveSeasonHistory failed', { code: error.code });
-  return !error;
 }

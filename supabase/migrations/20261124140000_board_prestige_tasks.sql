@@ -1,4 +1,5 @@
--- D131: season history, board tasks and their payout. Additive; safe before the deploy.
+-- D131: season history, board tasks, their payout and the season start lock.
+-- Additive; run it before the deploy.
 
 create table if not exists public.club_season_history (
   club_id uuid not null references public.clubs (id) on delete cascade,
@@ -29,15 +30,24 @@ create table if not exists public.club_board_task_claims (
   primary key (club_id, season_number, block)
 );
 
--- The owner reads, only the server writes.
+-- One season start per club at a time. Server only.
+create table if not exists public.club_season_starts (
+  club_id uuid primary key references public.clubs (id) on delete cascade,
+  token uuid not null,
+  started_at timestamptz not null default now()
+);
+
+alter table public.club_season_starts enable row level security;
+revoke all on public.club_season_starts from public, anon, authenticated, service_role;
+
+-- The owner reads, only the SQL functions below write.
 alter table public.club_season_history enable row level security;
 alter table public.club_board_task_claims enable row level security;
 
 revoke all on public.club_season_history, public.club_board_task_claims
   from public, anon, authenticated, service_role;
 grant select on public.club_season_history, public.club_board_task_claims to authenticated;
-grant select, insert on public.club_season_history to service_role;
-grant select on public.club_board_task_claims to service_role;
+grant select on public.club_season_history, public.club_board_task_claims to service_role;
 
 drop policy if exists club_season_history_select_own on public.club_season_history;
 create policy club_season_history_select_own on public.club_season_history
@@ -90,12 +100,14 @@ set search_path = ''
 as $$
 declare
   v_season integer;
+  v_phase text;
 begin
   if p_amount is null or p_amount < 1 or p_amount > 10000 then
     raise exception 'board task reward out of range';
   end if;
 
-  select season_number into v_season from public.clubs where id = p_club_id for update;
+  select season_number, season_phase into v_season, v_phase
+  from public.clubs where id = p_club_id for update;
   if not found then
     raise exception 'club not found';
   end if;
@@ -112,6 +124,14 @@ begin
   ) then
     raise exception 'season is closed';
   end if;
+  -- Between seasons only the 22 finished matches count, never a half-started next season.
+  if v_phase <> 'in_season' and not exists (
+    select 1 from public.fixtures
+    where club_id = p_club_id and competition = 'league'
+    having count(*) = 22 and count(*) filter (where status = 'played') = 22
+  ) then
+    raise exception 'season is not complete';
+  end if;
 
   insert into public.club_board_task_claims (club_id, season_number, block, kind, amount)
   values (p_club_id, p_season, p_block, p_kind, p_amount);
@@ -126,4 +146,100 @@ $$;
 revoke all on function public.claim_board_task(uuid, integer, integer, text, integer, text)
   from public, anon, authenticated;
 grant execute on function public.claim_board_task(uuid, integer, integer, text, integer, text)
+  to service_role;
+
+-- The lock token, or null when another request holds it or the club moved on.
+create or replace function public.begin_season_start(p_club_id uuid, p_season integer)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_token uuid;
+begin
+  perform 1 from public.clubs
+  where id = p_club_id and season_phase = 'offseason' and season_number = p_season
+  for update;
+  if not found then
+    return null;
+  end if;
+
+  insert into public.club_season_starts as held (club_id, token)
+  values (p_club_id, gen_random_uuid())
+  on conflict (club_id) do update
+    set token = excluded.token, started_at = now()
+    where held.started_at < now() - interval '5 minutes'
+  returning token into v_token;
+  return v_token;
+end;
+$$;
+
+create or replace function public.end_season_start(p_club_id uuid, p_token uuid)
+returns void
+language sql
+security definer
+set search_path = ''
+as $$
+  delete from public.club_season_starts where club_id = p_club_id and token = p_token;
+$$;
+
+-- The season record and the fixture delete land together, so a stored season means its
+-- fixtures are gone. Refused when the lock, the season or the results moved.
+create or replace function public.clear_season_fixtures(
+  p_club_id uuid,
+  p_season integer,
+  p_token uuid,
+  p_played integer,
+  p_history jsonb
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  -- settle_fixture locks the club first as well, so no result lands in between.
+  perform 1 from public.clubs
+  where id = p_club_id and season_phase = 'offseason' and season_number = p_season
+  for update;
+  if not found or not exists (
+    select 1 from public.club_season_starts where club_id = p_club_id and token = p_token
+  ) then
+    raise exception 'season start moved';
+  end if;
+  if p_played is distinct from (
+    select count(*)::integer from public.fixtures
+    where club_id = p_club_id and status = 'played'
+  ) then
+    raise exception 'results moved';
+  end if;
+
+  if p_history is not null and jsonb_typeof(p_history) = 'object' then
+    insert into public.club_season_history (
+      club_id, season_number, league_tier, position, table_size, points, won, drawn, lost,
+      goals_for, goals_against, cup_round_reached, outcome
+    )
+    select
+      p_club_id, p_season, h.league_tier, h.position, h.table_size, h.points, h.won, h.drawn,
+      h.lost, h.goals_for, h.goals_against, h.cup_round_reached, h.outcome
+    from jsonb_to_record(p_history) as h(
+      league_tier text, position integer, table_size integer, points integer, won integer,
+      drawn integer, lost integer, goals_for integer, goals_against integer,
+      cup_round_reached integer, outcome text
+    )
+    on conflict (club_id, season_number) do nothing;
+  end if;
+  delete from public.fixtures where club_id = p_club_id;
+  return true;
+end;
+$$;
+
+revoke all on function public.begin_season_start(uuid, integer),
+  public.end_season_start(uuid, uuid),
+  public.clear_season_fixtures(uuid, integer, uuid, integer, jsonb)
+  from public, anon, authenticated;
+grant execute on function public.begin_season_start(uuid, integer),
+  public.end_season_start(uuid, uuid),
+  public.clear_season_fixtures(uuid, integer, uuid, integer, jsonb)
   to service_role;

@@ -42,6 +42,7 @@ describe('board persist surface', () => {
       'tasks',
       'season-history',
       'board-state',
+      'task-claim',
     ]) {
       expect(source(name)).not.toMatch(/supabase|'use server'|Date\.now|Math\.random/);
     }
@@ -121,7 +122,7 @@ describe('resolveClubBoard', () => {
     expect(dto.tone).toBe('concern');
   });
 
-  it('exposes Offseason seasonReview and non-blocking hubHint (H-BOARD)', () => {
+  it('exposes Offseason seasonReview and a hubHint that promises nothing about blocking', () => {
     const dto = resolveClubBoard({
       seasonPhase: 'offseason',
       seasonNumber: 1,
@@ -133,7 +134,8 @@ describe('resolveClubBoard', () => {
     expect(dto.seasonReview?.available).toBe(true);
     expect(dto.seasonReview?.outcomeLabel).toContain('Górny środek');
     expect(dto.tone).toBe('positive');
-    expect(dto.hubHint).toMatch(/nie blokuje/i);
+    expect(dto.hubHint).toMatch(/na Hubie/);
+    expect(dto.hubHint).not.toMatch(/blok/i);
     expect(dto.departureNote).toBeNull();
   });
 

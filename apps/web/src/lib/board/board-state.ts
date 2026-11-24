@@ -9,6 +9,8 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 export type BoardState = {
   readonly prestige: PrestigeDto;
   readonly tasks: readonly BoardTaskDto[];
+  /** The season is in the history, so the stored fixtures belong to the next one. */
+  readonly closed: boolean;
 };
 
 /**
@@ -21,15 +23,17 @@ export function resolveBoardState(
   records: BoardRecords,
 ): BoardState | null {
   if (records.status !== 'ok') return null;
+  const closed = records.history.some((row) => row.seasonNumber === club.seasonNumber);
   const tasks = resolveBoardTasks({
     clubId: club.id,
     seasonNumber: club.seasonNumber,
     leagueTier: club.leagueTier,
-    fixtures,
+    fixtures: closed ? [] : fixtures,
     claims: records.claims,
-  });
-  const stored = records.history.some((row) => row.seasonNumber === club.seasonNumber);
-  const closing = stored ? null : buildSeasonHistory(club, fixtures);
+  }).map((task): BoardTaskDto =>
+    closed && task.state !== 'claimed' ? { ...task, state: 'failed' } : task,
+  );
+  const closing = closed ? null : buildSeasonHistory(club, fixtures);
   const prestige = resolvePrestige({
     leagueTier: club.leagueTier,
     history: closing ? [closing, ...records.history] : records.history,
@@ -38,5 +42,5 @@ export function resolveBoardState(
       ...tasks.filter((task) => task.state === 'done').map(() => club.seasonNumber),
     ],
   });
-  return { prestige, tasks };
+  return { prestige, tasks, closed };
 }

@@ -7,7 +7,7 @@
 **Pointer w GDD:** [`GAME_DESIGN_DOCUMENT.md`](./GAME_DESIGN_DOCUMENT.md) §6 · §21 · Season End  
 **Lifecycle:** [`GDD-SEASON-END-01.md`](./GDD-SEASON-END-01.md) · H-BOARD
 
-> **D131 (2026-11-24):** prestiż i zadania zarządu zastępują D106 / D107 i punkty 1–2 poniżej; reszta kontraktu obowiązuje.
+> **D131 (2026-11-24):** prestiż i zadania zarządu zastępują D106 / D107 i punkty 1–2 poniżej; nieudana wypłata zadań zatrzymuje start sezonu; reszta kontraktu obowiązuje.
 
 > **Cel:** Warstwa informacji Zarządu — ocena / oczekiwania względem faktów sezonu (tabela · report).  
 > Pure derive · bez persist · bez Prestige Engine · bez Quest · bez zarządzania klubem · bez blokady Confirm.

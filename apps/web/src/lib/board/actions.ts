@@ -6,6 +6,7 @@ import { env } from '@/config/env';
 import type { BoardTaskActionState } from '@/lib/board/action-types';
 import { loadBoardState } from '@/lib/board/load-board-state';
 import { payBoardTask } from '@/lib/board/store';
+import { resolveTaskClaim } from '@/lib/board/task-claim';
 import { parseBoardTaskBlock } from '@/lib/board/tasks';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -25,17 +26,18 @@ export async function collectTaskReward(
   const admin = tryAdminClient();
   if (!admin) return { error: 'Nagroda jest chwilowo niedostępna.' };
 
-  const board = await loadBoardState(club, await listClubFixtures(club.id));
-  const task = board?.tasks.find((item) => item.block === block);
-  if (task?.state === 'claimed') return { error: null };
-  if (task?.state !== 'done') return { error: 'To zadanie nie jest wykonane.' };
-
-  const paid = await payBoardTask(admin, {
-    clubId: club.id,
-    seasonNumber: club.seasonNumber,
-    task,
-  });
-  if (!paid) return { error: 'Nie udało się wypłacić nagrody. Spróbuj ponownie.' };
+  const fixtures = await listClubFixtures(club.id);
+  const board = await loadBoardState(club, fixtures);
+  const claim = resolveTaskClaim({ club, fixtures, board, block });
+  if (claim.kind === 'refused') return { error: claim.error };
+  if (claim.kind === 'pay') {
+    const paid = await payBoardTask(admin, {
+      clubId: club.id,
+      seasonNumber: club.seasonNumber,
+      task: claim.task,
+    });
+    if (!paid) return { error: 'Nie udało się wypłacić nagrody. Spróbuj ponownie.' };
+  }
 
   revalidatePath('/', 'layout');
   return { error: null };
