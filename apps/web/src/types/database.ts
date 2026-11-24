@@ -175,6 +175,8 @@ export type Database = {
       };
       players: {
         Row: {
+          contract_season: number | null;
+          departed_reason: string | null;
           id: string;
           club_id: string;
           name: string;
@@ -207,6 +209,8 @@ export type Database = {
           recent_ratings: number[];
         };
         Insert: {
+          contract_season?: number | null;
+          departed_reason?: string | null;
           id: string;
           club_id: string;
           name: string;
@@ -239,6 +243,8 @@ export type Database = {
           recent_ratings?: number[];
         };
         Update: {
+          contract_season?: number | null;
+          departed_reason?: string | null;
           id?: string;
           club_id?: string;
           name?: string;

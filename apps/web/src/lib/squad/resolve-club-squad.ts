@@ -124,7 +124,10 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
       wage: typeof row.wage === 'number' ? row.wage : displayWage(skill, row.age),
-      until: contractUntilLabel(row.contractUntil),
+      until: row.contractSeason
+        ? `koniec sezonu ${row.contractSeason}`
+        : contractUntilLabel(row.contractUntil),
+      season: row.contractSeason ?? null,
       clause: typeof row.releaseClause === 'number' ? row.releaseClause : displayClause(skill),
       role: roleLabel(row.pos, row.captain),
     },

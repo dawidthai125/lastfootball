@@ -4,7 +4,6 @@ import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
-import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { isTalkPersonality, talkResult } from '@/lib/squad/contract-talk';
 import { createClient } from '@/lib/supabase/server';
 
@@ -29,14 +28,15 @@ export async function saveContractTalk(
   if (!user) return { error: 'Sesja wygasła.' };
   const { data: club } = await supabase
     .from('clubs')
-    .select('id')
+    .select('id, season_number')
     .eq('owner_id', user.id)
     .maybeSingle();
-  const clubId = (club as { id: string } | null)?.id;
+  const clubRow = club as { id: string; season_number: number | null } | null;
+  const clubId = clubRow?.id;
   if (!clubId) return { error: 'Nie znaleziono klubu.' };
   const { data: player, error: readErr } = await supabase
     .from('players')
-    .select('id, wage, skill, age, morale, personality, contract_until')
+    .select('id, wage, skill, age, morale, personality, contract_season')
     .eq('id', playerId)
     .eq('club_id', clubId)
     .is('departed_at', null)
@@ -48,7 +48,7 @@ export async function saveContractTalk(
     age: number;
     morale: number | null;
     personality: string | null;
-    contract_until: string | null;
+    contract_season: number | null;
   };
   const rawPersonality = row.personality ?? '';
   const personality = isTalkPersonality(rawPersonality) ? rawPersonality : 'spokojny';
@@ -58,13 +58,13 @@ export async function saveContractTalk(
     offer,
     personality,
     morale: typeof row.morale === 'number' ? row.morale : 60,
-    contractUntil: row.contract_until ?? '2028-06-30',
-    today: utcDateString(),
+    contractSeason: row.contract_season,
+    season: clubRow?.season_number ?? 1,
   });
   if (!decision.ok) return { error: decision.reason };
   const { error } = await serverDb(supabase)
     .from('players')
-    .update({ wage: decision.wage, contract_until: decision.contractUntil } as never)
+    .update({ wage: decision.wage, contract_season: decision.contractSeason } as never)
     .eq('id', playerId)
     .eq('club_id', clubId);
   if (error) return { error: 'Nie udało się zapisać kontraktu.' };

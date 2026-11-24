@@ -838,7 +838,15 @@ Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_l
 4. Niedostępny zawodnik w jedenastce nie blokuje meczu obu klubom: przy zamknięciu składów zastępuje go najlepszy wolny.
 5. Wyniki poprzednich sezonów zostają (`human_broadcasts.season`). Przy starcie znikają tylko nierozegrane mecze.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D138 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D139 — Kontrakty w sezonach klubu · Owner GO 2026-11-24
+
+1. `players.contract_season` = ostatni sezon umowy. Obecni zawodnicy: obecny sezon + 1–3, rozłożone, więc nikt nie odchodzi po sezonie, który trwa. Transfer i awans z akademii: obecny sezon + 2.
+2. Rozmowa jest otwarta w dwóch ostatnich sezonach umowy i przedłuża do końca sezonu + 2.
+3. Start sezonu: bez przedłużenia zawodnik odchodzi za darmo. Zarząd zatrzymuje na sezon, za żądaną pensję, gdy zostałoby mniej niż 14 seniorów albo żaden bramkarz. Najpierw odchodzą najsłabsi.
+4. Wiadomości: ostatni sezon umowy i lista, kto odszedł. Raport sezonu mówi, kto odejdzie.
+5. `departed_reason`: sprzedaż i koniec wypożyczenia nie są już pokazywane jako koniec kariery.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D139 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

@@ -50,6 +50,7 @@ export type PlayerDbRow = {
   morale?: number | null;
   personality?: string | null;
   contract_until?: string | null;
+  contract_season?: number | null;
   release_clause?: number | null;
   set_piece?: boolean | null;
   last_individual_on?: string | null;
@@ -112,6 +113,7 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     morale: typeof row.morale === 'number' ? row.morale : undefined,
     personality: isPersonality(row.personality) ? row.personality : undefined,
     contractUntil: row.contract_until ?? null,
+    contractSeason: row.contract_season ?? null,
     releaseClause: typeof row.release_clause === 'number' ? row.release_clause : undefined,
     setPiece: row.set_piece === true,
     lastIndividualOn: row.last_individual_on ?? null,

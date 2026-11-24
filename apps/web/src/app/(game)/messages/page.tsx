@@ -14,6 +14,7 @@ import { resolveClubMessages } from '@/lib/messages';
 import {
   listClubRetirementFlash,
   resolveDeparturePreview,
+  contractLeavers,
   resolveRetirementFarewell,
 } from '@/lib/season';
 import { isPersonality } from '@/lib/squad/depth';
@@ -23,6 +24,7 @@ import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers, isAcademyProspect } from '@/lib/squad/types';
+import { contractFarewell, contractReminder } from '@/lib/season/contract-expiry';
 import { createClient } from '@/lib/supabase/server';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
@@ -122,6 +124,10 @@ export default async function MessagesPage() {
       upkeep,
     ).wageNote,
     boardTaskNote: board ? resolveBoardTaskNote(board.tasks) : null,
+    contractNotes: [
+      contractReminder(activePlayers, club.seasonNumber),
+      contractFarewell(contractLeavers(farewellFlash, today)),
+    ].filter((note) => note !== null),
     academyAgeNote: juniorAgeNote(activePlayers.filter(isAcademyProspect)),
   });
 

@@ -51,7 +51,7 @@ export default async function PlayerDetailPage({ params }: PageProps) {
       <PlayerStatus player={player} />
       <PlayerAttributes player={player} />
       <div className="lf-sq-detail__context">
-        <PlayerContract player={player} />
+        <PlayerContract player={player} season={club.seasonNumber} />
         <PlayerHistory player={player} />
       </div>
     </div>

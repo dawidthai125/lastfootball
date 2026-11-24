@@ -17,6 +17,7 @@ export {
   formatRetirementFarewell,
   planSeasonDeparture,
   resolveDeparturePreview,
+  contractLeavers,
   resolveRetirementFarewell,
   type DeparturePlan,
   type DeparturePlayer,

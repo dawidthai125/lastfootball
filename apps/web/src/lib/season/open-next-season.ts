@@ -2,6 +2,7 @@ import { serverDb } from '@/lib/supabase/admin';
 import { academyDraftId, buildAcademyIntakeDraft } from '@/lib/academy/intake';
 import { isLastAcademySeason } from '@/lib/academy/levels';
 import type { LeagueTier } from '@/lib/league/league-tier';
+import { keptWage, planContractExpiry, type ContractPlan } from '@/lib/season/contract-expiry';
 import {
   formatRetirementFarewell,
   planSeasonDeparture,
@@ -67,12 +68,14 @@ export async function openNextSeasonAfterDeparture(
   );
   const before = new Map(input.hAgeSnapshot.map((player) => [player.id, player.age]));
   const leavers: PlayerRowDto[] = [];
+  const contracts: PlayerRowDto[] = [];
   const rollback = async (undo: SeasonDepartureUndo | null, error: string) => {
+    const agreed = await restoreContracts(input.supabase, input.clubId, contracts);
     const juniors = await restoreJuniors(input.supabase, input.clubId, leavers);
     const squad = await undoSeasonDeparture(input.supabase, undo);
     const ages = await revertSeasonTransitionHAge(input.clubId, input.hAgePort, input.hAgeSnapshot);
-    if (juniors && squad && ages.ok) return { ok: false as const, error };
-    console.error('openNextSeason: undo incomplete', { juniors, squad, ages: ages.ok });
+    if (agreed && juniors && squad && ages.ok) return { ok: false as const, error };
+    console.error('openNextSeason: undo incomplete', { agreed, juniors, squad, ages: ages.ok });
     return { ok: false as const, error: `${error} Części zmian w kadrze nie udało się cofnąć.` };
   };
   if (!departure.ok) return rollback(null, departure.error);
@@ -90,6 +93,17 @@ export async function openNextSeasonAfterDeparture(
   );
   if (!(await releaseJuniors(input.supabase, input.clubId, leavers))) {
     return rollback(departure.undo, 'Nie udało się zamknąć rocznika akademii.');
+  }
+
+  // D139: contracts that ended with the season. The retiree left already.
+  const retiredId = departure.undo?.retiree?.id;
+  const plan = planContractExpiry(
+    roster.filter((player) => player.id !== retiredId),
+    input.endedSeason,
+  );
+  contracts.push(...plan.leave, ...plan.keep);
+  if (!(await settleContracts(input.supabase, input.clubId, plan, input.nextSeason))) {
+    return rollback(departure.undo, 'Nie udało się rozliczyć kontraktów.');
   }
 
   const { data: opened, error: updErr } = await input.supabase
@@ -110,6 +124,70 @@ export async function openNextSeasonAfterDeparture(
   }
 
   return { ok: true, farewell: departure.farewell };
+}
+
+/** Safe to repeat: who left is no longer in the roster, who stayed has a later season. */
+async function settleContracts(
+  supabase: SeasonDb,
+  clubId: string,
+  plan: ContractPlan<PlayerRowDto>,
+  nextSeason: number,
+): Promise<boolean> {
+  const departedAt = new Date().toISOString();
+  for (const player of plan.leave) {
+    const { error } = await serverDb(supabase)
+      .from('players')
+      .update({
+        status: 'DEPARTED',
+        departed_at: departedAt,
+        departed_reason: 'contract',
+        starter: false,
+        captain: false,
+        set_piece: false,
+        transfer_listed_at: null,
+      } as never)
+      .eq('id', player.id)
+      .eq('club_id', clubId)
+      .is('departed_at', null);
+    if (error) return false;
+  }
+  for (const player of plan.keep) {
+    const wage = keptWage(player);
+    const { error } = await serverDb(supabase)
+      .from('players')
+      .update({ contract_season: nextSeason, ...(wage === null ? {} : { wage }) } as never)
+      .eq('id', player.id)
+      .eq('club_id', clubId);
+    if (error) return false;
+  }
+  return true;
+}
+
+async function restoreContracts(
+  supabase: SeasonDb,
+  clubId: string,
+  players: readonly PlayerRowDto[],
+): Promise<boolean> {
+  let ok = true;
+  for (const player of players) {
+    const { error } = await serverDb(supabase)
+      .from('players')
+      .update({
+        status: player.status,
+        departed_at: null,
+        departed_reason: null,
+        starter: player.starter,
+        captain: player.captain,
+        set_piece: player.setPiece === true,
+        transfer_listed_at: player.transferListedAt,
+        contract_season: player.contractSeason,
+        ...(typeof player.wage === 'number' ? { wage: player.wage } : {}),
+      } as never)
+      .eq('id', player.id)
+      .eq('club_id', clubId);
+    if (error) ok = false;
+  }
+  return ok;
 }
 
 /** Safe to repeat: a junior who left already is no longer in the roster. */
@@ -182,7 +260,12 @@ async function applySeasonDeparture(
   const now = new Date().toISOString();
   const { error: leaveErr } = await serverDb(supabase)
     .from('players')
-    .update({ status: 'DEPARTED', departed_at: now, starter: false } as never)
+    .update({
+      status: 'DEPARTED',
+      departed_at: now,
+      departed_reason: 'retired',
+      starter: false,
+    } as never)
     .eq('id', plan.retireId)
     .eq('club_id', clubId)
     .is('departed_at', null);
@@ -195,6 +278,7 @@ async function applySeasonDeparture(
       .update({
         status: retiree.status,
         departed_at: null,
+        departed_reason: null,
         starter: retiree.starter,
       } as never)
       .eq('id', retiree.id)
@@ -310,6 +394,7 @@ async function undoSeasonDeparture(
       .update({
         status: undo.retiree.status,
         departed_at: null,
+        departed_reason: null,
         starter: undo.retiree.starter,
       } as never)
       .eq('id', undo.retiree.id)

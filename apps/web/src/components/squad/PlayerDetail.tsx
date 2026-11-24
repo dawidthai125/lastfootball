@@ -7,7 +7,12 @@ import { ContractTalkForm } from '@/components/squad/ContractTalkForm';
 import { LoanButton } from '@/components/squad/LoanButton';
 import { CaptainButton } from '@/components/squad/CaptainButton';
 import { SetPieceButton } from '@/components/squad/SetPieceButton';
-import { demandWage, isTalkPersonality } from '@/lib/squad/contract-talk';
+import {
+  demandWage,
+  isTalkPersonality,
+  contractTalkOpen,
+  renewedContractSeason,
+} from '@/lib/squad/contract-talk';
 import { personalityLabel, type Personality } from '@/lib/squad/depth';
 import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
@@ -208,7 +213,7 @@ export function PlayerAttributes({ player }: { player: SquadPlayer }) {
   );
 }
 
-export function PlayerContract({ player }: { player: SquadPlayer }) {
+export function PlayerContract({ player, season }: { player: SquadPlayer; season: number }) {
   const c = player.contract;
   const rows = [
     { label: 'Wynagrodzenie', value: `${formatMoney(c.wage)} / tydz.` },
@@ -268,7 +273,8 @@ export function PlayerContract({ player }: { player: SquadPlayer }) {
         <ContractTalkForm
           playerId={player.id}
           demand={demandWage(c.wage, talkPersonality(player.personality))}
-          extended={c.until.endsWith('2029') || c.until.startsWith('2029')}
+          extended={!contractTalkOpen(c.season ?? null, season)}
+          untilSeason={renewedContractSeason(season)}
         />
         <LoanButton
           playerId={player.id}

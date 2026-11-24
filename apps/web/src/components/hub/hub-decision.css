@@ -363,8 +363,14 @@
   .lf-hub__decision-stage {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
+    grid-auto-flow: row dense;
     gap: var(--lf-space-4);
     align-items: stretch;
+  }
+
+  /* Only the decision and its button share a row. Report, banners and notes take the full width. */
+  .lf-hub__decision-stage > :not(.lf-hub__decision):not(.lf-hub__primary-wrap) {
+    grid-column: 1 / -1;
   }
 
   .lf-hub__decision {

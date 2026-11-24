@@ -11,13 +11,20 @@ export function ContractTalkForm({
   playerId,
   demand,
   extended,
+  untilSeason,
 }: {
   readonly playerId: string;
   readonly demand: number;
   readonly extended: boolean;
+  readonly untilSeason: number;
 }) {
   const [state, action, pending] = useActionState(saveContractTalk, INITIAL);
-  if (extended) return <p style={{ margin: '0.5rem 0 0' }}>Kontrakt jest już przedłużony.</p>;
+  if (extended)
+    return (
+      <p style={{ margin: '0.5rem 0 0' }}>
+        Rozmowa będzie możliwa w dwóch ostatnich sezonach kontraktu.
+      </p>
+    );
   return (
     <form
       action={action}
@@ -35,7 +42,7 @@ export function ContractTalkForm({
         <input name="offer" type="number" min={demand} step={1} defaultValue={demand} required />
       </label>
       <button type="submit" disabled={pending}>
-        {pending ? 'Zapisuję…' : 'Przedłuż do 30.06.2029'}
+        {pending ? 'Zapisuję…' : `Przedłuż do końca sezonu ${untilSeason}`}
       </button>
       {state.error ? (
         <p role="alert" style={{ margin: 0 }}>
