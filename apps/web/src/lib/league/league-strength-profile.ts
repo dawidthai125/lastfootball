@@ -11,9 +11,9 @@ export type LeagueStrengthProfile = {
 };
 
 const PROFILES: Record<LeagueTier, LeagueStrengthProfile> = {
-  iv: Object.freeze({ minSkill: 42, maxSkill: 58 }),
-  iii: Object.freeze({ minSkill: 50, maxSkill: 66 }),
-  ii: Object.freeze({ minSkill: 58, maxSkill: 74 }),
+  iv: Object.freeze({ minSkill: 47, maxSkill: 63 }),
+  iii: Object.freeze({ minSkill: 53, maxSkill: 69 }),
+  ii: Object.freeze({ minSkill: 59, maxSkill: 75 }),
   i: Object.freeze({ minSkill: 66, maxSkill: 82 }),
 };
 

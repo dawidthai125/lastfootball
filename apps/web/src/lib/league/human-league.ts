@@ -166,7 +166,7 @@ export function kickoffWindowState(now: Date, kickoffOn: string): KickoffWindow 
 export function kickoffWindowSentence(state: KickoffWindow): string | null {
   if (state === 'before') return 'Wspólny początek o 18:00 czasu warszawskiego.';
   if (state === 'after')
-    return 'Okno tej kolejki jest już zamknięte. Wynik jest jeden dla obu klubów.';
+    return 'Wspólna transmisja już była. Możesz obejrzeć i zapisać zaległy mecz. Wynik jest jeden dla obu klubów.';
   return null;
 }
 

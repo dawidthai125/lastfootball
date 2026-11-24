@@ -2,6 +2,7 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import { getFixtureByIdForClub } from '@/lib/fixtures/get-fixture';
+import { sessionFromKickoff, type KickoffSnapshot } from '@/lib/match/kickoff-snapshot';
 import type { ManagerLogEntry } from '@/lib/match/manager-commands';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { replayManagerMatch } from '@/lib/match/replay-manager-match';
@@ -12,7 +13,8 @@ import type { PlayerRowDto } from '@/lib/squad/types';
 
 /**
  * Official score of a league, cup or challenge match (D127).
- * Builds the same session as the live page from stored data and replays the decisions.
+ * Replays the decisions on the kickoff snapshot the live page stored (D130). Without one
+ * it builds the same session from the stored squad.
  */
 export async function authoritativeManagerScore(
   fixtureId: string,
@@ -20,7 +22,15 @@ export async function authoritativeManagerScore(
   log: readonly ManagerLogEntry[],
   shape: unknown,
   today: string,
+  kickoff: KickoffSnapshot | null = null,
 ): Promise<{ home: number; away: number } | { error: string }> {
+  if (kickoff) {
+    const session = sessionFromKickoff(kickoff);
+    const score = replayManagerMatch(session, kickoff.fixture.isHome ? 'home' : 'away', log);
+    session.dispose();
+    return score ?? { error: 'Nie udało się policzyć wyniku. Spróbuj ponownie.' };
+  }
+
   const club = await getManagerClub();
   const dto = club ? await getFixtureByIdForClub(club.id, fixtureId) : null;
   if (!club || !dto) return { error: 'Nie znaleziono meczu.' };
@@ -37,7 +47,7 @@ export async function authoritativeManagerScore(
       club,
       dto,
       resolveStartingXi(players),
-      resolveMatchBench(players),
+      resolveMatchBench(players, today),
       parseOurFormation(typeof shape === 'string' ? shape : null),
       rival?.xi ?? null,
     );

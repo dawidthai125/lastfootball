@@ -79,7 +79,7 @@ export default async function LeaguePage() {
                 href={`/match/${human.fixtureId}`}
                 style={{ color: 'var(--lf-color-text-gold)' }}
               >
-                Wejdź w mecz
+                {human.late ? 'Zagraj zaległy mecz' : 'Wejdź w mecz'}
               </Link>
             </p>
           ) : null}

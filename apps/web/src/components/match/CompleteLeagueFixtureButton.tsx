@@ -46,8 +46,7 @@ export function CompleteLeagueFixtureButton({
       <>
         {differs && state.score ? (
           <p role="status" style={{ margin: '0 0 0.5rem' }}>
-            Oficjalny wynik: {state.score.home}:{state.score.away}. Skład zmienił się w trakcie
-            meczu.
+            Oficjalny wynik: {state.score.home}:{state.score.away}. Mecz otwarto też w innej karcie.
           </p>
         ) : null}
         <a href="/hub" style={buttonStyle}>
