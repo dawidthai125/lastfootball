@@ -51,7 +51,7 @@ Nie kopiuj hashy tutaj na sztywno.
 
 - **ChatGPT:** [`docs/AI/AI_QUICK_START.md`](docs/AI/AI_QUICK_START.md) → [`docs/AI/PROJECT_HANDOFF.md`](docs/AI/PROJECT_HANDOFF.md) §12 **NOWA SESJA AI**.
 - **Cursor:** ten plik → Quick Start → Handoff §13 **NOWY AGENT CURSOR**.
-- **Następny EPIC:** Retirement / §22 push / Prime — każdy z własnym kontraktem. Academy 02 = SCOPE LOCK. SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **Następny EPIC:** Retirement / §22 push / Prime — każdy z własnym kontraktem. Academy 02 = DONE (D134). SSOT [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - Decyzje **D1–D125:** [`docs/DECISIONS.md`](docs/DECISIONS.md) · skrót [`docs/AI/ARCHITECTURAL_DECISIONS.md`](docs/AI/ARCHITECTURAL_DECISIONS.md).
 
 ## Last updated

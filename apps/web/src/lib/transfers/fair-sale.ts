@@ -1,3 +1,4 @@
+import { homegrownSaleShare } from '@/lib/academy/levels';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 
@@ -7,13 +8,14 @@ export type SalePlayer = {
   readonly age: number;
   readonly origin?: string | null;
   readonly joinedAt?: string | null;
+  readonly seniorMatches?: number;
   readonly loanedIn?: boolean;
   readonly onLoan?: boolean;
 };
 
 /** Days a newcomer (academy, free agent, purchase) stays before he can be sold or listed. */
 export const SALE_COOLDOWN_DAYS = 7;
-/** Computer clubs pay this share for players the club got for nothing. */
+/** Computer clubs pay this share for free agents. Home-grown: homegrownSaleShare (D134). */
 export const FREE_ORIGIN_SHARE = 0.1;
 
 const DAY_MS = 86_400_000;
@@ -34,6 +36,8 @@ export function saleBlock(player: SalePlayer, now: Date = new Date()): string | 
 export function aiSaleAsk(player: SalePlayer): number {
   const full = deriveTransferFee(player.skill, player.age);
   if (player.origin !== 'academy' && player.origin !== 'free') return full;
+  const share =
+    player.origin === 'academy' ? homegrownSaleShare(player.seniorMatches) : FREE_ORIGIN_SHARE;
   const { ROUND } = ECONOMY_THIN.TRANSFER_FEE;
-  return Math.round((full * FREE_ORIGIN_SHARE) / ROUND) * ROUND;
+  return Math.round((full * share) / ROUND) * ROUND;
 }

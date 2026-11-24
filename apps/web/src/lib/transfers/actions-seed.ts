@@ -79,6 +79,7 @@ export async function buyTransferPlayer(
     status: p.status,
     departed_at: p.departedAt,
     origin: p.origin,
+    seniorMatches: p.seniorMatches,
   }));
 
   const settle = async (agreedAmount: number): Promise<TransferActionState> => {
@@ -227,6 +228,7 @@ export async function sellTransferPlayer(
       status: p.status,
       departed_at: p.departedAt,
       origin: p.origin,
+      seniorMatches: p.seniorMatches,
     })),
   });
 
@@ -346,6 +348,7 @@ export async function respondIncomingOffer(
         status: p.status,
         departed_at: p.departedAt,
         origin: p.origin,
+        seniorMatches: p.seniorMatches,
       })),
     });
     if (!result.ok) return { error: result.error };

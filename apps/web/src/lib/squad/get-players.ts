@@ -16,6 +16,8 @@ const DEPTH_SELECT =
 const LOAN_SELECT =
   'id, on_loan, loan_until, wage_bank, loaned_in, loan_partner_label, intl_absent_until';
 
+const ACADEMY_SELECT = 'id, senior_matches, academy_trained_on, academy_gain, academy_gain_season';
+
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
@@ -58,13 +60,14 @@ export async function listClubPlayers(
       if (row.id) depthById.set(row.id, row);
     }
   }
-  const loan = await supabase
-    .from('players')
-    .select(LOAN_SELECT)
-    .eq('club_id', clubId)
-    .is('departed_at', null);
-  if (!loan.error && loan.data) {
-    for (const row of loan.data as Partial<PlayerDbRow>[]) {
+  const extras = await Promise.all(
+    [LOAN_SELECT, ACADEMY_SELECT].map((columns) =>
+      supabase.from('players').select(columns).eq('club_id', clubId).is('departed_at', null),
+    ),
+  );
+  for (const extra of extras) {
+    if (extra.error || !extra.data) continue;
+    for (const row of extra.data as unknown as Partial<PlayerDbRow>[]) {
       if (!row.id) continue;
       depthById.set(row.id, { ...depthById.get(row.id), ...row });
     }

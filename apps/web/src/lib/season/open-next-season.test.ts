@@ -404,4 +404,46 @@ describe('openNextSeasonAfterDeparture', () => {
       starter: false,
     });
   });
+
+  it('parts with juniors older than 19 and keeps the one it promotes (D134)', async () => {
+    const roster = [
+      player({ id: 'retiree', age: 40, skill: 40, academyTrack: false, starter: true }),
+      player({ id: 'a-1', age: 20, skill: 50, academyTrack: true, starter: false }),
+      player({ id: 'a-2', age: 20, skill: 50, academyTrack: true, starter: false }),
+      player({ id: 'a-3', age: 19, skill: 50, academyTrack: true, starter: false }),
+      player({ id: 's-1', age: 20, skill: 50, academyTrack: false, starter: true }),
+    ];
+    const run = async (fail: 'club' | null) => {
+      const db = fakeDb(roster, fail);
+      const result = await openNextSeasonAfterDeparture({
+        supabase: db.supabase as never,
+        clubId: 'club-1',
+        endedSeason: 3,
+        loadRoster: async () => roster,
+        nextSeason: 4,
+        nextTier: 'iii',
+        goalNote: 'miss',
+        hAgePort: hAge(db.ops, snapshot),
+        hAgeSnapshot: snapshot,
+      });
+      return {
+        ok: result.ok,
+        status: Object.fromEntries(db.players.map((row) => [row.id, row.status])),
+        left: db.players.filter((row) => row.departed_at != null).map((row) => row.id),
+      };
+    };
+    expect(await run(null)).toEqual({
+      ok: true,
+      status: {
+        retiree: 'DEPARTED',
+        'a-1': 'READY',
+        'a-2': 'DEPARTED',
+        'a-3': 'READY',
+        's-1': 'READY',
+      },
+      left: ['retiree', 'a-2'],
+    });
+    // The club row did not open: everybody is back for the next try.
+    expect(await run('club')).toMatchObject({ ok: false, left: [] });
+  });
 });

@@ -1,5 +1,6 @@
 import { serverDb } from '@/lib/supabase/admin';
 import { buildAcademyIntakeDraft } from '@/lib/academy/intake';
+import { leavesAcademy } from '@/lib/academy/levels';
 import type { LeagueTier } from '@/lib/league/league-tier';
 import {
   formatRetirementFarewell,
@@ -8,7 +9,7 @@ import {
 } from '@/lib/season/departure';
 import { revertSeasonTransitionHAge, type HAgePlayersPort } from '@/lib/season/transition/h-age';
 import type { SeasonAgePlayerSlice } from '@/lib/squad/season-age';
-import type { PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
+import { isAcademyProspect, type PlayerRowDto, type PlayerStatus } from '@/lib/squad/types';
 import type { createClient } from '@/lib/supabase/server';
 
 type SeasonDb = Awaited<ReturnType<typeof createClient>>;
@@ -53,15 +54,28 @@ export type OpenNextSeasonOk = {
 export async function openNextSeasonAfterDeparture(
   input: OpenNextSeasonInput,
 ): Promise<OpenNextSeasonOk | { ok: false; error: string }> {
+  const roster = await input.loadRoster(input.clubId);
   const departure = await applySeasonDeparture(
     input.supabase,
     input.clubId,
     input.endedSeason,
-    input.loadRoster,
+    roster,
   );
   if (!departure.ok) {
     await revertSeasonTransitionHAge(input.clubId, input.hAgePort, input.hAgeSnapshot);
     return { ok: false, error: departure.error };
+  }
+
+  // D134: ages are ticked already. A junior the departure just promoted stays.
+  const promoted = departure.undo?.replacement.id;
+  const leavers = roster.filter(
+    (player) => isAcademyProspect(player) && leavesAcademy(player.age) && player.id !== promoted,
+  );
+  if (!(await releaseJuniors(input.supabase, input.clubId, leavers))) {
+    await restoreJuniors(input.supabase, input.clubId, leavers);
+    await undoSeasonDeparture(input.supabase, departure.undo);
+    await revertSeasonTransitionHAge(input.clubId, input.hAgePort, input.hAgeSnapshot);
+    return { ok: false, error: 'Nie udało się zamknąć rocznika akademii.' };
   }
 
   const { data: opened, error: updErr } = await input.supabase
@@ -78,12 +92,48 @@ export async function openNextSeasonAfterDeparture(
     .select('id');
 
   if (updErr || !opened || opened.length === 0) {
+    await restoreJuniors(input.supabase, input.clubId, leavers);
     await undoSeasonDeparture(input.supabase, departure.undo);
     await revertSeasonTransitionHAge(input.clubId, input.hAgePort, input.hAgeSnapshot);
     return { ok: false, error: 'Nie udało się otworzyć nowego sezonu.' };
   }
 
   return { ok: true, farewell: departure.farewell };
+}
+
+/** Safe to repeat: a junior who left already is no longer in the roster. */
+async function releaseJuniors(
+  supabase: SeasonDb,
+  clubId: string,
+  juniors: readonly PlayerRowDto[],
+): Promise<boolean> {
+  const now = new Date().toISOString();
+  for (const junior of juniors) {
+    const { error } = await serverDb(supabase)
+      .from('players')
+      .update({ status: 'DEPARTED', departed_at: now, starter: false } as never)
+      .eq('id', junior.id)
+      .eq('club_id', clubId)
+      .eq('academy_track', true)
+      .is('departed_at', null);
+    if (error) return false;
+  }
+  return true;
+}
+
+async function restoreJuniors(
+  supabase: SeasonDb,
+  clubId: string,
+  juniors: readonly PlayerRowDto[],
+): Promise<void> {
+  for (const junior of juniors) {
+    await serverDb(supabase)
+      .from('players')
+      .update({ status: junior.status, departed_at: null, starter: junior.starter } as never)
+      .eq('id', junior.id)
+      .eq('club_id', clubId)
+      .eq('academy_track', true);
+  }
 }
 
 type DepartureApplyOk = {
@@ -96,9 +146,8 @@ async function applySeasonDeparture(
   supabase: SeasonDb,
   clubId: string,
   seasonNumber: number,
-  loadRoster: (clubId: string) => Promise<readonly PlayerRowDto[]>,
+  roster: readonly PlayerRowDto[],
 ): Promise<DepartureApplyOk | { ok: false; error: string }> {
-  const roster = await loadRoster(clubId);
   const plan = planSeasonDeparture(
     roster.map((player) => ({
       id: player.id,
@@ -227,6 +276,9 @@ async function applySeasonDeparture(
       version: 1,
       academy_track: false,
       promoted_at: now,
+      // Home-grown as well: computer clubs pay by his senior matches (D134).
+      origin: 'academy',
+      joined_at: now,
       transfer_listed_at: null,
     } as never);
   if (insertErr) {

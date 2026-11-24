@@ -18,6 +18,8 @@ export async function listClubRetirementFlash(
       .from('players')
       .select('id, name, status, departed_at, promoted_at')
       .eq('club_id', clubId)
+      // A junior who leaves the academy did not end a career.
+      .eq('academy_track', false)
       .not('departed_at', 'is', null)
       .gte('departed_at', dayStart),
     supabase

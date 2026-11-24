@@ -1,5 +1,7 @@
 # LFE-ACADEMY-02 — SCOPE LOCK
 
+> **Odblokowane 2026-11-24 (D134).** Liczby i zakres: [`../game-design/LFE-ACADEMY-02-PLAN.md`](../game-design/LFE-ACADEMY-02-PLAN.md), GDD §16.14 i §26.8. Reszta pliku to historia. Auto-promote, mecze młodzieżowe i academy OVR dalej OUT.
+
 **Data:** 2026-11-09  
 **Owner GO:** tak, na zapis zakresu. Kod akademii **nie** wchodzi w tym EPIC-u.  
 **SSOT:** GDD §16.14 · §16.17 · D23.

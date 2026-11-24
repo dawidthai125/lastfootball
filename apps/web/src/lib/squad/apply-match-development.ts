@@ -49,6 +49,8 @@ export async function applyMatchDevelopment(
     matchKey: string;
     activePlayers: readonly PlayerRowDto[];
     truthById?: Readonly<Record<string, MatchTruthPatch>>;
+    /** The eleven that started: each gets one senior match, once per match key (D134). */
+    startedIds?: ReadonlySet<string>;
   },
 ): Promise<ApplyMatchDevelopmentResult> {
   const seniors = filterSeniorPlayers(input.activePlayers);
@@ -68,10 +70,12 @@ export async function applyMatchDevelopment(
     const next = after[i]!;
     const prev = before[i]!;
     const patch = input.truthById?.[next.id];
-    if (next.skill === prev.skill && !patch) continue;
+    const started = input.startedIds?.has(next.id) === true;
+    if (next.skill === prev.skill && !patch && !started) continue;
     updates.push({
       id: next.id,
       skill: next.skill,
+      ...(started ? { played: true } : {}),
       ...(patch?.status ? { status: patch.status } : {}),
       ...(patch?.groups
         ? {

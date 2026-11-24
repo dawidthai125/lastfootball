@@ -5,6 +5,14 @@ import { bumpGroup, type AttrGroups } from '@/lib/squad/truth';
 export const COACH_GROUPS = ['attack', 'passing', 'defense', 'physical', 'goalkeeping'] as const;
 export type CoachGroup = (typeof COACH_GROUPS)[number];
 
+export const COACH_GROUP_LABEL: Readonly<Record<CoachGroup, string>> = {
+  attack: 'Atak',
+  passing: 'Podania',
+  defense: 'Obrona',
+  physical: 'Fizyczność',
+  goalkeeping: 'Bramkarstwo',
+};
+
 export const COACH_THIN = { HIRE_FEE: 8_000, EXTRA_GROUP_DELTA: 1 } as const;
 
 export function isCoachGroup(value: unknown): value is CoachGroup {

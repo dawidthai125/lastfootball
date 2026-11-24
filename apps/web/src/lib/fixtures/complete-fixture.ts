@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
+import { UPKEEP_LABEL, UPKEEP_SHORT_LABEL } from '@/lib/academy/levels';
+import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { readClubBuild } from '@/lib/club/read-build';
 import { recordFanMood } from '@/lib/club/record-fan-mood';
@@ -181,6 +183,7 @@ export async function completeFixture(
       : 0;
 
   // Result, cash, ledger and the next fixture land together or not at all.
+  const upkeep = await loadAcademyUpkeep(admin, clubId);
   const { data: settledRaw, error: settleErr } = await admin.rpc(
     'settle_fixture' as never,
     {
@@ -194,6 +197,13 @@ export async function completeFixture(
       p_wage_due: wageDue,
       p_wage_label: WAGES_LABEL,
       p_wage_short_label: WAGES_SHORT_LABEL,
+      ...(upkeep > 0
+        ? {
+            p_upkeep: upkeep,
+            p_upkeep_label: UPKEEP_LABEL,
+            p_upkeep_short_label: UPKEEP_SHORT_LABEL,
+          }
+        : {}),
     } as never,
   );
   const settled = settledRaw as { applied: boolean; paid: number } | null;
@@ -259,6 +269,7 @@ export async function completeFixture(
     // Growth goes to the players who played, not to a lineup changed meanwhile.
     activePlayers: xiIds ? players.map((p) => ({ ...p, starter: xiIds.has(p.id) })) : players,
     truthById,
+    startedIds: new Set(Object.keys(roleById).filter((id) => roleById[id] === 'xi')),
   });
   if (!dev.ok) {
     return { error: dev.error };

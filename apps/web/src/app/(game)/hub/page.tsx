@@ -20,6 +20,7 @@ import {
   utcDateString,
 } from '@/lib/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { resolveCashChipLabel, resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { resolveHubPhase } from '@/lib/hub';
@@ -127,7 +128,13 @@ export default async function HubPage() {
       resolveClubSquad(club, seniors).players.filter((player) => player.starter),
       todayUtc,
     ).ok;
-  const finance = resolveClubFinance(club, movements, matchWageDue(seniors));
+  const supabase = await createClient();
+  const finance = resolveClubFinance(
+    club,
+    movements,
+    matchWageDue(seniors),
+    await loadAcademyUpkeep(supabase, club.id),
+  );
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const leaguePlayedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
@@ -135,7 +142,6 @@ export default async function HubPage() {
   const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
   const cupLink =
     phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
-  const supabase = await createClient();
   const mood = await supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle();
   const moodValue = mood.error || !mood.data ? null : (mood.data as { fan_mood?: number }).fan_mood;
   const fanLabel = resolveHubFanLabel(

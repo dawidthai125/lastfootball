@@ -1,5 +1,6 @@
 import { hashPlayerId, resolvePlayerPotential } from '@/lib/squad/potential';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { academyLevel } from '@/lib/academy/levels';
 import { ACADEMY_THIN } from '@/lib/academy/types';
 
 const YOUTH_TEMPLATES = [
@@ -81,21 +82,74 @@ export function buildAcademyIntakeDraft(
   };
 }
 
-/** One intake a week: about three in a league season (D133). */
-export const INTAKE_EVERY_DAYS = 7;
+/** One candidate of a stored intake. The potential number never leaves the server. */
+export type AcademyCandidate = {
+  readonly id: string;
+  readonly name: string;
+  readonly pos: string;
+  readonly role: string;
+  readonly age: number;
+  readonly skill: number;
+  readonly potential: number;
+};
+
+/** Id of a junior from a stored intake. The intake number keeps it unique for good. */
+function candidateId(clubId: string, seq: number, index: number): string {
+  return `${ACADEMY_THIN.ID_PREFIX}-${clubTagFromId(clubId)}-n${seq}-${index}`;
+}
+
+/** Such a junior was chosen by his potential band, so the band stays known. */
+export function isCandidateId(playerId: string, clubId: string): boolean {
+  return (
+    isAcademyId(playerId, clubId) &&
+    /^n[0-9]+-[0-9]$/.test(playerId.slice(playerId.indexOf('-', 2) + 1))
+  );
+}
+
+/** Same club, number and level: same candidates. Positions within one intake differ. */
+export function generateAcademyCandidates(
+  clubId: string,
+  seq: number,
+  level: number,
+): AcademyCandidate[] {
+  const rules = academyLevel(level);
+  const [low, high] = rules.skill;
+  const roll = (index: number, part: string) =>
+    hashPlayerId(`${part}:${clubId}:${seq}:${index}`) >>> 8;
+  const first = roll(0, 'pos');
+  return Array.from({ length: rules.candidates }, (_, index) => {
+    const template = YOUTH_TEMPLATES[(first + index) % YOUTH_TEMPLATES.length]!;
+    const id = candidateId(clubId, seq, index);
+    const age = 16 + (roll(index, 'age') % 3);
+    const skill = low + (roll(index, 'skill') % (high - low + 1));
+    return {
+      id,
+      name: template.names[roll(index, 'name') % template.names.length]!,
+      pos: template.pos,
+      role: template.role,
+      age,
+      skill,
+      potential: resolvePlayerPotential(skill, id, age),
+    };
+  });
+}
+
+/** Level 0 rhythm, about three intakes in a league season (D133). Higher levels wait less. */
+export const INTAKE_EVERY_DAYS = academyLevel(0).intakeEveryDays;
 
 export function isAcademyId(playerId: string, clubId: string): boolean {
   return playerId.startsWith(`${ACADEMY_THIN.ID_PREFIX}-${clubTagFromId(clubId)}-`);
 }
 
 /** Full days until the next intake; 0 = now. */
-export function intakeWaitDays(intakes: readonly string[], now: Date): number {
+export function intakeWaitDays(
+  intakes: readonly string[],
+  now: Date,
+  everyDays: number = INTAKE_EVERY_DAYS,
+): number {
   const last = Math.max(...intakes.map((at) => Date.parse(at)).filter(Number.isFinite), 0);
   if (last === 0) return 0;
-  return Math.max(
-    0,
-    Math.ceil((last + INTAKE_EVERY_DAYS * 86_400_000 - now.getTime()) / 86_400_000),
-  );
+  return Math.max(0, Math.ceil((last + everyDays * 86_400_000 - now.getTime()) / 86_400_000));
 }
 
 /** Pure Promote guards — no skill/potential mutation. */

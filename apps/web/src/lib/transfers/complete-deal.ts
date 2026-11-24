@@ -53,6 +53,7 @@ type ActivePlayer = {
   status: string;
   departed_at: string | null;
   origin?: string | null;
+  seniorMatches?: number;
 };
 
 type SeedBuyInput = {
