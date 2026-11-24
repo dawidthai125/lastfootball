@@ -65,6 +65,7 @@ export async function runTrainingSession(
   );
   const activePlayers = await listClubPlayers(clubRow.id);
   const build = await readClubBuild(supabase, clubRow.id);
+  if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
 
   const result = await completeTrainingSession(supabase, {
     clubId: clubRow.id,

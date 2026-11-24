@@ -186,7 +186,8 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
     dial
       ? goals.some((goal) => {
           const at = minuteNumber(goal.minute);
-          return at !== null && at >= dial.minute;
+          // The dials belong to one side, so a goal of the other one says nothing about them.
+          return goal.side === matchState.tacticsSide && at !== null && at >= dial.minute;
         })
       : false;
 

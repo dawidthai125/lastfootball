@@ -1,5 +1,6 @@
 'use server';
 
+import { recordMovement } from '@/lib/finance/record-movement';
 import { restedEnergy, restedStatus } from '@/lib/squad/rest';
 import type { PlayerStatus } from '@/lib/squad/types';
 import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
@@ -48,14 +49,12 @@ async function ownClub() {
   return { supabase, club: club as { id: string; cash_balance: number } };
 }
 
-export async function hireClubPhysio(
-  _prev: TrainingActionState,
-  _formData: FormData,
-): Promise<TrainingActionState> {
+export async function hireClubPhysio(): Promise<TrainingActionState> {
   if (!env.isSupabaseConfigured) return { error: 'Supabase nie jest skonfigurowany.' };
   const owned = await ownClub();
   if (!owned.club) return { error: owned.error };
   const build = await readClubBuild(owned.supabase, owned.club.id);
+  if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
   const hired = hireOnce({ cash: owned.club.cash_balance, owned: build.physio });
   if (!hired.ok) return { error: 'Za mało środków na fizjoterapeutę.' };
   if (hired.fee === 0) return { ok: true };
@@ -67,15 +66,12 @@ export async function hireClubPhysio(
   });
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Fizjoterapeuta nie jest jeszcze włączony.' };
-  await serverDb(owned.supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: owned.club.id,
-      category: 'physio_hire',
-      label: 'Fizjoterapeuta',
-      amount: -hired.fee,
-      fixture_id: null,
-    } as never);
+  await recordMovement({
+    club_id: owned.club.id,
+    category: 'physio_hire',
+    label: 'Fizjoterapeuta',
+    amount: -hired.fee,
+  });
   revalidatePath('/training');
   revalidatePath('/finance');
   return { ok: true };
@@ -89,6 +85,7 @@ export async function hireClubAssistant(
   const owned = await ownClub();
   if (!owned.club) return { error: owned.error };
   const build = await readClubBuild(owned.supabase, owned.club.id);
+  if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
   const hired = hireCoach({
     cash: owned.club.cash_balance,
     current: build.assistantGroup,
@@ -111,15 +108,12 @@ export async function hireClubAssistant(
   });
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Asystent nie jest jeszcze włączony.' };
-  await serverDb(owned.supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: owned.club.id,
-      category: 'assistant_hire',
-      label: 'Asystent trenera',
-      amount: -STAFF_FEE,
-      fixture_id: null,
-    } as never);
+  await recordMovement({
+    club_id: owned.club.id,
+    category: 'assistant_hire',
+    label: 'Asystent trenera',
+    amount: -STAFF_FEE,
+  });
   revalidatePath('/training');
   revalidatePath('/finance');
   return { ok: true };
@@ -241,10 +235,11 @@ export async function savePressTone(
   const row = fixture as { id: string; press_tone: string | null } | null;
   if (error || !row || row.id !== fixtureId) return { error: 'Nie ma meczu do omówienia.' };
   if (row.press_tone) return { ok: true };
-  const { data: marked, error: markErr } = await owned.supabase
+  const { data: marked, error: markErr } = await serverDb(owned.supabase)
     .from('fixtures')
     .update({ press_tone: tone } as never)
     .eq('id', fixtureId)
+    .eq('club_id', owned.club.id)
     .is('press_tone', null)
     .select('id');
   if (markErr) return { error: 'Konferencja nie jest jeszcze włączona.' };

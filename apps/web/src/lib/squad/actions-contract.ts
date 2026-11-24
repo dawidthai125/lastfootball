@@ -36,7 +36,7 @@ export async function saveContractTalk(
   if (!clubId) return { error: 'Nie znaleziono klubu.' };
   const { data: player, error: readErr } = await supabase
     .from('players')
-    .select('id, wage, skill, age, morale, personality, contract_season')
+    .select('id, wage, skill, age, morale, personality, contract_season, on_loan')
     .eq('id', playerId)
     .eq('club_id', clubId)
     .eq('loaned_in', false)
@@ -51,7 +51,10 @@ export async function saveContractTalk(
     morale: number | null;
     personality: string | null;
     contract_season: number | null;
+    on_loan: boolean | null;
   };
+  // Half of the pay sits in wage_bank during a loan, so the talk would start from a false wage.
+  if (row.on_loan === true) return { error: 'Najpierw ściągnij go z wypożyczenia.' };
   const rawPersonality = row.personality ?? '';
   const personality = isTalkPersonality(rawPersonality) ? rawPersonality : 'spokojny';
   const wage = typeof row.wage === 'number' ? row.wage : fallbackWage(row.skill, row.age);

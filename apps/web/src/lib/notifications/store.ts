@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { env } from '@/config/env';
 import { emailGate } from '@/lib/auth/email-confirm-policy';
 import { isProvenEmail } from '@/lib/auth/email-proof';
+import { latestPlayedAt, type KickoffCompetition } from '@/lib/fixtures/kickoff-gate';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { humanRoundFromFixture, humanSeasonFromFixture } from '@/lib/league/human-league';
 import { emailLetter, pushPayload } from '@/lib/notifications/content';
@@ -226,6 +227,19 @@ async function loadUsers(
       .range(from, to),
   );
   if (clubs.length === 0) return [];
+  // A blocked player cannot sign in, so a letter that asks to play makes no sense.
+  const blocked = new Set(
+    (
+      await allRows<{ user_id: string }>((from, to) =>
+        admin
+          .from('blocked_accounts' as never)
+          .select('user_id')
+          .in('user_id', userIds)
+          .order('user_id')
+          .range(from, to),
+      )
+    ).map((row) => row.user_id),
+  );
   const clubIds = clubs.map((club) => club.id);
   const since = (ms: number) => new Date(now.getTime() - ms).toISOString();
 
@@ -241,11 +255,11 @@ async function loadUsers(
           .order('id')
           .range(from, to),
       ),
-      // Any competition: the Warsaw day rule and the activity rule both look at every match.
-      allRows<{ club_id: string; played_at: string | null }>((from, to) =>
+      // Any competition: the activity rule looks at every match, the league day only at its own.
+      allRows<{ club_id: string; competition: string; played_at: string | null }>((from, to) =>
         admin
           .from('fixtures')
-          .select('club_id, played_at')
+          .select('club_id, competition, played_at')
           .in('club_id', clubIds)
           .eq('status', 'played')
           .gte('played_at', since(NOTIFY_RULES.activeMs))
@@ -341,7 +355,7 @@ async function loadUsers(
   const users: PlannerUser[] = [];
   for (const row of prefs) {
     const club = clubByOwner.get(row.user_id);
-    if (!club) continue;
+    if (!club || blocked.has(row.user_id)) continue;
     context.clubNames.set(row.user_id, club.name);
     const userDevices = devices.get(row.user_id) ?? [];
     if (userDevices.length > 0) context.devices.set(row.user_id, userDevices);
@@ -361,7 +375,14 @@ async function loadUsers(
         : null,
       now.getTime(),
     );
-    const lastPlayedAt = latest((playedByClub.get(club.id) ?? []).map((item) => item.played_at));
+    const matches = playedByClub.get(club.id) ?? [];
+    const lastPlayedAt = latestPlayedAt(
+      matches.map((item) => ({
+        status: 'played',
+        competition: item.competition as KickoffCompetition,
+        playedAt: item.played_at,
+      })),
+    );
     const humanClub = human?.playedByClub.get(club.id) ?? null;
     users.push({
       userId: row.user_id,
@@ -384,7 +405,7 @@ async function loadUsers(
       matchesBlocked: gate.matchesBlocked,
       lastPlayedAt,
       lastActiveAt: latest([
-        lastPlayedAt,
+        ...matches.map((item) => item.played_at),
         club.last_training_on,
         club.first_match_completed_at,
         row.chosen_at,

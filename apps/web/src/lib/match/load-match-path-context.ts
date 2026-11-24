@@ -130,7 +130,9 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
         ? `Puchar · ${dto.matchday === 104 ? 'Neutralny' : dto.isHome ? 'U siebie' : 'Wyjazd'}`
         : dto.competition === 'human'
           ? `Liga ludzi · Kolejka ${humanRoundFromFixture(dto.matchday) ?? dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`
-          : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
+          : dto.competition === 'challenge'
+            ? `Wyzwanie · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`
+            : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
     firstMatch: false,
     rivalLines: await rivalLinesFor(club.id, dto.opponentClubId),
   };

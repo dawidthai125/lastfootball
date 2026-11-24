@@ -377,7 +377,9 @@ export function TrainingView({
       ) : null}
 
       <header className="lf-tr__hero">
-        <p className="lf-tr__status">Sesja dostępna</p>
+        <p className="lf-tr__status">
+          {training.canTrain ? 'Sesja dostępna' : lockTitle(training)}
+        </p>
         <h1 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h1>
         <p className="lf-tr__meta">
           Rozegrane: {training.playedCount} · Dziś (UTC): {training.today}
@@ -476,7 +478,7 @@ export function TrainingView({
               {' · '}
               Zregenerowani <strong>{state.summary.regenerated}</strong>
               {' · '}
-              +skill <strong>{state.summary.skillUp}</strong>
+              Wyższa umiejętność <strong>{state.summary.skillUp}</strong>
               {state.summary.skillUpNames && state.summary.skillUpNames.length > 0 ? (
                 <>
                   {': '}

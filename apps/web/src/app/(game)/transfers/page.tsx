@@ -25,7 +25,8 @@ export default async function TransfersPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
-  await settleDueAuctions();
+  // The club was read before: a settled auction changes its cash, so the page starts again.
+  if ((await settleDueAuctions()) > 0) redirect('/transfers');
   const [activePlayers, liveListings, h2hOffers, auctions, fixtures, bought] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),
@@ -60,7 +61,7 @@ export default async function TransfersPage() {
   const loanOffers = resolveIncomingLoanOffers({
     clubId: club.id,
     transferWindowOpen: club.transferWindowOpen,
-    rosterCount: filterSeniorPlayers(activePlayers).length,
+    roster: filterSeniorPlayers(activePlayers),
     today: utcDateString(),
   });
 

@@ -274,7 +274,7 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
         </form>
         {!academy.canIntake && academy.intakeBlockedReason === 'slots_full' ? (
           <p className="mt-1.5 text-[11px] text-[var(--lf-faint)]">
-            Maksymalnie {academy.maxProspects} perspektywy naraz.
+            Maksymalna liczba perspektyw naraz: {academy.maxProspects}.
           </p>
         ) : null}
       </section>

@@ -54,7 +54,8 @@ export async function completeTrainingSession(
   },
 ): Promise<CompleteTrainingResult> {
   const today = input.today ?? utcDateString();
-  const seniors = filterSeniorPlayers(input.activePlayers);
+  // A player on loan trains with the other club, as in the individual session (D158).
+  const seniors = filterSeniorPlayers(input.activePlayers).filter((p) => p.onLoan !== true);
   const resolved = resolveClubTraining({
     clubId: input.clubId,
     playedCount: input.playedCount,

@@ -60,7 +60,7 @@ export function lastRivalResult(
 export function buildRivalCardLines(input: RivalCardInput): readonly string[] {
   const lines: string[] = [];
   if (input.last == null) {
-    lines.push('Pierwszy mecz');
+    lines.push('Pierwszy mecz w tym sezonie');
   } else {
     const place = input.last.isHome ? 'U siebie' : 'Wyjazd';
     lines.push(`${input.last.homeScore}:${input.last.awayScore} · ${place}`);

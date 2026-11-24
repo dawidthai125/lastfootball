@@ -120,7 +120,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const loanOffers = resolveIncomingLoanOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
-      rosterCount: filterSeniorPlayers(activePlayers).length,
+      roster: filterSeniorPlayers(activePlayers),
       today,
     });
     const intl = resolveIntlCallup({
@@ -134,6 +134,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         starter: player.starter,
         onLoan: player.onLoan === true,
         loanedIn: player.loanedIn === true,
+        intlAbsentUntil: player.intlAbsentUntil ?? null,
       })),
       alreadyAbsentIds: activePlayers
         .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= today)

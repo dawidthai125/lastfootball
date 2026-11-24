@@ -18,6 +18,7 @@ import {
 } from '@/lib/squad/validate-starting-xi';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { matchLivePath, matchPrePath } from '@/lib/match/match-path';
+import { withShape } from '@/lib/match/our-formation';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './match-xi.css';
@@ -29,11 +30,14 @@ export function MatchXiView({
   matchId,
   players: initialPlayers,
   todayUtc = utcDateString(),
+  shape = '4-4-2',
 }: {
   matchId: string;
   players: readonly SquadPlayerDto[];
   /** Inject for tests; defaults to UTC today (intl gate parity with save). */
   todayUtc?: string;
+  /** Shape chosen on the pre-match screen. */
+  shape?: string;
 }) {
   const router = useRouter();
   const [players, setPlayers] = useState(() => initialPlayers.map((p) => ({ ...p })));
@@ -52,9 +56,9 @@ export function MatchXiView({
 
   useEffect(() => {
     if (state.ok) {
-      router.push(matchLivePath(matchId));
+      router.push(withShape(matchLivePath(matchId), shape));
     }
-  }, [state.ok, matchId, router]);
+  }, [state.ok, matchId, shape, router]);
 
   const repaired = useMemo(
     () => replaceUnavailableStarters(players, todayUtc),
@@ -119,7 +123,7 @@ export function MatchXiView({
             {UI_COPY.bestXi}
           </button>
         ) : null}
-        <Link href={matchPrePath(matchId)} className="lf-xi__soft">
+        <Link href={withShape(matchPrePath(matchId), shape)} className="lf-xi__soft">
           {UI_COPY.backToChecklist}
         </Link>
       </form>

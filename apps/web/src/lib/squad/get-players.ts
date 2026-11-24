@@ -20,6 +20,8 @@ const CONTRACT_SELECT = 'id, contract_season';
 
 const ACADEMY_SELECT = 'id, senior_matches, academy_trained_on, academy_gain, academy_gain_season';
 
+const OFFER_SELECT = 'id, ai_offer_declined';
+
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
 
@@ -30,9 +32,22 @@ function isFailedRead(error: { readonly code?: string } | null): boolean {
   return error != null && !MISSING_COLUMN.has(error.code ?? '');
 }
 
+/** The squad could not be read. It must never pass for an empty club or an old database. */
+export class SquadReadError extends Error {
+  constructor() {
+    super('Nie udało się odczytać kadry. Spróbuj ponownie.');
+    this.name = 'SquadReadError';
+  }
+}
+
+function stopOnFailedRead(error: { readonly code?: string } | null): void {
+  if (isFailedRead(error)) throw new SquadReadError();
+}
+
 /**
  * Club players from DB (SSOT) including academy prospects.
  * Excludes DEPARTED / departed_at. Empty array if missing — no seed fallback.
+ * Throws SquadReadError when the read fails.
  * Senior consumers must filter via resolveClubSquad / filterSeniorPlayers.
  */
 export async function listClubPlayers(
@@ -48,6 +63,7 @@ export async function listClubPlayers(
     .is('departed_at', null)
     .order('shirt_number', { ascending: true });
 
+  stopOnFailedRead(full.error);
   const result = full.error
     ? await supabase
         .from('players')
@@ -57,37 +73,30 @@ export async function listClubPlayers(
         .order('shirt_number', { ascending: true })
     : full;
 
-  if (result.error || !result.data) return [];
+  if (result.error || !result.data) throw new SquadReadError();
   const depth = await supabase
     .from('players')
     .select(DEPTH_SELECT)
     .eq('club_id', clubId)
     .is('departed_at', null);
+  stopOnFailedRead(depth.error);
   const depthById = new Map<string, Partial<PlayerDbRow>>();
-  let saleUnknown = isFailedRead(depth.error);
   if (!depth.error && depth.data) {
     for (const row of depth.data as Partial<PlayerDbRow>[]) {
       if (row.id) depthById.set(row.id, row);
     }
   }
   const extras = await Promise.all(
-    [LOAN_SELECT, ACADEMY_SELECT, CONTRACT_SELECT].map((columns) =>
+    [LOAN_SELECT, ACADEMY_SELECT, CONTRACT_SELECT, OFFER_SELECT].map((columns) =>
       supabase.from('players').select(columns).eq('club_id', clubId).is('departed_at', null),
     ),
   );
-  const [, academy] = extras;
-  saleUnknown ||= isFailedRead(academy?.error ?? null);
   for (const extra of extras) {
+    stopOnFailedRead(extra.error);
     if (extra.error || !extra.data) continue;
     for (const row of extra.data as unknown as Partial<PlayerDbRow>[]) {
       if (!row.id) continue;
       depthById.set(row.id, { ...depthById.get(row.id), ...row });
-    }
-  }
-
-  if (saleUnknown) {
-    for (const row of result.data as PlayerDbRow[]) {
-      depthById.set(row.id, { ...depthById.get(row.id), sale_unknown: true });
     }
   }
 
@@ -133,6 +142,8 @@ export async function listClubPlayers(
           status: 'DEPARTED',
           departed_at: new Date().toISOString(),
           starter: false,
+          captain: false,
+          set_piece: false,
           loaned_in: false,
           loan_partner_label: null,
           loan_until: null,

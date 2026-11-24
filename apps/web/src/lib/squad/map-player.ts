@@ -37,8 +37,6 @@ export type PlayerDbRow = {
   origin?: string | null;
   joined_at?: string | null;
   senior_matches?: number | null;
-  /** Not a column: set when the sale facts failed to load. */
-  sale_unknown?: boolean;
   academy_trained_on?: string | null;
   academy_gain?: number | null;
   academy_gain_season?: number | null;
@@ -60,6 +58,7 @@ export type PlayerDbRow = {
   loaned_in?: boolean | null;
   loan_partner_label?: string | null;
   intl_absent_until?: string | null;
+  ai_offer_declined?: boolean | null;
 };
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -98,7 +97,6 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     origin: row.origin ?? null,
     joinedAt: row.joined_at ?? null,
     seniorMatches: row.senior_matches ?? 0,
-    ...(row.sale_unknown === true ? { saleUnknown: true } : {}),
     academyTrainedOn: row.academy_trained_on ?? null,
     academyGain: row.academy_gain ?? 0,
     academyGainSeason: row.academy_gain_season ?? null,
@@ -123,6 +121,7 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     loanedIn: row.loaned_in === true,
     loanPartnerLabel: row.loan_partner_label ?? null,
     intlAbsentUntil: row.intl_absent_until ?? null,
+    aiOfferDeclined: row.ai_offer_declined === true,
   };
 }
 

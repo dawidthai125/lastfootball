@@ -57,6 +57,7 @@ export async function acceptIntlCallup(_prev: IntlState, formData: FormData): Pr
       starter: row.starter,
       onLoan: row.on_loan === true,
       loanedIn: row.loaned_in === true,
+      intlAbsentUntil: row.intl_absent_until,
     })),
     alreadyAbsentIds: rows
       .filter((row) => row.intl_absent_until && row.intl_absent_until >= today)

@@ -88,8 +88,6 @@ export type PlayerRowDto = {
   readonly joinedAt?: string | null;
   /** Matches in the starting eleven since he joined the seniors (D134). */
   readonly seniorMatches?: number;
-  /** Origin or matches could not be read, so his price is unknown: no sale now. */
-  readonly saleUnknown?: boolean;
   /** UTC day of the last academy training. */
   readonly academyTrainedOn?: string | null;
   readonly academyGain?: number;
@@ -121,6 +119,8 @@ export type PlayerRowDto = {
   readonly loanedIn?: boolean;
   readonly loanPartnerLabel?: string | null;
   readonly intlAbsentUntil?: string | null;
+  /** The computer club's offer was rejected; a new listing asks again. */
+  readonly aiOfferDeclined?: boolean;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

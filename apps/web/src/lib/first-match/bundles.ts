@@ -141,7 +141,6 @@ export function buildFirstLiveBundle(
       { label: 'Rożne', home: 0, away: 0 },
       { label: 'Żółte', home: 0, away: 0 },
     ],
-    momentum: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
     events: [
       {
         id: 'e0',

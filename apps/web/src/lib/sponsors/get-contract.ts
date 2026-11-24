@@ -7,6 +7,14 @@ import { env } from '@/config/env';
 export async function getClubSponsorContract(
   clubId: string,
 ): Promise<ClubSponsorContractRow | null> {
+  const read = await readClubSponsorContract(clubId);
+  return read === 'error' ? null : read;
+}
+
+/** A failed read is not a missing contract: whoever moves money must tell them apart. */
+export async function readClubSponsorContract(
+  clubId: string,
+): Promise<ClubSponsorContractRow | null | 'error'> {
   if (!env.isSupabaseConfigured) return null;
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -17,8 +25,8 @@ export async function getClubSponsorContract(
     .eq('club_id', clubId)
     .maybeSingle();
 
-  if (error || !data) return null;
-  return data as ClubSponsorContractRow;
+  if (error) return 'error';
+  return (data as ClubSponsorContractRow | null) ?? null;
 }
 
 /** Deterministic Thin seed for legacy clubs missing a row (createClub is primary path). */

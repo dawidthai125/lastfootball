@@ -9,6 +9,7 @@ import { createSessionFromLeagueFixture, type MatchExtra } from '@/lib/fixtures/
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { commentaryLine } from '@/lib/match/commentary';
+import { momentumFromEvents } from '@/lib/match/momentum';
 import type { RosterPlayerSeed } from '@/lib/squad';
 import {
   LIVE_SUB_LIMIT,
@@ -50,6 +51,8 @@ export type LiveMatchSnapshot = {
     highlight?: boolean;
   }[];
   readonly tactics: MatchState['tactics'];
+  /** Home share of the attacking play, 12 windows. */
+  readonly momentum: readonly number[];
   readonly replay: ReplayView;
 };
 
@@ -465,6 +468,7 @@ export class LiveMatchRuntime {
       ],
       feed,
       tactics: matchState.tactics,
+      momentum: momentumFromEvents(events),
       replay: replayView,
     };
   }
@@ -484,6 +488,8 @@ export class LiveMatchRuntime {
         ? createResumeMatchCommand({ tick, source: 'ui' })
         : createPauseMatchCommand({ tick, source: 'ui' });
     this.session.dispatch(command);
+    // Leaving a replay during a pause leaves no timer behind.
+    if (this.session.status === 'running') this.startSimulation();
     this.bump();
   }
 
@@ -491,7 +497,7 @@ export class LiveMatchRuntime {
     if (this.sharedWatch) {
       return {
         ok: false,
-        error: 'W lidze ludzi mecz idzie z jednego seeda. Taktyka jest zamknięta.',
+        error: 'W Lidze ludzi oba kluby oglądają ten sam mecz. Nie prowadzisz go na żywo.',
       };
     }
     if (!this.watchingLive()) {

@@ -8,6 +8,7 @@ import { tryAdminClient } from '@/lib/supabase/admin';
 /**
  * Insert the manager's current cup tie once the league anchor is reached.
  * Status stays scheduled so it does not replace the next league match.
+ * Also in the break: the cup ends with the season start, so a late round can still be played.
  */
 export async function ensurePlayerCupTie(
   club: Pick<ClubDto, 'id' | 'name' | 'shortName' | 'leagueTier' | 'seasonPhase'> & {
@@ -15,7 +16,6 @@ export async function ensurePlayerCupTie(
   },
   fixtures: readonly FixtureDto[],
 ): Promise<readonly FixtureDto[]> {
-  if (club.seasonPhase === 'offseason') return fixtures;
   const tie = resolveNationalCup(club, fixtures).playerTie;
   if (!tie?.due) return fixtures;
 

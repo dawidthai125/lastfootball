@@ -148,7 +148,9 @@ export async function createLiveTransferOffer(
 
   if (insErr) {
     if (insErr.code === '23505') {
-      return { ok: true };
+      return {
+        error: 'Masz już otwartą ofertę za tego zawodnika. Wycofaj ją, żeby zmienić kwotę.',
+      };
     }
     if (insErr.code === '42501') {
       return {

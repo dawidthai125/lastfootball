@@ -29,7 +29,7 @@ const envSchema = z
     const hasAnon = Boolean(data.NEXT_PUBLIC_SUPABASE_ANON_KEY);
     if (hasUrl !== hasAnon) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message:
           'NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must both be set or both omitted',
       });

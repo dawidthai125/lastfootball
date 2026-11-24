@@ -16,6 +16,8 @@ export type ClubBuild = {
   readonly styleWidth: number;
   readonly physio: boolean;
   readonly assistantGroup: CoachGroup | null;
+  /** Some part is a default, because the read failed. Do not write back or charge from it. */
+  readonly readFailed: boolean;
 };
 
 function clampLevel(value: unknown): number {
@@ -65,6 +67,8 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
   const physio = staffRow?.physio === true;
   const assistantGroup = isCoachGroup(staffRow?.assistant_group) ? staffRow.assistant_group : null;
 
+  const readFailed = [rich, style, tempo, width, staff].some((read) => read.error || !read.data);
+
   if (rich.error || !rich.data) {
     return {
       coachGroup: null,
@@ -74,6 +78,7 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
       styleWidth,
       physio,
       assistantGroup,
+      readFailed,
     };
   }
 
@@ -95,5 +100,6 @@ export async function readClubBuild(supabase: AppSupabase, clubId: string): Prom
     styleWidth,
     physio,
     assistantGroup,
+    readFailed,
   };
 }

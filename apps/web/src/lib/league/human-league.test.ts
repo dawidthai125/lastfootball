@@ -249,6 +249,7 @@ describe('human league', () => {
 
   it('a bot at home and set-piece takers give both views the same match', () => {
     // Bots carry no energy and no form.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const bot = xi('bot', 60, 80).map(({ energy: _e, form: _f, ...p }) => p);
     const taker = (side: string) =>
       xi(side, 70, 60).map((p, i) => ({ ...p, setPiece: i === 9 ? true : undefined }));

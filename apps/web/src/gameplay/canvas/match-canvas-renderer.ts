@@ -279,7 +279,7 @@ function paint(
     ctx.font = 'bold 10px IBM Plex Sans, ui-sans-serif, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('REPLAY', ox + 44, oy + ph - 19);
+    ctx.fillText('POWTÓRKA', ox + 44, oy + ph - 19);
     ctx.restore();
   }
 }
@@ -536,20 +536,17 @@ function worldToCanvas(
   return { x: ox + p.x * sx, y: oy + p.y * sy };
 }
 
-function lerpFrame(a: VisualFrame, b: VisualFrame, t: number): VisualFrame {
-  const byId = new Map(b.players.map((p) => [p.playerId, p]));
-  const players = a.players.map((pa) => {
-    const pb = byId.get(pa.playerId) ?? pa;
+export function lerpFrame(a: VisualFrame, b: VisualFrame, t: number): VisualFrame {
+  const byId = new Map(a.players.map((p) => [p.playerId, p]));
+  // Only who is on the pitch now: a player who went off must not stay drawn.
+  const players = b.players.map((pb) => {
+    const pa = byId.get(pb.playerId) ?? pb;
     return {
       ...pb,
       x: lerp(pa.x, pb.x, t),
       y: lerp(pa.y, pb.y, t),
     };
   });
-  // Include any new players only in b
-  for (const pb of b.players) {
-    if (!a.players.some((p) => p.playerId === pb.playerId)) players.push(pb);
-  }
   return {
     tick: b.tick,
     phase: b.phase,

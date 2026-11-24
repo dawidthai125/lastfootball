@@ -130,8 +130,10 @@ export async function loadHumanAwards(clubId: string): Promise<readonly HumanSea
   const { data } = await supabase
     .from('human_league_history')
     .select('league_id, cycle, closed_at, awards')
+    // Seasons of every league are in this table: the filter comes before the limit.
+    .contains('awards', JSON.stringify([{ club_id: clubId }]))
     .order('season', { ascending: false })
-    .limit(100);
+    .limit(1000);
   const rows = (data ?? []) as unknown as {
     league_id: number;
     cycle: number;

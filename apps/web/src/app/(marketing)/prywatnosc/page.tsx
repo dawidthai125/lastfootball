@@ -31,10 +31,10 @@ export default function PrivacyPage() {
             (uzasadniony interes: rozwój gry, lit. f). Do usunięcia konta.
           </li>
           <li>
-            <strong>Rejestracja i reset hasła:</strong> skrót adresu IP, a przy resecie także skrót
-            adresu e-mail, trzymane około 2 dni, oraz przy rejestracji sprawdzenie przeglądarki i
-            adresu IP przez Cloudflare Turnstile. Do ochrony przed botami i masowymi rejestracjami
-            (uzasadniony interes: bezpieczeństwo, lit. f).
+            <strong>Rejestracja, reset hasła i zmiana adresu:</strong> skrót adresu IP, a przy
+            resecie i zmianie adresu także skrót adresu e-mail, trzymane około 2 dni, oraz przy
+            rejestracji sprawdzenie przeglądarki i adresu IP przez Cloudflare Turnstile. Do ochrony
+            przed botami i masowymi rejestracjami (uzasadniony interes: bezpieczeństwo, lit. f).
           </li>
           <li>
             <strong>Powiadomienia e-mail:</strong> Twój wybór i historia wysyłek. Tylko po włączeniu
@@ -85,8 +85,10 @@ export default function PrivacyPage() {
       </LegalSection>
       <LegalSection title="4. Co widzą inni gracze">
         <p>
-          Nazwę klubu, herb, datę założenia klubu, ligę, skład, wyniki, trofea i miejsce w rankingu
-          graczy. Nie widzą Twojego e-maila. Nie wpisuj danych osobowych w nazwie klubu.
+          Nazwę klubu, herb, datę założenia klubu, ligę, skład, wyniki, trofea, miejsce w rankingu
+          graczy, zawodników na liście transferowej oraz Twoje kwoty w licytacjach. Ofertę za
+          zawodnika widzi tylko klub, do którego ją wysyłasz. Nie widzą Twojego e-maila. Nie wpisuj
+          danych osobowych w nazwie klubu.
         </p>
       </LegalSection>
       <LegalSection title="5. Ciasteczka i pamięć przeglądarki">

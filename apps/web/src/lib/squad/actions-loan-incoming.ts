@@ -8,6 +8,8 @@ import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { incomingLoanBlock, resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
+import { redirect } from 'next/navigation';
+
 import { createClient } from '@/lib/supabase/server';
 
 export type IncomingLoanState = { readonly error?: string; readonly ok?: boolean };
@@ -43,13 +45,19 @@ export async function acceptIncomingLoan(
     .maybeSingle();
   const clubRow = club as { id: string; transfer_window_open: boolean | null } | null;
   if (!clubRow?.id) return { error: 'Nie znaleziono klubu.' };
-  const { data: players } = await supabase
+  const { data: players, error: playersErr } = await supabase
     .from('players')
-    .select('id, loaned_in')
+    .select('id, name, loaned_in, loan_partner_label')
     .eq('club_id', clubRow.id)
     .eq('academy_track', false)
     .is('departed_at', null);
-  const rows = (players as { id: string; loaned_in: boolean | null }[] | null) ?? [];
+  if (playersErr || !players) return { error: 'Nie udało się odczytać kadry.' };
+  const rows = players as {
+    id: string;
+    name: string;
+    loaned_in: boolean | null;
+    loan_partner_label: string | null;
+  }[];
   const blocked = incomingLoanBlock({
     rosterCount: rows.length,
     alreadyLoanedIn: rows.filter((r) => r.loaned_in === true).length,
@@ -58,7 +66,11 @@ export async function acceptIncomingLoan(
   const offer = resolveIncomingLoanOffers({
     clubId: clubRow.id,
     transferWindowOpen: clubRow.transfer_window_open === true,
-    rosterCount: rows.length,
+    roster: rows.map((r) => ({
+      name: r.name,
+      loanedIn: r.loaned_in === true,
+      loanPartnerLabel: r.loan_partner_label,
+    })),
     today: utcDateString(),
   }).find((o) => o.offerId === offerId);
   if (!offer) return { error: 'Oferta wypożyczenia wygasła.' };
@@ -101,10 +113,8 @@ export async function acceptIncomingLoan(
       loan_until: offer.until,
       on_loan: false,
     } as never);
-  if (error) return { error: 'Wypożyczenie przychodzące nie jest jeszcze w bazie.' };
-  revalidatePath('/transfers');
-  revalidatePath('/squad');
-  revalidatePath('/messages');
+  if (error) return { error: 'Nie udało się wypożyczyć zawodnika.' };
+  revalidatePath('/', 'layout');
   return { ok: true };
 }
 
@@ -143,6 +153,8 @@ export async function returnIncomingLoan(
       status: 'DEPARTED',
       departed_at: new Date().toISOString(),
       starter: false,
+      captain: false,
+      set_piece: false,
       loaned_in: false,
       loan_partner_label: null,
       loan_until: null,
@@ -150,7 +162,7 @@ export async function returnIncomingLoan(
     .eq('id', playerId)
     .eq('club_id', clubId);
   if (error) return { error: 'Nie udało się odesłać zawodnika.' };
-  revalidatePath('/squad');
-  revalidatePath(`/players/${playerId}`);
-  return { ok: true };
+  revalidatePath('/', 'layout');
+  // His page is gone with him.
+  redirect('/squad');
 }

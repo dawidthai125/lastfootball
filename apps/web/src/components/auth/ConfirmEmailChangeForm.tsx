@@ -13,6 +13,7 @@ const TEXT = {
     'Link nie działa',
     'Link wygasł albo został już użyty. Zmień adres jeszcze raz w Ustawieniach.',
   ],
+  retry: ['Nie udało się zmienić adresu', 'Otwórz link z listu jeszcze raz za kilka minut.'],
   taken: ['Adresu nie da się użyć', 'Wybierz inny adres w Ustawieniach.'],
 } as const;
 

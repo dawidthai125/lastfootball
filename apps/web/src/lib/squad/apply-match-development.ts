@@ -139,19 +139,26 @@ export async function applyMatchDevelopment(
   };
 }
 
-/** Pure preview for Post Match UI (same rules as persist). Senior filter only. */
+/** What the save of this match will give, as "Name +1". Same rules, key and eleven as persist. */
 export function previewMatchDevelopment(
   activePlayers: readonly PlayerRowDto[],
-): MatchDevelopmentSummary {
+  matchKey: string,
+  startedIds: ReadonlySet<string>,
+): readonly string[] {
   const seniors = filterSeniorPlayers(activePlayers);
   const before = seniors.map((p) => ({
     id: p.id,
     name: p.name,
     skill: p.skill,
     potential: p.potential,
-    starter: p.starter,
+    starter: startedIds.has(p.id),
     age: p.age,
   }));
-  const after = applyMatchDevelopmentEffects(before, 'preview');
-  return summarizeMatchDevelopment(before, after);
+  const skillAfter = new Map(
+    applyMatchDevelopmentEffects(before, matchKey).map((p) => [p.id, p.skill]),
+  );
+  return before.flatMap((p) => {
+    const gain = (skillAfter.get(p.id) ?? p.skill) - p.skill;
+    return gain > 0 ? [`${p.name} +${gain}`] : [];
+  });
 }

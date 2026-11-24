@@ -22,7 +22,11 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
 import { applyMatchSquadTruth, groupsFromSkill, matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
-import { authoritativeHumanScore } from '@/lib/league/human-league-store';
+import {
+  authoritativeHumanScore,
+  humanDayBlock,
+  humanMatchLineup,
+} from '@/lib/league/human-league-store';
 import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
 import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
@@ -30,6 +34,7 @@ import { kickoffDay } from '@/lib/match/kickoff-day';
 import { incidentsById, toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
 import { continuesLog, parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
+import { isCupFinal } from '@/lib/cup/matchdays';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
 import { payFirstSponsorBase } from '@/lib/sponsors/pay-due';
@@ -110,8 +115,10 @@ export async function completeFixture(
   if (!admin) return { error: 'Zapis wyniku nie jest skonfigurowany na serwerze.' };
 
   const today = kickoffDay(formData.get('startedOn'));
-  const players = await listClubPlayers(clubId, today);
+  const players = await listClubPlayers(clubId, today).catch(() => null);
+  if (!players) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const build = await readClubBuild(supabase, clubId);
+  if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
   const seniors = filterSeniorPlayers(players);
   // A challenge is a friendly: no wages and no academy upkeep (D141).
   const friendly = row.competition === 'challenge';
@@ -143,7 +150,10 @@ export async function completeFixture(
       return { error: 'Potwierdź email, żeby rozgrywać kolejne mecze.' };
     }
 
-    if (row.competition !== 'human') {
+    if (row.competition === 'human') {
+      const blocked = await humanDayBlock(clubId, new Date());
+      if (blocked) return { error: blocked };
+    } else {
       // League and cup share one Warsaw day. A challenge has its own (D141).
       const clock = row.competition === 'challenge' ? ['challenge'] : ['league', 'cup'];
       const { data: lastPlayed, error: lastErr } = await supabase
@@ -194,6 +204,10 @@ export async function completeFixture(
     facts = lines;
   }
 
+  // A human match is played by the line-up frozen at its lock, not by the one set now.
+  const frozen = row.competition === 'human' ? await humanMatchLineup(clubId, row.matchday) : null;
+  if (frozen === 'error') return { error: 'Nie udało się odczytać składu. Spróbuj ponownie.' };
+
   const { home, away } = score;
   const ours = row.is_home ? home : away;
   const theirs = row.is_home ? away : home;
@@ -206,9 +220,9 @@ export async function completeFixture(
     isHome: row.is_home,
     leagueTier: parseLeagueTier(clubRow.league_tier),
   });
-  // Challenges are always at home and repeatable, so they sell no tickets.
+  // Challenges are always at home and repeatable, and the cup final is neutral: no tickets.
   const ticketTake =
-    row.is_home && row.competition !== 'challenge'
+    row.is_home && row.competition !== 'challenge' && !isCupFinal(row)
       ? ticketIncome({
           standsLevel: build.levels.stands,
           attendance: home > away ? 'lively' : home < away ? 'quiet' : 'steady',
@@ -242,8 +256,14 @@ export async function completeFixture(
   // Idempotent by match key, so a repeated save finishes a development that failed before.
   // The players who started this match, even if the lineup changed while it was on.
   const played = kickoff && row.competition !== 'human' ? kickoff : null;
-  const xiIds = played ? new Set(played.ourXi.map((p) => p.id)) : null;
-  const benchIds = new Set((played?.ourBench ?? resolveMatchBench(players)).map((p) => p.id));
+  const xiIds = played
+    ? new Set(played.ourXi.map((p) => p.id))
+    : frozen
+      ? new Set(frozen.xi)
+      : null;
+  const benchIds = new Set(
+    frozen?.bench ?? (played?.ourBench ?? resolveMatchBench(players)).map((p) => p.id),
+  );
   const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
   for (const p of seniors) {
     const started = xiIds
@@ -301,7 +321,8 @@ export async function completeFixture(
   if (!dev.ok) {
     return { error: dev.error };
   }
-  if (settled.applied) await recordFanMood(clubId, result);
+  // Once per match, also when an earlier save stopped before the squad was written.
+  if (!dev.skipped) await recordFanMood(clubId, result);
   await clearKickoffs(clubId, row.id);
   if (row.competition === 'league') {
     await payFirstSponsorBase(clubId, clubRow.season_number ?? 1);

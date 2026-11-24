@@ -42,15 +42,24 @@ function clubHash(clubId: string): number {
   return hash;
 }
 
-/** 0–2 deterministic loan-in offers while the transfer window is open. */
+const MAX_LOANED_IN = 2;
+
+/** 0–2 deterministic loan-in offers while the window is open. A taken player is not offered. */
 export function resolveIncomingLoanOffers(input: {
   readonly clubId: string;
   readonly transferWindowOpen: boolean;
-  readonly rosterCount: number;
+  /** Seniors of the club now. */
+  readonly roster: readonly {
+    readonly name: string;
+    readonly loanedIn?: boolean;
+    readonly loanPartnerLabel?: string | null;
+  }[];
   readonly today: string;
 }): readonly IncomingLoanOffer[] {
   if (!input.transferWindowOpen) return [];
-  if (input.rosterCount >= 22) return [];
+  if (input.roster.length >= 22) return [];
+  const borrowed = input.roster.filter((row) => row.loanedIn === true);
+  if (borrowed.length >= MAX_LOANED_IN) return [];
   const hash = clubHash(input.clubId);
   const count = hash % 3;
   if (count === 0) return [];
@@ -59,6 +68,9 @@ export function resolveIncomingLoanOffers(input: {
   for (let i = 0; i < count; i++) {
     const template = TEMPLATES[(hash + i * 7) % TEMPLATES.length]!;
     const partner = PARTNERS[(hash + i * 11) % PARTNERS.length]!;
+    if (borrowed.some((row) => row.name === template.name && row.loanPartnerLabel === partner)) {
+      continue;
+    }
     const skill = Math.min(72, template.skill + ((hash >> (i * 3)) % 4));
     offers.push({
       offerId: `loan-in:${input.clubId.slice(0, 8)}:${i}`,
@@ -80,6 +92,6 @@ export function incomingLoanBlock(input: {
   readonly alreadyLoanedIn: number;
 }): string | null {
   if (input.rosterCount >= 22) return 'Kadra jest pełna (max 22).';
-  if (input.alreadyLoanedIn >= 2) return 'Masz już dwóch wypożyczonych.';
+  if (input.alreadyLoanedIn >= MAX_LOANED_IN) return 'Masz już dwóch wypożyczonych.';
   return null;
 }

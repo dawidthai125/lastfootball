@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { TrophyCabinet } from '@/components/achievements/TrophyCabinet';
 import { AchievementsView } from '@/components/achievements/AchievementsView';
 import { resolveClubAchievements } from '@/lib/achievements';
-import { loadBoardRecords } from '@/lib/board/store';
+import { loadSeasonHistory } from '@/lib/board/store';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listClubFixtures } from '@/lib/fixtures';
 import { resolveClubRecords } from '@/lib/stats/records';
@@ -26,9 +26,9 @@ export default async function AchievementsPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
-  const [fixtures, board, human, matches, totals, bestMatch] = await Promise.all([
+  const [fixtures, history, human, matches, totals, bestMatch] = await Promise.all([
     listClubFixtures(club.id),
-    loadBoardRecords(supabase, club.id),
+    loadSeasonHistory(supabase, club.id),
     loadHumanAwards(club.id),
     loadClubMatches(club.id),
     loadPlayerTotals(club.id),
@@ -39,7 +39,7 @@ export default async function AchievementsPage() {
   return (
     <AchievementsView achievements={achievements}>
       <TrophyCabinet
-        trophies={board.status === 'ok' ? resolveTrophies({ history: board.history, human }) : null}
+        trophies={history ? resolveTrophies({ history, human }) : null}
         records={matches ? resolveClubRecords(matches) : null}
         players={totals ? sumByPlayer(totals) : null}
         bestMatch={bestMatch}

@@ -4,6 +4,7 @@ import { filterSeniorPlayers } from '@/lib/squad/types';
 import { aiSaleAsk, saleBlock, saleShownPriceError } from '@/lib/transfers/fair-sale';
 import { revalidatePath } from 'next/cache';
 
+import { serverDb } from '@/lib/supabase/admin';
 import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -268,10 +269,6 @@ export async function respondIncomingOffer(
     return { error: 'Wybierz akceptację lub odrzucenie kontroferty.' };
   }
 
-  if (decision === 'reject') {
-    return { ok: true };
-  }
-
   const supabase = await createClient();
   const {
     data: { user },
@@ -291,6 +288,18 @@ export async function respondIncomingOffer(
     cash_balance: number;
     transfer_window_open: boolean;
   };
+
+  if (decision === 'reject') {
+    // The offer stays away until the player is listed again (reset by the database).
+    const { error } = await serverDb(supabase)
+      .from('players')
+      .update({ ai_offer_declined: true } as never)
+      .eq('id', playerId)
+      .eq('club_id', clubRow.id);
+    if (error) return { error: 'Nie udało się odrzucić oferty. Spróbuj ponownie.' };
+    revalidatePath('/', 'layout');
+    return { ok: true };
+  }
 
   const windowOpen = Boolean(clubRow.transfer_window_open);
   const active = await listClubPlayers(clubRow.id);

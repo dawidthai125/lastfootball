@@ -11,8 +11,10 @@ export type AuctionSnap = {
 };
 
 /** Auctions past their end are settled first; the scheduler does the same every 10 minutes. */
-export async function settleDueAuctions(): Promise<void> {
-  await tryAdminClient()?.rpc('settle_due_auctions' as never);
+export async function settleDueAuctions(): Promise<number> {
+  const result = await tryAdminClient()?.rpc('settle_due_auctions' as never);
+  const settled: unknown = result?.data;
+  return typeof settled === 'number' ? settled : 0;
 }
 
 /** Whether bids bind this player now. A failed read counts as yes: no sale on a guess. */

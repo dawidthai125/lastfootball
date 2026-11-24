@@ -13,18 +13,21 @@ import { getFixtureByIdForClub } from '@/lib/fixtures';
 import { resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchPrePath } from '@/lib/match/match-path';
+import { parseOurFormation } from '@/lib/match/our-formation';
 import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ shape?: string | string[] }>;
 };
 
 /**
  * SCR-SQD-04 — Match XI editor (Match Path only).
  */
-export default async function MatchXiPage({ params }: PageProps) {
+export default async function MatchXiPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const shape = parseOurFormation((await searchParams).shape);
   const sentence = await upcomingKickoffSentence(id);
   if (sentence) return <KickoffBlocked sentence={sentence} />;
   const club = await getManagerClub();
@@ -44,7 +47,7 @@ export default async function MatchXiPage({ params }: PageProps) {
   const rows = await listClubPlayers(club.id);
   try {
     const squad = resolveClubSquad(club, rows);
-    return <MatchXiView matchId={id} players={squad.players} />;
+    return <MatchXiView matchId={id} players={squad.players} shape={shape} />;
   } catch (e) {
     if (e instanceof SquadUnavailableError) {
       return (

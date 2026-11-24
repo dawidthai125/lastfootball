@@ -133,9 +133,14 @@ export async function blockAccount(
   if (owner.ownerId === operator) return { error: 'To Twoje konto.', info: null };
   const banned = await admin.auth.admin.updateUserById(owner.ownerId, { ban_duration: FOREVER });
   if (banned.error) return { error: 'Nie udało się zablokować konta.', info: null };
-  await admin
+  const saved = await admin
     .from('blocked_accounts' as never)
     .upsert({ user_id: owner.ownerId, reason } as never, { onConflict: 'user_id' });
+  if (saved.error) {
+    // Without the row the panel would show no block and no way back.
+    await admin.auth.admin.updateUserById(owner.ownerId, { ban_duration: 'none' });
+    return { error: 'Nie udało się zapisać blokady. Spróbuj ponownie.', info: null };
+  }
   const ended = await admin.rpc(
     'admin_end_sessions' as never,
     { p_user_id: owner.ownerId } as never,
@@ -165,10 +170,13 @@ export async function unblockAccount(
   if (!owner) return { error: 'Nie ma takiego klubu.', info: null };
   const opened = await admin.auth.admin.updateUserById(owner.ownerId, { ban_duration: 'none' });
   if (opened.error) return { error: 'Nie udało się odblokować konta.', info: null };
-  await admin
+  const cleared = await admin
     .from('blocked_accounts' as never)
     .delete()
     .eq('user_id', owner.ownerId);
+  if (cleared.error) {
+    return { error: 'Konto już działa, ale wpis blokady został. Spróbuj ponownie.', info: null };
+  }
   await note(admin, operator, 'odblokowanie', clubId, owner.name);
   const told = await tell(
     admin,

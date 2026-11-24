@@ -108,10 +108,15 @@ function isPendingActionableBuyer(o: MessagesH2hOfferInput): boolean {
 export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessagesDto {
   const items: ClubMessageDto[] = [];
 
-  const h2hActionable = [
-    ...input.incomingLiveOffers.filter(isPendingActionableSeller),
-    ...input.outgoingLiveOffers.filter(isPendingActionableBuyer),
-  ]
+  // A closed window closes the page with the answers too.
+  const h2hActionable = (
+    input.transferWindowOpen
+      ? [
+          ...input.incomingLiveOffers.filter(isPendingActionableSeller),
+          ...input.outgoingLiveOffers.filter(isPendingActionableBuyer),
+        ]
+      : []
+  )
     .slice()
     .sort((a, b) => a.offerId.localeCompare(b.offerId));
 
@@ -121,7 +126,9 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       id: `msg:h2h:${o.offerId}:${role}`,
       kind: 'offer_brief',
       subject:
-        role === 'seller' ? `Oferta H2H: ${o.playerName}` : `Kontrpropozycja H2H: ${o.playerName}`,
+        role === 'seller'
+          ? `Oferta klubu: ${o.playerName}`
+          : `Kontrpropozycja klubu: ${o.playerName}`,
       fromLabel: 'Transfery',
       href: '/transfers',
       priority: 'decision',

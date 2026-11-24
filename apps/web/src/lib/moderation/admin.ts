@@ -30,6 +30,8 @@ export type PanelReport = {
   readonly id: string;
   readonly clubId: string;
   readonly clubName: string;
+  /** Null when the reported club is gone: nothing to act on. */
+  readonly club: PanelClub | null;
   readonly by: string;
   readonly reason: string;
   readonly details: string;
@@ -80,32 +82,41 @@ export async function loadPanel(): Promise<Panel | null> {
     details: string;
     created_at: string;
   }[];
-  const names = new Map(clubs.data.map((club) => [club.id, club.name]));
+  const byId = new Map(clubs.data.map((club) => [club.id, club]));
   const missing = open
     .flatMap((row) => [row.reporter_club_id, row.reported_club_id])
-    .filter((id) => !names.has(id));
+    .filter((id) => !byId.has(id));
   if (missing.length > 0) {
-    const more = await admin.from('clubs').select('id, name').in('id', missing);
-    for (const club of more.data ?? []) names.set(club.id, club.name);
+    const more = await admin
+      .from('clubs')
+      .select('id, owner_id, name, short_name, season_number, created_at')
+      .in('id', [...new Set(missing)]);
+    if (more.error) return null;
+    for (const club of more.data) byId.set(club.id, club);
   }
+  const panelClub = (club: (typeof clubs.data)[number]): PanelClub => ({
+    id: club.id,
+    name: club.name,
+    shortName: club.short_name,
+    season: club.season_number,
+    createdAt: club.created_at,
+    blockedFor: club.owner_id ? (reasons.get(club.owner_id) ?? null) : null,
+  });
   return {
-    clubs: clubs.data.map((club) => ({
-      id: club.id,
-      name: club.name,
-      shortName: club.short_name,
-      season: club.season_number,
-      createdAt: club.created_at,
-      blockedFor: club.owner_id ? (reasons.get(club.owner_id) ?? null) : null,
-    })),
-    reports: open.map((row) => ({
-      id: row.id,
-      clubId: row.reported_club_id,
-      clubName: names.get(row.reported_club_id) ?? 'Klub',
-      by: names.get(row.reporter_club_id) ?? 'Klub',
-      reason: isReportReason(row.reason) ? REPORT_REASONS[row.reason] : row.reason,
-      details: row.details,
-      createdAt: row.created_at,
-    })),
+    clubs: clubs.data.map(panelClub),
+    reports: open.map((row) => {
+      const reported = byId.get(row.reported_club_id);
+      return {
+        id: row.id,
+        clubId: row.reported_club_id,
+        clubName: reported?.name ?? 'Klub',
+        club: reported ? panelClub(reported) : null,
+        by: byId.get(row.reporter_club_id)?.name ?? 'Klub',
+        reason: isReportReason(row.reason) ? REPORT_REASONS[row.reason] : row.reason,
+        details: row.details,
+        createdAt: row.created_at,
+      };
+    }),
     log: (log.data as unknown as { action: string; note: string; created_at: string }[]).map(
       (row) => ({ at: row.created_at, text: `${row.action}: ${row.note}` }),
     ),

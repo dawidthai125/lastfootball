@@ -35,6 +35,15 @@ export default async function AdminPage() {
                 <li key={r.id}>
                   {day(r.createdAt)} · {r.clubName} · {r.reason}
                   {r.details ? ` · ${r.details}` : ''} · od: {r.by}
+                  {r.club?.blockedFor ? ` · ZABLOKOWANE: ${r.club.blockedFor}` : ''}
+                  {r.club ? (
+                    <ClubTools
+                      clubId={r.club.id}
+                      name={r.club.name}
+                      shortName={r.club.shortName}
+                      blocked={r.club.blockedFor !== null}
+                    />
+                  ) : null}
                   <CloseReportForm reportId={r.id} />
                 </li>
               ))}

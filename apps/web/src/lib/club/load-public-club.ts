@@ -1,6 +1,6 @@
 import { parseHumanAwards } from '@/lib/league/human-awards';
 import { parseLeagueTier, type LeagueTier } from '@/lib/league/league-tier';
-import { loadBoardRecords } from '@/lib/board/store';
+import { loadSeasonHistory } from '@/lib/board/store';
 import {
   fromClubMatchRow,
   resolveClubRecords,
@@ -44,7 +44,7 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
   if (!CLUB_ID.test(clubId)) return null;
   const admin = tryAdminClient();
   if (!admin) return 'error';
-  const [club, matches, players, human, board] = await Promise.all([
+  const [club, matches, players, human, history] = await Promise.all([
     admin
       .from('clubs')
       .select(
@@ -71,9 +71,10 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
     admin
       .from('human_league_history' as never)
       .select('league_id, cycle, awards')
+      .contains('awards', JSON.stringify([{ club_id: clubId }]))
       .order('season', { ascending: false })
-      .limit(100),
-    loadBoardRecords(admin, clubId),
+      .limit(1000),
+    loadSeasonHistory(admin, clubId),
   ]);
   if (club.error || matches.error || players.error) return 'error';
   if (!club.data) return null;
@@ -110,7 +111,7 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
     records: resolveClubRecords(played),
     last: played.slice(0, 5),
     trophies: resolveTrophies({
-      history: board.status === 'ok' ? board.history : [],
+      history: history ?? [],
       human: awards,
     }),
     starters: (

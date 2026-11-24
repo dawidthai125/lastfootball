@@ -36,7 +36,6 @@ export function LoanButton({
             {inState.error}
           </p>
         ) : null}
-        {inState.ok ? <p style={{ margin: '0.25rem 0 0' }}>Odesłany.</p> : null}
       </form>
     );
   }

@@ -87,7 +87,6 @@ export type LiveMatchBundle = {
   groundPitch: number;
   possession: { home: number; away: number };
   stats: { label: string; home: number; away: number }[];
-  momentum: number[];
   events: { id: string; minute: string; kind: LiveEventKind; text: string; highlight?: boolean }[];
   commands: { id: string; label: string }[];
   subs: { remaining: string; bench: { name: string; pos: string }[] };

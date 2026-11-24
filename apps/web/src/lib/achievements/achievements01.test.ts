@@ -104,7 +104,7 @@ describe('resolveClubAchievements', () => {
       fixtures: [],
     });
     expect(dto.milestones.map((m) => m.id)).toContain('first_training');
-    expect(dto.milestones.find((m) => m.id === 'first_training')?.occurredAt).toBe('2026-07-23');
+    expect(dto.milestones.find((m) => m.id === 'first_training')?.occurredAt).toBeNull();
   });
 
   it('is deterministic for identical domain state', () => {

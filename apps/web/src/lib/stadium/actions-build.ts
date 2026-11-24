@@ -1,6 +1,6 @@
 'use server';
 
-import { serverDb } from '@/lib/supabase/admin';
+import { recordMovement } from '@/lib/finance/record-movement';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -49,6 +49,7 @@ export async function raiseGroundPart(
 
   const clubRow = club as { id: string; cash_balance: number };
   const build = await readClubBuild(supabase, clubRow.id);
+  if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
   // The level the manager saw: a second click must not buy the next one.
   const seen = Number(formData.get('level') ?? -1);
   const current =
@@ -86,15 +87,12 @@ export async function raiseGroundPart(
   if (written === 'stale') return { error: CASH_STALE_ERROR };
   if (written === 'error') return { error: 'Rozbudowa nie jest jeszcze włączona.' };
 
-  await serverDb(supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: clubRow.id,
-      category: 'stadium_build',
-      label: PART_LABEL[part],
-      amount: -next.cost,
-      fixture_id: null,
-    } as never);
+  await recordMovement({
+    club_id: clubRow.id,
+    category: 'stadium_build',
+    label: PART_LABEL[part],
+    amount: -next.cost,
+  });
 
   revalidatePath('/stadium');
   revalidatePath('/finance');

@@ -22,9 +22,7 @@ describe('pre-match competition copy', () => {
   });
 
   it('keeps the league weather sentence and names the other competitions', () => {
-    expect(preMatchWeatherNote('league')).toBe(
-      'Mecz ligowy — bez wpływu pogody na silnik (Thin A)',
-    );
+    expect(preMatchWeatherNote('league')).toBe('Mecz ligowy — pogoda nie wpływa na wynik');
     expect(preMatchWeatherNote('challenge')).toContain('Wyzwanie');
     expect(preMatchWeatherNote('cup')).toContain('Puchar');
     expect(preMatchWeatherNote('challenge')).not.toContain('ligowy');

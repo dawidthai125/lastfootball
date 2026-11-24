@@ -38,7 +38,7 @@ export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | 
         />
       </Field>
 
-      <Field label="Hasło" htmlFor="register-password" hint="Minimum 6 znaków">
+      <Field label="Hasło" htmlFor="register-password" hint={`Minimum ${MIN_PASSWORD} znaków`}>
         <Input
           id="register-password"
           name="password"

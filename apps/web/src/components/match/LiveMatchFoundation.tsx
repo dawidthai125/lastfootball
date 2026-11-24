@@ -133,8 +133,12 @@ export function LiveMatchFoundation({
 
   const finished = snapshot ? isMatchFinished(snapshot.matchState, snapshot.events) : false;
 
+  // The whistle screen comes once. After that the pitch and the replay stay reachable.
+  const finalShown = useRef(false);
   useEffect(() => {
-    if (finished && !postMatchOpen) setFinalOpen(true);
+    if (!finished || postMatchOpen || finalShown.current) return;
+    finalShown.current = true;
+    setFinalOpen(true);
   }, [finished, postMatchOpen]);
 
   // Owns the single save. The summary button only displays this state.
@@ -182,13 +186,14 @@ export function LiveMatchFoundation({
   useEffect(() => {
     if (!snapshot || finalOpen || postMatchOpen) return;
     const goals = snapshot.feed.filter((e) => e.kind === 'goal');
-    const newest = goals[goals.length - 1];
-    if (!newest) return;
+    // The first look at a resumed match: what is there now was shown before.
     if (runtime?.resumedMinute != null && !oldGoalsSeen.current) {
       oldGoalsSeen.current = true;
       setSeenGoalIds(new Set(goals.map((goal) => `${goal.minute}-${goal.text ?? goal.kind}`)));
       return;
     }
+    const newest = goals[goals.length - 1];
+    if (!newest) return;
     const gid = `${newest.minute}-${newest.text ?? newest.kind}`;
     if (seenGoalIds.has(gid)) return;
     setSeenGoalIds((prev) => new Set(prev).add(gid));
@@ -390,6 +395,7 @@ export function LiveMatchFoundation({
   const playheadPct = clampPct((snapshot.matchState.clock.displayMinute / 90) * 100);
   const goalMarkers = snapshot.feed.filter((e) => e.kind === 'goal' || e.highlight);
   const isHalfTime = snapshot.periodLabel === 'Przerwa';
+  const shared = leagueFixture?.competition === 'human';
 
   return (
     <div className="lf-live" data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04">
@@ -404,7 +410,7 @@ export function LiveMatchFoundation({
       {/* Broadcast scorebug — HF-MCH-04 Status strip */}
       <header
         role="status"
-        aria-label="Scorebug"
+        aria-label="Wynik meczu"
         className={isReplay ? 'lf-live__scorebug lf-live__scorebug--replay' : 'lf-live__scorebug'}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-1)' }}>
@@ -418,6 +424,17 @@ export function LiveMatchFoundation({
           >
             {bundle.viewers} widzów
           </span>
+          {finished && !isReplay ? (
+            <div className="lf-live__watch">
+              <button
+                type="button"
+                className="lf-live__watch-btn"
+                onClick={() => setPostMatchOpen(true)}
+              >
+                Podsumowanie
+              </button>
+            </div>
+          ) : null}
           {snapshot && !finished && !isReplay ? (
             <div className="lf-live__watch">
               <button type="button" className="lf-live__watch-btn" onClick={() => togglePause()}>
@@ -584,7 +601,7 @@ export function LiveMatchFoundation({
               data-match-phase={snapshot.matchState.phase}
               data-match-tick={snapshot.matchState.tick}
               data-view-mode={viewMode}
-              aria-label="Obszar boiska (Canvas host)"
+              aria-label="Boisko"
               className="lf-live__canvas"
             >
               <AtmosphereLayer
@@ -673,12 +690,7 @@ export function LiveMatchFoundation({
                   >
                     {e.minute}
                   </span>
-                  <LiveEventIcon
-                    kind={e.kind}
-                    highlight={Boolean(e.highlight)}
-                    size={14}
-                    title={e.kind}
-                  />
+                  <LiveEventIcon kind={e.kind} highlight={Boolean(e.highlight)} size={14} />
                   <span
                     style={{
                       color: e.highlight
@@ -701,7 +713,7 @@ export function LiveMatchFoundation({
             <summary>Oś czasu i powtórka</summary>
             {/* Timeline with event markers */}
             <section
-              aria-label="Timeline"
+              aria-label="Oś czasu"
               className="lf-section-shell"
               style={{ padding: 'var(--lf-space-3)' }}
             >
@@ -709,7 +721,7 @@ export function LiveMatchFoundation({
                 className="lf-section-shell__title"
                 style={{ marginBottom: 'var(--lf-space-2)' }}
               >
-                Timeline
+                Oś czasu
               </div>
               <div
                 style={{
@@ -775,7 +787,7 @@ export function LiveMatchFoundation({
                 }}
               >
                 <span>0′</span>
-                <span>HT</span>
+                <span>Przerwa</span>
                 <span>90′</span>
               </div>
             </section>
@@ -812,7 +824,7 @@ export function LiveMatchFoundation({
                 min={0}
                 max={Math.max(0, replay.length - 1)}
                 value={replay.index}
-                aria-label="Replay seek"
+                aria-label="Przewiń powtórkę"
                 disabled={replay.length === 0}
                 onChange={(e) => runtime.replaySeek(Number(e.target.value))}
                 style={{
@@ -862,7 +874,7 @@ export function LiveMatchFoundation({
                   }
                   disabled={replay.length === 0}
                 >
-                  {replay.status === 'playing' ? 'Pause' : 'Play'}
+                  {replay.status === 'playing' ? 'Pauza' : 'Odtwórz'}
                 </button>
                 <button
                   type="button"
@@ -888,7 +900,7 @@ export function LiveMatchFoundation({
                   onClick={() => runtime.exitReplay()}
                   disabled={!isReplay}
                 >
-                  Wróć do Live
+                  Wróć do meczu
                 </button>
                 {finished ? (
                   <button
@@ -904,7 +916,7 @@ export function LiveMatchFoundation({
 
             {/* Momentum */}
             <section
-              aria-label="Momentum"
+              aria-label="Przewaga"
               className="lf-section-shell"
               style={{ padding: 'var(--lf-space-3)' }}
             >
@@ -916,7 +928,7 @@ export function LiveMatchFoundation({
                   marginBottom: 'var(--lf-space-2)',
                 }}
               >
-                <div className="lf-section-shell__title">Momentum</div>
+                <div className="lf-section-shell__title">Przewaga</div>
                 <div
                   style={{
                     display: 'flex',
@@ -928,7 +940,7 @@ export function LiveMatchFoundation({
                   <span style={{ color: 'var(--lf-color-text-gold)' }}>{awayShort}</span>
                 </div>
               </div>
-              <MomentumChart values={bundle.momentum} />
+              <MomentumChart values={snapshot.momentum} />
             </section>
           </details>
         </div>
@@ -957,7 +969,10 @@ export function LiveMatchFoundation({
               <button
                 key={id}
                 type="button"
-                onClick={() => setRightTab(id)}
+                onClick={() => {
+                  setRightTab(id);
+                  setDecisionError(null);
+                }}
                 style={chipStyle(rightTab === id)}
               >
                 {label}
@@ -975,6 +990,11 @@ export function LiveMatchFoundation({
                     gap: 'var(--lf-space-2)',
                   }}
                 >
+                  {shared ? (
+                    <p className="lf-live__subs-note" style={{ gridColumn: '1 / -1' }}>
+                      Mecz Ligi ludzi toczy się sam. Oba kluby widzą to samo.
+                    </p>
+                  ) : null}
                   {bundle.commands.map((c) => {
                     const active = commandId === c.id;
                     return (
@@ -1010,6 +1030,7 @@ export function LiveMatchFoundation({
                 </div>
                 <button
                   type="button"
+                  hidden={shared}
                   onClick={() => {
                     const applied = dispatchUiCommand(commandId);
                     setDecisionError(
@@ -1033,6 +1054,11 @@ export function LiveMatchFoundation({
                 >
                   Zastosuj zmiany
                 </button>
+                {decisionError ? (
+                  <p className="lf-live__subs-error" role="alert">
+                    {decisionError}
+                  </p>
+                ) : null}
                 {runtime?.resumedMinute != null ? (
                   <p className="lf-live__tactic" role="status">
                     Mecz wznowiony od {runtime.resumedMinute}&apos;.
@@ -1067,7 +1093,10 @@ export function LiveMatchFoundation({
               </div>
             ) : null}
 
-            {rightTab === 'subs' ? (
+            {rightTab === 'subs' && shared ? (
+              <p className="lf-live__subs-note">W meczu Ligi ludzi zmiany robi asystent.</p>
+            ) : null}
+            {rightTab === 'subs' && !shared ? (
               <LiveSubs
                 snapshot={snapshot}
                 home={fixture.home}
@@ -1122,7 +1151,7 @@ export function LiveMatchFoundation({
 
       {/* Possession footer — broadcast bar */}
       <footer
-        aria-label="Possession"
+        aria-label="Posiadanie"
         style={{
           display: 'grid',
           gridTemplateColumns: 'auto minmax(0, 1fr) auto',
@@ -1367,7 +1396,7 @@ function minuteLabelToPct(minuteLabel: string): number {
   return clampPct((n / 90) * 100);
 }
 
-function MomentumChart({ values }: { values: number[] }) {
+function MomentumChart({ values }: { values: readonly number[] }) {
   const w = 100;
   const h = 36;
   const mid = h / 2;
@@ -1425,7 +1454,7 @@ function MomentumChart({ values }: { values: number[] }) {
   );
 }
 
-function buildAreaPath(values: number[], w: number, h: number, home: boolean): string {
+function buildAreaPath(values: readonly number[], w: number, h: number, home: boolean): string {
   if (values.length === 0) return '';
   const pts = values.map((v, i) => {
     const x = values.length <= 1 ? 0 : (i / (values.length - 1)) * w;

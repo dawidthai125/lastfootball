@@ -121,12 +121,16 @@ async function invokeLiveH2hRpc(
   );
 
   if (error) {
-    return { ok: false, error: error.message || 'Transfer Live nieudany.' };
+    console.error('complete_live_h2h_transfer failed', { code: error.code });
+    return {
+      ok: false,
+      error: 'Transfer nie doszedł do skutku. Odśwież stronę i spróbuj ponownie.',
+    };
   }
 
   const row = data as LiveRpcResult | null;
   if (!row || row.ok !== true || !row.player_id || typeof row.amount !== 'number') {
-    return { ok: false, error: row?.error || 'Transfer Live nieudany.' };
+    return { ok: false, error: row?.error || 'Transfer nie doszedł do skutku.' };
   }
 
   return { ok: true, playerId: row.player_id, amount: row.amount };

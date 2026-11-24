@@ -95,7 +95,7 @@ export function LandingPage() {
           </h2>
           <p className="lf-landing__story-body">
             Kolejka po kolejce budujesz instytucję: szatnia, biuro transferowe i boisko treningowe —
-            ta sama pętla, która wraca Cię do następnego meczu.
+            wszystko prowadzi do następnego meczu.
           </p>
         </div>
         <div className="lf-landing__season-strip" aria-hidden>

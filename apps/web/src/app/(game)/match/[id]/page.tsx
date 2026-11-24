@@ -12,12 +12,8 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
 import { buildFirstPreMatchBundle } from '@/lib/first-match/bundles';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { resolvePlayedFixtureFanLine } from '@/lib/club/fans';
-import {
-  buildLeaguePreMatchBundle,
-  getFixtureByIdForClub,
-  getLastPlayedFixture,
-} from '@/lib/fixtures';
+import { lastMoodFixture, resolvePlayedFixtureFanLine } from '@/lib/club/fans';
+import { buildLeaguePreMatchBundle, getFixtureByIdForClub, listClubFixtures } from '@/lib/fixtures';
 import { parseOurFormation } from '@/lib/match/our-formation';
 import { lineupEditorHref } from '@/lib/match/xi-block-path';
 import { loadClubStartingXi, SquadUnavailableError } from '@/lib/squad/load-starting-xi';
@@ -76,8 +72,8 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
 
   if (dto.status === 'played') {
     const supabase = await createClient();
-    const [latestPlayed, moodRow] = await Promise.all([
-      getLastPlayedFixture(club.id),
+    const [clubFixtures, moodRow] = await Promise.all([
+      listClubFixtures(club.id),
       supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle(),
     ]);
     const storedMood =
@@ -88,7 +84,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
           : null;
     const fanLine = resolvePlayedFixtureFanLine({
       fixtureId: dto.id,
-      latestPlayedId: latestPlayed?.id ?? null,
+      latestPlayedId: lastMoodFixture(clubFixtures)?.id ?? null,
       homeScore: dto.homeScore,
       awayScore: dto.awayScore,
       isHome: dto.isHome,
@@ -165,7 +161,13 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
 
   try {
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
-    if (human?.block) return <SquadError matchId={id} detail={human.block} />;
+    if (human?.block) {
+      return human.ownLineup ? (
+        <SquadError matchId={id} detail={human.block} />
+      ) : (
+        <KickoffBlocked sentence={human.block} />
+      );
+    }
     const ourXi = human ? human.ourXi : await loadClubStartingXi(club);
     return (
       <PreMatchView
@@ -173,7 +175,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
           club,
           human?.fixture ?? dto,
           ourXi,
-          shape,
+          human ? '4-4-2' : shape,
           human?.theirXi,
         )}
       />

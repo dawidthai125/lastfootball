@@ -60,6 +60,23 @@ export async function loadBoardRecords(db: BoardReadDb, clubId: string): Promise
   };
 }
 
+/** Every closed season, for trophies. Null = the read failed. */
+export async function loadSeasonHistory(
+  db: BoardReadDb,
+  clubId: string,
+): Promise<readonly SeasonHistory[] | null> {
+  const { data, error } = await db
+    .from('club_season_history' as never)
+    .select(
+      'season_number, league_tier, position, table_size, points, won, drawn, lost, goals_for, goals_against, cup_round_reached, outcome',
+    )
+    .eq('club_id', clubId)
+    .order('season_number', { ascending: false })
+    .limit(1000);
+  if (error || !data) return null;
+  return (data as unknown as SeasonHistoryRow[]).map(fromSeasonHistoryRow);
+}
+
 /**
  * Claim, cash and ledger in one transaction (`claim_board_task`). False when nothing is
  * known to be paid. A repeat of a paid task is true and pays nothing.

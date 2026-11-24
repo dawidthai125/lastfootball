@@ -2,7 +2,7 @@ import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
-import { clauseFromSkill, contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
+import { contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
 import { leadershipOf, talentsOf } from '@/lib/squad/talents';
 import { attributeBars, groupsFromSkill } from '@/lib/squad/truth';
 import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
@@ -126,9 +126,12 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
       wage: typeof row.wage === 'number' ? row.wage : displayWage(skill, row.age),
-      until: row.contractSeason
-        ? `koniec sezonu ${row.contractSeason}`
-        : contractUntilLabel(row.contractUntil),
+      until:
+        row.loanedIn && row.loanUntil
+          ? `${contractUntilLabel(row.loanUntil)} (wypożyczenie)`
+          : row.contractSeason
+            ? `koniec sezonu ${row.contractSeason}`
+            : contractUntilLabel(row.contractUntil),
       season: row.contractSeason ?? null,
       clause: typeof row.releaseClause === 'number' ? row.releaseClause : displayClause(skill),
       role: roleLabel(row.pos, row.captain),
@@ -203,7 +206,10 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     ...traits(r),
   }));
   if (xi.length !== 11) {
-    throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
+    throw new SquadUnavailableError(
+      clubId,
+      `W jedenastce jest ${xi.length} z 11 zawodników. Uzupełnij skład.`,
+    );
   }
   return xi;
 }

@@ -8,6 +8,7 @@ import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { openChallenge } from '@/lib/rivals/open-challenge';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { readPages } from '@/lib/supabase/read-pages';
 import { createClient } from '@/lib/supabase/server';
 
 export type RivalClub = {
@@ -32,10 +33,14 @@ export type RivalChallengeView = {
 export async function listRivalClubs(): Promise<RivalClub[]> {
   if (!env.isSupabaseConfigured) return [];
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc('list_rival_clubs');
-  if (error || !data) return [];
-  const rows = data as { id: string; name: string; short_name: string }[];
-  return rows.map((row) => ({ id: row.id, name: row.name, shortName: row.short_name }));
+  const rows = await readPages<{ id: string; name: string; short_name: string }>((from, to) =>
+    supabase
+      .rpc('list_rival_clubs')
+      .order('name' as never)
+      .order('id' as never)
+      .range(from, to),
+  );
+  return (rows ?? []).map((row) => ({ id: row.id, name: row.name, shortName: row.short_name }));
 }
 
 export async function listRivalChallenges(clubId: string): Promise<RivalChallengeView[]> {

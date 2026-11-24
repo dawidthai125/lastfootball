@@ -598,6 +598,7 @@ function AuctionBidForm({
         min={min}
         step={AUCTION_THIN.STEP}
         defaultValue={min}
+        key={min}
         className="w-24 text-[12px]"
         aria-label="Kwota licytacji"
       />
@@ -637,6 +638,8 @@ export function TransfersView({
     ...outgoingCountered.map((offer) => ({ kind: 'h2h-out-countered' as const, offer })),
   ];
 
+  const sellable = new Set(market.sellCandidates.map((player) => player.playerId));
+  const listedOnly = market.listedPlayers.filter((player) => !sellable.has(player.playerId));
   const windowLabel = market.windowOpen ? 'Okno otwarte' : 'Okno zamknięte';
 
   if (!market.windowOpen) {
@@ -992,14 +995,14 @@ export function TransfersView({
         </div>
       </section>
 
-      {/* Listed when window closed */}
-      {!market.windowOpen && market.listedPlayers.length > 0 ? (
+      {/* Listed players that cannot be sold now still can leave the list. */}
+      {listedOnly.length > 0 ? (
         <section className="lf-tx__section" aria-labelledby="tx-listed-title">
           <h2 id="tx-listed-title" className="lf-tx__section-title lf-tx__section-title--muted">
             Na Twojej liście
           </h2>
           <ul className="lf-tx__inbox lf-tx__inbox--muted">
-            {market.listedPlayers.map((r) => (
+            {listedOnly.map((r) => (
               <li key={r.playerId} className="lf-tx__case lf-tx__case--muted">
                 <div className="lf-tx__case-main">
                   <p className="lf-tx__case-title">{r.name}</p>

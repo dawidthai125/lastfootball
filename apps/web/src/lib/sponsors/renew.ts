@@ -1,6 +1,7 @@
+import { recordMovement } from '@/lib/finance/record-movement';
 import { creditClubCash } from '@/lib/finance/club-cash';
-import { ensureClubSponsorContract, getClubSponsorContract } from '@/lib/sponsors/get-contract';
-import { createAdminClient, serverDb } from '@/lib/supabase/admin';
+import { ensureClubSponsorContract, readClubSponsorContract } from '@/lib/sponsors/get-contract';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 // Not a 'use server' module on purpose: it takes a club id and writes with the admin client.
 
@@ -16,7 +17,8 @@ export async function renewSponsorAndPayBase(params: {
   readonly quote?: { readonly base: number; readonly bonus: number };
 }): Promise<{ ok: true; nextCash: number } | { ok: false; error: string }> {
   const supabase = createAdminClient();
-  let contract = await getClubSponsorContract(params.clubId);
+  let contract = await readClubSponsorContract(params.clubId);
+  if (contract === 'error') return { ok: false, error: 'Nie udało się odczytać umowy sponsora.' };
   if (!contract) {
     contract = await ensureClubSponsorContract(params.clubId, Math.max(1, params.nextSeason - 1));
   }
@@ -75,14 +77,12 @@ export async function renewSponsorAndPayBase(params: {
     return { ok: false, error: 'Nie udało się wypłacić przychodu sponsora.' };
   }
 
-  await serverDb(supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: params.clubId,
-      category: 'sponsor_base',
-      label: `Przychód sponsorski · ${contract.brand_name} · Sezon ${nextSeason}`,
-      amount,
-    } as never);
+  await recordMovement({
+    club_id: params.clubId,
+    category: 'sponsor_base',
+    label: `Przychód sponsorski · ${contract.brand_name} · Sezon ${nextSeason}`,
+    amount,
+  });
 
   return { ok: true, nextCash };
 }

@@ -5,3 +5,8 @@ export function parseOurFormation(raw: string | string[] | undefined | null): Fo
   const value = Array.isArray(raw) ? raw[0] : raw;
   return value === '4-3-3' ? '4-3-3' : '4-4-2';
 }
+
+/** The chosen shape travels in the address, because nothing is stored before kick-off. */
+export function withShape(path: string, formation: string): string {
+  return formation === '4-3-3' ? `${path}?shape=4-3-3` : path;
+}

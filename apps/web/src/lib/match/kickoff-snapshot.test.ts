@@ -90,6 +90,7 @@ describe('kickoff snapshot', () => {
   });
 
   it('ends a match opened before full rules under its own rules', { timeout: 60_000 }, () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { rules: _rules, ...old } = snapshot;
     const stored = readKickoffSnapshot(JSON.parse(JSON.stringify(old)), 'fx-1', 'c1')!;
     const session = sessionFromKickoff(stored);

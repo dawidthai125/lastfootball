@@ -21,6 +21,18 @@ export function challengeBlockReason(
   return 'Wyzwanie na dziś już rozegrane. Następne od jutra.';
 }
 
+/** One human league round per Warsaw calendar day, on its own clock. */
+export function humanDayBlockReason(
+  lastHumanAt: string | null | undefined,
+  now: Date,
+): string | null {
+  if (!lastHumanAt) return null;
+  const last = new Date(lastHumanAt);
+  if (Number.isNaN(last.getTime())) return null;
+  if (warsawDateKey(last) !== warsawDateKey(now)) return null;
+  return 'Kolejka ludzi na dziś już rozegrana.';
+}
+
 /** Null when the club may play. A sentence when today's match is already done. */
 export function matchdayBlockReason(
   lastPlayedAt: string | null | undefined,

@@ -131,6 +131,24 @@ describe('LFE-POST-MATCH-01', () => {
     expect(summary.stats.some((stat) => stat.label === 'Podania celne')).toBe(true);
   });
 
+  it('does not credit the late dial of one side with a goal of the other', () => {
+    const why = (tacticsSide: 'home' | 'away') =>
+      buildPostMatchSummary({
+        matchState: { ...fakeState(1, 1), tacticsSide } as MatchState,
+        events: [
+          { type: 'GOAL', tick: 100, payload: { side: 'home', minute: 12 } },
+          { type: 'SYSTEM', tick: 300, payload: { kind: 'pressing', minute: 80, value: 75 } },
+          { type: 'GOAL', tick: 400, payload: { side: 'away', minute: 85 } },
+        ],
+        homeName: 'A',
+        awayName: 'B',
+        homeShort: 'A',
+        awayShort: 'B',
+      }).why;
+    expect(why('home')).toBe('Pressing 75 od 80. minuty nie dał gola.');
+    expect(why('away')).toBe('Pressing 75 od 80. minuty dał gola.');
+  });
+
   it('says who won the shoot-out; the extra goal is not a goal', () => {
     const base = {
       matchState: fakeState(1, 0),

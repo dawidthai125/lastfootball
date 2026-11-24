@@ -46,7 +46,7 @@ function mapClub(row: ClubRow): ClubDto {
   };
 }
 
-/** Current manager club from `clubs` table (SSOT). */
+/** Current manager club from `clubs` table (SSOT). A failed read is not "no club": it throws. */
 export async function getManagerClub(): Promise<ClubDto | null> {
   if (!env.isSupabaseConfigured) return null;
   const supabase = await createClient();
@@ -63,6 +63,7 @@ export async function getManagerClub(): Promise<ClubDto | null> {
     .eq('owner_id', user.id)
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) throw new Error('club read failed');
+  if (!data) return null;
   return mapClub(data as ClubRow);
 }
