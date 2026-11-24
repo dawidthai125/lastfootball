@@ -34,16 +34,10 @@ export async function setClubCaptain(
     .is('departed_at', null)
     .maybeSingle();
   if (!player) return { error: 'Nie znaleziono zawodnika.' };
-  await supabase
-    .from('players')
-    .update({ captain: false } as never)
-    .eq('club_id', clubId)
-    .eq('captain', true);
-  const { error } = await supabase
-    .from('players')
-    .update({ captain: true } as never)
-    .eq('id', playerId)
-    .eq('club_id', clubId);
+  const { error } = await supabase.rpc(
+    'set_club_captain' as never,
+    { p_club_id: clubId, p_player_id: playerId } as never,
+  );
   if (error) return { error: 'Nie udało się wyznaczyć kapitana.' };
   revalidatePath('/squad');
   revalidatePath(`/players/${playerId}`);

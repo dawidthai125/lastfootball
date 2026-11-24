@@ -184,7 +184,7 @@ export function LiveMatchFoundation({
   ]);
 
   useEffect(() => {
-    if (!snapshot || finalOpen || postMatchOpen) return;
+    if (!snapshot || finished || finalOpen || postMatchOpen) return;
     const goals = snapshot.feed.filter((e) => e.kind === 'goal');
     // The first look at a resumed match: what is there now was shown before.
     if (runtime?.resumedMinute != null && !oldGoalsSeen.current) {
@@ -202,7 +202,7 @@ export function LiveMatchFoundation({
       title: 'GOL!',
       score: `${snapshot.homeScore}–${snapshot.awayScore}`,
     });
-  }, [snapshot, seenGoalIds, finalOpen, postMatchOpen, runtime]);
+  }, [snapshot, seenGoalIds, finished, finalOpen, postMatchOpen, runtime]);
 
   useEffect(() => {
     const synth = window.speechSynthesis;
@@ -409,7 +409,7 @@ export function LiveMatchFoundation({
       ) : null}
       {/* Broadcast scorebug — HF-MCH-04 Status strip */}
       <header
-        role="status"
+        role="group"
         aria-label="Wynik meczu"
         className={isReplay ? 'lf-live__scorebug lf-live__scorebug--replay' : 'lf-live__scorebug'}
       >
@@ -523,6 +523,10 @@ export function LiveMatchFoundation({
             >
               {snapshot.periodLabel}
             </div>
+            {/* Only the score is announced: the clock changes all the time. */}
+            <span role="status" className="sr-only">
+              {homeName} {snapshot.homeScore}:{snapshot.awayScore} {awayName}
+            </span>
           </div>
 
           <div
@@ -1065,8 +1069,9 @@ export function LiveMatchFoundation({
                   </p>
                 ) : null}
                 <p className="lf-live__tactic">
-                  Układ {snapshot.tactics.formationCode} · pressing {snapshot.tactics.pressing} ·
-                  tempo {snapshot.tactics.tempo} · mentalność {snapshot.tactics.mentality}
+                  {shared ? 'Gospodarze: układ' : 'Układ'} {snapshot.tactics.formationCode} ·
+                  pressing {snapshot.tactics.pressing} · tempo {snapshot.tactics.tempo} · mentalność{' '}
+                  {snapshot.tactics.mentality}
                 </p>
               </>
             ) : null}
@@ -1139,12 +1144,14 @@ export function LiveMatchFoundation({
             >
               ← Przed meczem
             </Link>
-            <Link
-              href="/matches"
-              style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}
-            >
-              Terminarz
-            </Link>
+            {firstMatch ? null : (
+              <Link
+                href="/matches"
+                style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-muted)' }}
+              >
+                Terminarz
+              </Link>
+            )}
           </div>
         </aside>
       </div>

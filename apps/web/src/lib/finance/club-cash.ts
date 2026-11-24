@@ -22,6 +22,22 @@ async function readCash(clubId: string, db: CashDb): Promise<number | null> {
   return error || !data ? null : (data as { cash_balance: number }).cash_balance;
 }
 
+/** An errored write may have landed. It did when the row holds everything it was to write. */
+async function writeLanded(
+  clubId: string,
+  written: Readonly<Record<string, unknown>>,
+  db: CashDb,
+): Promise<boolean> {
+  const { data, error } = await db
+    .from('clubs')
+    .select(Object.keys(written).join(', '))
+    .eq('id', clubId)
+    .maybeSingle();
+  if (error || !data) return false;
+  const row = data as unknown as Record<string, unknown>;
+  return Object.entries(written).every(([column, value]) => row[column] === value);
+}
+
 /** Spend path: the decision was made on `expected`, so a changed balance is refused. */
 export async function writeClubCash(
   input: {
@@ -34,14 +50,15 @@ export async function writeClubCash(
   db: CashDb | null = tryAdminClient(),
 ): Promise<CashWrite> {
   if (!db) return 'error';
+  const row = { ...input.extra, cash_balance: input.next };
   const { data, error } = await db
     .from('clubs')
-    .update({ ...input.extra, cash_balance: input.next } as never)
+    .update(row as never)
     .eq('id', input.clubId)
     .eq('cash_balance', input.expected)
     .select('id')
     .maybeSingle();
-  if (error) return 'error';
+  if (error) return (await writeLanded(input.clubId, row, db)) ? 'ok' : 'error';
   return data ? 'ok' : 'stale';
 }
 

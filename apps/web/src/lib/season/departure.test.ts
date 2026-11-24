@@ -26,6 +26,30 @@ describe('planSeasonDeparture', () => {
     ).toEqual({ retireId: 'old-weak', promoteId: 'a-youth' });
   });
 
+  it('never retires the last goalkeeper', () => {
+    const keeper = (id: string, age: number, skill: number) => ({
+      id,
+      age,
+      skill,
+      academyTrack: false,
+      departed: false,
+      goalkeeper: true,
+    });
+    const back = { id: 'back', age: 39, skill: 60, academyTrack: false, departed: false };
+    expect(planSeasonDeparture([keeper('gk', 40, 40), back]).retireId).toBe('back');
+    expect(planSeasonDeparture([keeper('gk', 40, 40)]).retireId).toBeNull();
+    expect(planSeasonDeparture([keeper('gk', 40, 40), keeper('gk2', 22, 40), back]).retireId).toBe(
+      'gk',
+    );
+    // A junior keeper does not count: he may stay in the academy.
+    expect(
+      planSeasonDeparture([
+        keeper('gk', 40, 40),
+        { ...keeper('youth', 17, 40), academyTrack: true },
+      ]).retireId,
+    ).toBeNull();
+  });
+
   it('retires without a promote when the academy is empty', () => {
     expect(
       planSeasonDeparture([

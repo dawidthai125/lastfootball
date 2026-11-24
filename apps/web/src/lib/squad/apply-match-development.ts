@@ -7,6 +7,7 @@ import {
 } from '@/lib/squad/match-development';
 import type { AttrGroups } from '@/lib/squad/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { seenState, SQUAD_MOVED_CODE, SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 
 export type MatchTruthPatch = {
@@ -36,7 +37,8 @@ export type ApplyMatchDevelopmentResult =
       changedCount: number;
       summary: MatchDevelopmentSummary;
     }
-  | { ok: false; error: string };
+  /** `moved`: a player changed since he was read, so read again and repeat. */
+  | { ok: false; error: string; moved?: boolean };
 
 /**
  * Atomic match development via RPC (skill only).
@@ -72,9 +74,11 @@ export async function applyMatchDevelopment(
     const patch = input.truthById?.[next.id];
     const started = input.startedIds?.has(next.id) === true;
     if (next.skill === prev.skill && !patch && !started) continue;
+    const seen = seenState(seniors[i]!);
     updates.push({
       id: next.id,
       skill: next.skill,
+      ...(seen ? { seen } : {}),
       ...(started ? { played: true } : {}),
       ...(patch?.status ? { status: patch.status } : {}),
       ...(patch?.groups
@@ -106,6 +110,9 @@ export async function applyMatchDevelopment(
     } as never,
   );
 
+  if (error?.code === SQUAD_MOVED_CODE) {
+    return { ok: false, error: SQUAD_MOVED_ERROR, moved: true };
+  }
   if (error) {
     // P0001: the function refused a row and rolled everything back.
     return {

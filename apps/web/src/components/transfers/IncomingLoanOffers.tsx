@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { formatMoney } from '@/lib/finance/format-money';
 import { acceptIncomingLoan, type IncomingLoanState } from '@/lib/squad/actions-loan-incoming';
 import type { IncomingLoanOffer } from '@/lib/squad/incoming-loan';
+import { polishDay } from '@/lib/ui/polish-day';
 
 const INITIAL: IncomingLoanState = {};
 
@@ -28,7 +29,7 @@ export function IncomingLoanOffers({ offers }: { offers: readonly IncomingLoanOf
             <div>
               <strong>{offer.name}</strong> · {offer.pos} · {offer.skill} · {offer.partnerLabel}
               <div className="lf-tx__meta">
-                Pensja {formatMoney(offer.wage)} · ważny do {offer.until}
+                Pensja {formatMoney(offer.wage)} · ważny do {polishDay(offer.until)}
               </div>
             </div>
             <form action={action}>

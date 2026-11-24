@@ -23,7 +23,7 @@ const COPY: Readonly<Record<NotificationKind, Copy>> = {
   },
   challenge: {
     title: 'Rywal zagrał z Twoim klubem',
-    body: 'Wynik wyzwania jest już w Rywalach.',
+    body: 'Wynik wyzwania jest już w Rywalizacji.',
     path: '/rivals',
   },
 };

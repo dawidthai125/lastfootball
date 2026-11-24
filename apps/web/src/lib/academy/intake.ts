@@ -170,6 +170,10 @@ export function intakeWaitDays(
 }
 
 /** Pure Promote guards — no skill/potential mutation. */
+export function rosterFullSentence(): string {
+  return `Kadra ma już ${TRANSFERS_THIN.MAX_ROSTER} zawodników. Zwolnij miejsce.`;
+}
+
 export function canPromoteProspect(
   rows: readonly PlayerRowDto[],
   playerId: string,
@@ -188,7 +192,7 @@ export function canPromoteProspect(
   if (filterSeniorPlayers(rows).length >= TRANSFERS_THIN.MAX_ROSTER) {
     return {
       ok: false,
-      error: `Kadra ma już ${TRANSFERS_THIN.MAX_ROSTER} zawodników. Zwolnij miejsce.`,
+      error: rosterFullSentence(),
     };
   }
   return { ok: true, player };

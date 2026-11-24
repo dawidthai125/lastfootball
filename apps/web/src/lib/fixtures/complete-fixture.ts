@@ -16,7 +16,11 @@ import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { settleFixture } from '@/lib/fixtures/settle-fixture';
-import { challengeBlockReason, matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
+import {
+  challengeBlockReason,
+  humanDayBlockReason,
+  matchdayBlockReason,
+} from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { resolveMatchBench } from '@/lib/squad/resolve-club-squad';
@@ -248,6 +252,15 @@ export async function completeFixture(
     settlement,
     toStoredPlayers(lines, row.is_home ? 'home' : 'away'),
   );
+  if (settled === 'day_taken') {
+    const reason = friendly
+      ? challengeBlockReason
+      : row.competition === 'human'
+        ? humanDayBlockReason
+        : matchdayBlockReason;
+    const now = new Date();
+    return { error: reason(now.toISOString(), now) ?? undefined };
+  }
   if (!settled) {
     console.error('completeFixture: settlement failed', { fixtureId: row.id });
     return { error: 'Nie udało się rozliczyć meczu. Spróbuj ponownie.' };
@@ -274,50 +287,59 @@ export async function completeFixture(
     else roleById[p.id] = 'out';
   }
   const moraleHit = unpaidWageMoraleDelta(wageDue, settled.paid);
-  const afterTruth = applyMatchSquadTruth(
-    seniors.map((p) => ({
-      id: p.id,
-      pos: p.pos,
-      status: p.status,
-      skill: p.skill,
-      potential: p.potential,
-      groups: p.groups ?? groupsFromSkill(p.skill),
-      energy: p.energy ?? 80,
-      form: p.form ?? 60,
-      recentRatings: p.recentRatings ?? [],
-      suspensionMatches: p.suspensionMatches ?? 0,
-      injuryMatches: p.injuryMatches ?? 0,
-      morale: p.morale ?? 60,
-      personality: isPersonality(p.personality) ? p.personality : 'spokojny',
-    })),
-    { matchKey: row.id, result, roleById, physio: build.physio, incidents: incidentsById(facts) },
-  );
-  const truthById = Object.fromEntries(
-    afterTruth.map((p) => [
-      p.id,
-      {
+  const starterIds = xiIds ?? new Set(players.filter((p) => p.starter).map((p) => p.id));
+  const develop = async (squad: typeof players) => {
+    const afterTruth = applyMatchSquadTruth(
+      filterSeniorPlayers(squad).map((p) => ({
+        id: p.id,
+        pos: p.pos,
         status: p.status,
-        groups: p.groups,
-        energy: p.energy,
-        form: p.form,
-        suspensionMatches: p.suspensionMatches,
-        injuryMatches: p.injuryMatches,
-        recentRatings: p.recentRatings,
-        morale:
-          moraleHit < 0 && typeof p.morale === 'number'
-            ? nextMorale(p.morale, moraleHit)
-            : p.morale,
-      },
-    ]),
-  );
-  const dev = await applyMatchDevelopment(supabase, {
-    clubId,
-    matchKey: row.id,
-    // Growth goes to the players who played, not to a lineup changed meanwhile.
-    activePlayers: xiIds ? players.map((p) => ({ ...p, starter: xiIds.has(p.id) })) : players,
-    truthById,
-    startedIds: new Set(Object.keys(roleById).filter((id) => roleById[id] === 'xi')),
-  });
+        skill: p.skill,
+        potential: p.potential,
+        groups: p.groups ?? groupsFromSkill(p.skill),
+        energy: p.energy ?? 80,
+        form: p.form ?? 60,
+        recentRatings: p.recentRatings ?? [],
+        suspensionMatches: p.suspensionMatches ?? 0,
+        injuryMatches: p.injuryMatches ?? 0,
+        morale: p.morale ?? 60,
+        personality: isPersonality(p.personality) ? p.personality : 'spokojny',
+      })),
+      { matchKey: row.id, result, roleById, physio: build.physio, incidents: incidentsById(facts) },
+    );
+    const truthById = Object.fromEntries(
+      afterTruth.map((p) => [
+        p.id,
+        {
+          status: p.status,
+          groups: p.groups,
+          energy: p.energy,
+          form: p.form,
+          suspensionMatches: p.suspensionMatches,
+          injuryMatches: p.injuryMatches,
+          recentRatings: p.recentRatings,
+          morale:
+            moraleHit < 0 && typeof p.morale === 'number'
+              ? nextMorale(p.morale, moraleHit)
+              : p.morale,
+        },
+      ]),
+    );
+    return applyMatchDevelopment(supabase, {
+      clubId,
+      matchKey: row.id,
+      // Growth goes to the players who played, not to a lineup changed meanwhile.
+      activePlayers: squad.map((p) => ({ ...p, starter: starterIds.has(p.id) })),
+      truthById,
+      startedIds: new Set(Object.keys(roleById).filter((id) => roleById[id] === 'xi')),
+    });
+  };
+  let dev = await develop(players);
+  // Training or a transfer landed during the replay: once more on the squad as it is now.
+  if (!dev.ok && dev.moved) {
+    const again = await listClubPlayers(clubId, today).catch(() => null);
+    if (again) dev = await develop(again);
+  }
   if (!dev.ok) {
     return { error: dev.error };
   }

@@ -46,7 +46,8 @@ export async function setTransferListing(
   if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
 
   const clubRow = club as { id: string; transfer_window_open: boolean };
-  const active = await listClubPlayers(clubRow.id);
+  const active = await listClubPlayers(clubRow.id).catch(() => null);
+  if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const player = active.find((p) => p.id === playerId);
 
   if (!player || player.departedAt != null || player.status === 'DEPARTED') {

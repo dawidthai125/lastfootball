@@ -155,6 +155,15 @@ function drawnCupOpponents(fixtures: readonly FixtureDto[]): ReadonlyMap<CupRoun
   return out;
 }
 
+/** The final has one tie. A won final leaves no next tie, the same as a defeat. */
+export function playerWonCup(cup: Pick<NationalCupDto, 'rounds'>): boolean {
+  const final = cup.rounds.find((round) => round.round === 4)?.ties[0];
+  if (!final?.winnerId) return false;
+  return [final.home, final.away].some(
+    (side) => side.kind === 'club' && side.club.isPlayer && side.club.id === final.winnerId,
+  );
+}
+
 function findPlayerTie(
   rounds: readonly CupRoundDto[],
   playedLeagueMatchdays: number,

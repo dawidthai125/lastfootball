@@ -48,7 +48,8 @@ export async function saveStartingXi(
   if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
   const clubId = (club as { id: string }).id;
 
-  const rows = await listClubPlayers(clubId);
+  const rows = await listClubPlayers(clubId).catch(() => null);
+  if (!rows) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   let squad;
   try {
     squad = resolveClubSquad({ id: clubId }, rows);

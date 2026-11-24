@@ -42,7 +42,7 @@ function clubHash(clubId: string): number {
   return hash;
 }
 
-const MAX_LOANED_IN = 2;
+export const MAX_LOANED_IN = 2;
 
 /** 0–2 deterministic loan-in offers while the window is open. A taken player is not offered. */
 export function resolveIncomingLoanOffers(input: {
@@ -87,11 +87,14 @@ export function resolveIncomingLoanOffers(input: {
   return offers;
 }
 
+export const ROSTER_FULL = 'Kadra jest pełna (max 22).';
+export const LOANS_FULL = 'Masz już dwóch wypożyczonych.';
+
 export function incomingLoanBlock(input: {
   readonly rosterCount: number;
   readonly alreadyLoanedIn: number;
 }): string | null {
-  if (input.rosterCount >= 22) return 'Kadra jest pełna (max 22).';
-  if (input.alreadyLoanedIn >= MAX_LOANED_IN) return 'Masz już dwóch wypożyczonych.';
+  if (input.rosterCount >= 22) return ROSTER_FULL;
+  if (input.alreadyLoanedIn >= MAX_LOANED_IN) return LOANS_FULL;
   return null;
 }

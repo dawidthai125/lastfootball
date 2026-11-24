@@ -109,10 +109,11 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
             color: 'var(--lf-color-text-muted)',
           }}
         >
-          {dto.opponent.name} ·{' '}
+          {dto.isHome ? club.name : dto.opponent.name}{' '}
           {dto.homeScore != null && dto.awayScore != null
             ? `${dto.homeScore}:${dto.awayScore}`
-            : '—'}
+            : '—'}{' '}
+          {dto.isHome ? dto.opponent.name : club.name}
         </p>
         {fanLine ? (
           <p

@@ -58,7 +58,7 @@ export function LandingPage() {
       >
         <p>
           Nadasz klubowi imię, barwy i herb — potem wracasz do gabinetu, gdzie jedna sprawa dnia
-          prowadzi Cię do następnego meczu. Nie dashboard KPI. Biurko managera.
+          prowadzi Cię do następnego meczu. Nie tabela liczb. Biurko managera.
         </p>
       </StorySection>
 
@@ -128,7 +128,7 @@ export function LandingPage() {
             Tak wygląda gra
           </h2>
           <p className="lf-landing__story-body">
-            Gabinet, Live scorebug i skład XI — te same ekrany, które zobaczysz po założeniu klubu.
+            Gabinet, wynik na żywo i skład — te same ekrany, które zobaczysz po założeniu klubu.
           </p>
         </div>
         <LandingUiCrops />

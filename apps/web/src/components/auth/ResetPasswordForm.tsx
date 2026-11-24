@@ -6,6 +6,7 @@ import { updatePasswordFromRecovery } from '@/lib/auth/actions';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { MIN_PASSWORD } from '@/lib/auth/password-policy';
 import { Field, Input } from '@/components/ui/FormControls';
+import { keepFields } from '@/components/ui/kept-form';
 
 export function ResetPasswordForm({
   token = '',
@@ -17,7 +18,7 @@ export function ResetPasswordForm({
   const [state, action, pending] = useActionState(updatePasswordFromRecovery, AUTH_ACTION_INITIAL);
 
   return (
-    <form action={action} className="lf-auth-form">
+    <form action={action} onSubmit={keepFields(action)} className="lf-auth-form">
       {state.error || retry ? (
         <p className="lf-auth-form__error" role="alert">
           {state.error ?? 'Tego hasła nie da się ustawić. Wybierz inne niż poprzednie.'}

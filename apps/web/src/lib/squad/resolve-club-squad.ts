@@ -10,6 +10,7 @@ import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential'
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 import type { PlayerRowDto, SquadDto, SquadPlayerDto } from '@/lib/squad/types';
 import { filterSeniorPlayers, SquadUnavailableError } from '@/lib/squad/types';
+import { polishDay } from '@/lib/ui/polish-day';
 
 /** Display/filter position — group CBs/LB into OB for squad filters. */
 function displayPosition(pos: string): string {
@@ -77,18 +78,18 @@ function historyLines(row: PlayerRowDto): string[] {
   }
   lines.push(row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.');
   if (row.onLoan) {
-    lines.push(row.loanUntil ? `Wypożyczony do ${row.loanUntil}.` : 'Wypożyczony.');
+    lines.push(row.loanUntil ? `Wypożyczony do ${polishDay(row.loanUntil)}.` : 'Wypożyczony.');
   }
   if (row.loanedIn) {
     const partner = row.loanPartnerLabel ? ` z ${row.loanPartnerLabel}` : '';
     lines.push(
       row.loanUntil
-        ? `Wypożyczony do nas${partner} do ${row.loanUntil}.`
+        ? `Wypożyczony do nas${partner} do ${polishDay(row.loanUntil)}.`
         : `Wypożyczony do nas${partner}.`,
     );
   }
   if (row.intlAbsentUntil) {
-    lines.push(`Powołanie do ${row.intlAbsentUntil}.`);
+    lines.push(`Powołanie do ${polishDay(row.intlAbsentUntil)}.`);
   }
   return lines;
 }

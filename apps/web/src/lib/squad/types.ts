@@ -100,6 +100,12 @@ export type PlayerRowDto = {
   /** Stored groups. Absent on old test fixtures — UI then derives from skill. */
   readonly groups?: AttrGroups;
   readonly energy?: number;
+  /** Energy and status as stored, before the rest of the nights since. */
+  readonly stored?: {
+    readonly energy: number;
+    readonly energyOn: string | null;
+    readonly status: string;
+  };
   readonly form?: number;
   readonly wage?: number;
   readonly recentRatings?: readonly number[];

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { ConfirmSubmit, LocationHero, SoftLockState } from '@/components/ui';
 import { UI_COPY } from '@/lib/ui/copy';
+import { keepFields } from '@/components/ui/kept-form';
 import { Table } from '@/components/ui/Table';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveTransfersClosedSoftLock } from '@/lib/finance/transfer-entry';
@@ -23,6 +24,7 @@ import {
 } from '@/lib/transfers/actions';
 import { placeAuctionBid } from '@/lib/transfers/actions-auction';
 import type { AuctionSnap } from '@/lib/transfers/load-auctions';
+import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { AUCTION_THIN, auctionEndLabel } from '@/lib/transfers/auction';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
@@ -46,7 +48,7 @@ const PRESET_LABEL: Record<OfferPreset, string> = {
   high: 'Wysoka',
 };
 
-/** Player-facing labels (amounts remain in title / formatMoney). */
+/** Player-facing labels. The button adds the amount. */
 const OFFER_PRESET_LABEL: Record<OfferPreset | 'counter', string> = {
   low: 'Niska',
   normal: 'Normalna',
@@ -173,14 +175,17 @@ function BuyNegotiate({
                 type="submit"
                 variant={preset === 'normal' ? 'primary' : 'default'}
                 disabled={disabled}
-                title={formatMoney(resolveOfferAmount(ask, preset))}
               >
-                {PRESET_LABEL[preset]}
+                {PRESET_LABEL[preset]} · {formatMoney(resolveOfferAmount(ask, preset))}
               </Button>
             </form>
           );
         })}
       </div>
+      <p className="lf-tx-actions__hint">
+        Normalna i wysoka kupują od razu. Na niską sprzedawca poda{' '}
+        {formatMoney(resolveCounterAmount(ask))}.
+      </p>
     </div>
   );
 }
@@ -393,9 +398,8 @@ function LiveOfferCreate({
                 type="submit"
                 variant={preset === 'normal' ? 'primary' : 'default'}
                 disabled={disabled || pending || envelopeBalance < amount}
-                title={formatMoney(amount)}
               >
-                {OFFER_PRESET_LABEL[preset]}
+                {OFFER_PRESET_LABEL[preset]} · {formatMoney(amount)}
               </Button>
             </form>
           );
@@ -405,7 +409,16 @@ function LiveOfferCreate({
   );
 }
 
-function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disabled: boolean }) {
+function IncomingH2hActions({
+  offer,
+  ask,
+  disabled,
+}: {
+  offer: LiveH2hOfferDto;
+  /** Today's price of the player: the server counts a counter-offer from it. */
+  ask: number;
+  disabled: boolean;
+}) {
   const [acceptState, acceptAction, acceptPending] = useActionState(
     acceptLiveTransferOffer,
     TRANSFER_ACTION_INITIAL,
@@ -453,13 +466,11 @@ function IncomingH2hActions({ offer, disabled }: { offer: LiveH2hOfferDto; disab
           <form key={preset} action={counterAction} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
             <input type="hidden" name="preset" value={preset} />
-            <Button
-              type="submit"
-              variant="default"
-              disabled={disabled || pending}
-              title={`Kontroferta: ${OFFER_PRESET_LABEL[preset]}`}
-            >
-              {OFFER_PRESET_LABEL[preset]}
+            <Button type="submit" variant="default" disabled={disabled || pending}>
+              {OFFER_PRESET_LABEL[preset]} ·{' '}
+              {formatMoney(
+                preset === 'counter' ? resolveCounterAmount(ask) : resolveOfferAmount(ask, preset),
+              )}
             </Button>
           </form>
         ))}
@@ -590,7 +601,7 @@ function AuctionBidForm({
   const leading = auction?.highClubId === clubId;
   const min = high == null ? ask : Math.max(ask, high + AUCTION_THIN.STEP);
   return (
-    <form action={action} className="lf-tx-actions">
+    <form action={action} onSubmit={keepFields(action)} className="lf-tx-actions">
       <input type="hidden" name="playerId" value={playerId} />
       <input
         name="amount"
@@ -753,6 +764,7 @@ export function TransfersView({
               }
               if (item.kind === 'h2h-in') {
                 const o = item.offer;
+                const listed = market.listedPlayers.find((p) => p.playerId === o.playerId);
                 return (
                   <li key={`in-${o.offerId}`} className="lf-tx__case">
                     <div className="lf-tx__case-main">
@@ -766,6 +778,7 @@ export function TransfersView({
                     </div>
                     <IncomingH2hActions
                       offer={o}
+                      ask={listed ? deriveTransferFee(listed.skill, listed.age) : o.askAtCreate}
                       disabled={!market.windowOpen || !market.canSell}
                     />
                   </li>

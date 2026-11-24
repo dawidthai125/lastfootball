@@ -67,7 +67,8 @@ export async function buyTransferPlayer(
   if (!listing) return { error: 'Nie znaleziono oferty rynkowej.' };
 
   const ask = marketFee(listing.skill, listing.age, listing.clubLabel);
-  const active = await listClubPlayers(clubRow.id);
+  const active = await listClubPlayers(clubRow.id).catch(() => null);
+  if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const activePlayers = filterSeniorPlayers(active).map((p) => ({
     id: p.id,
     name: p.name,
@@ -194,7 +195,8 @@ export async function sellTransferPlayer(
     transfer_window_open: boolean;
   };
 
-  const active = await listClubPlayers(clubRow.id);
+  const active = await listClubPlayers(clubRow.id).catch(() => null);
+  if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const player = active.find((p) => p.id === playerId);
   if (!player) return { error: 'Nie znaleziono zawodnika.' };
 
@@ -302,7 +304,8 @@ export async function respondIncomingOffer(
   }
 
   const windowOpen = Boolean(clubRow.transfer_window_open);
-  const active = await listClubPlayers(clubRow.id);
+  const active = await listClubPlayers(clubRow.id).catch(() => null);
+  if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const player = active.find((p) => p.id === playerId);
   if (!player || player.departedAt != null || player.status === 'DEPARTED') {
     return { error: 'Zawodnik niedostępny.' };

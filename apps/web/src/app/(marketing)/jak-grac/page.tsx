@@ -26,7 +26,8 @@ export default function HelpPage() {
       <LegalSection title="W skrócie">
         <p>
           Prowadzisz klub od IV ligi w górę. Codziennie grasz jeden mecz ligowy albo pucharowy i
-          jedno towarzyskie wyzwanie. Nowy dzień zaczyna się o północy czasu polskiego.
+          jedno towarzyskie wyzwanie. Nowy dzień meczowy zaczyna się o północy czasu polskiego.
+          Trening i powołania do reprezentacji mają nowy dzień od 1:00, a w czasie letnim od 2:00.
         </p>
       </LegalSection>
       <LegalSection title="Mecz">

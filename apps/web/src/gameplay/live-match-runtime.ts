@@ -618,7 +618,9 @@ function mapFeedItem(
     ? rawMinute
     : e.type === 'MATCH_START'
       ? 0
-      : minute;
+      : isSecondHalfStart(e)
+        ? 45
+        : minute;
   return {
     id: `ev-${index}-${e.type}-${e.tick}`,
     minute: `${Math.floor(payloadMinute)}'`,
@@ -626,6 +628,13 @@ function mapFeedItem(
     text: humanizeEvent(e, players, teams),
     highlight: e.type === 'GOAL',
   };
+}
+
+function isSecondHalfStart(e: EngineEvent): boolean {
+  return (
+    e.type === 'SYSTEM' &&
+    (e.payload as { readonly kind?: unknown } | undefined)?.kind === 'second_half_start'
+  );
 }
 
 function eventKind(type: string): LiveEventKind {

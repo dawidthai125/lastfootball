@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 
+import { keepFields } from '@/components/ui/kept-form';
 import { formatMoney } from '@/lib/finance/format-money';
 import { saveContractTalk, type ContractTalkState } from '@/lib/squad/actions-contract';
 
@@ -28,6 +29,7 @@ export function ContractTalkForm({
   return (
     <form
       action={action}
+      onSubmit={keepFields(action)}
       style={{
         marginTop: '0.75rem',
         display: 'flex',

@@ -56,16 +56,23 @@ function conditionFromSeed(p: RosterPlayerSeed) {
 }
 
 /** Level 0 returns the same skills object, so old sims stay put. */
-function withHomePitch<T extends { ballControl: number; shortPassing: number }>(
+const PITCH_SKILLS = [
+  'finishing',
+  'ballControl',
+  'shortPassing',
+  'tackling',
+  'composure',
+  'positioning',
+] as const;
+
+function withHomePitch<T extends Readonly<Record<(typeof PITCH_SKILLS)[number], number>>>(
   skills: T,
   bonus: number,
 ): T {
   if (bonus <= 0) return skills;
-  return {
-    ...skills,
-    ballControl: clampSkill(skills.ballControl + bonus),
-    shortPassing: clampSkill(skills.shortPassing + bonus),
-  };
+  const better = { ...skills } as Record<string, number>;
+  for (const key of PITCH_SKILLS) better[key] = clampSkill(skills[key] + bonus);
+  return better as T;
 }
 
 /** Opponent condition only when the seed actually carries it, so AI matches stay put. */

@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { signInWithPassword } from '@/lib/auth/actions';
 import { Field, Input } from '@/components/ui/FormControls';
+import { useKeptForm } from '@/components/ui/kept-form';
 
 type LoginFormProps = {
   nextPath?: string;
@@ -14,9 +15,10 @@ type LoginFormProps = {
 
 export function LoginForm({ nextPath, bannerError }: LoginFormProps) {
   const [state, action, pending] = useActionState(signInWithPassword, AUTH_ACTION_INITIAL);
+  const form = useKeptForm(action, state);
 
   return (
-    <form action={action} className="lf-auth-form">
+    <form {...form} className="lf-auth-form">
       {nextPath ? <input type="hidden" name="next" value={nextPath} /> : null}
 
       {(bannerError || state.error) && (

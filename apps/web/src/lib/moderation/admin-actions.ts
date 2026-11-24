@@ -138,7 +138,14 @@ export async function blockAccount(
     .upsert({ user_id: owner.ownerId, reason } as never, { onConflict: 'user_id' });
   if (saved.error) {
     // Without the row the panel would show no block and no way back.
-    await admin.auth.admin.updateUserById(owner.ownerId, { ban_duration: 'none' });
+    const before = await admin
+      .from('blocked_accounts' as never)
+      .select('user_id')
+      .eq('user_id', owner.ownerId)
+      .maybeSingle();
+    if (!before.error && !before.data) {
+      await admin.auth.admin.updateUserById(owner.ownerId, { ban_duration: 'none' });
+    }
     return { error: 'Nie udało się zapisać blokady. Spróbuj ponownie.', info: null };
   }
   const ended = await admin.rpc(

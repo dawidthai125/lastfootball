@@ -4,12 +4,13 @@ type AppSupabase = Awaited<ReturnType<typeof createClient>>;
 
 /**
  * IO: count league fixtures with status played for a club.
+ * Null when the read failed: not the same as no matches.
  * Prefer `countPlayedInList` when fixtures are already loaded.
  */
 export async function countClubPlayedFixtures(
   supabase: AppSupabase,
   clubId: string,
-): Promise<number> {
+): Promise<number | null> {
   const { count, error } = await supabase
     .from('fixtures')
     .select('id', { count: 'exact', head: true })
@@ -17,6 +18,5 @@ export async function countClubPlayedFixtures(
     .eq('competition', 'league')
     .eq('status', 'played');
 
-  if (error || count == null) return 0;
-  return count;
+  return error ? null : count;
 }

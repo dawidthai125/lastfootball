@@ -7,10 +7,13 @@ import {
   stadiumSeatLabel,
   type StadiumLevels,
 } from '@/lib/stadium/levels';
+import { lineupFacts, teamCondition } from '@/lib/fixtures/to-ui-fixture';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
+
+const FIRST_ATTENDANCE = '2 100';
 
 function firstStadiumName(club: ClubDto, levels: StadiumLevels): string {
   const base = STARTER_PACKAGE.stadiumLabel(club.name);
@@ -53,9 +56,9 @@ export function buildFirstPreMatchBundle(
     fixture,
     weather: 'Słonecznie',
     weatherDetail: 'Dobry dzień na inaugurację',
-    weatherNote: 'Mecz inauguracyjny — bez wpływu pogody na silnik',
+    weatherNote: 'Mecz inauguracyjny — pogoda nie wpływa na wynik',
     temperature: '18°C',
-    attendance: '2 100',
+    attendance: FIRST_ATTENDANCE,
     referee: 'Adam Lewicki',
     countdown: 'Gotowy',
     ourTeam: {
@@ -85,17 +88,15 @@ export function buildFirstPreMatchBundle(
       { id: 'possession', label: 'Posiadanie', value: 50 },
       { id: 'pressing', label: 'Pressing', value: 50 },
       { id: 'tempo', label: 'Tempo', value: 50 },
-      { id: 'width', label: 'Szerokość', value: 55 },
+      { id: 'width', label: 'Szerokość', value: 50 },
       { id: 'density', label: 'Zagęszczenie', value: 50 },
     ],
+    // No ids: player pages stay closed until the first match is over.
     ourLineup: our.map((p) => ({
       pos: p.pos,
       name: p.name,
       number: p.number,
-      rating: 60,
-      condition: 4,
-      id: p.id,
-      captain: p.captain,
+      ...lineupFacts(p),
     })),
     theirLineup: their.map((p) => ({
       pos: p.pos,
@@ -103,7 +104,7 @@ export function buildFirstPreMatchBundle(
       number: p.number,
     })),
     pitchSlots: pitchSlotsFor(our, '4-4-2'),
-    teamCondition: { label: 'Gotowa', value: 85 },
+    teamCondition: teamCondition(our),
     ticker: `${club.name} — pierwszy gwizdek w historii klubu.`,
     decisions: [
       {
@@ -128,7 +129,7 @@ export function buildFirstLiveBundle(
     period: 'Początek',
     homeScore: 0,
     awayScore: 0,
-    viewers: '—',
+    viewers: FIRST_ATTENDANCE,
     weather: '18°C · słonecznie',
     stadiumCapacity: stadiumSeatLabel(levels.stands),
     groundStands: levels.stands,

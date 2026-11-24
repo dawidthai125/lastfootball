@@ -51,7 +51,7 @@ export default async function PublicClubPage({ params }: PageProps) {
             resolveLeagueTierLabel(club.leagueTier),
             `sezon ${club.season}`,
             place ? `${place}. w rankingu graczy` : null,
-            `gra od ${club.since.split('-').reverse().join('.')}`,
+            `gra od ${club.since}`,
           ]
             .filter(Boolean)
             .join(' · ')}

@@ -17,7 +17,7 @@ export async function reportClub(
   _prev: ModerationState,
   formData: FormData,
 ): Promise<ModerationState> {
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   const admin = tryAdminClient();
   if (!club || !admin) return { error: 'Nie udało się wysłać zgłoszenia.', info: null };
   const reportedId = String(formData.get('clubId') ?? '');

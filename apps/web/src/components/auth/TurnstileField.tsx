@@ -12,9 +12,11 @@ function turnstileApi(): TurnstileApi | null {
   return api ?? null;
 }
 
-export function TurnstileField({ siteKey, resetKey }: { siteKey: string; resetKey: string }) {
+/** `answer` is the state of the form: every new one means the token is used up. */
+export function TurnstileField({ siteKey, answer }: { siteKey: string; answer: object }) {
   const host = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
+  const seen = useRef(answer);
 
   useEffect(() => {
     const hostNode = host.current;
@@ -27,27 +29,30 @@ export function TurnstileField({ siteKey, resetKey }: { siteKey: string; resetKe
       widgetId.current = api.render(hostNode, { sitekey: siteKey, theme: 'dark' });
     };
 
-    const existing = document.getElementById('cf-turnstile-script');
-    if (existing) {
-      render();
-    } else {
-      const script = document.createElement('script');
+    let script = document.getElementById('cf-turnstile-script') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
       script.id = 'cf-turnstile-script';
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
       script.async = true;
-      script.onload = render;
       document.head.appendChild(script);
     }
+    const pending = script;
+    render();
+    // The script may still be loading from an earlier visit to this page.
+    pending.addEventListener('load', render);
 
     return () => {
       cancelled = true;
+      pending.removeEventListener('load', render);
     };
   }, [siteKey]);
 
   useEffect(() => {
-    if (!resetKey || !widgetId.current) return;
-    turnstileApi()?.reset(widgetId.current);
-  }, [resetKey]);
+    if (seen.current === answer) return;
+    seen.current = answer;
+    if (widgetId.current) turnstileApi()?.reset(widgetId.current);
+  }, [answer]);
 
   return <div ref={host} className="lf-auth-form__turnstile" />;
 }

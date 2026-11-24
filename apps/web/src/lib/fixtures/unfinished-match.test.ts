@@ -24,4 +24,10 @@ describe('lastFreshMatch', () => {
     ).toBeNull();
     expect(lastFreshMatch([], now)).toBeNull();
   });
+
+  it('waits for the save that may still be running', () => {
+    expect(
+      lastFreshMatch([{ id: 'a', status: 'played', playedAt: '2026-11-24T19:59:00Z' }], now),
+    ).toBeNull();
+  });
 });

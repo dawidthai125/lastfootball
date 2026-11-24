@@ -27,7 +27,7 @@ export default async function SquadPage() {
             waId="EMP-002"
             illustrationSrc="/assets/world-art/emp-002-empty-locker.png"
             title="Kadra niedostępna"
-            body="Nie znaleziono zawodników klubu. Odśwież stronę lub wróć do Hub — skład nie jest generowany ponownie w runtime."
+            body="Nie znaleziono zawodników klubu. Odśwież stronę albo wróć na Hub."
             links={[
               { href: '/hub', label: 'Hub' },
               { href: '/training', label: 'Trening' },

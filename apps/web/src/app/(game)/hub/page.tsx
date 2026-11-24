@@ -93,6 +93,7 @@ export default async function HubPage() {
             skill: player.skill,
             academyTrack: Boolean(player.academyTrack),
             departed: player.departedAt != null || player.status === 'DEPARTED',
+            goalkeeper: player.pos === 'BR',
           })),
         )
       : null;

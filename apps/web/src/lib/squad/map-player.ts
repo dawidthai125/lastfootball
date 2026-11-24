@@ -102,6 +102,9 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     academyGainSeason: row.academy_gain_season ?? null,
     groups: groupsFromRow(row),
     energy,
+    ...(typeof row.energy === 'number' && row.energy_on
+      ? { stored: { energy: row.energy, energyOn: row.energy_on, status: row.status } }
+      : {}),
     form: typeof row.form === 'number' ? row.form : undefined,
     wage: typeof row.wage === 'number' ? row.wage : undefined,
     suspensionMatches:

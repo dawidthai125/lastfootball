@@ -24,7 +24,7 @@ export async function claimSponsorBonus(
     return { error: 'Supabase nie jest skonfigurowany.' };
   }
 
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
 
   const contract = await ensureClubSponsorContract(club.id, club.seasonNumber);
@@ -72,7 +72,7 @@ export async function acceptSponsorRenewal(
     return { error: 'Supabase nie jest skonfigurowany.' };
   }
 
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
   if (club.seasonPhase !== 'offseason') {
     return { error: 'Odnowienie dostępne tylko w przerwie.' };

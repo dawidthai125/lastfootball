@@ -416,3 +416,32 @@
     display: none;
   }
 }
+
+/* A phone held sideways has no room for the whole screen, so the screen scrolls. */
+@media (max-width: 1023px) and (max-height: 480px) and (orientation: landscape) {
+  .lf-live {
+    overflow-y: auto;
+  }
+
+  .lf-live__stage {
+    flex: none;
+    grid-template-rows: auto;
+    overflow: visible;
+  }
+
+  .lf-live__frame {
+    grid-template-rows: auto auto;
+    height: auto;
+  }
+
+  .lf-live__canvas {
+    width: min(100%, 100dvh);
+    height: auto;
+  }
+
+  .lf-live__panel,
+  .lf-live__more[open] {
+    max-height: none;
+    overflow: visible;
+  }
+}

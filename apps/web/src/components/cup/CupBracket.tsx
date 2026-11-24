@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
-import type { CupSide, CupTieDto, NationalCupDto } from '@/lib/cup';
+import { playerWonCup, type CupSide, type CupTieDto, type NationalCupDto } from '@/lib/cup';
 import { hideFutureRounds } from '@/lib/cup/hide-future-rounds';
 import { openCupTie } from '@/lib/cup/open-cup-tie';
 
@@ -92,7 +92,9 @@ function OpenBracket({
       ) : null}
       {!tie && cup.editionOpen ? (
         <p className="text-[12px] text-[var(--lf-muted)]">
-          Twoja ścieżka w tym pucharze jest zamknięta. Liga zostaje.
+          {playerWonCup(cup)
+            ? 'Twój klub zdobył Puchar Krajowy.'
+            : 'Twoja ścieżka w tym pucharze jest zamknięta. Liga zostaje.'}
         </p>
       ) : null}
       {hideFutureRounds(cup).map((round) => (

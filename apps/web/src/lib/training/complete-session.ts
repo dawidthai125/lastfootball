@@ -12,6 +12,7 @@ import type {
   TrainingSessionSummary,
 } from '@/lib/training/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { seenState, SQUAD_MOVED_CODE, SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { groupKeyForFocus } from '@/lib/squad/truth';
 import { applyCoachYield, isCoachGroup, type CoachGroup } from '@/lib/training/coach';
@@ -32,7 +33,8 @@ export type CompleteTrainingResult =
       changedCount: number;
       summary: TrainingSessionSummary;
     }
-  | { ok: false; error: string };
+  /** `moved`: a player changed since he was read, so read again and repeat. */
+  | { ok: false; error: string; moved?: boolean };
 
 /**
  * Atomic team session via RPC: status + skill + clubs.last_training_on.
@@ -124,6 +126,7 @@ export async function completeTrainingSession(
     attr_physical?: number;
     attr_goalkeeping?: number;
     energy?: number;
+    seen?: Record<string, unknown>;
   }[] = [];
   for (let i = 0; i < after.length; i++) {
     const next = after[i]!;
@@ -144,6 +147,7 @@ export async function completeTrainingSession(
     ) {
       continue;
     }
+    const seen = seenState(seniors[i]!);
     updates.push({
       id: next.id,
       status: next.status,
@@ -158,6 +162,7 @@ export async function completeTrainingSession(
           }
         : {}),
       ...(typeof next.energy === 'number' ? { energy: next.energy } : {}),
+      ...(seen ? { seen } : {}),
     });
   }
 
@@ -171,7 +176,9 @@ export async function completeTrainingSession(
   );
 
   if (error) {
-    return { ok: false, error: error.message || 'Nie udało się zapisać treningu.' };
+    return error.code === SQUAD_MOVED_CODE
+      ? { ok: false, error: SQUAD_MOVED_ERROR, moved: true }
+      : { ok: false, error: 'Nie udało się zapisać treningu. Spróbuj ponownie.' };
   }
 
   const row = data as RpcResult | null;

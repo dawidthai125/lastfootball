@@ -2,8 +2,9 @@
 
 import { recordMovement } from '@/lib/finance/record-movement';
 import { restedEnergy, restedStatus } from '@/lib/squad/rest';
+import { SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import type { PlayerStatus } from '@/lib/squad/types';
-import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
+import { tryAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -11,16 +12,9 @@ import { readClubBuild } from '@/lib/club/read-build';
 import { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
 import { hasPlayedUnlock, unlockPlayedCount, utcDateString } from '@/lib/fixtures/played-unlock';
 import { TRAINING_THIN } from '@/lib/training/types';
-import {
-  hireOnce,
-  individualStep,
-  isPressTone,
-  nextMorale,
-  pressDelta,
-  STAFF_FEE,
-} from '@/lib/squad/depth';
+import { hireOnce, individualStep, isPressTone, pressDelta, STAFF_FEE } from '@/lib/squad/depth';
 import type { TrainingActionState } from '@/lib/training/action-types';
-import { hireCoach, isCoachGroup } from '@/lib/training/coach';
+import { hireCoach, isCoachGroup, type CoachGroup } from '@/lib/training/coach';
 import { CASH_STALE_ERROR, writeClubCash } from '@/lib/finance/club-cash';
 import { createClient } from '@/lib/supabase/server';
 
@@ -129,13 +123,30 @@ export async function runIndividualSession(
   const playerId = String(formData.get('playerId') ?? '');
   const group = String(formData.get('group') ?? '');
   if (!playerId || !isCoachGroup(group)) return { error: 'Wybierz zawodnika i grupę.' };
-  const { data: player, error } = await owned.supabase
+  const first = await trainOnce(owned.supabase, owned.club.id, playerId, group);
+  // A match or a team training landed in between: once more on the player as he is now.
+  const result =
+    first === 'moved' ? await trainOnce(owned.supabase, owned.club.id, playerId, group) : first;
+  if (result === 'moved') return { error: SQUAD_MOVED_ERROR };
+  if (result.error) return result;
+  revalidatePath('/training');
+  revalidatePath('/squad');
+  return result;
+}
+
+async function trainOnce(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  clubId: string,
+  playerId: string,
+  group: CoachGroup,
+): Promise<TrainingActionState | 'moved'> {
+  const { data: player, error } = await supabase
     .from('players')
     .select(
       'id, status, on_loan, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
     )
     .eq('id', playerId)
-    .eq('club_id', owned.club.id)
+    .eq('club_id', clubId)
     .eq('academy_track', false)
     .is('departed_at', null)
     .maybeSingle();
@@ -155,13 +166,16 @@ export async function runIndividualSession(
   };
   if (row.on_loan === true) return { error: 'Ten zawodnik jest na wypożyczeniu.' };
   if (row.status === 'INJURED') return { error: 'Kontuzjowany nie trenuje.' };
-  const { data: season } = await owned.supabase
+  const { data: season } = await supabase
     .from('clubs')
     .select('season_number')
-    .eq('id', owned.club.id)
+    .eq('id', clubId)
     .maybeSingle();
+  const playedThisSeason = await countClubPlayedFixtures(supabase, clubId);
+  if (playedThisSeason == null)
+    return { error: 'Nie udało się odczytać meczów. Spróbuj ponownie.' };
   const played = unlockPlayedCount(
-    await countClubPlayedFixtures(owned.supabase, owned.club.id),
+    playedThisSeason,
     (season as { season_number: number | null } | null)?.season_number ?? 1,
   );
   if (!hasPlayedUnlock(played, TRAINING_THIN.UNLOCK_AFTER_PLAYED)) {
@@ -184,32 +198,30 @@ export async function runIndividualSession(
   if (row[column] >= row.potential) return { error: 'Ta grupa jest już na suficie zawodnika.' };
   const admin = tryAdminClient();
   if (!admin) return { error: 'Trening nie jest skonfigurowany na serwerze.' };
-  const claim = await admin.rpc(
-    'claim_individual_training' as never,
-    { p_club_id: owned.club.id, p_player_id: playerId, p_today: utcDateString() } as never,
+  // Session of the day, attribute and energy land together, and only on the player read above.
+  const { data: saved, error: saveErr } = await admin.rpc(
+    'train_individual' as never,
+    {
+      p_club_id: clubId,
+      p_player_id: playerId,
+      p_today: utcDateString(),
+      p_group: group,
+      p_value: step.group,
+      p_energy: step.energy,
+      p_status: restedStatus(row.status, row.energy, rested),
+      p_seen: {
+        status: row.status,
+        on_loan: row.on_loan,
+        energy: row.energy,
+        energy_on: row.energy_on,
+        potential: row.potential,
+        [column]: row[column],
+      },
+    } as never,
   );
-  if (claim.error) return { error: 'Nie udało się zapisać treningu.' };
-  if ((claim.data as unknown) !== true) return { error: SESSION_TAKEN };
-  const { error: updErr } = await serverDb(owned.supabase)
-    .from('players')
-    .update({
-      [column]: step.group,
-      energy: step.energy,
-      status: restedStatus(row.status, row.energy, rested),
-    } as never)
-    .eq('id', playerId)
-    .eq('club_id', owned.club.id);
-  if (updErr) {
-    // Not trained means the session of the day is free again.
-    await admin
-      .from('players')
-      .update({ last_individual_on: row.last_individual_on } as never)
-      .eq('id', playerId)
-      .eq('club_id', owned.club.id);
-    return { error: 'Nie udało się zapisać treningu.' };
-  }
-  revalidatePath('/training');
-  revalidatePath('/squad');
+  if (saveErr) return { error: 'Nie udało się zapisać treningu.' };
+  if ((saved as unknown) === 'moved') return 'moved';
+  if ((saved as unknown) !== 'ok') return { error: SESSION_TAKEN };
   return { ok: true };
 }
 
@@ -223,43 +235,23 @@ export async function savePressTone(
   const fixtureId = String(formData.get('fixtureId') ?? '');
   const tone = formData.get('tone');
   if (!fixtureId || !isPressTone(tone)) return { error: 'Wybierz ton konferencji.' };
-  // Only the last match: older ones without a conference do not add up.
-  const { data: fixture, error } = await owned.supabase
-    .from('fixtures')
-    .select('id, press_tone')
-    .eq('club_id', owned.club.id)
-    .eq('status', 'played')
-    .order('played_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  const row = fixture as { id: string; press_tone: string | null } | null;
-  if (error || !row || row.id !== fixtureId) return { error: 'Nie ma meczu do omówienia.' };
-  if (row.press_tone) return { ok: true };
-  const { data: marked, error: markErr } = await serverDb(owned.supabase)
-    .from('fixtures')
-    .update({ press_tone: tone } as never)
-    .eq('id', fixtureId)
-    .eq('club_id', owned.club.id)
-    .is('press_tone', null)
-    .select('id');
-  if (markErr) return { error: 'Konferencja nie jest jeszcze włączona.' };
-  // A second click that came at the same time changes nothing.
-  if (!marked || (marked as unknown[]).length === 0) return { ok: true };
-  const delta = pressDelta(tone);
-  if (delta !== 0) {
-    const { data: players } = await owned.supabase
-      .from('players')
-      .select('id, morale')
-      .eq('club_id', owned.club.id)
-      .is('departed_at', null);
-    for (const player of (players ?? []) as { id: string; morale: number }[]) {
-      await serverDb(owned.supabase)
-        .from('players')
-        .update({ morale: nextMorale(player.morale ?? 60, delta) } as never)
-        .eq('id', player.id)
-        .eq('club_id', owned.club.id);
-    }
+  const admin = tryAdminClient();
+  if (!admin) return { error: 'Konferencja nie jest jeszcze włączona.' };
+  // Tone and morale land together. Only the last match, and only once.
+  const { data, error } = await admin.rpc(
+    'save_press_tone' as never,
+    {
+      p_club_id: owned.club.id,
+      p_fixture_id: fixtureId,
+      p_tone: tone,
+      p_delta: pressDelta(tone),
+    } as never,
+  );
+  // 22P02: not a match id at all.
+  if (error && error.code !== '22P02') {
+    return { error: 'Nie udało się zapisać konferencji. Spróbuj ponownie.' };
   }
+  if ((data as unknown) !== 'ok') return { error: 'Nie ma meczu do omówienia.' };
   revalidatePath('/training');
   revalidatePath('/squad');
   return { ok: true };

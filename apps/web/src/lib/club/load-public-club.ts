@@ -10,6 +10,7 @@ import {
 } from '@/lib/stats/records';
 import { resolveTrophies, type TrophyDto } from '@/lib/stats/trophies';
 import { tryAdminClient } from '@/lib/supabase/admin';
+import { polishDay } from '@/lib/ui/polish-day';
 
 /**
  * What any signed-in player may see of another club (D152, privacy policy section 4):
@@ -107,7 +108,7 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
     crestTemplateId: row.crest_template_id,
     leagueTier: parseLeagueTier(row.league_tier),
     season: row.season_number ?? 1,
-    since: row.created_at.slice(0, 10),
+    since: polishDay(row.created_at),
     records: resolveClubRecords(played),
     last: played.slice(0, 5),
     trophies: resolveTrophies({

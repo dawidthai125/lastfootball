@@ -61,11 +61,11 @@ function partDetail(part: StadiumPart, level: number): string {
   if (part === 'pitch') {
     const now = homePitchBonus(level);
     if (level >= 3)
-      return `Gospodarz: opanowanie piłki i podania +${now}. Obaj widzowie meczu biorą poziom domu.`;
+      return `Twoi zawodnicy u siebie: +${now} do gry. Obaj widzowie meczu biorą poziom domu.`;
     if (level <= 0) {
-      return 'Od poziomu 1 gospodarz ma lepsze opanowanie piłki i podania. Obaj widzowie meczu biorą poziom domu.';
+      return 'Od poziomu 1 twoi zawodnicy grają lepiej u siebie. Obaj widzowie meczu biorą poziom domu.';
     }
-    return `Gospodarz: opanowanie piłki i podania +${now}. Po rozbudowie +${homePitchBonus(level + 1)}.`;
+    return `Twoi zawodnicy u siebie: +${now} do gry. Po rozbudowie +${homePitchBonus(level + 1)}.`;
   }
   const now = trainingSessionCap(level);
   if (level >= 3) return `Na jednym treningu rośnie do ${now} zawodników.`;

@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { DeleteAccountForm } from '@/components/account/DeleteAccountForm';
 import { CredentialForms } from '@/components/account/CredentialForms';
 import { getAuthUser } from '@/lib/auth/session';
-import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { SignOutForm } from '@/components/auth/SignOutForm';
 import { NotificationSettingsPanel } from '@/components/notifications/NotificationSettingsPanel';
 import { Button } from '@/components/ui/Button';
@@ -32,9 +31,7 @@ export default async function SettingsPage() {
           <p style={{ margin: '0 0 var(--lf-space-2)' }}>
             Email jest potwierdzony. Premia 10 000 € jest jednorazowa.
           </p>
-        ) : (
-          <EmailConfirmSlot userId={club.ownerId} variant="game" />
-        )}
+        ) : null}
         {email ? <CredentialForms email={email} /> : null}
         <div style={{ height: 'var(--lf-space-3)' }} />
         <SignOutForm>

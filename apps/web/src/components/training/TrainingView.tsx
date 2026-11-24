@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 import Link from 'next/link';
 
 import { LocationHero, SoftLockState, StateBanner } from '@/components/ui';
+import { keepFields } from '@/components/ui/kept-form';
 import { runTrainingSession } from '@/lib/training/actions';
 import { hireClubCoach } from '@/lib/training/actions-coach';
 import {
@@ -20,6 +21,7 @@ import { pressLineLabel, pressShapeLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
 import { formatMoney } from '@/lib/finance/format-money';
+import { polishDay } from '@/lib/ui/polish-day';
 import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { Button } from '@/components/ui';
 
@@ -30,7 +32,7 @@ function lockCopy(dto: TrainingDto): string {
     case 'not_unlocked':
       return resolveNavLockReason('training', dto.playedCount);
     case 'already_trained_today':
-      return 'Dzisiejsza sesja już odbyta. Wróć jutro (dzień UTC).';
+      return 'Dzisiejsza sesja już odbyta. Następna od 1:00, a w czasie letnim od 2:00.';
     case 'squad_unavailable':
       return 'Brak aktywnej kadry — trening niedostępny.';
     default:
@@ -127,7 +129,7 @@ export function TrainingView({
           illustrationSrc="/assets/world-art/ill-002-softlock-training.png"
           title={lockTitle(training)}
           reason={lockCopy(training)}
-          unlockHint={`Rozegrane: ${training.playedCount}/${training.playedRequired} · Dziś (UTC): ${training.today}`}
+          unlockHint={`Rozegrane: ${training.playedCount}/${training.playedRequired} · Dzień treningowy: ${polishDay(training.today)}`}
           secondaryHref="/squad"
           secondaryLabel="Kadra"
         />
@@ -252,15 +254,19 @@ export function TrainingView({
             </p>
           ) : null}
           {individualState.ok ? <p className="lf-tr__meta">Zapisane.</p> : null}
-          <form action={individualAction} className="lf-tr__focus-grid">
-            <select name="playerId" defaultValue={players[0]?.id}>
+          <form
+            action={individualAction}
+            onSubmit={keepFields(individualAction)}
+            className="lf-tr__focus-grid"
+          >
+            <select name="playerId" aria-label="Zawodnik" defaultValue={players[0]?.id}>
               {players.map((player) => (
                 <option key={player.id} value={player.id}>
                   {player.name} · energia {player.energy}
                 </option>
               ))}
             </select>
-            <select name="group" defaultValue="attack">
+            <select name="group" aria-label="Grupa treningu" defaultValue="attack">
               {COACH_GROUPS.map((group) => (
                 <option key={group} value={group}>
                   {COACH_GROUP_LABEL[group]}
@@ -382,7 +388,7 @@ export function TrainingView({
         </p>
         <h1 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h1>
         <p className="lf-tr__meta">
-          Rozegrane: {training.playedCount} · Dziś (UTC): {training.today}
+          Rozegrane: {training.playedCount} · Dzień treningowy: {polishDay(training.today)}
         </p>
       </header>
 

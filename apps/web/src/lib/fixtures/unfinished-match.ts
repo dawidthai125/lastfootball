@@ -6,6 +6,8 @@ import { tryAdminClient } from '@/lib/supabase/admin';
 
 /** Older matches are left alone: the squad has moved on since. */
 const WINDOW_MS = 48 * 60 * 60 * 1000;
+/** The save of the match itself may still be running, with the newest decisions. */
+const SETTLING_MS = 2 * 60 * 1000;
 
 export type UnfinishedMatch = {
   readonly fixtureId: string;
@@ -24,7 +26,9 @@ export function lastFreshMatch(
     if (fixture.status !== 'played' || Number.isNaN(at)) continue;
     if (!best || at > best.at) best = { id: fixture.id, at };
   }
-  return best && now.getTime() - best.at <= WINDOW_MS ? best.id : null;
+  if (!best) return null;
+  const age = now.getTime() - best.at;
+  return age >= SETTLING_MS && age <= WINDOW_MS ? best.id : null;
 }
 
 /** Null when all is saved, or when that is not certain. */
@@ -44,6 +48,7 @@ export async function findUnfinishedMatch(
     .maybeSingle();
   if (error || data) return null;
   const kickoff = await loadKickoff(fixtureId, clubId, now);
+  if (kickoff.kind === 'error') return null;
   return {
     fixtureId,
     managerLog: JSON.stringify(kickoff.kind === 'found' ? kickoff.log : []),

@@ -86,7 +86,7 @@ export async function createRivalChallenge(
 ): Promise<RivalChallengeState> {
   if (!env.isSupabaseConfigured) return { error: 'Supabase nie jest skonfigurowany.' };
   const rivalId = String(formData.get('rivalId') ?? '');
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
   if (!rivalId || rivalId === club.id) return { error: 'Nie wybrano rywala.' };
 

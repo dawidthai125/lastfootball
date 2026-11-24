@@ -56,7 +56,11 @@ export type OpenNextSeasonOk = {
 export async function openNextSeasonAfterDeparture(
   input: OpenNextSeasonInput,
 ): Promise<OpenNextSeasonOk | { ok: false; error: string }> {
-  const roster = await input.loadRoster(input.clubId);
+  const roster = await input.loadRoster(input.clubId).catch(() => null);
+  if (!roster) {
+    await revertSeasonTransitionHAge(input.clubId, input.hAgePort, input.hAgeSnapshot);
+    return { ok: false, error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
+  }
   const departure = await applySeasonDeparture(
     input.supabase,
     input.clubId,
@@ -252,6 +256,7 @@ async function applySeasonDeparture(
       skill: player.skill,
       academyTrack: Boolean(player.academyTrack),
       departed: player.departedAt != null || player.status === 'DEPARTED',
+      goalkeeper: player.pos === 'BR',
     })),
   );
   if (!plan.retireId) return { ok: true, undo: null, farewell: null };

@@ -6,6 +6,7 @@ export type DeparturePlayer = {
   readonly skill: number;
   readonly academyTrack: boolean;
   readonly departed: boolean;
+  readonly goalkeeper?: boolean;
 };
 
 export type DeparturePlan = {
@@ -28,10 +29,16 @@ export type DeparturePreview = {
   readonly summary: string;
 };
 
-/** Lowest skill among age 38+, tie-break by id. No late player means nobody moves. */
+/**
+ * Lowest skill among age 38+, tie-break by id. The last goalkeeper stays: without one the club
+ * cannot play. No late player means nobody moves.
+ */
 export function planSeasonDeparture(players: readonly DeparturePlayer[]): DeparturePlan {
   const active = players.filter((player) => !player.departed);
-  const late = active.filter((player) => !player.academyTrack && player.age >= 38);
+  const keepers = active.filter((player) => !player.academyTrack && player.goalkeeper).length;
+  const late = active.filter(
+    (player) => !player.academyTrack && player.age >= 38 && !(player.goalkeeper && keepers <= 1),
+  );
   if (late.length === 0) return { retireId: null, promoteId: null };
 
   const retire = late.slice().sort((a, b) => a.skill - b.skill || a.id.localeCompare(b.id))[0];

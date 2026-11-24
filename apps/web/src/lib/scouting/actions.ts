@@ -21,7 +21,7 @@ async function requireSeasonClub() {
   if (!env.isSupabaseConfigured) {
     return { error: 'Supabase nie jest skonfigurowany.' } as const;
   }
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' } as const;
 
   const fixtures = await listClubFixtures(club.id);
@@ -49,11 +49,12 @@ export async function addScoutShortlist(
 
   const supabase = await createClient();
   const [ownPlayers, liveListings, shortlistIds] = await Promise.all([
-    listClubPlayers(club.id),
+    listClubPlayers(club.id).catch(() => null),
     fetchLiveListings(supabase, club.id),
     listScoutShortlistIds(club.id),
   ]);
 
+  if (!ownPlayers) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const check = canAddToShortlist(shortlistIds, playerId, ownPlayers, liveListings);
   if (!check.ok) return { error: check.error };
 

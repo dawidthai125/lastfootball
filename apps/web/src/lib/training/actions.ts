@@ -59,25 +59,33 @@ export async function runTrainingSession(
     last_training_on: string | null;
     season_number: number | null;
   };
-  const playedCount = unlockPlayedCount(
-    await countClubPlayedFixtures(supabase, clubRow.id),
-    clubRow.season_number ?? 1,
-  );
-  const activePlayers = await listClubPlayers(clubRow.id);
+  const playedThisSeason = await countClubPlayedFixtures(supabase, clubRow.id);
+  if (playedThisSeason == null)
+    return { error: 'Nie udało się odczytać meczów. Spróbuj ponownie.' };
+  const playedCount = unlockPlayedCount(playedThisSeason, clubRow.season_number ?? 1);
+  const activePlayers = await listClubPlayers(clubRow.id).catch(() => null);
+  if (!activePlayers) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const build = await readClubBuild(supabase, clubRow.id);
   if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
 
-  const result = await completeTrainingSession(supabase, {
-    clubId: clubRow.id,
-    lastTrainingOn: clubRow.last_training_on,
-    playedCount,
-    activePlayers,
-    focusId,
-    intensityId,
-    coachGroup: build.coachGroup,
-    assistantGroup: build.assistantGroup,
-    sessionCap: trainingSessionCap(build.levels.trainingCenter),
-  });
+  const train = (squad: Awaited<ReturnType<typeof listClubPlayers>>) =>
+    completeTrainingSession(supabase, {
+      clubId: clubRow.id,
+      lastTrainingOn: clubRow.last_training_on,
+      playedCount,
+      activePlayers: squad,
+      focusId,
+      intensityId,
+      coachGroup: build.coachGroup,
+      assistantGroup: build.assistantGroup,
+      sessionCap: trainingSessionCap(build.levels.trainingCenter),
+    });
+  let result = await train(activePlayers);
+  // A match or a transfer landed in between: once more on the squad as it is now.
+  if (!result.ok && result.moved) {
+    const again = await listClubPlayers(clubRow.id).catch(() => null);
+    if (again) result = await train(again);
+  }
 
   if (!result.ok) return { error: result.error };
 

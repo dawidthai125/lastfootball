@@ -9,12 +9,14 @@ import { TurnstileField } from '@/components/auth/TurnstileField';
 import { MIN_PASSWORD } from '@/lib/auth/password-policy';
 import { LEGAL } from '@/lib/legal';
 import { Checkbox, Field, Input } from '@/components/ui/FormControls';
+import { useKeptForm } from '@/components/ui/kept-form';
 
 export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [state, action, pending] = useActionState(signUpWithPassword, AUTH_ACTION_INITIAL);
+  const form = useKeptForm(action, state);
 
   return (
-    <form action={action} className="lf-auth-form">
+    <form {...form} className="lf-auth-form">
       {state.error ? (
         <p className="lf-auth-form__error" role="alert">
           {state.error}
@@ -50,9 +52,7 @@ export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | 
         />
       </Field>
 
-      {turnstileSiteKey ? (
-        <TurnstileField siteKey={turnstileSiteKey} resetKey={state.error ?? ''} />
-      ) : null}
+      {turnstileSiteKey ? <TurnstileField siteKey={turnstileSiteKey} answer={state} /> : null}
 
       <div className="lf-auth-form__terms">
         <Checkbox

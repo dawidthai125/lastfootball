@@ -291,7 +291,8 @@ export async function acceptLiveTransferOffer(
     });
     if (!sellResult.ok) return { error: sellResult.error };
   } else {
-    const active = await listClubPlayers(offer.buyer_club_id);
+    const active = await listClubPlayers(offer.buyer_club_id).catch(() => null);
+    if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
     const activeMapped = filterSeniorPlayers(active).map((p) => ({
       id: p.id,
       name: p.name,

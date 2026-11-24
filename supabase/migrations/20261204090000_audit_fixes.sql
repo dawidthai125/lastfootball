@@ -31,7 +31,8 @@ grant update (press_line, press_shape) on public.clubs to authenticated;
 grant update (starter, captain, set_piece, shirt_number) on public.players to authenticated;
 grant insert on public.transfer_offers to authenticated;
 
--- 3. The database names both clubs and numbers the offer, so nobody can type them.
+-- 3. The database names both clubs and keys the offer, so nobody can type them. One pending
+--    offer for a player is kept by transfer_offers_one_pending_buyer_player.
 do $mig$
 declare
   d text;
@@ -55,7 +56,7 @@ begin
     raise exception ''too many offers for the player'' using errcode = ''42501'';
   end if;
   new.idempotency_key := ''pending:'' || new.buyer_club_id::text || '':'' || new.player_id
-    || case when v_open > 0 then '':'' || v_open::text else '''' end;
+    || '':'' || pg_catalog.gen_random_uuid()::text;
   new.created_at := now();');
     execute d;
   end if;
@@ -100,7 +101,10 @@ begin
       raise exception 'sell_market_player differs';
     end if;
     d := replace(d, '  select * into v_club from public.clubs where id = p_club_id for update;',
-      '  perform 1 from public.players where id = p_player_id for update; -- player first
+      '  -- Offers, then the player first, then the club: the order of an accepted offer.
+  perform 1 from public.transfer_offers
+  where player_id = p_player_id and status = ''pending'' order by id for update;
+  perform 1 from public.players where id = p_player_id for update;
   select * into v_club from public.clubs where id = p_club_id for update;');
     execute d;
   end if;
