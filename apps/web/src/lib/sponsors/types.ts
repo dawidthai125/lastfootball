@@ -124,7 +124,7 @@ export function resolveClubSponsors(input: ResolveClubSponsorsInput): ClubSponso
           accepted: renewalAccepted,
           summaryLabel: renewalAccepted
             ? 'Odnowienie zaakceptowane — możesz przygotować sezon'
-            : 'Zaakceptuj odnowienie (opcjonalnie) — Confirm nie jest zablokowany',
+            : 'Zaakceptuj odnowienie (opcjonalnie). Nowy sezon możesz zacząć i bez tego',
         }
       : null,
     basePaidForCurrentSeason: contract.base_paid_season_number === contract.season_number,

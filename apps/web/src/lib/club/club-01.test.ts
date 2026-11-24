@@ -76,7 +76,11 @@ describe('resolveClubProfile (LFE-CLUB-01)', () => {
 
   it('exposes league position label from table input', () => {
     const club = clubFixture();
-    const table = resolveLeagueTable(club, []);
+    const empty = resolveLeagueTable(club, []);
+    const table = {
+      ...empty,
+      rows: empty.rows.map((row) => (row.isPlayer ? { ...row, played: 1 } : row)),
+    };
     const dto = resolveClubProfile({ club, table });
 
     expect(dto.leaguePositionLabel).toMatch(/miejsce/);

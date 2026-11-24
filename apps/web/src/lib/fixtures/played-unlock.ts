@@ -8,6 +8,18 @@ export function hasPlayedUnlock(playedCount: number, threshold: number): boolean
   return playedCount >= threshold;
 }
 
+/** League matches in one season. A season only ends when all of them are played. */
+const SEASON_LEAGUE_MATCHES = 22;
+
+/**
+ * Matches that count toward an unlock. A new season clears the fixtures, so the closed
+ * seasons are added back: what the club unlocked once stays unlocked.
+ */
+export function unlockPlayedCount(playedThisSeason: number, seasonNumber: number): number {
+  const closed = Number.isFinite(seasonNumber) ? Math.max(0, Math.trunc(seasonNumber) - 1) : 0;
+  return playedThisSeason + closed * SEASON_LEAGUE_MATCHES;
+}
+
 /** Count fixtures with status `played` in an already-loaded list. */
 export function countPlayedInList(fixtures: readonly { readonly status: string }[]): number {
   let n = 0;

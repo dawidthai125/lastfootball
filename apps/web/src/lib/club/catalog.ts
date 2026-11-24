@@ -44,7 +44,9 @@ export function suggestShortName(name: string): string {
   const parts = cleaned.split(/\s+/).filter(Boolean);
   if (parts.length >= 2) {
     const initials = parts.map((p) => p[0] ?? '').join('');
-    return initials.slice(0, 4);
+    if (initials.length >= 3) return initials.slice(0, 4);
+    // The form needs 3–4 characters: two words give two letters of the first and one of the second.
+    return `${(parts[0] ?? '').slice(0, 2)}${(parts[1] ?? '').slice(0, 2)}`.slice(0, 4);
   }
 
   const single = parts[0] ?? '';

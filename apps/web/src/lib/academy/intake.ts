@@ -119,20 +119,28 @@ export function generateAcademyCandidates(
   clubId: string,
   seq: number,
   level: number,
+  takenNames: readonly string[] = [],
 ): AcademyCandidate[] {
   const rules = academyLevel(level);
   const [low, high] = rules.skill;
   const roll = (index: number, part: string) =>
     hashPlayerId(`${part}:${clubId}:${seq}:${index}`) >>> 8;
   const first = roll(0, 'pos');
+  const used = new Set(takenNames);
   return Array.from({ length: rules.candidates }, (_, index) => {
     const template = YOUTH_TEMPLATES[(first + index) % YOUTH_TEMPLATES.length]!;
     const id = candidateId(clubId, seq, index);
     const age = 16 + (roll(index, 'age') % 3);
     const skill = low + (roll(index, 'skill') % (high - low + 1));
+    const start = roll(index, 'name');
+    const free = template.names.map(
+      (_n, i) => template.names[(start + i) % template.names.length]!,
+    );
+    const name = free.find((n) => !used.has(n)) ?? free[0]!;
+    used.add(name);
     return {
       id,
-      name: template.names[roll(index, 'name') % template.names.length]!,
+      name,
       pos: template.pos,
       role: template.role,
       age,

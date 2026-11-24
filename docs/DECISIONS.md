@@ -811,7 +811,14 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D134 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D135 — Poprawki po próbie sezonu · 2026-11-24
+
+1. Odblokowania (trening, transfery) liczą zamknięte sezony: nowy sezon niczego nie zamyka z powrotem.
+2. Start sezonu nie kasuje wyników rywalizacji; otwarte wyzwanie przechodzi do nowego sezonu (`keep_rival_results`).
+3. Karne: podsumowanie mówi, kto je wygrał; dopisany gol nie jest golem meczu.
+4. Pozycja w tabeli pojawia się dopiero po pierwszym meczu ligowym sezonu.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D135 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

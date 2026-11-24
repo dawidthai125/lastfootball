@@ -5,7 +5,7 @@ import { readClubBuild } from '@/lib/club/read-build';
 import { isPressLine, isPressShape } from '@/lib/training/press-line';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { createClient } from '@/lib/supabase/server';
-import { countPlayedInList, listClubFixtures } from '@/lib/fixtures';
+import { countPlayedInList, listClubFixtures, unlockPlayedCount } from '@/lib/fixtures';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { resolveClubTraining } from '@/lib/training';
@@ -24,7 +24,10 @@ export default async function TrainingPage() {
   ]);
   const training = resolveClubTraining({
     clubId: club.id,
-    playedCount: countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
+    playedCount: unlockPlayedCount(
+      countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
+      club.seasonNumber,
+    ),
     lastTrainingOn: club.lastTrainingOn,
     activePlayers,
   });

@@ -17,6 +17,7 @@ import {
   getLastPlayedFixture,
   getNextFixture,
   hasPlayedUnlock,
+  unlockPlayedCount,
   utcDateString,
 } from '@/lib/fixtures';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
@@ -138,7 +139,10 @@ export default async function HubPage() {
   const cashLabel =
     phase === 'SEASON' || phase === 'OFFSEASON' ? resolveCashChipLabel(finance) : null;
   const leaguePlayedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
-  const trainingUnlocked = hasPlayedUnlock(leaguePlayedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
+  const trainingUnlocked = hasPlayedUnlock(
+    unlockPlayedCount(leaguePlayedCount, club.seasonNumber),
+    TRAINING_THIN.UNLOCK_AFTER_PLAYED,
+  );
   const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
   const cupLink =
     phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);

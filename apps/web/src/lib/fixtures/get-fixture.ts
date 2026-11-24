@@ -13,9 +13,17 @@ async function withChallengeNames(clubId: string, fixtures: FixtureDto[]): Promi
     .select('fixture_id, rival_name, rival_short')
     .eq('challenger_club_id', clubId);
   if (error || !data) return fixtures;
-  const rows = data as unknown as { fixture_id: string; rival_name: string; rival_short: string }[];
+  const rows = data as unknown as {
+    fixture_id: string | null;
+    rival_name: string;
+    rival_short: string;
+  }[];
   const names = new Map(
-    rows.map((row) => [row.fixture_id, { name: row.rival_name, shortName: row.rival_short }]),
+    rows.flatMap((row) =>
+      row.fixture_id
+        ? [[row.fixture_id, { name: row.rival_name, shortName: row.rival_short }] as const]
+        : [],
+    ),
   );
   return fixtures.map((fixture) => {
     const rival = names.get(fixture.id);

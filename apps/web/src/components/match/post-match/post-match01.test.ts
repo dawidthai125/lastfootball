@@ -131,6 +131,23 @@ describe('LFE-POST-MATCH-01', () => {
     expect(summary.stats.some((stat) => stat.label === 'Podania celne')).toBe(true);
   });
 
+  it('says who won the shoot-out; the extra goal is not a goal', () => {
+    const base = {
+      matchState: fakeState(1, 0),
+      homeName: 'FC Lastovia',
+      awayName: 'Orzeł Grodzisk',
+      homeShort: 'FCL',
+      awayShort: 'ORG',
+    };
+    const summary = buildPostMatchSummary({
+      ...base,
+      events: [{ type: 'SYSTEM', tick: 9, payload: { kind: 'penalty_decider', side: 'home' } }],
+    });
+    expect(summary.goals).toHaveLength(0);
+    expect(summary.shootout).toBe('Po dogrywce był remis. FC Lastovia wygrywa w karnych.');
+    expect(buildPostMatchSummary({ ...base, events: [] }).shootout).toBeNull();
+  });
+
   it('T9 / W5: summary includes ratings v2 + mvpPlayerId (assists/minutes on view)', () => {
     const summary = buildPostMatchSummary({
       matchState: fakeState(1, 0),

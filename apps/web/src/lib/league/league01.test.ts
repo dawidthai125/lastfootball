@@ -102,8 +102,13 @@ describe('resolveLeagueTable', () => {
 
   it('exposes position label for Hub chip', () => {
     const table = resolveLeagueTable(club, []);
-    const label = resolvePlayerLeaguePositionLabel(table);
-    expect(label).toMatch(/^\d+\. miejsce \/ 12$/);
+    // Alphabetical order before the first match is not a position.
+    expect(resolvePlayerLeaguePositionLabel(table)).toBeNull();
+    const started = {
+      ...table,
+      rows: table.rows.map((row) => (row.isPlayer ? { ...row, played: 1 } : row)),
+    };
+    expect(resolvePlayerLeaguePositionLabel(started)).toMatch(/^\d+\. miejsce \/ 12$/);
   });
 });
 

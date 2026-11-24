@@ -46,6 +46,8 @@ export type PostMatchSummary = {
   readonly awayScore: number;
   readonly resultLabel: string;
   readonly goals: readonly PostMatchGoal[];
+  /** Set when a cup tie ended in a shoot-out: the winner's extra goal is not a goal. */
+  readonly shootout: string | null;
   readonly timeline: readonly PostMatchTimelineItem[];
   readonly stats: readonly PostMatchStat[];
   readonly possession: { readonly home: number; readonly away: number };
@@ -98,6 +100,19 @@ function cardSplit(
     else if (side === 'away') away += 1;
   }
   return { home, away };
+}
+
+function shootoutLine(
+  events: BuildPostMatchInput['events'],
+  homeName: string,
+  awayName: string,
+): string | null {
+  for (const event of events) {
+    const payload = event.payload as { kind?: unknown; side?: unknown } | null | undefined;
+    if (payload?.kind !== 'penalty_decider') continue;
+    return `Po dogrywce był remis. ${payload.side === 'home' ? homeName : awayName} wygrywa w karnych.`;
+  }
+  return null;
 }
 
 export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSummary {
@@ -177,6 +192,7 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
     awayScore,
     resultLabel: resultLabel(homeScore, awayScore),
     goals,
+    shootout: shootoutLine(events, homeName, awayName),
     timeline,
     stats: [
       {

@@ -163,7 +163,8 @@ export function FixturesView({
             color: 'var(--lf-color-text-muted)',
           }}
         >
-          {leagueLabel} · {fixtures.filter((f) => f.competition === 'league').length} spotkań ligi
+          {leagueLabel} · mecze ligi:{' '}
+          {fixtures.filter((f) => f.kickoffCompetition === 'league').length}
         </p>
       </header>
 
