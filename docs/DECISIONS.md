@@ -792,9 +792,14 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `club_season_history` i `club_board_task_claims` pisze tylko serwer, właściciel czyta. Prestiż 0..100 = pure derive (`resolvePrestige`) z historii, ligi, pucharu i zadań; działa wyłącznie na wycenę sponsora przy odnowieniu (0..+10%, `sponsorFromCrowd`), nigdy na mecz. Zadania: jedno na kolejki 1–5, 6–10, 11–15, 16–20, wybór i postęp = derive z meczów ligowych; porażka nic nie kosztuje. Wypłata = `claim_board_task` (claim + kasa + księga w jednej transakcji, service role). `confirmStartNextSeason` przed skasowaniem terminarza wypłaca nieodebrane zadania i zapisuje sezon raz; każdy błąd zatrzymuje start sezonu. Powtórzony start bierze awans lub spadek z zapisanego sezonu. Bez tabel funkcja jest ukryta. Liczby: GDD §26.8.  
 **OUT:** Reputacja · wydawanie prestiżu · kary · losowanie zadań od nowa · zadanie jako Primary na Hubie.
 
+### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
+
+**Dlaczego:** Darmowy nabór bez limitu i sprzedaż juniora, wolnego agenta lub wypożyczonego za pełną cenę dawały nieograniczoną kasę.  
+**Zasada:** `players.origin` (academy · free · bought · loan; null = start) i `joined_at`. `saleBlock`: wypożyczeni nigdy, nowi po 7 dniach. `aiSaleAsk`: 10% ceny dla academy i free; handel między menedżerami bez zmian. Nabór co 7 dni (`intakeWaitDays`), liczony z całej historii klubu. Zmiana klubu stempluje trigger `lf_stamp_player_move`.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D131 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D133 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

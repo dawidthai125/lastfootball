@@ -1,10 +1,10 @@
+import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { displayPos } from '@/lib/transfers/display-pos';
-import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { marketFee } from '@/lib/transfers/market-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
@@ -60,7 +60,7 @@ export function resolveTransferMarket(input: {
     transferWindowOpen: windowOpen,
     activePlayers: seniors,
   }).map((p) => {
-    const fee = deriveTransferFee(p.skill, p.age);
+    const fee = aiSaleAsk(p);
     return {
       playerId: p.id,
       name: p.name,
@@ -77,7 +77,7 @@ export function resolveTransferMarket(input: {
   const listedPlayers: SellCandidateDto[] = active
     .filter((p) => p.transferListedAt != null)
     .map((p) => {
-      const fee = deriveTransferFee(p.skill, p.age);
+      const fee = aiSaleAsk(p);
       return {
         playerId: p.id,
         name: p.name,

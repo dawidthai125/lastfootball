@@ -1,5 +1,7 @@
 'use server';
 
+import { filterSeniorPlayers } from '@/lib/squad/types';
+import { aiSaleAsk, saleBlock } from '@/lib/transfers/fair-sale';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -7,7 +9,6 @@ import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { completeTransferBuy, completeTransferSell } from '@/lib/transfers/complete-deal';
 import type { TransferActionState } from '@/lib/transfers/action-types';
-import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { marketFee } from '@/lib/transfers/market-fee';
 import {
   buildIncomingOfferId,
@@ -77,6 +78,7 @@ export async function buyTransferPlayer(
     skill: p.skill,
     status: p.status,
     departed_at: p.departedAt,
+    origin: p.origin,
   }));
 
   const settle = async (agreedAmount: number): Promise<TransferActionState> => {
@@ -194,14 +196,26 @@ export async function sellTransferPlayer(
   const player = active.find((p) => p.id === playerId);
   if (!player) return { error: 'Nie znaleziono zawodnika.' };
 
-  const ask = deriveTransferFee(player.skill, player.age);
+  const blocked = saleBlock(player);
+  if (blocked) return { error: blocked };
+  if (
+    !isTransferSellEligible({
+      transferWindowOpen: Boolean(clubRow.transfer_window_open),
+      activePlayers: active,
+      playerId,
+    })
+  ) {
+    return { error: 'Sprzedaż niedostępna (okno / kadra / bramkarz).' };
+  }
+
+  const ask = aiSaleAsk(player);
   const result = await completeTransferSell(supabase, {
     clubId: clubRow.id,
     cashBalance: clubRow.cash_balance,
     transferWindowOpen: Boolean(clubRow.transfer_window_open),
     playerId,
     agreedAmount: ask,
-    activePlayers: active.map((p) => ({
+    activePlayers: filterSeniorPlayers(active).map((p) => ({
       id: p.id,
       name: p.name,
       shirt_number: p.shirtNumber,
@@ -212,6 +226,7 @@ export async function sellTransferPlayer(
       skill: p.skill,
       status: p.status,
       departed_at: p.departedAt,
+      origin: p.origin,
     })),
   });
 
@@ -292,7 +307,7 @@ export async function respondIncomingOffer(
     return { error: 'Sprzedaż niedostępna (okno / kadra / bramkarz).' };
   }
 
-  const ask = deriveTransferFee(player.skill, player.age);
+  const ask = aiSaleAsk(player);
   const offers = resolveIncomingOffers({
     clubId: clubRow.id,
     transferWindowOpen: windowOpen,
@@ -319,7 +334,7 @@ export async function respondIncomingOffer(
       transferWindowOpen: windowOpen,
       playerId,
       agreedAmount,
-      activePlayers: active.map((p) => ({
+      activePlayers: filterSeniorPlayers(active).map((p) => ({
         id: p.id,
         name: p.name,
         shirt_number: p.shirtNumber,
@@ -330,6 +345,7 @@ export async function respondIncomingOffer(
         skill: p.skill,
         status: p.status,
         departed_at: p.departedAt,
+        origin: p.origin,
       })),
     });
     if (!result.ok) return { error: result.error };
