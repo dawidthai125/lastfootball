@@ -95,6 +95,8 @@ export async function acceptIncomingLoan(
       potential: resolvePlayerPotential(offer.skill, playerId, offer.age),
       status: 'READY',
       nationality: 'POL',
+      origin: 'loan',
+      joined_at: new Date().toISOString(),
       version: 1,
       departed_at: null,
       wage: offer.wage,

@@ -792,9 +792,14 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** Wszystko domyślnie wyłączone. Rodzaje: `matchday` (17:00–19:59, tylko przy aktywności w ostatnich 14 dniach), `human_round` (17:15–17:59, klub z dzisiejszą kolejką ludzi), `offer` (oferta albo kontra, gdy decyzja jest po stronie klubu), `challenge` (rywal rozegrał wyzwanie). Cisza 22:00–8:00 czasu warszawskiego. Najwyżej 2 dziennie na kanał i jedno na sprawę. Plan = czysta funkcja `planNotifications`. Wysyłkę zleca `pg_cron` co 30 min do `POST /api/notify` (token z bazy albo `CRON_SECRET`). Wpis w `notification_log` powstaje przed wysyłką (dedup). Klucze VAPID serwer tworzy sam i trzyma w `server_secrets` (tylko service role). Push: tylko znane serwery push, do 5 urządzeń, treść bez danych osobowych. E-mail: Resend, tylko potwierdzony adres, wypisanie bez logowania (GET pyta, POST wypisuje). Bez tabel, kluczy albo dostawcy funkcja jest ukryta lub „niedostępna”. Powiadomienie nie zmienia niczego w domenie. Zastępuje zakaz `lib/notifications` z D125; zaproszenia w grze zostają osobno w `lib/invitations`.  
 **OUT:** SMS · przypomnienia o treningu i zadaniach · treści AI · bieżąca minuta meczu.
 
+### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
+
+**Dlaczego:** Darmowy nabór bez limitu i sprzedaż juniora, wolnego agenta lub wypożyczonego za pełną cenę dawały nieograniczoną kasę.  
+**Zasada:** `players.origin` (academy · free · bought · loan; null = start) i `joined_at`. `saleBlock`: wypożyczeni nigdy, nowi po 7 dniach. `aiSaleAsk`: 10% ceny dla academy i free; handel między menedżerami bez zmian. Nabór co 7 dni (`intakeWaitDays`), liczony z całej historii klubu. Zmiana klubu stempluje trigger `lf_stamp_player_move`.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D132 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D133 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

@@ -46,15 +46,17 @@ export function buildAcademyIntakeDraft(
   clubId: string,
   existing: readonly PlayerRowDto[],
   salt = Date.now(),
+  takenShirts: readonly number[] = [],
 ): AcademyIntakeDraft | { error: string } {
   const prospects = existing.filter((p) => p.academyTrack && p.departedAt == null);
   if (prospects.length >= ACADEMY_THIN.MAX_PROSPECTS) {
     return { error: 'Limit perspektyw akademii wyczerpany (3).' };
   }
 
-  const usedShirts = new Set(
-    existing.filter((p) => p.departedAt == null).map((p) => p.shirtNumber),
-  );
+  const usedShirts = new Set([
+    ...existing.filter((p) => p.departedAt == null).map((p) => p.shirtNumber),
+    ...takenShirts,
+  ]);
   const shirt = allocateAcademyShirt(usedShirts);
   if (shirt == null) return { error: 'Brak wolnego numeru koszulki.' };
 
@@ -77,6 +79,23 @@ export function buildAcademyIntakeDraft(
     skill,
     potential,
   };
+}
+
+/** One intake a week: about three in a league season (D133). */
+export const INTAKE_EVERY_DAYS = 7;
+
+export function isAcademyId(playerId: string, clubId: string): boolean {
+  return playerId.startsWith(`${ACADEMY_THIN.ID_PREFIX}-${clubTagFromId(clubId)}-`);
+}
+
+/** Full days until the next intake; 0 = now. */
+export function intakeWaitDays(intakes: readonly string[], now: Date): number {
+  const last = Math.max(...intakes.map((at) => Date.parse(at)).filter(Number.isFinite), 0);
+  if (last === 0) return 0;
+  return Math.max(
+    0,
+    Math.ceil((last + INTAKE_EVERY_DAYS * 86_400_000 - now.getTime()) / 86_400_000),
+  );
 }
 
 /** Pure Promote guards — no skill/potential mutation. */
