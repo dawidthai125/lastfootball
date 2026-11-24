@@ -99,6 +99,8 @@ export function resolveLeagueTable(
 export function resolvePlayerLeaguePositionLabel(table: LeagueTableDto): string | null {
   const row = table.rows.find((r) => r.isPlayer);
   if (!row) return null;
+  // Before the first match the order is alphabetical, not a position.
+  if (row.played === 0) return null;
   return `${row.position}. miejsce / ${table.rows.length}`;
 }
 

@@ -33,6 +33,10 @@ export function describeFanMoodChange(current: number, result: FanResult): strin
 export function describeFanMoodAfterResult(storedMood: number, result: FanResult): string {
   const after = Number.isFinite(storedMood) ? Math.trunc(storedMood) : 60;
   const delta = fanMoodDelta(result);
+  // At the edge the step was cut to an unknown part, so no number is better than a wrong one.
+  if ((delta > 0 && after >= 100) || (delta < 0 && after <= 0)) {
+    return `Kibice: ${fanMoodLabel(after)} ${after}`;
+  }
   const signed = delta > 0 ? `+${delta}` : `${delta}`;
   return `Kibice: ${fanMoodLabel(after)} ${after} (${signed})`;
 }

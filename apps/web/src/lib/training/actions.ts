@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
+import { unlockPlayedCount } from '@/lib/fixtures/played-unlock';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { readClubBuild } from '@/lib/club/read-build';
 import { trainingSessionCap } from '@/lib/stadium/levels';
@@ -47,14 +48,21 @@ export async function runTrainingSession(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, last_training_on')
+    .select('id, last_training_on, season_number')
     .eq('owner_id', user.id)
     .maybeSingle();
 
   if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
 
-  const clubRow = club as { id: string; last_training_on: string | null };
-  const playedCount = await countClubPlayedFixtures(supabase, clubRow.id);
+  const clubRow = club as {
+    id: string;
+    last_training_on: string | null;
+    season_number: number | null;
+  };
+  const playedCount = unlockPlayedCount(
+    await countClubPlayedFixtures(supabase, clubRow.id),
+    clubRow.season_number ?? 1,
+  );
   const activePlayers = await listClubPlayers(clubRow.id);
   const build = await readClubBuild(supabase, clubRow.id);
 

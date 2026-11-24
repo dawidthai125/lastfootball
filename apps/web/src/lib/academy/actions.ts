@@ -151,7 +151,12 @@ export async function intakeAcademyProspect(
     {
       p_club_id: club.id,
       p_seq: seq,
-      p_candidates: generateAcademyCandidates(club.id, seq, records.level),
+      p_candidates: generateAcademyCandidates(
+        club.id,
+        seq,
+        records.level,
+        rows.map((p) => p.name),
+      ),
     } as never,
   );
   if (error || (data as { ok?: boolean } | null)?.ok !== true) {

@@ -69,7 +69,7 @@ function OpenBracket({
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[13px] text-[var(--lf-text)]">
-        Jedna drabinka, jeden mecz. Dogrywka i karne tylko w twoim meczu. Pary bez ciebie są
+        Jedna drabinka, jeden mecz. Remis rozstrzyga dogrywka, a potem karne. Pary bez ciebie są
         domknięte. Goście: {cup.guestOriginLabel}.
       </p>
       {tie && playFixtureId ? (

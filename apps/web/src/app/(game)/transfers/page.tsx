@@ -4,7 +4,7 @@ import { IncomingLoanOffers } from '@/components/transfers/IncomingLoanOffers';
 import { TransfersView } from '@/components/transfers/TransfersView';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { countPlayedInList, ensureClubFixtures } from '@/lib/fixtures';
+import { countPlayedInList, ensureClubFixtures, unlockPlayedCount } from '@/lib/fixtures';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -31,7 +31,10 @@ export default async function TransfersPage() {
     loadOpenAuctions(),
     ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase }),
   ]);
-  const playedCount = countPlayedInList(fixtures.filter((f) => f.competition === 'league'));
+  const playedCount = unlockPlayedCount(
+    countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
+    club.seasonNumber,
+  );
 
   const market = resolveTransferMarket({
     clubId: club.id,

@@ -18,7 +18,8 @@ export type RivalClub = {
 
 export type RivalChallengeView = {
   readonly id: string;
-  readonly fixtureId: string;
+  /** Null once the season of that match is closed. */
+  readonly fixtureId: string | null;
   readonly rivalName: string;
   readonly rivalShort: string;
   readonly challengerName: string;
@@ -50,7 +51,7 @@ export async function listRivalChallenges(clubId: string): Promise<RivalChalleng
   if (error || !data) return [];
   const rows = data as {
     id: string;
-    fixture_id: string;
+    fixture_id: string | null;
     challenger_club_id: string;
     challenger_name: string;
     rival_name: string;

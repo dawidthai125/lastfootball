@@ -141,7 +141,7 @@ export function EarlyClubHub({
       ? {
           from: 'Zarząd',
           subject: `${status.seasonLabel} zamknięty`,
-          body: 'Sezon ligowy dobiegł końca. Przejrzyj raport i potwierdź start kolejnego sezonu w tej samej lidze.',
+          body: 'Sezon ligowy dobiegł końca. Przejrzyj raport i potwierdź start kolejnego sezonu.',
         }
       : buildWelcomeMessage(club, nextFixture, kickoffSentence);
   const event =

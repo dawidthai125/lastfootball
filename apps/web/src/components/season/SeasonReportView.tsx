@@ -69,7 +69,7 @@ export function SeasonReportView({
 
       {departure ? (
         <div className="lf-season-report__departure" data-season-departure="">
-          <h3 className="lf-season-report__departure-title">Kadra przy starcie N+1</h3>
+          <h3 className="lf-season-report__departure-title">Kadra na nowy sezon</h3>
           <p className="lf-season-report__departure-body">{departure.summary}</p>
         </div>
       ) : null}

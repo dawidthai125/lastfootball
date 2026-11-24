@@ -174,6 +174,7 @@ export function PostMatchView({
             <li key={index}>{sentence}</li>
           ))}
         </ol>
+        {summary.shootout ? <p className="lf-post__meta">{summary.shootout}</p> : null}
         <p className="lf-post__meta">{note ?? summary.why}</p>
       </header>
 

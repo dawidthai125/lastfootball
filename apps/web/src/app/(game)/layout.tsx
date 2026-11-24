@@ -8,7 +8,12 @@ import { loadBoardState } from '@/lib/board/load-board-state';
 import { resolveBoardTaskNote } from '@/lib/board/tasks';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { isFirstMatchCompleted } from '@/lib/club/types';
-import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fixtures';
+import {
+  countPlayedInList,
+  ensureClubFixtures,
+  hasPlayedUnlock,
+  unlockPlayedCount,
+} from '@/lib/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
@@ -67,7 +72,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const fixtures = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
     const leagueFixtures = fixtures.filter((f) => f.competition === 'league');
     hasFixtures = leagueFixtures.length > 0;
-    playedCount = countPlayedInList(leagueFixtures);
+    playedCount = unlockPlayedCount(countPlayedInList(leagueFixtures), club.seasonNumber);
     trainingUnlocked = hasPlayedUnlock(playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
 
     const nextFixture = pickNextUpcoming(leagueFixtures);

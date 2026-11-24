@@ -83,13 +83,14 @@ export function resolveClubAchievements(input: ResolveClubAchievementsInput): Cl
   }
 
   const leaguePlayed = fixtures.filter((f) => f.competition === 'league');
-  if (hasPlayedFixture(leaguePlayed)) {
+  // A later season means a full league season was played; its fixtures are gone.
+  if (hasPlayedFixture(leaguePlayed) || club.seasonNumber > 1) {
     milestones.push({
       id: 'first_league_match',
       category: 'sport',
       title: UI_COPY.achievementFirstLeagueTitle,
       detail: UI_COPY.achievementFirstLeagueDetail,
-      occurredAt: earliestPlayedAt(leaguePlayed),
+      occurredAt: club.seasonNumber > 1 ? null : earliestPlayedAt(leaguePlayed),
     });
   }
 

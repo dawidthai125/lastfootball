@@ -564,7 +564,7 @@ export type Database = {
       rival_challenges: {
         Row: {
           id: string;
-          fixture_id: string;
+          fixture_id: string | null;
           challenger_club_id: string;
           challenger_name: string;
           challenger_short: string;
@@ -579,7 +579,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          fixture_id: string;
+          fixture_id: string | null;
           challenger_club_id: string;
           challenger_name: string;
           challenger_short: string;
@@ -594,7 +594,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          fixture_id?: string;
+          fixture_id?: string | null;
           challenger_club_id?: string;
           challenger_name?: string;
           challenger_short?: string;
