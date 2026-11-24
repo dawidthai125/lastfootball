@@ -9505,7 +9505,7 @@ Nagroda kredytowana **tylko** przy pierwszym przejściu fixture → `played` (D1
 | Remis      | `REWARD_DRAW` | 6 000   | 6 500    | 7 000   | 8 000  |
 | Porażka    | `REWARD_LOSS` | 4 000   | 4 500    | 4 500   | 5 000  |
 
-Wyższe ligi biorą połowę kroku `LEAGUE_RUNG_MULT` (`REWARD_RUNG_SHARE` 0,5), do pełnych 500 EUR. Liga ludzi zawsze płaci stawkę IV ligi. Puchar i wyzwania nie płacą nagrody.
+Wyższe ligi biorą połowę kroku `LEAGUE_RUNG_MULT` (`REWARD_RUNG_SHARE` 0,5), do pełnych 500 EUR. Liga ludzi zawsze płaci stawkę IV ligi. Puchar płaci za rundę (D136): awans 12 000 / 14 000 / 17 000, zwycięstwo w finale 30 000, udział 4000, przegrany finał 10 000. Wyzwania nie płacą nagrody.
 
 Remis i porażka dają **> 0** (ochrona early — spójne z pytaniem otwartym §14.2).
 

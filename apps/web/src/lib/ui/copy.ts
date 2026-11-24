@@ -14,6 +14,7 @@ export const UI_COPY = {
   setLineup: 'Ustaw skład',
   lineupTitle: 'Ustaw skład (XI)',
   replaceUnavailable: 'Zastąp niedostępnych',
+  bestXi: 'Najlepsza jedenastka',
   goToMatch: 'Idź do meczu',
   playMatch: 'Zagraj mecz',
   playFirstMatch: 'Rozpocznij pierwszy mecz',

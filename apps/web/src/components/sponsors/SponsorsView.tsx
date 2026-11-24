@@ -56,6 +56,7 @@ export function SponsorsView({
         </h1>
         <p className="mt-1 text-[12px] text-[var(--lf-muted)]">
           {sponsors.seasonLabel} · przychód bazowy {sponsors.basePayoutLabel}
+          {sponsors.basePaidForCurrentSeason ? '' : ' · wypłata po meczu ligowym'}
         </p>
       </header>
 

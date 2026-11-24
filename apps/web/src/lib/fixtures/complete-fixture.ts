@@ -31,6 +31,7 @@ import { parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
+import { payFirstSponsorBase } from '@/lib/sponsors/pay-due';
 import { ensureTransferWindow } from '@/lib/transfers/ensure-window';
 
 /**
@@ -68,7 +69,7 @@ export async function completeFixture(
 
   const { data: club, error: clubErr } = await supabase
     .from('clubs')
-    .select('id, league_tier')
+    .select('id, league_tier, season_number')
     .eq('owner_id', user.id)
     .maybeSingle();
 
@@ -76,7 +77,11 @@ export async function completeFixture(
     return { error: 'Nie znaleziono klubu.' };
   }
 
-  const clubRow = club as { id: string; league_tier: string | null };
+  const clubRow = club as {
+    id: string;
+    league_tier: string | null;
+    season_number: number | null;
+  };
   const clubId = clubRow.id;
 
   const { data: fixture, error: loadErr } = await supabase
@@ -167,6 +172,7 @@ export async function completeFixture(
   const result = ours > theirs ? 'win' : ours < theirs ? 'loss' : 'draw';
   const reward = resolveFixtureReward({
     competition: row.competition,
+    matchday: row.matchday,
     homeScore: home,
     awayScore: away,
     isHome: row.is_home,
@@ -263,6 +269,9 @@ export async function completeFixture(
   }
   if (settled.applied) await recordFanMood(clubId, result);
   await clearKickoffs(clubId);
+  if (row.competition === 'league') {
+    await payFirstSponsorBase(clubId, clubRow.season_number ?? 1);
+  }
 
   // Also open window if already played earlier and threshold now met (idempotent).
   await ensureTransferWindow(supabase, clubId);

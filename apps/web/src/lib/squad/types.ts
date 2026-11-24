@@ -19,6 +19,8 @@ export type SquadPlayerDto = {
   /** Shirt number 1–99. Unique in the club. */
   readonly shirtNumber: number;
   readonly position: string;
+  /** Engine role (RB, CB, LW…). The display position merges some of them. */
+  readonly pitchRole?: string;
   readonly age: number;
   readonly form: number;
   readonly energy: number;

@@ -818,7 +818,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 3. Karne: podsumowanie mówi, kto je wygrał; dopisany gol nie jest golem meczu.
 4. Pozycja w tabeli pojawia się dopiero po pierwszym meczu ligowym sezonu.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D135 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D136 — Początek sezonu, nagrody pucharu, sponsor, skład · Owner GO 2026-11-24
+
+1. Start sezonu: energia 100, kontuzje wyleczone, nikt nie jest zmęczony. Zawieszenie zostaje.
+2. Puchar płaci za rundę (IV liga): awans 12 000 / 14 000 / 17 000, zwycięstwo w finale 30 000; udział 4000, przegrany finał 10 000. Wyższe ligi jak w §26.4.
+3. Start sezonu wypłaca nieodebrany bonus sponsora. Baza pierwszego kontraktu wpływa raz, po meczu ligowym.
+4. „Ustaw skład” pokazuje energię i ma „Najlepsza jedenastka” (4-4-2, umiejętność pomniejszona o brak energii).
+5. Drabinka pucharu nie pokazuje rund, które jeszcze się nie otworzyły. Zmienia tylko widok.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D136 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

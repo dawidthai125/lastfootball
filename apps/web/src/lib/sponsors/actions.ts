@@ -3,13 +3,13 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
-import { creditClubCash } from '@/lib/finance/club-cash';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { getManagerClub } from '@/lib/club/get-manager-club';
-import { ensureClubSponsorContract, getClubSponsorContract } from '@/lib/sponsors/get-contract';
+import { ensureClubSponsorContract } from '@/lib/sponsors/get-contract';
+import { paySponsorBonus } from '@/lib/sponsors/pay-due';
 import { resolveClubSponsors, type SponsorActionState } from '@/lib/sponsors/types';
-import { createAdminClient, serverDb } from '@/lib/supabase/admin';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
  * Idempotent bonus claim (Owner LOCK 7) — finance ledger only (D97).
@@ -53,44 +53,8 @@ export async function claimSponsorBonus(
     return { error: 'Bonus nie jest jeszcze dostępny.' };
   }
 
-  const supabase = createAdminClient();
-  const amount = contract.bonus_amount;
-  const claimedAt = new Date().toISOString();
-
-  const { data: updated, error: claimErr } = await supabase
-    .from('club_sponsor_contracts')
-    .update({ bonus_claimed_at: claimedAt, updated_at: claimedAt } as never)
-    .eq('id', contract.id)
-    .eq('season_number', contract.season_number)
-    .is('bonus_claimed_at', null)
-    .select('id')
-    .maybeSingle();
-
-  if (claimErr) {
-    return { error: 'Nie udało się zarejestrować odbioru bonusu.' };
-  }
-  if (!updated) {
-    return { error: null };
-  }
-
-  if ((await creditClubCash(club.id, amount)) == null) {
-    // Give the claim back, so the bonus is not lost.
-    await supabase
-      .from('club_sponsor_contracts')
-      .update({ bonus_claimed_at: null } as never)
-      .eq('id', contract.id)
-      .eq('bonus_claimed_at', claimedAt);
-    return { error: 'Nie udało się wypłacić bonusu.' };
-  }
-
-  await serverDb(supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: club.id,
-      category: 'sponsor_bonus',
-      label: `Bonus sponsorski · ${contract.brand_name}`,
-      amount,
-    } as never);
+  const paid = await paySponsorBonus(club.id, contract);
+  if (!paid.ok) return { error: paid.error };
 
   revalidatePath('/', 'layout');
   return { error: null };

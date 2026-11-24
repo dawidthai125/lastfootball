@@ -220,3 +220,72 @@ export function replaceUnavailableStarters(
   }
   return list;
 }
+
+const SLOTS_442 = ['GK', 'RB', 'CB', 'CB', 'LB', 'RM', 'CM', 'CM', 'LM', 'ST', 'ST'] as const;
+
+function roleLine(role: string): 'G' | 'D' | 'M' | 'W' | 'A' {
+  if (role === 'GK') return 'G';
+  if (['RB', 'LB', 'CB', 'RWB', 'LWB'].includes(role)) return 'D';
+  if (['RM', 'LM', 'RW', 'LW'].includes(role)) return 'W';
+  return ['ST', 'CF'].includes(role) ? 'A' : 'M';
+}
+
+const ROLE_BY_POSITION: Readonly<Record<string, string>> = {
+  BR: 'GK',
+  PO: 'RB',
+  OB: 'CB',
+  ŚO: 'CB',
+  LO: 'LB',
+  PN: 'RW',
+  N: 'ST',
+};
+
+/** Points lost by a player outside his own slot. */
+function slotCost(slot: string, role: string): number {
+  const [a, b] = [roleLine(slot), roleLine(role)];
+  if (a === b) {
+    if (slot === role || a === 'M' || a === 'A') return 0;
+    if (a === 'W') return slot[0] === role[0] ? 0 : 1;
+    return 3;
+  }
+  const pair = [a, b].sort().join('');
+  if (pair === 'MW') return 3;
+  if (pair === 'AW') return 4;
+  if (pair === 'AM') return 6;
+  return 15;
+}
+
+/** Skill minus what missing energy takes. Under 45 the injury risk starts, so it weighs more. */
+export function xiReadiness(player: Pick<SquadPlayerDto, 'skill' | 'energy'>): number {
+  return (
+    player.skill - Math.max(0, 70 - player.energy) * 0.2 - Math.max(0, 45 - player.energy) * 0.3
+  );
+}
+
+/**
+ * The strongest available XI for 4-4-2, energy included. Saves nothing.
+ * Without eleven available players, or a goalkeeper, the squad comes back unchanged.
+ */
+export function pickBestXi(players: readonly SquadPlayerDto[], today: string): SquadPlayerDto[] {
+  const free = players.filter((p) => p.status !== 'DEPARTED' && !isUnavailable(p, today));
+  const pairs = free
+    .flatMap((player) => {
+      const role = player.pitchRole ?? ROLE_BY_POSITION[player.position] ?? 'CM';
+      return SLOTS_442.flatMap((slot, index) =>
+        isGoalkeeper(player) !== (slot === 'GK')
+          ? []
+          : [{ id: player.id, index, score: xiReadiness(player) - slotCost(slot, role) }],
+      );
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index || a.id.localeCompare(b.id));
+
+  const taken = new Set<number>();
+  const chosen = new Set<string>();
+  for (const pair of pairs) {
+    if (taken.has(pair.index) || chosen.has(pair.id)) continue;
+    taken.add(pair.index);
+    chosen.add(pair.id);
+  }
+  if (chosen.size !== SLOTS_442.length) return players.map((p) => ({ ...p }));
+  return players.map((p) => ({ ...p, starter: chosen.has(p.id) }));
+}

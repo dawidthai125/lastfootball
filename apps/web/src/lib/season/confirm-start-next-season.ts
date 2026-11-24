@@ -9,6 +9,8 @@ import { parseLeagueTier } from '@/lib/league/league-tier';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import type { ConfirmStartNextSeasonState } from '@/lib/season/action-types';
 import { createHAgeSupabasePort, runSeasonTransitionHAge } from '@/lib/season/transition';
+import { refreshSquadForSeason } from '@/lib/season/refresh-squad';
+import { payClosedSeasonBonus } from '@/lib/sponsors/pay-due';
 import { renewSponsorAndPayBase } from '@/lib/sponsors/renew';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -190,6 +192,16 @@ async function startNextSeason(
     leagueTier: currentTier,
     prestige: board.prestige?.value,
   });
+  // D136: an uncollected season bonus is paid before the contract rolls over.
+  const bonus = await payClosedSeasonBonus({
+    clubId,
+    endedSeason,
+    position,
+    tableSize: table.rows.length,
+  });
+  if (!bonus.ok) {
+    return { error: bonus.error, farewell: null };
+  }
   const sponsor = await renewSponsorAndPayBase({
     clubId,
     nextSeason,
@@ -266,6 +278,11 @@ async function startNextSeason(
   const { error: insErr } = await admin.from('fixtures').insert(rows as never);
   if (insErr) {
     return { error: 'Nie udało się zaplanować nowego sezonu.', farewell: null };
+  }
+
+  // D136: the squad comes back rested and healthy.
+  if (!(await refreshSquadForSeason(admin, clubId))) {
+    return { error: 'Nie udało się przygotować kadry na nowy sezon.', farewell: null };
   }
 
   // H-AGE — Season Transition Pipeline step 1 (before in_season persist).
