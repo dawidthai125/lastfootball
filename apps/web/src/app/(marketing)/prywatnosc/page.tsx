@@ -31,9 +31,10 @@ export default function PrivacyPage() {
             (uzasadniony interes: rozwój gry, lit. f). Do usunięcia konta.
           </li>
           <li>
-            <strong>Rejestracja:</strong> skrót adresu IP, trzymany około 2 dni, oraz sprawdzenie
-            przeglądarki i adresu IP przez Cloudflare Turnstile. Do ochrony przed botami i masowymi
-            rejestracjami (uzasadniony interes: bezpieczeństwo, lit. f).
+            <strong>Rejestracja i reset hasła:</strong> skrót adresu IP, a przy resecie także skrót
+            adresu e-mail, trzymane około 2 dni, oraz przy rejestracji sprawdzenie przeglądarki i
+            adresu IP przez Cloudflare Turnstile. Do ochrony przed botami i masowymi rejestracjami
+            (uzasadniony interes: bezpieczeństwo, lit. f).
           </li>
           <li>
             <strong>Powiadomienia e-mail:</strong> Twój wybór i historia wysyłek. Tylko po włączeniu

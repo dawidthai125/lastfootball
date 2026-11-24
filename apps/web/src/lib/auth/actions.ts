@@ -4,10 +4,13 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { headers } from 'next/headers';
+import { after } from 'next/server';
 
-import type { AuthActionState } from '@/lib/auth/types';
+import type { AuthActionState, ConfirmEmailState } from '@/lib/auth/types';
+import { accountMailReady } from '@/lib/auth/account-mail';
 import { consentError } from '@/lib/auth/consent';
-import { issueConfirmLink } from '@/lib/auth/email-confirm';
+import { confirmEmailToken, issueConfirmLink } from '@/lib/auth/email-confirm';
+import { isResetToken, sendResetLetter, takeResetSlot } from '@/lib/auth/password-reset';
 import { getAuthUser, getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
 import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate';
 import { takeSignupSlot } from '@/lib/auth/signup-throttle';
@@ -174,6 +177,16 @@ export async function sendEmailConfirmLink(
   return { error: 'Nie udało się wysłać. Spróbuj za chwilę.', info: null };
 }
 
+/** The click, not the opened link: mail scanners open links on their own. */
+export async function confirmEmailAction(
+  _prev: ConfirmEmailState,
+  formData: FormData,
+): Promise<ConfirmEmailState> {
+  return { result: await confirmEmailToken(String(formData.get('token') ?? '')) };
+}
+
+const RESET_SENT = 'Jeśli konto istnieje, link do nowego hasła jest na mailu.';
+
 export async function requestPasswordReset(
   _prev: AuthActionState,
   formData: FormData,
@@ -183,6 +196,15 @@ export async function requestPasswordReset(
   }
   const email = String(formData.get('email') ?? '').trim();
   if (!email) return { error: 'Podaj email.', info: null };
+  if (env.supabaseServiceRoleKey && accountMailReady()) {
+    const ip = clientIpFromHeaders(await headers());
+    if (!(await takeResetSlot(ip, email))) {
+      return { error: 'Za dużo próśb o nowe hasło. Spróbuj później.', info: null };
+    }
+    // After the answer, so its time does not tell whether the account exists.
+    after(() => sendResetLetter(email));
+    return { error: null, info: RESET_SENT };
+  }
   const origin = env.appUrl ?? 'https://www.lastfootball.pl';
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -191,7 +213,7 @@ export async function requestPasswordReset(
   if (error) return { error: mapAuthError(error.message), info: null };
   return {
     error: null,
-    info: 'Jeśli konto istnieje, link do nowego hasła jest na mailu.',
+    info: RESET_SENT,
   };
 }
 
@@ -211,6 +233,21 @@ export async function updatePasswordFromRecovery(
     return { error: 'Hasła muszą być takie same.', info: null };
   }
   const supabase = await createClient();
+  const token = String(formData.get('token') ?? '');
+  if (token) {
+    // Used only with the new password in hand: a mail scanner that opens the link spends nothing.
+    const used = isResetToken(token)
+      ? await supabase.auth.verifyOtp({ type: 'recovery', token_hash: token })
+      : null;
+    if (!used || used.error) {
+      return { error: 'Link wygasł. Poproś o nowy reset hasła.', info: null };
+    }
+    const { error } = await supabase.auth.updateUser({ password });
+    // The link is spent and the session is open: the form goes on without the token.
+    if (error) redirect('/reset-password?ponow=1');
+    revalidatePath('/', 'layout');
+    redirect('/hub');
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
