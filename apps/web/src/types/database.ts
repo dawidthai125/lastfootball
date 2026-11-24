@@ -611,16 +611,19 @@ export type Database = {
       };
       human_league: {
         Row: {
+          season_number: number;
           id: number;
           season_key: string;
           frozen: boolean;
         };
         Insert: {
+          season_number?: number;
           id?: number;
           season_key: string;
           frozen?: boolean;
         };
         Update: {
+          season_number?: number;
           id?: number;
           season_key?: string;
           frozen?: boolean;
@@ -653,6 +656,7 @@ export type Database = {
       };
       human_broadcasts: {
         Row: {
+          season: number;
           id: string;
           matchday: number;
           home_id: string;
@@ -672,6 +676,7 @@ export type Database = {
           created_at: string;
         };
         Insert: {
+          season?: number;
           id?: string;
           matchday: number;
           home_id: string;
@@ -691,6 +696,7 @@ export type Database = {
           created_at?: string;
         };
         Update: {
+          season?: number;
           id?: string;
           matchday?: number;
           home_id?: string;
