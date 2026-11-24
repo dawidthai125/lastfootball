@@ -5,6 +5,7 @@ import { emailProvider } from '@/lib/notifications/email';
 import { loadVapidKeys } from '@/lib/notifications/server-secrets';
 import {
   PREFS_OFF,
+  PUSH_ENABLED,
   type EmailChannelState,
   type NotificationPrefs,
   type NotificationSettings,
@@ -70,7 +71,7 @@ export async function loadNotificationSettings(
     if (!prefs || devices.error) return null;
     return {
       prefs,
-      vapidPublicKey: vapid?.publicKey ?? null,
+      vapidPublicKey: PUSH_ENABLED ? (vapid?.publicKey ?? null) : null,
       emailState,
       deviceCount: devices.count ?? 0,
     };

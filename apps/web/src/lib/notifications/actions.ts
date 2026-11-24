@@ -12,6 +12,7 @@ import { loadVapidKeys } from '@/lib/notifications/server-secrets';
 import { emailChannelState, readPrefs } from '@/lib/notifications/settings';
 import {
   MAX_PUSH_DEVICES,
+  PUSH_ENABLED,
   NOTIFICATION_KINDS,
   type NotificationActionResult,
   type NotificationChanges,
@@ -65,6 +66,7 @@ export async function checkPushDevice(endpoint: unknown): Promise<PushDeviceOwne
 }
 
 export async function savePushDevice(raw: unknown): Promise<NotificationActionResult> {
+  if (!PUSH_ENABLED) return UNAVAILABLE;
   const device = parsePushDevice(raw);
   if (!device) return { ok: false, message: 'Ta przeglądarka podała nieobsługiwany adres.' };
   const access = await authorize();
@@ -166,6 +168,7 @@ export async function saveNotificationPrefs(
 
 /** To the signed-in manager's own devices. One per two minutes and five a day. */
 export async function sendTestPush(): Promise<NotificationActionResult> {
+  if (!PUSH_ENABLED) return UNAVAILABLE;
   const access = await authorize();
   if (!access) return UNAVAILABLE;
   const { admin, userId } = access;

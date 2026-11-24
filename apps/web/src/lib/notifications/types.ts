@@ -1,5 +1,11 @@
 /** Notifications (GDD §22, D132). Shared shapes, safe for the browser. */
 
+/**
+ * Browser push goes through Google, Apple, Mozilla or Microsoft. Off by Owner decision (D146):
+ * no player data to US providers. E-mail and messages in the game stay.
+ */
+export const PUSH_ENABLED: boolean = false;
+
 export const NOTIFICATION_KINDS = ['matchday', 'human_round', 'offer', 'challenge'] as const;
 
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];

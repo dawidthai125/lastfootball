@@ -881,7 +881,11 @@ kontakt@lastfootball.pl odbiera Resend (rekord MX). Harmonogram powiadomień prz
 
 Dawid nie chce przekazywać danych graczy dostawcom z USA. Notka po meczu to zdanie z faktów meczu (`summary.why`), bez xAI, Groq i Gemini.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D145 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D146 — Push wyłączony · Owner 2026-11-24
+
+`PUSH_ENABLED = false`: przeglądarki dostarczają push przez firmy z USA. Zostają e-mail i wiadomości w grze. Vercel, Supabase, Resend i Turnstile zostają: serwery w UE, polityka wymienia firmy z USA i podstawę przekazania.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D146 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
