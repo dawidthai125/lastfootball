@@ -856,7 +856,14 @@ Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_l
 
 Wyzwanie: jedno na dzień (czas warszawski), własny zegar, nie zajmuje dnia ligi i pucharu. Bez nagrody, pensji i utrzymania akademii. Energia, kontuzje, kartki, rozwój i kibice liczą się jak w meczu.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D141 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D142 — Gotowość na graczy · Owner GO 2026-11-24
+
+1. Usunięcie konta w Ustawieniach (hasło i słowo USUŃ): klub znika, konto znika, u innych zostaje „Klub usunięty”.
+2. Pierwsze kroki na hubie: 3 mecze, trening, nabór. Nagroda 5000 € raz (`claim_starter_reward`).
+3. Zaproszenie: link klubu, po założeniu klubu od razu otwarte wyzwanie z zapraszającym. Bez nagród.
+4. Statystyki: tylko dni gry konta (`account_activity`) i zliczenia (`player_report`, tylko serwer).
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D142 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

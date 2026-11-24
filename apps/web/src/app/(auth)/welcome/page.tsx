@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import { ActivityPing } from '@/components/account/ActivityPing';
+import { DeleteAccountForm } from '@/components/account/DeleteAccountForm';
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { SignOutForm } from '@/components/auth/SignOutForm';
 import { LandingCta } from '@/components/landing/LandingCta';
@@ -41,6 +43,8 @@ export default async function WelcomePage() {
           Wyloguj
         </button>
       </SignOutForm>
+      {user ? <DeleteAccountForm clubName={null} /> : null}
+      {user ? <ActivityPing accountId={user.id} /> : null}
     </div>
   );
 }

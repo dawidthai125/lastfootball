@@ -6,6 +6,7 @@ import { updateSession } from '@/lib/supabase/middleware';
 const PUBLIC_PREFIXES = [
   '/login',
   '/register',
+  '/zaproszenie',
   '/forgot-password',
   '/reset-password',
   '/auth',

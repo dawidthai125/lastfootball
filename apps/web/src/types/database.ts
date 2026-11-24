@@ -660,6 +660,32 @@ export type Database = {
         };
         Relationships: [];
       };
+      account_activity: {
+        Row: { user_id: string; day: string };
+        Insert: { user_id: string; day: string };
+        Update: { user_id?: string; day?: string };
+        Relationships: [];
+      };
+      club_invites: {
+        Row: { club_id: string; code: string; created_at: string };
+        Insert: { club_id: string; code: string; created_at?: string };
+        Update: { club_id?: string; code?: string; created_at?: string };
+        Relationships: [
+          {
+            foreignKeyName: 'club_invites_club_id_fkey';
+            columns: ['club_id'];
+            isOneToOne: true;
+            referencedRelation: 'clubs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      club_invite_uses: {
+        Row: { invited_club_id: string; inviter_club_id: string; created_at: string };
+        Insert: { invited_club_id: string; inviter_club_id: string; created_at?: string };
+        Update: { invited_club_id?: string; inviter_club_id?: string; created_at?: string };
+        Relationships: [];
+      };
       human_league_history: {
         Row: { season: number; season_key: string; standings: Json; closed_at: string };
         Insert: { season: number; season_key: string; standings: Json; closed_at?: string };

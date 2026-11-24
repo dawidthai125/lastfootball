@@ -26,6 +26,8 @@ import {
 import type { DeparturePreview, RetirementFarewell } from '@/lib/season/departure';
 import { SEASON_GOAL_LABEL } from '@/lib/season/season-goal';
 import type { SeasonReportDto } from '@/lib/season/types';
+import { StarterPathPanel } from '@/components/starter/StarterPathPanel';
+import type { StarterPath } from '@/lib/starter/steps';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './hub-decision.css';
@@ -51,6 +53,7 @@ export function EarlyClubHub({
   cupLink = null,
   matchesBlocked = false,
   lastPlayedAt,
+  starterPath = null,
   fanLabel = null,
   seasonGoalLine = null,
   wageNote = null,
@@ -85,6 +88,7 @@ export function EarlyClubHub({
   matchesBlocked?: boolean;
   /** Newest played_at across competitions. Omitted falls back to the last league fixture. */
   lastPlayedAt?: string | null;
+  starterPath?: StarterPath | null;
   /** Fan mood sentence. Omitted when the column is missing. */
   fanLabel?: string | null;
   /** Starting XI cannot play → Daily Goal to the XI screen. */
@@ -223,6 +227,8 @@ export function EarlyClubHub({
           </p>
         ) : null}
       </div>
+
+      {starterPath ? <StarterPathPanel path={starterPath} /> : null}
 
       <div className="lf-hub__body">
         {event.scoreHref ? null : <LastMatchStrip model={lastMatch} />}

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { ActivityPing } from '@/components/account/ActivityPing';
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { ClubProvider } from '@/components/club/ClubProvider';
 import { AppShell } from '@/components/layout/AppShell';
@@ -208,6 +209,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
       invitations={invitations}
     >
       <AppShell>
+        {club ? <ActivityPing accountId={club.ownerId} /> : null}
         {club ? <EmailConfirmSlot userId={club.ownerId} variant="game" /> : null}
         <SoftLockRouteGate>{children}</SoftLockRouteGate>
       </AppShell>
