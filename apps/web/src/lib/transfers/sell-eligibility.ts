@@ -1,3 +1,4 @@
+import { saleBlock } from '@/lib/transfers/fair-sale';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
@@ -18,7 +19,7 @@ export function isTransferSellEligible(input: {
   if (active.length <= TRANSFERS_THIN.MIN_ROSTER) return false;
 
   const player = active.find((p) => p.id === input.playerId);
-  if (!player) return false;
+  if (!player || saleBlock(player)) return false;
 
   const isGk = player.pos === 'BR' || player.role === 'GK';
   const gkCount = active.filter((p) => p.pos === 'BR' || p.role === 'GK').length;

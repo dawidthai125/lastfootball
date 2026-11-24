@@ -1,3 +1,4 @@
+import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { serverDb } from '@/lib/supabase/admin';
 import { CASH_STALE_ERROR, creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
@@ -51,6 +52,7 @@ type ActivePlayer = {
   skill: number;
   status: string;
   departed_at: string | null;
+  origin?: string | null;
 };
 
 type SeedBuyInput = {
@@ -265,6 +267,8 @@ export async function completeTransferBuy(
       potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
       status: 'READY',
       nationality: 'POL',
+      origin: agreedAmount === 0 ? 'free' : 'bought',
+      joined_at: new Date().toISOString(),
       version: 1,
       departed_at: null,
     } as never);
@@ -365,7 +369,7 @@ export async function completeTransferSell(
     return { ok: false, error: 'Nie możesz sprzedać ostatniego bramkarza.' };
   }
 
-  const ask = deriveTransferFee(player.skill, player.age);
+  const ask = aiSaleAsk(player);
   if (!isAllowedAgreedAmount(ask, input.agreedAmount)) {
     return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
   }

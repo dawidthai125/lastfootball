@@ -34,6 +34,8 @@ export type PlayerDbRow = {
   attr_goalkeeping?: number | null;
   energy?: number | null;
   energy_on?: string | null;
+  origin?: string | null;
+  joined_at?: string | null;
   form?: number | null;
   wage?: number | null;
   suspension_matches?: number | null;
@@ -86,6 +88,8 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     transferListedAt: row.transfer_listed_at ?? null,
     academyTrack: Boolean(row.academy_track),
     promotedAt: row.promoted_at ?? null,
+    origin: row.origin ?? null,
+    joinedAt: row.joined_at ?? null,
     groups: groupsFromRow(row),
     energy,
     form: typeof row.form === 'number' ? row.form : undefined,

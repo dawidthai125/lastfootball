@@ -1,8 +1,8 @@
+import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { displayPos } from '@/lib/transfers/display-pos';
-import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { resolveOfferAmount, type OfferPreset } from '@/lib/transfers/resolve-negotiation';
 import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
 import type { IncomingOfferDto } from '@/lib/transfers/types';
@@ -67,7 +67,7 @@ export function resolveIncomingOffers(input: {
   const selected = pool.slice(0, INCOMING_THIN.MAX_OFFERS);
 
   return selected.map((p) => {
-    const ask = deriveTransferFee(p.skill, p.age);
+    const ask = aiSaleAsk(p);
     const aiPreset = resolveIncomingAiPreset(input.clubId, p.id);
     const amount = resolveOfferAmount(ask, aiPreset);
     const buyerIdx = stableHash([input.clubId, p.id, 'buyer']) % AI_BUYER_LABELS.length;

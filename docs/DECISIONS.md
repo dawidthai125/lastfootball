@@ -786,9 +786,14 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Serwer odtwarzał mecz ze stanu na koniec, więc zmiana kadry w trakcie dawała inny wynik niż na ekranie. Nowy klub w IV lidze wygrywał ok. 2/3 meczów.  
 **Zasada:** Strona live zapisuje `match_kickoffs` (tylko service role, jeden wiersz na klub; ostatnie wejście zastępuje poprzednie, każdy rozliczony mecz go kasuje). Serwer sam czyta kopię, klient jej nie wskazuje. `authoritativeManagerScore` odtwarza z kopii ważnej 6 h razem z rywalem AI; role i rozwój po meczu biorą jedenastkę z tej samej kopii. Sprzedany lub wypożyczony w trakcie = mecz od nowa. Bez kopii działa ścieżka D127. Liga ludzi zostaje na swoich zamkniętych składach. Pasma `LeagueStrengthProfile`: IV 47–63, III 53–69, II 59–75, I 66–82.
 
+### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
+
+**Dlaczego:** Darmowy nabór bez limitu i sprzedaż juniora, wolnego agenta lub wypożyczonego za pełną cenę dawały nieograniczoną kasę.  
+**Zasada:** `players.origin` (academy · free · bought · loan; null = start) i `joined_at`. `saleBlock`: wypożyczeni nigdy, nowi po 7 dniach. `aiSaleAsk`: 25% ceny dla academy i free; handel między menedżerami bez zmian. Nabór co 7 dni (`intakeWaitDays`), liczony z całej historii klubu. Zmiana klubu stempluje trigger `lf_stamp_player_move`.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D130 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D133 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

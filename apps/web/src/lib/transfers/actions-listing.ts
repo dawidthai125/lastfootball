@@ -1,5 +1,6 @@
 'use server';
 
+import { saleBlock } from '@/lib/transfers/fair-sale';
 import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
@@ -54,6 +55,8 @@ export async function setTransferListing(
     if (player.transferListedAt != null) {
       return { ok: true };
     }
+    const blocked = saleBlock(player);
+    if (blocked) return { error: blocked };
     if (
       !isTransferSellEligible({
         transferWindowOpen: Boolean(clubRow.transfer_window_open),
