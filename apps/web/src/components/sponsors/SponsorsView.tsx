@@ -68,7 +68,7 @@ export function SponsorsView({
               {formatMoney(crowdQuote.bonus)}. Cel górnej połowy zostaje. Frekwencja i szczebel ligi
               ruszają kwoty dopiero przy odnowieniu sezonu.
               {prestige
-                ? ` Prestiż ${prestige.value} (${prestige.band}): ${prestige.sponsorLabel}, kwoty w pełnych 500 EUR.`
+                ? ` Prestiż ${prestige.value} (${prestige.band}): ${prestige.sponsorLabel}, kwoty w pełnych 500 €.`
                 : null}
             </p>
           </Panel>

@@ -4,7 +4,7 @@ export const SEASON_GOAL_BONUS = 10_000;
 
 export const SEASON_GOAL_LABEL = 'Cel sezonu: górna połowa tabeli.';
 
-export const SEASON_GOAL_MET = 'Cel sezonu zaliczony. 10 000 EUR.';
+export const SEASON_GOAL_MET = 'Cel sezonu zaliczony. 10 000 €.';
 
 export const SEASON_GOAL_MISSED = 'Cel sezonu niezaliczony.';
 

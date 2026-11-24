@@ -28,7 +28,7 @@ export function EmailConfirmBanner({
     <div className={className} role="status" style={{ marginBottom: '1rem' }}>
       <div className={variant === 'auth' ? undefined : 'lf-sb__body'}>
         <p style={{ margin: '0 0 0.35rem' }}>
-          Potwierdź email, żeby grać w rywalizacji i dostać 10 000 EUR premii od zarządu.
+          Potwierdź email, żeby grać w rywalizacji i dostać 10 000 € premii od zarządu.
           {matchesBlocked
             ? ' Czas na grę bez potwierdzenia minął, więc kolejne mecze czekają.'
             : ` Mecze ligi zostają otwarte do ${deadlineLabel}.`}

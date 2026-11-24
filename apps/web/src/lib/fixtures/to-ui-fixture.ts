@@ -258,7 +258,7 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
   return {
     fixture,
     clock: '00:00',
-    period: 'Kick-off',
+    period: 'Początek',
     homeScore: 0,
     awayScore: 0,
     viewers: facts.attendance,

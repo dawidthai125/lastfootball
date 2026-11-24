@@ -480,7 +480,7 @@ function drawEventFx(
 function fxLabel(kind: VisualFxKind): string {
   switch (kind) {
     case 'MATCH_START':
-      return 'KICK-OFF';
+      return 'ZACZYNAMY';
     case 'GOAL':
       return 'GOL!';
     case 'SHOT':

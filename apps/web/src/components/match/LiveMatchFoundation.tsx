@@ -410,7 +410,7 @@ export function LiveMatchFoundation({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--lf-space-1)' }}>
           <span className={isReplay ? 'lf-live__chip lf-live__chip--replay' : 'lf-live__chip'}>
             <span className="lf-live__chip-dot" aria-hidden />
-            {isReplay ? 'Replay' : 'Live'}
+            {isReplay ? 'Powtórka' : 'Na żywo'}
           </span>
           <span
             className="lf-live__viewers tabular-nums"
@@ -782,7 +782,7 @@ export function LiveMatchFoundation({
 
             {/* Replay controls — recorded frames only, no Engine */}
             <section
-              aria-label="Replay"
+              aria-label="Powtórka"
               className="lf-section-shell"
               style={{ padding: 'var(--lf-space-3)' }}
             >
@@ -795,7 +795,7 @@ export function LiveMatchFoundation({
                   gap: 'var(--lf-space-2)',
                 }}
               >
-                <div className="lf-section-shell__title">Replay</div>
+                <div className="lf-section-shell__title">Powtórka</div>
                 <div
                   style={{
                     fontSize: 'var(--lf-type-label)',
@@ -804,7 +804,7 @@ export function LiveMatchFoundation({
                     letterSpacing: 'var(--lf-type-tracking-label)',
                   }}
                 >
-                  {isReplay ? replay.status : 'live buffer'} · {replay.length} klatek
+                  {isReplay ? 'oglądasz powtórkę' : 'na żywo'}
                 </div>
               </div>
               <input
@@ -1108,7 +1108,7 @@ export function LiveMatchFoundation({
               href={`/match/${fixture.id}/tunnel`}
               style={{ fontSize: 'var(--lf-type-caption)', color: 'var(--lf-color-text-gold)' }}
             >
-              ← Pre Match
+              ← Przed meczem
             </Link>
             <Link
               href="/matches"

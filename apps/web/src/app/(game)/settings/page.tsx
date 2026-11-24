@@ -30,7 +30,7 @@ export default async function SettingsPage() {
       <Panel title="Konto">
         {gate.confirmed ? (
           <p style={{ margin: '0 0 var(--lf-space-2)' }}>
-            Email jest potwierdzony. Premia 10 000 EUR jest jednorazowa.
+            Email jest potwierdzony. Premia 10 000 € jest jednorazowa.
           </p>
         ) : (
           <EmailConfirmSlot userId={club.ownerId} variant="game" />

@@ -28,7 +28,7 @@ const STEPS = [
   { id: 1, label: 'Nazwa' },
   { id: 2, label: 'Barwy' },
   { id: 3, label: 'Herb' },
-  { id: 4, label: 'Reveal' },
+  { id: 4, label: 'Gotowe' },
 ] as const;
 
 function loadDraft(): ClubWizardDraft | null {

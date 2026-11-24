@@ -123,9 +123,9 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
     <div className="lf-sco" data-lf-impl="LFE-SCOUTING-01">
       <header className="mb-3 px-0.5">
         <p className="text-[11px] tracking-wide text-[var(--lf-muted)] uppercase">Skauting</p>
-        <h2 className="font-[family-name:var(--font-display)] text-[1.25rem] text-[var(--lf-text-strong)]">
+        <h1 className="font-[family-name:var(--font-display)] text-[1.25rem] text-[var(--lf-text-strong)]">
           Porządkujesz informacje przed decyzją?
-        </h2>
+        </h1>
         <p className="mt-1 text-[12px] text-[var(--lf-muted)]">
           Shortlista: {scouting.shortlistCount}/{scouting.maxShortlist}
           {scouting.windowOpen ? ' · okno transferowe otwarte' : ' · okno zamknięte'} — ocena zawsze

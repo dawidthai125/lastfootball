@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
+import { serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { filterSeniorPlayers } from '@/lib/squad/types';
@@ -98,7 +99,7 @@ export async function createLiveTransferOffer(
     return { error: 'Nieprawidłowa kwota oferty.' };
   }
 
-  const { data: playerRow } = await supabase
+  const { data: playerRow } = await serverDb(supabase)
     .from('players')
     .select('id, club_id, transfer_listed_at, departed_at')
     .eq('id', playerId)
@@ -241,7 +242,7 @@ export async function acceptLiveTransferOffer(
     return { error: 'Nieprawidłowa faza oferty.' };
   }
 
-  const { data: playerRow } = await supabase
+  const { data: playerRow } = await serverDb(supabase)
     .from('players')
     .select('id, club_id, transfer_listed_at, departed_at, skill, age')
     .eq('id', offer.player_id)
@@ -382,7 +383,7 @@ export async function counterLiveTransferOffer(
     return { error: 'Kontrpropozycja już złożona.' };
   }
 
-  const { data: playerRow } = await supabase
+  const { data: playerRow } = await serverDb(supabase)
     .from('players')
     .select('id, club_id, transfer_listed_at, departed_at, skill, age')
     .eq('id', offer.player_id)
