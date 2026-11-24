@@ -135,6 +135,7 @@ export async function completeFixture(
       .select('played_at')
       .eq('club_id', clubId)
       .eq('status', 'played')
+      .neq('competition', 'human')
       .order('played_at', { ascending: false })
       .limit(1)
       .maybeSingle();

@@ -21,14 +21,22 @@ export function kickoffBlockReason(input: KickoffBlockInput): string | null {
   return matchdayBlockReason(input.lastPlayedAt, input.now);
 }
 
-/** Latest played_at across competitions. Same clock completeFixture uses. */
+/**
+ * Latest played_at that takes the Warsaw day: every competition except the human league,
+ * which has its own clock. Same rule completeFixture uses.
+ */
 export function latestPlayedAt(
-  fixtures: readonly { status: string; playedAt?: string | null }[],
+  fixtures: readonly {
+    status: string;
+    competition?: KickoffCompetition;
+    playedAt?: string | null;
+  }[],
 ): string | null {
   let best: string | null = null;
   let bestMs = Number.NEGATIVE_INFINITY;
   for (const fixture of fixtures) {
     if (fixture.status !== 'played' || !fixture.playedAt) continue;
+    if (fixture.competition === 'human') continue;
     const ms = Date.parse(fixture.playedAt);
     if (Number.isNaN(ms) || ms < bestMs) continue;
     bestMs = ms;

@@ -94,6 +94,15 @@ describe('latestPlayedAt', () => {
     ).toBe(earlierToday);
   });
 
+  it('leaves the league day open after a human league match', () => {
+    expect(
+      latestPlayedAt([
+        { status: 'played', competition: 'league', playedAt: yesterday },
+        { status: 'played', competition: 'human', playedAt: earlierToday },
+      ]),
+    ).toBe(yesterday);
+  });
+
   it('returns null when nothing has been played', () => {
     expect(latestPlayedAt([{ status: 'upcoming', playedAt: null }])).toBeNull();
     expect(latestPlayedAt([])).toBeNull();

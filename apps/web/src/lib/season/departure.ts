@@ -62,7 +62,8 @@ function slotFrom(
 export function resolveDeparturePreview(
   players: readonly DeparturePreviewPlayer[],
 ): DeparturePreview {
-  const plan = planSeasonDeparture(players);
+  // The age tick of the season start comes first, so 37 now is 38 when it decides.
+  const plan = planSeasonDeparture(players.map((p) => ({ ...p, age: p.age + 1 })));
   const retire = slotFrom(players, plan.retireId);
   const promote = slotFrom(players, plan.promoteId);
 
@@ -78,14 +79,14 @@ export function resolveDeparturePreview(
     return {
       retire,
       promote,
-      summary: `Przy potwierdzeniu startu N+1 ${retire.name} (lat ${retire.age}) kończy karierę. Z akademii wchodzi ${promote.name}.`,
+      summary: `Na starcie nowego sezonu ${retire.name} (lat ${retire.age}) kończy karierę. Z akademii wchodzi ${promote.name}.`,
     };
   }
 
   return {
     retire,
     promote: null,
-    summary: `Przy potwierdzeniu startu N+1 ${retire.name} (lat ${retire.age}) kończy karierę. Akademia jest pusta — nabór uzupełni skład przy starcie.`,
+    summary: `Na starcie nowego sezonu ${retire.name} (lat ${retire.age}) kończy karierę. Akademia jest pusta — nabór uzupełni skład przy starcie.`,
   };
 }
 

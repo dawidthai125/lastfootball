@@ -39,11 +39,18 @@ describe('planSeasonDeparture', () => {
 describe('resolveDeparturePreview', () => {
   it('empty plan: null slots and no-retirement summary', () => {
     const preview = resolveDeparturePreview([
-      { id: 'a', name: 'Młody', age: 37, skill: 40, academyTrack: false, departed: false },
+      { id: 'a', name: 'Młody', age: 36, skill: 40, academyTrack: false, departed: false },
     ]);
     expect(preview.retire).toBeNull();
     expect(preview.promote).toBeNull();
     expect(preview.summary).toMatch(/nikt nie kończy kariery/i);
+  });
+
+  it('counts the birthday of the season start: 37 retires at 38', () => {
+    const preview = resolveDeparturePreview([
+      { id: 'a', name: 'Alfa', age: 37, skill: 40, academyTrack: false, departed: false },
+    ]);
+    expect(preview.retire).toMatchObject({ id: 'a', age: 37 });
   });
 
   it('retire + promote: names in Polish summary', () => {
