@@ -72,7 +72,10 @@ export default function HelpPage() {
       </LegalSection>
       <LegalSection title="Liga i puchar">
         <ul>
-          <li>Sezon ma 22 kolejki i 12 klubów. Miejsca 1–2 dają awans, 11–12 spadek.</li>
+          <li>
+            Sezon ma 22 kolejki i 12 klubów. Miejsca 1–2 dają awans, 11–12 spadek (z IV ligi się nie
+            spada).
+          </li>
           <li>Puchar Krajowy zaczyna się po 8. kolejce. Remis rozstrzyga dogrywka, potem karne.</li>
         </ul>
       </LegalSection>
