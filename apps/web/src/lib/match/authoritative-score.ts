@@ -65,7 +65,7 @@ export async function authoritativeManagerScore(
 export async function authoritativeFirstMatchScore(
   players: readonly PlayerRowDto[],
   log: readonly ManagerLogEntry[],
-): Promise<{ home: number; away: number } | { error: string }> {
+): Promise<ReplayedMatch | { error: string }> {
   const club = await getManagerClub();
   if (!club) return { error: 'Nie znaleziono klubu.' };
   try {

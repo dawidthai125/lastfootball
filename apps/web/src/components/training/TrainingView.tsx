@@ -243,7 +243,7 @@ export function TrainingView({
         <section className="lf-tr__block" aria-label="Trening indywidualny">
           <h3 className="lf-tr__block-title">Trening indywidualny</h3>
           <p className="lf-tr__meta">
-            Jeden zawodnik, jedna grupa, raz dziennie. Kosztuje 8 energii. Nie rusza ogólnej
+            Jeden zawodnik dziennie, jedna grupa. Kosztuje 8 energii. Nie rusza ogólnej
             umiejętności.
           </p>
           {individualState.error ? (

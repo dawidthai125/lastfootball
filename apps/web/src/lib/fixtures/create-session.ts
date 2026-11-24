@@ -71,6 +71,24 @@ function sharedCondition(p: RosterPlayerSeed) {
   return condition ? { condition } : {};
 }
 
+/** The chosen captain, or the best leader of the eleven when he is not in it (D158). */
+function captainOf(xi: readonly RosterPlayerSeed[], fullRules: boolean): PlayerId | undefined {
+  const chosen = xi.find((p) => p.captain);
+  if (chosen || !fullRules) return chosen?.id as PlayerId | undefined;
+  let best: RosterPlayerSeed | undefined;
+  for (const p of xi) {
+    if (p.leadership === undefined) continue;
+    if (
+      !best ||
+      p.leadership > best.leadership! ||
+      (p.leadership === best.leadership && p.id < best.id)
+    ) {
+      best = p;
+    }
+  }
+  return best?.id as PlayerId | undefined;
+}
+
 /** AI rival of this fixture. Also frozen in the kickoff copy (D130). */
 export function resolveOpponentXi(
   club: Pick<ClubDto, 'leagueTier'>,
@@ -235,18 +253,16 @@ export function createSessionFromLeagueFixture(
   const awayPlayers = fixture.isHome ? theirPlayers : ourPlayers;
   const homeIds = homePlayers.map((p) => p.id);
   const awayIds = awayPlayers.map((p) => p.id);
-  const ourCaptain = our.find((p) => p.captain)?.id;
+  const ourCaptain = captainOf(our, fullRules);
   const homeSeeds = fixture.isHome ? our : their;
   const homeCaptain = shared
-    ? ((homeSeeds.find((p) => p.captain)?.id as PlayerId | undefined) ?? homeIds[0]!)
+    ? (captainOf(homeSeeds, fullRules) ?? homeIds[0]!)
     : fixture.isHome
-      ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
+      ? (ourCaptain ?? homeIds[0]!)
       : homeIds[0]!;
   const awaySeeds = fixture.isHome ? their : our;
   // Without full rules only the home side had a captain; he changed nothing then.
-  const awayCaptain = fullRules
-    ? ((awaySeeds.find((p) => p.captain)?.id as PlayerId | undefined) ?? null)
-    : null;
+  const awayCaptain = fullRules ? (captainOf(awaySeeds, true) ?? null) : null;
   const ourSetPiece = (our.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null;
   const theirSetPiece = shared
     ? ((their.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null)

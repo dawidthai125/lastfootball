@@ -99,7 +99,11 @@ export function buildLightStatus(
   leaguePositionLabel: string | null = null,
   cashLabel: string | null = null,
 ): HubLightStatus {
-  const dayLabel = nextFixture ? `Kolejka ${nextFixture.matchday}` : 'Dzień 1';
+  const dayLabel = nextFixture
+    ? `Kolejka ${nextFixture.matchday}`
+    : club.seasonPhase === 'offseason'
+      ? 'Przerwa'
+      : 'Dzień 1';
   return {
     league: resolveLeagueTierLabel(club.leagueTier),
     stadium: STARTER_PACKAGE.stadiumLabel(club.name),

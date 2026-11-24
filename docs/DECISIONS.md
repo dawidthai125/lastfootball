@@ -950,7 +950,15 @@ Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabas
 
 Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do klubu AI, transfer między graczami i kolejna licytacja nie mogą przez to zejść poniżej 18 zawodników ani ostatniego bramkarza. Rozliczenie sprawdza tylko próg 15, żeby koniec wypożyczenia lub umowy nie zabrał zawodnika zwycięzcy.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D157 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D158 — Akcje gracza · Owner GO 2026-11-24
+
+1. Sprzedaż do klubu AI to jedna transakcja (`sell_market_player`): dwie naraz nie zejdą poniżej 18, zawodnik nie odejdzie bez zapłaty.
+2. Trening indywidualny: jeden zawodnik klubu dziennie, jak mówi ekran (`claim_individual_training`). Nie dla kontuzjowanych, wypożyczonych i juniorów, dopiero po odblokowaniu treningu; grupa na suficie nie zabiera energii.
+3. Konferencja tylko po ostatnim meczu i raz, także przy dwóch kliknięciach naraz.
+4. Awans z akademii wymaga miejsca w kadrze (22). Kontraktu nie negocjuje się z wypożyczonym ani juniorem.
+5. Pierwszy mecz: kartki i kontuzje z meczu, nie z losowania. Gdy kapitan nie gra, opaskę ma najlepszy przywódca jedenastki.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D158 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

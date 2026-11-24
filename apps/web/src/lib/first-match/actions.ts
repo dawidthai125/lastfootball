@@ -17,6 +17,7 @@ import { isPersonality } from '@/lib/squad/depth';
 import { applyMatchSquadTruth, groupsFromSkill } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeFirstMatchScore } from '@/lib/match/authoritative-score';
+import { incidentsById } from '@/lib/match/match-players';
 import { parseManagerLog } from '@/lib/match/manager-commands';
 import { serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
@@ -99,7 +100,14 @@ export async function completeFirstMatch(
           morale: p.morale ?? 60,
           personality: isPersonality(p.personality) ? p.personality : 'spokojny',
         })),
-        { matchKey: 'first-match', result, roleById, physio: build.physio },
+        {
+          matchKey: 'first-match',
+          result,
+          roleById,
+          physio: build.physio,
+          // Cards and injuries of this match, not a draw (D151).
+          incidents: incidentsById(score.players),
+        },
       );
       const truthById = Object.fromEntries(
         afterTruth.map((p) => [

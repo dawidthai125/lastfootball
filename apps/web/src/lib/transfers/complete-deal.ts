@@ -8,7 +8,7 @@ import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { marketFee } from '@/lib/transfers/market-fee';
 import { AUCTION_OPEN } from '@/lib/transfers/auction';
-import { auctionReserved, hasOpenAuction } from '@/lib/transfers/load-auctions';
+import { hasOpenAuction } from '@/lib/transfers/load-auctions';
 import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
 import { boughtPlayerId, seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
@@ -131,6 +131,16 @@ async function invokeLiveH2hRpc(
 
   return { ok: true, playerId: row.player_id, amount: row.amount };
 }
+
+const SELL_NOT_SAVED = 'Nie udało się rozliczyć sprzedaży. Spróbuj ponownie.';
+
+const SELL_ERRORS: Readonly<Record<string, string>> = {
+  window: 'Okno transferowe jest zamknięte.',
+  player: 'Nie znaleziono zawodnika w kadrze.',
+  auction: AUCTION_OPEN,
+  roster: 'Kadra nie może zejść poniżej 18 zawodników, licząc trwające licytacje.',
+  keeper: 'Nie możesz sprzedać ostatniego bramkarza.',
+};
 
 const BUY_NOT_SAVED = 'Nie udało się zapisać transferu. Spróbuj ponownie.';
 
@@ -303,28 +313,9 @@ export async function completeTransferSell(
   if (!input.transferWindowOpen) {
     return { ok: false, error: 'Okno transferowe jest zamknięte.' };
   }
-  const reserved = await auctionReserved(input.clubId);
-  if (!reserved)
-    return { ok: false, error: 'Nie udało się sprawdzić licytacji. Spróbuj ponownie.' };
-  if (input.activePlayers.length - reserved.players <= TRANSFERS_THIN.MIN_ROSTER) {
-    return {
-      ok: false,
-      error:
-        reserved.players > 0
-          ? 'Z trwającymi licytacjami zszedłbyś poniżej 18 zawodników.'
-          : 'Nie można zejść poniżej 18 zawodników.',
-    };
-  }
-
   const player = input.activePlayers.find((p) => p.id === input.playerId);
   if (!player || player.departed_at) {
     return { ok: false, error: 'Nie znaleziono zawodnika w kadrze.' };
-  }
-
-  const isGk = player.pos === 'BR' || player.role === 'GK';
-  const gkCount = input.activePlayers.filter((p) => p.pos === 'BR' || p.role === 'GK').length;
-  if (isGk && gkCount - reserved.keepers <= 1) {
-    return { ok: false, error: 'Nie możesz sprzedać ostatniego bramkarza.' };
   }
 
   const ask = aiSaleAsk(player);
@@ -332,89 +323,24 @@ export async function completeTransferSell(
     return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
   }
 
-  if (await hasOpenAuction(input.playerId)) return { ok: false, error: AUCTION_OPEN };
-
-  const agreedAmount = input.agreedAmount;
-  const idempotencyKey = `sell:${input.playerId}`;
-
-  const { data: existing } = await supabase
-    .from('transfer_deals')
-    .select('id, player_id, amount')
-    .eq('club_id', input.clubId)
-    .eq('idempotency_key', idempotencyKey)
-    .maybeSingle();
-
-  if (existing) {
-    const row = existing as { player_id: string; amount: number };
-    return { ok: true, playerId: row.player_id, amount: row.amount };
+  const admin = tryAdminClient();
+  if (!admin) return { ok: false, error: SELL_NOT_SAVED };
+  const { data, error } = await admin.rpc(
+    'sell_market_player' as never,
+    {
+      p_club_id: input.clubId,
+      p_player_id: input.playerId,
+      p_amount: input.agreedAmount,
+      p_min_roster: TRANSFERS_THIN.MIN_ROSTER,
+    } as never,
+  );
+  const row = data as { ok?: boolean; reason?: string; amount?: number } | null;
+  if (error || !row) {
+    console.error('completeTransferSell failed', { code: error?.code });
+    return { ok: false, error: SELL_NOT_SAVED };
   }
-
-  const { data: before } = await supabase
-    .from('players')
-    .select('status, starter, captain, transfer_listed_at')
-    .eq('id', input.playerId)
-    .eq('club_id', input.clubId)
-    .is('departed_at', null)
-    .maybeSingle();
-  if (!before) return { ok: false, error: 'Nie znaleziono zawodnika w kadrze.' };
-
-  const departedAt = new Date().toISOString();
-  const { data: departed, error: updErr } = await serverDb(supabase)
-    .from('players')
-    .update({
-      status: 'DEPARTED',
-      departed_at: departedAt,
-      starter: false,
-      captain: false,
-      transfer_listed_at: null,
-    } as never)
-    .eq('id', input.playerId)
-    .eq('club_id', input.clubId)
-    .is('departed_at', null)
-    .select('id')
-    .maybeSingle();
-
-  // No row means a parallel sale already took this player: never credit twice.
-  if (updErr || !departed) {
-    return { ok: false, error: 'Nie udało się oznaczyć odejścia zawodnika.' };
+  if (row.ok !== true || typeof row.amount !== 'number') {
+    return { ok: false, error: SELL_ERRORS[row.reason ?? ''] ?? SELL_NOT_SAVED };
   }
-
-  if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
-    // Not paid means not sold.
-    await serverDb(supabase)
-      .from('players')
-      .update({ ...(before as object), departed_at: null } as never)
-      .eq('id', input.playerId)
-      .eq('club_id', input.clubId)
-      .eq('departed_at', departedAt);
-    return { ok: false, error: 'Nie udało się rozliczyć sprzedaży. Spróbuj ponownie.' };
-  }
-
-  await serverDb(supabase)
-    .from('finance_movements')
-    .insert({
-      club_id: input.clubId,
-      category: 'transfer_sell',
-      label: `Sprzedaż: ${player.name}`,
-      amount: agreedAmount,
-      fixture_id: null,
-    } as never);
-
-  const { error: dealErr } = await serverDb(supabase)
-    .from('transfer_deals')
-    .insert({
-      club_id: input.clubId,
-      kind: 'sell',
-      player_id: input.playerId,
-      market_id: null,
-      amount: agreedAmount,
-      idempotency_key: idempotencyKey,
-      completed_at: departedAt,
-    } as never);
-
-  if (dealErr && dealErr.code !== '23505') {
-    return { ok: false, error: 'Sprzedaż częściowa — sprawdź kadrę i finanse.' };
-  }
-
-  return { ok: true, playerId: input.playerId, amount: agreedAmount };
+  return { ok: true, playerId: input.playerId, amount: row.amount };
 }
