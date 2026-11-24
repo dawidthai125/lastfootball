@@ -1324,6 +1324,7 @@ Opisać kapitał sukcesu sportowego jako tożsamość.
 2. Prestiż ≠ punkty ligowe; to osobna warstwa dumy i historii (§11.16 odsyła tutaj).
 3. Soft landing: wczesne odpadnięcie / słaby sezon nie niszczy tożsamości destrukcyjnie w Sezonie 1.
 4. Prestiż zasila Reputację (§6.6); nie jest walutą do wydania.
+5. Liczby i skutek (wycena sponsora): §26.8 · D131.
 
 **Decyzje gracza**
 
@@ -9590,6 +9591,25 @@ Buy i sell używają **tej samej** formuły (D20). Negotiation / envelope = OUT.
 Cele IV ligi: mistrz +60..+110 tys., środek −15..+10 tys., dół −70..−35 tys. Pilnuje ich `season-projection.test.ts`.
 
 **Niewypłacone pensje:** kasa nie schodzi poniżej 0, długu nie ma. Brakująca część pensji obniża morale każdego seniora o 1..8 (`UNPAID_WAGE_MORALE_MAX` × udział, w górę). Ruch w księdze mówi, ile zabrakło; komunikat znika po pełnej wypłacie. Ostrzeżenie: kasa mniejsza niż 3 wypłaty meczowe (`WAGE_WARNING_MATCHES`).
+
+**Zadania zarządu (D131):** cztery na sezon (kolejki 1–5, 6–10, 11–15, 16–20), każde inne: 7 punktów · 7 goli · 2 mecze bez straty gola · 2 wygrane · bez porażki u siebie. Nagroda 5 000 EUR w IV lidze, 5 500 / 6 000 / 6 500 wyżej (`rewardForLeagueRung`). Porażka nic nie kosztuje.
+
+| Klub (skill względem ligi) | Wykonane zadania na sezon | IV liga |
+| -------------------------- | ------------------------- | ------- |
+| Środek                     | 1,99 z 4                  | +9 925  |
+| Mocny (+6)                 | 3,54 z 4                  | +17 700 |
+| Słaby (−6)                 | 0,40 z 4                  | +2 000  |
+
+Środek tabeli z zadaniami: ok. −6 038 + 10 000 = +4 tys. Pilnują tego `board/tasks.test.ts` i `season-projection.test.ts`.
+
+**Prestiż (D131), 0..100:** baza ligi IV 10 · III 15 · II 22 · I 30, plus suma sezonów × 0,8 za każdy starszy sezon:
+
+- miejsce: −2 + 6 × (udział tabeli za klubem), czyli pierwszy +4, ostatni −2; dodatnie punkty × 1 / 1,25 / 1,5 / 2 (IV..I);
+- awans +3, spadek −3;
+- puchar: 1/4 finału +1, półfinał +2, finał +3, zdobyty +5;
+- wykonane zadanie zarządu +0,5.
+
+Pasma: Nieznany 0–19 · Lokalny 20–39 · Rozpoznawalny 40–59 · Ceniony 60–79 · Wielki 80–100. Skutek: wycena sponsora przy odnowieniu × (1 + 10% × (prestiż − 10) / 90), od 0 do +10%, w pełnych 500 EUR.
 
 ---
 

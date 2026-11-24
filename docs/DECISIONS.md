@@ -633,12 +633,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Unlock Stadium „przy okazji”.  
 **Zasada:** `/board` open SEASON+OFFSEASON; `/stadium` remain soft-locked. (D99: Sponsors already open.)
 
-### D106 — No Prestige Engine · CLOSED
+### D106 — No Prestige Engine · SUPERSEDED BY D131
 
 **Dlaczego:** Silnik §6 Prestige/Reputacja = poza Thin.  
 **Zasada:** Brak numeric Prestige/Reputation; Board nie liczy §6.
 
-### D107 — No Quest No Club Mgmt · CLOSED
+### D107 — No Quest No Club Mgmt · SUPERSEDED BY D131 (zadania zarządu; zarządzanie klubem z Board dalej OUT)
 
 **Dlaczego:** Quest / zarządzanie klubem = scope creep.  
 **Zasada:** Brak Quest Engine · brak systemu zarządzania klubem z Board.
@@ -786,9 +786,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Serwer odtwarzał mecz ze stanu na koniec, więc zmiana kadry w trakcie dawała inny wynik niż na ekranie. Nowy klub w IV lidze wygrywał ok. 2/3 meczów.  
 **Zasada:** Strona live zapisuje `match_kickoffs` (tylko service role, jeden wiersz na klub; ostatnie wejście zastępuje poprzednie, każdy rozliczony mecz go kasuje). Serwer sam czyta kopię, klient jej nie wskazuje. `authoritativeManagerScore` odtwarza z kopii ważnej 6 h razem z rywalem AI; role i rozwój po meczu biorą jedenastkę z tej samej kopii. Sprzedany lub wypożyczony w trakcie = mecz od nowa. Bez kopii działa ścieżka D127. Liga ludzi zostaje na swoich zamkniętych składach. Pasma `LeagueStrengthProfile`: IV 47–63, III 53–69, II 59–75, I 66–82.
 
+### D131 — Prestiż klubu i zadania zarządu · Owner GO 2026-11-24
+
+**Dlaczego:** Sukces sportowy nie zostawał w historii klubu, a ekran Zarządu tylko opisywał tabelę. Zastępuje D106 i D107, zawęża D103 i D101.  
+**Zasada:** `club_season_history` i `club_board_task_claims` pisze tylko serwer, właściciel czyta. Prestiż 0..100 = pure derive (`resolvePrestige`) z historii, ligi, pucharu i zadań; działa wyłącznie na wycenę sponsora przy odnowieniu (0..+10%, `sponsorFromCrowd`), nigdy na mecz. Zadania: jedno na kolejki 1–5, 6–10, 11–15, 16–20, wybór i postęp = derive z meczów ligowych; porażka nic nie kosztuje. Wypłata = `claim_board_task` (claim + kasa + księga w jednej transakcji, service role). `confirmStartNextSeason` przed skasowaniem terminarza wypłaca nieodebrane zadania i zapisuje sezon raz; każdy błąd zatrzymuje start sezonu. Powtórzony start bierze awans lub spadek z zapisanego sezonu. Bez tabel funkcja jest ukryta. Liczby: GDD §26.8.  
+**OUT:** Reputacja · wydawanie prestiżu · kary · losowanie zadań od nowa · zadanie jako Primary na Hubie.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D130 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D131 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
+import { closeBoardSeason } from '@/lib/board/close-board-season';
 import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
 import {
   applyLeagueTierOutcome,
@@ -81,7 +82,21 @@ export async function confirmStartNextSeason(
   const nextSeason = endedSeason + 1;
   const currentTier = parseLeagueTier(row.league_tier);
 
+  // Same schema; the two factories only differ in generic defaults.
+  const admin = createAdminClient() as unknown as typeof supabase;
+
   const fixtures = await listClubFixtures(clubId);
+  if (fixtures.length === 0) {
+    // A failed read looks the same as an empty list, and the list is deleted below.
+    const { data: anyFixture, error: readErr } = await admin
+      .from('fixtures')
+      .select('id')
+      .eq('club_id', clubId)
+      .limit(1);
+    if (readErr || anyFixture.length > 0) {
+      return { error: 'Nie udało się wczytać terminarza. Spróbuj ponownie.', farewell: null };
+    }
+  }
   const table = resolveLeagueTable(
     {
       id: clubId,
@@ -96,7 +111,23 @@ export async function confirmStartNextSeason(
   const outcome = playerRow
     ? resolvePromotionOutcome(playerRow.position, table.rows.length, currentTier)
     : { kind: 'stay' as const, label: '' };
-  const nextTier = applyLeagueTierOutcome(currentTier, outcome.kind);
+
+  // D131: pays uncollected board tasks and writes the season, while its fixtures still exist.
+  const board = await closeBoardSeason(
+    admin,
+    {
+      id: clubId,
+      name: row.name,
+      shortName: row.short_name,
+      leagueTier: currentTier,
+      seasonNumber: endedSeason,
+    },
+    fixtures,
+  );
+  if (!board.ok) {
+    return { error: board.error, farewell: null };
+  }
+  const nextTier = applyLeagueTierOutcome(currentTier, board.storedOutcome ?? outcome.kind);
 
   // H-SPONSORS: renew (Accept or auto — same flat Thin) → base payout once (Owner LOCK 2 · 8).
   const lastHome = fixtures
@@ -117,7 +148,11 @@ export async function confirmStartNextSeason(
         : lastHome.homeScore < lastHome.awayScore
           ? 'quiet'
           : 'steady';
-  const quote = sponsorFromCrowd({ attendance, leagueTier: currentTier });
+  const quote = sponsorFromCrowd({
+    attendance,
+    leagueTier: currentTier,
+    prestige: board.prestige?.value,
+  });
   const sponsor = await renewSponsorAndPayBase({
     clubId,
     nextSeason,
@@ -135,8 +170,6 @@ export async function confirmStartNextSeason(
     paidFor: row.season_goal_paid_for,
     note: row.season_goal_note,
   });
-  // Same schema; the two factories only differ in generic defaults.
-  const admin = createAdminClient() as unknown as typeof supabase;
   const goalBonus = settlement.bonus;
   const goalNote = settlement.note;
 

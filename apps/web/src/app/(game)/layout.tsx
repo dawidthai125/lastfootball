@@ -4,6 +4,8 @@ import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { ClubProvider } from '@/components/club/ClubProvider';
 import { AppShell } from '@/components/layout/AppShell';
 import { SoftLockRouteGate } from '@/components/layout/SoftLockRouteGate';
+import { loadBoardState } from '@/lib/board/load-board-state';
+import { resolveBoardTaskNote } from '@/lib/board/tasks';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fixtures';
@@ -78,13 +80,14 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
 
     const supabase = await createClient();
     const today = utcDateString();
-    const [activePlayers, h2hOffers, farewellFlash, movements] = await Promise.all([
+    const [activePlayers, h2hOffers, farewellFlash, movements, board] = await Promise.all([
       listClubPlayers(club.id),
       fetchLiveH2hOffers(supabase, club.id),
       club.seasonPhase === 'in_season'
         ? listClubRetirementFlash(club.id, today)
         : Promise.resolve([]),
       listClubFinanceMovements(club.id),
+      loadBoardState(club, fixtures),
     ]);
     const incomingOffers = resolveIncomingOffers({
       clubId: club.id,
@@ -152,6 +155,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         movements,
         matchWageDue(filterSeniorPlayers(activePlayers)),
       ).wageNote,
+      boardTaskNote: board ? resolveBoardTaskNote(board.tasks) : null,
     });
     invitations = resolveClubInvitations({
       messages,

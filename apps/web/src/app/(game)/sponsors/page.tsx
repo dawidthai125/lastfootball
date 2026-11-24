@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { SponsorsView } from '@/components/sponsors/SponsorsView';
+import { loadBoardState } from '@/lib/board/load-board-state';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubFixtures } from '@/lib/fixtures';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
@@ -58,7 +59,14 @@ export default async function SponsorsPage() {
         : lastHome.homeScore < lastHome.awayScore
           ? 'quiet'
           : 'steady';
-  const crowdQuote = sponsorFromCrowd({ attendance, leagueTier: club.leagueTier });
+  const board = await loadBoardState(club, fixtures);
+  const crowdQuote = sponsorFromCrowd({
+    attendance,
+    leagueTier: club.leagueTier,
+    prestige: board?.prestige.value,
+  });
 
-  return <SponsorsView sponsors={sponsors} crowdQuote={crowdQuote} />;
+  return (
+    <SponsorsView sponsors={sponsors} crowdQuote={crowdQuote} prestige={board?.prestige ?? null} />
+  );
 }

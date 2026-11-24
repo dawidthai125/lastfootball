@@ -109,6 +109,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | **LFE-RETIREMENT-01**                                  | **CLOSED** · Thin farewell after Confirm N+1 · PLAN · Owner GO 2026-11-17                                                  |
 | **Career Prime ×1.1**                                  | **CLOSED** · `GROWTH_COEFF_PRIME=1.1` · bonus skill delta · Owner GO 2026-11-17                                            |
 | **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                                 |
+| **Prestiż i zadania zarządu**                          | Historia sezonów · prestiż 0–100 · 4 zadania na sezon · D131                                                               |
 
 ## IN PROGRESS 🔄
 
@@ -139,7 +140,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | Messages DB / mark-as-read / Accept     | poza Thin derive (D46)                     |
 | Multi-tier AI catalogs / baraże         | poza D123 Thin B / D94                     |
 | Sponsor marketplace / nego / Quest      | poza Sponsors Thin (D100)                  |
-| Board Prestige / Quest / club mgmt      | poza Board Thin (D106–D107)                |
+| Reputacja / zarządzanie klubem z Board  | poza D131 (prestiż i zadania: DONE)        |
 | Stadium Ticket / expand / Match couple  | poza Stadium Thin (D112–D115)              |
 | Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC               |
 

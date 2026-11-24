@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
-import { BOARD_THIN_NO_PERSIST } from '@/lib/board/no-persist';
 import { resolveClubBoard } from '@/lib/board/resolve-club-board';
 import type { SeasonReportDto } from '@/lib/season/types';
 
@@ -28,9 +30,31 @@ function report(overrides: Partial<SeasonReportDto> = {}): SeasonReportDto {
   };
 }
 
-describe('BOARD_THIN_NO_PERSIST (M2)', () => {
-  it('documents zero persist surface', () => {
-    expect(BOARD_THIN_NO_PERSIST).toBe(true);
+/** M2 "no persist", narrowed by D131: writes have two server entry points and no other. */
+describe('board persist surface', () => {
+  const source = (name: string) =>
+    readFileSync(join(process.cwd(), 'src/lib/board', `${name}.ts`), 'utf8');
+
+  it('keeps every resolver pure', () => {
+    for (const name of [
+      'resolve-club-board',
+      'prestige',
+      'tasks',
+      'season-history',
+      'board-state',
+    ]) {
+      expect(source(name)).not.toMatch(/supabase|'use server'|Date\.now|Math\.random/);
+    }
+  });
+
+  it('never takes a club id from the browser', () => {
+    const actions = source('actions');
+    expect(actions).toMatch(/^'use server'/);
+    expect(actions.match(/^export /gm)).toHaveLength(1);
+    expect(actions.match(/formData\.get\('\w+'\)/g)).toEqual(["formData.get('block')"]);
+    for (const name of ['store', 'close-board-season', 'load-board-state']) {
+      expect(source(name)).not.toMatch(/^'use server'/m);
+    }
   });
 });
 
@@ -52,6 +76,8 @@ describe('resolveClubBoard', () => {
     expect(dto.standing).not.toHaveProperty('complete');
     expect(dto.standing.trend).toBe('steady');
     expect(dto.tone).toBe('neutral');
+    expect(dto.prestige).toBeNull();
+    expect(dto.tasks).toBeNull();
   });
 
   it('does not call a blank table a rise', () => {
