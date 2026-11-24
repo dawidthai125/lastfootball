@@ -324,7 +324,6 @@ export function LiveMatchFoundation({
         rewardLine={rewardLine}
         fanMoodLine={fanMoodLine}
         developmentNames={developmentNames}
-        fixtureId={leagueFixture?.id}
         continueSlot={
           firstMatch ? (
             <CompleteFirstMatchButton managerLog={runtime?.serializeManagerLog() ?? '[]'} />
