@@ -202,6 +202,7 @@ export function StadiumView({
                   ) : (
                     <form action={buildAction}>
                       <input type="hidden" name="part" value={item.part} />
+                      <input type="hidden" name="level" value={level} />
                       <Button
                         type="submit"
                         variant="default"

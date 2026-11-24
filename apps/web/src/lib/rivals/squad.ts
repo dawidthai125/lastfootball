@@ -1,5 +1,11 @@
 import { createClient } from '@/lib/supabase/server';
-import { resolveMatchBench, resolveStartingXi, type RosterPlayerSeed } from '@/lib/squad';
+import {
+  resolveMatchBench,
+  resolveStartingXi,
+  SquadUnavailableError,
+  type RosterPlayerSeed,
+} from '@/lib/squad';
+import { repairLineup } from '@/lib/squad/lineup-problem';
 import type { PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
 
 const STATUSES: readonly PlayerStatus[] = ['READY', 'INJURED', 'SUSPENDED', 'TIRED', 'DEPARTED'];
@@ -54,8 +60,12 @@ export async function loadRivalSquad(rivalClubId: string): Promise<{
     promotedAt: null,
   }));
 
-  return {
-    xi: resolveStartingXi(rows),
-    bench: resolveMatchBench(rows),
-  };
+  // The rival is not here to fix an injured starter, so he is replaced for this match.
+  const squadRows = repairLineup(rivalClubId, rows);
+  try {
+    return { xi: resolveStartingXi(squadRows), bench: resolveMatchBench(squadRows) };
+  } catch (problem) {
+    if (problem instanceof SquadUnavailableError) return null;
+    throw problem;
+  }
 }

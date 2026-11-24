@@ -71,3 +71,10 @@
     right: var(--lf-space-4);
   }
 }
+
+/* The last row of a page must scroll clear of the toast. */
+@media (max-width: 767px) {
+  body:has(.lf-invitation-toast) main {
+    padding-bottom: 7rem;
+  }
+}

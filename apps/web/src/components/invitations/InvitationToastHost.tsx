@@ -65,6 +65,8 @@ export function InvitationToastHost() {
   if (!hydrated || !candidate) return null;
   if (dismissedId === candidate.id) return null;
   if (candidate.kind === 'matchday' && shouldSuppressMatchdayPath(pathname)) return null;
+  // The invitation leads here already.
+  if (pathname === candidate.href) return null;
   // Immersive Match Path: no chrome toast (same as TopBar hide).
   if (pathname === '/match' || pathname.startsWith('/match/')) return null;
 

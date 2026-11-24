@@ -148,3 +148,10 @@
     padding: var(--lf-space-6) var(--lf-space-5);
   }
 }
+
+@media (max-width: 767px) {
+  .lf-post .truncate {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+}

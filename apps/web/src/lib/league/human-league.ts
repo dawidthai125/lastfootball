@@ -93,6 +93,9 @@ export function humanRoundFromFixture(matchday: number): number | null {
 /** Free days after round 22, for overdue matches. Then the next season starts (D138). */
 export const HUMAN_BREAK_DAYS = 3;
 
+/** A club that did nothing for this long gives its seat back in the next season (D140). */
+export const HUMAN_ACTIVE_DAYS = 14;
+
 /** First day of the next season, when nobody comes late. */
 export function nextHumanSeasonStart(seasonKey: string): string {
   return kickoffDate(seasonKey, HUMAN_ROUND_COUNT + HUMAN_BREAK_DAYS + 1);

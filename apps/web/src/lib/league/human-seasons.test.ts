@@ -13,7 +13,7 @@ import {
 } from './human-league';
 import { lineupProblem, repairLineup } from '@/lib/squad/lineup-problem';
 import type { PlayerRowDto } from '@/lib/squad/types';
-import { resolveHumanTable } from './human-table';
+import { resolveHumanTable, settleMissing } from './human-table';
 
 const KEY = '2026-11-12';
 const at = (iso: string) => new Date(iso);
@@ -88,6 +88,45 @@ describe('human league seasons (D138)', () => {
     );
     expect(mine[0]).toMatchObject({ id: 'me', played: 1, won: 1, points: 3, goalsFor: 9 });
     expect(mine.reduce((sum, row) => sum + row.goalsFor - row.goalsAgainst, 0)).toBe(0);
+  });
+});
+
+describe('closing a season (D140)', () => {
+  const seats = fillHumanSeats(
+    [
+      { id: 'strong', name: 'Mocni', shortName: 'MOC', createdAt: '2026-11-01' },
+      { id: 'weak', name: 'Słabi', shortName: 'SLA', createdAt: '2026-11-02' },
+    ],
+    OPPONENT_CATALOG,
+  );
+  const now = at('2026-12-07T10:00:00Z');
+
+  it('gives an absent club defeats, so it cannot win, and keeps played matches', () => {
+    const pair = pairingsForMatchday(seats, 1)[0]!;
+    const played = [
+      { round: 1, homeId: pair.home.id, awayId: pair.away.id, homeScore: 0, awayScore: 0 },
+    ];
+    const missing = settleMissing({ seats, seasonKey: KEY, results: played });
+    // Two matches between the two clubs have no result.
+    expect(missing).toHaveLength(22 * 6 - 1 - 2);
+    expect(settleMissing({ seats, seasonKey: KEY, results: played })).toEqual(missing);
+    const table = resolveHumanTable({
+      seats,
+      seasonKey: KEY,
+      results: [...played, ...missing],
+      now,
+    });
+    const weak = table.find((row) => row.id === 'weak')!;
+    expect(weak).toMatchObject({ played: 20, won: 0, points: 0, goalsFor: 0 });
+    expect(table.slice(0, 10).every((row) => row.isBot)).toBe(true);
+  });
+
+  it('agrees with the live table on bot pairs', () => {
+    const live = resolveHumanTable({ seats, seasonKey: KEY, results: [], now });
+    const bots = settleMissing({ seats, seasonKey: KEY, results: [] }).filter(
+      (r) => r.homeId.startsWith('opp-') && r.awayId.startsWith('opp-'),
+    );
+    expect(resolveHumanTable({ seats, seasonKey: KEY, results: bots, now })).toEqual(live);
   });
 });
 

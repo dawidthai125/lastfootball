@@ -384,9 +384,31 @@
 
 @media (max-width: 767px) {
   .lf-live__scorebug {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: var(--lf-space-2);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--lf-space-1);
     padding: var(--lf-space-2);
+  }
+
+  /* Controls above, score below: side by side left no room for the club names. */
+  .lf-live__scorebug > div:first-child {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .lf-live__scorebug .lf-live__chip {
+    align-self: center;
+  }
+
+  .lf-live__scorebug .truncate {
+    font-size: var(--lf-type-table) !important;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .lf-live__feed {
+    max-height: 8.5rem;
   }
 
   .lf-live__viewers,

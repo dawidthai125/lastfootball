@@ -846,7 +846,13 @@ Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_l
 4. Wiadomości: ostatni sezon umowy i lista, kto odszedł. Raport sezonu mówi, kto odejdzie.
 5. `departed_reason`: sprzedaż i koniec wypożyczenia nie są już pokazywane jako koniec kariery.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D139 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D140 — Liga ludzi: koniec sezonu i aktywność; zapisy kasy · Owner GO 2026-11-24
+
+1. Przy starcie nowego sezonu nierozegrany mecz klubu gracza z botem to 0:3, mecz dwóch nieobecnych klubów się nie liczy, boty grają między sobą jak w tabeli. Bez nagród i kar. Tabela końcowa zostaje (`human_league_history`).
+2. Miejsce dostaje klub, który w ostatnich 14 dniach grał, trenował albo powstał. Pozostałe miejsca biorą boty.
+3. Zakup z rynku to jedna transakcja (`buy_market_player`). Rozbudowa stadionu wymaga poziomu, który gracz widział.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D140 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

@@ -1,6 +1,6 @@
 import { aiSaleAsk } from '@/lib/transfers/fair-sale';
-import { serverDb } from '@/lib/supabase/admin';
-import { CASH_STALE_ERROR, creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
+import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
+import { creditClubCash } from '@/lib/finance/club-cash';
 import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
@@ -146,6 +146,14 @@ async function invokeLiveH2hRpc(
   return { ok: true, playerId: row.player_id, amount: row.amount };
 }
 
+const BUY_NOT_SAVED = 'Nie udało się zapisać transferu. Spróbuj ponownie.';
+
+const BUY_ERRORS: Readonly<Record<string, string>> = {
+  window: 'Okno transferowe jest zamknięte.',
+  cash: 'Za mało środków w budżecie transferowym / kasie.',
+  roster: 'Kadra jest pełna (max 22).',
+};
+
 /**
  * Atomic buy settlement.
  * - seed: insert t-{tag}- player from catalogue.
@@ -234,85 +242,43 @@ export async function completeTransferBuy(
   const playerId = nextBoughtId(input.clubId, [...allIds, ...departedIds]);
   const shirt = freeShirt(everyRow);
   if (shirt == null) return { ok: false, error: 'Brak wolnego numeru koszulki.' };
-  const nextCash = input.cashBalance - agreedAmount;
 
-  const written = await writeClubCash({
-    clubId: input.clubId,
-    expected: input.cashBalance,
-    next: nextCash,
-  });
-  if (written !== 'ok') {
-    return {
-      ok: false,
-      error: written === 'stale' ? CASH_STALE_ERROR : 'Nie udało się zaktualizować kasy.',
-    };
+  // One transaction under the club lock: a second request finds the deal and pays nothing.
+  const admin = tryAdminClient();
+  if (!admin) return { ok: false, error: BUY_NOT_SAVED };
+  const { data, error } = await admin.rpc(
+    'buy_market_player' as never,
+    {
+      p_club_id: input.clubId,
+      p_market_id: input.marketId,
+      p_amount: agreedAmount,
+      p_max_roster: TRANSFERS_THIN.MAX_ROSTER,
+      p_player: {
+        id: playerId,
+        name: listing.name,
+        shirt_number: shirt,
+        pos: listing.pos,
+        role: listing.role,
+        age: listing.age,
+        skill: listing.skill,
+        potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
+      },
+    } as never,
+  );
+  const row = data as {
+    ok?: boolean;
+    reason?: string;
+    player_id?: string;
+    amount?: number;
+  } | null;
+  if (error || !row) {
+    console.error('completeTransferBuy failed', { code: error?.code });
+    return { ok: false, error: BUY_NOT_SAVED };
   }
-
-  const { error: playerErr } = await serverDb(supabase)
-    .from('players')
-    .insert({
-      id: playerId,
-      club_id: input.clubId,
-      name: listing.name,
-      shirt_number: shirt,
-      pos: listing.pos,
-      role: listing.role,
-      starter: false,
-      captain: false,
-      age: listing.age,
-      skill: listing.skill,
-      potential: resolvePlayerPotential(listing.skill, playerId, listing.age),
-      status: 'READY',
-      nationality: 'POL',
-      origin: agreedAmount === 0 ? 'free' : 'bought',
-      joined_at: new Date().toISOString(),
-      version: 1,
-      departed_at: null,
-    } as never);
-
-  if (playerErr) {
-    if ((await creditClubCash(input.clubId, agreedAmount)) == null) {
-      console.error('completeTransferBuy: refund failed', { clubId: input.clubId });
-    }
-    return { ok: false, error: 'Nie udało się dodać zawodnika.' };
+  if (row.ok !== true || !row.player_id || typeof row.amount !== 'number') {
+    return { ok: false, error: BUY_ERRORS[row.reason ?? ''] ?? BUY_NOT_SAVED };
   }
-
-  if (agreedAmount !== 0) {
-    const { error: movErr } = await serverDb(supabase)
-      .from('finance_movements')
-      .insert({
-        club_id: input.clubId,
-        category: 'transfer_buy',
-        label: `Transfer: ${listing.name}`,
-        amount: -agreedAmount,
-        fixture_id: null,
-      } as never);
-
-    if (movErr) {
-      return {
-        ok: false,
-        error: 'Zawodnik dodany, ale wpis finansowy nieudany — odśwież Finanse.',
-      };
-    }
-  }
-
-  const { error: dealErr } = await serverDb(supabase)
-    .from('transfer_deals')
-    .insert({
-      club_id: input.clubId,
-      kind: 'buy',
-      player_id: playerId,
-      market_id: input.marketId,
-      amount: agreedAmount,
-      idempotency_key: idempotencyKey,
-      completed_at: new Date().toISOString(),
-    } as never);
-
-  if (dealErr && dealErr.code !== '23505') {
-    return { ok: false, error: 'Transfer zapisany częściowo — sprawdź kadrę i finanse.' };
-  }
-
-  return { ok: true, playerId, amount: agreedAmount };
+  return { ok: true, playerId: row.player_id, amount: row.amount };
 }
 
 /**
