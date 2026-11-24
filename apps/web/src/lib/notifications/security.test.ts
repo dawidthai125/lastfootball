@@ -432,6 +432,7 @@ describe('key creation', () => {
 
 describe('secrets stay on the server', () => {
   const SERVER_ONLY = [
+    'lib/contact/forward',
     'lib/notifications/server-secrets',
     'lib/notifications/push',
     'lib/notifications/devices',
@@ -488,6 +489,7 @@ describe('secrets stay on the server', () => {
       'lib/notifications/server-secrets.ts',
       'lib/notifications/push.ts',
       'lib/notifications/email.ts',
+      'lib/contact/forward.ts',
       'config/env.ts',
       'types/database.ts',
     ]);
