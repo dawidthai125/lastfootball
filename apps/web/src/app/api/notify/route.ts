@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { env } from '@/config/env';
+import { runContactMail } from '@/lib/contact/forward';
 import { isSchedulerRequest } from '@/lib/notifications/notify-token';
 import { runNotifications } from '@/lib/notifications/run';
 import { readNotifyToken } from '@/lib/notifications/server-secrets';
@@ -25,10 +26,13 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401, headers: NO_STORE });
   }
   try {
+    const contact = await runContactMail(new Date());
     const deps = await createNotifyDeps(admin);
-    if (!deps) return NextResponse.json({ available: false }, { headers: NO_STORE });
+    if (!deps) {
+      return NextResponse.json({ available: false, contact }, { headers: NO_STORE });
+    }
     const counts = await runNotifications(deps, new Date());
-    return NextResponse.json({ available: true, ...counts }, { headers: NO_STORE });
+    return NextResponse.json({ available: true, ...counts, contact }, { headers: NO_STORE });
   } catch {
     return NextResponse.json({ error: 'failed' }, { status: 500, headers: NO_STORE });
   }

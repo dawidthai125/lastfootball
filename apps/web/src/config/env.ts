@@ -22,6 +22,7 @@ const envSchema = z
     CRON_SECRET: z.preprocess(emptyToUndefined, z.string().min(16).optional()),
     RESEND_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
     NOTIFY_FROM: z.preprocess(emptyToUndefined, z.string().min(3).optional()),
+    CONTACT_FORWARD_TO: z.preprocess(emptyToUndefined, z.string().min(3).optional()),
   })
   .superRefine((data, ctx) => {
     const hasUrl = Boolean(data.NEXT_PUBLIC_SUPABASE_URL);
@@ -45,6 +46,7 @@ const parsed = envSchema.safeParse({
   CRON_SECRET: process.env.CRON_SECRET,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   NOTIFY_FROM: process.env.NOTIFY_FROM,
+  CONTACT_FORWARD_TO: process.env.CONTACT_FORWARD_TO,
 });
 
 if (!parsed.success) {
@@ -65,6 +67,8 @@ export const env = {
   /** Server-only. Both or neither: without them the e-mail channel stays off. */
   resendApiKey: data.RESEND_API_KEY ?? null,
   notifyFrom: data.NOTIFY_FROM ?? null,
+  /** Server-only. Where letters to the contact address go. Never in the repository. */
+  contactForwardTo: data.CONTACT_FORWARD_TO ?? null,
   isSupabaseConfigured: Boolean(
     data.NEXT_PUBLIC_SUPABASE_URL && data.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   ),

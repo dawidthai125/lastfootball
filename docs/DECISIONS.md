@@ -873,7 +873,11 @@ Wyzwanie: jedno na dzień (czas warszawski), własny zegar, nie zajmuje dnia lig
 6. Nagrody Ligi ludzi (`HUMAN_PRIZES`) płacone raz przy zamknięciu sezonu, klubom z co najmniej 11 własnymi kolejkami.
 7. Nowy sezon klubu nie kasuje rozegranych kolejek trwającej Ligi ludzi (wcześniej można je było zagrać i dostać nagrodę drugi raz).
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D143 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D144 — Poczta kontaktowa · Owner GO 2026-11-24
+
+kontakt@lastfootball.pl odbiera Resend (rekord MX). Harmonogram powiadomień przekazuje listy na adres z `CONTACT_FORWARD_TO` (tylko Vercel, nigdy w repo), najwyżej 25 na dobę. Zapisujemy wyłącznie identyfikatory przekazanych listów, na 7 dni.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D144 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
