@@ -70,14 +70,42 @@ export function fillHumanSeats(
   return seats;
 }
 
-export function humanFixtureMatchday(round: number): number {
-  return HUMAN_FIXTURE_BASE + round;
+/** Season 1 keeps 301–322. Later seasons sit far above the challenge days (201+). */
+const LATER_SEASON_BASE = 100_000;
+
+export function humanFixtureMatchday(round: number, season = 1): number {
+  return season <= 1 ? HUMAN_FIXTURE_BASE + round : LATER_SEASON_BASE + season * 100 + round;
+}
+
+export function humanSeasonFromFixture(matchday: number): number {
+  return matchday < LATER_SEASON_BASE ? 1 : Math.trunc((matchday - LATER_SEASON_BASE) / 100);
 }
 
 export function humanRoundFromFixture(matchday: number): number | null {
-  const round = matchday - HUMAN_FIXTURE_BASE;
+  const round =
+    matchday < LATER_SEASON_BASE
+      ? matchday - HUMAN_FIXTURE_BASE
+      : (matchday - LATER_SEASON_BASE) % 100;
   if (round < 1 || round > HUMAN_ROUND_COUNT) return null;
   return round;
+}
+
+/** Free days after round 22, for overdue matches. Then the next season starts (D138). */
+export const HUMAN_BREAK_DAYS = 3;
+
+/** First day of the next season, when nobody comes late. */
+export function nextHumanSeasonStart(seasonKey: string): string {
+  return kickoffDate(seasonKey, HUMAN_ROUND_COUNT + HUMAN_BREAK_DAYS + 1);
+}
+
+/**
+ * Key of the season that should start now, or null. A late start counts from the day it happens,
+ * and from tomorrow once the shared kickoff of today has passed: no round is overdue at birth.
+ */
+export function dueHumanSeasonKey(seasonKey: string, now: Date): string | null {
+  const today = warsawDateKey(now);
+  if (today < nextHumanSeasonStart(seasonKey)) return null;
+  return warsawHour(now) < KICKOFF_OPEN_HOUR ? today : kickoffDate(today, 2);
 }
 
 /** Circle method. Matchdays 12–22 are the return legs. */

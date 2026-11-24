@@ -1,4 +1,4 @@
-import { lineupProblem } from '@/lib/squad/lineup-problem';
+import { lineupProblem, repairLineup } from '@/lib/squad/lineup-problem';
 import type { PitchRole } from '@lastfootball/lfe';
 
 import { env } from '@/config/env';
@@ -16,7 +16,11 @@ import type { Json } from '@/types/database';
 
 import {
   fillHumanSeats,
+  dueHumanSeasonKey,
+  HUMAN_ROUND_COUNT,
   humanFixtureMatchday,
+  humanSeasonFromFixture,
+  nextHumanSeasonStart,
   humanRoundFromFixture,
   isBotClubId,
   kickoffDate,
@@ -28,6 +32,7 @@ import {
   type HumanPairing,
   type HumanSeat,
 } from './human-league';
+import { resolveHumanTable, type HumanResult, type HumanTableRow } from '@/lib/league/human-table';
 import { parseHomeSetup, type HumanHomeSetup } from '@/lib/league/human-home-setup';
 import { finishSharedSession } from './human-play';
 
@@ -46,6 +51,10 @@ export type HumanLeagueCard = {
   readonly late: boolean;
   readonly fixtureId: string | null;
   readonly note: string | null;
+  readonly season: number;
+  /** Warsaw date when the next season may start. */
+  readonly nextSeasonOn: string | null;
+  readonly standings: readonly HumanTableRow[];
 };
 
 type BroadcastRow = {
@@ -69,6 +78,7 @@ type BroadcastRow = {
 
 type SeatTable = {
   readonly seasonKey: string;
+  readonly season: number;
   readonly frozen: boolean;
   readonly seats: readonly HumanSeat[];
 };
@@ -110,6 +120,9 @@ function previewCard(club: ClubDto, note: string): HumanLeagueCard {
     late: false,
     fixtureId: null,
     note,
+    season: 1,
+    nextSeasonOn: null,
+    standings: [],
   };
 }
 
@@ -118,13 +131,14 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
   const admin = createAdminClient();
   const existing = await admin
     .from('human_league')
-    .select('season_key, frozen')
+    .select('season_key, season_number, frozen')
     .eq('id', 1)
     .maybeSingle();
   if (missingRelation(existing.error)) return 'missing';
   if (existing.error) return null;
 
   let seasonKey = existing.data?.season_key;
+  let season = existing.data?.season_number ?? 1;
   let frozen = existing.data?.frozen ?? false;
   if (!seasonKey) {
     seasonKey = warsawDateKey(now);
@@ -137,13 +151,30 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
     if (inserted.error) {
       const again = await admin
         .from('human_league')
-        .select('season_key, frozen')
+        .select('season_key, season_number, frozen')
         .eq('id', 1)
         .maybeSingle();
       if (!again.data) return null;
       seasonKey = again.data.season_key;
+      season = again.data.season_number;
       frozen = again.data.frozen;
     }
+  }
+
+  const nextKey = dueHumanSeasonKey(seasonKey, now);
+  if (nextKey) {
+    const rolled = await admin.rpc(
+      'roll_human_league' as never,
+      { p_season: season, p_key: nextKey } as never,
+    );
+    // Next remembers equal reads while it renders one page, so the call itself returns the state.
+    const state = rolled.data as unknown as {
+      season_key: string;
+      season_number: number;
+      frozen: boolean;
+    } | null;
+    if (rolled.error || !state) return null;
+    ({ season_key: seasonKey, season_number: season, frozen } = state);
   }
 
   if (!frozen) {
@@ -172,7 +203,7 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
       })),
     );
     if (saved.error) return null;
-    return { seasonKey, frozen: false, seats };
+    return { seasonKey, season, frozen: false, seats };
   }
 
   const seatRows = await admin
@@ -182,6 +213,7 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
   if (seatRows.error || !seatRows.data || seatRows.data.length !== 12) return null;
   return {
     seasonKey,
+    season,
     frozen: true,
     seats: seatRows.data.map((row) => ({
       slot: row.slot,
@@ -254,7 +286,11 @@ async function snapshotXi(
     : full;
   if (result.error || !result.data) return { error: 'Nie mogę odczytać składu.' };
   try {
-    const rows = (result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row));
+    // A rival's injured starter must not cancel the match for both clubs.
+    const rows = repairLineup(
+      clubId,
+      (result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row)),
+    );
     const xi = resolveStartingXi(rows);
     const problem = lineupProblem(clubId, rows);
     return problem ? { error: problem } : xi;
@@ -274,13 +310,14 @@ function sideXi(
   return parsed;
 }
 
-async function readBroadcast(pair: HumanPairing): Promise<BroadcastRow | null> {
+async function readBroadcast(season: number, pair: HumanPairing): Promise<BroadcastRow | null> {
   const admin = createAdminClient();
   const { data, error } = await admin
     .from('human_broadcasts')
     .select(
       'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
     )
+    .eq('season', season)
     .eq('matchday', pair.matchday)
     .eq('home_id', pair.home.id)
     .eq('away_id', pair.away.id)
@@ -317,12 +354,21 @@ async function setupOf(broadcast: BroadcastRow): Promise<HumanHomeSetup> {
     : readHomeSetup(broadcast.home_id);
 }
 
+/** Only its own season: a late request must not close the seats of the next one. */
+async function freezeSeats(season: number): Promise<void> {
+  await createAdminClient()
+    .from('human_league')
+    .update({ frozen: true })
+    .eq('id', 1)
+    .eq('season_number', season);
+}
+
 async function lockBroadcast(
   table: SeatTable,
   pair: HumanPairing,
   now: Date,
 ): Promise<BroadcastRow | { error: string }> {
-  const existing = await readBroadcast(pair);
+  const existing = await readBroadcast(table.season, pair);
   if (existing?.locked_at) return existing;
 
   const homeSnap = isBotClubId(pair.home.id) ? null : await snapshotXi(pair.home.id);
@@ -332,6 +378,7 @@ async function lockBroadcast(
 
   const admin = createAdminClient();
   const payload = {
+    season: table.season,
     matchday: pair.matchday,
     home_id: pair.home.id,
     away_id: pair.away.id,
@@ -357,7 +404,7 @@ async function lockBroadcast(
       )
       .maybeSingle();
     if (updated.error || !updated.data) return { error: 'Nie udało się zamknąć składów.' };
-    await admin.from('human_league').update({ frozen: true }).eq('id', 1);
+    await freezeSeats(table.season);
     return updated.data as BroadcastRow;
   }
 
@@ -369,11 +416,11 @@ async function lockBroadcast(
     )
     .maybeSingle();
   if (inserted.error || !inserted.data) {
-    const raced = await readBroadcast(pair);
+    const raced = await readBroadcast(table.season, pair);
     if (raced) return raced;
     return { error: 'Nie udało się zapisać meczu ligi ludzi.' };
   }
-  await admin.from('human_league').update({ frozen: true }).eq('id', 1);
+  await freezeSeats(table.season);
   return inserted.data as BroadcastRow;
 }
 
@@ -381,11 +428,12 @@ async function ensureFixture(input: {
   clubId: string;
   opponentId: string;
   isHome: boolean;
+  season: number;
   round: number;
 }): Promise<string | null> {
   if (isBotClubId(input.clubId)) return null;
   const admin = createAdminClient();
-  const matchday = humanFixtureMatchday(input.round);
+  const matchday = humanFixtureMatchday(input.round, input.season);
   const existing = await admin
     .from('fixtures')
     .select('id, status')
@@ -417,6 +465,34 @@ async function ensureFixture(input: {
   return inserted.data?.id ?? null;
 }
 
+function dayLabel(date: string): string {
+  const [, month, day] = date.split('-');
+  return `${day}.${month}`;
+}
+
+/** Scores somebody already played, for the standings. */
+async function seasonResults(season: number): Promise<HumanResult[]> {
+  const { data, error } = await createAdminClient()
+    .from('human_broadcasts')
+    .select('matchday, home_id, away_id, home_score, away_score')
+    .eq('season', season)
+    .not('home_score', 'is', null);
+  if (error || !data) return [];
+  return data.flatMap((row) =>
+    row.home_score == null || row.away_score == null
+      ? []
+      : [
+          {
+            round: row.matchday,
+            homeId: row.home_id,
+            awayId: row.away_id,
+            homeScore: row.home_score,
+            awayScore: row.away_score,
+          },
+        ],
+  );
+}
+
 function cardFrom(
   club: ClubDto,
   table: SeatTable,
@@ -435,6 +511,9 @@ function cardFrom(
     late: extra.late ?? false,
     fixtureId: extra.fixtureId ?? null,
     note: extra.note ?? null,
+    season: table.season,
+    nextSeasonOn: nextHumanSeasonStart(table.seasonKey),
+    standings: extra.standings ?? [],
   };
 }
 
@@ -452,10 +531,20 @@ export async function loadHumanLeagueCard(
     );
   }
 
+  const standings = resolveHumanTable({
+    seats: table.seats,
+    seasonKey: table.seasonKey,
+    results: await seasonResults(table.season),
+    now,
+  });
+  const card = (extra: Partial<HumanLeagueCard>) => cardFrom(club, table, { standings, ...extra });
+
   const mine = table.seats.find((seat) => seat.id === club.id);
   if (!mine) {
-    return cardFrom(club, table, {
-      note: 'Liga ludzi ma już 12 klubów. Wchodzisz, gdy zwolni się miejsce.',
+    return card({
+      note: table.seats.some((seat) => seat.kind === 'bot')
+        ? `Miejsca w tym sezonie są zamknięte. Wejdziesz w nowym sezonie, od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}.`
+        : 'Liga ludzi ma już 12 klubów. Wchodzisz, gdy zwolni się miejsce.',
     });
   }
 
@@ -467,7 +556,9 @@ export async function loadHumanLeagueCard(
     .eq('competition', 'human');
   const rows = playedRows.data ?? [];
   const playedRounds = rows
-    .filter((row) => row.status === 'played')
+    .filter(
+      (row) => row.status === 'played' && humanSeasonFromFixture(row.matchday) === table.season,
+    )
     .map((row) => humanRoundFromFixture(row.matchday))
     .filter((round): round is number => round != null);
   const today = warsawDateKey(now);
@@ -482,19 +573,21 @@ export async function loadHumanLeagueCard(
     playedHumanToday,
   });
   if (!round) {
-    return cardFrom(club, table, {
+    return card({
       note: playedHumanToday
         ? 'Kolejka ludzi na dziś już rozegrana.'
-        : 'Sezon ligi ludzi nie ma teraz meczu do rozegrania.',
+        : today > kickoffDate(table.seasonKey, HUMAN_ROUND_COUNT)
+          ? `Sezon ${table.season} rozegrany. Nowy sezon od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}, wolne miejsca biorą nowe kluby.`
+          : 'Sezon ligi ludzi nie ma teraz meczu do rozegrania.',
     });
   }
 
   const pair = pairingForClub(table.seats, round, club.id);
-  if (!pair) return cardFrom(club, table, { round, note: 'Brak pary na tę kolejkę.' });
+  if (!pair) return card({ round, note: 'Brak pary na tę kolejkę.' });
   const opponent = pair.home.id === club.id ? pair.away : pair.home;
   const window = kickoffWindowState(now, kickoffDate(table.seasonKey, round));
   if (window === 'before') {
-    return cardFrom(club, table, {
+    return card({
       round,
       opponentName: opponent.name,
       windowSentence: kickoffWindowSentence(window),
@@ -504,7 +597,7 @@ export async function loadHumanLeagueCard(
 
   const locked = await lockBroadcast(table, pair, now);
   if ('error' in locked) {
-    return cardFrom(club, table, {
+    return card({
       round,
       opponentName: opponent.name,
       windowSentence: null,
@@ -515,15 +608,17 @@ export async function loadHumanLeagueCard(
     clubId: club.id,
     opponentId: opponent.id,
     isHome: pair.home.id === club.id,
+    season: table.season,
     round,
   });
   await ensureFixture({
     clubId: opponent.id,
     opponentId: club.id,
     isHome: pair.home.id === opponent.id,
+    season: table.season,
     round,
   });
-  return cardFrom(club, table, {
+  return card({
     round,
     opponentName: opponent.name,
     windowSentence: kickoffWindowSentence(window),
@@ -555,6 +650,9 @@ export async function prepareHumanLive(
   const table = await ensureSeatTable(now);
   if (table === null || table === 'missing') {
     return blocked('Liga ludzi nie jest jeszcze włączona na bazie.');
+  }
+  if (humanSeasonFromFixture(dto.matchday) !== table.season) {
+    return blocked('Ten sezon Ligi ludzi jest już zamknięty.');
   }
   const pair = pairingForClub(table.seats, round, club.id);
   if (!pair) return blocked('Nie ma Cię w tej kolejce ligi ludzi.');
@@ -601,6 +699,7 @@ export async function authoritativeHumanScore(
     .select(
       'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
     )
+    .eq('season', humanSeasonFromFixture(fixtureMatchday))
     .eq('matchday', round)
     .or(`home_id.eq.${clubId},away_id.eq.${clubId}`)
     .maybeSingle();
@@ -651,7 +750,7 @@ export async function authoritativeHumanScore(
     {
       id: broadcast.id,
       clubId: broadcast.home_id,
-      matchday: humanFixtureMatchday(round),
+      matchday: fixtureMatchday,
       competition: 'human',
       opponentClubId: broadcast.away_id,
       opponent: {

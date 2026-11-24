@@ -6,6 +6,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Table } from '@/components/ui/Table';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { ensureClubFixtures } from '@/lib/fixtures';
+import { HumanStandings } from '@/components/league/HumanStandings';
 import { CupBracket } from '@/components/cup/CupBracket';
 import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { resolveNationalCup } from '@/lib/cup';
@@ -55,7 +56,7 @@ export default async function LeaguePage() {
         {seasonGoalLine}
       </p>
       {human ? (
-        <Panel title="Liga ludzi">
+        <Panel title={`Liga ludzi · Sezon ${human.season}`}>
           <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
             12 miejsc. Wolne miejsca zajmują boty. Oba kluby oglądają ten sam mecz z jednego seeda.
           </p>
@@ -83,15 +84,19 @@ export default async function LeaguePage() {
               </Link>
             </p>
           ) : null}
-          <ol style={{ margin: 0, paddingLeft: '1.2em' }}>
-            {human.seats.map((seat) => (
-              <li key={seat.slot} style={{ fontWeight: seat.yours ? 700 : 400 }}>
-                {seat.name}
-                {seat.kind === 'bot' ? ' · bot' : ''}
-                {seat.yours ? ' · Ty' : ''}
-              </li>
-            ))}
-          </ol>
+          {human.standings.length > 0 ? (
+            <HumanStandings rows={human.standings} clubId={club.id} />
+          ) : (
+            <ol style={{ margin: 0, paddingLeft: '1.2em' }}>
+              {human.seats.map((seat) => (
+                <li key={seat.slot} style={{ fontWeight: seat.yours ? 700 : 400 }}>
+                  {seat.name}
+                  {seat.kind === 'bot' ? ' · bot' : ''}
+                  {seat.yours ? ' · Ty' : ''}
+                </li>
+              ))}
+            </ol>
+          )}
         </Panel>
       ) : null}
       <Panel title="Tabela" flush>

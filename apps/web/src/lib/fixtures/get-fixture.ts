@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { env } from '@/config/env';
 import { mapFixtureRow } from '@/lib/fixtures/map-fixture';
-import { humanRoundFromFixture } from '@/lib/league/human-league';
+import { humanRoundFromFixture, humanSeasonFromFixture } from '@/lib/league/human-league';
 import type { FixtureDto, FixtureRow } from '@/lib/fixtures/types';
 import { clampStyle } from '@/lib/training/style';
 
@@ -40,10 +40,13 @@ async function withHumanNames(clubId: string, fixtures: FixtureDto[]): Promise<F
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('human_broadcasts')
-    .select('matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed')
+    .select(
+      'season, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed',
+    )
     .or(`home_id.eq.${clubId},away_id.eq.${clubId}`);
   if (error || !data) return fixtures;
   const rows = data as {
+    season: number;
     matchday: number;
     home_id: string;
     away_id: string;
@@ -56,7 +59,9 @@ async function withHumanNames(clubId: string, fixtures: FixtureDto[]): Promise<F
   return fixtures.map((fixture) => {
     if (fixture.competition !== 'human') return fixture;
     const round = humanRoundFromFixture(fixture.matchday);
-    const row = rows.find((item) => item.matchday === round);
+    const row = rows.find(
+      (item) => item.matchday === round && item.season === humanSeasonFromFixture(fixture.matchday),
+    );
     if (!row) return fixture;
     const home = row.home_id === clubId;
     return {

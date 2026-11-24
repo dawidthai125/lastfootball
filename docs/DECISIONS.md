@@ -830,7 +830,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_league_season`), więc rozegranej kolejki nie da się zagrać ani rozliczyć drugi raz. Oba kluby i zapis wyniku liczą ten sam mecz: jedna zasada energii, stałe fragmenty obu stron, boisko i styl gospodarza zamrożone ze składem (`human_broadcasts.home_setup`). Mecz Ligi ludzi nie zajmuje dnia ligi i pucharu. Zapowiedź końca kariery liczy wiek po starcie sezonu.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D137 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D138 — Liga ludzi: sezony, tabela, nowe kluby · Owner GO 2026-11-24
+
+1. Sezon ma 22 kolejki. Potem 3 dni na zaległe mecze i automatyczny start kolejnego (`roll_human_league`, raz, tylko serwer).
+2. Między sezonami miejsca są otwarte do 18:00 pierwszej kolejki; wolne biorą nowe kluby, resztę boty. Nadal 12 miejsc, od najstarszego klubu.
+3. Tabela: mecz z klubem gracza liczy się, gdy ktoś go rozegrał; dwa boty grają same po oknie 18:00–21:00.
+4. Niedostępny zawodnik w jedenastce nie blokuje meczu obu klubom: przy zamknięciu składów zastępuje go najlepszy wolny.
+5. Wyniki poprzednich sezonów zostają (`human_broadcasts.season`). Przy starcie znikają tylko nierozegrane mecze.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D138 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

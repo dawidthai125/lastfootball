@@ -6,7 +6,7 @@ import { env } from '@/config/env';
 import { emailGate } from '@/lib/auth/email-confirm-policy';
 import { isProvenEmail } from '@/lib/auth/email-proof';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
-import { humanRoundFromFixture } from '@/lib/league/human-league';
+import { humanRoundFromFixture, humanSeasonFromFixture } from '@/lib/league/human-league';
 import { emailLetter, pushPayload } from '@/lib/notifications/content';
 import { createEmailSender, emailProvider } from '@/lib/notifications/email';
 import {
@@ -85,7 +85,11 @@ async function loadHumanFacts(
   now: Date,
 ): Promise<HumanFacts | null> {
   if (!isHumanWindow(now)) return null;
-  const league = await admin.from('human_league').select('season_key').eq('id', 1).maybeSingle();
+  const league = await admin
+    .from('human_league')
+    .select('season_key, season_number')
+    .eq('id', 1)
+    .maybeSingle();
   if (league.error || !league.data) return null;
   const seats = await admin
     .from('human_league_seats')
@@ -108,6 +112,7 @@ async function loadHumanFacts(
     const club = playedByClub.get(row.club_id);
     const round = humanRoundFromFixture(row.matchday);
     if (!club || round == null) continue;
+    if (humanSeasonFromFixture(row.matchday) !== league.data.season_number) continue;
     club.rounds.push(round);
     if (row.played_at) club.playedAt.push(row.played_at);
   }
