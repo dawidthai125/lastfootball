@@ -8612,6 +8612,8 @@ Odciąć mocki od designu.
 
 **Status rozdziału:** GDD-22 — opracowany (**Powiadomienia Thin** — polityka alertów produktowych · soft FOMO · opt-in · dedup; bez push engineering, email, SDK, DB, quiet hours, kodu i liczb)
 
+**Wdrożenie kanałów:** D132 (2026-11-24) — web push i e-mail: opt-in, cisza 22:00–8:00, najwyżej 2 dziennie na kanał. Polityka §22 bez zmian.
+
 **Cel rozdziału**  
 Zdefiniować **politykę soft remindów / alertów produktowych**, które **zapraszają** menedżera do decyzji już istniejącej w grze — **bez** wymuszania, **bez** kary za wyłączenie i **bez** ukrywania istotnych informacji poza Hubem / skrzynką / ekranem domenowym.
 
@@ -8968,7 +8970,7 @@ Odciąć mocki od designu.
 - [x] Kategorie jakościowe · Soft FOMO · opt-in · dedup
 - [x] Granice §20 · §21 · §23 · §3.10
 - [x] Granice odpowiedzialności · Placeholder nie-SSOT · Thin vs Future · kontrakty
-- [ ] Implementacja kanału push / email / SDK / DB / kodu (osobny EPIC · poza GDD-22 docs)
+- [x] Implementacja kanału push / email / DB / kodu (osobny EPIC · D132)
 - [x] Sync statusów projektu (DOCS CLOSE)
 
 ---

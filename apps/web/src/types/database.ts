@@ -708,6 +708,153 @@ export type Database = {
         };
         Relationships: [];
       };
+      notification_prefs: {
+        Row: {
+          user_id: string;
+          push_enabled: boolean;
+          email_enabled: boolean;
+          kind_matchday: boolean;
+          kind_human_round: boolean;
+          kind_offer: boolean;
+          kind_challenge: boolean;
+          unsubscribe_token_hash: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          push_enabled?: boolean;
+          email_enabled?: boolean;
+          kind_matchday?: boolean;
+          kind_human_round?: boolean;
+          kind_offer?: boolean;
+          kind_challenge?: boolean;
+          unsubscribe_token_hash?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          push_enabled?: boolean;
+          email_enabled?: boolean;
+          kind_matchday?: boolean;
+          kind_human_round?: boolean;
+          kind_offer?: boolean;
+          kind_challenge?: boolean;
+          unsubscribe_token_hash?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      push_subscriptions: {
+        Row: {
+          id: string;
+          user_id: string;
+          endpoint: string;
+          p256dh: string;
+          auth: string;
+          failure_count: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          endpoint: string;
+          p256dh: string;
+          auth: string;
+          failure_count?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          endpoint?: string;
+          p256dh?: string;
+          auth?: string;
+          failure_count?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      notification_log: {
+        Row: {
+          id: string;
+          user_id: string;
+          kind: string;
+          ref: string;
+          channel: string;
+          sent_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          kind: string;
+          ref: string;
+          channel: string;
+          sent_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          kind?: string;
+          ref?: string;
+          channel?: string;
+          sent_at?: string;
+        };
+        Relationships: [];
+      };
+      server_secrets: {
+        Row: {
+          name: string;
+          value: string;
+          created_at: string;
+        };
+        Insert: {
+          name: string;
+          value: string;
+          created_at?: string;
+        };
+        Update: {
+          name?: string;
+          value?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      manager_email_status: {
+        Row: {
+          user_id: string;
+          confirmed_at: string | null;
+          deadline_at: string;
+          token_hash: string | null;
+          token_expires_at: string | null;
+          last_sent_at: string | null;
+          sends_today: number;
+          sends_day: string | null;
+          bonus_at: string | null;
+        };
+        Insert: {
+          user_id: string;
+          confirmed_at?: string | null;
+          deadline_at: string;
+          token_hash?: string | null;
+          token_expires_at?: string | null;
+          last_sent_at?: string | null;
+          sends_today?: number;
+          sends_day?: string | null;
+          bonus_at?: string | null;
+        };
+        Update: {
+          user_id?: string;
+          confirmed_at?: string | null;
+          deadline_at?: string;
+          token_hash?: string | null;
+          token_expires_at?: string | null;
+          last_sent_at?: string | null;
+          sends_today?: number;
+          sends_day?: string | null;
+          bonus_at?: string | null;
+        };
+        Relationships: [];
+      };
       infra_meta: {
         Row: {
           key: string;

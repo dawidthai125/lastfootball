@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Powiadomienia push i e-mail (D132)
+
+### Product
+
+- Ustawienia → Powiadomienia: push na urządzeniu, e-mail i cztery rodzaje (mecz ligowy, liga ludzi, oferta, wyzwanie). Wszystko domyślnie wyłączone.
+- Cisza 22:00–8:00, najwyżej dwa dziennie na kanał, jedno na sprawę. Wypisanie z e-maili jednym kliknięciem.
+- Migracje `20261124150000_notifications.sql` i `20261124151000_notify_schedule.sql` (`pg_cron` co 30 min). E-mail czeka na `RESEND_API_KEY` i `NOTIFY_FROM`.
+
+---
+
 ## [2026-11-24] — Zamrożony początek meczu i mocniejsi rywale (D130)
 
 ### Product

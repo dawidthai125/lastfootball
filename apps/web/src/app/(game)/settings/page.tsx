@@ -1,19 +1,24 @@
 import { redirect } from 'next/navigation';
 
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
+import { NotificationSettingsPanel } from '@/components/notifications/NotificationSettingsPanel';
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { signOut } from '@/lib/auth/actions';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { loadNotificationSettings } from '@/lib/notifications/settings';
 
 /** Account settings. Replaces the settings placeholder. */
 export default async function SettingsPage() {
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 
-  const gate = await loadEmailGate(club.ownerId);
+  const [gate, notifications] = await Promise.all([
+    loadEmailGate(club.ownerId),
+    loadNotificationSettings(club.ownerId),
+  ]);
 
   return (
     <div>
@@ -31,6 +36,13 @@ export default async function SettingsPage() {
             Wyloguj
           </Button>
         </form>
+      </Panel>
+      <Panel title="Powiadomienia" className="mt-3">
+        {notifications ? (
+          <NotificationSettingsPanel settings={notifications} />
+        ) : (
+          <p style={{ margin: 0 }}>Powiadomienia są teraz niedostępne.</p>
+        )}
       </Panel>
       <Panel title="Komentator" className="mt-3">
         <p style={{ margin: 0 }}>

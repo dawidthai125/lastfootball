@@ -786,9 +786,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Serwer odtwarzał mecz ze stanu na koniec, więc zmiana kadry w trakcie dawała inny wynik niż na ekranie. Nowy klub w IV lidze wygrywał ok. 2/3 meczów.  
 **Zasada:** Strona live zapisuje `match_kickoffs` (tylko service role, jeden wiersz na klub; ostatnie wejście zastępuje poprzednie, każdy rozliczony mecz go kasuje). Serwer sam czyta kopię, klient jej nie wskazuje. `authoritativeManagerScore` odtwarza z kopii ważnej 6 h razem z rywalem AI; role i rozwój po meczu biorą jedenastkę z tej samej kopii. Sprzedany lub wypożyczony w trakcie = mecz od nowa. Bez kopii działa ścieżka D127. Liga ludzi zostaje na swoich zamkniętych składach. Pasma `LeagueStrengthProfile`: IV 47–63, III 53–69, II 59–75, I 66–82.
 
+### D132 — Powiadomienia push i e-mail · Owner GO 2026-11-24
+
+**Dlaczego:** §22 miał tylko zaproszenia w grze. Menedżer poza grą nie wiedział o meczu, ofercie ani wyzwaniu.  
+**Zasada:** Wszystko domyślnie wyłączone. Rodzaje: `matchday` (17:00–19:59, tylko przy aktywności w ostatnich 14 dniach), `human_round` (17:15–17:59, klub z dzisiejszą kolejką ludzi), `offer` (oferta albo kontra, gdy decyzja jest po stronie klubu), `challenge` (rywal rozegrał wyzwanie). Cisza 22:00–8:00 czasu warszawskiego. Najwyżej 2 dziennie na kanał i jedno na sprawę. Plan = czysta funkcja `planNotifications`. Wysyłkę zleca `pg_cron` co 30 min do `POST /api/notify` (token z bazy albo `CRON_SECRET`). Wpis w `notification_log` powstaje przed wysyłką (dedup). Klucze VAPID serwer tworzy sam i trzyma w `server_secrets` (tylko service role). Push: tylko znane serwery push, do 5 urządzeń, treść bez danych osobowych. E-mail: Resend, tylko potwierdzony adres, wypisanie bez logowania (GET pyta, POST wypisuje). Bez tabel, kluczy albo dostawcy funkcja jest ukryta lub „niedostępna”. Powiadomienie nie zmienia niczego w domenie. Zastępuje zakaz `lib/notifications` z D125; zaproszenia w grze zostają osobno w `lib/invitations`.  
+**OUT:** SMS · przypomnienia o treningu i zadaniach · treści AI · bieżąca minuta meczu.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D130 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D132 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
