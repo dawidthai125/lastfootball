@@ -1,6 +1,7 @@
 import type { MatchState, PitchSide, Player } from '../match/domain';
 import { DEFAULT_PLAYER_CONDITION, tacticsOwnedBy } from '../match/domain';
 
+import { fatigueOf } from './fatigue';
 import type { MatchAiContext, MatchAiSideContext } from './types';
 
 function clamp01(n: number): number {
@@ -39,11 +40,12 @@ function teamStrength(players: readonly Player[]): number {
   return clamp01(sum / players.length);
 }
 
-function teamFreshness(players: readonly Player[]): number {
+function teamFreshness(state: MatchState, players: readonly Player[]): number {
   if (players.length === 0) return 1;
   let sum = 0;
   for (const p of players) {
     sum += (p.condition.energy + p.condition.freshness) / 200;
+    if (state.rules) sum -= fatigueOf(state, p) / 100;
   }
   return clamp01(sum / players.length);
 }
@@ -51,6 +53,15 @@ function teamFreshness(players: readonly Player[]): number {
 function teamMorale(players: readonly Player[]): number {
   if (players.length === 0) return DEFAULT_PLAYER_CONDITION.morale;
   return players.reduce((sum, p) => sum + p.condition.morale, 0) / players.length;
+}
+
+/** -0.5 … 1 from the leadership of the captain on the pitch. No captain → 0. */
+function captainEdge(state: MatchState, side: PitchSide): number {
+  if (!state.rules) return 0;
+  const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
+  if (!lineup.slots.some((s) => s.playerId === lineup.captainPlayerId)) return 0;
+  const captain = state.players.find((p) => p.id === lineup.captainPlayerId);
+  return captain ? Math.max(-0.5, Math.min(1, (captain.leadership - 50) / 40)) : 0;
 }
 
 function tacticsForSide(state: MatchState, side: PitchSide) {
@@ -72,7 +83,9 @@ function buildSide(state: MatchState, side: PitchSide): MatchAiSideContext {
     side,
     tactics,
     strength: teamStrength(players),
-    freshness: teamFreshness(players),
+    freshness: teamFreshness(state, players),
+    men: state.rules ? players.length : 11,
+    captain: captainEdge(state, side),
     morale: teamMorale(players),
     goalsFor,
     goalsAgainst,

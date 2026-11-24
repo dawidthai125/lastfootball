@@ -1,4 +1,4 @@
-import type { PlayerId, PitchRole, PitchSide, TeamId } from './ids';
+import type { PlayerId, PitchRole, PitchSide, Rating, TeamId } from './ids';
 import type { PlayerAttributes } from './player-attributes';
 import { DEFAULT_PLAYER_ATTRIBUTES } from './player-attributes';
 import type { PlayerCondition } from './player-condition';
@@ -17,6 +17,8 @@ export interface Player {
   readonly attributes: PlayerAttributes;
   readonly skills: PlayerSkills;
   readonly condition: PlayerCondition;
+  /** 0–100 hold over the team when wearing the armband. 50 changes nothing. */
+  readonly leadership: Rating;
 }
 
 export interface CreatePlayerInput {
@@ -29,6 +31,7 @@ export interface CreatePlayerInput {
   attributes?: PlayerAttributes;
   skills?: PlayerSkills;
   condition?: PlayerCondition;
+  leadership?: Rating;
 }
 
 export function createPlayer(input: CreatePlayerInput): Player {
@@ -42,5 +45,6 @@ export function createPlayer(input: CreatePlayerInput): Player {
     attributes: Object.freeze({ ...(input.attributes ?? DEFAULT_PLAYER_ATTRIBUTES) }),
     skills: Object.freeze({ ...(input.skills ?? DEFAULT_PLAYER_SKILLS) }),
     condition: Object.freeze({ ...(input.condition ?? DEFAULT_PLAYER_CONDITION) }),
+    leadership: input.leadership ?? 50,
   });
 }

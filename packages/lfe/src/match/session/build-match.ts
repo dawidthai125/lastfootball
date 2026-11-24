@@ -31,6 +31,7 @@ export function buildMatchFromConfig(config: MatchSessionConfig): Match {
     openingPressing: config.openingPressing,
     openingTempo: config.openingTempo,
     openingWidth: config.openingWidth,
+    rules: config.rules,
   });
 
   return createMatchModel({

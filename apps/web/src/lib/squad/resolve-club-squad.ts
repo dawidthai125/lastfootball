@@ -3,6 +3,7 @@ import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
 import { clauseFromSkill, contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
+import { leadershipOf, talentsOf } from '@/lib/squad/talents';
 import { attributeBars, groupsFromSkill } from '@/lib/squad/truth';
 import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
 import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential';
@@ -116,6 +117,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     injuryMatches: row.injuryMatches,
     morale: typeof row.morale === 'number' ? row.morale : 60,
     personality: row.personality ?? personalityFromId(row.id),
+    ...traits(row),
     setPiece: row.setPiece === true,
     onLoan: row.onLoan === true,
     loanedIn: row.loanedIn === true,
@@ -154,6 +156,19 @@ export function resolveClubSquad(
   return { clubId: club.id, players };
 }
 
+/** Talents and the captain's hold, frozen with the line-up. */
+function traits(row: PlayerRowDto): Pick<RosterPlayerSeed, 'leadership' | 'talents'> {
+  const talents = talentsOf(row.id, row.pos);
+  return {
+    talents,
+    leadership: leadershipOf({
+      personality: row.personality ?? personalityFromId(row.id),
+      age: row.age,
+      talents,
+    }),
+  };
+}
+
 /**
  * Starting XI for LFE sessions — from DB rows only (no seed).
  * Throws if fewer than 11 starters among active players.
@@ -185,6 +200,7 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     energy: r.energy,
     form: r.form,
     morale: r.morale,
+    ...traits(r),
   }));
   if (xi.length !== 11) {
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
@@ -220,6 +236,7 @@ export function resolveMatchBench(
         energy: row.energy,
         form: row.form,
         morale: row.morale,
+        ...traits(row),
       }))
   );
 }

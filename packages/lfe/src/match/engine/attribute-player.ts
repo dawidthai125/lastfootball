@@ -1,7 +1,9 @@
 import type { LineupSlot, MatchState, PitchRole, PitchSide, PlayerId } from '../domain';
 
+import { foulWeight } from './incidents';
+
 /** Event kinds that receive deterministic player attribution in PLAYER-MATCH-DATA-01. */
-export type AttributeEventKind = 'GOAL' | 'SHOT' | 'FOUL' | 'PASS';
+export type AttributeEventKind = 'GOAL' | 'SHOT' | 'FOUL' | 'PASS' | 'HEADER';
 
 /** Hash kinds including ASSIST (Ratings v2) — ASSIST is not a Match Engine event actor kind. */
 type AttributeHashKind = AttributeEventKind | 'ASSIST';
@@ -46,6 +48,25 @@ const ASSIST_ROLE_WEIGHT: Readonly<Record<PitchRole, number>> = {
 /** One goal in four has no assist. */
 export const ASSIST_SHARE = 0.75;
 
+/** Corners: centre-backs come forward. */
+const HEADER_ROLE_WEIGHT: Readonly<Record<PitchRole, number>> = {
+  GK: 0,
+  CB: 8,
+  RB: 2,
+  LB: 2,
+  RWB: 2,
+  LWB: 2,
+  CDM: 4,
+  CM: 3,
+  RM: 2,
+  LM: 2,
+  CAM: 3,
+  RW: 3,
+  LW: 3,
+  ST: 9,
+  CF: 9,
+};
+
 const skillFactor = (skill: number): number => (Math.max(1, skill) / 60) ** 2;
 
 /** Weight of a player for a shot or a goal. The league scorer list uses the same one. */
@@ -84,7 +105,7 @@ function pickSlot(
   state: MatchState,
   slots: readonly LineupSlot[],
   weight: typeof goalWeight,
-  skill: 'finishing' | 'shortPassing',
+  skill: 'finishing' | 'shortPassing' | 'heading',
   unit: number,
 ): PlayerId | undefined {
   if (slots.length === 0) return undefined;
@@ -131,12 +152,27 @@ export function attributePlayerForEvent(
   actingSide: PitchSide,
   kind: AttributeEventKind,
   tick: number,
+  exceptId?: PlayerId,
 ): PlayerId | undefined {
   const lineup = actingSide === 'home' ? state.homeLineup : state.awayLineup;
+  if (kind === 'HEADER') {
+    return pickSlot(
+      state,
+      lineup.slots.filter((s) => s.playerId !== exceptId),
+      (role, heading) => HEADER_ROLE_WEIGHT[role] * skillFactor(heading),
+      'heading',
+      attributionUnit('HEADER', actingSide, tick),
+    );
+  }
   if (kind === 'GOAL' || kind === 'SHOT') {
     // One unit for both: the goal belongs to the shooter.
     const unit = attributionUnit('SHOT', actingSide, tick);
     return pickSlot(state, lineup.slots, goalWeight, 'finishing', unit);
+  }
+  if (kind === 'FOUL' && state.rules) {
+    const weights = lineup.slots.map((s) => foulWeight(state, s.role, s.playerId));
+    const index = pickByWeight(weights, attributionUnit('FOUL', actingSide, tick));
+    return lineup.slots[index]?.playerId;
   }
   const preferred = kind === 'FOUL' ? DEFENSIVE_ROLES : PASS_ROLES;
   const preferredSlots = lineup.slots.filter((s) => preferred.has(s.role));

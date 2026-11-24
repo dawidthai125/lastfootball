@@ -1,3 +1,4 @@
+import type { Talent } from '@/lib/squad/talents';
 import type { CareerPhaseId } from '@/lib/squad/career-phase';
 import type { PotentialBandId } from '@/lib/squad/potential';
 
@@ -36,6 +37,9 @@ export type SquadPlayerDto = {
   readonly injuryMatches?: number;
   readonly morale?: number;
   readonly personality?: string;
+  readonly talents?: readonly Talent[];
+  /** 0–100 as a captain, 50 is neutral. */
+  readonly leadership?: number;
   readonly setPiece?: boolean;
   readonly onLoan?: boolean;
   readonly loanedIn?: boolean;

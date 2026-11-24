@@ -1,10 +1,22 @@
 import type { EngineEventType } from '../../events';
-import type { MatchState, PitchSide, TeamStatistics } from '../domain';
+import type { MatchState, PitchSide, PlayerId, TeamStatistics } from '../domain';
 import { bumpPlayerStat, createScore } from '../domain';
 import type { Rng } from '../../rng';
 import { decideActionFromState, decidePossessionFromState } from '../../ai';
 
 import { attributeAssistForGoal, attributePlayerForEvent } from './attribute-player';
+import {
+  cornerGoalChance,
+  cornerQuality,
+  freeKickGoalChance,
+  freeKickQuality,
+  FULL_RULES,
+  penaltyGoalChance,
+  penaltyQuality,
+  rollCard,
+  setPieceTaker,
+  withOffside,
+} from './incidents';
 
 export type MatchEngineEmit = {
   readonly type: EngineEventType;
@@ -104,6 +116,12 @@ export function resolvePossessionAction(
 
   emits.push({ type: 'ATTACK', payload: { side, minute: state.clock.displayMinute } });
 
+  if (state.rules && rng.next() < FULL_RULES.OFFSIDE) {
+    const offside = withOffside(state, side, actorId);
+    emits.push(...offside.emits);
+    return { state: offside.state, emits };
+  }
+
   if (rng.next() >= decision.shotChance) {
     if (rng.next() < decision.foulChance) {
       const foulerSide = oppositeSide(side);
@@ -127,18 +145,26 @@ export function resolvePossessionAction(
           });
         }
       }
-      return {
-        state: Object.freeze({
-          ...state,
-          statistics: Object.freeze({
-            ...state.statistics,
-            home: side === 'away' ? nextTeam : state.statistics.home,
-            away: side === 'home' ? nextTeam : state.statistics.away,
-            players,
-          }),
+      let fouled: MatchState = Object.freeze({
+        ...state,
+        statistics: Object.freeze({
+          ...state.statistics,
+          home: side === 'away' ? nextTeam : state.statistics.home,
+          away: side === 'home' ? nextTeam : state.statistics.away,
+          players,
         }),
-        emits,
-      };
+      });
+      if (state.rules) {
+        if (foulerId !== undefined) {
+          const card = rollCard(fouled, foulerSide, foulerId, tick, rng);
+          fouled = card.state;
+          emits.push(...card.emits);
+        }
+        const dead = resolveDeadBall(fouled, side, rng, tick);
+        fouled = dead.state;
+        emits.push(...dead.emits);
+      }
+      return { state: fouled, emits };
     }
     return { state, emits };
   }
@@ -199,26 +225,133 @@ export function resolvePossessionAction(
             side === 'away' ? bumpTeamStat(st, { corners: st.corners + 1 }) : next.statistics.away,
         }),
       });
+      if (state.rules) {
+        const taker = setPieceTaker(next, side, cornerQuality);
+        if (taker && rng.next() < cornerGoalChance(next, side, taker)) {
+          const scorerId = headerScorer(next, side, taker.id, tick);
+          const shot = withShot(next, side, scorerId, true, { header: true });
+          const goal = withGoal(shot.state, side, scorerId, taker.id, { header: true });
+          return { state: goal.state, emits: [...emits, ...shot.emits, ...goal.emits] };
+        }
+      }
     }
     return { state: next, emits };
   }
 
-  if (rng.next() >= decision.goalChance) {
+  const goalChance = state.rules ? decision.goalChance * OPEN_PLAY_SHARE : decision.goalChance;
+  if (rng.next() >= goalChance) {
     return { state: next, emits };
   }
 
   const assistPlayerId =
     actorId !== undefined ? attributeAssistForGoal(next, side, actorId, tick) : undefined;
 
-  emits.push({
-    type: 'GOAL',
-    payload: {
-      side,
-      minute: next.clock.displayMinute,
-      ...(actorId !== undefined ? { playerId: actorId } : {}),
-      ...(assistPlayerId !== undefined ? { assistPlayerId } : {}),
+  const goal = withGoal(next, side, actorId, assistPlayerId);
+  return { state: goal.state, emits: [...emits, ...goal.emits] };
+}
+
+/** Goals from penalties, free kicks and corners come on top, so open play scores a bit less. */
+const OPEN_PLAY_SHARE = 0.83;
+
+/** A foul near the goal: rarely a penalty, sometimes a free kick worth a shot. */
+function resolveDeadBall(
+  state: MatchState,
+  side: PitchSide,
+  rng: Rng,
+  tick: number,
+): { state: MatchState; emits: MatchEngineEmit[] } {
+  const roll = rng.next();
+  const penalty = roll < FULL_RULES.PENALTY;
+  if (!penalty && roll >= FULL_RULES.PENALTY + FULL_RULES.FREE_KICK) return { state, emits: [] };
+  const taker = setPieceTaker(state, side, penalty ? penaltyQuality : freeKickQuality);
+  if (!taker) return { state, emits: [] };
+
+  const mark = penalty ? { penalty: true } : { freeKick: true };
+  const emits: MatchEngineEmit[] = [
+    {
+      type: penalty ? 'PENALTY' : 'FREE_KICK',
+      payload: { side, playerId: taker.id, minute: state.clock.displayMinute },
     },
-  });
+  ];
+  const scored =
+    rng.next() <
+    (penalty ? penaltyGoalChance(state, side, taker) : freeKickGoalChance(state, side, taker));
+  const onTarget = scored || rng.next() < (penalty ? 0.7 : 0.3);
+  const shot = withShot(state, side, taker.id, onTarget, { ...mark, missed: !scored });
+  emits.push(...shot.emits);
+  if (!scored) return { state: shot.state, emits };
+  const goal = withGoal(shot.state, side, taker.id, undefined, mark);
+  return { state: goal.state, emits: [...emits, ...goal.emits] };
+}
+
+function headerScorer(
+  state: MatchState,
+  side: PitchSide,
+  takerId: PlayerId,
+  tick: number,
+): PlayerId | undefined {
+  const id = attributePlayerForEvent(state, side, 'HEADER', tick);
+  return id === takerId ? attributePlayerForEvent(state, side, 'HEADER', tick, takerId) : id;
+}
+
+function withShot(
+  state: MatchState,
+  side: PitchSide,
+  playerId: PlayerId | undefined,
+  onTarget: boolean,
+  mark: Record<string, unknown>,
+): { state: MatchState; emits: MatchEngineEmit[] } {
+  const team = state.statistics[side];
+  const row = state.statistics.players.find((p) => p.playerId === playerId);
+  return {
+    state: Object.freeze({
+      ...state,
+      statistics: Object.freeze({
+        ...state.statistics,
+        [side]: bumpTeamStat(team, {
+          shots: team.shots + 1,
+          shotsOnTarget: team.shotsOnTarget + (onTarget ? 1 : 0),
+        }),
+        players: row
+          ? bumpPlayerStat(state.statistics.players, row.playerId, { shots: row.shots + 1 })
+          : state.statistics.players,
+      }),
+    }),
+    emits: [
+      {
+        type: 'SHOT',
+        payload: {
+          side,
+          onTarget,
+          minute: state.clock.displayMinute,
+          ...(playerId !== undefined ? { playerId } : {}),
+          ...mark,
+        },
+      },
+    ],
+  };
+}
+
+function withGoal(
+  state: MatchState,
+  side: PitchSide,
+  actorId: PlayerId | undefined,
+  assistPlayerId: PlayerId | undefined,
+  mark: Record<string, unknown> = {},
+): { state: MatchState; emits: MatchEngineEmit[] } {
+  const emits: MatchEngineEmit[] = [
+    {
+      type: 'GOAL',
+      payload: {
+        side,
+        minute: state.clock.displayMinute,
+        ...(actorId !== undefined ? { playerId: actorId } : {}),
+        ...(assistPlayerId !== undefined ? { assistPlayerId } : {}),
+        ...mark,
+      },
+    },
+  ];
+  let next = state;
   const scored = side === 'home' ? next.statistics.home : next.statistics.away;
   let goalPlayers = next.statistics.players;
   if (actorId !== undefined) {

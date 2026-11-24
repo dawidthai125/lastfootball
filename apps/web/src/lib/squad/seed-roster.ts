@@ -1,6 +1,7 @@
 import type { PitchRole } from '@lastfootball/lfe';
 
 import { opponentNames } from '@/lib/squad/opponent-names';
+import type { Talent } from '@/lib/squad/talents';
 import type { LeagueTier } from '@/lib/league/league-tier';
 import {
   resolveLeagueStrengthProfile,
@@ -28,6 +29,9 @@ export type RosterPlayerSeed = {
   readonly form?: number;
   /** Stored morale 0..100. Absent = the match treats the player as neutral. */
   readonly morale?: number;
+  /** 0–100 as a captain. Absent = neutral. */
+  readonly leadership?: number;
+  readonly talents?: readonly Talent[];
 };
 
 const XI_BASE: Omit<RosterPlayerSeed, 'id' | 'starter'>[] = [
@@ -125,5 +129,31 @@ export function seedOpponentSquad(
     role: r.role,
     starter: true as const,
     skill: resolveOpponentPlayerSkill(opponentClubId, i, profile),
+  }));
+}
+
+/** Bench of an AI club: five players a little below its eleven (D151). */
+export function seedOpponentBench(
+  opponentClubId: string,
+  tier: LeagueTier = 'iv',
+): readonly RosterPlayerSeed[] {
+  const tag = opponentClubId.replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'opp';
+  const profile = resolveLeagueStrengthProfile(tier);
+  const names = opponentNames(opponentClubId, 16);
+  const roles: { pos: string; role: PitchRole; number: number }[] = [
+    { pos: 'BR', role: 'GK', number: 12 },
+    { pos: 'ŚO', role: 'CB', number: 14 },
+    { pos: 'ŚP', role: 'CM', number: 16 },
+    { pos: 'PN', role: 'RW', number: 17 },
+    { pos: 'N', role: 'ST', number: 19 },
+  ];
+  return roles.map((r, i) => ({
+    id: `o-${tag}-b${i}`,
+    name: names[11 + i]!,
+    number: r.number,
+    pos: r.pos,
+    role: r.role,
+    starter: false as const,
+    skill: Math.max(1, resolveOpponentPlayerSkill(opponentClubId, 11 + i, profile) - 2),
   }));
 }

@@ -230,9 +230,17 @@ export function createMatch(config: MatchSessionConfig): MatchSession {
       }
       // Paused session: still allow headless step for determinism tests (time scale separate)
       syncScoreTied();
+      const before = simulation.getMatchState();
       const snapshot = simulation.step();
       const matchState = simulation.getMatchState();
       if (matchState) {
+        // The engine itself changes a line-up: an injury, a red card, the rival's substitution.
+        if (
+          matchState.homeLineup !== before?.homeLineup ||
+          matchState.awayLineup !== before?.awayLineup
+        ) {
+          spatial = reseatSpatialLineup(spatial, matchState);
+        }
         spatial = advanceMatchSpatialState({
           previous: spatial,
           matchState,

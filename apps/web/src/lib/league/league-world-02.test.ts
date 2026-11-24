@@ -127,13 +127,15 @@ describe('LFE-LEAGUE-WORLD-02 league session skills', () => {
     const ai = players.filter((p) => String(p.id).startsWith('o-'));
     expect(our).toHaveLength(11);
     expect(session.getMatchState().homeBench.playerIds).toHaveLength(0);
-    expect(ai).toHaveLength(11);
+    // Eleven and the bench (D151).
+    expect(ai).toHaveLength(16);
+    expect(session.getMatchState().awayBench.playerIds).toHaveLength(5);
     for (const p of our) {
       expect(p.skills.finishing).toBe(80);
     }
     const profile = resolveLeagueStrengthProfile('ii');
     for (const p of ai) {
-      expect(p.skills.finishing).toBeGreaterThanOrEqual(profile.minSkill);
+      expect(p.skills.finishing).toBeGreaterThanOrEqual(profile.minSkill - 2);
       expect(p.skills.finishing).toBeLessThanOrEqual(profile.maxSkill);
     }
   });

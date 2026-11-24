@@ -1,6 +1,7 @@
 import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
 import { TRAINING_THIN } from '@/lib/training/types';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
+import { closedWindowSentence } from '@/lib/transfers/window';
 import { UI_COPY } from '@/lib/ui/copy';
 
 /** Compact progress while league unlock is pending, e.g. `Trening · 1/2`. */
@@ -39,7 +40,7 @@ export function resolveNavLockReason(itemId: string, playedCount: number): strin
     if (!hasPlayedUnlock(playedCount, TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)) {
       return `Transfery odblokują się po ${TRANSFERS_THIN.UNLOCK_AFTER_PLAYED} rozegranych meczach ligowych (masz ${playedCount}).`;
     }
-    return UI_COPY.transferWindowClosed;
+    return closedWindowSentence(playedCount);
   }
   return UI_COPY.softLockReason;
 }

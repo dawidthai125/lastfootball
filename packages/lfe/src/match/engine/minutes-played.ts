@@ -13,6 +13,16 @@ function isOnPitch(state: MatchState, playerId: PlayerId): boolean {
   );
 }
 
+/** Minute of a sending-off or an injury that nobody replaced. */
+function exitMinute(state: MatchState, playerId: PlayerId): number | null {
+  const red = state.cards.find((c) => c.playerId === playerId && c.type !== 'yellow');
+  if (red) return Math.floor(red.matchMinute);
+  if (isOnPitch(state, playerId)) return null;
+  const hurt = state.injuries.find((i) => i.playerId === playerId && i.forcedOff);
+  if (!hurt || state.substitutions.some((s) => s.playerOutId === playerId)) return null;
+  return Math.floor(hurt.matchMinute);
+}
+
 /**
  * Total on-pitch display minutes for `playerId` up to `untilFloor` (inclusive span).
  */
@@ -27,7 +37,8 @@ export function computeMinutesPlayed(
   const onPitch = isOnPitch(state, playerId);
 
   // True starters only (never subbed in). Bench never appearing in subs → 0.
-  let on = !wasEverIn && (onPitch || wasEverOut);
+  const exit = exitMinute(state, playerId);
+  let on = !wasEverIn && (onPitch || wasEverOut || exit !== null);
   let segmentStart = 0;
   let total = 0;
 
@@ -44,7 +55,7 @@ export function computeMinutesPlayed(
   }
 
   if (on) {
-    total += Math.max(0, until - segmentStart);
+    total += Math.max(0, (exit ?? until) - segmentStart);
   }
 
   return total;

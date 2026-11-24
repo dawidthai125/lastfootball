@@ -13,6 +13,7 @@ import {
   contractTalkOpen,
   renewedContractSeason,
 } from '@/lib/squad/contract-talk';
+import { captainLabel, TALENTS } from '@/lib/squad/talents';
 import { personalityLabel, type Personality } from '@/lib/squad/depth';
 import { playerStatusLabel, type SquadPlayerDto } from '@/lib/squad';
 import { SectionShell } from '@/components/panel/SectionShell';
@@ -211,6 +212,37 @@ export function PlayerAttributes({ player }: { player: SquadPlayer }) {
           <ProgressBar key={a.label} label={a.label} value={a.value} tone="gold" />
         ))}
       </div>
+    </SectionShell>
+  );
+}
+
+/** Talents (GDD 7.16) and what the player brings as a captain. */
+export function PlayerTalents({ player }: { player: SquadPlayer }) {
+  const talents = player.talents ?? [];
+  const lead = captainLabel(player.leadership ?? 50);
+  return (
+    <SectionShell title="Talenty">
+      {talents.length === 0 ? (
+        <p style={{ margin: 0 }}>Ten zawodnik nie ma wyjątkowego talentu.</p>
+      ) : (
+        <ul style={{ margin: 0, paddingLeft: '1.1rem' }}>
+          {talents.map((talent) => (
+            <li key={talent}>
+              <strong>{TALENTS[talent].label}</strong>: {TALENTS[talent].effect}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p
+        style={{
+          margin: 0,
+          marginTop: 'var(--lf-space-2)',
+          fontSize: 'var(--lf-type-caption)',
+          color: 'var(--lf-color-text-muted)',
+        }}
+      >
+        Jako kapitan: {lead}.
+      </p>
     </SectionShell>
   );
 }

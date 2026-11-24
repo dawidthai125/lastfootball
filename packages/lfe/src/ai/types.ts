@@ -10,6 +10,10 @@ export type MatchAiSideContext = {
   readonly freshness: number;
   /** 0–100 average player morale. `MATCH_BALANCE.MORALE_NEUTRAL` changes nothing. */
   readonly morale: number;
+  /** Players on the pitch. Absent = eleven. */
+  readonly men?: number;
+  /** -0.5 … 1, what the captain adds. Absent = 0. */
+  readonly captain?: number;
   readonly goalsFor: number;
   readonly goalsAgainst: number;
   /** goalsFor - goalsAgainst */

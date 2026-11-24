@@ -11,6 +11,7 @@ import type { PlayerId } from '@lastfootball/domain';
 import type { ClubDto } from '@/lib/club/types';
 import { FIRST_MATCH_BOT, FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { seedBotSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
 import { hashSeed } from '@/lib/match/hash-seed';
 import { orderForFormation } from '@/lib/match/order-xi';
 
@@ -93,6 +94,7 @@ export function createSessionFromFirstMatch(
     ),
     awayBench: createBench('away', []),
     players: [...homePlayers, ...awayPlayers, ...benchPlayers],
+    rules: { autoSides: ['away'], maxSubstitutions: LIVE_SUB_LIMIT },
     settings: {
       halfDurationMs: 20_000,
       halfTimeDurationMs: 2_000,

@@ -3,9 +3,11 @@ import {
   createLineup,
   createMatch,
   createPlayer,
+  DEFAULT_PLAYER_ATTRIBUTES,
   DEFAULT_PLAYER_CONDITION,
   type FormationCode,
   type MatchSession,
+  type PitchSide,
 } from '@lastfootball/lfe';
 import type { PlayerId } from '@lastfootball/domain';
 
@@ -19,7 +21,9 @@ import { kickoffPressingWithLine } from '@/lib/training/press-line';
 import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
-import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
+import { seedOpponentBench, seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { talentAttributes, withTalentSkills } from '@/lib/squad/talents';
 
 /** An average week: the form a level season settles at and the starting morale. */
 const NEUTRAL_FORM = 65;
@@ -80,6 +84,39 @@ export function resolveOpponentXi(
   );
 }
 
+/** Bench of that rival (D151). */
+export function resolveOpponentBench(
+  club: Pick<ClubDto, 'leagueTier'>,
+  fixture: Pick<FixtureDto, 'competition' | 'opponentClubId'>,
+): readonly RosterPlayerSeed[] {
+  return seedOpponentBench(
+    fixture.opponentClubId,
+    fixture.competition === 'cup'
+      ? cupOpponentTier(fixture.opponentClubId, club.leagueTier)
+      : club.leagueTier,
+  );
+}
+
+export type MatchExtra = {
+  readonly theirBench?: readonly RosterPlayerSeed[] | null;
+  /** False only for a match that was opened before D151. */
+  readonly fullRules?: boolean;
+};
+
+/** Talents and leadership of a seed. A rival without them stays neutral. */
+function traitsFromSeed(p: RosterPlayerSeed, fullRules: boolean) {
+  if (!fullRules || (p.talents === undefined && p.leadership === undefined)) return {};
+  return {
+    attributes: { ...DEFAULT_PLAYER_ATTRIBUTES, ...talentAttributes(p.talents) },
+    leadership: p.leadership ?? 50,
+  };
+}
+
+function skillsFromSeed(p: RosterPlayerSeed, fullRules: boolean) {
+  const skills = p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill!);
+  return fullRules ? { ...skills, ...withTalentSkills(skills, p.talents) } : skills;
+}
+
 /**
  * League fixture → MatchSession.
  * Our XI skills from DB (`players.skill`); AI from League Strength Profile (tier).
@@ -91,7 +128,10 @@ export function createSessionFromLeagueFixture(
   ourBench: readonly RosterPlayerSeed[] = [],
   ourFormation: FormationCode = '4-4-2',
   theirXi?: readonly RosterPlayerSeed[] | null,
+  extra: MatchExtra = {},
 ): MatchSession {
+  // A match that started before full rules (D151) ends under the rules it started with.
+  const fullRules = extra.fullRules !== false;
   const shared = typeof fixture.sharedSeed === 'number';
   const formation: FormationCode = shared ? '4-4-2' : ourFormation;
   const our = orderForFormation(ourXi, formation);
@@ -105,7 +145,7 @@ export function createSessionFromLeagueFixture(
   const awayTeamId = 'team-away';
 
   const ourSide = fixture.isHome ? 'home' : 'away';
-  const theirSide = fixture.isHome ? 'away' : 'home';
+  const theirSide: PitchSide = fixture.isHome ? 'away' : 'home';
   const tacticsSide = shared ? 'home' : ourSide;
   const habit =
     tacticsSide === 'home' ? (fixture.homeStylePressing ?? 0) : (fixture.viewerStylePressing ?? 0);
@@ -132,15 +172,13 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: withHomePitch(
-        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
-        ourSide === 'home' ? pitchBonus : 0,
-      ),
+      skills: withHomePitch(skillsFromSeed(p, fullRules), ourSide === 'home' ? pitchBonus : 0),
+      ...traitsFromSeed(p, fullRules),
       // A shared match must not depend on who watches: both sides follow the same rule.
       ...(shared ? sharedCondition(p) : { condition: conditionFromSeed(p) }),
     });
   });
-  const benchSource = shared ? [] : ourBench;
+  const benchSource = shared && !fullRules ? [] : ourBench;
   const benchPlayers = benchSource.map((p) => {
     if (p.skill == null || !Number.isFinite(p.skill)) {
       throw new Error(`League bench missing skill for player ${p.id}`);
@@ -152,11 +190,28 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: withHomePitch(
-        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
-        ourSide === 'home' ? pitchBonus : 0,
-      ),
-      condition: conditionFromSeed(p),
+      skills: withHomePitch(skillsFromSeed(p, fullRules), ourSide === 'home' ? pitchBonus : 0),
+      ...traitsFromSeed(p, fullRules),
+      ...(shared ? sharedCondition(p) : { condition: conditionFromSeed(p) }),
+    });
+  });
+  const theirBenchSource = fullRules
+    ? (extra.theirBench ?? (theirXi ? [] : resolveOpponentBench(club, fixture)))
+    : [];
+  const theirBenchPlayers = theirBenchSource.map((p) => {
+    if (p.skill == null || !Number.isFinite(p.skill)) {
+      throw new Error(`League bench missing skill for player ${p.id}`);
+    }
+    return createPlayer({
+      id: p.id as PlayerId,
+      teamId: theirSide === 'home' ? homeTeamId : awayTeamId,
+      side: theirSide,
+      name: p.name,
+      shirtNumber: p.number,
+      preferredRole: p.role,
+      skills: withHomePitch(skillsFromSeed(p, fullRules), theirSide === 'home' ? pitchBonus : 0),
+      ...traitsFromSeed(p, fullRules),
+      ...sharedCondition(p),
     });
   });
   const theirPlayers = their.map((p) => {
@@ -170,10 +225,8 @@ export function createSessionFromLeagueFixture(
       name: p.name,
       shirtNumber: p.number,
       preferredRole: p.role,
-      skills: withHomePitch(
-        p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
-        theirSide === 'home' ? pitchBonus : 0,
-      ),
+      skills: withHomePitch(skillsFromSeed(p, fullRules), theirSide === 'home' ? pitchBonus : 0),
+      ...traitsFromSeed(p, fullRules),
       ...sharedCondition(p),
     });
   });
@@ -189,6 +242,11 @@ export function createSessionFromLeagueFixture(
     : fixture.isHome
       ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
       : homeIds[0]!;
+  const awaySeeds = fixture.isHome ? their : our;
+  // Without full rules only the home side had a captain; he changed nothing then.
+  const awayCaptain = fullRules
+    ? ((awaySeeds.find((p) => p.captain)?.id as PlayerId | undefined) ?? null)
+    : null;
   const ourSetPiece = (our.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null;
   const theirSetPiece = shared
     ? ((their.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null)
@@ -221,11 +279,35 @@ export function createSessionFromLeagueFixture(
       side: 'away',
       formationCode: awayFormation,
       playerIds: awayIds,
+      captainPlayerId: awayCaptain,
       setPiecePlayerId: awaySetPiece,
     }),
-    homeBench: createBench('home', fixture.isHome ? benchPlayers.map((p) => p.id) : []),
-    awayBench: createBench('away', fixture.isHome ? [] : benchPlayers.map((p) => p.id)),
-    players: [...homePlayers, ...awayPlayers, ...benchPlayers],
+    homeBench: createBench(
+      'home',
+      (fixture.isHome ? benchPlayers : theirBenchPlayers).map((p) => p.id),
+    ),
+    awayBench: createBench(
+      'away',
+      (fixture.isHome ? theirBenchPlayers : benchPlayers).map((p) => p.id),
+    ),
+    // Home first, so both clubs of a shared match build the very same list.
+    players: shared
+      ? [
+          ...homePlayers,
+          ...awayPlayers,
+          ...(fixture.isHome ? benchPlayers : theirBenchPlayers),
+          ...(fixture.isHome ? theirBenchPlayers : benchPlayers),
+        ]
+      : [...homePlayers, ...awayPlayers, ...benchPlayers, ...theirBenchPlayers],
+    ...(fullRules
+      ? {
+          rules: {
+            // Nobody leads a shared match live, so the engine makes both sides' changes.
+            autoSides: shared ? (['home', 'away'] as const) : [theirSide],
+            maxSubstitutions: LIVE_SUB_LIMIT,
+          },
+        }
+      : {}),
     tacticsSide,
     openingPressing: kickoffPressingWithLine(habit, pressLine, pressShape),
     openingTempo: kickoffTempo(tempoHabit),

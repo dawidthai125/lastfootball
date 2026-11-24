@@ -14,6 +14,8 @@ import { DEFAULT_PITCH } from './pitch';
 import type { Player } from './player';
 import type { Referee } from './referee';
 import { createReferee } from './referee';
+import type { MatchRules } from './rules';
+import { createMatchRules } from './rules';
 import type { Score } from './score';
 import { ZERO_SCORE } from './score';
 import type { Stadium } from './stadium';
@@ -58,6 +60,8 @@ export interface MatchState {
   readonly tactics: MatchTactics;
   /** Which side owns `tactics`. The other side stays on balanced dials. */
   readonly tacticsSide: 'home' | 'away';
+  /** Full match rules, or null for a match that plays without them. */
+  readonly rules: MatchRules | null;
   /** Tick index mirrored from simulation when bound (0 until core wiring). */
   readonly tick: number;
 }
@@ -76,6 +80,8 @@ export interface CreateMatchStateInput {
   stadium?: Stadium;
   phase?: MatchPhase;
   tacticsSide?: 'home' | 'away';
+  /** Omitted keeps the match without full rules. */
+  rules?: Partial<MatchRules>;
   /** Kickoff pressing for the tactics owner. Omitted keeps 50. */
   openingPressing?: number;
   /** Kickoff tempo for the tactics owner. Omitted keeps 50. */
@@ -128,6 +134,7 @@ export function createMatchState(input: CreateMatchStateInput): MatchState {
         : { width: openingPressingOf(input.openingWidth) }),
     }),
     tacticsSide: input.tacticsSide ?? 'home',
+    rules: input.rules ? createMatchRules(input.rules) : null,
     tick: 0,
   });
 }

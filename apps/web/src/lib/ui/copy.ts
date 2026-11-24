@@ -110,8 +110,6 @@ export const UI_COPY = {
   softLockSoon: 'wkrótce',
   softLockReason:
     'Ta lokacja odblokuje się wraz z postępem klubu. Wróć później lub wybierz inną sprawę dnia.',
-  transferWindowClosed:
-    'Okno transferowe jest zamknięte. Transakcje będą znów dostępne po kolejnych meczach ligowych.',
 
   saveAndContinue: 'Zapisz i dalej',
   saving: 'Zapisuję…',

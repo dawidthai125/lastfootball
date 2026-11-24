@@ -44,6 +44,8 @@ export { createGoals } from './goal';
 export type { Card, CardType } from './card';
 export type { Injury, InjurySeverity } from './injury';
 
+export type { MatchRules } from './rules';
+export { createMatchRules } from './rules';
 export type { Score } from './score';
 export { ZERO_SCORE, createScore } from './score';
 

@@ -1,7 +1,7 @@
 import { hasPlayedUnlock } from '@/lib/fixtures/played-unlock';
 import { resolveNavLockLabel, resolveNavLockReason } from '@/lib/nav-lock-copy';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
-import { UI_COPY } from '@/lib/ui/copy';
+import { closedWindowSentence } from '@/lib/transfers/window';
 
 const CLOSED_WINDOW_TITLE = 'Okno transferowe zamknięte';
 
@@ -43,5 +43,5 @@ export function resolveTransfersClosedSoftLock(playedCount: number): {
       reason: resolveNavLockReason('transfers', playedCount),
     };
   }
-  return { title: CLOSED_WINDOW_TITLE, reason: UI_COPY.transferWindowClosed };
+  return { title: CLOSED_WINDOW_TITLE, reason: closedWindowSentence(playedCount) };
 }

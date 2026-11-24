@@ -37,6 +37,7 @@ import {
 import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
 import { completeFixture } from '@/lib/fixtures/complete-fixture';
 import { LoadingFrame } from '@/components/ui';
+import type { MatchExtra } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveFixtureReward } from '@/lib/finance';
 import type { RosterPlayerSeed } from '@/lib/squad';
@@ -58,6 +59,7 @@ export function LiveMatchFoundation({
   developmentNames = [],
   fanMoodBefore = 60,
   resume = null,
+  extra,
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
@@ -73,6 +75,8 @@ export function LiveMatchFoundation({
   fanMoodBefore?: number;
   /** A match that already went on continues from here. */
   resume?: MatchResume | null;
+  /** Rival's bench and the rules this match plays by. */
+  extra?: MatchExtra;
 }) {
   const { fixture } = bundle;
   const {
@@ -93,6 +97,7 @@ export function LiveMatchFoundation({
     ourFormation,
     theirXi,
     resume,
+    extra,
   );
   useMatchProgress(
     runtime,
@@ -1219,7 +1224,13 @@ function LiveSubs({
   const state = snapshot.matchState;
   const side = home ? 'home' : 'away';
   const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
-  const bench = side === 'home' ? state.homeBench : state.awayBench;
+  const gone = new Set<string>([
+    ...state.substitutions.map((sub) => sub.playerOutId),
+    ...state.injuries.filter((injury) => injury.forcedOff).map((injury) => injury.playerId),
+  ]);
+  const bench = (side === 'home' ? state.homeBench : state.awayBench).playerIds.filter(
+    (id) => !state.rules || !gone.has(id),
+  );
   const used = state.substitutions.filter((sub) => sub.side === side).length;
   const remaining = Math.max(0, LIVE_SUB_LIMIT - used);
   const label = (id: string) => {
@@ -1255,11 +1266,11 @@ function LiveSubs({
         ))}
       </div>
       <p className="lf-live__subs-label">Wchodzi</p>
-      {bench.playerIds.length === 0 ? (
+      {bench.length === 0 ? (
         <p className="lf-live__subs-note">Brak zdrowych rezerwowych w kadrze.</p>
       ) : (
         <div className="lf-live__subs-grid">
-          {bench.playerIds.map((id) => (
+          {bench.map((id) => (
             <button
               key={id}
               type="button"

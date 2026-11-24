@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { resolveSecondaryCtas } from '@/lib/hub/resolve-primary-cta';
 import { TRAINING_THIN } from '@/lib/training/types';
+import { closedWindowSentence } from '@/lib/transfers/window';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -97,7 +98,7 @@ describe('resolveNavLockReason', () => {
 
   it('uses okno zamknięte after transfer unlock matches', () => {
     expect(resolveNavLockReason('transfers', TRANSFERS_THIN.UNLOCK_AFTER_PLAYED)).toBe(
-      UI_COPY.transferWindowClosed,
+      closedWindowSentence(TRANSFERS_THIN.UNLOCK_AFTER_PLAYED),
     );
   });
 
