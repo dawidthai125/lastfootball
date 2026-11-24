@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { InvitePanel } from '@/components/rivals/InvitePanel';
+import { ReportClubForm } from '@/components/rivals/ReportClubForm';
 import { RivalChallengeForm } from '@/components/rivals/RivalChallengeForm';
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -43,6 +44,7 @@ export default async function RivalsPage() {
                   rivalName={rival.name}
                   rivalShort={rival.shortName}
                 />
+                <ReportClubForm clubId={rival.id} />
               </li>
             ))}
           </ul>

@@ -151,6 +151,9 @@ export function LandingPage() {
       <footer className="lf-landing__footer">
         <BrandLogo size="sm" variant="wordmark" className="lf-landing__footer-brand-logo" />
         <nav className="lf-landing__footer-links" aria-label="Informacje prawne">
+          <Link href="/jak-grac" className="lf-landing__footer-link">
+            Jak grać
+          </Link>
           <Link href="/regulamin" className="lf-landing__footer-link">
             Regulamin
           </Link>

@@ -60,6 +60,20 @@ export function managerSubstitution(
   return createSubstitutePlayerCommand({ tick, source: 'ui', side, playerOutId, playerInId });
 }
 
+/** The stored decisions are still there, and nothing was added to the part already played. */
+export function continuesLog(
+  storedTick: number,
+  stored: readonly ManagerLogEntry[],
+  log: readonly ManagerLogEntry[],
+): boolean {
+  if (log.length < stored.length) return false;
+  return log.every((entry, n) => {
+    const old = stored[n];
+    if (!old) return entry.t >= storedTick;
+    return old.t === entry.t && old.c === entry.c && old.o === entry.o && old.i === entry.i;
+  });
+}
+
 /** Untrusted form text → log. Null means the log is not usable. */
 export function parseManagerLog(raw: unknown): readonly ManagerLogEntry[] | null {
   if (raw == null || raw === '') return [];

@@ -1,4 +1,5 @@
 import { getEngineStatus } from '@lastfootball/lfe';
+import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/Badge';
 import { Panel } from '@/components/ui/Panel';
@@ -6,11 +7,13 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { StatBlock } from '@/components/ui/StatBlock';
 import { Table } from '@/components/ui/Table';
 import { env } from '@/config/env';
+import { requireOperator } from '@/lib/moderation/admin';
 import { getSupabaseStatus } from '@/lib/supabase/status';
 
 export const dynamic = 'force-dynamic';
 
-export default function EngineStatusPage() {
+export default async function EngineStatusPage() {
+  if (!(await requireOperator())) notFound();
   const engine = getEngineStatus();
   const supabase = getSupabaseStatus();
   const readyCount = engine.modules.filter((m) => m.ready).length;

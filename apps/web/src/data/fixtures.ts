@@ -90,7 +90,6 @@ export type LiveMatchBundle = {
   momentum: number[];
   events: { id: string; minute: string; kind: LiveEventKind; text: string; highlight?: boolean }[];
   commands: { id: string; label: string }[];
-  instructions: { id: string; label: string; value: string; on?: boolean }[];
   subs: { remaining: string; bench: { name: string; pos: string }[] };
   viewModes: { id: string; label: string }[];
 };

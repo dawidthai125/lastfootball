@@ -12,6 +12,7 @@ const EARLY_CLUB_OPEN = new Set([
   'rankings',
   'profile',
   'settings',
+  'help',
   'status',
 ]);
 

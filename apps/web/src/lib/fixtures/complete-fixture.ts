@@ -28,7 +28,7 @@ import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
 import { toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
-import { parseManagerLog } from '@/lib/match/manager-commands';
+import { continuesLog, parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
 import { createClient } from '@/lib/supabase/server';
@@ -163,6 +163,12 @@ export async function completeFixture(
       if (lookup.kind === 'expired') {
         return { error: 'Mecz trwał zbyt długo. Wejdź w mecz jeszcze raz.' };
       }
+      if (lookup.kind === 'other') {
+        return { error: 'Masz niedokończony inny mecz. Dokończ go najpierw.' };
+      }
+      if (lookup.kind === 'found' && !continuesLog(lookup.tick, lookup.log, managerLog)) {
+        return { error: 'Ten mecz poszedł dalej w innym oknie. Wejdź w mecz jeszcze raz.' };
+      }
       const gone = kickoff ? leftDuringMatch(kickoff, seniors) : null;
       if (gone) {
         return { error: `${gone} odszedł w trakcie meczu. Wejdź w mecz jeszcze raz.` };
@@ -286,7 +292,7 @@ export async function completeFixture(
     return { error: dev.error };
   }
   if (settled.applied) await recordFanMood(clubId, result);
-  await clearKickoffs(clubId);
+  await clearKickoffs(clubId, row.id);
   if (row.competition === 'league') {
     await payFirstSponsorBase(clubId, clubRow.season_number ?? 1);
   }

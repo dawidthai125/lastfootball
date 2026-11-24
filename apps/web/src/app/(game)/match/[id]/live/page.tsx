@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
+import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
 import { LiveMatchShell } from '@/components/match/LiveMatchShell';
 import { EmptyState, LocationHero } from '@/components/ui';
 import { readClubBuild } from '@/lib/club/read-build';
@@ -20,7 +21,8 @@ import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
 import { resolveOpponentXi } from '@/lib/fixtures/create-session';
-import { storeKickoff } from '@/lib/match/kickoff-store';
+import { enterMatch, storeKickoff } from '@/lib/match/kickoff-store';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { lineupProblem } from '@/lib/squad/lineup-problem';
 import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -112,13 +114,20 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     if (human?.block) {
       return <SquadError matchId={id} detail={human.block} />;
     }
-    const problem = human ? null : lineupProblem(club.id, players);
+    const entry = human ? null : await enterMatch(club.id, dto.id, filterSeniorPlayers(players));
+    if (entry?.kind === 'error') {
+      return <KickoffBlocked sentence="Nie udało się odczytać meczu. Odśwież stronę." />;
+    }
+    if (entry?.kind === 'other') return <OpenMatchNotice fixtureId={entry.fixtureId} other />;
+    const going = entry?.kind === 'resume' ? entry : null;
+    const problem = human || going ? null : lineupProblem(club.id, players);
     if (problem) return <SquadError matchId={id} detail={problem} />;
-    const ourXi = human ? human.ourXi : resolveStartingXi(players);
-    const ourBench = human ? [] : resolveMatchBench(players);
+    const ourXi = human ? human.ourXi : (going?.snapshot.ourXi ?? resolveStartingXi(players));
+    const ourBench = human ? [] : (going?.snapshot.ourBench ?? resolveMatchBench(players));
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
-    const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
-    if (dto.competition === 'challenge' && !rival) {
+    const rival =
+      dto.competition === 'challenge' && !going ? await loadRivalSquad(dto.opponentClubId) : null;
+    if (dto.competition === 'challenge' && !going && !rival) {
       return <SquadError matchId={id} detail="Rywal nie ma pełnej jedenastki." />;
     }
     const supabase = await createClient();
@@ -129,7 +138,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
           ? (moodRow.data as { fan_mood: number }).fan_mood
           : 60;
-    if (!human) {
+    if (!human && !going) {
       await storeKickoff({
         club,
         fixture: dto,
@@ -143,12 +152,13 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
       <LiveMatchShell playedHref={`/match/${id}`}>
         <LiveMatchFoundation
           bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
-          club={club}
-          leagueFixture={human?.fixture ?? dto}
+          club={going?.snapshot.club ?? club}
+          leagueFixture={human?.fixture ?? going?.snapshot.fixture ?? dto}
           ourXi={ourXi}
           ourBench={ourBench}
-          ourFormation={ourFormation}
-          theirXi={human?.theirXi ?? rival?.xi ?? null}
+          ourFormation={going?.snapshot.formation ?? ourFormation}
+          theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
+          resume={going ? { tick: going.tick, log: going.log } : null}
           developmentNames={developmentNames}
           fanMoodBefore={fanMoodBefore}
         />

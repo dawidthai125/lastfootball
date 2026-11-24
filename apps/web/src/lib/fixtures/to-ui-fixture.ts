@@ -301,11 +301,6 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
             { id: 'form-442', label: 'Układ 4-4-2' },
             { id: 'form-433', label: 'Układ 4-3-3' },
           ],
-    instructions: [
-      { id: 'focus', label: 'Focus gry', value: 'Środek' },
-      { id: 'trap', label: 'Pułapka ofsajdowa', value: 'Wyłączona', on: false },
-      { id: 'counter', label: 'Kontry', value: 'Średnie' },
-    ],
     subs: {
       remaining: '3/3',
       bench: [

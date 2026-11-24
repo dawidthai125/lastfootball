@@ -8,7 +8,11 @@ import type { Fixture, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { RosterPlayerSeed } from '@/lib/squad';
-import { LiveMatchRuntime, type LiveMatchSnapshot } from '@/gameplay/live-match-runtime';
+import {
+  LiveMatchRuntime,
+  type LiveMatchSnapshot,
+  type MatchResume,
+} from '@/gameplay/live-match-runtime';
 
 export function useLiveMatchRuntime(
   fixture: Fixture,
@@ -19,6 +23,7 @@ export function useLiveMatchRuntime(
   ourBench?: readonly RosterPlayerSeed[] | null,
   ourFormation: FormationCode = '4-4-2',
   theirXi?: readonly RosterPlayerSeed[] | null,
+  resume?: MatchResume | null,
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
@@ -46,6 +51,7 @@ export function useLiveMatchRuntime(
         ourBench,
         ourFormation,
         theirXi,
+        resume,
       );
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';

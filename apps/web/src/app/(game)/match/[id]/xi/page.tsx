@@ -1,6 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 
+import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
+import { openMatchOf } from '@/lib/match/kickoff-store';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { MatchXiView } from '@/components/match/MatchXiView';
 import { EmptyState, LocationHero } from '@/components/ui';
@@ -34,6 +36,9 @@ export default async function MatchXiPage({ params }: PageProps) {
     const dto = await getFixtureByIdForClub(club.id, id);
     if (!dto) notFound();
     if (dto.status === 'played') redirect(matchPrePath(id));
+    if (dto.competition !== 'human' && (await openMatchOf(club.id)) === dto.id) {
+      return <OpenMatchNotice fixtureId={dto.id} />;
+    }
   }
 
   const rows = await listClubPlayers(club.id);

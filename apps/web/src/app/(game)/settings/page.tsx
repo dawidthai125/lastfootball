@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 
 import { DeleteAccountForm } from '@/components/account/DeleteAccountForm';
+import { CredentialForms } from '@/components/account/CredentialForms';
+import { getAuthUser } from '@/lib/auth/session';
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
 import { SignOutForm } from '@/components/auth/SignOutForm';
 import { NotificationSettingsPanel } from '@/components/notifications/NotificationSettingsPanel';
@@ -16,6 +18,7 @@ export default async function SettingsPage() {
   const club = await getManagerClub();
   if (!club) redirect('/welcome');
 
+  const email = (await getAuthUser())?.email ?? null;
   const [gate, notifications] = await Promise.all([
     loadEmailGate(club.ownerId),
     loadNotificationSettings(club.ownerId),
@@ -32,6 +35,8 @@ export default async function SettingsPage() {
         ) : (
           <EmailConfirmSlot userId={club.ownerId} variant="game" />
         )}
+        {email ? <CredentialForms email={email} /> : null}
+        <div style={{ height: 'var(--lf-space-3)' }} />
         <SignOutForm>
           <Button type="submit" variant="danger">
             Wyloguj

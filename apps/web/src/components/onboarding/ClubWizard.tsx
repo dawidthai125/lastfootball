@@ -1,5 +1,6 @@
 'use client';
 
+import { isNameAllowed } from '@/lib/club/name-filter';
 import { useActionState, useEffect, useMemo, useState } from 'react';
 
 import { ClubCrest } from '@/components/assets/ClubCrest';
@@ -112,6 +113,10 @@ export function ClubWizard() {
       }
       if (!/^[A-Z0-9]{3,4}$/.test(s)) {
         setLocalError('Skrót: 3–4 znaki A–Z / 0–9.');
+        return;
+      }
+      if (!isNameAllowed(n) || !isNameAllowed(s)) {
+        setLocalError('Tej nazwy nie można użyć. Wybierz inną.');
         return;
       }
       setName(n);

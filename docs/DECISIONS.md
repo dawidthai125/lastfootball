@@ -897,7 +897,15 @@ Pole „Mam ukończone 16 lat”, sprawdzane też na serwerze (`consentError`). 
 
 Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabase. Link z listu nic nie zużywa, dopóki człowiek nie kliknie w grze (skanery poczty). Reset ma hamulec `consume_reset_slot`; gdy hamulec nie odpowiada, listu nie ma.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D149 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D150 — Gotowość A · Owner GO 2026-11-24
+
+1. Mecz jest jeden: serwer zapamiętuje postęp (`match_kickoffs.progress_tick`, `manager_log`), powrót wznawia, a zapis wyniku musi zawierać zapamiętane decyzje. Niedokończony mecz idzie przed innym. Wyjątek: pierwszy mecz i zawodnik, który odszedł w trakcie.
+2. Filtr nazw (`isNameAllowed`), klub zakłada serwer, sesja gracza nie zmienia nazwy. Zgłoszenia w Rywalizacji, panel `/admin` dla `app_admins`: zmiana nazwy i blokada z powodem wysyłanym do gracza.
+3. Zmiana hasła i e-maila w Ustawieniach, nowe hasła od 8 znaków. Nowy adres działa po kliknięciu linku.
+4. Funkcje RPC tylko dla zalogowanych; `supersede_pending_transfer_offers` tylko dla bazy.
+5. `/jak-grac`, polskie strony błędów, `/status` tylko dla operatora. Z meczu usunięte instrukcje, które nic nie robiły.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D150 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

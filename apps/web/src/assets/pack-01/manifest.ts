@@ -140,5 +140,6 @@ export const NAV_ITEM_ICON: Record<string, NavIconId> = {
   achievements: 'achievements',
   profile: 'profile',
   settings: 'settings',
+  help: 'messages',
   status: 'status',
 };

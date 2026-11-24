@@ -76,6 +76,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { id: 'achievements', href: '/achievements', label: 'Gablota', shortLabel: 'G' },
       { id: 'profile', href: '/profile', label: 'Profil', shortLabel: 'Pr' },
       { id: 'settings', href: '/settings', label: 'Ustawienia', shortLabel: 'U' },
+      { id: 'help', href: '/jak-grac', label: 'Jak grać', shortLabel: '?' },
     ],
   },
 ];

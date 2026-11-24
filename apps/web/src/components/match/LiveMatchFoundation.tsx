@@ -14,8 +14,10 @@ import {
   LIVE_BALL_INTERP_MS,
   LIVE_SUB_LIMIT,
   type LiveMatchSnapshot,
+  type MatchResume,
 } from '@/gameplay/live-match-runtime';
 import { pickCommentaryUtterance, polishVoice } from '@/lib/match/commentary';
+import { useMatchProgress } from '@/gameplay/use-match-progress';
 import { useLiveMatchRuntime } from '@/gameplay/use-live-match-runtime';
 import type { ReplaySpeed } from '@/gameplay/replay';
 import { MatchMomentOverlay } from '@/components/match/MatchMomentOverlay';
@@ -55,6 +57,7 @@ export function LiveMatchFoundation({
   theirXi = null,
   developmentNames = [],
   fanMoodBefore = 60,
+  resume = null,
 }: {
   bundle: LiveMatchBundle;
   club?: ClubDto | null;
@@ -68,6 +71,8 @@ export function LiveMatchFoundation({
   developmentNames?: readonly string[];
   /** Fan mood before settle — Post Match Δ line (Information Thin). */
   fanMoodBefore?: number;
+  /** A match that already went on continues from here. */
+  resume?: MatchResume | null;
 }) {
   const { fixture } = bundle;
   const {
@@ -87,6 +92,11 @@ export function LiveMatchFoundation({
     ourBench,
     ourFormation,
     theirXi,
+    resume,
+  );
+  useMatchProgress(
+    runtime,
+    !firstMatch && leagueFixture && leagueFixture.competition !== 'human' ? leagueFixture.id : null,
   );
   const usName = club?.name ?? '—';
   const usShort = club?.shortName ?? '—';
@@ -112,6 +122,7 @@ export function LiveMatchFoundation({
   } | null>(null);
   const [seenGoalIds, setSeenGoalIds] = useState<Set<string>>(() => new Set());
   const [commentatorOn, setCommentatorOn] = useState(false);
+  const oldGoalsSeen = useRef(false);
   const spokenIds = useRef<Set<string>>(new Set());
   const voices = useRef<SpeechSynthesisVoice[]>([]);
 
@@ -168,6 +179,11 @@ export function LiveMatchFoundation({
     const goals = snapshot.feed.filter((e) => e.kind === 'goal');
     const newest = goals[goals.length - 1];
     if (!newest) return;
+    if (runtime?.resumedMinute != null && !oldGoalsSeen.current) {
+      oldGoalsSeen.current = true;
+      setSeenGoalIds(new Set(goals.map((goal) => `${goal.minute}-${goal.text ?? goal.kind}`)));
+      return;
+    }
     const gid = `${newest.minute}-${newest.text ?? newest.kind}`;
     if (seenGoalIds.has(gid)) return;
     setSeenGoalIds((prev) => new Set(prev).add(gid));
@@ -176,7 +192,7 @@ export function LiveMatchFoundation({
       title: 'GOL!',
       score: `${snapshot.homeScore}–${snapshot.awayScore}`,
     });
-  }, [snapshot, seenGoalIds, finalOpen, postMatchOpen]);
+  }, [snapshot, seenGoalIds, finalOpen, postMatchOpen, runtime]);
 
   useEffect(() => {
     const synth = window.speechSynthesis;
@@ -1012,46 +1028,15 @@ export function LiveMatchFoundation({
                 >
                   Zastosuj zmiany
                 </button>
+                {runtime?.resumedMinute != null ? (
+                  <p className="lf-live__tactic" role="status">
+                    Mecz wznowiony od {runtime.resumedMinute}&apos;.
+                  </p>
+                ) : null}
                 <p className="lf-live__tactic">
                   Układ {snapshot.tactics.formationCode} · pressing {snapshot.tactics.pressing} ·
                   tempo {snapshot.tactics.tempo} · mentalność {snapshot.tactics.mentality}
                 </p>
-                <div style={{ marginTop: 'var(--lf-space-4)' }}>
-                  <div
-                    className="lf-section-shell__title"
-                    style={{ marginBottom: 'var(--lf-space-2)' }}
-                  >
-                    Instrukcje
-                  </div>
-                  <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                    {bundle.instructions.map((ins) => (
-                      <li
-                        key={ins.id}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          gap: 'var(--lf-space-2)',
-                          padding: 'var(--lf-space-2) 0',
-                          borderBottomWidth: 'var(--lf-border-width-hair)',
-                          borderBottomStyle: 'solid',
-                          borderBottomColor: 'var(--lf-color-border-subtle)',
-                          fontSize: 'var(--lf-type-caption)',
-                        }}
-                      >
-                        <span style={{ color: 'var(--lf-color-text-muted)' }}>{ins.label}</span>
-                        <span
-                          style={{
-                            color: ins.on
-                              ? 'var(--lf-color-status-ok)'
-                              : 'var(--lf-color-text-secondary)',
-                          }}
-                        >
-                          {ins.value}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </>
             ) : null}
 
