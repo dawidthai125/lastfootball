@@ -6,6 +6,7 @@ import type { FormationCode } from '@lastfootball/lfe';
 
 import type { Fixture, LiveMatchBundle } from '@/data/fixtures';
 import type { ClubDto } from '@/lib/club/types';
+import type { MatchExtra } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { RosterPlayerSeed } from '@/lib/squad';
 import {
@@ -24,6 +25,7 @@ export function useLiveMatchRuntime(
   ourFormation: FormationCode = '4-4-2',
   theirXi?: readonly RosterPlayerSeed[] | null,
   resume?: MatchResume | null,
+  extra?: MatchExtra,
 ): {
   snapshot: LiveMatchSnapshot | null;
   runtime: LiveMatchRuntime | null;
@@ -52,6 +54,7 @@ export function useLiveMatchRuntime(
         ourFormation,
         theirXi,
         resume,
+        extra,
       );
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Nie można rozpocząć meczu.';

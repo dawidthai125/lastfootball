@@ -50,6 +50,7 @@ export async function authoritativeManagerScore(
       resolveMatchBench(players, today),
       parseOurFormation(typeof shape === 'string' ? shape : null),
       rival?.xi ?? null,
+      rival ? { theirBench: rival.bench } : {},
     );
     const score = replayManagerMatch(session, dto.isHome ? 'home' : 'away', log);
     session.dispose();

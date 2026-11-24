@@ -41,6 +41,7 @@ const SHOT_DELTA = 0.1;
 const SHOT_CAP = 6;
 const FOUL_DELTA = -0.25;
 const FOUL_CAP = 4;
+const RED_DELTA = -1.5;
 const TEAM_WIN = 0.3;
 const TEAM_LOSE = -0.3;
 const GK_CLEAN_SHEET = 0.5;
@@ -76,6 +77,7 @@ function ratePlayer(input: {
   readonly assists: number;
   readonly shots: number;
   readonly foulsCommitted: number;
+  readonly sentOff: boolean;
   readonly role: string;
   readonly side: 'home' | 'away';
   readonly homeScore: number;
@@ -92,6 +94,7 @@ function ratePlayer(input: {
     assists * ASSIST_DELTA +
     shots * SHOT_DELTA +
     fouls * FOUL_DELTA +
+    (input.sentOff ? RED_DELTA : 0) +
     teamResultDelta(input.side, input.homeScore, input.awayScore);
 
   const goalsAgainst = input.side === 'home' ? input.awayScore : input.homeScore;
@@ -131,7 +134,19 @@ function buildSideRatings(
   const homeScore = state.score.home;
   const awayScore = state.score.away;
 
-  const rows = lineup.slots.map((slot) => {
+  // Whoever left the pitch also gets a rating: substituted, injured or sent off.
+  const onPitch = new Set<string>(lineup.slots.map((slot) => slot.playerId));
+  const left = state.rules
+    ? state.statistics.players
+        .filter((row) => row.side === side && row.minutesPlayed > 0 && !onPitch.has(row.playerId))
+        .map((row, i) => ({
+          slotIndex: 11 + i,
+          role: state.players.find((p) => p.id === row.playerId)?.preferredRole ?? ('CM' as const),
+          playerId: row.playerId,
+        }))
+    : [];
+
+  const rows = [...lineup.slots, ...left].map((slot) => {
     const player = state.players.find((p) => p.id === slot.playerId);
     const stats = state.statistics.players.find((p) => p.playerId === slot.playerId);
     const goals = stats?.goals ?? 0;
@@ -157,6 +172,7 @@ function buildSideRatings(
         assists,
         shots,
         foulsCommitted,
+        sentOff: (stats?.redCards ?? 0) > 0,
         role: slot.role,
         side,
         homeScore,

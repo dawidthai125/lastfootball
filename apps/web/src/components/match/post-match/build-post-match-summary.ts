@@ -72,6 +72,10 @@ const TIMELINE_TYPES = new Set([
   'FOUL',
   'CORNER',
   'CARD',
+  'INJURY',
+  'PENALTY',
+  'FREE_KICK',
+  'OFFSIDE',
   'SUBSTITUTION',
 ]);
 
@@ -117,8 +121,10 @@ function shootoutLine(
 
 export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSummary {
   const { matchState, events, homeName, awayName, homeShort, awayShort } = input;
-  const yellowCards = cardSplit(events, matchState, 'yellow');
-  const redCards = cardSplit(events, matchState, 'red');
+  // Full rules count the cards in the match itself; an older one only has the shown events.
+  const none = { home: 0, away: 0 };
+  const yellowCards = matchState.rules ? none : cardSplit(events, matchState, 'yellow');
+  const redCards = matchState.rules ? none : cardSplit(events, matchState, 'red');
   const homeScore = matchState.score.home;
   const awayScore = matchState.score.away;
 
@@ -230,6 +236,15 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
         home: (matchState.statistics.home.redCards ?? 0) + redCards.home,
         away: (matchState.statistics.away.redCards ?? 0) + redCards.away,
       },
+      ...(matchState.rules
+        ? [
+            {
+              label: 'Spalone',
+              home: matchState.statistics.home.offsides,
+              away: matchState.statistics.away.offsides,
+            },
+          ]
+        : []),
     ],
     possession,
     ratings: {
@@ -355,11 +370,14 @@ function eventKind(type: string): LiveEventKind {
     case 'GOAL':
       return 'goal';
     case 'CARD':
+    case 'INJURY':
       return 'card';
     case 'SUBSTITUTION':
       return 'sub';
     case 'SHOT':
     case 'ATTACK':
+    case 'PENALTY':
+    case 'FREE_KICK':
       return 'shot';
     case 'CORNER':
       return 'corner';
@@ -390,12 +408,25 @@ function humanize(
     case 'MATCH_END':
       return 'Koniec meczu.';
     case 'GOAL': {
-      const payload = (e.payload ?? {}) as { playerId?: string; assistPlayerId?: string };
+      const payload = (e.payload ?? {}) as {
+        playerId?: string;
+        assistPlayerId?: string;
+        penalty?: boolean;
+        freeKick?: boolean;
+        header?: boolean;
+      };
       const named = (id?: string) => matchState.players.find((player) => player.id === id)?.name;
       const scorer = named(payload.playerId);
       const assist = named(payload.assistPlayerId);
       if (!scorer) return `Gol! ${team}.`;
-      return `Gol! ${team}: ${scorer}${assist ? `, asysta ${assist}` : ''}.`;
+      const how = payload.penalty
+        ? ' z karnego'
+        : payload.freeKick
+          ? ' z wolnego'
+          : payload.header
+            ? ' głową'
+            : '';
+      return `Gol! ${team}: ${scorer}${how}${assist ? `, asysta ${assist}` : ''}.`;
     }
     case 'SHOT':
       return `Strzał. ${team}.`;
@@ -405,8 +436,24 @@ function humanize(
       return 'Faul.';
     case 'CORNER':
       return `Rzut rożny. ${team}.`;
-    case 'SUBSTITUTION':
-      return 'Zmiana zawodnika.';
+    case 'PENALTY':
+      return `Rzut karny. ${team}.`;
+    case 'FREE_KICK':
+      return `Rzut wolny. ${team}.`;
+    case 'OFFSIDE':
+      return `Spalony. ${team}.`;
+    case 'INJURY': {
+      const id = (e.payload as { playerId?: string } | undefined)?.playerId;
+      const hurt = matchState.players.find((player) => player.id === id)?.name;
+      return hurt ? `Kontuzja. ${hurt}.` : 'Kontuzja.';
+    }
+    case 'SUBSTITUTION': {
+      const p = (e.payload ?? {}) as { playerOutId?: string; playerInId?: string };
+      const of = (id?: string) => matchState.players.find((player) => player.id === id)?.name;
+      const out = of(p.playerOutId);
+      const inn = of(p.playerInId);
+      return out && inn ? `Zmiana. ${team}: ${inn} za ${out}.` : 'Zmiana zawodnika.';
+    }
     case 'CARD': {
       const payload =
         e.payload && typeof e.payload === 'object'

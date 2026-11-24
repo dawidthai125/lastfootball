@@ -250,10 +250,50 @@ export function matchBooking(playerId: string, matchKey: string): MatchBooking |
   return null;
 }
 
+/** What the match itself did to a player (D151). */
+export type MatchIncident = {
+  readonly card?: 'yellow' | 'second_yellow' | 'red';
+  readonly injury?: 'minor' | 'serious';
+  readonly minutes?: number;
+};
+
+/** One yellow in four sits one match, a second yellow one, a red two. */
+export function banFor(card: MatchIncident['card'], playerId: string, matchKey: string): 0 | 1 | 2 {
+  if (card === 'red') return 2;
+  if (card === 'second_yellow') return 1;
+  if (card === 'yellow') return hash(`${playerId}:${matchKey}:count`) % 4 === 0 ? 1 : 0;
+  return 0;
+}
+
+/** Injury first, then a ban: a player sits out one thing at a time. */
+function afterIncident(
+  player: SquadTruthPlayer,
+  matchKey: string,
+  incident: MatchIncident,
+): Pick<SquadTruthPlayer, 'status' | 'suspensionMatches' | 'injuryMatches'> {
+  const { status, suspensionMatches, injuryMatches } = player;
+  if (incident.injury) {
+    return {
+      status: 'INJURED',
+      suspensionMatches,
+      injuryMatches: incident.injury === 'serious' ? 2 : 1,
+    };
+  }
+  const ban = banFor(incident.card, player.id, matchKey);
+  return ban > 0
+    ? { status: 'SUSPENDED', suspensionMatches: ban, injuryMatches }
+    : { status, suspensionMatches, injuryMatches };
+}
+
 /** One regeneration session (+28) covers two matches in the XI. */
 const XI_ENERGY_COST = 14;
 /** Sitting on the bench is a light rest; a day off gives 14. */
 const BENCH_ENERGY_GAIN = 4;
+
+/** A part of a match costs a part of the energy; extra time costs no more. */
+function energyCost(minutes: number): number {
+  return Math.round((XI_ENERGY_COST * Math.max(0, Math.min(90, minutes))) / 90);
+}
 
 function applyOne(
   player: SquadTruthPlayer,
@@ -261,6 +301,7 @@ function applyOne(
   result: MatchResult,
   role: MatchRole,
   physio = false,
+  incidents: Readonly<Record<string, MatchIncident>> | null = null,
 ): SquadTruthPlayer {
   if (player.status === 'INJURED' && role === 'out') {
     const left = injuryLeft(player.injuryMatches ?? 0, physio);
@@ -289,12 +330,24 @@ function applyOne(
     return { ...player, energy, status: recovered };
   }
 
+  const incident = incidents?.[player.id];
+
   if (role === 'bench') {
-    const energy = Math.min(100, player.energy + BENCH_ENERGY_GAIN);
+    const minutes = incident?.minutes ?? 0;
+    const energy =
+      minutes > 0
+        ? Math.max(10, player.energy - energyCost(minutes))
+        : Math.min(100, player.energy + BENCH_ENERGY_GAIN);
     const recentRatings = pushRating(player.recentRatings, 60);
-    const status = energy < 34 && player.status === 'READY' ? 'TIRED' : player.status;
+    const hit =
+      incident && player.status !== 'INJURED' && player.status !== 'SUSPENDED'
+        ? afterIncident(player, matchKey, incident)
+        : null;
+    const base = hit?.status ?? player.status;
+    const status = energy < 34 && base === 'READY' ? 'TIRED' : base;
     return {
       ...player,
+      ...(hit ?? {}),
       energy,
       recentRatings,
       form: formFromRatings(recentRatings, player.form),
@@ -304,7 +357,7 @@ function applyOne(
 
   if (role === 'xi') {
     const energyBefore = player.energy;
-    const energy = Math.max(10, energyBefore - XI_ENERGY_COST);
+    const energy = Math.max(10, energyBefore - energyCost(incident?.minutes ?? 90));
     const rating = clampBand(
       62 + resultDelta(result) + Math.round((energyBefore - 50) / 10),
       20,
@@ -315,7 +368,14 @@ function applyOne(
     let suspensionMatches = player.suspensionMatches;
     let injuryMatches = player.injuryMatches;
 
-    if (status !== 'INJURED' && status !== 'SUSPENDED') {
+    if (incidents) {
+      if (incident && status !== 'INJURED' && status !== 'SUSPENDED') {
+        const hit = afterIncident(player, matchKey, incident);
+        status = hit.status;
+        suspensionMatches = hit.suspensionMatches;
+        injuryMatches = hit.injuryMatches;
+      }
+    } else if (status !== 'INJURED' && status !== 'SUSPENDED') {
       const injRoll = hash(`${player.id}:${matchKey}:inj`) % 100;
       const injured = (energy < 45 && injRoll < 8) || (energy < 25 && injRoll < 18);
       const booking = matchBooking(player.id, matchKey);
@@ -351,11 +411,20 @@ export function applyMatchSquadTruth(
     readonly result: MatchResult;
     readonly roleById: Readonly<Record<string, MatchRole>>;
     readonly physio?: boolean;
+    /** Facts of a full-rules match. Null keeps the draw by match key. */
+    readonly incidents?: Readonly<Record<string, MatchIncident>> | null;
   },
 ): SquadTruthPlayer[] {
   return players.map((player) => {
     const role = input.roleById[player.id] ?? 'out';
-    const next = applyOne(player, input.matchKey, input.result, role, input.physio === true);
+    const next = applyOne(
+      player,
+      input.matchKey,
+      input.result,
+      role,
+      input.physio === true,
+      input.incidents ?? null,
+    );
     if (typeof player.morale !== 'number') return next;
     return {
       ...next,

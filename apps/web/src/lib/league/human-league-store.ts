@@ -7,9 +7,10 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
-import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { seedOpponentBench, seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
-import { resolveStartingXi } from '@/lib/squad/resolve-club-squad';
+import { resolveMatchBench, resolveStartingXi } from '@/lib/squad/resolve-club-squad';
+import { isTalent } from '@/lib/squad/talents';
 import { SquadUnavailableError, type AttrGroups } from '@/lib/squad/types';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { Json } from '@/types/database';
@@ -309,9 +310,14 @@ function isGroups(value: unknown): value is AttrGroups {
 }
 
 function parseXi(value: Json | null): RosterPlayerSeed[] | null {
-  if (!Array.isArray(value) || value.length !== 11) return null;
+  const rows = parseSquad(value, true);
+  return rows?.length === 11 ? rows : null;
+}
+
+function parseSquad(value: unknown, starter: boolean): RosterPlayerSeed[] | null {
+  if (!Array.isArray(value)) return null;
   const rows: RosterPlayerSeed[] = [];
-  for (const item of value) {
+  for (const item of value as Json[]) {
     if (!item || typeof item !== 'object' || Array.isArray(item)) return null;
     const row = item as Record<string, Json | undefined>;
     if (
@@ -327,21 +333,26 @@ function parseXi(value: Json | null): RosterPlayerSeed[] | null {
       number: typeof row.number === 'number' ? row.number : 0,
       pos: typeof row.pos === 'string' ? row.pos : 'ŚP',
       role: (typeof row.role === 'string' ? row.role : 'CM') as PitchRole,
-      starter: true,
+      starter,
       captain: row.captain === true,
       setPiece: row.setPiece === true || undefined,
       skill: row.skill,
       groups: isGroups(row.groups) ? row.groups : undefined,
       energy: typeof row.energy === 'number' ? row.energy : undefined,
       form: typeof row.form === 'number' ? row.form : undefined,
+      ...(typeof row.leadership === 'number' ? { leadership: row.leadership } : {}),
+      ...(Array.isArray(row.talents) ? { talents: row.talents.filter(isTalent) } : {}),
     });
   }
   return rows;
 }
 
-async function snapshotXi(
-  clubId: string,
-): Promise<readonly RosterPlayerSeed[] | { error: string }> {
+type SquadSnapshot = {
+  readonly xi: readonly RosterPlayerSeed[];
+  readonly bench: readonly RosterPlayerSeed[];
+};
+
+async function snapshotSquad(clubId: string): Promise<SquadSnapshot | { error: string }> {
   const admin = createAdminClient();
   const full = await admin
     .from('players')
@@ -357,7 +368,9 @@ async function snapshotXi(
     : full;
   if (result.error || !result.data) return { error: 'Nie mogę odczytać składu.' };
   // The account was deleted: its seat plays on like a bot until the season ends.
-  if (result.data.length === 0) return [...seedOpponentSquad(clubId, 'iv')];
+  if (result.data.length === 0) {
+    return { xi: seedOpponentSquad(clubId, 'iv'), bench: seedOpponentBench(clubId, 'iv') };
+  }
   try {
     // A rival's injured starter must not cancel the match for both clubs.
     const rows = repairLineup(
@@ -366,7 +379,7 @@ async function snapshotXi(
     );
     const xi = resolveStartingXi(rows);
     const problem = lineupProblem(clubId, rows);
-    return problem ? { error: problem } : xi;
+    return problem ? { error: problem } : { xi, bench: resolveMatchBench(rows) };
   } catch (error: unknown) {
     if (error instanceof SquadUnavailableError) return { error: error.message };
     throw error;
@@ -427,6 +440,14 @@ async function setupOf(broadcast: BroadcastRow): Promise<HumanHomeSetup> {
     : readHomeSetup(broadcast.home_id);
 }
 
+/** Null = locked before the benches existed: the match plays without full rules. */
+function benchesOf(broadcast: BroadcastRow) {
+  const setup = broadcast.home_setup as { homeBench?: unknown; awayBench?: unknown } | null;
+  const home = parseSquad(setup?.homeBench, false);
+  const away = parseSquad(setup?.awayBench, false);
+  return home && away ? { home, away } : null;
+}
+
 /** Only its own season: a late request must not close the seats of the next one. */
 async function freezeSeats(season: number): Promise<void> {
   await createAdminClient()
@@ -444,8 +465,8 @@ async function lockBroadcast(
   const existing = await readBroadcast(table.season, pair);
   if (existing?.locked_at) return existing;
 
-  const homeSnap = isBotClubId(pair.home.id) ? null : await snapshotXi(pair.home.id);
-  const awaySnap = isBotClubId(pair.away.id) ? null : await snapshotXi(pair.away.id);
+  const homeSnap = isBotClubId(pair.home.id) ? null : await snapshotSquad(pair.home.id);
+  const awaySnap = isBotClubId(pair.away.id) ? null : await snapshotSquad(pair.away.id);
   if (homeSnap && 'error' in homeSnap) return homeSnap;
   if (awaySnap && 'error' in awaySnap) return awaySnap;
 
@@ -461,9 +482,14 @@ async function lockBroadcast(
     away_short: pair.away.shortName,
     seed: String(sharedHumanSeed(table.seasonKey, pair.matchday, pair.home.id, pair.away.id)),
     kickoff_on: kickoffDate(table.seasonKey, pair.matchday),
-    home_xi: (homeSnap ?? null) as Json | null,
-    away_xi: (awaySnap ?? null) as Json | null,
-    home_setup: await readHomeSetup(pair.home.id),
+    home_xi: (homeSnap?.xi ?? null) as unknown as Json | null,
+    away_xi: (awaySnap?.xi ?? null) as unknown as Json | null,
+    // The benches are frozen here too. Their presence means full match rules (D151).
+    home_setup: {
+      ...(await readHomeSetup(pair.home.id)),
+      homeBench: homeSnap?.bench ?? seedOpponentBench(pair.home.id, 'iv'),
+      awayBench: awaySnap?.bench ?? seedOpponentBench(pair.away.id, 'iv'),
+    } as unknown as Json,
     locked_at: now.toISOString(),
   };
 
@@ -755,6 +781,9 @@ export type HumanLiveReady = {
   readonly fixture: FixtureDto;
   readonly ourXi: readonly RosterPlayerSeed[];
   readonly theirXi: readonly RosterPlayerSeed[];
+  readonly ourBench: readonly RosterPlayerSeed[];
+  readonly theirBench: readonly RosterPlayerSeed[];
+  readonly fullRules: boolean;
   readonly block: string | null;
 };
 
@@ -767,6 +796,9 @@ export async function prepareHumanLive(
     fixture: dto,
     ourXi: [],
     theirXi: [],
+    ourBench: [],
+    theirBench: [],
+    fullRules: true,
     block,
   });
   const round = humanRoundFromFixture(dto.matchday);
@@ -795,10 +827,14 @@ export async function prepareHumanLive(
   if ('error' in awayXi) return blocked(awayXi.error);
   const isHome = pair.home.id === club.id;
   const opponent = isHome ? pair.away : pair.home;
+  const benches = benchesOf(locked);
   return {
     block: null,
     ourXi: isHome ? homeXi : awayXi,
     theirXi: isHome ? awayXi : homeXi,
+    ourBench: (isHome ? benches?.home : benches?.away) ?? [],
+    theirBench: (isHome ? benches?.away : benches?.home) ?? [],
+    fullRules: benches !== null,
     fixture: {
       ...dto,
       isHome,
@@ -857,6 +893,7 @@ export async function authoritativeHumanScore(
   if ('error' in homeXi) return homeXi;
   if ('error' in awayXi) return awayXi;
 
+  const benches = benchesOf(broadcast);
   const session = createSessionFromLeagueFixture(
     {
       id: broadcast.home_id,
@@ -896,9 +933,10 @@ export async function authoritativeHumanScore(
       ...(await setupOf(broadcast)),
     },
     homeXi,
-    [],
+    benches?.home ?? [],
     '4-4-2',
     awayXi,
+    { theirBench: benches?.away ?? [], fullRules: benches !== null },
   );
   const played = finishSharedSession(session);
   session.dispose();

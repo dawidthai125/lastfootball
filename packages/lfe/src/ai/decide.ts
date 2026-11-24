@@ -53,6 +53,12 @@ export const MATCH_BALANCE = Object.freeze({
   MORALE_SPAN: 30,
   MORALE_ATTACK: 0.06,
   MORALE_GOAL: 0.06,
+  /** Per player more than the rival has (D151). */
+  MEN_ATTACK: 0.12,
+  MEN_GOAL: 0.06,
+  MEN_POSSESSION: 0.05,
+  /** Full effect of the best captain; double while the team is behind. */
+  CAPTAIN: 0.025,
   SCORE_ATTACK: 1,
   SCORE_GOAL: 0.3,
   EXPOSURE_MENTALITY: 0.75,
@@ -77,6 +83,14 @@ function moraleEdge(side: MatchAiSideContext): number {
   return Math.max(-1, Math.min(1, edge));
 }
 
+function menGap(ours: MatchAiSideContext, theirs: MatchAiSideContext): number {
+  return (ours.men ?? 11) - (theirs.men ?? 11);
+}
+
+function captainFactor(side: MatchAiSideContext): number {
+  return factor(1 + (side.captain ?? 0) * MATCH_BALANCE.CAPTAIN * (side.scoreDiff < 0 ? 2 : 1));
+}
+
 /**
  * Who keeps the ball — both sides' strength, tactics, fatigue, score.
  * At default equal teams / 0–0 → MATCH_BALANCE.HOME_POSSESSION.
@@ -97,6 +111,7 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
     (awayPressing - 0.5) * 0.06;
 
   homeChance += (h.strength - a.strength) * MATCH_BALANCE.STRENGTH_POSSESSION;
+  homeChance += menGap(h, a) * MATCH_BALANCE.MEN_POSSESSION;
   homeChance += (h.freshness - a.freshness) * 0.04;
   homeChance += (h.formationAggressiveness - a.formationAggressiveness) * 0.03;
   homeChance += scorePhaseModifier(h, ctx.displayMinute) * 0.2;
@@ -147,6 +162,8 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
       factor(1 + gap * MATCH_BALANCE.STRENGTH_ATTACK) *
       factor(1 + (ours.freshness - 1) * MATCH_BALANCE.FRESHNESS_ATTACK) *
       factor(1 + morale * MATCH_BALANCE.MORALE_ATTACK) *
+      factor(1 + menGap(ours, theirs) * MATCH_BALANCE.MEN_ATTACK) *
+      captainFactor(ours) *
       factor(1 + pressure * MATCH_BALANCE.SCORE_ATTACK) *
       factor(1 + tempo * 0.5 + shape * 0.35 + width * 0.2) *
       exposure(theirs),
@@ -162,6 +179,8 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
   const goalChance = clamp01(
     MATCH_BALANCE.GOAL *
       factor(1 + gap * MATCH_BALANCE.STRENGTH_GOAL) *
+      factor(1 + menGap(ours, theirs) * MATCH_BALANCE.MEN_GOAL) *
+      captainFactor(ours) *
       factor(1 + morale * MATCH_BALANCE.MORALE_GOAL) *
       factor(1 + mentality * 0.2 + pressure * MATCH_BALANCE.SCORE_GOAL),
   );

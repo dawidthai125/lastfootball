@@ -5,7 +5,7 @@ import type { Fixture } from '@/data/fixtures';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { createSessionFromFirstMatch } from '@/lib/first-match/create-session';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
-import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
+import { createSessionFromLeagueFixture, type MatchExtra } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { commentaryLine } from '@/lib/match/commentary';
@@ -72,6 +72,10 @@ const FEED_TYPES = new Set([
   'FOUL',
   'CORNER',
   'CARD',
+  'INJURY',
+  'PENALTY',
+  'FREE_KICK',
+  'OFFSIDE',
   'SUBSTITUTION',
   'FORMATION_CHANGE',
   'SYSTEM',
@@ -132,6 +136,7 @@ export class LiveMatchRuntime {
     ourFormation: FormationCode = '4-4-2',
     theirXi?: readonly RosterPlayerSeed[] | null,
     resume?: MatchResume | null,
+    extra: MatchExtra = {},
   ) {
     this.fixture = fixture;
     this.shell = shell;
@@ -142,7 +147,8 @@ export class LiveMatchRuntime {
     this.homeName = fixture.home ? clubName : opponentName;
     this.awayName = fixture.home ? opponentName : clubName;
     this.booked =
-      leagueFixture && ourXi
+      // Under full rules the cards come from the match itself.
+      leagueFixture && ourXi && extra.fullRules === false
         ? ourXi.flatMap((player) => {
             const booking = matchBooking(player.id, leagueFixture.id);
             return booking
@@ -158,6 +164,7 @@ export class LiveMatchRuntime {
       ourBench ?? null,
       ourFormation,
       theirXi,
+      extra,
     );
     this.canvasHost = createMatchCanvasHost();
     this.canvasHost.bind(this.session);
@@ -445,6 +452,16 @@ export class LiveMatchRuntime {
           home: matchState.statistics.home.yellowCards,
           away: matchState.statistics.away.yellowCards,
         },
+        {
+          label: 'Czerwone',
+          home: matchState.statistics.home.redCards,
+          away: matchState.statistics.away.redCards,
+        },
+        {
+          label: 'Spalone',
+          home: matchState.statistics.home.offsides,
+          away: matchState.statistics.away.offsides,
+        },
       ],
       feed,
       tactics: matchState.tactics,
@@ -600,11 +617,14 @@ function eventKind(type: string): LiveEventKind {
     case 'GOAL':
       return 'goal';
     case 'CARD':
+    case 'INJURY':
       return 'card';
     case 'SUBSTITUTION':
       return 'sub';
     case 'SHOT':
     case 'ATTACK':
+    case 'PENALTY':
+    case 'FREE_KICK':
       return 'shot';
     case 'CORNER':
       return 'corner';
@@ -639,7 +659,8 @@ function resolveSession(
   ourXi: readonly RosterPlayerSeed[] | null,
   ourBench: readonly RosterPlayerSeed[] | null,
   ourFormation: FormationCode,
-  theirXi?: readonly RosterPlayerSeed[] | null,
+  theirXi: readonly RosterPlayerSeed[] | null | undefined,
+  extra: MatchExtra,
 ): MatchSession {
   if (fixture.id === FIRST_MATCH_ID && club && ourXi) {
     return createSessionFromFirstMatch(club, ourXi, ourBench ?? []);
@@ -652,6 +673,7 @@ function resolveSession(
       ourBench ?? [],
       ourFormation,
       theirXi,
+      extra,
     );
   }
   throw new MatchSessionDataError();

@@ -4,6 +4,7 @@ import type { Rng } from '../../rng';
 import { attackScaleForHalf } from '../../ai';
 
 import { advanceMatchClock, isHalfComplete } from './clock';
+import { autoSubstitutions, rollInjury } from './incidents';
 import { reconcileMinutesPlayed } from './minutes-played';
 import {
   resolvePossessionAction,
@@ -168,6 +169,18 @@ export function simulateMatchTick(
   );
   next = resolved.state;
   emits.push(...resolved.emits);
+
+  if (next.rules) {
+    const injury = rollInjury(
+      next,
+      input.dtMs / Math.max(1, 2 * input.halfDurationMs),
+      input.tick,
+      input.rng,
+    );
+    const changes = autoSubstitutions(injury.state, input.tick);
+    next = changes.state;
+    emits.push(...injury.emits, ...changes.emits);
+  }
 
   return { state: next, emits, lifecycle };
 }

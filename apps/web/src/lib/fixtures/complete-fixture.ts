@@ -27,7 +27,7 @@ import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
 import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
-import { toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
+import { incidentsById, toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
 import { continuesLog, parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { closeSeasonIfComplete } from '@/lib/season/close-season';
@@ -122,9 +122,18 @@ export async function completeFixture(
 
   let score: { home: number; away: number };
   let lines: readonly MatchPlayerLine[] = [];
+  let facts: readonly MatchPlayerLine[] = [];
   if (row.status === 'played' && row.home_score != null && row.away_score != null) {
     // A repeated save: the stored result stands, only unfinished steps run again.
     score = { home: row.home_score, away: row.away_score };
+    // Cards and injuries of the stored match, for a development step that failed before.
+    const again =
+      row.competition === 'human'
+        ? await authoritativeHumanScore(clubId, row.matchday)
+        : kickoff
+          ? await authoritativeManagerScore(row.id, players, managerLog, shape, today, kickoff)
+          : null;
+    if (again && !('error' in again)) facts = again.players;
   } else {
     const emailGate = await loadEmailGate(user.id);
     if (!emailGate.confirmed && row.competition === 'challenge') {
@@ -182,6 +191,7 @@ export async function completeFixture(
     if ('error' in scored) return scored;
     score = { home: scored.home, away: scored.away };
     lines = scored.players;
+    facts = lines;
   }
 
   const { home, away } = score;
@@ -260,7 +270,7 @@ export async function completeFixture(
       morale: p.morale ?? 60,
       personality: isPersonality(p.personality) ? p.personality : 'spokojny',
     })),
-    { matchKey: row.id, result, roleById, physio: build.physio },
+    { matchKey: row.id, result, roleById, physio: build.physio, incidents: incidentsById(facts) },
   );
   const truthById = Object.fromEntries(
     afterTruth.map((p) => [

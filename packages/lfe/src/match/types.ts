@@ -1,6 +1,6 @@
 import type { TeamId } from '@lastfootball/domain';
 
-import type { Bench, Lineup, MatchSettings, Player } from './domain';
+import type { Bench, Lineup, MatchRules, MatchSettings, Player } from './domain';
 
 /**
  * Input contract to create a match session (see MatchSessionConfig).
@@ -25,6 +25,8 @@ export interface MatchInput {
   openingTempo?: number;
   /** Kickoff width for the tactics owner. Omitted keeps the default 50. */
   openingWidth?: number;
+  /** Full match rules (D151). Omitted plays without them. */
+  rules?: Partial<MatchRules>;
 }
 
 export interface MatchEvent {

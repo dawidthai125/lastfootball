@@ -41,11 +41,11 @@ export function commentaryLine(
     case 'CORNER':
       return `Rzut rożny dla ${team}.`;
     case 'FREE_KICK':
-      return `Rzut wolny dla ${team}.`;
+      return setPieceLine('Rzut wolny', payload, team, context);
     case 'PENALTY':
-      return `Rzut karny dla ${team}.`;
+      return setPieceLine('Rzut karny', payload, team, context);
     case 'OFFSIDE':
-      return side ? `Spalony. ${team}.` : 'Spalony.';
+      return offsideLine(payload, side ? team : null, context);
     case 'CARD':
       return cardLine(payload, context);
     case 'SUBSTITUTION':
@@ -54,7 +54,10 @@ export function commentaryLine(
       return formationLine(payload, team);
     case 'INJURY': {
       const player = named(context, readString(payload, 'playerId'));
-      return player ? `${player} potrzebuje pomocy.` : 'Kontuzja.';
+      if (!player) return 'Kontuzja.';
+      return readBool(payload, 'forcedOff')
+        ? `Kontuzja. ${player} nie może grać dalej.`
+        : `${player} potrzebuje pomocy, ale zostaje na boisku.`;
     }
     case 'VAR':
       return 'Sędzia sprawdza sytuację.';
@@ -95,13 +98,22 @@ function goalLine(payload: unknown, team: string, context: CommentaryContext): s
   const scorer = named(context, readString(payload, 'playerId'));
   if (!scorer) return `Gol! ${team} zdobywa bramkę.`;
   const assist = named(context, readString(payload, 'assistPlayerId'));
-  const base = `Gol! ${scorer} strzela dla ${team}.`;
+  if (readBool(payload, 'penalty')) return `Gol z karnego! ${scorer} strzela dla ${team}.`;
+  if (readBool(payload, 'freeKick')) return `Gol z wolnego! ${scorer} strzela dla ${team}.`;
+  const base = readBool(payload, 'header')
+    ? `Gol głową po rożnym! ${scorer} strzela dla ${team}.`
+    : `Gol! ${scorer} strzela dla ${team}.`;
   return assist ? `${base} Asysta: ${assist}.` : base;
 }
 
 function shotLine(payload: unknown, team: string, context: CommentaryContext): string {
   const player = named(context, readString(payload, 'playerId'));
   const who = player ?? team;
+  if (readBool(payload, 'penalty') && readBool(payload, 'missed')) {
+    return readBool(payload, 'onTarget')
+      ? `${who} nie trafia z karnego. Bramkarz broni.`
+      : `${who} nie trafia z karnego. Pudło.`;
+  }
   return readBool(payload, 'onTarget')
     ? `${who} oddaje strzał w światło bramki.`
     : `${who} oddaje strzał.`;
@@ -110,6 +122,22 @@ function shotLine(payload: unknown, team: string, context: CommentaryContext): s
 function foulLine(payload: unknown, context: CommentaryContext): string {
   const player = named(context, readString(payload, 'playerId'));
   return player ? `Faul. ${player}.` : 'Faul.';
+}
+
+function setPieceLine(
+  label: string,
+  payload: unknown,
+  team: string,
+  context: CommentaryContext,
+): string {
+  const player = named(context, readString(payload, 'playerId'));
+  return player ? `${label} dla ${team}. Do piłki podchodzi ${player}.` : `${label} dla ${team}.`;
+}
+
+function offsideLine(payload: unknown, team: string | null, context: CommentaryContext): string {
+  const player = named(context, readString(payload, 'playerId'));
+  if (player) return `Spalony. ${player}.`;
+  return team ? `Spalony. ${team}.` : 'Spalony.';
 }
 
 function cardLine(payload: unknown, context: CommentaryContext): string {
@@ -121,6 +149,9 @@ function cardLine(payload: unknown, context: CommentaryContext): string {
     readString(payload, 'card') ??
     ''
   ).toLowerCase();
+  if (colour === 'red' && readBool(payload, 'second')) {
+    return player ? `Druga żółta. ${player} schodzi z boiska.` : 'Druga żółta kartka.';
+  }
   if (colour === 'red' || colour === 'red_card') return `Czerwona kartka${who}.`;
   if (colour === 'yellow' || colour === 'yellow_card') return `Żółta kartka${who}.`;
   return player ? `Kartka dla ${player}.` : 'Kartka.';
@@ -129,6 +160,9 @@ function cardLine(payload: unknown, context: CommentaryContext): string {
 function substitutionLine(payload: unknown, team: string, context: CommentaryContext): string {
   const outName = named(context, readString(payload, 'playerOutId'));
   const inName = named(context, readString(payload, 'playerInId'));
+  if (outName && inName && readString(payload, 'reason') === 'injury') {
+    return `Za kontuzjowanego wchodzi ${inName}.`;
+  }
   if (outName && inName) return `${outName} schodzi. Wchodzi ${inName}.`;
   return `Zmiana w drużynie ${team}.`;
 }

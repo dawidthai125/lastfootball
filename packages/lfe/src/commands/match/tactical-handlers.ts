@@ -1,6 +1,6 @@
 import type { Lineup, MatchState, PitchRole } from '../../match/domain';
 import { createMatchTactics, formationByCode, orderPlayersByRole } from '../../match/domain';
-import { reconcileMinutesPlayed } from '../../match/engine/minutes-played';
+import { applySubstitution, freshBench } from '../../match/engine/substitution';
 import type { CommandHandler, CommandValidator, ValidationError } from '../types';
 
 import type {
@@ -221,7 +221,8 @@ function lineupWithFormation(
     })),
     formationCode,
   );
-  const slots = formation.slots.map((slot, index) =>
+  // Men down: the open places are up front, the back line stays whole.
+  const slots = formation.slots.slice(0, ordered.length).map((slot, index) =>
     Object.freeze({
       slotIndex: slot.slotIndex,
       role: slot.role,
@@ -302,53 +303,26 @@ export const substitutePlayerHandler: CommandHandler<SubstitutePlayerCommand> = 
         message: 'playerInId must be on the bench',
         field: 'payload.playerInId',
       });
+    } else if (state.rules && !freshBench(state, p.side).includes(p.playerInId)) {
+      errors.push({
+        code: 'PLAYER_LEFT_PITCH',
+        message: 'A player who left the pitch cannot return',
+        field: 'payload.playerInId',
+      });
     }
     return errors;
   },
   execute(command, ctx) {
     const state = ctx.getMatchState()!;
     const { side, playerOutId, playerInId } = command.payload!;
-    const lineup = side === 'home' ? state.homeLineup : state.awayLineup;
-    const bench = side === 'home' ? state.homeBench : state.awayBench;
-
-    const nextSlots = lineup.slots.map((s) =>
-      s.playerId === playerOutId ? Object.freeze({ ...s, playerId: playerInId }) : s,
-    );
-    const nextLineup = Object.freeze({
-      ...lineup,
-      slots: Object.freeze(nextSlots),
-      captainPlayerId: lineup.captainPlayerId === playerOutId ? playerInId : lineup.captainPlayerId,
-      setPiecePlayerId:
-        lineup.setPiecePlayerId === playerOutId ? playerInId : lineup.setPiecePlayerId,
+    const next = applySubstitution(state, {
+      id: `sub-${command.id}`,
+      side,
+      playerOutId,
+      playerInId,
+      tick: command.tick,
+      reason: 'tactical',
     });
-    const nextBenchIds = bench.playerIds.filter((id) => id !== playerInId).concat(playerOutId);
-    const nextBench = Object.freeze({
-      ...bench,
-      playerIds: Object.freeze(nextBenchIds),
-    });
-
-    const nextRaw: MatchState = Object.freeze({
-      ...state,
-      homeLineup: side === 'home' ? nextLineup : state.homeLineup,
-      awayLineup: side === 'away' ? nextLineup : state.awayLineup,
-      homeBench: side === 'home' ? nextBench : state.homeBench,
-      awayBench: side === 'away' ? nextBench : state.awayBench,
-      substitutions: Object.freeze([
-        ...state.substitutions,
-        Object.freeze({
-          id: `sub-${command.id}`,
-          side,
-          playerOutId,
-          playerInId,
-          matchMinute: state.clock.displayMinute,
-          tick: command.tick,
-          reason: 'tactical' as const,
-          completed: true,
-        }),
-      ]),
-    });
-    // LFE-RATINGS-V2: freeze out-player minutes; in-player starts from current minute.
-    const next = reconcileMinutesPlayed(nextRaw);
     ctx.setMatchState(next);
     ctx.recordEvent('SUBSTITUTION', {
       side,

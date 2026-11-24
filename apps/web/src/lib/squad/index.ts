@@ -35,6 +35,7 @@ export {
   seedClubRoster,
   seedStarterSquad,
   seedBotSquad,
+  seedOpponentBench,
   seedOpponentSquad,
 } from '@/lib/squad/seed-roster';
 export type { RosterPlayerSeed } from '@/lib/squad/seed-roster';

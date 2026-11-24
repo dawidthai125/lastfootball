@@ -14,7 +14,12 @@ export type KickoffSnapshot = {
   readonly ourBench: readonly RosterPlayerSeed[];
   readonly formation: FormationCode;
   readonly theirXi: readonly RosterPlayerSeed[] | null;
+  readonly theirBench?: readonly RosterPlayerSeed[] | null;
+  /** 2 = full match rules (D151). Absent = opened before them. */
+  readonly rules?: number;
 };
+
+export const MATCH_RULES_VERSION = 2;
 
 /** A started match can be finished for this long; later the stored squad counts again. */
 export const KICKOFF_VALID_MS = 6 * 60 * 60 * 1000;
@@ -39,6 +44,7 @@ export function readKickoffSnapshot(
   if (s.club?.id !== clubId || s.fixture?.id !== fixtureId) return null;
   if (!isRoster(s.ourXi) || s.ourXi.length !== 11 || !isRoster(s.ourBench)) return null;
   if (s.theirXi != null && !isRoster(s.theirXi)) return null;
+  if (s.theirBench != null && !isRoster(s.theirBench)) return null;
   return {
     club: s.club,
     fixture: s.fixture,
@@ -46,6 +52,8 @@ export function readKickoffSnapshot(
     ourBench: s.ourBench,
     formation: parseOurFormation(s.formation),
     theirXi: s.theirXi ?? null,
+    theirBench: s.theirBench ?? null,
+    rules: s.rules === MATCH_RULES_VERSION ? MATCH_RULES_VERSION : 1,
   };
 }
 
@@ -57,6 +65,7 @@ export function sessionFromKickoff(s: KickoffSnapshot): MatchSession {
     s.ourBench,
     s.formation,
     s.theirXi,
+    { theirBench: s.theirBench ?? null, fullRules: s.rules === MATCH_RULES_VERSION },
   );
 }
 

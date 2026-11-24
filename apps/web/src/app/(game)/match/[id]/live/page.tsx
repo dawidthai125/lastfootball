@@ -20,7 +20,12 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
-import { resolveOpponentXi } from '@/lib/fixtures/create-session';
+import {
+  resolveOpponentBench,
+  resolveOpponentXi,
+  type MatchExtra,
+} from '@/lib/fixtures/create-session';
+import { MATCH_RULES_VERSION } from '@/lib/match/kickoff-snapshot';
 import { enterMatch, storeKickoff } from '@/lib/match/kickoff-store';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { lineupProblem } from '@/lib/squad/lineup-problem';
@@ -123,7 +128,9 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     const problem = human || going ? null : lineupProblem(club.id, players);
     if (problem) return <SquadError matchId={id} detail={problem} />;
     const ourXi = human ? human.ourXi : (going?.snapshot.ourXi ?? resolveStartingXi(players));
-    const ourBench = human ? [] : (going?.snapshot.ourBench ?? resolveMatchBench(players));
+    const ourBench = human
+      ? human.ourBench
+      : (going?.snapshot.ourBench ?? resolveMatchBench(players));
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
     const rival =
       dto.competition === 'challenge' && !going ? await loadRivalSquad(dto.opponentClubId) : null;
@@ -138,6 +145,15 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
           ? (moodRow.data as { fan_mood: number }).fan_mood
           : 60;
+    // A resumed match keeps the rules and the bench it started with.
+    const extra: MatchExtra = human
+      ? { theirBench: human.theirBench, fullRules: human.fullRules }
+      : going
+        ? {
+            theirBench: going.snapshot.theirBench ?? null,
+            fullRules: going.snapshot.rules === MATCH_RULES_VERSION,
+          }
+        : { theirBench: rival?.bench ?? resolveOpponentBench(club, dto), fullRules: true };
     if (!human && !going) {
       await storeKickoff({
         club,
@@ -146,6 +162,8 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         ourBench,
         formation: ourFormation,
         theirXi: rival?.xi ?? resolveOpponentXi(club, dto),
+        theirBench: extra.theirBench,
+        rules: MATCH_RULES_VERSION,
       });
     }
     return (
@@ -158,6 +176,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
           ourBench={ourBench}
           ourFormation={going?.snapshot.formation ?? ourFormation}
           theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
+          extra={extra}
           resume={going ? { tick: going.tick, log: going.log } : null}
           developmentNames={developmentNames}
           fanMoodBefore={fanMoodBefore}

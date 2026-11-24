@@ -64,12 +64,10 @@ export function occupyFormationLayout(
 ): readonly OccupiedSlot[] {
   const bySlot = new Map(lineup.slots.map((s) => [s.slotIndex, s.playerId]));
   return Object.freeze(
-    layout.slots.map((slot) => {
+    // A slot without a player is an expulsion or an injury with nobody to come on.
+    layout.slots.flatMap((slot) => {
       const playerId = bySlot.get(slot.slotIndex);
-      if (!playerId) {
-        throw new Error(`Lineup missing player for slot ${slot.slotIndex} (${layout.side})`);
-      }
-      return Object.freeze({ ...slot, playerId });
+      return playerId ? [Object.freeze({ ...slot, playerId })] : [];
     }),
   );
 }
