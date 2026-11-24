@@ -124,10 +124,36 @@ export async function openNextSeasonAfterDeparture(
     .select('id');
 
   if (updErr || !opened || opened.length === 0) {
-    return rollback(departure.undo, 'Nie udało się otworzyć nowego sezonu.');
+    // The reply may be lost and the season open: an open season is never rolled back.
+    const state = await seasonState(input.supabase, input.clubId, input.nextSeason);
+    if (state === 'unknown') {
+      return { ok: false, error: 'Nie udało się otworzyć nowego sezonu. Odśwież stronę.' };
+    }
+    if (state === 'closed') {
+      return rollback(departure.undo, 'Nie udało się otworzyć nowego sezonu.');
+    }
   }
 
   return { ok: true, farewell: departure.farewell };
+}
+
+/** Re-read after a failed open. Unknown: the database does not answer, so nothing is undone. */
+async function seasonState(
+  supabase: SeasonDb,
+  clubId: string,
+  nextSeason: number,
+): Promise<'open' | 'closed' | 'unknown'> {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { data, error } = await supabase
+      .from('clubs')
+      .select('season_number, season_phase')
+      .eq('id', clubId)
+      .maybeSingle();
+    if (error || !data) continue;
+    const row = data as { season_number: number; season_phase: string };
+    return row.season_number >= nextSeason && row.season_phase === 'in_season' ? 'open' : 'closed';
+  }
+  return 'unknown';
 }
 
 /** Safe to repeat: who left is no longer in the roster, who stayed has a later season. */
@@ -156,10 +182,14 @@ async function settleContracts(
     if (error) return false;
   }
   for (const player of plan.keep) {
-    const wage = keptWage(player);
+    const kept = keptWage(player);
     const { error } = await serverDb(supabase)
       .from('players')
-      .update({ contract_season: nextSeason, ...(wage === null ? {} : { wage }) } as never)
+      .update({
+        contract_season: nextSeason,
+        ...(kept === null ? {} : { wage: kept.wage }),
+        ...(kept?.bank === undefined ? {} : { wage_bank: kept.bank }),
+      } as never)
       .eq('id', player.id)
       .eq('club_id', clubId);
     if (error) return false;
@@ -186,6 +216,7 @@ async function restoreContracts(
         transfer_listed_at: player.transferListedAt,
         contract_season: player.contractSeason,
         ...(typeof player.wage === 'number' ? { wage: player.wage } : {}),
+        ...(typeof player.wageBank === 'number' ? { wage_bank: player.wageBank } : {}),
       } as never)
       .eq('id', player.id)
       .eq('club_id', clubId);
@@ -274,8 +305,6 @@ async function applySeasonDeparture(
     .eq('id', plan.retireId)
     .eq('club_id', clubId)
     .is('departed_at', null);
-  if (leaveErr) return { ok: false, error: 'Nie udało się zakończyć kariery zawodnika.' };
-
   const restoreRetiree = async () => {
     if (!retiree) return;
     const { error } = await serverDb(supabase)
@@ -290,6 +319,11 @@ async function applySeasonDeparture(
       .eq('club_id', clubId);
     if (error) console.error('applySeasonDeparture: restore failed', { code: error.code });
   };
+  // A failed write may have landed, so it is undone as well, here and below.
+  if (leaveErr) {
+    await restoreRetiree();
+    return { ok: false, error: 'Nie udało się zakończyć kariery zawodnika.' };
+  }
 
   const undoBase = {
     clubId,
@@ -312,7 +346,10 @@ async function applySeasonDeparture(
       .eq('academy_track', true)
       .is('departed_at', null);
     if (promoteErr) {
-      await restoreRetiree();
+      await undoSeasonDeparture(supabase, {
+        ...undoBase,
+        replacement: { kind: 'promote', id: plan.promoteId, starter: prospect?.starter ?? null },
+      });
       return { ok: false, error: 'Nie udało się wprowadzić zawodnika z akademii.' };
     }
     return {
@@ -372,7 +409,14 @@ async function applySeasonDeparture(
       transfer_listed_at: null,
     } as never);
   if (insertErr) {
-    await restoreRetiree();
+    // A taken id is somebody else's row.
+    if (insertErr.code === '23505') await restoreRetiree();
+    else {
+      await undoSeasonDeparture(supabase, {
+        ...undoBase,
+        replacement: { kind: 'insert', id: draft.id },
+      });
+    }
     return { ok: false, error: 'Nie udało się uzupełnić kadry.' };
   }
   return {

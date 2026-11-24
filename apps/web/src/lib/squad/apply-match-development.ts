@@ -41,7 +41,8 @@ export type ApplyMatchDevelopmentResult =
   | { ok: false; error: string; moved?: boolean };
 
 /**
- * Atomic match development via RPC (skill only).
+ * Atomic match development via RPC. The database moves the groups with the skill
+ * (`lf_move_groups`), so the groups here stay as they were read.
  * Pure growth: applyMatchDevelopmentEffects — starters, K_MATCH=5, skill ≤ potential.
  */
 export async function applyMatchDevelopment(

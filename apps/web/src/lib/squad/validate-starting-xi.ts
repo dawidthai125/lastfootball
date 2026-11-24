@@ -181,7 +181,14 @@ export function applyXiSelection(
   return { players: list, selectedId: null };
 }
 
-function isUnavailable(player: SquadPlayerDto, today: string): boolean {
+type AvailabilityFacts = Pick<SquadPlayerDto, 'status' | 'onLoan' | 'intlAbsentUntil'>;
+
+/** May start today. The same check runs in SQL (call_emergency_junior). */
+export function isAvailable(player: AvailabilityFacts, today: string): boolean {
+  return player.status !== 'DEPARTED' && !isUnavailable(player, today);
+}
+
+function isUnavailable(player: AvailabilityFacts, today: string): boolean {
   return (
     player.status === 'INJURED' ||
     player.status === 'SUSPENDED' ||
@@ -192,7 +199,8 @@ function isUnavailable(player: SquadPlayerDto, today: string): boolean {
 
 /**
  * Manager-triggered fix on the XI screen: each unavailable starter swaps with the best
- * free bench player, same position first. A goalkeeper only swaps with a goalkeeper.
+ * free bench player, same position first. A goalkeeper only swaps with a goalkeeper, and a
+ * spare goalkeeper plays in the field only when nobody else is left.
  * Nothing is saved here and a starter without a replacement stays, so the gate still holds.
  */
 export function replaceUnavailableStarters(
@@ -200,18 +208,23 @@ export function replaceUnavailableStarters(
   today: string,
 ): SquadPlayerDto[] {
   let list = players.map((p) => ({ ...p }));
-  for (const out of players) {
-    if (!out.starter || out.status === 'DEPARTED' || !isUnavailable(out, today)) continue;
+  // Goalkeepers first: a spare one belongs in goal before he helps in the field.
+  const gone = players
+    .filter((p) => p.starter && p.status !== 'DEPARTED' && isUnavailable(p, today))
+    .sort((a, b) => Number(isGoalkeeper(b)) - Number(isGoalkeeper(a)));
+  for (const out of gone) {
     const best = list
       .filter(
         (p) =>
           !p.starter &&
           p.status !== 'DEPARTED' &&
           !isUnavailable(p, today) &&
-          isGoalkeeper(p) === isGoalkeeper(out),
+          (isGoalkeeper(p) || !isGoalkeeper(out)),
       )
       .sort(
         (a, b) =>
+          Number(isGoalkeeper(a) !== isGoalkeeper(out)) -
+            Number(isGoalkeeper(b) !== isGoalkeeper(out)) ||
           Number(b.position === out.position) - Number(a.position === out.position) ||
           Number(a.status === 'TIRED') - Number(b.status === 'TIRED') ||
           b.skill - a.skill,
@@ -265,6 +278,7 @@ export function xiReadiness(player: Pick<SquadPlayerDto, 'skill' | 'energy'>): n
 /**
  * The strongest available XI for 4-4-2, energy included. Saves nothing.
  * Without eleven available players, or a goalkeeper, the squad comes back unchanged.
+ * A second goalkeeper plays in the field only when there is nobody else.
  */
 export function pickBestXi(players: readonly SquadPlayerDto[], today: string): SquadPlayerDto[] {
   const free = players.filter((p) => p.status !== 'DEPARTED' && !isUnavailable(p, today));
@@ -285,6 +299,12 @@ export function pickBestXi(players: readonly SquadPlayerDto[], today: string): S
     if (taken.has(pair.index) || chosen.has(pair.id)) continue;
     taken.add(pair.index);
     chosen.add(pair.id);
+  }
+  if (taken.has(0) && chosen.size < SLOTS_442.length) {
+    const spare = free
+      .filter((p) => !chosen.has(p.id))
+      .sort((a, b) => xiReadiness(b) - xiReadiness(a) || a.id.localeCompare(b.id));
+    for (const player of spare.slice(0, SLOTS_442.length - chosen.size)) chosen.add(player.id);
   }
   if (chosen.size !== SLOTS_442.length) return players.map((p) => ({ ...p }));
   return players.map((p) => ({ ...p, starter: chosen.has(p.id) }));

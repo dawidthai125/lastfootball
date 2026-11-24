@@ -47,7 +47,10 @@ export default async function MatchXiPage({ params, searchParams }: PageProps) {
   const rows = await listClubPlayers(club.id);
   try {
     const squad = resolveClubSquad(club, rows);
-    return <MatchXiView matchId={id} players={squad.players} shape={shape} />;
+    return (
+      // A junior called from here starts the editor anew with him on the bench.
+      <MatchXiView key={squad.players.length} matchId={id} players={squad.players} shape={shape} />
+    );
   } catch (e) {
     if (e instanceof SquadUnavailableError) {
       return (

@@ -24,6 +24,7 @@ const DAY_MS = 86_400_000;
 /** Why he cannot leave yet, or null. Same rule for instant sale, list and offers. */
 export function saleBlock(player: SalePlayer, now: Date = new Date()): string | null {
   if (player.loanedIn === true) return 'Wypożyczonego zawodnika nie możesz sprzedać.';
+  if (player.origin === 'emergency') return 'Juniora awaryjnego nie możesz sprzedać.';
   if (player.saleUnknown === true) return 'Nie udało się ustalić ceny. Spróbuj ponownie.';
   if (player.onLoan === true) return 'Zawodnik jest na wypożyczeniu.';
   if (!player.joinedAt) return null;

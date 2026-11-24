@@ -1,6 +1,5 @@
 'use server';
 
-import { recordMovement } from '@/lib/finance/record-movement';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -15,7 +14,6 @@ import { payClosedSeasonBonus } from '@/lib/sponsors/pay-due';
 import { renewSponsorAndPayBase } from '@/lib/sponsors/renew';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { listClubPlayers } from '@/lib/squad/get-players';
-import { creditClubCash } from '@/lib/finance/club-cash';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -206,7 +204,6 @@ async function startNextSeason(
   const sponsor = await renewSponsorAndPayBase({
     clubId,
     nextSeason,
-    currentCash: row.cash_balance ?? 0,
     quote,
   });
   if (!sponsor.ok) {
@@ -224,32 +221,19 @@ async function startNextSeason(
   const goalNote = settlement.note;
 
   if (row.season_goal_paid_for !== endedSeason) {
-    // Mark first, then pay: a parallel confirm cannot pay the goal twice.
-    const { data: settledRows, error: goalErr } = await admin
-      .from('clubs')
-      .update({ season_goal_paid_for: endedSeason, season_goal_note: goalNote } as never)
-      .eq('id', clubId)
-      .eq('season_phase', 'offseason')
-      .or(`season_goal_paid_for.is.null,season_goal_paid_for.neq.${endedSeason}`)
-      .select('id');
-    if (goalErr || !settledRows) {
-      return { error: 'Nie udało się zapisać celu sezonu.', farewell: null };
-    }
-    if (goalBonus > 0 && settledRows.length > 0) {
-      if ((await creditClubCash(clubId, goalBonus)) == null) {
-        await admin
-          .from('clubs')
-          .update({ season_goal_paid_for: row.season_goal_paid_for } as never)
-          .eq('id', clubId)
-          .eq('season_phase', 'offseason');
-        return { error: 'Nie udało się wypłacić celu sezonu.', farewell: null };
-      }
-      await recordMovement({
-        club_id: clubId,
-        category: 'season_goal',
-        label: 'Cel sezonu · górna połowa',
-        amount: goalBonus,
-      });
+    // Mark, cash and ledger in one step: neither a parallel nor a repeated start pays it twice.
+    const { error: goalErr } = await admin.rpc(
+      'pay_season_goal' as never,
+      {
+        p_club_id: clubId,
+        p_season: endedSeason,
+        p_note: goalNote,
+        p_amount: goalBonus,
+        p_label: 'Cel sezonu · górna połowa',
+      } as never,
+    );
+    if (goalErr) {
+      return { error: 'Nie udało się wypłacić celu sezonu.', farewell: null };
     }
   }
 

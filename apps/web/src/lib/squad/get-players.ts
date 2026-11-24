@@ -20,7 +20,7 @@ const CONTRACT_SELECT = 'id, contract_season';
 
 const ACADEMY_SELECT = 'id, senior_matches, academy_trained_on, academy_gain, academy_gain_season';
 
-const OFFER_SELECT = 'id, ai_offer_declined';
+const OFFER_SELECT = 'id, ai_offer_declined, absence_on';
 
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';

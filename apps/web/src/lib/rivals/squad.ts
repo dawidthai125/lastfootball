@@ -35,6 +35,11 @@ export async function loadRivalSquad(rivalClubId: string): Promise<{
         age: number;
         skill: number;
         status: string;
+        attr_attack: number;
+        attr_passing: number;
+        attr_defense: number;
+        attr_physical: number;
+        attr_goalkeeping: number;
       }[]
     | null;
   if (error || !squad || squad.length === 0) return null;
@@ -58,6 +63,13 @@ export async function loadRivalSquad(rivalClubId: string): Promise<{
     transferListedAt: null,
     academyTrack: false,
     promotedAt: null,
+    groups: {
+      attack: row.attr_attack,
+      passing: row.attr_passing,
+      defense: row.attr_defense,
+      physical: row.attr_physical,
+      goalkeeping: row.attr_goalkeeping,
+    },
   }));
 
   // The rival is not here to fix an injured starter, so he is replaced for this match.

@@ -38,7 +38,8 @@ export type CompleteTrainingResult =
 
 /**
  * Atomic team session via RPC: status + skill + clubs.last_training_on.
- * Growth rules: pure applyTrainingSessionEffects (TS SSOT).
+ * Growth rules: pure applyTrainingSessionEffects (TS SSOT). The database moves every group with
+ * the skill (`lf_move_groups`), on top of the trained one.
  */
 export async function completeTrainingSession(
   supabase: AppSupabase,

@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
 import { openMatchOf } from '@/lib/match/kickoff-store';
+import { EmergencyJuniorOffer } from '@/components/squad/EmergencyJuniorOffer';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { PreMatchView } from '@/components/match/PreMatchView';
 import { Panel } from '@/components/ui/Panel';
@@ -39,6 +40,7 @@ function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
         </Link>{' '}
         lub popraw XI przed meczem.
       </p>
+      <EmergencyJuniorOffer />
     </Panel>
   );
 }
@@ -162,13 +164,7 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
 
   try {
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
-    if (human?.block) {
-      return human.ownLineup ? (
-        <SquadError matchId={id} detail={human.block} />
-      ) : (
-        <KickoffBlocked sentence={human.block} />
-      );
-    }
+    if (human?.block) return <KickoffBlocked sentence={human.block} />;
     const ourXi = human ? human.ourXi : await loadClubStartingXi(club);
     return (
       <PreMatchView

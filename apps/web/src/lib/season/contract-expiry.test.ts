@@ -70,7 +70,14 @@ describe('contract expiry (D139)', () => {
     expect(contractPreview(players, 1)).toBeNull();
     expect(contractFarewell([])).toBeNull();
     expect(contractFarewell(['A', 'B', 'C'])).toBe('Koniec kontraktu, odeszli: A, B i jeszcze 1');
-    expect(keptWage(players[0]!)).toBe(1100);
+    expect(keptWage(players[0]!)).toEqual({ wage: 1100 });
+  });
+
+  it('raises the full wage of a player on loan, not the half that is paid', () => {
+    expect(keptWage({ wage: 500, personality: 'lider', onLoan: true, wageBank: 1000 })).toEqual({
+      wage: 550,
+      bank: 1100,
+    });
   });
 
   it('opens the talk in the last two seasons and renews for two more', () => {

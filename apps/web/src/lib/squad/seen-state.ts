@@ -14,6 +14,12 @@ export function seenState(player: PlayerRowDto): Record<string, unknown> | undef
     energy: player.stored.energy,
     energy_on: player.stored.energyOn,
     status: player.stored.status,
+    ...(typeof player.stored.injuryMatches === 'number'
+      ? { injury_matches: player.stored.injuryMatches }
+      : {}),
+    ...(typeof player.stored.suspensionMatches === 'number'
+      ? { suspension_matches: player.stored.suspensionMatches }
+      : {}),
     skill: player.skill,
     ...(typeof player.morale === 'number' ? { morale: player.morale } : {}),
     ...(player.groups

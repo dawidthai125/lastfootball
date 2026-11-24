@@ -1,8 +1,11 @@
 import { redirect } from 'next/navigation';
 
 import { EmptyState, LocationHero } from '@/components/ui';
+import { EmergencyJunior } from '@/components/squad/EmergencyJunior';
 import { SquadView } from '@/components/squad/SquadView';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { missingRole } from '@/lib/squad/emergency-junior';
 import { resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
 import { listClubPlayers } from '@/lib/squad/get-players';
 
@@ -13,7 +16,13 @@ export default async function SquadPage() {
   const rows = await listClubPlayers(club.id);
   try {
     const squad = resolveClubSquad(club, rows);
-    return <SquadView players={squad.players} />;
+    const missing = missingRole(squad.players, utcDateString());
+    return (
+      <>
+        {missing ? <EmergencyJunior keeper={missing.pos === 'BR'} /> : null}
+        <SquadView players={squad.players} />
+      </>
+    );
   } catch (e) {
     if (e instanceof SquadUnavailableError) {
       return (

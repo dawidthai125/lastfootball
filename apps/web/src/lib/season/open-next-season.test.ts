@@ -64,7 +64,11 @@ function matches(row: Row, filters: readonly Filter[]): boolean {
   return filters.every((filter) => row[filter.column] === filter.value);
 }
 
-function fakeDb(roster: readonly PlayerRowDto[], fail: 'club' | 'promote' | null) {
+function fakeDb(
+  roster: readonly PlayerRowDto[],
+  fail: 'club' | 'lost' | 'silent' | 'promote' | null,
+) {
+  const club = { season_number: 3, season_phase: 'offseason' };
   const players = roster.map(toRow);
   const ops: Op[] = [];
 
@@ -91,6 +95,10 @@ function fakeDb(roster: readonly PlayerRowDto[], fail: 'club' | 'promote' | null
       return this;
     }
 
+    maybeSingle(): this {
+      return this;
+    }
+
     then<TResult1 = { data: unknown; error: { message: string } | null }, TResult2 = never>(
       onfulfilled?:
         | ((value: {
@@ -104,9 +112,15 @@ function fakeDb(roster: readonly PlayerRowDto[], fail: 'club' | 'promote' | null
     }
 
     private execute(): { data: unknown; error: { message: string } | null } {
+      if (this.table === 'clubs' && this.mode === 'select') {
+        if (fail === 'silent') return { data: null, error: { message: 'down' } };
+        return { data: { ...club }, error: null };
+      }
       if (this.table === 'clubs') {
         ops.push({ op: 'club', payload: this.payload, filters: [...this.filters] });
         if (fail === 'club') return { data: null, error: { message: 'open failed' } };
+        Object.assign(club, this.payload);
+        if (fail !== null) return { data: null, error: { message: 'lost reply' } };
         return { data: [{ id: 'club-1' }], error: null };
       }
 
@@ -391,7 +405,7 @@ describe('openNextSeasonAfterDeparture', () => {
     });
 
     expect(result).toEqual({ ok: false, error: 'Nie udało się wprowadzić zawodnika z akademii.' });
-    expect(db.ops.map((op) => op.op)).toEqual(['update', 'update', 'h-age']);
+    expect(db.ops.map((op) => op.op)).toEqual(['update', 'update', 'update', 'h-age']);
     expect(db.ops.filter((op) => op.op === 'club')).toHaveLength(0);
     expect(db.players.find((row) => row.id === 'retiree')).toMatchObject({
       status: 'INJURED',
@@ -486,6 +500,31 @@ describe('openNextSeasonAfterDeparture', () => {
       ok: false,
       error: 'Nie udało się otworzyć nowego sezonu. Części zmian w kadrze nie udało się cofnąć.',
     });
+  });
+
+  it('never rolls back a season that opened although the reply was lost', async () => {
+    const roster = [
+      player({ id: 'retiree', age: 40, skill: 40, academyTrack: false, starter: true }),
+      player({ id: 'prospect', age: 17, skill: 48, academyTrack: true, starter: false }),
+    ];
+    const run = async (fail: 'lost' | 'silent') => {
+      const db = fakeDb(roster, fail);
+      const result = await openNextSeasonAfterDeparture({
+        supabase: db.supabase as never,
+        clubId: 'club-1',
+        endedSeason: 3,
+        loadRoster: async () => roster,
+        nextSeason: 4,
+        nextTier: 'iii',
+        goalNote: 'miss',
+        hAgePort: hAge(db.ops, snapshot),
+        hAgeSnapshot: snapshot,
+      });
+      expect(db.ops.map((op) => op.op)).toEqual(['update', 'update', 'club']);
+      return result;
+    };
+    expect(await run('lost')).toMatchObject({ ok: true, farewell: { retireName: 'retiree' } });
+    expect(await run('silent')).toMatchObject({ ok: false });
   });
 
   it('retires nobody else when an interrupted start already brought the replacement', async () => {

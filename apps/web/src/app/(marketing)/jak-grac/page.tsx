@@ -59,6 +59,11 @@ export default function HelpPage() {
           <li>Mecz zabiera energię. Wraca ona z każdą nocą i przy regeneracji na treningu.</li>
           <li>
             Zmęczeni częściej łapią kontuzje. Kartki i kontuzje oznaczają pauzę w kolejnych meczach.
+            Pauzę skraca o jeden każdy mecz klubu i każdy dzień bez meczu.
+          </li>
+          <li>
+            Gdy nie da się wystawić jedenastki, powołasz za darmo juniora awaryjnego. Ma kontrakt do
+            końca sezonu i nie można go sprzedać.
           </li>
           <li>
             Część zawodników ma talenty, na przykład Egzekutor albo Żelazne płuca. Widać je w

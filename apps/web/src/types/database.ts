@@ -206,6 +206,7 @@ export type Database = {
           wage: number;
           suspension_matches: number;
           injury_matches: number;
+          absence_on: string;
           recent_ratings: number[];
         };
         Insert: {
@@ -240,6 +241,7 @@ export type Database = {
           wage?: number;
           suspension_matches?: number;
           injury_matches?: number;
+          absence_on?: string;
           recent_ratings?: number[];
         };
         Update: {
@@ -274,6 +276,7 @@ export type Database = {
           wage?: number;
           suspension_matches?: number;
           injury_matches?: number;
+          absence_on?: string;
           recent_ratings?: number[];
         };
         Relationships: [
@@ -988,6 +991,11 @@ export type Database = {
           age: number;
           skill: number;
           status: string;
+          attr_attack: number;
+          attr_passing: number;
+          attr_defense: number;
+          attr_physical: number;
+          attr_goalkeeping: number;
         }[];
       };
       list_live_transfer_listings: {

@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { FormationCode } from '@lastfootball/lfe';
 import { notFound, redirect } from 'next/navigation';
 
+import { EmergencyJuniorOffer } from '@/components/squad/EmergencyJuniorOffer';
 import { FreshEntry } from '@/components/match/FreshEntry';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
@@ -64,6 +65,7 @@ function SquadError({
           { href: '/squad', label: UI_COPY.squadNav },
         ]}
       />
+      <EmergencyJuniorOffer />
     </div>
   );
 }
@@ -132,13 +134,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
   try {
     const players = await listClubPlayers(club.id);
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
-    if (human?.block) {
-      return human.ownLineup ? (
-        <SquadError matchId={id} detail={human.block} />
-      ) : (
-        <KickoffBlocked sentence={human.block} />
-      );
-    }
+    if (human?.block) return <KickoffBlocked sentence={human.block} />;
     const entry = human ? null : await enterMatch(club.id, dto.id, filterSeniorPlayers(players));
     if (entry?.kind === 'error') {
       return <KickoffBlocked sentence="Nie udało się odczytać meczu. Odśwież stronę." />;

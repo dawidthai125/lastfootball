@@ -1,5 +1,5 @@
 import { utcDateString } from '@/lib/fixtures/played-unlock';
-import { restedEnergy, restedStatus } from '@/lib/squad/rest';
+import { restedEnergy, restedStatus, servedAbsence } from '@/lib/squad/rest';
 import { isPersonality } from '@/lib/squad/depth';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { AttrGroups, PlayerRowDto, PlayerStatus } from '@/lib/squad/types';
@@ -44,6 +44,7 @@ export type PlayerDbRow = {
   wage?: number | null;
   suspension_matches?: number | null;
   injury_matches?: number | null;
+  absence_on?: string | null;
   recent_ratings?: number[] | null;
   morale?: number | null;
   personality?: string | null;
@@ -71,7 +72,16 @@ function mapStatus(raw: string): PlayerStatus {
 export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()): PlayerRowDto {
   const energy =
     typeof row.energy === 'number' ? restedEnergy(row.energy, row.energy_on, today) : undefined;
-  const status = mapStatus(row.status);
+  const absence = servedAbsence(
+    {
+      status: mapStatus(row.status),
+      injuryMatches: row.injury_matches ?? 0,
+      suspensionMatches: row.suspension_matches ?? 0,
+    },
+    row.absence_on,
+    today,
+  );
+  const status = absence.status;
   return {
     id: row.id,
     clubId: row.club_id,
@@ -103,13 +113,25 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     groups: groupsFromRow(row),
     energy,
     ...(typeof row.energy === 'number' && row.energy_on
-      ? { stored: { energy: row.energy, energyOn: row.energy_on, status: row.status } }
+      ? {
+          stored: {
+            energy: row.energy,
+            energyOn: row.energy_on,
+            status: row.status,
+            ...(typeof row.injury_matches === 'number'
+              ? { injuryMatches: row.injury_matches }
+              : {}),
+            ...(typeof row.suspension_matches === 'number'
+              ? { suspensionMatches: row.suspension_matches }
+              : {}),
+          },
+        }
       : {}),
     form: typeof row.form === 'number' ? row.form : undefined,
     wage: typeof row.wage === 'number' ? row.wage : undefined,
     suspensionMatches:
-      typeof row.suspension_matches === 'number' ? row.suspension_matches : undefined,
-    injuryMatches: typeof row.injury_matches === 'number' ? row.injury_matches : undefined,
+      typeof row.suspension_matches === 'number' ? absence.suspensionMatches : undefined,
+    injuryMatches: typeof row.injury_matches === 'number' ? absence.injuryMatches : undefined,
     recentRatings: Array.isArray(row.recent_ratings) ? row.recent_ratings : undefined,
     morale: typeof row.morale === 'number' ? row.morale : undefined,
     personality: isPersonality(row.personality) ? row.personality : undefined,

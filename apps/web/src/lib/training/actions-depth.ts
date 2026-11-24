@@ -1,7 +1,7 @@
 'use server';
 
 import { recordMovement } from '@/lib/finance/record-movement';
-import { restedEnergy, restedStatus } from '@/lib/squad/rest';
+import { restedEnergy, restedStatus, servedAbsence } from '@/lib/squad/rest';
 import { SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import type { PlayerStatus } from '@/lib/squad/types';
 import { tryAdminClient } from '@/lib/supabase/admin';
@@ -143,7 +143,7 @@ async function trainOnce(
   const { data: player, error } = await supabase
     .from('players')
     .select(
-      'id, status, on_loan, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
+      'id, status, injury_matches, suspension_matches, absence_on, on_loan, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
     )
     .eq('id', playerId)
     .eq('club_id', clubId)
@@ -153,6 +153,9 @@ async function trainOnce(
   if (error || !player) return { error: 'Nie znaleziono zawodnika.' };
   const row = player as {
     status: PlayerStatus;
+    injury_matches: number;
+    suspension_matches: number;
+    absence_on: string | null;
     on_loan: boolean | null;
     energy: number;
     energy_on: string | null;
@@ -165,7 +168,16 @@ async function trainOnce(
     attr_goalkeeping: number;
   };
   if (row.on_loan === true) return { error: 'Ten zawodnik jest na wypożyczeniu.' };
-  if (row.status === 'INJURED') return { error: 'Kontuzjowany nie trenuje.' };
+  const { status } = servedAbsence(
+    {
+      status: row.status,
+      injuryMatches: row.injury_matches,
+      suspensionMatches: row.suspension_matches,
+    },
+    row.absence_on,
+    utcDateString(),
+  );
+  if (status === 'INJURED') return { error: 'Kontuzjowany nie trenuje.' };
   const { data: season } = await supabase
     .from('clubs')
     .select('season_number')
@@ -208,9 +220,11 @@ async function trainOnce(
       p_group: group,
       p_value: step.group,
       p_energy: step.energy,
-      p_status: restedStatus(row.status, row.energy, rested),
+      p_status: restedStatus(status, row.energy, rested),
       p_seen: {
         status: row.status,
+        injury_matches: row.injury_matches,
+        suspension_matches: row.suspension_matches,
         on_loan: row.on_loan,
         energy: row.energy,
         energy_on: row.energy_on,

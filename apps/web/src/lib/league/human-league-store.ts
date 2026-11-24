@@ -1,17 +1,20 @@
-import { lineupProblem, repairLineup } from '@/lib/squad/lineup-problem';
+import { fillLineup, isStandIn, lineupProblem, repairLineup } from '@/lib/squad/lineup-problem';
 import type { PitchRole } from '@lastfootball/lfe';
 
 import { env } from '@/config/env';
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
+import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { parseLeagueTier } from '@/lib/league/league-tier';
 import { humanDayBlockReason, warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
 import { seedOpponentBench, seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
+import { reconcileExpiredLoans } from '@/lib/squad/reconcile-loans';
 import { resolveMatchBench, resolveStartingXi } from '@/lib/squad/resolve-club-squad';
 import { isTalent } from '@/lib/squad/talents';
-import { SquadUnavailableError, type AttrGroups } from '@/lib/squad/types';
+import { filterSeniorPlayers, type AttrGroups, type PlayerRowDto } from '@/lib/squad/types';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { Json } from '@/types/database';
 
@@ -49,7 +52,7 @@ import type { ReplayedMatch } from '@/lib/match/replay-manager-match';
 import { finishSharedSession } from './human-play';
 
 const PLAYER_SELECT =
-  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, energy_on, form, wage, suspension_matches, injury_matches, recent_ratings, morale, personality, set_piece, on_loan, loaned_in, intl_absent_until';
+  'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping, energy, energy_on, form, wage, suspension_matches, injury_matches, recent_ratings, morale, personality, set_piece, on_loan, loaned_in, loan_until, intl_absent_until, absence_on';
 
 const PLAYER_SELECT_LEGACY =
   'id, club_id, name, shirt_number, pos, role, starter, captain, age, skill, potential, status, nationality, version, departed_at, transfer_listed_at, academy_track, promoted_at';
@@ -421,19 +424,35 @@ async function snapshotSquad(clubId: string): Promise<SquadSnapshot | { error: s
   if (result.data.length === 0) {
     return { xi: seedOpponentSquad(clubId, 'iv'), bench: seedOpponentBench(clubId, 'iv') };
   }
-  try {
-    // A rival's injured starter must not cancel the match for both clubs.
-    const rows = repairLineup(
-      clubId,
-      (result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row)),
-    );
-    const xi = resolveStartingXi(rows);
-    const problem = lineupProblem(clubId, rows);
-    return problem ? { error: problem } : { xi, bench: resolveMatchBench(rows) };
-  } catch (error: unknown) {
-    if (error instanceof SquadUnavailableError) return { error: error.message };
-    throw error;
+  const squad = withoutExpiredLoans((result.data as PlayerDbRow[]).map((row) => mapPlayerRow(row)));
+  // A rival's injured starter must not cancel the match for both clubs.
+  let rows = filterSeniorPlayers(squad).length > 0 ? repairLineup(clubId, squad) : squad;
+  if (filterSeniorPlayers(squad).length === 0 || lineupProblem(clubId, rows)) {
+    const club = await admin.from('clubs').select('league_tier').eq('id', clubId).maybeSingle();
+    if (club.error) return { error: 'Nie mogę odczytać klubu.' };
+    rows = fillLineup(clubId, parseLeagueTier(club.data?.league_tier), squad);
   }
+  return { xi: resolveStartingXi(rows), bench: resolveMatchBench(rows) };
+}
+
+/** The same end of a loan as when the club opens its squad, without the write. */
+function withoutExpiredLoans(rows: readonly PlayerRowDto[]): PlayerRowDto[] {
+  const ended = new Map(
+    reconcileExpiredLoans(
+      rows.map((row) => ({
+        id: row.id,
+        onLoan: row.onLoan === true,
+        loanedIn: row.loanedIn === true,
+        loanUntil: row.loanUntil ?? null,
+        wage: row.wage ?? 0,
+        wageBank: row.wageBank ?? null,
+      })),
+      utcDateString(),
+    ).map((patch) => [patch.id, patch.kind]),
+  );
+  return rows
+    .filter((row) => ended.get(row.id) !== 'return_in')
+    .map((row) => (ended.has(row.id) ? { ...row, onLoan: false } : row));
 }
 
 function sideXi(
@@ -503,19 +522,15 @@ async function lockBroadcast(
   table: SeatTable,
   pair: HumanPairing,
   now: Date,
-  viewerId: string,
-): Promise<BroadcastRow | { error: string; ownLineup?: boolean }> {
+): Promise<BroadcastRow | { error: string }> {
   const existing = await readBroadcast(table.season, pair);
   if (existing?.locked_at) return existing;
 
   const homeSnap = isBotClubId(pair.home.id) ? null : await snapshotSquad(pair.home.id);
   const awaySnap = isBotClubId(pair.away.id) ? null : await snapshotSquad(pair.away.id);
-  const refused = (seat: HumanSeat, reason: string) =>
-    seat.id === viewerId
-      ? { error: reason, ownLineup: true }
-      : { error: `${seat.name} nie może teraz wystawić jedenastki. Kolejka poczeka na ten klub.` };
-  if (homeSnap && 'error' in homeSnap) return refused(pair.home, homeSnap.error);
-  if (awaySnap && 'error' in awaySnap) return refused(pair.away, awaySnap.error);
+  if ((homeSnap && 'error' in homeSnap) || (awaySnap && 'error' in awaySnap)) {
+    return { error: 'Nie udało się odczytać składów. Odśwież stronę.' };
+  }
   const homeSetup = await readHomeSetup(pair.home.id);
   if (!homeSetup) return { error: 'Nie udało się odczytać ustawień gospodarza. Odśwież stronę.' };
 
@@ -757,7 +772,7 @@ export async function loadHumanLeagueCard(
     });
   }
 
-  const locked = await lockBroadcast(table, pair, now, club.id);
+  const locked = await lockBroadcast(table, pair, now);
   if ('error' in locked) {
     return card({
       round,
@@ -786,7 +801,26 @@ export async function loadHumanLeagueCard(
     windowSentence: kickoffWindowSentence(window),
     late: window === 'after',
     fixtureId,
+    note: standInNote(locked, club.id, opponent.name),
   });
+}
+
+/** Says who plays with juniors in the place of missing players. */
+export function standInNote(
+  row: Pick<BroadcastRow, 'home_id' | 'home_xi' | 'away_xi'>,
+  clubId: string,
+  opponentName: string,
+): string | null {
+  const short = (value: Json | null) => parseXi(value)?.some((p) => isStandIn(p.id)) === true;
+  const [ours, theirs] =
+    row.home_id === clubId ? [row.home_xi, row.away_xi] : [row.away_xi, row.home_xi];
+  const notes = [
+    short(ours)
+      ? 'Twój skład był niepełny, w tym meczu uzupełniają go juniorzy spoza kadry.'
+      : null,
+    short(theirs) ? `${opponentName} ma niepełny skład, uzupełniają go juniorzy.` : null,
+  ].filter(Boolean);
+  return notes.length > 0 ? notes.join(' ') : null;
 }
 
 /** Scorers of the running human season. Reads only. Null = nothing to show. */
@@ -873,8 +907,6 @@ export type HumanLiveReady = {
   readonly theirBench: readonly RosterPlayerSeed[];
   readonly fullRules: boolean;
   readonly block: string | null;
-  /** The block is about this club's own line-up, so the editor helps. */
-  readonly ownLineup: boolean;
 };
 
 export async function prepareHumanLive(
@@ -882,7 +914,7 @@ export async function prepareHumanLive(
   dto: FixtureDto,
   now = new Date(),
 ): Promise<HumanLiveReady> {
-  const blocked = (block: string, ownLineup = false): HumanLiveReady => ({
+  const blocked = (block: string): HumanLiveReady => ({
     fixture: dto,
     ourXi: [],
     theirXi: [],
@@ -890,7 +922,6 @@ export async function prepareHumanLive(
     theirBench: [],
     fullRules: true,
     block,
-    ownLineup,
   });
   const round = humanRoundFromFixture(dto.matchday);
   if (!round) return blocked('To nie jest mecz ligi ludzi.');
@@ -913,8 +944,8 @@ export async function prepareHumanLive(
   if (!table.frozen) return blocked('Wejdź w mecz ze strony Ligi.');
   const day = await humanDayBlock(club.id, now);
   if (day) return blocked(day);
-  const locked = await lockBroadcast(table, pair, now, club.id);
-  if ('error' in locked) return blocked(locked.error, locked.ownLineup === true);
+  const locked = await lockBroadcast(table, pair, now);
+  if ('error' in locked) return blocked(locked.error);
 
   const homeXi = sideXi(pair.home, locked.home_xi);
   const awayXi = sideXi(pair.away, locked.away_xi);
@@ -927,7 +958,6 @@ export async function prepareHumanLive(
   if (!setup) return blocked('Nie udało się odczytać meczu. Odśwież stronę.');
   return {
     block: null,
-    ownLineup: false,
     ourXi: isHome ? homeXi : awayXi,
     theirXi: isHome ? awayXi : homeXi,
     ourBench: (isHome ? benches?.home : benches?.away) ?? [],

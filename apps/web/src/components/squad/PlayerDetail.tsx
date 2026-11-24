@@ -205,6 +205,9 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
           {playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}
         </strong>
       </span>
+      {player.status === 'INJURED' || player.status === 'SUSPENDED' ? (
+        <span>Pauzę skraca o jeden każdy mecz klubu i każdy dzień bez meczu.</span>
+      ) : null}
     </div>
   );
 }
