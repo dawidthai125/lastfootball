@@ -660,6 +660,12 @@ export type Database = {
         };
         Relationships: [];
       };
+      human_league_history: {
+        Row: { season: number; season_key: string; standings: Json; closed_at: string };
+        Insert: { season: number; season_key: string; standings: Json; closed_at?: string };
+        Update: { season?: number; season_key?: string; standings?: Json; closed_at?: string };
+        Relationships: [];
+      };
       human_broadcasts: {
         Row: {
           season: number;

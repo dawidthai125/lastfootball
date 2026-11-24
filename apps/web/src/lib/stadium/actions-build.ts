@@ -49,6 +49,15 @@ export async function raiseGroundPart(
 
   const clubRow = club as { id: string; cash_balance: number };
   const build = await readClubBuild(supabase, clubRow.id);
+  // The level the manager saw: a second click must not buy the next one.
+  const seen = Number(formData.get('level') ?? -1);
+  const current =
+    part === 'stands'
+      ? build.levels.stands
+      : part === 'pitch'
+        ? build.levels.pitch
+        : build.levels.trainingCenter;
+  if (seen !== current) return { error: 'Poziom już się zmienił. Odśwież stronę.' };
   const next = upgradePart({ levels: build.levels, part, cash: clubRow.cash_balance });
   if (!next.ok) {
     return {

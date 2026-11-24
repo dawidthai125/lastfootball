@@ -17,6 +17,7 @@ import type { Json } from '@/types/database';
 import {
   fillHumanSeats,
   dueHumanSeasonKey,
+  HUMAN_ACTIVE_DAYS,
   HUMAN_ROUND_COUNT,
   humanFixtureMatchday,
   humanSeasonFromFixture,
@@ -32,7 +33,12 @@ import {
   type HumanPairing,
   type HumanSeat,
 } from './human-league';
-import { resolveHumanTable, type HumanResult, type HumanTableRow } from '@/lib/league/human-table';
+import {
+  resolveHumanTable,
+  settleMissing,
+  type HumanResult,
+  type HumanTableRow,
+} from '@/lib/league/human-table';
 import { parseHomeSetup, type HumanHomeSetup } from '@/lib/league/human-home-setup';
 import { finishSharedSession } from './human-play';
 
@@ -55,6 +61,11 @@ export type HumanLeagueCard = {
   /** Warsaw date when the next season may start. */
   readonly nextSeasonOn: string | null;
   readonly standings: readonly HumanTableRow[];
+  readonly lastSeason: {
+    readonly season: number;
+    readonly champion: string;
+    readonly place: number | null;
+  } | null;
 };
 
 type BroadcastRow = {
@@ -123,7 +134,50 @@ function previewCard(club: ClubDto, note: string): HumanLeagueCard {
     season: 1,
     nextSeasonOn: null,
     standings: [],
+    lastSeason: null,
   };
+}
+
+async function readSeats(): Promise<HumanSeat[] | null> {
+  const { data, error } = await createAdminClient()
+    .from('human_league_seats')
+    .select('slot, kind, ref_id, display_name, short_name')
+    .order('slot', { ascending: true });
+  if (error || !data || data.length !== 12) return null;
+  return data.map((row) => ({
+    slot: row.slot,
+    kind: row.kind === 'human' ? 'human' : 'bot',
+    id: row.ref_id,
+    name: row.display_name,
+    shortName: row.short_name,
+  }));
+}
+
+/** Table of a season that closes now, with every missing match decided. Null = no seats to read. */
+async function finalStandings(
+  season: number,
+  seasonKey: string,
+  now: Date,
+): Promise<readonly HumanTableRow[] | null> {
+  const seats = await readSeats();
+  if (!seats) return null;
+  const results = await seasonResults(season);
+  const missing = settleMissing({ seats, seasonKey, results });
+  return resolveHumanTable({ seats, seasonKey, results: [...results, ...missing], now });
+}
+
+/** The season before this one, for the card. */
+async function lastSeason(season: number, clubId: string): Promise<HumanLeagueCard['lastSeason']> {
+  if (season < 2) return null;
+  const { data } = await createAdminClient()
+    .from('human_league_history')
+    .select('season, standings')
+    .eq('season', season - 1)
+    .maybeSingle();
+  const rows = data?.standings as unknown as HumanTableRow[] | undefined;
+  if (!Array.isArray(rows) || !rows[0]) return null;
+  const place = rows.findIndex((row) => row.id === clubId) + 1;
+  return { season: season - 1, champion: rows[0].name, place: place > 0 ? place : null };
 }
 
 async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null> {
@@ -164,8 +218,12 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
   const nextKey = dueHumanSeasonKey(seasonKey, now);
   if (nextKey) {
     const rolled = await admin.rpc(
-      'roll_human_league' as never,
-      { p_season: season, p_key: nextKey } as never,
+      'close_human_season' as never,
+      {
+        p_season: season,
+        p_key: nextKey,
+        p_standings: await finalStandings(season, seasonKey, now),
+      } as never,
     );
     // Next remembers equal reads while it renders one page, so the call itself returns the state.
     const state = rolled.data as unknown as {
@@ -178,13 +236,13 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
   }
 
   if (!frozen) {
-    const clubs = await admin
-      .from('clubs')
-      .select('id, name, short_name, created_at')
-      .order('created_at', { ascending: true });
-    if (clubs.error || !clubs.data) return null;
+    const since = new Date(now.getTime() - HUMAN_ACTIVE_DAYS * 86_400_000).toISOString();
+    const clubs = await admin.rpc('human_league_clubs' as never, { p_since: since } as never);
+    const rows = clubs.data as
+      { id: string; name: string; short_name: string; created_at: string }[] | null;
+    if (clubs.error || !rows) return null;
     const seats = fillHumanSeats(
-      clubs.data.map((row) => ({
+      rows.map((row) => ({
         id: row.id,
         name: row.name,
         shortName: row.short_name,
@@ -206,23 +264,8 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
     return { seasonKey, season, frozen: false, seats };
   }
 
-  const seatRows = await admin
-    .from('human_league_seats')
-    .select('slot, kind, ref_id, display_name, short_name')
-    .order('slot', { ascending: true });
-  if (seatRows.error || !seatRows.data || seatRows.data.length !== 12) return null;
-  return {
-    seasonKey,
-    season,
-    frozen: true,
-    seats: seatRows.data.map((row) => ({
-      slot: row.slot,
-      kind: row.kind === 'human' ? 'human' : 'bot',
-      id: row.ref_id,
-      name: row.display_name,
-      shortName: row.short_name,
-    })),
-  };
+  const seats = await readSeats();
+  return seats ? { seasonKey, season, frozen: true, seats } : null;
 }
 
 function isGroups(value: unknown): value is AttrGroups {
@@ -514,6 +557,7 @@ function cardFrom(
     season: table.season,
     nextSeasonOn: nextHumanSeasonStart(table.seasonKey),
     standings: extra.standings ?? [],
+    lastSeason: extra.lastSeason ?? null,
   };
 }
 
@@ -537,14 +581,18 @@ export async function loadHumanLeagueCard(
     results: await seasonResults(table.season),
     now,
   });
-  const card = (extra: Partial<HumanLeagueCard>) => cardFrom(club, table, { standings, ...extra });
+  const previous = await lastSeason(table.season, club.id);
+  const card = (extra: Partial<HumanLeagueCard>) =>
+    cardFrom(club, table, { standings, lastSeason: previous, ...extra });
 
   const mine = table.seats.find((seat) => seat.id === club.id);
   if (!mine) {
     return card({
-      note: table.seats.some((seat) => seat.kind === 'bot')
-        ? `Miejsca w tym sezonie są zamknięte. Wejdziesz w nowym sezonie, od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}.`
-        : 'Liga ludzi ma już 12 klubów. Wchodzisz, gdy zwolni się miejsce.',
+      note: !table.frozen
+        ? 'Miejsce dostaje klub, który grał albo trenował w ostatnich 14 dniach. Zagraj mecz przed 18:00 pierwszej kolejki, a zajmiesz wolne miejsce.'
+        : table.seats.some((seat) => seat.kind === 'bot')
+          ? `Miejsca w tym sezonie są zamknięte. Wejdziesz w nowym sezonie, od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}.`
+          : 'Liga ludzi ma już 12 klubów. Wchodzisz, gdy zwolni się miejsce.',
     });
   }
 

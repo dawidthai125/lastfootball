@@ -60,6 +60,12 @@ export default async function LeaguePage() {
           <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
             12 miejsc. Wolne miejsca zajmują boty. Oba kluby oglądają ten sam mecz z jednego seeda.
           </p>
+          {human.lastSeason ? (
+            <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
+              Mistrz sezonu {human.lastSeason.season}: {human.lastSeason.champion}.
+              {human.lastSeason.place ? ` Twoje miejsce: ${human.lastSeason.place}.` : ''}
+            </p>
+          ) : null}
           {human.opponentName ? (
             <p style={{ margin: '0 0 var(--lf-space-2)' }}>
               {human.round ? `Kolejka ${human.round}. ` : ''}

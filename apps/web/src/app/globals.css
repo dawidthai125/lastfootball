@@ -537,3 +537,28 @@ textarea {
     display: none !important;
   }
 }
+
+/* A bare button looked like plain text. */
+main button:not([class], .lf-live *, .lf-post *) {
+  border: 1px solid var(--lf-border-strong);
+  border-radius: var(--lf-radius);
+  background: var(--lf-panel-alt);
+  padding: 0.25rem 0.75rem;
+  font-weight: 500;
+}
+
+main button:not([class], .lf-live *, .lf-post *):hover:not(:disabled) {
+  border-color: var(--lf-gold-dim);
+}
+
+main button:not([class], .lf-live *, .lf-post *):disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* A finger needs more than a text line. The live match keeps its dense controls. */
+@media (max-width: 767px) {
+  main button:not(.lf-live *, .lf-post *) {
+    min-height: 40px;
+  }
+}
