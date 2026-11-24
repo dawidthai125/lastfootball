@@ -7,6 +7,7 @@ export function fixtureKickoffSentence(input: {
   readonly matchesBlocked: boolean;
   readonly competition: KickoffCompetition | null | undefined;
   readonly lastPlayedAt: string | null | undefined;
+  readonly lastChallengeAt?: string | null;
   readonly now: Date;
 }): string | null {
   return kickoffBlockReason(input);
@@ -28,6 +29,7 @@ export function calendarFixtureHref(input: {
   readonly competition: KickoffCompetition;
   readonly matchesBlocked: boolean;
   readonly lastPlayedAt: string | null | undefined;
+  readonly lastChallengeAt?: string | null;
   readonly now: Date;
 }): string | null {
   if (input.status === 'played') return playedMatchHref(input.id);
@@ -37,6 +39,7 @@ export function calendarFixtureHref(input: {
     matchesBlocked: input.matchesBlocked,
     competition: input.competition,
     lastPlayedAt: input.lastPlayedAt,
+    lastChallengeAt: input.lastChallengeAt,
     now: input.now,
   });
   if (sentence) return null;

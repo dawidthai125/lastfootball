@@ -49,6 +49,7 @@ describe('calendarFixtureHref', () => {
           status: 'upcoming',
           competition,
           ...blockedDay,
+          lastChallengeAt: blockedDay.lastPlayedAt,
         }),
       ).toBeNull();
       expect(
@@ -57,6 +58,7 @@ describe('calendarFixtureHref', () => {
           status: 'scheduled',
           competition,
           ...blockedDay,
+          lastChallengeAt: blockedDay.lastPlayedAt,
         }),
       ).toBeNull();
     }

@@ -39,8 +39,8 @@ describe('kickoffBlockReason', () => {
     ).toBe(email);
   });
 
-  it('returns the day sentence for league, cup, and challenge on the same Warsaw day', () => {
-    for (const competition of ['league', 'cup', 'challenge'] as const) {
+  it('returns the day sentence for league and cup on the same Warsaw day', () => {
+    for (const competition of ['league', 'cup'] as const) {
       expect(
         kickoffBlockReason({
           matchesBlocked: false,
@@ -101,6 +101,27 @@ describe('latestPlayedAt', () => {
         { status: 'played', competition: 'human', playedAt: earlierToday },
       ]),
     ).toBe(yesterday);
+  });
+
+  it('keeps challenges on their own day', () => {
+    const fixtures = [
+      { status: 'played', competition: 'league' as const, playedAt: yesterday },
+      { status: 'played', competition: 'challenge' as const, playedAt: earlierToday },
+    ];
+    expect(latestPlayedAt(fixtures)).toBe(yesterday);
+    expect(latestPlayedAt(fixtures, 'challenge')).toBe(earlierToday);
+    const gate = (competition: 'league' | 'challenge', challengeAt: string | null) =>
+      kickoffBlockReason({
+        matchesBlocked: false,
+        competition,
+        lastPlayedAt: competition === 'league' ? yesterday : earlierToday,
+        lastChallengeAt: challengeAt,
+        now,
+      });
+    expect(gate('league', earlierToday)).toBeNull();
+    expect(gate('challenge', earlierToday)).toContain('Wyzwanie na dziś');
+    expect(gate('challenge', yesterday)).toBeNull();
+    expect(gate('challenge', null)).toBeNull();
   });
 
   it('returns null when nothing has been played', () => {

@@ -74,6 +74,7 @@ function rowHref(
   gate: {
     readonly matchesBlocked: boolean;
     readonly lastPlayedAt: string | null;
+    readonly lastChallengeAt: string | null;
     readonly now: Date;
   },
 ): string | null {
@@ -84,6 +85,7 @@ function rowHref(
     competition: gateCompetition(f),
     matchesBlocked: gate.matchesBlocked,
     lastPlayedAt: gate.lastPlayedAt,
+    lastChallengeAt: gate.lastChallengeAt,
     now: gate.now,
   });
 }
@@ -96,6 +98,7 @@ export function FixturesView({
   kickoffSentence,
   matchesBlocked,
   lastPlayedAt,
+  lastChallengeAt,
   kickoffNow,
 }: {
   fixtures: readonly Fixture[];
@@ -106,14 +109,15 @@ export function FixturesView({
   kickoffSentence: string | null;
   matchesBlocked: boolean;
   lastPlayedAt: string | null;
+  lastChallengeAt: string | null;
   /** Server clock. The client does not sample a second Warsaw day. */
   kickoffNow: string;
 }) {
   const [competition, setCompetition] = useState<CompetitionFilter>('ALL');
   const now = useMemo(() => new Date(kickoffNow), [kickoffNow]);
   const gate = useMemo(
-    () => ({ matchesBlocked, lastPlayedAt, now }),
-    [matchesBlocked, lastPlayedAt, now],
+    () => ({ matchesBlocked, lastPlayedAt, lastChallengeAt, now }),
+    [matchesBlocked, lastPlayedAt, lastChallengeAt, now],
   );
   const next = pickCalendarHero(fixtures, competition);
   const heroSentence =

@@ -852,7 +852,11 @@ Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_l
 2. Miejsce dostaje klub, który w ostatnich 14 dniach grał, trenował albo powstał. Pozostałe miejsca biorą boty.
 3. Zakup z rynku to jedna transakcja (`buy_market_player`). Rozbudowa stadionu wymaga poziomu, który gracz widział.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D140 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D141 — Wyzwanie jako mecz towarzyski · Owner GO 2026-11-24
+
+Wyzwanie: jedno na dzień (czas warszawski), własny zegar, nie zajmuje dnia ligi i pucharu. Bez nagrody, pensji i utrzymania akademii. Energia, kontuzje, kartki, rozwój i kibice liczą się jak w meczu.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D141 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
