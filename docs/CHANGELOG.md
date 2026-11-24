@@ -28,6 +28,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Prestiż klubu i zadania zarządu (D131)
+
+### Product
+
+- Zarząd pokazuje prestiż 0–100 z pasmem i źródłami. Rośnie z miejsc w lidze, awansów, pucharu i zadań; przy odnowieniu dodaje sponsorowi do +10%. Na boisku nie działa.
+- Cztery zadania zarządu na sezon, po 5 000 EUR w IV lidze. Nieodebrane nagrody wypłaca start kolejnego sezonu. Wykonane zadanie widać w Wiadomościach.
+- Każdy zamknięty sezon zostaje w historii klubu. Migracja `20261124140000_board_prestige_tasks.sql`.
+
+---
+
 ## [2026-11-24] — Uczciwa sprzedaż (D133)
 
 ### Product

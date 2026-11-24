@@ -633,12 +633,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** Unlock Stadium „przy okazji”.  
 **Zasada:** `/board` open SEASON+OFFSEASON; `/stadium` remain soft-locked. (D99: Sponsors already open.)
 
-### D106 — No Prestige Engine · CLOSED
+### D106 — No Prestige Engine · SUPERSEDED BY D131
 
 **Dlaczego:** Silnik §6 Prestige/Reputacja = poza Thin.  
 **Zasada:** Brak numeric Prestige/Reputation; Board nie liczy §6.
 
-### D107 — No Quest No Club Mgmt · CLOSED
+### D107 — No Quest No Club Mgmt · SUPERSEDED BY D131 (zadania zarządu; zarządzanie klubem z Board dalej OUT)
 
 **Dlaczego:** Quest / zarządzanie klubem = scope creep.  
 **Zasada:** Brak Quest Engine · brak systemu zarządzania klubem z Board.
@@ -791,6 +791,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Dlaczego:** §22 miał tylko zaproszenia w grze. Menedżer poza grą nie wiedział o meczu, ofercie ani wyzwaniu.  
 **Zasada:** Wszystko domyślnie wyłączone. Rodzaje: `matchday` (17:00–19:59, tylko przy aktywności w ostatnich 14 dniach), `human_round` (17:15–17:59; klub z kolejką na dziś; klub z zaległą kolejką zamiast 18:00 słyszy o zaległości, najwyżej raz na 7 dni, póki jest aktywny), `offer` (oferta albo kontra, gdy decyzja jest po stronie klubu, zawodnik jest nadal wystawiony przez sprzedawcę, a kwota do rozliczenia; jedna sprawa = zawodnik i kupujący), `challenge` (rywal rozegrał wyzwanie). Cisza 22:00–8:00 czasu warszawskiego. Najwyżej 2 dziennie na kanał i jedno na sprawę. Plan = czysta funkcja `planNotifications`. Wysyłkę zleca `pg_cron` co 30 min do adresu z wiersza `notify_url` (token z bazy albo `CRON_SECRET`); bez wiersza nic nie robi. Najdłużej czekający menedżer idzie pierwszy. Wpis w `notification_log` powstaje przed wysyłką (dedup). Klucze VAPID serwer tworzy sam i trzyma w `server_secrets` (tylko service role). Push: tylko znane serwery push, do 5 urządzeń, treść bez danych osobowych. Push nie czeka dłużej niż do końca swojej sprawy i nigdy poza 22:00; wylogowanie usuwa urządzenie. Strażnik `lf_guard_transfer_offer` sprawdza każdą ofertę z sesji gracza (najwyżej 10 otwartych na klub). E-mail: Resend, do 2 na sekundę, tylko adres z `confirmed_email_hash` równym obecnemu (starsze potwierdzenia muszą kliknąć link jeszcze raz), wypisanie bez logowania (GET pyta, POST wypisuje). Bez tabel, kluczy albo dostawcy funkcja jest ukryta lub „niedostępna”. Powiadomienie nie zmienia niczego w domenie. Zastępuje zakaz `lib/notifications` z D125; zaproszenia w grze zostają osobno w `lib/invitations`.  
 **OUT:** SMS · przypomnienia o treningu i zadaniach · treści AI · bieżąca minuta meczu.
+
+### D131 — Prestiż klubu i zadania zarządu · Owner GO 2026-11-24
+
+**Dlaczego:** Sukces sportowy nie zostawał w historii klubu, a ekran Zarządu tylko opisywał tabelę. Zastępuje D106 i D107, zawęża D103 i D101.  
+**Zasada:** `club_season_history` i `club_board_task_claims` pisze tylko serwer, właściciel czyta. Prestiż 0..100 = pure derive (`resolvePrestige`) z historii, ligi, pucharu i zadań; działa wyłącznie na wycenę sponsora przy odnowieniu (0..+10%, `sponsorFromCrowd`), nigdy na mecz. Zadania: jedno na kolejki 1–5, 6–10, 11–15, 16–20, wybór i postęp = derive z meczów ligowych; porażka nic nie kosztuje. Wypłata = `claim_board_task` (claim + kasa + księga w jednej transakcji, service role). W przerwie odbiór wymaga 22 rozegranych meczów sezonu. `confirmStartNextSeason` bierze blokadę klubu (`club_season_starts`, wygasa po 5 min), wypłaca nieodebrane zadania, a `clear_season_fixtures` zapisuje sezon i kasuje terminarz w jednej transakcji; każdy błąd, także wypłaty, zatrzymuje start (zawęża D104). Powtórzony start bierze awans lub spadek z zapisanego sezonu, a niepełny terminarz nie zmienia ligi. Bez tabel ekrany ukrywają funkcję, a start sezonu czeka. Liczby: GDD §26.8.  
+**OUT:** Reputacja · wydawanie prestiżu · kary · losowanie zadań od nowa · zadanie jako Primary na Hubie.
 
 ### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
 

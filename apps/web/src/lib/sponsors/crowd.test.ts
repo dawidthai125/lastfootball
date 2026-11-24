@@ -31,6 +31,17 @@ describe('sponsorFromCrowd', () => {
     expect(quiet.base).toBeLessThan(steady.base);
   });
 
+  it('adds at most 10% for prestige and never takes anything away', () => {
+    const quote = (prestige?: number | null) =>
+      sponsorFromCrowd({ attendance: 'steady', leagueTier: 'iv', prestige });
+    for (const none of [undefined, null, 0, 10, NaN]) expect(quote(none)).toEqual(quote());
+    expect(quote(100)).toEqual({ base: 16_500, bonus: 11_000 });
+    expect(quote(500)).toEqual(quote(100));
+    for (let p = 1; p <= 100; p += 1) {
+      expect(quote(p).base).toBeGreaterThanOrEqual(quote(p - 1).base);
+    }
+  });
+
   it('falls back to iv + steady when the rung or the crowd is unknown', () => {
     const baseline = { base: 15_000, bonus: 10_000 };
     expect(

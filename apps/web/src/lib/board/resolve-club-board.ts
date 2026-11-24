@@ -1,8 +1,10 @@
 /**
  * LFE-BOARD-01 — Board Information Thin (D102–D108).
- * Pure derive only — no persist, no Server Actions, no Prestige engine.
+ * Pure derive only. Prestige and tasks (D131) come in resolved and pass through.
  */
 
+import type { PrestigeDto } from '@/lib/board/prestige';
+import type { BoardTaskDto } from '@/lib/board/tasks';
 import { formatSeasonLabel, type ClubSeasonPhase, type SeasonReportDto } from '@/lib/season/types';
 
 export type BoardTone = 'positive' | 'neutral' | 'concern';
@@ -30,10 +32,13 @@ export type ClubBoardDto = {
     readonly summary: string;
   } | null;
   readonly tone: BoardTone;
-  /** Offseason: Confirm is not blocked by Board. */
+  /** Offseason: where the season starts. A failed task payout can stop that start (D131). */
   readonly hubHint: string | null;
   /** Offseason foreshadow when a senior retires at Confirm N+1. */
   readonly departureNote: string | null;
+  /** Null hides the block. */
+  readonly prestige: PrestigeDto | null;
+  readonly tasks: readonly BoardTaskDto[] | null;
 };
 
 export type ResolveClubBoardInput = {
@@ -45,6 +50,8 @@ export type ResolveClubBoardInput = {
   readonly seasonReport: SeasonReportDto | null;
   /** Polish summary from resolveDeparturePreview when a retire is planned. */
   readonly departureNote?: string | null;
+  readonly prestige?: PrestigeDto | null;
+  readonly tasks?: readonly BoardTaskDto[] | null;
 };
 
 const EXPECTATION = {
@@ -116,6 +123,8 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
     playedCount,
     seasonReport,
     departureNote = null,
+    prestige = null,
+    tasks = null,
   } = input;
 
   const size = Math.max(0, Math.trunc(tableSize));
@@ -151,9 +160,9 @@ export function resolveClubBoard(input: ResolveClubBoardInput): ClubBoardDto {
     },
     seasonReview,
     tone,
-    hubHint: offseason
-      ? 'Start kolejnego sezonu potwierdzasz na Hubie — Zarząd go nie blokuje.'
-      : null,
+    hubHint: offseason ? 'Start kolejnego sezonu potwierdzasz na Hubie.' : null,
     departureNote: offseason && departureNote ? departureNote : null,
+    prestige,
+    tasks,
   };
 }

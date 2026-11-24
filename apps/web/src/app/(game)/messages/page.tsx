@@ -1,9 +1,12 @@
 import { redirect } from 'next/navigation';
 
 import { MessagesView } from '@/components/messages/MessagesView';
+import { loadBoardState } from '@/lib/board/load-board-state';
+import { resolveBoardTaskNote } from '@/lib/board/tasks';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
+import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveClubMessages } from '@/lib/messages';
 import {
@@ -32,14 +35,16 @@ export default async function MessagesPage() {
 
   const supabase = await createClient();
   const today = utcDateString();
-  const [activePlayers, h2hOffers, farewellFlash, movements] = await Promise.all([
+  const [activePlayers, h2hOffers, farewellFlash, movements, fixtures] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveH2hOffers(supabase, club.id),
     club.seasonPhase === 'in_season'
       ? listClubRetirementFlash(club.id, today)
       : Promise.resolve([]),
     listClubFinanceMovements(club.id),
+    listClubFixtures(club.id),
   ]);
+  const board = await loadBoardState(club, fixtures);
 
   const incomingOffers = resolveIncomingOffers({
     clubId: club.id,
@@ -109,6 +114,7 @@ export default async function MessagesPage() {
     retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
     wageNote: resolveClubFinance(club, movements, matchWageDue(filterSeniorPlayers(activePlayers)))
       .wageNote,
+    boardTaskNote: board ? resolveBoardTaskNote(board.tasks) : null,
   });
 
   return (

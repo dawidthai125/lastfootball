@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { LocationHero, Panel, Button, StateBanner } from '@/components/ui';
+import type { PrestigeDto } from '@/lib/board';
 import { acceptSponsorRenewal, claimSponsorBonus } from '@/lib/sponsors/actions';
 import { SPONSOR_ACTION_INITIAL, type ClubSponsorsDto } from '@/lib/sponsors';
 import { formatMoney } from '@/lib/finance/format-money';
@@ -27,9 +28,11 @@ function bonusStateLabel(state: ClubSponsorsDto['bonusState']): string {
 export function SponsorsView({
   sponsors,
   crowdQuote = null,
+  prestige = null,
 }: {
   sponsors: ClubSponsorsDto;
   crowdQuote?: { readonly base: number; readonly bonus: number } | null;
+  prestige?: PrestigeDto | null;
 }) {
   const [claimState, claimAction, claimPending] = useActionState(
     claimSponsorBonus,
@@ -63,6 +66,9 @@ export function SponsorsView({
               Następny kontrakt: baza {formatMoney(crowdQuote.base)}, bonus{' '}
               {formatMoney(crowdQuote.bonus)}. Cel górnej połowy zostaje. Frekwencja i szczebel ligi
               ruszają kwoty dopiero przy odnowieniu sezonu.
+              {prestige
+                ? ` Prestiż ${prestige.value} (${prestige.band}): ${prestige.sponsorLabel}, kwoty w pełnych 500 EUR.`
+                : null}
             </p>
           </Panel>
         </div>
