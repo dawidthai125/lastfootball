@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import type { CupSide, CupTieDto, NationalCupDto } from '@/lib/cup';
+import { hideFutureRounds } from '@/lib/cup/hide-future-rounds';
 import { openCupTie } from '@/lib/cup/open-cup-tie';
 
 /**
@@ -69,8 +70,8 @@ function OpenBracket({
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[13px] text-[var(--lf-text)]">
-        Jedna drabinka, jeden mecz. Remis rozstrzyga dogrywka, a potem karne. Pary bez ciebie są
-        domknięte. Goście: {cup.guestOriginLabel}.
+        Jedna drabinka, jeden mecz. Remis rozstrzyga dogrywka, a potem karne. Wyniki innych par
+        poznasz, gdy runda się otworzy. Goście: {cup.guestOriginLabel}.
       </p>
       {tie && playFixtureId ? (
         <form action={openCupTie} className="flex items-center gap-2">
@@ -94,7 +95,7 @@ function OpenBracket({
           Twoja ścieżka w tym pucharze jest zamknięta. Liga zostaje.
         </p>
       ) : null}
-      {cup.rounds.map((round) => (
+      {hideFutureRounds(cup).map((round) => (
         <section key={round.round} aria-label={round.label} data-cup-round={round.round}>
           <h3 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold tracking-wide text-[var(--lf-faint)] uppercase">
             {round.label}

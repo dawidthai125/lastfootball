@@ -287,6 +287,7 @@ export function LiveMatchFoundation({
   const rewardLine = leagueFixture
     ? (resolveFixtureReward({
         competition: leagueFixture.competition,
+        matchday: leagueFixture.matchday,
         homeScore: official.home,
         awayScore: official.away,
         isHome: leagueFixture.isHome,

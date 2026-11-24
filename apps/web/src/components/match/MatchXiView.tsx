@@ -11,6 +11,7 @@ import { SAVE_XI_INITIAL } from '@/lib/squad/xi-action-state';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import {
   applyXiSelection,
+  pickBestXi,
   replaceUnavailableStarters,
   sortXiPlayers,
   validateStartingXi,
@@ -61,6 +62,14 @@ export function MatchXiView({
   );
   const canRepair = repaired.some((p, i) => p.starter !== players[i]?.starter);
 
+  const best = useMemo(() => pickBestXi(players, todayUtc), [players, todayUtc]);
+  const canImprove = best.some((p, i) => p.starter !== players[i]?.starter);
+
+  function onBest() {
+    setPlayers(best);
+    setSelectedId(null);
+  }
+
   function onRepair() {
     setPlayers(repaired);
     setSelectedId(null);
@@ -103,6 +112,11 @@ export function MatchXiView({
         {canRepair ? (
           <button type="button" className="lf-xi__soft" onClick={onRepair}>
             {UI_COPY.replaceUnavailable}
+          </button>
+        ) : null}
+        {canImprove ? (
+          <button type="button" className="lf-xi__soft" onClick={onBest}>
+            {UI_COPY.bestXi}
           </button>
         ) : null}
         <Link href={matchPrePath(matchId)} className="lf-xi__soft">
@@ -185,7 +199,7 @@ function XiRow({
           .join(' ')}
         onClick={onSelect}
         aria-pressed={selected}
-        aria-label={`${player.name}, ${player.position}, ${STATUS_LABEL[player.status]}${player.captain ? ', kapitan' : ''}${player.setPiece ? ', stałe fragmenty' : ''}`}
+        aria-label={`${player.name}, ${player.position}, ${STATUS_LABEL[player.status]}, energia ${Math.round(player.energy)}${player.captain ? ', kapitan' : ''}${player.setPiece ? ', stałe fragmenty' : ''}`}
       >
         <PlayerPortrait playerId={player.id} name={player.name} size="sm" />
         <span className="lf-xi__row-body">
@@ -195,7 +209,8 @@ function XiRow({
             {player.setPiece ? <span className="lf-xi__cap lf-xi__cap--sf">SF</span> : null}
           </span>
           <span className="lf-xi__row-meta">
-            {player.position} · {STATUS_LABEL[player.status]} · {player.skill}
+            {player.position} · {STATUS_LABEL[player.status]} · {player.skill} · energia{' '}
+            {Math.round(player.energy)}
           </span>
         </span>
         <span className="lf-xi__row-slot">{slot === 'xi' ? 'XI' : 'Ław'}</span>

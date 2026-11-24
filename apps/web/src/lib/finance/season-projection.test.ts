@@ -47,6 +47,7 @@ function seasonResult(profile: Profile, tier: LeagueTier = 'iv', skill = 65, sta
     const [homeScore, awayScore] = SCORES[outcome];
     const reward = resolveFixtureReward({
       competition: 'league',
+      matchday: 1,
       homeScore,
       awayScore,
       isHome: true,
@@ -154,7 +155,7 @@ describe('academy projection (LFE-ACADEMY-02 plan, section 4)', () => {
 });
 
 describe('resolveFixtureReward', () => {
-  const win = { homeScore: 1, awayScore: 0, isHome: true };
+  const win = { homeScore: 1, awayScore: 0, isHome: true, matchday: 1 };
 
   it('scales league pay by rung and leaves the human league on the IV rung', () => {
     expect(resolveFixtureReward({ ...win, competition: 'league', leagueTier: 'i' })?.amount).toBe(
@@ -165,8 +166,23 @@ describe('resolveFixtureReward', () => {
     );
   });
 
-  it('pays nothing in the cup and in challenges', () => {
-    expect(resolveFixtureReward({ ...win, competition: 'cup', leagueTier: 'iv' })).toBeNull();
+  it('pays the cup by round, also away and after elimination', () => {
+    const cup = (round: number, home: number, away: number, isHome = true, leagueTier = 'iv') =>
+      resolveFixtureReward({
+        competition: 'cup',
+        matchday: 100 + round,
+        homeScore: home,
+        awayScore: away,
+        isHome,
+        leagueTier,
+      })?.amount;
+    expect([1, 2, 3, 4].map((r) => cup(r, 1, 0))).toEqual([12_000, 14_000, 17_000, 30_000]);
+    expect([1, 2, 3, 4].map((r) => cup(r, 0, 1))).toEqual([4_000, 4_000, 4_000, 10_000]);
+    expect(cup(2, 0, 3, false)).toBe(14_000);
+    expect(cup(1, 1, 0, true, 'i')).toBeGreaterThan(12_000);
+  });
+
+  it('pays nothing in challenges', () => {
     expect(resolveFixtureReward({ ...win, competition: 'challenge', leagueTier: 'iv' })).toBeNull();
   });
 });
