@@ -154,13 +154,18 @@ export function createMatchCanvasRenderer(
     },
   };
 
+  function size(el: HTMLElement) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = el.clientWidth || 640;
+    const h = el.clientHeight || 360;
+    return { dpr, w, h, pxW: Math.floor(w * dpr), pxH: Math.floor(h * dpr) };
+  }
+
   function resize() {
     if (!canvas || !root) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = root.clientWidth || 640;
-    const h = root.clientHeight || 360;
-    canvas.width = Math.max(1, Math.floor(w * dpr));
-    canvas.height = Math.max(1, Math.floor(h * dpr));
+    const { dpr, w, h, pxW, pxH } = size(root);
+    canvas.width = pxW;
+    canvas.height = pxH;
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -170,12 +175,8 @@ export function createMatchCanvasRenderer(
     if (!running) return;
     raf = requestAnimationFrame(loop);
     if (!ctx || !canvas || !root) return;
-    if (
-      canvas.width !==
-      Math.floor((root.clientWidth || 1) * Math.min(window.devicePixelRatio || 1, 2))
-    ) {
-      resize();
-    }
+    const { pxW, pxH } = size(root);
+    if (canvas.width !== pxW || canvas.height !== pxH) resize();
 
     const now = performance.now();
     if (from && to) {

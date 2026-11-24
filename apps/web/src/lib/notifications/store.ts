@@ -7,7 +7,11 @@ import { emailGate } from '@/lib/auth/email-confirm-policy';
 import { isProvenEmail } from '@/lib/auth/email-proof';
 import { latestPlayedAt, type KickoffCompetition } from '@/lib/fixtures/kickoff-gate';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
-import { humanRoundFromFixture, humanSeasonFromFixture } from '@/lib/league/human-league';
+import {
+  humanFixtureMatchday,
+  humanRoundFromFixture,
+  humanSeasonFromFixture,
+} from '@/lib/league/human-league';
 import { emailLetter, pushPayload } from '@/lib/notifications/content';
 import { createEmailSender, emailProvider } from '@/lib/notifications/email';
 import {
@@ -83,15 +87,20 @@ type HumanFacts = {
 };
 
 /** Null outside the 17:15 window, so the other runs of the day skip these reads. */
-async function loadHumanFacts(
+export async function loadHumanFacts(
   admin: Admin,
   clubIds: readonly string[],
   now: Date,
 ): Promise<HumanFacts | null> {
   if (!isHumanWindow(now)) return null;
-  const leagues = await admin.from('human_league').select('id, season_key, season_number');
+  const leagues = await admin.from('human_league').select('id, season_key, season_number, frozen');
   if (leagues.error || !leagues.data) return null;
-  const leagueById = new Map(leagues.data.map((row) => [row.id, row]));
+  // Past its first day and nobody has opened it: it may still start again, so no round is due.
+  const leagueById = new Map(
+    leagues.data
+      .filter((row) => row.frozen || row.season_key >= warsawDateKey(now))
+      .map((row) => [row.id, row]),
+  );
   const seats = await admin
     .from('human_league_seats')
     .select('ref_id, league_id')
@@ -105,13 +114,21 @@ async function loadHumanFacts(
     }),
   );
   const seated = [...leagueOf.keys()];
-  const played = await admin
-    .from('fixtures')
-    .select('club_id, matchday, played_at')
-    .in('club_id', seated)
-    .eq('competition', 'human')
-    .eq('status', 'played');
-  if (played.error || !played.data) return null;
+  if (seated.length === 0) return null;
+  const oldest = Math.min(...[...leagueOf.values()].map((league) => league.season_number));
+  const played = await allRows<{ club_id: string; matchday: number; played_at: string | null }>(
+    (from, to) =>
+      admin
+        .from('fixtures')
+        .select('club_id, matchday, played_at')
+        .in('club_id', seated)
+        .eq('competition', 'human')
+        .eq('status', 'played')
+        .gte('matchday', humanFixtureMatchday(1, oldest))
+        .order('id')
+        .range(from, to),
+  ).catch(() => null);
+  if (!played) return null;
   const playedByClub = new Map(
     seated.map((id) => [
       id,
@@ -122,7 +139,7 @@ async function loadHumanFacts(
       },
     ]),
   );
-  for (const row of played.data) {
+  for (const row of played) {
     const club = playedByClub.get(row.club_id);
     const round = humanRoundFromFixture(row.matchday);
     if (!club || round == null) continue;
@@ -243,100 +260,121 @@ async function loadUsers(
   const clubIds = clubs.map((club) => club.id);
   const since = (ms: number) => new Date(now.getTime() - ms).toISOString();
 
-  const [upcoming, played, sellerOffers, buyerOffers, challenges, log, mails, human, devices] =
-    await Promise.all([
-      allRows<{ club_id: string }>((from, to) =>
+  type PlayedRow = { club_id: string; competition: string; played_at: string | null };
+  const [
+    upcoming,
+    kept,
+    archived,
+    sellerOffers,
+    buyerOffers,
+    challenges,
+    log,
+    mails,
+    human,
+    devices,
+  ] = await Promise.all([
+    allRows<{ club_id: string }>((from, to) =>
+      admin
+        .from('fixtures')
+        .select('club_id')
+        .in('club_id', clubIds)
+        .eq('competition', 'league')
+        .eq('status', 'upcoming')
+        .order('id')
+        .range(from, to),
+    ),
+    // Any competition: the activity rule looks at every match, the league day only at its own.
+    allRows<PlayedRow>((from, to) =>
+      admin
+        .from('fixtures')
+        .select('club_id, competition, played_at')
+        .in('club_id', clubIds)
+        .eq('status', 'played')
+        .gte('played_at', since(NOTIFY_RULES.activeMs))
+        .order('played_at', { ascending: false })
+        .range(from, to),
+    ),
+    // A season start deletes the played fixtures, the archive keeps the day.
+    allRows<PlayedRow>((from, to) =>
+      admin
+        .from('club_matches' as never)
+        .select('club_id, competition, played_at')
+        .in('club_id', clubIds)
+        .gte('played_at', since(NOTIFY_RULES.activeMs))
+        .order('played_at', { ascending: false })
+        .range(from, to),
+    ),
+    allRows<OfferRow>((from, to) =>
+      admin
+        .from('transfer_offers')
+        .select(
+          'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
+        )
+        .in('seller_club_id', clubIds)
+        .eq('status', 'pending')
+        .eq('phase', 'opening')
+        .gte('created_at', since(NOTIFY_RULES.offerFreshMs))
+        .lte('created_at', now.toISOString())
+        .order('id')
+        .range(from, to),
+    ),
+    allRows<OfferRow>((from, to) =>
+      admin
+        .from('transfer_offers')
+        .select(
+          'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
+        )
+        .in('buyer_club_id', clubIds)
+        .eq('status', 'pending')
+        .eq('phase', 'countered')
+        .gte('created_at', since(NOTIFY_RULES.counterFreshMs))
+        .lte('created_at', now.toISOString())
+        .order('id')
+        .range(from, to),
+    ),
+    allRows<{ id: string; rival_club_id: string; status: string; played_at: string | null }>(
+      (from, to) =>
         admin
-          .from('fixtures')
-          .select('club_id')
-          .in('club_id', clubIds)
-          .eq('competition', 'league')
-          .eq('status', 'upcoming')
-          .order('id')
-          .range(from, to),
-      ),
-      // Any competition: the activity rule looks at every match, the league day only at its own.
-      allRows<{ club_id: string; competition: string; played_at: string | null }>((from, to) =>
-        admin
-          .from('fixtures')
-          .select('club_id, competition, played_at')
-          .in('club_id', clubIds)
+          .from('rival_challenges')
+          .select('id, rival_club_id, status, played_at')
+          .in('rival_club_id', clubIds)
           .eq('status', 'played')
-          .gte('played_at', since(NOTIFY_RULES.activeMs))
-          .order('played_at', { ascending: false })
-          .range(from, to),
-      ),
-      allRows<OfferRow>((from, to) =>
-        admin
-          .from('transfer_offers')
-          .select(
-            'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
-          )
-          .in('seller_club_id', clubIds)
-          .eq('status', 'pending')
-          .eq('phase', 'opening')
-          .gte('created_at', since(NOTIFY_RULES.offerFreshMs))
-          .lte('created_at', now.toISOString())
+          .gte('played_at', since(NOTIFY_RULES.challengeFreshMs))
           .order('id')
           .range(from, to),
-      ),
-      allRows<OfferRow>((from, to) =>
+    ),
+    allRows<{ user_id: string; kind: string; ref: string; channel: string; sent_at: string }>(
+      (from, to) =>
         admin
-          .from('transfer_offers')
-          .select(
-            'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
-          )
-          .in('buyer_club_id', clubIds)
-          .eq('status', 'pending')
-          .eq('phase', 'countered')
-          .gte('created_at', since(NOTIFY_RULES.counterFreshMs))
-          .lte('created_at', now.toISOString())
-          .order('id')
-          .range(from, to),
-      ),
-      allRows<{ id: string; rival_club_id: string; status: string; played_at: string | null }>(
-        (from, to) =>
-          admin
-            .from('rival_challenges')
-            .select('id, rival_club_id, status, played_at')
-            .in('rival_club_id', clubIds)
-            .eq('status', 'played')
-            .gte('played_at', since(NOTIFY_RULES.challengeFreshMs))
-            .order('id')
-            .range(from, to),
-      ),
-      allRows<{ user_id: string; kind: string; ref: string; channel: string; sent_at: string }>(
-        (from, to) =>
-          admin
-            .from('notification_log')
-            .select('user_id, kind, ref, channel, sent_at')
-            .in('user_id', userIds)
-            .neq('kind', 'test')
-            .gte('sent_at', since(LOG_DAYS * 24 * 60 * 60 * 1000))
-            .order('sent_at', { ascending: false })
-            .range(from, to),
-      ),
-      allRows<{
-        user_id: string;
-        confirmed_at: string | null;
-        deadline_at: string;
-        confirmed_email_hash: string | null;
-      }>((from, to) =>
-        admin
-          .from('manager_email_status')
-          .select('user_id, confirmed_at, deadline_at, confirmed_email_hash')
+          .from('notification_log')
+          .select('user_id, kind, ref, channel, sent_at')
           .in('user_id', userIds)
-          .order('user_id')
+          .neq('kind', 'test')
+          .gte('sent_at', since(LOG_DAYS * 24 * 60 * 60 * 1000))
+          .order('sent_at', { ascending: false })
           .range(from, to),
-      ),
-      loadHumanFacts(admin, clubIds, now),
-      channels.push
-        ? listPushDevices(
-            admin,
-            prefs.filter((row) => row.push_enabled).map((row) => row.user_id),
-          )
-        : Promise.resolve(new Map<string, PushDevice[]>()),
-    ]);
+    ),
+    allRows<{
+      user_id: string;
+      confirmed_at: string | null;
+      deadline_at: string;
+      confirmed_email_hash: string | null;
+    }>((from, to) =>
+      admin
+        .from('manager_email_status')
+        .select('user_id, confirmed_at, deadline_at, confirmed_email_hash')
+        .in('user_id', userIds)
+        .order('user_id')
+        .range(from, to),
+    ),
+    loadHumanFacts(admin, clubIds, now),
+    channels.push
+      ? listPushDevices(
+          admin,
+          prefs.filter((row) => row.push_enabled).map((row) => row.user_id),
+        )
+      : Promise.resolve(new Map<string, PushDevice[]>()),
+  ]);
 
   const market = await loadMarket(admin, [
     ...new Set([...sellerOffers, ...buyerOffers].map((row) => row.seller_club_id)),
@@ -344,7 +382,7 @@ async function loadUsers(
 
   const clubByOwner = new Map(clubs.map((club) => [club.owner_id, club]));
   const upcomingClubs = new Set(upcoming.map((row) => row.club_id));
-  const playedByClub = groupBy(played, (row) => row.club_id);
+  const playedByClub = groupBy([...kept, ...archived], (row) => row.club_id);
   const selling = groupBy(sellerOffers, (row) => row.seller_club_id);
   const buying = groupBy(buyerOffers, (row) => row.buyer_club_id);
   const challengesByClub = groupBy(challenges, (row) => row.rival_club_id);

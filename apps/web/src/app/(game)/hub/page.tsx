@@ -15,7 +15,7 @@ import { resolveStarterPath } from '@/lib/starter/steps';
 import { loadStarterProgress } from '@/lib/starter/store';
 import { contractPreview } from '@/lib/season/contract-expiry';
 import { createClient } from '@/lib/supabase/server';
-import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
 import {
   countPlayedInList,
   ensureClubFixtures,
@@ -147,6 +147,7 @@ export default async function HubPage() {
       todayUtc,
     ).ok;
   const supabase = await createClient();
+  const playedDay = await lastPlayedOf(supabase, club.id, fixtures);
   const finance = resolveClubFinance(
     club,
     movements,
@@ -203,7 +204,7 @@ export default async function HubPage() {
         fanLabel={fanLabel}
         starterPath={starterPath}
         matchesBlocked={emailGate.matchesBlocked}
-        lastPlayedAt={latestPlayedAt(fixtures)}
+        lastPlayedAt={playedDay.match}
         lineupBlocked={lineupBlocked}
         dressingConflict={dressingConflict}
         intlCallup={intlCallup}

@@ -152,7 +152,9 @@ function BuyNegotiate({
     );
   }
 
-  const presets: OfferPreset[] = ['low', 'normal', 'high'];
+  // A free agent has nothing to bargain about.
+  const free = ask === 0;
+  const presets: OfferPreset[] = free ? ['normal'] : ['low', 'normal', 'high'];
 
   return (
     <div className="lf-tx-actions">
@@ -176,16 +178,20 @@ function BuyNegotiate({
                 variant={preset === 'normal' ? 'primary' : 'default'}
                 disabled={disabled}
               >
-                {PRESET_LABEL[preset]} · {formatMoney(resolveOfferAmount(ask, preset))}
+                {free
+                  ? 'Podpisz za darmo'
+                  : `${PRESET_LABEL[preset]} · ${formatMoney(resolveOfferAmount(ask, preset))}`}
               </Button>
             </form>
           );
         })}
       </div>
-      <p className="lf-tx-actions__hint">
-        Normalna i wysoka kupują od razu. Na niską sprzedawca poda{' '}
-        {formatMoney(resolveCounterAmount(ask))}.
-      </p>
+      {free ? null : (
+        <p className="lf-tx-actions__hint">
+          Normalna i wysoka kupują od razu. Na niską sprzedawca poda{' '}
+          {formatMoney(resolveCounterAmount(ask))}.
+        </p>
+      )}
     </div>
   );
 }

@@ -39,7 +39,7 @@ export async function saveContractTalk(
   const { data: player, error: readErr } = await supabase
     .from('players')
     .select(
-      'id, wage, skill, age, morale, personality, contract_season, on_loan, transfer_listed_at',
+      'id, wage, skill, age, morale, personality, contract_season, on_loan, transfer_listed_at, origin',
     )
     .eq('id', playerId)
     .eq('club_id', clubId)
@@ -57,7 +57,11 @@ export async function saveContractTalk(
     contract_season: number | null;
     on_loan: boolean | null;
     transfer_listed_at: string | null;
+    origin: string | null;
   };
+  if (row.origin === 'emergency') {
+    return { error: 'Junior awaryjny ma kontrakt tylko do końca sezonu.' };
+  }
   // Half of the pay sits in wage_bank during a loan, so the talk would start from a false wage.
   if (row.on_loan === true) return { error: 'Najpierw ściągnij go z wypożyczenia.' };
   // The buyer takes the wage over and bids without seeing it.

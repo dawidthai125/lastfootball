@@ -9,7 +9,7 @@ import { marketFee } from '@/lib/transfers/market-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
 import { talentLabels, talentsOf } from '@/lib/squad/talents';
 import { boughtPlayerId, seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
-import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
+import { listTransferSellEligiblePlayers, saleRoster } from '@/lib/transfers/sell-eligibility';
 import {
   TRANSFERS_THIN,
   type LiveH2hOfferDto,
@@ -42,7 +42,7 @@ export function resolveTransferMarket(input: {
   const windowOpen = input.transferWindowOpen;
   const envelope = resolveTransferEnvelope(input.cashBalance);
   const canBuy = windowOpen && count < TRANSFERS_THIN.MAX_ROSTER;
-  const canSell = windowOpen && count > TRANSFERS_THIN.MIN_ROSTER;
+  const canSell = windowOpen && saleRoster(seniors).length > TRANSFERS_THIN.MIN_ROSTER;
 
   const listings: MarketListingDto[] = seedTransferCatalogue(input.clubId)
     .filter((s) => !input.boughtMarketIds?.has(s.marketId))

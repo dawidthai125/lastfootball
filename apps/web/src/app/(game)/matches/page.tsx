@@ -7,7 +7,9 @@ import { resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import { ensurePlayerCupTie } from '@/lib/cup/ensure-cup-tie';
 import { ensureClubFixtures, toUiFixture } from '@/lib/fixtures';
 import { pickCalendarHero } from '@/lib/fixtures/calendar-hero';
-import { kickoffBlockReason, latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
+import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
+import { createClient } from '@/lib/supabase/server';
 import type { FixtureDto } from '@/lib/fixtures/types';
 
 function calendarBucket(competition: FixtureDto['competition']): 'league' | 'cup' | 'friendly' {
@@ -23,8 +25,9 @@ export default async function MatchesPage() {
   const seeded = await ensureClubFixtures(club.id, { seasonPhase: club.seasonPhase });
   const fixtures = await ensurePlayerCupTie(club, seeded);
   const emailGate = await loadEmailGate(club.ownerId);
-  const lastPlayedAt = latestPlayedAt(fixtures);
-  const lastChallengeAt = latestPlayedAt(fixtures, 'challenge');
+  const last = await lastPlayedOf(await createClient(), club.id, fixtures);
+  const lastPlayedAt = last.match;
+  const lastChallengeAt = last.challenge;
   const now = new Date();
   const hero = pickCalendarHero(
     fixtures.map((fixture) => ({

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { standInNote } from '@/lib/league/human-league-store';
-import { emergencyJunior, missingRole } from '@/lib/squad/emergency-junior';
+import { emergencyJunior, emergencyNeed, missingRole } from '@/lib/squad/emergency-junior';
 import { fillLineup, isStandIn, lineupProblem, repairLineup } from '@/lib/squad/lineup-problem';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import { resolveClubSquad, resolveStartingXi } from '@/lib/squad/resolve-club-squad';
@@ -10,6 +10,8 @@ import { seenState } from '@/lib/squad/seen-state';
 import { energyAfterTraining } from '@/lib/squad/truth';
 import type { PlayerRowDto } from '@/lib/squad/types';
 import { pickBestXi, replaceUnavailableStarters } from '@/lib/squad/validate-starting-xi';
+import { isTransferSellEligible } from '@/lib/transfers/sell-eligibility';
+import { loanBlock } from '@/lib/squad/loan';
 import { saleBlock } from '@/lib/transfers/fair-sale';
 
 const TODAY = '2026-12-08';
@@ -43,7 +45,8 @@ function row(i: number, extra: Partial<PlayerDbRow> = {}): PlayerDbRow {
   };
 }
 
-const squad = (rows: PlayerDbRow[]): PlayerRowDto[] => rows.map((r) => mapPlayerRow(r, TODAY));
+const squad = (rows: PlayerDbRow[]): PlayerRowDto[] =>
+  rows.map((r) => mapPlayerRow(r, TODAY, TODAY));
 const players = (rows: PlayerRowDto[]) => resolveClubSquad({ id: CLUB }, rows).players;
 
 describe('days without a match (D160)', () => {
@@ -84,9 +87,19 @@ describe('days without a match (D160)', () => {
     const player = mapPlayerRow(
       row(1, { status: 'INJURED', injury_matches: 2, absence_on: '2026-12-06' }),
       TODAY,
+      TODAY,
     );
     expect(player).toMatchObject({ status: 'INJURED', injuryMatches: 1 });
     expect(seenState(player)).toMatchObject({ status: 'INJURED', injury_matches: 2 });
+  });
+
+  it('counts Warsaw days, also when the UTC day is another one', () => {
+    const hurtRow = row(1, { status: 'INJURED', injury_matches: 1, absence_on: '2026-11-25' });
+    // Played on the 25th at 00:30 in Warsaw (23:30 UTC on the 24th), again on the 26th.
+    expect(mapPlayerRow(hurtRow, '2026-11-26', '2026-11-26').status).toBe('INJURED');
+    expect(mapPlayerRow(hurtRow, '2026-11-26', '2026-11-27').status).toBe('READY');
+    // A repeated save of a match played on the 26th reads the squad as on the 26th.
+    expect(mapPlayerRow(hurtRow, '2026-11-28', '2026-11-26').status).toBe('INJURED');
   });
 
   it('spares the injured the training load', () => {
@@ -119,6 +132,32 @@ describe('emergency junior (D160)', () => {
     expect(missingRole(players(squad(rows)), TODAY)?.role).toBe('CB');
     rows[2] = row(2, { intl_absent_until: TODAY });
     expect(missingRole(players(squad(rows)), TODAY)?.role).toBe('CB');
+  });
+
+  it('waits until the players on loan are back', () => {
+    const rows = [...SHAPE.keys()].map((i) => row(i));
+    rows[2] = row(2, { on_loan: true });
+    expect(emergencyNeed(players(squad(rows)), TODAY)).toBe('recall');
+    rows[0] = row(0, out);
+    expect(emergencyNeed(players(squad(rows)), TODAY)).toMatchObject({ role: 'GK' });
+    rows[0] = row(0);
+    rows[2] = row(2, { on_loan: true, ...out });
+    expect(emergencyNeed(players(squad(rows)), TODAY)).toMatchObject({ role: 'CB' });
+  });
+
+  it('is neither loaned out nor counted among the players a sale must leave', () => {
+    expect(loanBlock({ position: 'N', starter: false, onLoan: false, emergency: true })).toContain(
+      'Juniora',
+    );
+    const eligible = (list: PlayerDbRow[]) =>
+      isTransferSellEligible({
+        transferWindowOpen: true,
+        activePlayers: squad(list),
+        playerId: 'p5',
+      });
+    const eighteen = Array.from({ length: 18 }, (_, i) => row(i));
+    expect(eligible([...eighteen, row(18, { origin: 'emergency' })])).toBe(false);
+    expect(eligible([...eighteen, row(18)])).toBe(true);
   });
 
   it('stays under the level of the league and is never for sale', () => {

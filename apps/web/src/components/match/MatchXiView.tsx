@@ -9,7 +9,7 @@ import { EmergencyJunior } from '@/components/squad/EmergencyJunior';
 import { LocationHero, StateBanner } from '@/components/ui';
 import { saveStartingXi } from '@/lib/squad/actions';
 import { SAVE_XI_INITIAL } from '@/lib/squad/xi-action-state';
-import { missingRole } from '@/lib/squad/emergency-junior';
+import { emergencyNeed } from '@/lib/squad/emergency-junior';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import {
   applyXiSelection,
@@ -71,7 +71,7 @@ export function MatchXiView({
   const best = useMemo(() => pickBestXi(players, todayUtc), [players, todayUtc]);
   const canImprove = best.some((p, i) => p.starter !== players[i]?.starter);
 
-  const missing = useMemo(() => missingRole(players, todayUtc), [players, todayUtc]);
+  const need = useMemo(() => emergencyNeed(players, todayUtc), [players, todayUtc]);
 
   function onBest() {
     setPlayers(best);
@@ -111,7 +111,7 @@ export function MatchXiView({
       ) : null}
       {state.error ? <StateBanner tone="error">{state.error}</StateBanner> : null}
 
-      {missing ? <EmergencyJunior keeper={missing.pos === 'BR'} /> : null}
+      {need ? <EmergencyJunior need={need} /> : null}
 
       <form action={action} className="lf-xi__cta">
         <input type="hidden" name="matchId" value={matchId} />

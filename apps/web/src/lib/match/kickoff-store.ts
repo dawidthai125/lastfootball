@@ -70,7 +70,7 @@ export type MatchEntry =
 export async function enterMatch(
   clubId: string,
   fixtureId: string,
-  seniors: readonly { readonly id: string; readonly onLoan?: boolean }[],
+  seniors: readonly { readonly id: string }[],
 ): Promise<MatchEntry> {
   const row = await readOpenRow(clubId);
   if (row === 'error') return { kind: 'error' };
@@ -120,6 +120,21 @@ export async function openMatchOf(clubId: string): Promise<string | null> {
       .eq('club_id', clubId)
       .maybeSingle()) ?? {};
   return data?.status === 'upcoming' ? row.fixture_id : null;
+}
+
+export const OPEN_MATCH_ERROR = 'Masz rozpoczęty mecz. Dokończ go najpierw.';
+export const OPEN_MATCH_PLAYER_ERROR =
+  'Ten zawodnik gra w rozpoczętym meczu. Najpierw dokończ mecz.';
+
+/** Giving him away would drop the match and start it again from 0:0. */
+export async function playsInOpenMatch(clubId: string, playerId: string): Promise<boolean> {
+  const row = await readOpenRow(clubId);
+  if (!row || row === 'error') return false;
+  const snapshot = readKickoffSnapshot(row.snapshot, row.fixture_id, clubId);
+  if (![...(snapshot?.ourXi ?? []), ...(snapshot?.ourBench ?? [])].some((p) => p.id === playerId)) {
+    return false;
+  }
+  return (await openMatchOf(clubId)) === row.fixture_id;
 }
 
 /** False when the copy is gone, another window is further, or an old decision was changed. */

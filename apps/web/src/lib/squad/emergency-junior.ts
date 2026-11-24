@@ -21,7 +21,7 @@ const LINES = [
 
 /**
  * Who is missing when no legal eleven exists: fewer than eleven available, or no keeper.
- * Null = the manager can set one. The database checks the same before it adds a player.
+ * Null = the manager can set one.
  */
 export function missingRole(players: readonly Candidate[], today: string): MissingRole | null {
   const free = players.filter((p) => isAvailable(p, today));
@@ -34,6 +34,23 @@ export function missingRole(players: readonly Candidate[], today: string): Missi
       free.filter((p) => (line.positions as readonly string[]).includes(p.position)).length,
   })).sort((a, b) => b.gap - a.gap)[0]!;
   return short.line.fill;
+}
+
+/**
+ * What the manager may do about it. His own players out on loan count as available: while they
+ * are enough he recalls them, and only then there is a junior. The database checks the same.
+ */
+export function emergencyNeed(
+  players: readonly Candidate[],
+  today: string,
+): MissingRole | 'recall' | null {
+  if (!missingRole(players, today)) return null;
+  return (
+    missingRole(
+      players.map((p) => ({ ...p, onLoan: false })),
+      today,
+    ) ?? 'recall'
+  );
 }
 
 /** A junior just under the level of the league. He may grow only to its floor. */

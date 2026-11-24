@@ -1,5 +1,6 @@
 import { serverDb } from '@/lib/supabase/admin';
 import { env } from '@/config/env';
+import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { mapPlayerRow, type PlayerDbRow } from '@/lib/squad/map-player';
 import { reconcileExpiredIntl } from '@/lib/squad/reconcile-intl';
@@ -53,6 +54,7 @@ function stopOnFailedRead(error: { readonly code?: string } | null): void {
 export async function listClubPlayers(
   clubId: string,
   restDay: string = utcDateString(),
+  matchDay: string = warsawDateKey(new Date()),
 ): Promise<PlayerRowDto[]> {
   if (!env.isSupabaseConfigured) return [];
   const supabase = await createClient();
@@ -102,7 +104,7 @@ export async function listClubPlayers(
 
   const today = utcDateString();
   const mapped = (result.data as PlayerDbRow[]).map((row) =>
-    mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay),
+    mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay, matchDay),
   );
   const patches = reconcileExpiredLoans(
     mapped.map((row) => ({
@@ -161,7 +163,7 @@ export async function listClubPlayers(
   }
 
   const afterLoans = (result.data as PlayerDbRow[])
-    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay))
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay, matchDay))
     .filter((p) => p.status !== 'DEPARTED');
 
   const intlPatches = reconcileExpiredIntl(
@@ -184,6 +186,6 @@ export async function listClubPlayers(
   if (intlPatches.length === 0) return afterLoans;
 
   return (result.data as PlayerDbRow[])
-    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay))
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay, matchDay))
     .filter((p) => p.status !== 'DEPARTED');
 }

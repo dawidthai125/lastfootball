@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { OPEN_MATCH_PLAYER_ERROR, playsInOpenMatch } from '@/lib/match/kickoff-store';
 import {
   incomingLoanBlock,
   LOANS_FULL,
@@ -163,6 +164,7 @@ export async function returnIncomingLoan(
   if (!player || (player as { loaned_in: boolean | null }).loaned_in !== true) {
     return { error: 'To nie jest wypożyczenie przychodzące.' };
   }
+  if (await playsInOpenMatch(clubId, playerId)) return { error: OPEN_MATCH_PLAYER_ERROR };
   const { error } = await serverDb(supabase)
     .from('players')
     .update({

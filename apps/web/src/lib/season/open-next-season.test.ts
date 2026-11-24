@@ -547,4 +547,36 @@ describe('openNextSeasonAfterDeparture', () => {
     expect(result).toEqual({ ok: true, farewell: null });
     expect(db.ops.map((op) => op.op)).toEqual(['club']);
   });
+
+  it('retires one player a season, also when the interrupted start promoted a junior', async () => {
+    const roster = [
+      player({ id: 'late', age: 39, skill: 40, academyTrack: false, starter: true }),
+      player({ id: 'promoted', age: 18, skill: 45, academyTrack: false, starter: false }),
+    ];
+    const run = async (season: number) => {
+      const db = fakeDb(roster, null);
+      db.players.push({
+        id: 'gone',
+        club_id: 'club-1',
+        departed_at: '2026-12-01',
+        departed_reason: 'retired',
+        aged_for_season: season,
+      });
+      await openNextSeasonAfterDeparture({
+        supabase: db.supabase as never,
+        clubId: 'club-1',
+        endedSeason: 3,
+        loadRoster: async () => roster,
+        nextSeason: 4,
+        nextTier: 'iii',
+        goalNote: 'miss',
+        hAgePort: hAge(db.ops, []),
+        hAgeSnapshot: [],
+      });
+      return db.players.find((row) => row.id === 'late')?.departed_at;
+    };
+    expect(await run(3)).toBeNull();
+    // Retired a season ago: somebody else may go now.
+    expect(await run(2)).not.toBeNull();
+  });
 });

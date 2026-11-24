@@ -1,3 +1,4 @@
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import {
@@ -102,13 +103,15 @@ export async function applyMatchDevelopment(
     });
   }
 
-  const { data, error } = await serverDb(supabase).rpc(
-    'apply_match_development' as never,
-    {
-      p_club_id: input.clubId,
-      p_match_key: input.matchKey,
-      p_updates: updates,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    serverDb(supabase).rpc(
+      'apply_match_development' as never,
+      {
+        p_club_id: input.clubId,
+        p_match_key: input.matchKey,
+        p_updates: updates,
+      } as never,
+    ),
   );
 
   if (error?.code === SQUAD_MOVED_CODE) {

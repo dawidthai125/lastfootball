@@ -14,12 +14,14 @@ import { parseLeagueTier } from '@/lib/league/league-tier';
 import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
+import { archivedLastPlayed, laterOf } from '@/lib/fixtures/last-played';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { settleFixture } from '@/lib/fixtures/settle-fixture';
 import {
   challengeBlockReason,
   humanDayBlockReason,
   matchdayBlockReason,
+  warsawDateKey,
 } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -96,7 +98,9 @@ export async function completeFixture(
 
   const { data: fixture, error: loadErr } = await supabase
     .from('fixtures')
-    .select('id, club_id, matchday, status, is_home, competition, home_score, away_score')
+    .select(
+      'id, club_id, matchday, status, is_home, competition, home_score, away_score, played_at',
+    )
     .eq('id', fixtureId)
     .eq('club_id', clubId)
     .maybeSingle();
@@ -114,12 +118,17 @@ export async function completeFixture(
     competition: FixtureDto['competition'];
     home_score: number | null;
     away_score: number | null;
+    played_at: string | null;
   };
   const admin = tryAdminClient();
   if (!admin) return { error: 'Zapis wyniku nie jest skonfigurowany na serwerze.' };
 
   const today = kickoffDay(formData.get('startedOn'));
-  const players = await listClubPlayers(clubId, today).catch(() => null);
+  // A repeated save of a stored match counts the pauses as on the day it was played.
+  const matchDay = warsawDateKey(
+    row.status === 'played' && row.played_at ? new Date(row.played_at) : new Date(),
+  );
+  const players = await listClubPlayers(clubId, today, matchDay).catch(() => null);
   if (!players) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const build = await readClubBuild(supabase, clubId);
   if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
@@ -169,8 +178,14 @@ export async function completeFixture(
         .order('played_at', { ascending: false })
         .limit(1)
         .maybeSingle();
-      if (lastErr) return { error: 'Nie udało się sprawdzić dnia meczu. Spróbuj ponownie.' };
-      const lastAt = (lastPlayed as { played_at: string | null } | null)?.played_at ?? null;
+      const archive = await archivedLastPlayed(supabase, clubId);
+      if (lastErr || !archive) {
+        return { error: 'Nie udało się sprawdzić dnia meczu. Spróbuj ponownie.' };
+      }
+      const lastAt = laterOf(
+        (lastPlayed as { played_at: string | null } | null)?.played_at ?? null,
+        row.competition === 'challenge' ? archive.challenge : archive.match,
+      );
       const blocked =
         row.competition === 'challenge'
           ? challengeBlockReason(lastAt, new Date())
@@ -337,7 +352,7 @@ export async function completeFixture(
   let dev = await develop(players);
   // Training or a transfer landed during the replay: once more on the squad as it is now.
   if (!dev.ok && dev.moved) {
-    const again = await listClubPlayers(clubId, today).catch(() => null);
+    const again = await listClubPlayers(clubId, today, matchDay).catch(() => null);
     if (again) dev = await develop(again);
   }
   if (!dev.ok) {

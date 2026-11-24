@@ -631,11 +631,7 @@ function dayLabel(date: string): string {
   return `${day}.${month}`;
 }
 
-/** Scores somebody already played, for the standings. */
-async function seasonResults(season: number): Promise<HumanResult[]> {
-  return (await storedResults(season)) ?? [];
-}
-
+/** Scores somebody already played. Null = the read failed. */
 async function storedResults(season: number): Promise<HumanResult[] | null> {
   const { data, error } = await createAdminClient()
     .from('human_broadcasts')
@@ -688,6 +684,8 @@ function cardFrom(
   };
 }
 
+const CARD_UNREAD = 'Nie udało się wczytać Ligi ludzi. Odśwież stronę.';
+
 export async function loadHumanLeagueCard(
   club: ClubDto,
   now = new Date(),
@@ -695,9 +693,7 @@ export async function loadHumanLeagueCard(
   const state = await ensureSeatTable(club.id, now);
   if (state === null || state === 'missing') {
     return noteCard(
-      state === 'missing'
-        ? 'Tabela ligi ludzi nie jest jeszcze na bazie.'
-        : 'Nie udało się wczytać Ligi ludzi. Odśwież stronę.',
+      state === 'missing' ? 'Tabela ligi ludzi nie jest jeszcze na bazie.' : CARD_UNREAD,
       null,
     );
   }
@@ -708,23 +704,29 @@ export async function loadHumanLeagueCard(
   }
   let table = state.table;
 
+  const admin = createAdminClient();
+  const [results, playedRows] = await Promise.all([
+    storedResults(table.season),
+    admin
+      .from('fixtures')
+      .select('matchday, status, played_at')
+      .eq('club_id', club.id)
+      .eq('competition', 'human'),
+  ]);
+  // Nothing read is not the same as nothing played.
+  if (!results || playedRows.error || !playedRows.data) return noteCard(CARD_UNREAD, state);
+
   const standings = resolveHumanTable({
     seats: table.seats,
     seasonKey: table.seasonKey,
-    results: await seasonResults(table.season),
+    results,
     now,
   });
   const previous = await lastSeason(table, club.id);
   const card = (extra: Partial<HumanLeagueCard>) =>
     cardFrom(club, state, table, { standings, lastSeason: previous, ...extra });
 
-  const admin = createAdminClient();
-  const playedRows = await admin
-    .from('fixtures')
-    .select('matchday, status, played_at')
-    .eq('club_id', club.id)
-    .eq('competition', 'human');
-  const rows = playedRows.data ?? [];
+  const rows = playedRows.data;
   const playedRounds = rows
     .filter(
       (row) => row.status === 'played' && humanSeasonFromFixture(row.matchday) === table.season,

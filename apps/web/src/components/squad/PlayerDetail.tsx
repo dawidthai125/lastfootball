@@ -312,7 +312,11 @@ export function PlayerContract({ player, season }: { player: SquadPlayer; season
           active={player.setPiece === true}
           goalkeeper={player.position === 'BR'}
         />
-        {player.loanedIn === true ? null : player.onLoan === true ? (
+        {player.emergency === true ? (
+          <p style={{ margin: '0.5rem 0 0' }}>
+            Junior awaryjny. Ma kontrakt do końca sezonu, nie można go sprzedać ani wypożyczyć.
+          </p>
+        ) : player.loanedIn === true ? null : player.onLoan === true ? (
           <p style={{ margin: '0.5rem 0 0' }}>
             O kontrakcie porozmawiasz po powrocie z wypożyczenia.
           </p>
@@ -324,13 +328,15 @@ export function PlayerContract({ player, season }: { player: SquadPlayer; season
             untilSeason={renewedContractSeason(season)}
           />
         )}
-        <LoanButton
-          playerId={player.id}
-          position={player.position}
-          starter={player.starter}
-          onLoan={player.onLoan === true}
-          loanedIn={player.loanedIn === true}
-        />
+        {player.emergency === true ? null : (
+          <LoanButton
+            playerId={player.id}
+            position={player.position}
+            starter={player.starter}
+            onLoan={player.onLoan === true}
+            loanedIn={player.loanedIn === true}
+          />
+        )}
       </div>
     </SectionShell>
   );

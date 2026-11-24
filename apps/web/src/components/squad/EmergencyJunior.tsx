@@ -1,14 +1,28 @@
 'use client';
 
 import { useActionState } from 'react';
+import Link from 'next/link';
 
 import { StateBanner } from '@/components/ui';
 import { callEmergencyJunior } from '@/lib/squad/actions-emergency';
+import type { MissingRole } from '@/lib/squad/emergency-junior';
 import { EMERGENCY_JUNIOR_INITIAL } from '@/lib/squad/emergency-action-state';
 
 /** Shown only while the club cannot field a legal eleven. */
-export function EmergencyJunior({ keeper }: { readonly keeper: boolean }) {
+export function EmergencyJunior({ need }: { readonly need: MissingRole | 'recall' }) {
   const [state, action, pending] = useActionState(callEmergencyJunior, EMERGENCY_JUNIOR_INITIAL);
+  if (need === 'recall') {
+    return (
+      <p style={{ margin: 'var(--lf-space-3) 0' }}>
+        Do jedenastki brakuje zawodników z wypożyczenia. Ściągnij ich: otwórz zawodnika w{' '}
+        <Link href="/squad" style={{ color: 'var(--lf-color-text-gold)' }}>
+          kadrze
+        </Link>{' '}
+        i wybierz „Ściągnij z wypożyczenia”.
+      </p>
+    );
+  }
+  const keeper = need.pos === 'BR';
   return (
     <section
       aria-label="Junior awaryjny"

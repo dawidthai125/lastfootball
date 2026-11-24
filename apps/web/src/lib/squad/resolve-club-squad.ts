@@ -122,6 +122,7 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     setPiece: row.setPiece === true,
     onLoan: row.onLoan === true,
     loanedIn: row.loanedIn === true,
+    emergency: row.origin === 'emergency',
     intlAbsentUntil: row.intlAbsentUntil ?? null,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),

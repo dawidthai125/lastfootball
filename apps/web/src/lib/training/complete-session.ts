@@ -1,3 +1,4 @@
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
@@ -167,13 +168,15 @@ export async function completeTrainingSession(
     });
   }
 
-  const { data, error } = await serverDb(supabase).rpc(
-    'complete_training_session' as never,
-    {
-      p_club_id: input.clubId,
-      p_training_on: today,
-      p_updates: updates,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    serverDb(supabase).rpc(
+      'complete_training_session' as never,
+      {
+        p_club_id: input.clubId,
+        p_training_on: today,
+        p_updates: updates,
+      } as never,
+    ),
   );
 
   if (error) {

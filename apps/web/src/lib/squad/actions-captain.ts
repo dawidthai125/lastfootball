@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -34,9 +35,11 @@ export async function setClubCaptain(
     .is('departed_at', null)
     .maybeSingle();
   if (!player) return { error: 'Nie znaleziono zawodnika.' };
-  const { error } = await supabase.rpc(
-    'set_club_captain' as never,
-    { p_club_id: clubId, p_player_id: playerId } as never,
+  const { error } = await retryDeadlock(() =>
+    supabase.rpc(
+      'set_club_captain' as never,
+      { p_club_id: clubId, p_player_id: playerId } as never,
+    ),
   );
   if (error) return { error: 'Nie udało się wyznaczyć kapitana.' };
   revalidatePath('/squad');

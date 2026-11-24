@@ -2,8 +2,10 @@ export function loanBlock(input: {
   readonly position: string;
   readonly starter: boolean;
   readonly onLoan: boolean;
+  readonly emergency?: boolean;
 }): string | null {
   if (input.onLoan) return 'Już jest wypożyczony.';
+  if (input.emergency) return 'Juniora awaryjnego nie wypożyczysz.';
   if (input.position === 'BR') return 'Bramkarza nie wypożyczysz.';
   if (input.starter) return 'Zdejmij go z jedenastki.';
   return null;

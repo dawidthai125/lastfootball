@@ -280,6 +280,17 @@ async function applySeasonDeparture(
   if (roster.some((player) => player.id === academyDraftId(clubId, seasonNumber))) {
     return { ok: true, undo: null, farewell: null };
   }
+  // The same on a promoted junior: the retiree has aged for this season and left.
+  if (agingIsMarked) {
+    const { data: retired, error } = await supabase
+      .from('players')
+      .select('id')
+      .eq('club_id', clubId)
+      .eq('departed_reason', 'retired')
+      .eq('aged_for_season', seasonNumber);
+    if (error || !retired) return { ok: false, error: 'Nie udało się odczytać kadry.' };
+    if (retired.length > 0) return { ok: true, undo: null, farewell: null };
+  }
   const plan = planSeasonDeparture(
     roster.map((player) => ({
       id: player.id,

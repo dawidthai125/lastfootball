@@ -2,20 +2,26 @@
 
 -- 1. Days without a match shorten an injury and a ban. The app derives it (servedAbsence).
 alter table public.players add column if not exists absence_on date;
--- Energy is written by every match, so nothing of the club was played after that day.
-update public.players set absence_on = energy_on where absence_on is null;
+-- Energy is written by every match, so nothing of the club was played after that day. It is a
+-- UTC date and match days are Warsaw dates, so the last match itself is asked as well.
+update public.players p
+set absence_on = greatest(p.energy_on, coalesce((
+  select max((f.played_at at time zone 'Europe/Warsaw')::date)
+  from public.fixtures f where f.club_id = p.club_id and f.status = 'played'
+), p.energy_on))
+where p.absence_on is null;
 alter table public.players
-  alter column absence_on set default ((now() at time zone 'utc')::date);
+  alter column absence_on set default ((now() at time zone 'Europe/Warsaw')::date);
 alter table public.players alter column absence_on set not null;
 
--- Every match save writes injury_matches: the match counted for this day.
+-- Every match save writes injury_matches: the match counted for this Warsaw day.
 create or replace function public.lf_stamp_absence()
 returns trigger
 language plpgsql
 set search_path = ''
 as $$
 begin
-  new.absence_on := (now() at time zone 'utc')::date;
+  new.absence_on := (now() at time zone 'Europe/Warsaw')::date;
   return new;
 end;
 $$;
@@ -30,7 +36,7 @@ begin
   if new.status = 'DEPARTED' then
     return new;
   end if;
-  new.absence_on := (now() at time zone 'utc')::date;
+  new.absence_on := (now() at time zone 'Europe/Warsaw')::date;
   if new.status <> 'INJURED' then
     new.injury_matches := 0;
   end if;
@@ -72,7 +78,7 @@ as $$
     else p_status
   end
   from (
-    select greatest(0, (now() at time zone 'utc')::date - p_since - 1) as days
+    select greatest(0, (now() at time zone 'Europe/Warsaw')::date - p_since - 1) as days
   ) d;
 $$;
 
@@ -104,6 +110,7 @@ declare
   v_seniors integer;
   v_free integer;
   v_keepers integer;
+  v_away integer;
   v_shirt integer;
   v_prefix text := 'e-' || replace(p_club_id::text, '-', '') || '-';
   v_id text;
@@ -118,22 +125,25 @@ begin
     raise exception 'club not found';
   end if;
 
+  -- Own players out on loan count as available: the manager can call them back.
   select count(*),
     count(*) filter (where p.fit),
-    count(*) filter (where p.fit and p.pos = 'BR')
-  into v_seniors, v_free, v_keepers
+    count(*) filter (where p.fit and p.pos = 'BR'),
+    count(*) filter (where p.fit and p.on_loan)
+  into v_seniors, v_free, v_keepers, v_away
   from (
-    select q.pos,
+    select q.pos, q.on_loan,
       public.lf_status_today(q.status, q.injury_matches, q.suspension_matches, q.absence_on)
         in ('READY', 'TIRED')
-      and not q.on_loan
       and (q.intl_absent_until is null
         or q.intl_absent_until < (now() at time zone 'utc')::date) as fit
     from public.players q
     where q.club_id = p_club_id and q.departed_at is null and not q.academy_track
   ) p;
   if v_free >= 11 and v_keepers > 0 then
-    return jsonb_build_object('ok', false, 'reason', 'not_needed');
+    return jsonb_build_object(
+      'ok', false, 'reason', case when v_away > 0 then 'recall' else 'not_needed' end
+    );
   end if;
   if v_seniors >= p_max_roster then
     return jsonb_build_object('ok', false, 'reason', 'roster');
@@ -176,3 +186,58 @@ $$;
 revoke all on function public.call_emergency_junior(uuid, jsonb, integer)
   from public, anon, authenticated;
 grant execute on function public.call_emergency_junior(uuid, jsonb, integer) to service_role;
+
+-- 3. He does not stand in for a player the sale limits keep in the club, and cannot be sold.
+do $mig$
+declare
+  d text;
+  f text;
+  v_club text;
+begin
+  foreach f in array array[
+    'public.sell_market_player(uuid,text,integer,integer)',
+    'public.complete_live_h2h_transfer(uuid,uuid,text,integer,uuid)',
+    'public.place_auction_bid(text,integer)',
+    'public.auction_reserved(uuid,text,boolean)'
+  ]
+  loop
+    d := pg_get_functiondef(f::regprocedure);
+    if position('emergency' in d) > 0 then
+      continue;
+    end if;
+    if f like '%auction_reserved%' then
+      if position('and p.departed_at is null' in d) = 0 then
+        raise exception '% differs', f;
+      end if;
+      d := replace(d, 'and p.departed_at is null',
+        'and p.departed_at is null and p.origin is distinct from ''emergency''');
+      execute d;
+      continue;
+    end if;
+    v_club := case
+      when f like '%sell_market%' then 'club_id = p_club_id'
+      when f like '%h2h%' then 'club_id = p_seller_club_id'
+      else 'club_id = v_seller.id'
+    end;
+    -- The squad and the goalkeepers: both counts of the seller.
+    if (
+      select count(*)
+      from regexp_matches(d, v_club || '\s+and departed_at is null\s+and not academy_track', 'g')
+    ) <> 2 then
+      raise exception '% differs', f;
+    end if;
+    d := regexp_replace(d, '(' || v_club || '\s+and departed_at is null\s+and not academy_track)',
+      '\1 and origin is distinct from ''emergency''', 'g');
+    if f like '%sell_market%' then
+      if position('or v_player.academy_track or' in d) = 0 then
+        raise exception '% differs', f;
+      end if;
+      d := replace(d, 'or v_player.academy_track or',
+        'or v_player.origin = ''emergency'' or v_player.academy_track or');
+    end if;
+    execute d;
+  end loop;
+end;
+$mig$;
+
+notify pgrst, 'reload schema';

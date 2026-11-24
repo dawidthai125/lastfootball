@@ -1,3 +1,4 @@
+import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { restedEnergy, restedStatus, servedAbsence } from '@/lib/squad/rest';
 import { isPersonality } from '@/lib/squad/depth';
@@ -69,7 +70,12 @@ function mapStatus(raw: string): PlayerStatus {
   return 'READY';
 }
 
-export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()): PlayerRowDto {
+/** Energy rests by UTC days, a pause is served by Warsaw days, the days of matches. */
+export function mapPlayerRow(
+  row: PlayerDbRow,
+  today: string = utcDateString(),
+  matchDay: string = warsawDateKey(new Date()),
+): PlayerRowDto {
   const energy =
     typeof row.energy === 'number' ? restedEnergy(row.energy, row.energy_on, today) : undefined;
   const absence = servedAbsence(
@@ -79,7 +85,7 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
       suspensionMatches: row.suspension_matches ?? 0,
     },
     row.absence_on,
-    today,
+    matchDay,
   );
   const status = absence.status;
   return {

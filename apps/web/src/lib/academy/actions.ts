@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
@@ -333,13 +334,15 @@ export async function promoteAcademyProspect(
   const admin = tryAdminClient();
   if (!admin) return { error: failed };
   // Counts the squad again under the club lock.
-  const { data, error } = await admin.rpc(
-    'promote_academy_player' as never,
-    {
-      p_club_id: club.id,
-      p_player_id: playerId,
-      p_max_roster: TRANSFERS_THIN.MAX_ROSTER,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    admin.rpc(
+      'promote_academy_player' as never,
+      {
+        p_club_id: club.id,
+        p_player_id: playerId,
+        p_max_roster: TRANSFERS_THIN.MAX_ROSTER,
+      } as never,
+    ),
   );
   const row = data as { ok?: boolean; reason?: string; name?: string } | null;
   if (error || !row) return { error: failed };

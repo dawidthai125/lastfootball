@@ -33,7 +33,7 @@ export type Absence = {
 };
 
 /**
- * An injury or a ban also gets shorter by one for each full day without a match of the club.
+ * An injury or a ban also gets shorter by one for each full Warsaw day without a club match.
  * `absenceOn` is the day of the last match save (or of the last change), stamped by the database;
  * that match counted for its own day, so only the days after it and before today count here.
  * Same rule in SQL: lf_status_today.

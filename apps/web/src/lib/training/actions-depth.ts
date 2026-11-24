@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { recordMovement } from '@/lib/finance/record-movement';
 import { restedEnergy, restedStatus, servedAbsence } from '@/lib/squad/rest';
 import { SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
@@ -10,6 +11,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { readClubBuild } from '@/lib/club/read-build';
 import { countClubPlayedFixtures } from '@/lib/fixtures/count-played';
+import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { hasPlayedUnlock, unlockPlayedCount, utcDateString } from '@/lib/fixtures/played-unlock';
 import { TRAINING_THIN } from '@/lib/training/types';
 import { hireOnce, individualStep, isPressTone, pressDelta, STAFF_FEE } from '@/lib/squad/depth';
@@ -175,7 +177,7 @@ async function trainOnce(
       suspensionMatches: row.suspension_matches,
     },
     row.absence_on,
-    utcDateString(),
+    warsawDateKey(new Date()),
   );
   if (status === 'INJURED') return { error: 'Kontuzjowany nie trenuje.' };
   const { data: season } = await supabase
@@ -211,27 +213,29 @@ async function trainOnce(
   const admin = tryAdminClient();
   if (!admin) return { error: 'Trening nie jest skonfigurowany na serwerze.' };
   // Session of the day, attribute and energy land together, and only on the player read above.
-  const { data: saved, error: saveErr } = await admin.rpc(
-    'train_individual' as never,
-    {
-      p_club_id: clubId,
-      p_player_id: playerId,
-      p_today: utcDateString(),
-      p_group: group,
-      p_value: step.group,
-      p_energy: step.energy,
-      p_status: restedStatus(status, row.energy, rested),
-      p_seen: {
-        status: row.status,
-        injury_matches: row.injury_matches,
-        suspension_matches: row.suspension_matches,
-        on_loan: row.on_loan,
-        energy: row.energy,
-        energy_on: row.energy_on,
-        potential: row.potential,
-        [column]: row[column],
-      },
-    } as never,
+  const { data: saved, error: saveErr } = await retryDeadlock(() =>
+    admin.rpc(
+      'train_individual' as never,
+      {
+        p_club_id: clubId,
+        p_player_id: playerId,
+        p_today: utcDateString(),
+        p_group: group,
+        p_value: step.group,
+        p_energy: step.energy,
+        p_status: restedStatus(status, row.energy, rested),
+        p_seen: {
+          status: row.status,
+          injury_matches: row.injury_matches,
+          suspension_matches: row.suspension_matches,
+          on_loan: row.on_loan,
+          energy: row.energy,
+          energy_on: row.energy_on,
+          potential: row.potential,
+          [column]: row[column],
+        },
+      } as never,
+    ),
   );
   if (saveErr) return { error: 'Nie udało się zapisać treningu.' };
   if ((saved as unknown) === 'moved') return 'moved';
@@ -252,14 +256,16 @@ export async function savePressTone(
   const admin = tryAdminClient();
   if (!admin) return { error: 'Konferencja nie jest jeszcze włączona.' };
   // Tone and morale land together. Only the last match, and only once.
-  const { data, error } = await admin.rpc(
-    'save_press_tone' as never,
-    {
-      p_club_id: owned.club.id,
-      p_fixture_id: fixtureId,
-      p_tone: tone,
-      p_delta: pressDelta(tone),
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    admin.rpc(
+      'save_press_tone' as never,
+      {
+        p_club_id: owned.club.id,
+        p_fixture_id: fixtureId,
+        p_tone: tone,
+        p_delta: pressDelta(tone),
+      } as never,
+    ),
   );
   // 22P02: not a match id at all.
   if (error && error.code !== '22P02') {

@@ -43,6 +43,8 @@ export type SquadPlayerDto = {
   readonly setPiece?: boolean;
   readonly onLoan?: boolean;
   readonly loanedIn?: boolean;
+  /** Called up because no legal eleven was left (D160). */
+  readonly emergency?: boolean;
   readonly intlAbsentUntil?: string | null;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
@@ -83,7 +85,7 @@ export type PlayerRowDto = {
   readonly version: number;
   readonly departedAt: string | null;
   /** When set — on club transfer list (LFE-TRANSFERS-04). */
-  /** academy · free · bought · loan; null = starting squad (D133). */
+  /** academy · free · bought · loan · emergency; null = starting squad (D133). */
   readonly origin?: string | null;
   readonly joinedAt?: string | null;
   /** Matches in the starting eleven since he joined the seniors (D134). */
