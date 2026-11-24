@@ -70,6 +70,8 @@ export type ResolveClubMessagesInput = {
   readonly retirementFarewell?: MessagesRetirementFarewellInput | null;
   /** ClubFinanceDto.wageNote — REUSE resolveClubFinance. */
   readonly wageNote?: string | null;
+  /** Completed board tasks to collect — REUSE resolveBoardTaskNote. */
+  readonly boardTaskNote?: string | null;
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -171,6 +173,17 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       subject: input.wageNote,
       fromLabel: 'Zarząd',
       href: '/finance',
+      priority: 'info',
+    });
+  }
+
+  if (input.boardTaskNote) {
+    items.push({
+      id: 'msg:board-task',
+      kind: 'system',
+      subject: input.boardTaskNote,
+      fromLabel: 'Zarząd',
+      href: '/board',
       priority: 'info',
     });
   }

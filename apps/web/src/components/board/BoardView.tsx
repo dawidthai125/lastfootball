@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { LocationHero, Panel } from '@/components/ui';
+import { BoardTasksPanel } from '@/components/board/BoardTasksPanel';
+import { LocationHero, Panel, ProgressBar } from '@/components/ui';
 import type { BoardTone, ClubBoardDto } from '@/lib/board';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -16,8 +17,8 @@ function toneLabel(tone: BoardTone): string {
 }
 
 /**
- * Board Experience — LFE-BOARD-01 Information Thin.
- * Domain only via resolveClubBoard (D102 · D103). No actions / mutations.
+ * Board Experience — LFE-BOARD-01, prestige and tasks D131.
+ * Domain only via resolveClubBoard (D102).
  */
 export function BoardView({ board }: { board: ClubBoardDto }) {
   return (
@@ -51,6 +52,36 @@ export function BoardView({ board }: { board: ClubBoardDto }) {
           </div>
         </Panel>
       </div>
+
+      {board.tasks ? (
+        <div className="mt-3">
+          <BoardTasksPanel tasks={board.tasks} />
+        </div>
+      ) : null}
+
+      {board.prestige ? (
+        <div className="mt-3" data-board-prestige={board.prestige.value}>
+          <Panel title="Prestiż klubu" flush>
+            <div className="space-y-1.5 px-2.5 py-2.5 text-[13px]">
+              <p className="text-[var(--lf-text-strong)]">{board.prestige.band}</p>
+              <ProgressBar value={board.prestige.value} label="Prestiż" />
+              <p className="text-[11px] tracking-wide text-[var(--lf-muted)] uppercase">Skąd</p>
+              <ul className="space-y-0.5 text-[12px] text-[var(--lf-muted)]">
+                {board.prestige.sources.map((source) => (
+                  <li key={source.label} className="flex justify-between gap-2">
+                    <span>{source.label}</span>
+                    <span className="tabular-nums">{source.pointsLabel}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-[12px] text-[var(--lf-muted)]">
+                Świeże sezony ważą więcej. Oferta sponsora przy odnowieniu:{' '}
+                {board.prestige.sponsorLabel}. Prestiż nie działa na boisku.
+              </p>
+            </div>
+          </Panel>
+        </div>
+      ) : null}
 
       {board.seasonReview ? (
         <div className="mt-3">

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { boardTaskReward } from '@/lib/board/tasks';
 import { ECONOMY_THIN, type MatchRewardOutcome } from '@/lib/finance/types';
 import { resolveFixtureReward } from '@/lib/finance/resolve-match-reward';
 import { LEAGUE_TIERS_ASC, type LeagueTier } from '@/lib/league/league-tier';
@@ -65,6 +66,18 @@ describe('season projection (GDD §26.8)', () => {
     expect(seasonResult(CHAMPION)).toBeLessThanOrEqual(110_000);
     expect(seasonResult(BOTTOM)).toBeGreaterThanOrEqual(-70_000);
     expect(seasonResult(BOTTOM)).toBeLessThanOrEqual(-35_000);
+  });
+
+  it('adds about 10 000 EUR of board tasks for a mid-table club, and more on higher rungs', () => {
+    // About two of four tasks: measured in board/tasks.test.ts.
+    const withTasks = seasonResult(MID) + 2 * boardTaskReward('iv');
+    expect(withTasks - seasonResult(MID)).toBe(10_000);
+    expect(withTasks).toBeLessThanOrEqual(10_000);
+    expect(LEAGUE_TIERS_ASC.map((tier) => 2 * boardTaskReward(tier))).toEqual([
+      10_000, 11_000, 12_000, 13_000,
+    ]);
+    // All four tasks every season still leave a bottom club short.
+    expect(seasonResult(BOTTOM) + 4 * boardTaskReward('iv')).toBeLessThan(-30_000);
   });
 
   it('keeps starter cash alive for a bottom club through one season, not two', () => {

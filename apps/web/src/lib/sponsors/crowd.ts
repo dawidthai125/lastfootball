@@ -23,6 +23,16 @@ const CROWD_MULT: Record<AttendanceBand, number> = {
   unknown: 1,
 };
 
+/** Prestige of a new IV-league club, where the sponsor pays the plain quote. */
+export const PRESTIGE_START = 10;
+const PRESTIGE_SPONSOR_MAX = 0.1;
+
+/** Prestige part of the renewal quote: 0 up to the starter value, 0.10 at 100. */
+export function prestigeSponsorShare(prestige: number): number {
+  const step = (prestige - PRESTIGE_START) / (100 - PRESTIGE_START);
+  return PRESTIGE_SPONSOR_MAX * Math.min(1, Math.max(0, Number.isFinite(step) ? step : 0));
+}
+
 function roundTo500(amount: number): number {
   return Math.round(amount / 500) * 500;
 }
@@ -55,14 +65,17 @@ export function rewardForLeagueRung(amount: number, tier: string): number {
 export function sponsorFromCrowd(input: {
   readonly attendance: AttendanceBand;
   readonly leagueTier: LeagueRung;
+  /** 0..100. Absent means no prestige effect. */
+  readonly prestige?: number | null;
 }): { readonly base: number; readonly bonus: number } {
   const tierMult = rungMultiplier(input.leagueTier);
   const crowdMult = crowdMultiplier(input.attendance);
-  // One bad factor drops the whole quote to iv + steady. Do not throw.
+  // One bad crowd or rung factor drops the whole quote to iv + steady. Do not throw.
   const tier = tierMult == null || crowdMult == null ? 1 : tierMult;
   const crowd = tierMult == null || crowdMult == null ? 1 : crowdMult;
+  const prestige = 1 + prestigeSponsorShare(input.prestige ?? PRESTIGE_START);
   return {
-    base: roundTo500(ECONOMY_THIN.SPONSOR_BASE * tier * crowd),
-    bonus: roundTo500(ECONOMY_THIN.SPONSOR_BONUS * tier * crowd),
+    base: roundTo500(ECONOMY_THIN.SPONSOR_BASE * tier * crowd * prestige),
+    bonus: roundTo500(ECONOMY_THIN.SPONSOR_BONUS * tier * crowd * prestige),
   };
 }

@@ -24,6 +24,8 @@ export const ECONOMY_THIN = {
   /** LFE-SPONSORS-01 Thin (GDD-SPONSORS-01 · D95–D101). */
   SPONSOR_BASE: 15_000,
   SPONSOR_BONUS: 10_000,
+  /** One board task at the IV-league rung (D131). Higher rungs scale like match rewards. */
+  BOARD_TASK_REWARD: 5_000,
   /** Shared transfer-fee coefficients — consumed only by deriveTransferFee (D20). */
   TRANSFER_FEE: {
     SKILL_MULT: 2_000,
@@ -46,7 +48,8 @@ export type FinanceMovementCategory =
   | 'scout_report'
   | 'ticket_income'
   | 'stadium_build'
-  | 'coach_hire';
+  | 'coach_hire'
+  | 'board_task';
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

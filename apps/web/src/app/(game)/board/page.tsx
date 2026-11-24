@@ -5,12 +5,13 @@ import { getManagerClub } from '@/lib/club/get-manager-club';
 import { countPlayedInList, ensureClubFixtures } from '@/lib/fixtures';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
 import { resolveClubBoard } from '@/lib/board';
+import { loadBoardState } from '@/lib/board/load-board-state';
 import { resolveDeparturePreview, resolveSeasonReport } from '@/lib/season';
 import { listClubPlayers } from '@/lib/squad/get-players';
 
 /**
  * Board — fed only by resolveClubBoard() (LFE-BOARD-01 · D102).
- * Information Thin — no Server Actions / no persist (D103).
+ * Prestige and tasks: D131. The only action lives in BoardTasksPanel.
  */
 export default async function BoardPage() {
   const club = await getManagerClub();
@@ -38,6 +39,7 @@ export default async function BoardPage() {
       )
     : null;
 
+  const records = await loadBoardState(club, fixtures);
   const board = resolveClubBoard({
     seasonPhase: club.seasonPhase,
     seasonNumber: club.seasonNumber,
@@ -46,6 +48,8 @@ export default async function BoardPage() {
     playedCount: countPlayedInList(fixtures.filter((f) => f.competition === 'league')),
     seasonReport,
     departureNote: departure?.retire ? departure.summary : null,
+    prestige: records?.prestige ?? null,
+    tasks: records?.tasks ?? null,
   });
 
   return <BoardView board={board} />;

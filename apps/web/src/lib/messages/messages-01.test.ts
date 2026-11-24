@@ -30,6 +30,19 @@ describe('resolveClubMessages (LFE-MESSAGES-01)', () => {
     });
   });
 
+  it('board task note → board info → /board', () => {
+    const dto = resolveClubMessages({
+      transferWindowOpen: false,
+      incomingOffers: [],
+      incomingLiveOffers: [],
+      outgoingLiveOffers: [],
+      boardTaskNote: 'Zadanie zarządu wykonane.',
+    });
+    expect(dto.items).toMatchObject([
+      { id: 'msg:board-task', priority: 'info', href: '/board', fromLabel: 'Zarząd' },
+    ]);
+  });
+
   it('wage note → board info → /finance', () => {
     const dto = resolveClubMessages({
       transferWindowOpen: false,
