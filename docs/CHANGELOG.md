@@ -28,6 +28,17 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-23] — Głębia meczu (D129)
+
+### Product
+
+- Forma i morale zawodników działają w meczu: najwyżej ±6% do ataku i do skuteczności. Zwykły zawodnik i rywal bez zapisanego morale są neutralni.
+- Sędzia, pogoda i liczba widzów wynikają z meczu, a nie ze stałego tekstu. Przedmecz i mecz na żywo pokazują to samo; widzów nigdy nie jest więcej niż miejsc.
+- Puchar: wyniki AI liczy ten sam model siły co tabela ligi. Klub z wyższej ligi jest wyraźnym faworytem.
+- Nowe kluby zaczynają z najlepszym zawodnikiem każdej pozycji w jedenastce. Istniejące kluby bez zmian.
+
+---
+
 ## [2026-11-23] — Wynik i kasa po stronie serwera (D127)
 
 ### Product

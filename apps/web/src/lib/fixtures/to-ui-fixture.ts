@@ -6,6 +6,7 @@ import { stadiumLook, stadiumSeatLabel } from '@/lib/stadium/levels';
 import type { Fixture, LiveMatchBundle, PreMatchBundle } from '@/data/fixtures';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { cupRoundForMatchday, cupRoundLabel } from '@/lib/cup/matchdays';
+import { resolveMatchFacts } from '@/lib/fixtures/match-facts';
 import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { leagueTierGenitive, resolveLeagueTierLabel } from '@/lib/league/league-tier';
 import {
@@ -128,6 +129,15 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
   };
 }
 
+function matchGround(dto: FixtureDto): { stands: number; pitch: number } {
+  const cupRound = dto.competition === 'cup' ? cupRoundForMatchday(dto.matchday) : null;
+  if (cupRound === 4) return { stands: 0, pitch: 0 };
+  return {
+    stands: dto.homeStandsLevel ?? 0,
+    pitch: dto.homePitchLevel ?? 0,
+  };
+}
+
 /** Average stored energy of the XI — the same number the engine starts from. */
 function teamCondition(xi: readonly RosterPlayerSeed[]): { label: string; value: number } {
   const value =
@@ -150,14 +160,16 @@ export function buildLeaguePreMatchBundle(
       ? orderForFormation(theirXi, '4-4-2')
       : seedOpponentSquad(dto.opponentClubId, club.leagueTier);
 
+  const facts = resolveMatchFacts(dto, matchGround(dto).stands);
+
   return {
     fixture,
-    weather: 'Pochmurnie',
+    weather: facts.weather,
     weatherDetail: preMatchWeatherDetail(dto.competition, leagueTierGenitive(club.leagueTier)),
     weatherNote: preMatchWeatherNote(dto.competition),
-    temperature: '14°C',
-    attendance: dto.isHome ? '2 400' : '1 800',
-    referee: 'Piotr Malinowski',
+    temperature: facts.temperature,
+    attendance: facts.attendance,
+    referee: facts.referee,
     countdown: 'Gotowy',
     ourTeam: {
       name: club.name,
@@ -239,26 +251,18 @@ export function buildLeaguePreMatchBundle(
   };
 }
 
-function liveGround(dto: FixtureDto): { stands: number; pitch: number } {
-  const cupRound = dto.competition === 'cup' ? cupRoundForMatchday(dto.matchday) : null;
-  if (cupRound === 4) return { stands: 0, pitch: 0 };
-  return {
-    stands: dto.homeStandsLevel ?? 0,
-    pitch: dto.homePitchLevel ?? 0,
-  };
-}
-
 export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatchBundle {
   const fixture = toUiFixture(dto, club);
-  const ground = liveGround(dto);
+  const ground = matchGround(dto);
+  const facts = resolveMatchFacts(dto, ground.stands);
   return {
     fixture,
     clock: '00:00',
     period: 'Kick-off',
     homeScore: 0,
     awayScore: 0,
-    viewers: '—',
-    weather: '14°C · pochmurnie',
+    viewers: facts.attendance,
+    weather: facts.weatherLine,
     stadiumCapacity: stadiumSeatLabel(ground.stands),
     groundStands: ground.stands,
     groundPitch: ground.pitch,

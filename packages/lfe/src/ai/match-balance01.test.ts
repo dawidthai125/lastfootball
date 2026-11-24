@@ -9,9 +9,11 @@ import {
   createPlayer,
   decideAction,
   decidePossession,
+  DEFAULT_PLAYER_CONDITION,
   formationAggressiveness,
 } from '../testing';
 
+import { MATCH_BALANCE } from './decide';
 import type { MatchAiContext, MatchAiSideContext } from './types';
 
 /** Web plays 90 display minutes at 20 ticks each. */
@@ -20,6 +22,7 @@ const TICKS_PER_MINUTE = 20;
 type Side = {
   readonly skill: number;
   readonly freshness?: number;
+  readonly morale?: number;
   readonly mentality?: number;
   readonly formation?: string;
   readonly tempo?: number;
@@ -40,6 +43,7 @@ function sideContext(side: 'home' | 'away', s: Side): MatchAiSideContext {
     },
     strength: s.skill / 100,
     freshness: s.freshness ?? 1,
+    morale: s.morale ?? DEFAULT_PLAYER_CONDITION.morale,
     goalsFor: 0,
     goalsAgainst: 0,
     scoreDiff: 0,
@@ -115,6 +119,40 @@ describe('MATCH-BALANCE-01', { timeout: 60_000 }, () => {
     const fresh = sample({ skill: 60 }, { skill: 60 });
     const tired = sample({ skill: 60, freshness: 0.4 }, { skill: 60 });
     expect(tired.home).toBeLessThan(fresh.home * 0.9);
+  });
+
+  it('morale moves attack and finishing by at most 6%, neutral at the default', () => {
+    const decide = (morale: number, theirs = DEFAULT_PLAYER_CONDITION.morale) =>
+      decideAction(
+        {
+          phase: 'FIRST_HALF',
+          displayMinute: 10,
+          home: sideContext('home', { skill: 50, morale }),
+          away: sideContext('away', { skill: 50, morale: theirs }),
+        } as MatchAiContext,
+        'home',
+      );
+    const neutral = decide(DEFAULT_PLAYER_CONDITION.morale);
+    expect(neutral.goalChance).toBe(MATCH_BALANCE.GOAL);
+    for (const [morale, scale] of [
+      [100, 1.06],
+      [40, 0.94],
+      [0, 0.94],
+    ] as const) {
+      expect(decide(morale).attackChance / neutral.attackChance).toBeCloseTo(scale, 6);
+      expect(decide(morale).goalChance / neutral.goalChance).toBeCloseTo(scale, 6);
+    }
+    expect(decide(DEFAULT_PLAYER_CONDITION.morale, 0)).toEqual(neutral);
+  });
+
+  it('a confident team wins a little more, a broken one a little less', () => {
+    const base = sample({ skill: 50 }, { skill: 50 });
+    const high = sample({ skill: 50, morale: 100 }, { skill: 50 });
+    const low = sample({ skill: 50, morale: 40 }, { skill: 50 });
+    expect(high.home).toBeGreaterThan(base.home);
+    expect(low.home).toBeLessThan(base.home);
+    expect(high.wins - low.wins).toBeGreaterThan(0.04);
+    expect(high.wins - low.wins).toBeLessThan(0.16);
   });
 
   it('no mentality or formation wins for free', () => {

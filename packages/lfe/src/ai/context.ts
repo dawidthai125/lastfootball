@@ -1,5 +1,5 @@
 import type { MatchState, PitchSide, Player } from '../match/domain';
-import { tacticsOwnedBy } from '../match/domain';
+import { DEFAULT_PLAYER_CONDITION, tacticsOwnedBy } from '../match/domain';
 
 import type { MatchAiContext, MatchAiSideContext } from './types';
 
@@ -48,6 +48,11 @@ function teamFreshness(players: readonly Player[]): number {
   return clamp01(sum / players.length);
 }
 
+function teamMorale(players: readonly Player[]): number {
+  if (players.length === 0) return DEFAULT_PLAYER_CONDITION.morale;
+  return players.reduce((sum, p) => sum + p.condition.morale, 0) / players.length;
+}
+
 function tacticsForSide(state: MatchState, side: PitchSide) {
   return tacticsOwnedBy(state, side);
 }
@@ -68,6 +73,7 @@ function buildSide(state: MatchState, side: PitchSide): MatchAiSideContext {
     tactics,
     strength: teamStrength(players),
     freshness: teamFreshness(players),
+    morale: teamMorale(players),
     goalsFor,
     goalsAgainst,
     scoreDiff: goalsFor - goalsAgainst,

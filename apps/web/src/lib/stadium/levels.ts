@@ -179,11 +179,19 @@ export function trainingSessionCap(centerLevel: number): number {
   return valueAt(TRAINING_SESSION_CAP, centerLevel);
 }
 
+/** Seat capacity of the ground. Level 0 is the starter stadium. */
+export function stadiumSeats(standsLevel: number): number {
+  return valueAt(STANDS_SEATS, standsLevel);
+}
+
+/** "4 200" */
+export function formatSeats(seats: number): string {
+  return String(seats).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
 /** "4 200 miejsc" at level 0, then the bigger grounds. */
 export function stadiumSeatLabel(standsLevel: number): string {
-  const seats = valueAt(STANDS_SEATS, standsLevel);
-  const text = String(seats).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  return `${text} miejsc`;
+  return `${formatSeats(stadiumSeats(standsLevel))} miejsc`;
 }
 
 /** Pixels the live picture keeps outside the grass for the stands. */

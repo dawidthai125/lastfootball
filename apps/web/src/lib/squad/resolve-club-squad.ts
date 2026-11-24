@@ -179,6 +179,7 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     groups: r.groups,
     energy: r.energy,
     form: r.form,
+    morale: r.morale,
   }));
   if (xi.length !== 11) {
     throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
@@ -206,6 +207,7 @@ export function resolveMatchBench(rows: readonly PlayerRowDto[]): readonly Roste
       groups: row.groups,
       energy: row.energy,
       form: row.form,
+      morale: row.morale,
     }));
 }
 

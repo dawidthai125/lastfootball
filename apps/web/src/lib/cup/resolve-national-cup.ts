@@ -1,9 +1,16 @@
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import type { LeagueTier } from '@/lib/league/league-tier';
 import { resolveLeagueMembers } from '@/lib/league/league-members';
+import {
+  aiTableStrength,
+  expectedGoals,
+  scoreFromStrength,
+} from '@/lib/league/simulate-ai-results';
+import { hashSeed, unitHash } from '@/lib/match/hash-seed';
 import { formatSeasonLabel } from '@/lib/season/types';
 
-import { cupGuestOriginLabel, cupGuestsForTier } from '@/lib/cup/cup-guests';
+import { cupGuestOriginLabel, cupGuestsForTier, cupOpponentTier } from '@/lib/cup/cup-guests';
 import {
   CUP_ROUND_AFTER_LEAGUE,
   cupMatchdayForRound,
@@ -43,6 +50,18 @@ const LEAGUE_SLOTS = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15] as const;
 
 type BuiltTie = CupTieDto;
 
+/** A club from a higher tier is the favourite even when its band overlaps the league's best. */
+const HIGHER_TIER_MIN_GAP = 6;
+
+type CupWorld = {
+  readonly seasonNumber: number;
+  readonly tier: LeagueTier;
+  /** Played results of the manager, by round. */
+  readonly stored: ReadonlyMap<CupRoundIndex, StoredCup>;
+  /** Clubs the manager already drew, by round. They did win their earlier ties. */
+  readonly drawn: ReadonlyMap<CupRoundIndex, string>;
+};
+
 /**
  * National cup bracket for the current season.
  * AI ties that do not need the player get a decisive score (no draw).
@@ -60,7 +79,12 @@ export function resolveNationalCup(
   const playedLeagueMatchdays = countPlayedLeagueMatchdays(fixtures);
   const editionOpen = playedLeagueMatchdays >= CUP_UNLOCK_AFTER_MATCHDAY;
   const rounds = editionOpen
-    ? drawRounds(field, `${club.id}|${seasonNumber}`, storedCupResults(fixtures))
+    ? drawRounds(field, `${club.id}|${seasonNumber}`, {
+        seasonNumber,
+        tier: club.leagueTier,
+        stored: storedCupResults(fixtures),
+        drawn: drawnCupOpponents(fixtures),
+      })
     : [];
 
   return {
@@ -121,6 +145,16 @@ function storedCupResults(fixtures: readonly FixtureDto[]): ReadonlyMap<CupRound
   return out;
 }
 
+function drawnCupOpponents(fixtures: readonly FixtureDto[]): ReadonlyMap<CupRoundIndex, string> {
+  const out = new Map<CupRoundIndex, string>();
+  for (const f of fixtures) {
+    if (f.competition !== 'cup') continue;
+    const round = cupRoundForMatchday(f.matchday);
+    if (round) out.set(round, f.opponentClubId);
+  }
+  return out;
+}
+
 function findPlayerTie(
   rounds: readonly CupRoundDto[],
   playedLeagueMatchdays: number,
@@ -149,7 +183,7 @@ function findPlayerTie(
 function drawRounds(
   field: readonly CupClub[],
   seedKey: string,
-  stored: ReadonlyMap<CupRoundIndex, StoredCup>,
+  world: CupWorld,
 ): readonly CupRoundDto[] {
   const seed = `cup-draw-v1|${seedKey}`;
   let entrants: CupSide[] = drawSlots(field, seed).map((club) => ({ kind: 'club', club }));
@@ -159,7 +193,7 @@ function drawRounds(
     const ties: BuiltTie[] = [];
     const next: CupSide[] = [];
     for (let i = 0; i < entrants.length; i += 2) {
-      const tie = makeTie(round, i / 2, entrants[i]!, entrants[i + 1]!, seed, stored.get(round));
+      const tie = makeTie(round, i / 2, entrants[i]!, entrants[i + 1]!, seed, world);
       ties.push(tie);
       next.push(advance(tie));
     }
@@ -195,9 +229,9 @@ function makeTie(
   left: CupSide,
   right: CupSide,
   seed: string,
-  stored: StoredCup | undefined,
+  world: CupWorld,
 ): BuiltTie {
-  const played = resolveTie(round, left, right, seed, stored);
+  const played = resolveTie(round, left, right, seed, world);
   const onPlayerPath = sideOnPath(played.home) || sideOnPath(played.away);
   return {
     id: `r${round}-${index}`,
@@ -233,14 +267,14 @@ function resolveTie(
   left: CupSide,
   right: CupSide,
   seed: string,
-  stored: StoredCup | undefined,
+  world: CupWorld,
 ): Omit<BuiltTie, 'id' | 'onPlayerPath'> {
   if (left.kind === 'club' && right.kind === 'club') {
     const ordered = orderSides(left.club, right.club, seed, round);
     const home: CupSide = { kind: 'club', club: ordered.home };
     const away: CupSide = { kind: 'club', club: ordered.away };
     if (left.club.isPlayer || right.club.isPlayer) {
-      const played = applyStoredPlayerResult(ordered.home, ordered.away, stored);
+      const played = applyStoredPlayerResult(ordered.home, ordered.away, world.stored.get(round));
       if (played) {
         return {
           home,
@@ -262,7 +296,7 @@ function resolveTie(
         decidedBy: null,
       };
     }
-    const score = decisiveScore(ordered.home.id, ordered.away.id, round);
+    const score = decisiveScore(ordered.home.id, ordered.away.id, round, world);
     const winnerId = score.home > score.away ? ordered.home.id : ordered.away.id;
     return {
       home,
@@ -313,19 +347,44 @@ function orderSides(
   return { home, away, venue: 'club', hostClubId: home.id };
 }
 
-/** Knockout has no draws. A level score is broken and marked as extra time. */
+/** Strength of home minus away. Guests play at their own tier. */
+function strengthGap(homeId: string, awayId: string, tier: LeagueTier): number {
+  const homeTier = cupOpponentTier(homeId, tier);
+  const awayTier = cupOpponentTier(awayId, tier);
+  const gap = aiTableStrength(homeId, homeTier) - aiTableStrength(awayId, awayTier);
+  if (homeTier === awayTier) return gap;
+  // Two tiers meet only as league club vs guest, and a guest tier is never the lower one.
+  return homeTier === tier
+    ? Math.min(gap, -HIGHER_TIER_MIN_GAP)
+    : Math.max(gap, HIGHER_TIER_MIN_GAP);
+}
+
+/**
+ * Same model as the league table. Knockout has no draws: a level score is broken by
+ * strength and marked as extra time. A club the manager already drew keeps its win.
+ */
 function decisiveScore(
   homeId: string,
   awayId: string,
   round: CupRoundIndex,
+  world: CupWorld,
 ): { home: number; away: number; decidedBy: CupDecidedBy } {
-  const h = hashSeed(`${homeId}|${awayId}|cup-v1|r${round}`);
-  let home = h % 4;
-  let away = Math.floor(h / 4) % 4;
-  if (home !== away) return { home, away, decidedBy: 'regulation' };
-  if ((h >>> 8) & 1) home += 1;
-  else away += 1;
-  return { home, away, decidedBy: 'extra' };
+  const gap = strengthGap(homeId, awayId, world.tier);
+  const neutral = round === 4;
+  const seed = `${homeId}|${awayId}|s${world.seasonNumber}|cup-v2|r${round}`;
+  const score = scoreFromStrength({ gap, seed, neutral });
+  let home = score.homeScore;
+  let away = score.awayScore;
+  let decidedBy: CupDecidedBy = 'regulation';
+  if (home === away) {
+    const goals = expectedGoals(gap, neutral);
+    if (unitHash(`${seed}|extra`) < goals.home / (goals.home + goals.away)) home += 1;
+    else away += 1;
+    decidedBy = 'extra';
+  }
+  const loserId = home > away ? awayId : homeId;
+  const loserWasDrawnLater = [...world.drawn].some(([r, id]) => r > round && id === loserId);
+  return loserWasDrawnLater ? { home: away, away: home, decidedBy } : { home, away, decidedBy };
 }
 
 function advance(tie: BuiltTie): CupSide {
@@ -351,13 +410,4 @@ function shuffle<T>(items: readonly T[], seed: string): T[] {
     arr[j] = tmp;
   }
   return arr;
-}
-
-function hashSeed(id: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < id.length; i += 1) {
-    h ^= id.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
 }

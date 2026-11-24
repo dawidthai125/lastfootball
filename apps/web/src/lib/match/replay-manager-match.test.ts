@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { createPauseMatchCommand, createResumeMatchCommand } from '@lastfootball/lfe';
+import {
+  createPauseMatchCommand,
+  createResumeMatchCommand,
+  DEFAULT_PLAYER_CONDITION,
+} from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
-import { createSessionFromLeagueFixture } from '@/lib/fixtures/create-session';
+import { createSessionFromLeagueFixture, teamSpiritFromSeed } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import {
   MANAGER_LOG_MAX,
@@ -128,5 +132,16 @@ describe('parseManagerLog', () => {
     ]) {
       expect(parseManagerLog(bad), bad.slice(0, 40)).toBeNull();
     }
+  });
+});
+
+describe('team spirit seed', () => {
+  it('is neutral for an ordinary player and without stored morale', () => {
+    const neutral = DEFAULT_PLAYER_CONDITION.morale;
+    expect(teamSpiritFromSeed({ form: 65, morale: 60 })).toBe(neutral);
+    expect(teamSpiritFromSeed({ form: 95 })).toBe(neutral);
+    expect(teamSpiritFromSeed({ form: 75, morale: 100 })).toBe(neutral + 25);
+    expect(teamSpiritFromSeed({ form: 55, morale: 10 })).toBe(neutral - 30);
+    expect(teamSpiritFromSeed({ form: 20, morale: 0 })).toBe(18);
   });
 });

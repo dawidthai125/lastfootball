@@ -7,7 +7,7 @@
 
 import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
 import type { LeagueTier } from '@/lib/league/league-tier';
-import { hashSeed } from '@/lib/match/hash-seed';
+import { unitHash } from '@/lib/match/hash-seed';
 import { seedOpponentSquad } from '@/lib/squad/seed-roster';
 
 export type AiMatchResult = {
@@ -57,12 +57,32 @@ function scorePair(
   awayId: string,
   ctx: AiSeasonContext,
 ): { homeScore: number; awayScore: number } {
-  const gap = aiTableStrength(homeId, ctx.tier) - aiTableStrength(awayId, ctx.tier);
+  return scoreFromStrength({
+    gap: aiTableStrength(homeId, ctx.tier) - aiTableStrength(awayId, ctx.tier),
+    seed: `${homeId}|${awayId}|s${ctx.seasonNumber}|ai-v3`,
+  });
+}
+
+/** Expected goals: home strength minus away strength moves both sides. */
+export function expectedGoals(gap: number, neutral = false): { home: number; away: number } {
   const edge = Math.exp(STRENGTH_WEIGHT * gap);
-  const seed = `${homeId}|${awayId}|s${ctx.seasonNumber}|ai-v3`;
+  const level = (BASE_HOME_GOALS + BASE_AWAY_GOALS) / 2;
   return {
-    homeScore: poissonGoals(BASE_HOME_GOALS * edge, unitHash(`${seed}|home`)),
-    awayScore: poissonGoals(BASE_AWAY_GOALS / edge, unitHash(`${seed}|away`)),
+    home: (neutral ? level : BASE_HOME_GOALS) * edge,
+    away: (neutral ? level : BASE_AWAY_GOALS) / edge,
+  };
+}
+
+/** Sole AI↔AI score model (league and cup). Same seed → same score. */
+export function scoreFromStrength(input: {
+  readonly gap: number;
+  readonly seed: string;
+  readonly neutral?: boolean;
+}): { homeScore: number; awayScore: number } {
+  const goals = expectedGoals(input.gap, input.neutral);
+  return {
+    homeScore: poissonGoals(goals.home, unitHash(`${input.seed}|home`)),
+    awayScore: poissonGoals(goals.away, unitHash(`${input.seed}|away`)),
   };
 }
 
@@ -93,14 +113,6 @@ function poissonGoals(lambda: number, u: number): number {
     cumulative += p;
   }
   return goals;
-}
-
-/** FNV alone barely moves the high bits for similar keys, so finish with a full mix. */
-function unitHash(key: string): number {
-  let h = hashSeed(key);
-  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
-  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
-  return ((h ^ (h >>> 16)) >>> 0) / 2 ** 32;
 }
 
 type Pair = { homeId: string; awayId: string };

@@ -4,6 +4,7 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
 import { CUP_UNLOCK_AFTER_MATCHDAY, resolveNationalCup } from '@/lib/cup';
 import type { CupTieDto } from '@/lib/cup';
+import { aiTableStrength } from '@/lib/league/simulate-ai-results';
 
 const club = {
   id: 'club-aaa',
@@ -172,6 +173,71 @@ describe('resolveNationalCup', () => {
     expect(lost.playerTie).toBeNull();
     expect(lost.rounds.flatMap((r) => [...r.ties]).every((t) => t.status === 'played')).toBe(true);
     expect(lost.rounds[0]?.ties.some((t) => t.winnerId === tie.opponentId)).toBe(true);
+  });
+
+  it('makes the stronger and the higher-tier club the favourite', () => {
+    const tally = { guestTies: 0, guestWins: 0, strongTies: 0, strongWins: 0, extra: 0, ties: 0 };
+    for (let seasonNumber = 1; seasonNumber <= 60; seasonNumber += 1) {
+      for (const tie of ties(resolveNationalCup({ ...club, seasonNumber }, played(8)))) {
+        if (tie.status !== 'played' || tie.home.kind !== 'club' || tie.away.kind !== 'club') {
+          continue;
+        }
+        tally.ties += 1;
+        if (tie.decidedBy === 'extra') {
+          tally.extra += 1;
+          expect(Math.abs(tie.homeScore! - tie.awayScore!)).toBe(1);
+        }
+        const [home, away] = [tie.home.club, tie.away.club];
+        if (home.origin !== away.origin) {
+          tally.guestTies += 1;
+          const guest = home.origin === 'guest' ? home : away;
+          if (tie.winnerId === guest.id) tally.guestWins += 1;
+        } else if (home.origin === 'league') {
+          const gap = aiTableStrength(home.id, 'iv') - aiTableStrength(away.id, 'iv');
+          if (Math.abs(gap) < 3) continue;
+          tally.strongTies += 1;
+          if (tie.winnerId === (gap > 0 ? home.id : away.id)) tally.strongWins += 1;
+        }
+      }
+    }
+    expect(tally.guestTies).toBeGreaterThan(100);
+    expect(tally.guestWins / tally.guestTies).toBeGreaterThan(0.75);
+    expect(tally.guestWins).toBeLessThan(tally.guestTies);
+    expect(tally.strongWins / tally.strongTies).toBeGreaterThan(0.6);
+    expect(tally.extra / tally.ties).toBeGreaterThan(0.1);
+    expect(tally.extra / tally.ties).toBeLessThan(0.3);
+  });
+
+  it('keeps an opponent the manager already drew, whatever the new scores say', () => {
+    for (const base of [1, 2, 3, 4, 5, 6]) {
+      const season = { ...club, seasonNumber: base };
+      const open = resolveNationalCup(season, played(8));
+      const first = open.playerTie!;
+      const cupRow = (
+        matchday: number,
+        opponentClubId: string,
+        isHome: boolean,
+        status: 'played' | 'scheduled',
+      ): FixtureDto => ({
+        ...played(1)[0]!,
+        id: `cup-${matchday}`,
+        matchday,
+        competition: 'cup',
+        opponentClubId,
+        isHome,
+        status,
+        homeScore: status === 'played' ? (isHome ? 2 : 0) : null,
+        awayScore: status === 'played' ? (isHome ? 0 : 2) : null,
+      });
+      const won = cupRow(first.matchday, first.opponentId, first.isHome, 'played');
+      const next = resolveNationalCup(season, [...played(8), won]).playerTie!;
+      const feeder = open.rounds[0]!.ties.find((t) => t.winnerId === next.opponentId)!;
+      if (feeder.home.kind !== 'club' || feeder.away.kind !== 'club') throw new Error('feeder');
+      const loser = feeder.home.club.id === next.opponentId ? feeder.away.club : feeder.home.club;
+      const stored = cupRow(next.matchday, loser.id, true, 'scheduled');
+      const kept = resolveNationalCup(season, [...played(12), won, stored]);
+      expect(kept.playerTie?.opponentId).toBe(loser.id);
+    }
   });
 
   it('ignores a played row that has no score', () => {

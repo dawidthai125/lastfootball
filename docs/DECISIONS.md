@@ -775,9 +775,15 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `lf_guard_players` przepuszcza z sesji gracza tylko `starter`, `captain`, `set_piece`, `shirt_number`. Resztę pisze `serverDb(session)` po sprawdzeniu właściciela i zawsze z filtrem `club_id`. `apply_match_development` i `complete_training_session` wykonuje tylko service role. `finance_movements` i `transfer_deals` = tylko serwer. Odpoczynek: `players.energy_on` stempluje trigger, `restedEnergy` to czysty derive (5 / dzień).  
 **OUT:** oferty transferowe i aukcje (własne funkcje SQL z kontrolą kwot).
 
+### D129 — Głębia meczu: morale, fakty meczowe, puchar, start kadry · Owner GO 2026-11-23
+
+**Dlaczego:** Morale nie działało w silniku, sędzia/pogoda/frekwencja były stałym tekstem, puchar AI losował wyniki bez siły, a ławka nowego klubu była lepsza od jedenastki.  
+**Zasada:** Duch zawodnika = `70 + ((forma − 65) + (morale − 60)) / 2` (`teamSpiritFromSeed`), bez morale = 70 = `DEFAULT_PLAYER_CONDITION`. Silnik: ±6% ataku i gola przy ±30 pkt (`MATCH_BALANCE.MORALE_*`). Wszystko z tych samych seedów co `authoritativeManagerScore` (D127). Fakty meczowe = pure derive z fixture (`resolveMatchFacts`), bez wpływu na silnik i bez zapisu; liczbowa frekwencja ≤ miejsca zastępuje tu D113. Puchar AI↔AI = `scoreFromStrength` (seed: sezon + runda), min. 6 pkt przewagi klubu z wyższej ligi; rywal już wylosowany przez menedżera zachowuje awans. `buildStarterPlayerInserts` tylko permutuje skill w pozycji.  
+**OUT:** odpoczynek między kolejkami (energia) · migracje · istniejące kluby.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D128 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D129 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
