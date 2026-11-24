@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
+import { LiveMatchShell } from '@/components/match/LiveMatchShell';
 import { EmptyState, LocationHero } from '@/components/ui';
 import { readClubBuild } from '@/lib/club/read-build';
 import { isFirstMatchCompleted } from '@/lib/club/types';
@@ -97,7 +98,9 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
 
   const dto = await getFixtureByIdForClub(club.id, id);
   if (!dto) notFound();
-  if (dto.status === 'played') redirect('/hub');
+  if (dto.status === 'played') {
+    return <LiveMatchShell playedHref={`/match/${id}`}>{null}</LiveMatchShell>;
+  }
   if (dto.status !== 'upcoming') redirect('/hub');
 
   try {
@@ -122,17 +125,19 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
           ? (moodRow.data as { fan_mood: number }).fan_mood
           : 60;
     return (
-      <LiveMatchFoundation
-        bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
-        club={club}
-        leagueFixture={human?.fixture ?? dto}
-        ourXi={ourXi}
-        ourBench={ourBench}
-        ourFormation={ourFormation}
-        theirXi={human?.theirXi ?? rival?.xi ?? null}
-        developmentNames={developmentNames}
-        fanMoodBefore={fanMoodBefore}
-      />
+      <LiveMatchShell playedHref={`/match/${id}`}>
+        <LiveMatchFoundation
+          bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
+          club={club}
+          leagueFixture={human?.fixture ?? dto}
+          ourXi={ourXi}
+          ourBench={ourBench}
+          ourFormation={ourFormation}
+          theirXi={human?.theirXi ?? rival?.xi ?? null}
+          developmentNames={developmentNames}
+          fanMoodBefore={fanMoodBefore}
+        />
+      </LiveMatchShell>
     );
   } catch (e) {
     if (e instanceof SquadUnavailableError) {
