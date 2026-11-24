@@ -5,12 +5,19 @@
 
 import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
-import { kickoffDate, nextHumanRound, warsawHour } from '@/lib/league/human-league';
+import {
+  HUMAN_ROUND_COUNT,
+  kickoffDate,
+  KICKOFF_OPEN_HOUR,
+  warsawHour,
+} from '@/lib/league/human-league';
 import type {
   NotificationChannel,
   NotificationKind,
   NotificationPrefs,
 } from '@/lib/notifications/types';
+import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
@@ -29,6 +36,9 @@ export const NOTIFY_RULES = {
   /** A counter has no own timestamp, so the offer it belongs to is the bound. */
   counterFreshMs: 14 * DAY_MS,
   challengeFreshMs: DAY_MS,
+  /** A club behind in the human league cannot catch up by itself, so it hears about it rarely. */
+  overdueEveryMs: 7 * DAY_MS,
+  maxTtlSeconds: 3 * 60 * 60,
 } as const;
 
 export type PlannerOffer = {
@@ -37,6 +47,18 @@ export type PlannerOffer = {
   readonly status: string;
   readonly phase: string;
   readonly createdAt: string;
+  readonly playerId: string;
+  readonly sellerClubId: string;
+  readonly buyerClubId: string;
+  readonly amount: number;
+  /** The player as he is now. Null when he is not on the market. */
+  readonly player: {
+    readonly clubId: string;
+    readonly listed: boolean;
+    readonly departed: boolean;
+    readonly skill: number;
+    readonly age: number;
+  } | null;
 };
 
 export type PlannerChallenge = {
@@ -104,8 +126,9 @@ function isMatchdayWindow(now: Date): boolean {
 
 function within(iso: string | null, now: Date, ms: number): boolean {
   if (!iso) return false;
-  const at = Date.parse(iso);
-  return Number.isFinite(at) && now.getTime() - at <= ms;
+  const age = now.getTime() - Date.parse(iso);
+  // A time in the future is not news, it is a wrong or forged row. NaN fails both checks.
+  return age >= 0 && age <= ms;
 }
 
 function matchdayRef(user: PlannerUser, now: Date): string | null {
@@ -120,24 +143,54 @@ function matchdayRef(user: PlannerUser, now: Date): string | null {
   return blocked ? null : warsawDateKey(now);
 }
 
-function humanRef(user: PlannerUser, now: Date): string | null {
-  if (!user.human || !isHumanWindow(now) || user.matchesBlocked) return null;
-  const round = nextHumanRound({
-    seasonKey: user.human.seasonKey,
-    playedRounds: user.human.playedRounds,
-    now,
-    playedHumanToday: user.human.playedToday,
-  });
-  if (!round) return null;
-  // A club that is behind catches up any time: today's shared kickoff is not its match.
-  const today = warsawDateKey(now);
-  return kickoffDate(user.human.seasonKey, round) === today ? today : null;
+const OVERDUE_REF = 'overdue:';
+
+export function isOverdueRef(ref: string): boolean {
+  return ref.startsWith(OVERDUE_REF);
 }
 
+/**
+ * The 18:00 reminder belongs to the round of today. A club with an older unplayed round plays that
+ * one first, so it hears "you have an overdue round" instead, at most once in seven days.
+ */
+function humanRef(user: PlannerUser, now: Date, rows: readonly PlannerLogRow[]): string | null {
+  const { human } = user;
+  if (!human || !isHumanWindow(now) || user.matchesBlocked || human.playedToday) return null;
+  const today = warsawDateKey(now);
+  const played = new Set(human.playedRounds);
+  let behind = false;
+  for (let round = 1; round <= HUMAN_ROUND_COUNT; round += 1) {
+    if (played.has(round)) continue;
+    const date = kickoffDate(human.seasonKey, round);
+    if (date > today) break;
+    if (date === today && !behind) return today;
+    behind = true;
+  }
+  if (!behind || !within(user.lastActiveAt, now, NOTIFY_RULES.activeMs)) return null;
+  const told = rows.some(
+    (row) =>
+      row.kind === 'human_round' &&
+      isOverdueRef(row.ref) &&
+      now.getTime() - Date.parse(row.sentAt) < NOTIFY_RULES.overdueEveryMs,
+  );
+  return told ? null : `${OVERDUE_REF}${today}`;
+}
+
+/** The seller can still close this deal. The same checks as the settlement itself. */
+function isRealOffer(offer: PlannerOffer): boolean {
+  const { player } = offer;
+  if (!player || !player.listed || player.departed) return false;
+  if (player.clubId !== offer.sellerClubId || offer.sellerClubId === offer.buyerClubId) {
+    return false;
+  }
+  return isAllowedAgreedAmount(deriveTransferFee(player.skill, player.age), offer.amount);
+}
+
+/** One matter = one player and one buyer, however many rows stand behind it. */
 function offerRefs(user: PlannerUser, now: Date): string[] {
-  return user.offers
+  const refs = user.offers
     .filter((offer) => {
-      if (offer.status !== 'pending') return false;
+      if (offer.status !== 'pending' || !isRealOffer(offer)) return false;
       if (offer.side === 'seller') {
         return offer.phase === 'opening' && within(offer.createdAt, now, NOTIFY_RULES.offerFreshMs);
       }
@@ -145,8 +198,8 @@ function offerRefs(user: PlannerUser, now: Date): string[] {
         offer.phase === 'countered' && within(offer.createdAt, now, NOTIFY_RULES.counterFreshMs)
       );
     })
-    .map((offer) => `${offer.id}:${offer.phase}`)
-    .sort();
+    .map((offer) => `${offer.playerId}:${offer.buyerClubId}`);
+  return [...new Set(refs)].sort();
 }
 
 function challengeRefs(user: PlannerUser, now: Date): string[] {
@@ -158,17 +211,28 @@ function challengeRefs(user: PlannerUser, now: Date): string[] {
     .sort();
 }
 
+/** Seconds until the given Warsaw hour today. The clock never changes between 08:00 and 22:00. */
+function secondsToHour(now: Date, hour: number): number {
+  return (hour - warsawHour(now)) * 3600 - now.getUTCMinutes() * 60 - now.getUTCSeconds();
+}
+
+/** How long a push service may hold the message: never into the quiet hours or past its matter. */
+export function pushTtlSeconds(kind: NotificationKind, ref: string, now: Date): number {
+  let end: number = NOTIFY_RULES.quietFromHour;
+  if (kind === 'matchday') end = NOTIFY_RULES.matchdayToHour;
+  if (kind === 'human_round' && !isOverdueRef(ref)) end = KICKOFF_OPEN_HOUR;
+  return Math.max(0, Math.min(NOTIFY_RULES.maxTtlSeconds, secondsToHour(now, end)));
+}
+
 /** In order of urgency. At most one of a kind per run, so a busy day never floods a phone. */
 export function planNotifications(user: PlannerUser, now: Date): PlannedNotification[] {
   if (isQuietHour(now) || !user.firstMatchDone) return [];
 
+  const { kinds } = user.prefs;
   const single = (ref: string | null) => (ref ? [ref] : []);
-  const candidates: readonly (readonly [NotificationKind, readonly string[]])[] = [
-    ['human_round', user.prefs.kinds.human_round ? single(humanRef(user, now)) : []],
-    ['offer', user.prefs.kinds.offer ? offerRefs(user, now) : []],
-    ['matchday', user.prefs.kinds.matchday ? single(matchdayRef(user, now)) : []],
-    ['challenge', user.prefs.kinds.challenge ? challengeRefs(user, now) : []],
-  ];
+  const offers = kinds.offer ? offerRefs(user, now) : [];
+  const matchday = kinds.matchday ? single(matchdayRef(user, now)) : [];
+  const challenges = kinds.challenge ? challengeRefs(user, now) : [];
 
   const channels: NotificationChannel[] = [];
   if (user.prefs.push && user.canPush) channels.push('push');
@@ -179,6 +243,12 @@ export function planNotifications(user: PlannerUser, now: Date): PlannedNotifica
   for (const channel of channels) {
     const rows = user.log.filter((row) => row.channel === channel && row.kind !== 'test');
     const sent = new Set(rows.map((row) => `${row.kind}|${row.ref}`));
+    const candidates: readonly (readonly [NotificationKind, readonly string[]])[] = [
+      ['human_round', kinds.human_round ? single(humanRef(user, now, rows)) : []],
+      ['offer', offers],
+      ['matchday', matchday],
+      ['challenge', challenges],
+    ];
     let left =
       NOTIFY_RULES.maxPerDay -
       rows.filter((row) => warsawDateKey(new Date(row.sentAt)) === today).length;

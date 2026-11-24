@@ -17,25 +17,31 @@ export type PushDevice = {
   readonly failureCount: number;
 };
 
-/** gone: the browser dropped it. refused: bad key or payload. busy: outage. unknown: no answer. */
+/**
+ * gone: the browser dropped it. refused: this device's subscription is bad.
+ * busy: our key, a limit or an outage, nothing about the device. unknown: no answer.
+ */
 export type DeviceOutcome = 'accepted' | 'gone' | 'refused' | 'busy' | 'unknown';
+
+/** Client errors that are about the sender or the moment, not about the device. */
+const NOT_THE_DEVICE = new Set([401, 403, 408, 429]);
 
 /** Push services look at who sends. A site address, not a person's mailbox. */
 const VAPID_SUBJECT = 'https://www.lastfootball.pl';
 const TIMEOUT_MS = 7_000;
-const TTL_SECONDS = 3 * 60 * 60;
 export const MAX_PUSH_FAILURES = 5;
 
 export function outcomeFromStatus(status: unknown): DeviceOutcome {
   if (status === 404 || status === 410) return 'gone';
   if (typeof status !== 'number') return 'unknown';
-  return status === 429 || status >= 500 ? 'busy' : 'refused';
+  return status >= 400 && status < 500 && !NOT_THE_DEVICE.has(status) ? 'refused' : 'busy';
 }
 
 async function sendToDevice(
   device: PushDevice,
   payload: PushPayload,
   vapid: VapidKeys,
+  ttlSeconds: number,
 ): Promise<DeviceOutcome> {
   // A row from before a rule change must not be called either.
   if (!isPushEndpoint(device.endpoint)) return 'gone';
@@ -46,7 +52,7 @@ async function sendToDevice(
       JSON.stringify(payload),
       {
         vapidDetails: { subject: VAPID_SUBJECT, ...vapid },
-        TTL: TTL_SECONDS,
+        TTL: ttlSeconds,
         topic: payload.tag,
         timeout: TIMEOUT_MS,
       },
@@ -91,7 +97,7 @@ export async function listPushDevices(
   return devices;
 }
 
-/** 404 and 410 remove the device, and so do five failures in a row. */
+/** 404 and 410 remove the device, and so do five refusals of it in a row. */
 async function recordOutcome(admin: Admin, device: PushDevice, outcome: DeviceOutcome) {
   if (outcome === 'accepted') {
     if (device.failureCount > 0) {
@@ -99,8 +105,7 @@ async function recordOutcome(admin: Admin, device: PushDevice, outcome: DeviceOu
     }
     return;
   }
-  // An outage of the push service says nothing about the device.
-  if (outcome === 'busy') return;
+  if (outcome === 'busy' || outcome === 'unknown') return;
   const failures = device.failureCount + 1;
   if (outcome === 'gone' || failures >= MAX_PUSH_FAILURES) {
     await admin.from('push_subscriptions').delete().eq('id', device.id);
@@ -122,11 +127,12 @@ export async function sendPushToDevices(
   devices: readonly PushDevice[],
   payload: PushPayload,
   vapid: VapidKeys,
+  ttlSeconds: number,
 ): Promise<PushResult> {
   return combineOutcomes(
     await Promise.all(
       devices.map(async (device) => {
-        const outcome = await sendToDevice(device, payload, vapid);
+        const outcome = await sendToDevice(device, payload, vapid, ttlSeconds);
         await recordOutcome(admin, device, outcome);
         return outcome;
       }),

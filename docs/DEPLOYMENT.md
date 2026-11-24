@@ -44,7 +44,8 @@ Never put service-role keys in `NEXT_PUBLIC_*`.
 
 - Push nie wymaga zmiennych: serwer sam tworzy klucze VAPID w `server_secrets`.
 - E-mail: konto Resend, zweryfikowana domena nadawcy (DNS: SPF, DKIM, zalecany DMARC), potem `RESEND_API_KEY` i `NOTIFY_FROM`, np. `Last Football <powiadomienia@lastfootball.pl>`. Bez obu kanał jest wyłączony.
-- Harmonogram: migracja `20261124151000_notify_schedule.sql` (`pg_cron` + `pg_net`) woła `https://www.lastfootball.pl/api/notify` co 30 minut tokenem `notify_token` z bazy.
+- Harmonogram: migracja `20261124151000_notify_schedule.sql` (`pg_cron` + `pg_net`) co 30 minut woła adres z `server_secrets` tokenem `notify_token`. Bez wiersza `notify_url` nic nie robi. Tylko na produkcji:
+  `insert into public.server_secrets (name, value) values ('notify_url', 'https://www.lastfootball.pl/api/notify') on conflict (name) do update set value = excluded.value;`
 - Wyłączenie: `select cron.unschedule('lf-notify');`.
 
 ### Cache

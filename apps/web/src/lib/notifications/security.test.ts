@@ -4,15 +4,17 @@ import path from 'node:path';
 import { generateVAPIDKeys } from 'web-push';
 import { describe, expect, it, vi } from 'vitest';
 
+import { emailHash, emailTokenPart, isProvenEmail, tokenProvesEmail } from '@/lib/auth/email-proof';
 import { emailLetter, pushPayload } from '@/lib/notifications/content';
-import { emailProvider, sendEmail } from '@/lib/notifications/email';
+import { createEmailSender, emailProvider, retryAfterMs } from '@/lib/notifications/email';
 import { bearerToken, isSchedulerRequest, sameSecret } from '@/lib/notifications/notify-token';
+import { forgetPushDevice } from '@/lib/notifications/devices';
 import { combineOutcomes, outcomeFromStatus } from '@/lib/notifications/push';
 import { isPushEndpoint, parsePushDevice } from '@/lib/notifications/push-endpoint';
 import { ensureSecret, loadVapidKeys, parseVapid } from '@/lib/notifications/server-secrets';
 import { loadNotificationSettings } from '@/lib/notifications/settings';
 import { createNotifyDeps } from '@/lib/notifications/store';
-import { NOTIFICATION_KINDS } from '@/lib/notifications/types';
+import { changedPrefs, NOTIFICATION_KINDS, NO_KINDS } from '@/lib/notifications/types';
 import {
   hashUnsubscribeToken,
   isUnsubscribeToken,
@@ -23,6 +25,14 @@ import {
 const SRC = path.resolve(__dirname, '../..');
 const ROOT = path.resolve(SRC, '../../..');
 const TOKEN = 'a'.repeat(64);
+
+function sourceFiles(dir: string): string[] {
+  return readdirSync(dir).flatMap((name) => {
+    const file = path.join(dir, name);
+    if (statSync(file).isDirectory()) return sourceFiles(file);
+    return /\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name) ? [file] : [];
+  });
+}
 
 describe('scheduler token', () => {
   const stored = async () => TOKEN;
@@ -106,8 +116,11 @@ describe('push outcomes', () => {
   it('drops a gone device and forgives an outage', () => {
     expect(outcomeFromStatus(404)).toBe('gone');
     expect(outcomeFromStatus(410)).toBe('gone');
-    expect(outcomeFromStatus(403)).toBe('refused');
-    expect(outcomeFromStatus(503)).toBe('busy');
+    expect(outcomeFromStatus(400)).toBe('refused');
+    // Our key, a limit or an outage: never counted against the device.
+    for (const status of [401, 403, 408, 429, 500, 503]) {
+      expect(outcomeFromStatus(status)).toBe('busy');
+    }
     expect(outcomeFromStatus(undefined)).toBe('unknown');
   });
 
@@ -153,7 +166,7 @@ describe('unsubscribe', () => {
     expect(await unsubscribeByToken(token, admin)).toBe('ok');
     expect(calls).toEqual([
       {
-        values: { email_enabled: false },
+        values: { email_enabled: false, updated_at: expect.any(String) },
         column: 'unsubscribe_token_hash',
         value: hashUnsubscribeToken(token),
       },
@@ -185,6 +198,7 @@ describe('letters and payloads', () => {
   it('escapes names and keeps them on one line', () => {
     const letter = emailLetter({
       kind: 'offer',
+      ref: 'p:b',
       clubName: '<b>"A&B"</b>\r\nBcc: x@y.z',
       origin: 'https://www.lastfootball.pl',
       unsubscribeUrl: 'https://www.lastfootball.pl/api/notify/unsubscribe?t=abc',
@@ -198,7 +212,7 @@ describe('letters and payloads', () => {
 
   it('keeps push small and impersonal, with a same-origin path', () => {
     for (const kind of NOTIFICATION_KINDS) {
-      const payload = pushPayload(kind);
+      const payload = pushPayload(kind, 'x');
       expect(Object.keys(payload).sort()).toEqual(['body', 'path', 'tag', 'title']);
       expect(payload.path).toMatch(/^\/[a-z]+$/);
       expect(payload.tag).toMatch(/^[A-Za-z0-9_-]{1,32}$/);
@@ -206,29 +220,142 @@ describe('letters and payloads', () => {
     }
   });
 
-  it('sends both one-click headers and stops on limits', async () => {
-    const letter = { subject: 's', text: 't', html: 'h' };
-    const provider = { apiKey: 'key', from: 'a@b.c' };
-    const input = {
-      to: 'x@y.z',
-      letter,
-      unsubscribeUrl: 'https://e.x/u?t=1',
-      idempotencyKey: 'k',
-    };
-    const reply = (status: number) =>
-      vi.fn(async () => new Response('{}', { status })) as unknown as typeof fetch;
-    const ok = reply(200);
-    expect(await sendEmail(provider, input, ok)).toBe('sent');
-    const body = JSON.parse((vi.mocked(ok).mock.calls[0]![1] as { body: string }).body) as {
-      headers: Record<string, string>;
-    };
-    expect(body.headers).toEqual({
+  it('an overdue round does not talk about 18:00', () => {
+    expect(pushPayload('human_round', '2026-11-24').title).toContain('18:00');
+    expect(JSON.stringify(pushPayload('human_round', 'overdue:2026-11-24'))).not.toContain('18:00');
+  });
+
+  const input = {
+    to: 'x@y.z',
+    letter: { subject: 's', text: 't', html: 'h' },
+    unsubscribeUrl: 'https://e.x/u?t=1',
+    idempotencyKey: 'k',
+  };
+
+  function sender(replies: readonly (Response | Error)[]) {
+    const queue = [...replies];
+    const calls: { at: number; body: { headers: Record<string, string> } }[] = [];
+    let time = 0;
+    const send = createEmailSender(
+      { apiKey: 'key', from: 'a@b.c' },
+      {
+        now: () => time,
+        sleep: async (ms) => {
+          time += ms;
+        },
+        fetch: (async (_url: unknown, init: { body: string }) => {
+          calls.push({ at: time, body: JSON.parse(init.body) });
+          const reply = queue.shift() ?? new Response('{}');
+          if (reply instanceof Error) throw reply;
+          return reply;
+        }) as unknown as typeof fetch,
+      },
+    );
+    return { send, calls };
+  }
+
+  const reply = (status: number, name = '', headers: Record<string, string> = {}) =>
+    new Response(JSON.stringify({ name }), { status, headers });
+
+  it('sends both one-click headers, never faster than two a second', async () => {
+    const { send, calls } = sender([]);
+    for (let i = 0; i < 3; i += 1) expect(await send(input)).toBe('sent');
+    expect(calls.map((call) => call.at)).toEqual([0, 500, 1000]);
+    expect(calls[0]!.body.headers).toEqual({
       'List-Unsubscribe': '<https://e.x/u?t=1>',
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
     });
-    expect(await sendEmail(provider, input, reply(422))).toBe('rejected');
-    expect(await sendEmail(provider, input, reply(429))).toBe('stop');
-    expect(await sendEmail(provider, input, reply(403))).toBe('stop');
+  });
+
+  it('honours Retry-After once', async () => {
+    const limited = () => reply(429, 'rate_limit_exceeded', { 'retry-after': '2' });
+    const once = sender([limited()]);
+    expect(await once.send(input)).toBe('sent');
+    expect(once.calls.map((call) => call.at)).toEqual([0, 2000]);
+    const twice = sender([limited(), limited()]);
+    expect(await twice.send(input)).toBe('retry');
+    expect(twice.calls).toHaveLength(2);
+    expect(retryAfterMs('3600')).toBeNull();
+    expect(retryAfterMs('Wed, 21 Oct 2026 07:28:00 GMT')).toBeNull();
+  });
+
+  it('stops only for a bad key or a used-up quota', async () => {
+    const result = async (answer: Response | Error) => sender([answer]).send(input);
+    expect(await result(new Error('timeout'))).toBe('retry');
+    expect(await result(reply(503))).toBe('retry');
+    expect(await result(reply(409, 'concurrent_idempotent_requests'))).toBe('retry');
+    expect(await result(reply(422))).toBe('rejected');
+    expect(await result(reply(401))).toBe('stop');
+    expect(await result(reply(403))).toBe('stop');
+    expect(await result(reply(429, 'daily_quota_exceeded', { 'retry-after': '1' }))).toBe('stop');
+  });
+});
+
+describe('proven address', () => {
+  it('needs a stored hash of the current address', () => {
+    expect(isProvenEmail(emailHash('A@b.c '), 'a@B.c')).toBe(true);
+    expect(isProvenEmail(emailHash('a@b.c'), 'other@b.c')).toBe(false);
+    expect(isProvenEmail(null, 'a@b.c')).toBe(false);
+    expect(isProvenEmail(emailHash('a@b.c'), null)).toBe(false);
+  });
+
+  it('binds the link to the address it was sent to', () => {
+    const token = 'r'.repeat(43) + emailTokenPart('a@b.c');
+    expect(token).toMatch(/^[A-Za-z0-9_-]{20,80}$/);
+    expect(tokenProvesEmail(token, 'a@b.c')).toBe(true);
+    expect(tokenProvesEmail(token, 'victim@b.c')).toBe(false);
+    expect(tokenProvesEmail('r'.repeat(43), 'a@b.c')).toBe(false);
+    expect(tokenProvesEmail(token, null)).toBe(false);
+  });
+});
+
+describe('older settings tab', () => {
+  const before = { push: true, email: true, kinds: { ...NO_KINDS, offer: true } };
+
+  it('sends only what was changed in it', () => {
+    expect(changedPrefs(before, before)).toEqual({});
+    const kinds = { ...before.kinds, matchday: true };
+    expect(changedPrefs(before, { email: true, kinds })).toEqual({ kinds: { matchday: true } });
+    expect(changedPrefs(before, { email: false, kinds: before.kinds })).toEqual({ email: false });
+  });
+});
+
+describe('signing out', () => {
+  it('removes this device of this manager and turns push off with the last one', async () => {
+    const steps: string[] = [];
+    const chain = (name: string, answer: unknown) => {
+      const self: Record<string, unknown> = {
+        then: (resolve: (value: unknown) => unknown) => Promise.resolve(answer).then(resolve),
+      };
+      self.eq = (column: string, value: string) => {
+        steps.push(`${name} ${column}=${value}`);
+        return self;
+      };
+      self.select = () => self;
+      return self;
+    };
+    const admin = {
+      from: () => ({
+        delete: () => chain('delete', { data: [{ id: '1' }], error: null }),
+        select: () => chain('count', { count: 0, error: null }),
+        update: (values: { push_enabled: boolean }) =>
+          chain(`push=${values.push_enabled}`, { error: null }),
+      }),
+    } as unknown as Parameters<typeof forgetPushDevice>[2];
+    expect(await forgetPushDevice('u1', 'https://x', admin)).toBe(true);
+    expect(steps).toEqual([
+      'delete user_id=u1',
+      'delete endpoint=https://x',
+      'count user_id=u1',
+      'push=false user_id=u1',
+    ]);
+    expect(await forgetPushDevice('u1', 'https://x', null)).toBe(false);
+  });
+
+  it('every sign-out form takes the device along', () => {
+    for (const file of sourceFiles(SRC)) {
+      expect(readFileSync(file, 'utf8'), file).not.toContain('action={signOut}');
+    }
   });
 });
 
@@ -307,6 +434,8 @@ describe('secrets stay on the server', () => {
   const SERVER_ONLY = [
     'lib/notifications/server-secrets',
     'lib/notifications/push',
+    'lib/notifications/devices',
+    'lib/auth/email-proof',
     'lib/notifications/email',
     'lib/notifications/store',
     'lib/notifications/settings',
@@ -314,14 +443,6 @@ describe('secrets stay on the server', () => {
     'lib/notifications/notify-token',
     'lib/supabase/admin',
   ];
-
-  function sourceFiles(dir: string): string[] {
-    return readdirSync(dir).flatMap((name) => {
-      const file = path.join(dir, name);
-      if (statSync(file).isDirectory()) return sourceFiles(file);
-      return /\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name) ? [file] : [];
-    });
-  }
 
   function resolveImport(from: string, spec: string): string | null {
     const base = spec.startsWith('@/')
@@ -339,7 +460,10 @@ describe('secrets stay on the server', () => {
   const isServerAction = (code: string) => /^\s*['"]use server['"]/.test(code);
 
   it('no client component reaches a server module or web-push', () => {
-    const queue = [path.join(SRC, 'components/notifications/NotificationSettingsPanel.tsx')];
+    const queue = [
+      path.join(SRC, 'components/notifications/NotificationSettingsPanel.tsx'),
+      path.join(SRC, 'components/auth/SignOutForm.tsx'),
+    ];
     const seen = new Set<string>();
     while (queue.length > 0) {
       const file = queue.pop()!;
@@ -395,6 +519,22 @@ describe('secrets stay on the server', () => {
     }
     expect(sql).not.toMatch(/to (anon|authenticated)/);
     expect(sql).not.toMatch(/create policy/i);
+  });
+
+  it('the schedule names no address and does nothing without the URL row', () => {
+    const sql = read(path.join(ROOT, 'supabase/migrations/20261124151000_notify_schedule.sql'));
+    expect(sql).not.toMatch(/https:\/\/[a-z]/);
+    expect(sql).toContain("u.name = 'notify_url'");
+    expect(sql).not.toMatch(/insert into/i);
+  });
+
+  it('the offer guard checks sessions only and cannot be called by one', () => {
+    const sql = read(
+      path.join(ROOT, 'supabase/migrations/20261124152000_guard_transfer_offers.sql'),
+    );
+    expect(sql).toContain("when (current_user in ('authenticated', 'anon'))");
+    expect(sql).toContain('new.created_at := now()');
+    expect(sql).toMatch(/revoke all on function public\.lf_guard_transfer_offer\(\) from public/);
   });
 
   it('the worker and the scheduler skip the session middleware', () => {

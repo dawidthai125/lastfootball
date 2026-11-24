@@ -719,6 +719,8 @@ export type Database = {
           kind_challenge: boolean;
           unsubscribe_token_hash: string | null;
           updated_at: string;
+          chosen_at: string;
+          last_processed_at: string | null;
         };
         Insert: {
           user_id: string;
@@ -730,6 +732,8 @@ export type Database = {
           kind_challenge?: boolean;
           unsubscribe_token_hash?: string | null;
           updated_at?: string;
+          chosen_at?: string;
+          last_processed_at?: string | null;
         };
         Update: {
           user_id?: string;
@@ -741,6 +745,8 @@ export type Database = {
           kind_challenge?: boolean;
           unsubscribe_token_hash?: string | null;
           updated_at?: string;
+          chosen_at?: string;
+          last_processed_at?: string | null;
         };
         Relationships: [];
       };
@@ -830,6 +836,7 @@ export type Database = {
           sends_today: number;
           sends_day: string | null;
           bonus_at: string | null;
+          confirmed_email_hash: string | null;
         };
         Insert: {
           user_id: string;
@@ -841,6 +848,7 @@ export type Database = {
           sends_today?: number;
           sends_day?: string | null;
           bonus_at?: string | null;
+          confirmed_email_hash?: string | null;
         };
         Update: {
           user_id?: string;
@@ -852,6 +860,7 @@ export type Database = {
           sends_today?: number;
           sends_day?: string | null;
           bonus_at?: string | null;
+          confirmed_email_hash?: string | null;
         };
         Relationships: [];
       };

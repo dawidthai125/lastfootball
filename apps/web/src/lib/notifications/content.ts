@@ -1,5 +1,6 @@
 /** Copy for both channels. Push carries no names, amounts or ids. */
 
+import { isOverdueRef } from '@/lib/notifications/planner';
 import type { NotificationKind } from '@/lib/notifications/types';
 
 type Copy = { readonly title: string; readonly body: string; readonly path: string };
@@ -27,6 +28,16 @@ const COPY: Readonly<Record<NotificationKind, Copy>> = {
   },
 };
 
+const OVERDUE_ROUND: Copy = {
+  title: 'Liga ludzi: zaległa kolejka',
+  body: 'Masz zaległą kolejkę. Możesz ją rozegrać, kiedy chcesz.',
+  path: '/league',
+};
+
+function copyFor(kind: NotificationKind, ref: string): Copy {
+  return kind === 'human_round' && isOverdueRef(ref) ? OVERDUE_ROUND : COPY[kind];
+}
+
 export type PushPayload = {
   readonly title: string;
   readonly body: string;
@@ -34,8 +45,8 @@ export type PushPayload = {
   readonly tag: string;
 };
 
-export function pushPayload(kind: NotificationKind): PushPayload {
-  return { ...COPY[kind], tag: `lf-${kind}` };
+export function pushPayload(kind: NotificationKind, ref: string): PushPayload {
+  return { ...copyFor(kind, ref), tag: `lf-${kind}` };
 }
 
 export const TEST_PUSH_PAYLOAD: PushPayload = {
@@ -70,11 +81,12 @@ export type EmailLetter = {
 
 export function emailLetter(input: {
   readonly kind: NotificationKind;
+  readonly ref: string;
   readonly clubName: string;
   readonly origin: string;
   readonly unsubscribeUrl: string;
 }): EmailLetter {
-  const copy = COPY[input.kind];
+  const copy = copyFor(input.kind, input.ref);
   const club = oneLine(input.clubName) || 'Twój klub';
   const link = `${input.origin}${copy.path}`;
   const settings = `${input.origin}/settings`;

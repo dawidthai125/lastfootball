@@ -1,5 +1,6 @@
 /** Server only. What the settings page shows; null hides the whole section. */
 
+import { isProvenEmail } from '@/lib/auth/email-proof';
 import { emailProvider } from '@/lib/notifications/email';
 import { loadVapidKeys } from '@/lib/notifications/server-secrets';
 import {
@@ -36,12 +37,18 @@ export async function readPrefs(admin: Admin, userId: string): Promise<Notificat
 
 export async function emailChannelState(admin: Admin, userId: string): Promise<EmailChannelState> {
   if (!emailProvider()) return 'soon';
-  const { data, error } = await admin
-    .from('manager_email_status')
-    .select('confirmed_at')
-    .eq('user_id', userId)
-    .maybeSingle();
-  return !error && data?.confirmed_at ? 'ready' : 'unconfirmed';
+  const [status, account] = await Promise.all([
+    admin
+      .from('manager_email_status')
+      .select('confirmed_at, confirmed_email_hash')
+      .eq('user_id', userId)
+      .maybeSingle(),
+    admin.auth.admin.getUserById(userId),
+  ]);
+  if (status.error || account.error || !status.data?.confirmed_at) return 'unconfirmed';
+  return isProvenEmail(status.data.confirmed_email_hash, account.data.user.email)
+    ? 'ready'
+    : 'unconfirmed';
 }
 
 /** Callers pass the signed-in user. */

@@ -24,7 +24,7 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 - Ustawienia → Powiadomienia: push na urządzeniu, e-mail i cztery rodzaje (mecz ligowy, liga ludzi, oferta, wyzwanie). Wszystko domyślnie wyłączone.
 - Cisza 22:00–8:00, najwyżej dwa dziennie na kanał, jedno na sprawę. Wypisanie z e-maili jednym kliknięciem.
-- Migracje `20261124150000_notifications.sql` i `20261124151000_notify_schedule.sql` (`pg_cron` co 30 min). E-mail czeka na `RESEND_API_KEY` i `NOTIFY_FROM`.
+- Migracje `20261124150000_notifications.sql`, `20261124151000_notify_schedule.sql` (`pg_cron` co 30 min) i `20261124152000_guard_transfer_offers.sql` (sprawdzone oferty, najwyżej 10 otwartych na klub). E-mail czeka na `RESEND_API_KEY` i `NOTIFY_FROM`.
 
 ---
 

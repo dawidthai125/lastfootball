@@ -16,30 +16,32 @@ begin
 end;
 $$;
 
--- The token is read at run time, so it is not part of the stored job text.
+-- Token and URL are read at run time, so neither is part of the stored job text. Without the
+-- 'notify_url' row the job does nothing: a copy of the database never calls production.
 select cron.schedule(
   'lf-notify',
   '*/30 * * * *',
   $job$
     select net.http_post(
-      url := 'https://www.lastfootball.pl/api/notify',
+      url := u.value,
       body := '{}'::jsonb,
       headers := jsonb_build_object(
         'content-type', 'application/json',
-        'authorization', 'Bearer ' || s.value
+        'authorization', 'Bearer ' || t.value
       ),
       timeout_milliseconds := 60000
     )
-    from public.server_secrets s
-    where s.name = 'notify_token';
+    from public.server_secrets t
+    join public.server_secrets u on u.name = 'notify_url' and u.value like 'https://%'
+    where t.name = 'notify_token';
   $job$
 );
 
--- Planned items are at most 14 days old, so 60 days of log keep the dedup whole.
+-- Planned items are at most 14 days old. The app reads the whole log that is kept here.
 select cron.schedule(
   'lf-notify-log-cleanup',
   '40 3 * * *',
   $job$
-    delete from public.notification_log where sent_at < now() - interval '60 days';
+    delete from public.notification_log where sent_at < now() - interval '30 days';
   $job$
 );

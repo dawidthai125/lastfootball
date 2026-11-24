@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
 
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
+import { SignOutForm } from '@/components/auth/SignOutForm';
 import { NotificationSettingsPanel } from '@/components/notifications/NotificationSettingsPanel';
 import { Button } from '@/components/ui/Button';
 import { Panel } from '@/components/ui/Panel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { signOut } from '@/lib/auth/actions';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { loadNotificationSettings } from '@/lib/notifications/settings';
@@ -31,11 +31,11 @@ export default async function SettingsPage() {
         ) : (
           <EmailConfirmSlot userId={club.ownerId} variant="game" />
         )}
-        <form action={signOut}>
+        <SignOutForm>
           <Button type="submit" variant="danger">
             Wyloguj
           </Button>
-        </form>
+        </SignOutForm>
       </Panel>
       <Panel title="Powiadomienia" className="mt-3">
         {notifications ? (

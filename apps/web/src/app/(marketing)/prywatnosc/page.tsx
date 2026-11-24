@@ -17,7 +17,7 @@ export default function PrivacyPage() {
       </p>
       <p>
         Powiadomienia są dobrowolne i domyślnie wyłączone. Po włączeniu zapisujemy wybór, adres
-        powiadomień przeglądarki i historię wysyłek (60 dni). E-maile wysyła dostawca poczty na
+        powiadomień przeglądarki i historię wysyłek (30 dni). E-maile wysyła dostawca poczty na
         potwierdzony adres. Wyłączysz je w ustawieniach gry lub linkiem w e-mailu.
       </p>
       <LandingCta href="/" variant="primary">

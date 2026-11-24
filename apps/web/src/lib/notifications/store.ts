@@ -4,14 +4,17 @@ import { createHash } from 'node:crypto';
 
 import { env } from '@/config/env';
 import { emailGate } from '@/lib/auth/email-confirm-policy';
+import { isProvenEmail } from '@/lib/auth/email-proof';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { humanRoundFromFixture } from '@/lib/league/human-league';
 import { emailLetter, pushPayload } from '@/lib/notifications/content';
-import { emailProvider, sendEmail } from '@/lib/notifications/email';
+import { createEmailSender, emailProvider } from '@/lib/notifications/email';
 import {
   isHumanWindow,
   NOTIFY_RULES,
+  pushTtlSeconds,
   type PlannedNotification,
+  type PlannerOffer,
   type PlannerUser,
 } from '@/lib/notifications/planner';
 import { listPushDevices, sendPushToDevices, type PushDevice } from '@/lib/notifications/push';
@@ -24,7 +27,9 @@ type Admin = NonNullable<ReturnType<typeof tryAdminClient>>;
 
 const PAGE_SIZE = 50;
 const ROWS = 1000;
-const MAX_ROW_PAGES = 5;
+const MAX_ROW_PAGES = 8;
+/** The cleanup job keeps 30 days: everything the unique key knows, the planner knows too. */
+const LOG_DAYS = 32;
 
 export const APP_ORIGIN = 'https://www.lastfootball.pl';
 
@@ -112,29 +117,79 @@ async function loadHumanFacts(
 type PageContext = {
   readonly devices: Map<string, PushDevice[]>;
   readonly clubNames: Map<string, string>;
+  readonly emailHashes: Map<string, string>;
 };
 
-async function loadPage(
+type PrefsRow = {
+  user_id: string;
+  push_enabled: boolean;
+  email_enabled: boolean;
+  kind_matchday: boolean;
+  kind_human_round: boolean;
+  kind_offer: boolean;
+  kind_challenge: boolean;
+  chosen_at: string;
+};
+
+/** Longest waiting first, and nobody twice in one run. */
+async function nextPrefs(admin: Admin, now: Date): Promise<PrefsRow[] | null> {
+  const { data, error } = await admin
+    .from('notification_prefs')
+    .select(
+      'user_id, push_enabled, email_enabled, kind_matchday, kind_human_round, kind_offer, kind_challenge, chosen_at',
+    )
+    .or('push_enabled.eq.true,email_enabled.eq.true')
+    .or(`last_processed_at.is.null,last_processed_at.lt.${now.toISOString()}`)
+    .order('last_processed_at', { ascending: true, nullsFirst: true })
+    .order('user_id', { ascending: true })
+    .limit(PAGE_SIZE);
+  return error ? null : data;
+}
+
+/** The market as it is, read by club: player ids on offers are typed by players and not trusted. */
+async function loadMarket(
+  admin: Admin,
+  clubIds: readonly string[],
+): Promise<Map<string, NonNullable<PlannerOffer['player']>>> {
+  const market = new Map<string, NonNullable<PlannerOffer['player']>>();
+  for (let start = 0; start < clubIds.length; start += PAGE_SIZE) {
+    const rows = await allRows<{
+      id: string;
+      club_id: string;
+      transfer_listed_at: string | null;
+      departed_at: string | null;
+      skill: number;
+      age: number;
+    }>((from, to) =>
+      admin
+        .from('players')
+        .select('id, club_id, transfer_listed_at, departed_at, skill, age')
+        .in('club_id', clubIds.slice(start, start + PAGE_SIZE))
+        .not('transfer_listed_at', 'is', null)
+        .is('departed_at', null)
+        .order('id')
+        .range(from, to),
+    );
+    for (const row of rows) {
+      market.set(row.id, {
+        clubId: row.club_id,
+        listed: row.transfer_listed_at !== null,
+        departed: row.departed_at !== null,
+        skill: row.skill,
+        age: row.age,
+      });
+    }
+  }
+  return market;
+}
+
+async function loadUsers(
   admin: Admin,
   context: PageContext,
   channels: { readonly push: boolean; readonly email: boolean },
-  after: string | null,
+  prefs: readonly PrefsRow[],
   now: Date,
-): Promise<NotifyPage> {
-  let query = admin
-    .from('notification_prefs')
-    .select(
-      'user_id, push_enabled, email_enabled, kind_matchday, kind_human_round, kind_offer, kind_challenge, updated_at',
-    )
-    .or('push_enabled.eq.true,email_enabled.eq.true')
-    .order('user_id', { ascending: true })
-    .limit(PAGE_SIZE);
-  if (after) query = query.gt('user_id', after);
-  const prefsResult = await query;
-  if (prefsResult.error) throw new Error('notify read failed');
-  const prefs = prefsResult.data;
-  const next = prefs.length === PAGE_SIZE ? prefs[prefs.length - 1]!.user_id : null;
-  if (prefs.length === 0) return { users: [], next };
+): Promise<PlannerUser[]> {
   const userIds = prefs.map((row) => row.user_id);
 
   const clubs = await allRows<{
@@ -152,7 +207,7 @@ async function loadPage(
       .order('id')
       .range(from, to),
   );
-  if (clubs.length === 0) return { users: [], next };
+  if (clubs.length === 0) return [];
   const clubIds = clubs.map((club) => club.id);
   const since = (ms: number) => new Date(now.getTime() - ms).toISOString();
 
@@ -182,22 +237,28 @@ async function loadPage(
       allRows<OfferRow>((from, to) =>
         admin
           .from('transfer_offers')
-          .select('id, seller_club_id, buyer_club_id, status, phase, created_at')
+          .select(
+            'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
+          )
           .in('seller_club_id', clubIds)
           .eq('status', 'pending')
           .eq('phase', 'opening')
           .gte('created_at', since(NOTIFY_RULES.offerFreshMs))
+          .lte('created_at', now.toISOString())
           .order('id')
           .range(from, to),
       ),
       allRows<OfferRow>((from, to) =>
         admin
           .from('transfer_offers')
-          .select('id, seller_club_id, buyer_club_id, status, phase, created_at')
+          .select(
+            'id, player_id, seller_club_id, buyer_club_id, current_amount, status, phase, created_at',
+          )
           .in('buyer_club_id', clubIds)
           .eq('status', 'pending')
           .eq('phase', 'countered')
           .gte('created_at', since(NOTIFY_RULES.counterFreshMs))
+          .lte('created_at', now.toISOString())
           .order('id')
           .range(from, to),
       ),
@@ -219,7 +280,7 @@ async function loadPage(
             .select('user_id, kind, ref, channel, sent_at')
             .in('user_id', userIds)
             .neq('kind', 'test')
-            .gte('sent_at', since(NOTIFY_RULES.counterFreshMs + 24 * 60 * 60 * 1000))
+            .gte('sent_at', since(LOG_DAYS * 24 * 60 * 60 * 1000))
             .order('sent_at', { ascending: false })
             .range(from, to),
       ),
@@ -227,10 +288,11 @@ async function loadPage(
         user_id: string;
         confirmed_at: string | null;
         deadline_at: string;
+        confirmed_email_hash: string | null;
       }>((from, to) =>
         admin
           .from('manager_email_status')
-          .select('user_id, confirmed_at, deadline_at')
+          .select('user_id, confirmed_at, deadline_at, confirmed_email_hash')
           .in('user_id', userIds)
           .order('user_id')
           .range(from, to),
@@ -243,6 +305,10 @@ async function loadPage(
           )
         : Promise.resolve(new Map<string, PushDevice[]>()),
     ]);
+
+  const market = await loadMarket(admin, [
+    ...new Set([...sellerOffers, ...buyerOffers].map((row) => row.seller_club_id)),
+  ]);
 
   const clubByOwner = new Map(clubs.map((club) => [club.owner_id, club]));
   const upcomingClubs = new Set(upcoming.map((row) => row.club_id));
@@ -262,6 +328,9 @@ async function loadPage(
     const userDevices = devices.get(row.user_id) ?? [];
     if (userDevices.length > 0) context.devices.set(row.user_id, userDevices);
     const mail = mailByUser.get(row.user_id) ?? null;
+    if (mail?.confirmed_at && mail.confirmed_email_hash) {
+      context.emailHashes.set(row.user_id, mail.confirmed_email_hash);
+    }
     const gate = emailGate(
       mail
         ? {
@@ -289,8 +358,8 @@ async function loadPage(
         },
       },
       canPush: channels.push && userDevices.length > 0,
-      // A missing row is not a confirmation here: letters go only to a confirmed address.
-      canEmail: channels.email && Boolean(mail?.confirmed_at),
+      // Letters go only to a proven address. The current one is compared again before sending.
+      canEmail: channels.email && context.emailHashes.has(row.user_id),
       firstMatchDone: Boolean(club.first_match_completed_at),
       inSeason: club.season_phase !== 'offseason',
       hasUpcomingLeague: upcomingClubs.has(club.id),
@@ -300,7 +369,7 @@ async function loadPage(
         lastPlayedAt,
         club.last_training_on,
         club.first_match_completed_at,
-        row.updated_at,
+        row.chosen_at,
       ]),
       human:
         human && humanClub
@@ -311,8 +380,8 @@ async function loadPage(
             }
           : null,
       offers: [
-        ...(selling.get(club.id) ?? []).map((offer) => plannerOffer(offer, 'seller')),
-        ...(buying.get(club.id) ?? []).map((offer) => plannerOffer(offer, 'buyer')),
+        ...(selling.get(club.id) ?? []).map((offer) => plannerOffer(offer, 'seller', market)),
+        ...(buying.get(club.id) ?? []).map((offer) => plannerOffer(offer, 'buyer', market)),
       ],
       challenges: (challengesByClub.get(club.id) ?? []).map((item) => ({
         id: item.id,
@@ -327,11 +396,13 @@ async function loadPage(
       })),
     });
   }
-  return { users, next };
+  return users;
 }
 
 type OfferRow = {
   id: string;
+  player_id: string;
+  current_amount: number;
   seller_club_id: string;
   buyer_club_id: string;
   status: string;
@@ -339,8 +410,23 @@ type OfferRow = {
   created_at: string;
 };
 
-function plannerOffer(row: OfferRow, side: 'seller' | 'buyer') {
-  return { id: row.id, side, status: row.status, phase: row.phase, createdAt: row.created_at };
+function plannerOffer(
+  row: OfferRow,
+  side: 'seller' | 'buyer',
+  market: ReadonlyMap<string, NonNullable<PlannerOffer['player']>>,
+): PlannerOffer {
+  return {
+    id: row.id,
+    side,
+    status: row.status,
+    phase: row.phase,
+    createdAt: row.created_at,
+    playerId: row.player_id,
+    sellerClubId: row.seller_club_id,
+    buyerClubId: row.buyer_club_id,
+    amount: row.current_amount,
+    player: market.get(row.player_id) ?? null,
+  };
 }
 
 async function claim(admin: Admin, item: PlannedNotification): Promise<ClaimResult> {
@@ -367,24 +453,25 @@ async function release(admin: Admin, item: PlannedNotification): Promise<void> {
 async function sendLetter(
   admin: Admin,
   context: PageContext,
+  sendEmail: ReturnType<typeof createEmailSender>,
   item: PlannedNotification,
 ): Promise<SendResult> {
-  const provider = emailProvider();
-  if (!provider) return 'stop';
   const [account, token] = await Promise.all([
     admin.auth.admin.getUserById(item.userId),
     ensureUnsubscribeToken(admin, item.userId),
   ]);
   if (account.error || !token) return 'retry';
   const to = account.data.user.email;
-  if (!to) return 'lost';
+  // The address may have changed since it was proven.
+  if (!to || !isProvenEmail(context.emailHashes.get(item.userId), to)) return 'lost';
   const origin = appOrigin();
   const unsubscribeUrl = `${origin}/api/notify/unsubscribe?t=${token}`;
-  const outcome = await sendEmail(provider, {
+  const outcome = await sendEmail({
     to,
     unsubscribeUrl,
     letter: emailLetter({
       kind: item.kind,
+      ref: item.ref,
       clubName: context.clubNames.get(item.userId) ?? '',
       origin,
       unsubscribeUrl,
@@ -400,26 +487,49 @@ async function sendLetter(
 export async function createNotifyDeps(admin: Admin | null): Promise<NotifyDeps | null> {
   if (!admin) return null;
   const vapid = await loadVapidKeys(admin);
-  const channels = { push: vapid !== null, email: emailProvider() !== null };
+  const provider = emailProvider();
+  const channels = { push: vapid !== null, email: provider !== null };
   if (!channels.push && !channels.email) return null;
-  const context: PageContext = { devices: new Map(), clubNames: new Map() };
+  const context: PageContext = {
+    devices: new Map(),
+    clubNames: new Map(),
+    emailHashes: new Map(),
+  };
+  const sendEmail = provider ? createEmailSender(provider) : null;
 
   return {
     clock: () => Date.now(),
-    loadPage: async (after, now) => {
+    loadPage: async (now) => {
+      const prefs = await nextPrefs(admin, now);
+      if (!prefs) return null;
+      const ids = prefs.map((row) => row.user_id);
       try {
-        return await loadPage(admin, context, channels, after, now);
+        const users = prefs.length > 0 ? await loadUsers(admin, context, channels, prefs, now) : [];
+        return { ids, users, failed: false };
       } catch {
-        return null;
+        return { ids, users: [], failed: true };
       }
+    },
+    markProcessed: async (ids, now) => {
+      if (ids.length === 0) return true;
+      const { error } = await admin
+        .from('notification_prefs')
+        .update({ last_processed_at: now.toISOString() })
+        .in('user_id', [...ids]);
+      return !error;
     },
     claim: (item) => claim(admin, item),
     release: (item) => release(admin, item),
     send: async (item) => {
-      if (item.channel === 'email') return sendLetter(admin, context, item);
+      if (item.channel === 'email') {
+        return sendEmail ? sendLetter(admin, context, sendEmail, item) : 'stop';
+      }
       const devices = context.devices.get(item.userId);
       if (!vapid || !devices) return 'lost';
-      return sendPushToDevices(admin, devices, pushPayload(item.kind), vapid);
+      const ttl = pushTtlSeconds(item.kind, item.ref, new Date());
+      // The run dragged past the end of this matter: say nothing.
+      if (ttl <= 0) return 'retry';
+      return sendPushToDevices(admin, devices, pushPayload(item.kind, item.ref), vapid, ttl);
     },
   };
 }

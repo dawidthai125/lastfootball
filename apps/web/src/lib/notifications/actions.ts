@@ -5,16 +5,20 @@ import { revalidatePath } from 'next/cache';
 import { getAuthUser } from '@/lib/auth/session';
 import { warsawDateKey } from '@/lib/fixtures/matchday-gate';
 import { TEST_PUSH_PAYLOAD } from '@/lib/notifications/content';
+import { forgetPushDevice } from '@/lib/notifications/devices';
 import { listPushDevices, sendPushToDevices } from '@/lib/notifications/push';
 import { isPushEndpoint, parsePushDevice } from '@/lib/notifications/push-endpoint';
 import { loadVapidKeys } from '@/lib/notifications/server-secrets';
 import { emailChannelState, readPrefs } from '@/lib/notifications/settings';
 import {
   MAX_PUSH_DEVICES,
+  NOTIFICATION_KINDS,
   type NotificationActionResult,
-  type NotificationKinds,
+  type NotificationChanges,
+  type PushDeviceOwner,
 } from '@/lib/notifications/types';
 import { tryAdminClient } from '@/lib/supabase/admin';
+import type { Database } from '@/types/database';
 
 const UNAVAILABLE: NotificationActionResult = {
   ok: false,
@@ -23,6 +27,7 @@ const UNAVAILABLE: NotificationActionResult = {
 
 const TEST_GAP_MS = 2 * 60 * 1000;
 const TESTS_PER_DAY = 5;
+const TEST_TTL_SECONDS = 10 * 60;
 
 /** The signed-in user and the server writer. Every action starts here. */
 async function authorize() {
@@ -33,36 +38,30 @@ async function authorize() {
 
 type Access = NonNullable<Awaited<ReturnType<typeof authorize>>>;
 
-async function countDevices({ admin, userId }: Access): Promise<number | null> {
-  const { count, error } = await admin
-    .from('push_subscriptions')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', userId);
-  return error ? null : (count ?? 0);
-}
-
 async function setPush({ admin, userId }: Access, enabled: boolean): Promise<boolean> {
+  const now = new Date().toISOString();
   const { error } = await admin
     .from('notification_prefs')
     .upsert(
-      { user_id: userId, push_enabled: enabled, updated_at: new Date().toISOString() },
+      { user_id: userId, push_enabled: enabled, updated_at: now, chosen_at: now },
       { onConflict: 'user_id' },
     );
   return !error;
 }
 
-/** Is this browser's subscription saved for the signed-in manager? */
-export async function checkPushDevice(endpoint: unknown): Promise<boolean> {
-  if (!isPushEndpoint(endpoint)) return false;
+/** Whose is this browser's subscription? Unknown when the server cannot tell. */
+export async function checkPushDevice(endpoint: unknown): Promise<PushDeviceOwner> {
+  if (!isPushEndpoint(endpoint)) return 'unknown';
   const access = await authorize();
-  if (!access) return false;
+  if (!access) return 'unknown';
   const { data, error } = await access.admin
     .from('push_subscriptions')
     .select('id')
     .eq('user_id', access.userId)
     .eq('endpoint', endpoint)
     .maybeSingle();
-  return !error && data !== null;
+  if (error) return 'unknown';
+  return data ? 'own' : 'foreign';
 }
 
 export async function savePushDevice(raw: unknown): Promise<NotificationActionResult> {
@@ -112,13 +111,7 @@ export async function removePushDevice(endpoint: unknown): Promise<NotificationA
   if (!isPushEndpoint(endpoint)) return UNAVAILABLE;
   const access = await authorize();
   if (!access) return UNAVAILABLE;
-  const { error } = await access.admin
-    .from('push_subscriptions')
-    .delete()
-    .eq('user_id', access.userId)
-    .eq('endpoint', endpoint);
-  if (error) return UNAVAILABLE;
-  if ((await countDevices(access)) === 0) await setPush(access, false);
+  if (!(await forgetPushDevice(access.userId, endpoint, access.admin))) return UNAVAILABLE;
   revalidatePath('/settings');
   return { ok: true, message: 'Powiadomienia na tym urządzeniu są wyłączone.' };
 }
@@ -135,18 +128,17 @@ export async function removeAllPushDevices(): Promise<NotificationActionResult> 
   return { ok: true, message: 'Powiadomienia są wyłączone na wszystkich urządzeniach.' };
 }
 
-export async function saveNotificationPrefs(input: {
-  email: boolean;
-  kinds: NotificationKinds;
-}): Promise<NotificationActionResult> {
+/** Writes the changed fields only, so it cannot undo a newer choice made elsewhere. */
+export async function saveNotificationPrefs(
+  changes: NotificationChanges,
+): Promise<NotificationActionResult> {
   const access = await authorize();
   if (!access) return UNAVAILABLE;
   const { admin, userId } = access;
-  const current = await readPrefs(admin, userId);
-  if (!current) return UNAVAILABLE;
 
-  const wantsEmail = input?.email === true;
-  if (wantsEmail && !current.email) {
+  const flag = (value: unknown) => (typeof value === 'boolean' ? value : undefined);
+  const email = flag(changes?.email);
+  if (email === true) {
     const state = await emailChannelState(admin, userId);
     if (state === 'soon') return { ok: false, message: 'E-mail włączymy wkrótce.' };
     if (state === 'unconfirmed') {
@@ -154,21 +146,22 @@ export async function saveNotificationPrefs(input: {
     }
   }
 
-  const { error } = await admin.from('notification_prefs').upsert(
-    {
-      user_id: userId,
-      email_enabled: wantsEmail,
-      kind_matchday: input?.kinds?.matchday === true,
-      kind_human_round: input?.kinds?.human_round === true,
-      kind_offer: input?.kinds?.offer === true,
-      kind_challenge: input?.kinds?.challenge === true,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'user_id' },
-  );
+  const now = new Date().toISOString();
+  const row: Database['public']['Tables']['notification_prefs']['Insert'] = {
+    user_id: userId,
+    updated_at: now,
+    chosen_at: now,
+  };
+  if (email !== undefined) row.email_enabled = email;
+  for (const kind of NOTIFICATION_KINDS) {
+    const value = flag(changes?.kinds?.[kind]);
+    if (value !== undefined) row[`kind_${kind}`] = value;
+  }
+  const { error } = await admin.from('notification_prefs').upsert(row, { onConflict: 'user_id' });
   if (error) return UNAVAILABLE;
+  const prefs = await readPrefs(admin, userId);
   revalidatePath('/settings');
-  return { ok: true, message: 'Zapisano.' };
+  return { ok: true, message: 'Zapisano.', ...(prefs ? { prefs } : {}) };
 }
 
 /** To the signed-in manager's own devices. One per two minutes and five a day. */
@@ -213,7 +206,7 @@ export async function sendTestPush(): Promise<NotificationActionResult> {
   });
   if (claimed.error) return claimed.error.code === '23505' ? wait : UNAVAILABLE;
 
-  const result = await sendPushToDevices(admin, own, TEST_PUSH_PAYLOAD, vapid);
+  const result = await sendPushToDevices(admin, own, TEST_PUSH_PAYLOAD, vapid, TEST_TTL_SECONDS);
   return result === 'sent'
     ? { ok: true, message: 'Wysłano próbne powiadomienie.' }
     : { ok: false, message: 'Nie udało się dostarczyć próby. Włącz powiadomienia ponownie.' };

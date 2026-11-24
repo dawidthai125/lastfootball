@@ -10,8 +10,17 @@ create table if not exists public.notification_prefs (
   kind_offer boolean not null default false,
   kind_challenge boolean not null default false,
   unsubscribe_token_hash text,
-  updated_at timestamptz not null default now()
+  -- Any change, also the unsubscribe link.
+  updated_at timestamptz not null default now(),
+  -- Last choice made in the game itself. Counts as activity; unsubscribing does not.
+  chosen_at timestamptz not null default now(),
+  -- Scheduler cursor: the longest waiting manager goes first.
+  last_processed_at timestamptz
 );
+
+create index if not exists notification_prefs_turn_idx
+  on public.notification_prefs (last_processed_at nulls first, user_id)
+  where push_enabled or email_enabled;
 
 create unique index if not exists notification_prefs_unsubscribe_idx
   on public.notification_prefs (unsubscribe_token_hash)
@@ -46,7 +55,12 @@ create index if not exists notification_log_user_sent_idx
 
 create index if not exists notification_log_sent_idx on public.notification_log (sent_at);
 
--- VAPID pair, scheduler token and the key for unsubscribe links. Never leaves the server.
+-- SHA-256 of the address that was really proven by the link. Rows confirmed before this column
+-- (and the November backfill) have none, so they get no letters until the address is proven.
+alter table public.manager_email_status
+  add column if not exists confirmed_email_hash text;
+
+-- VAPID pair, scheduler token and URL, and the key for unsubscribe links. Never leaves the server.
 create table if not exists public.server_secrets (
   name text primary key,
   value text not null,

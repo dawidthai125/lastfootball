@@ -47,7 +47,7 @@ export async function unsubscribeByToken(
   if (!admin) return 'unavailable';
   const { data, error } = await admin
     .from('notification_prefs')
-    .update({ email_enabled: false })
+    .update({ email_enabled: false, updated_at: new Date().toISOString() })
     .eq('unsubscribe_token_hash', hashUnsubscribeToken(token))
     .select('user_id');
   if (error) return 'unavailable';

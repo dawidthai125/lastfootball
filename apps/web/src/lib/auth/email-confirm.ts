@@ -11,6 +11,7 @@ import {
   type EmailConfirmRow,
   type EmailGate,
 } from '@/lib/auth/email-confirm-policy';
+import { emailHash, emailTokenPart, isProvenEmail, tokenProvesEmail } from '@/lib/auth/email-proof';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export type IssueLinkResult = 'sent' | 'confirmed' | 'cooldown' | 'daily' | 'failed';
@@ -89,8 +90,38 @@ async function ensurePending(userId: string, nowMs: number): Promise<EmailConfir
   return readStatus(userId);
 }
 
-function newToken(): string {
-  return randomBytes(32).toString('base64url');
+/** Random part first, then which address it goes to. The stored hash covers both. */
+function newToken(email: string): string {
+  return randomBytes(32).toString('base64url') + emailTokenPart(email);
+}
+
+/** Read apart from the gate: without the column (late migration) nothing else changes. */
+async function readEmailProof(userId: string): Promise<string | null | 'unknown'> {
+  const { ok, data } = await rest<{ confirmed_email_hash: string | null }[]>(
+    `manager_email_status?user_id=eq.${encodeURIComponent(userId)}&select=confirmed_email_hash&limit=1`,
+  );
+  return ok && data && data.length > 0 ? data[0]!.confirmed_email_hash : 'unknown';
+}
+
+async function currentEmail(userId: string): Promise<string | null> {
+  try {
+    const { data, error } = await createAdminClient().auth.admin.getUserById(userId);
+    return error ? null : (data.user.email ?? null);
+  } catch {
+    return null;
+  }
+}
+
+/** Own request: it must not decide whether the confirmation itself is saved. */
+async function saveEmailProof(userId: string, token: string): Promise<boolean> {
+  const email = await currentEmail(userId);
+  if (!email || !tokenProvesEmail(token, email)) return false;
+  const saved = await rest('manager_email_status?user_id=eq.' + encodeURIComponent(userId), {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ confirmed_email_hash: emailHash(email) }),
+  });
+  return saved.ok;
 }
 
 export function hashConfirmToken(token: string): string {
@@ -119,12 +150,16 @@ export async function issueConfirmLink(userId: string, email: string): Promise<I
   const nowMs = Date.now();
   const row = await ensurePending(userId, nowMs);
   if (!row) return 'failed';
-  if (row.confirmedAt) return 'confirmed';
+  if (row.confirmedAt) {
+    // Older confirmations have no proof of the address. The same link adds it.
+    const proof = await readEmailProof(userId);
+    if (proof === 'unknown' || isProvenEmail(proof, email)) return 'confirmed';
+  }
 
   const block = resendBlock(row, nowMs);
   if (block) return block;
 
-  const token = newToken();
+  const token = newToken(email);
   const sent = await sendConfirmLetter(email, token);
   if (!sent) return 'failed';
 
@@ -143,7 +178,8 @@ export async function issueConfirmLink(userId: string, email: string): Promise<I
   return saved.ok ? 'sent' : 'failed';
 }
 
-export async function confirmEmailToken(token: string): Promise<'ok' | 'bad'> {
+/** ok: first confirmation. proved: an older confirmation now has its address proven. */
+export async function confirmEmailToken(token: string): Promise<'ok' | 'proved' | 'bad'> {
   if (!TOKEN_PATTERN.test(token) || !env.supabaseServiceRoleKey) return 'bad';
   const hash = hashConfirmToken(token);
   const found = await rest<
@@ -153,7 +189,20 @@ export async function confirmEmailToken(token: string): Promise<'ok' | 'bad'> {
   );
   const row = found.ok && found.data && found.data.length > 0 ? found.data[0] : null;
   const expires = row?.token_expires_at ? Date.parse(row.token_expires_at) : NaN;
-  if (!row || row.confirmed_at || !Number.isFinite(expires) || expires <= Date.now()) return 'bad';
+  if (!row || !Number.isFinite(expires) || expires <= Date.now()) return 'bad';
+
+  if (row.confirmed_at) {
+    const used = await rest<{ user_id: string }[]>(
+      `manager_email_status?user_id=eq.${encodeURIComponent(row.user_id)}&token_hash=eq.${hash}`,
+      {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ token_hash: null, token_expires_at: null }),
+      },
+    );
+    if (!used.ok || !used.data || used.data.length === 0) return 'bad';
+    return (await saveEmailProof(row.user_id, token)) ? 'proved' : 'bad';
+  }
 
   const now = new Date().toISOString();
   const saved = await rest<{ user_id: string }[]>(
@@ -170,6 +219,7 @@ export async function confirmEmailToken(token: string): Promise<'ok' | 'bad'> {
   );
   if (!saved.ok || !saved.data || saved.data.length === 0) return 'bad';
   await grantEmailConfirmBonus(row.user_id);
+  await saveEmailProof(row.user_id, token);
   return 'ok';
 }
 

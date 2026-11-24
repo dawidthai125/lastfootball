@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState, useTransition } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/FormControls';
+import { sendEmailConfirmLink } from '@/lib/auth/actions';
+import { currentSubscription } from '@/lib/notifications/browser';
 import {
   checkPushDevice,
   removeAllPushDevices,
@@ -13,6 +15,7 @@ import {
   sendTestPush,
 } from '@/lib/notifications/actions';
 import {
+  changedPrefs,
   NOTIFICATION_KINDS,
   type NotificationActionResult,
   type NotificationKind,
@@ -90,7 +93,13 @@ async function readDevice(vapidPublicKey: string): Promise<DeviceState> {
   const registration = await navigator.serviceWorker.getRegistration('/');
   const subscription = await registration?.pushManager.getSubscription();
   if (!registration || !subscription) return 'off';
-  if (!(await checkPushDevice(subscription.endpoint))) return 'off';
+  const owner = await checkPushDevice(subscription.endpoint);
+  if (owner === 'foreign') {
+    // Left by another account, or dropped by the server. It must not deliver here any more.
+    await subscription.unsubscribe();
+    return 'off';
+  }
+  if (owner === 'unknown') return 'off';
   if (!sameKey(subscription.options.applicationServerKey, keyBytes(vapidPublicKey))) {
     const renewed = await subscribe(registration, vapidPublicKey);
     return (await savePushDevice(devicePayload(renewed))).ok ? 'on' : 'off';
@@ -98,9 +107,31 @@ async function readDevice(vapidPublicKey: string): Promise<DeviceState> {
   return 'on';
 }
 
+/** The same letter as the confirmation banner, with the same limits. */
+function ProveEmail() {
+  const [state, action, pending] = useActionState(sendEmailConfirmLink, {
+    error: null as string | null,
+    info: null as string | null,
+  });
+  return (
+    <form action={action} className="space-y-1.5">
+      <p className="m-0">
+        Najpierw potwierdź adres e-mail. Wyślemy link na adres konta, potem wróć tutaj.
+      </p>
+      <Button type="submit" size="md" disabled={pending}>
+        {pending ? 'Wysyłam…' : 'Wyślij link'}
+      </Button>
+      <p role="status" className="m-0">
+        {state.error ?? state.info ?? ''}
+      </p>
+    </form>
+  );
+}
+
 export function NotificationSettingsPanel({ settings }: { settings: NotificationSettings }) {
   const { vapidPublicKey, emailState, deviceCount } = settings;
   const [device, setDevice] = useState<DeviceState>('checking');
+  const [saved, setSaved] = useState(settings.prefs);
   const [email, setEmail] = useState(settings.prefs.email);
   const [kinds, setKinds] = useState(settings.prefs.kinds);
   const [result, setResult] = useState<NotificationActionResult | null>(null);
@@ -140,17 +171,16 @@ export function NotificationSettingsPanel({ settings }: { settings: Notification
       }
       await navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' });
       const registration = await navigator.serviceWorker.ready;
-      const saved = await savePushDevice(
+      const stored = await savePushDevice(
         devicePayload(await subscribe(registration, vapidPublicKey)),
       );
-      setDevice(saved.ok ? 'on' : 'off');
-      return saved;
+      setDevice(stored.ok ? 'on' : 'off');
+      return stored;
     });
 
   const disable = () =>
     run(async () => {
-      const registration = await navigator.serviceWorker.getRegistration('/');
-      const subscription = await registration?.pushManager.getSubscription();
+      const subscription = await currentSubscription();
       if (!subscription) {
         setDevice('off');
         return { ok: true, message: 'Powiadomienia na tym urządzeniu są wyłączone.' };
@@ -166,6 +196,17 @@ export function NotificationSettingsPanel({ settings }: { settings: Notification
       const removed = await removeAllPushDevices();
       if (removed.ok && device === 'on') setDevice('off');
       return removed;
+    });
+
+  const save = () =>
+    run(async () => {
+      const answer = await saveNotificationPrefs(changedPrefs(saved, { email, kinds }));
+      if (answer.prefs) {
+        setSaved(answer.prefs);
+        setEmail(answer.prefs.email);
+        setKinds(answer.prefs.kinds);
+      }
+      return answer;
     });
 
   const note = PUSH_NOTES[device];
@@ -221,9 +262,7 @@ export function NotificationSettingsPanel({ settings }: { settings: Notification
           onChange={(event) => setEmail(event.target.checked)}
         />
         {emailState === 'soon' ? <p className="m-0">E-mail włączymy wkrótce</p> : null}
-        {emailState === 'unconfirmed' ? (
-          <p className="m-0">Najpierw potwierdź adres e-mail.</p>
-        ) : null}
+        {emailState === 'unconfirmed' ? <ProveEmail /> : null}
       </div>
 
       <fieldset className="m-0 space-y-1.5 border-0 p-0">
@@ -243,12 +282,7 @@ export function NotificationSettingsPanel({ settings }: { settings: Notification
         ) : null}
       </fieldset>
 
-      <Button
-        variant="primary"
-        size="md"
-        disabled={pending}
-        onClick={() => run(() => saveNotificationPrefs({ email, kinds }))}
-      >
+      <Button variant="primary" size="md" disabled={pending} onClick={save}>
         {pending ? 'Chwila…' : 'Zapisz wybór'}
       </Button>
       <p role="status" className="m-0 min-h-[1.2em]">

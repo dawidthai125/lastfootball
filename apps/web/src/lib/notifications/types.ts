@@ -37,4 +37,29 @@ export type NotificationSettings = {
 export type NotificationActionResult = {
   readonly ok: boolean;
   readonly message: string;
+  /** What is stored now, so an older tab shows the truth after saving. */
+  readonly prefs?: NotificationPrefs;
 };
+
+/** Only what the manager changed. An older tab must not write back the rest. */
+export type NotificationChanges = {
+  readonly email?: boolean;
+  readonly kinds?: Partial<NotificationKinds>;
+};
+
+export function changedPrefs(
+  before: NotificationPrefs,
+  after: Pick<NotificationPrefs, 'email' | 'kinds'>,
+): NotificationChanges {
+  const kinds: Partial<Record<NotificationKind, boolean>> = {};
+  for (const kind of NOTIFICATION_KINDS) {
+    if (before.kinds[kind] !== after.kinds[kind]) kinds[kind] = after.kinds[kind];
+  }
+  return {
+    ...(before.email !== after.email ? { email: after.email } : {}),
+    ...(Object.keys(kinds).length > 0 ? { kinds } : {}),
+  };
+}
+
+/** foreign: this browser's subscription is not the signed-in manager's. */
+export type PushDeviceOwner = 'own' | 'foreign' | 'unknown';

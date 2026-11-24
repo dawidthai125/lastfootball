@@ -12,6 +12,8 @@ import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate'
 import { takeSignupSlot } from '@/lib/auth/signup-throttle';
 import { turnstileMessage, verifyTurnstileToken } from '@/lib/auth/turnstile';
 import { env } from '@/config/env';
+import { forgetPushDevice } from '@/lib/notifications/devices';
+import { isPushEndpoint } from '@/lib/notifications/push-endpoint';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
@@ -222,11 +224,16 @@ export async function updatePasswordFromRecovery(
   redirect('/hub');
 }
 
-export async function signOut(): Promise<void> {
+/** The endpoint of this browser, if any: its notifications end together with the session. */
+export async function signOut(pushEndpoint?: unknown): Promise<void> {
   if (!env.isSupabaseConfigured) {
     redirect('/');
   }
   const supabase = await createClient();
+  if (isPushEndpoint(pushEndpoint)) {
+    const user = await getAuthUser().catch(() => null);
+    if (user) await forgetPushDevice(user.id, pushEndpoint);
+  }
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
   redirect('/');
