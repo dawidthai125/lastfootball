@@ -12,6 +12,8 @@ import { countPlayedInList, ensureClubFixtures, hasPlayedUnlock } from '@/lib/fi
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
+import { juniorAgeNote } from '@/lib/academy/levels';
+import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
@@ -27,7 +29,7 @@ import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchWageDue } from '@/lib/squad/truth';
-import { filterSeniorPlayers } from '@/lib/squad/types';
+import { filterSeniorPlayers, isAcademyProspect } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { TRAINING_THIN } from '@/lib/training/types';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
@@ -80,7 +82,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
 
     const supabase = await createClient();
     const today = utcDateString();
-    const [activePlayers, h2hOffers, farewellFlash, movements, board] = await Promise.all([
+    const [activePlayers, h2hOffers, farewellFlash, movements, board, upkeep] = await Promise.all([
       listClubPlayers(club.id),
       fetchLiveH2hOffers(supabase, club.id),
       club.seasonPhase === 'in_season'
@@ -88,6 +90,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         : Promise.resolve([]),
       listClubFinanceMovements(club.id),
       loadBoardState(club, fixtures),
+      loadAcademyUpkeep(supabase, club.id),
     ]);
     const incomingOffers = resolveIncomingOffers({
       clubId: club.id,
@@ -106,7 +109,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const loanOffers = resolveIncomingLoanOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
-      rosterCount: activePlayers.length,
+      rosterCount: filterSeniorPlayers(activePlayers).length,
       today,
     });
     const intl = resolveIntlCallup({
@@ -154,8 +157,10 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         club,
         movements,
         matchWageDue(filterSeniorPlayers(activePlayers)),
+        upkeep,
       ).wageNote,
       boardTaskNote: board ? resolveBoardTaskNote(board.tasks) : null,
+      academyAgeNote: juniorAgeNote(activePlayers.filter(isAcademyProspect)),
     });
     invitations = resolveClubInvitations({
       messages,

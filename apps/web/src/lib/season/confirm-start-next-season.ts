@@ -270,7 +270,7 @@ async function startNextSeason(
 
   // H-AGE — Season Transition Pipeline step 1 (before in_season persist).
   const hAgePort = createHAgeSupabasePort(admin);
-  const hAge = await runSeasonTransitionHAge(clubId, hAgePort);
+  const hAge = await runSeasonTransitionHAge(clubId, hAgePort, endedSeason);
   if (!hAge.ok) {
     return { error: hAge.error, farewell: null };
   }

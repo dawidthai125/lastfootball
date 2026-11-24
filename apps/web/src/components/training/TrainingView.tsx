@@ -15,7 +15,7 @@ import {
 import { savePressLine } from '@/lib/training/actions-press-line';
 import { savePressShape } from '@/lib/training/actions-press-shape';
 import { TRAINING_ACTION_INITIAL } from '@/lib/training/action-types';
-import { COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
+import { COACH_GROUP_LABEL, COACH_GROUPS, COACH_THIN, type CoachGroup } from '@/lib/training/coach';
 import { pressLineLabel, pressShapeLabel } from '@/lib/training/press-line';
 import { kickoffPressing, kickoffTempo, kickoffWidth, STYLE_THIN } from '@/lib/training/style';
 import type { TrainingDto, TrainingFocusId, TrainingIntensityId } from '@/lib/training/types';
@@ -55,14 +55,6 @@ function lockTitle(dto: TrainingDto): string {
  * Training Experience — LFE-UI-IMPL-03 / HF-TRN-01 · HF-TRN-02 · LFE-TRAINING-02 feedback.
  * Decision-first; domain via resolveClubTraining + runTrainingSession.
  */
-const COACH_LABEL: Record<CoachGroup, string> = {
-  attack: 'Atak',
-  passing: 'Podania',
-  defense: 'Obrona',
-  physical: 'Fizyczność',
-  goalkeeping: 'Bramkarstwo',
-};
-
 export function TrainingView({
   training,
   coachGroup = null,
@@ -174,7 +166,7 @@ export function TrainingView({
         <h3 className="lf-tr__block-title">Trener</h3>
         <p className="lf-tr__meta">
           {coachGroup
-            ? `Podnosi plon treningu w grupie: ${COACH_LABEL[coachGroup]}.`
+            ? `Podnosi plon treningu w grupie: ${COACH_GROUP_LABEL[coachGroup]}.`
             : 'Brak trenera. Jeden trener podnosi tylko jedną grupę atrybutów.'}
         </p>
         {coachState.error ? (
@@ -192,8 +184,8 @@ export function TrainingView({
                 disabled={coachPending || (coachGroup !== group && cash < COACH_THIN.HIRE_FEE)}
               >
                 {coachGroup === group
-                  ? COACH_LABEL[group]
-                  : `${COACH_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
+                  ? COACH_GROUP_LABEL[group]
+                  : `${COACH_GROUP_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
               </Button>
             </form>
           ))}
@@ -207,7 +199,7 @@ export function TrainingView({
             ? 'Fizjoterapeuta skraca kontuzję o jeden mecz.'
             : `Fizjoterapeuta · ${formatMoney(COACH_THIN.HIRE_FEE)}. Skraca kontuzję o jeden mecz.`}
           {assistantGroup
-            ? ` Asystent podnosi grupę: ${COACH_LABEL[assistantGroup]}, jeśli to nie grupa trenera.`
+            ? ` Asystent podnosi grupę: ${COACH_GROUP_LABEL[assistantGroup]}, jeśli to nie grupa trenera.`
             : ' Asystent podnosi jedną grupę, inną niż trener.'}
         </p>
         {physioState.error ? (
@@ -239,8 +231,8 @@ export function TrainingView({
                 }
               >
                 {assistantGroup === group
-                  ? `Asystent · ${COACH_LABEL[group]}`
-                  : `Asystent · ${COACH_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
+                  ? `Asystent · ${COACH_GROUP_LABEL[group]}`
+                  : `Asystent · ${COACH_GROUP_LABEL[group]} · ${formatMoney(COACH_THIN.HIRE_FEE)}`}
               </Button>
             </form>
           ))}
@@ -271,7 +263,7 @@ export function TrainingView({
             <select name="group" defaultValue="attack">
               {COACH_GROUPS.map((group) => (
                 <option key={group} value={group}>
-                  {COACH_LABEL[group]}
+                  {COACH_GROUP_LABEL[group]}
                 </option>
               ))}
             </select>

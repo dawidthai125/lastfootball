@@ -72,6 +72,8 @@ export type ResolveClubMessagesInput = {
   readonly wageNote?: string | null;
   /** Completed board tasks to collect — REUSE resolveBoardTaskNote. */
   readonly boardTaskNote?: string | null;
+  /** Juniors in their last academy season — REUSE juniorAgeNote. */
+  readonly academyAgeNote?: string | null;
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -184,6 +186,17 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       subject: input.boardTaskNote,
       fromLabel: 'Zarząd',
       href: '/board',
+      priority: 'info',
+    });
+  }
+
+  if (input.academyAgeNote) {
+    items.push({
+      id: 'msg:academy-age',
+      kind: 'system',
+      subject: input.academyAgeNote,
+      fromLabel: 'Akademia',
+      href: '/academy',
       priority: 'info',
     });
   }

@@ -79,6 +79,14 @@ export type PlayerRowDto = {
   /** academy · free · bought · loan; null = starting squad (D133). */
   readonly origin?: string | null;
   readonly joinedAt?: string | null;
+  /** Matches in the starting eleven since he joined the seniors (D134). */
+  readonly seniorMatches?: number;
+  /** Origin or matches could not be read, so his price is unknown: no sale now. */
+  readonly saleUnknown?: boolean;
+  /** UTC day of the last academy training. */
+  readonly academyTrainedOn?: string | null;
+  readonly academyGain?: number;
+  readonly academyGainSeason?: number | null;
   readonly transferListedAt: string | null;
   /** LFE-ACADEMY-01: true = prospect before Promote (excluded from senior resolvers). */
   readonly academyTrack: boolean;

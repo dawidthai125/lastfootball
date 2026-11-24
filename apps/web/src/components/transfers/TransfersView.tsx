@@ -189,11 +189,20 @@ function BuyNegotiate({
   );
 }
 
-function SellButton({ playerId, disabled }: { playerId: string; disabled: boolean }) {
+function SellButton({
+  playerId,
+  ask,
+  disabled,
+}: {
+  playerId: string;
+  ask: number;
+  disabled: boolean;
+}) {
   const [state, action, pending] = useActionState(sellTransferPlayer, TRANSFER_ACTION_INITIAL);
   return (
     <form action={action} className="inline">
       <input type="hidden" name="playerId" value={playerId} />
+      <input type="hidden" name="ask" value={ask} />
       {state.error ? (
         <span className="mr-1 text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
@@ -240,7 +249,7 @@ function SellActions({ row, canSell }: { row: SellCandidateDto; canSell: boolean
         listed={row.listed}
         disabled={!canSell && !row.listed}
       />
-      <SellButton playerId={row.playerId} disabled={!canSell} />
+      <SellButton playerId={row.playerId} ask={row.fee} disabled={!canSell} />
     </div>
   );
 }
@@ -267,6 +276,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         <div className="lf-tx-actions__row">
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="ask" value={offer.ask} />
             <input type="hidden" name="playerId" value={offer.playerId} />
             <input type="hidden" name="phase" value="counter" />
             <input type="hidden" name="decision" value="accept" />
@@ -276,6 +286,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
           </form>
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="ask" value={offer.ask} />
             <input type="hidden" name="playerId" value={offer.playerId} />
             <input type="hidden" name="phase" value="counter" />
             <input type="hidden" name="decision" value="reject" />
@@ -299,6 +310,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         <ConfirmSubmit label={UI_COPY.accept} disabled={disabled} pending={pending}>
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="ask" value={offer.ask} />
             <input type="hidden" name="playerId" value={offer.playerId} />
             <input type="hidden" name="phase" value="opening" />
             <input type="hidden" name="decision" value="accept" />
@@ -310,6 +322,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         {offer.canCounter ? (
           <form action={action} className="inline">
             <input type="hidden" name="offerId" value={offer.offerId} />
+            <input type="hidden" name="ask" value={offer.ask} />
             <input type="hidden" name="playerId" value={offer.playerId} />
             <input type="hidden" name="phase" value="opening" />
             <input type="hidden" name="decision" value="counter" />
@@ -320,6 +333,7 @@ function IncomingOfferActions({ offer, disabled }: { offer: IncomingOfferDto; di
         ) : null}
         <form action={action} className="inline">
           <input type="hidden" name="offerId" value={offer.offerId} />
+          <input type="hidden" name="ask" value={offer.ask} />
           <input type="hidden" name="playerId" value={offer.playerId} />
           <input type="hidden" name="phase" value="opening" />
           <input type="hidden" name="decision" value="reject" />

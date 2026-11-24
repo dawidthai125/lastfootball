@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
+import { generateAcademyCandidates } from '@/lib/academy/intake';
+import { academyLevel } from '@/lib/academy/levels';
 import { boardTaskReward } from '@/lib/board/tasks';
 import { ECONOMY_THIN, type MatchRewardOutcome } from '@/lib/finance/types';
 import { resolveFixtureReward } from '@/lib/finance/resolve-match-reward';
 import { LEAGUE_TIERS_ASC, type LeagueTier } from '@/lib/league/league-tier';
 import { sponsorFromCrowd } from '@/lib/sponsors/crowd';
 import { matchWageDue, wageFromSkill } from '@/lib/squad/truth';
+import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { STADIUM_UPGRADE_COST, ticketIncome } from '@/lib/stadium/levels';
 
 /** Season results per side: wins, draws, losses. 11 home and 11 away. */
@@ -109,6 +112,44 @@ describe('season projection (GDD §26.8)', () => {
       expect(result).toBeLessThanOrEqual(40_000);
       if (i > 0) expect(result).toBeGreaterThan(results[i - 1]!);
     }
+  });
+});
+
+/**
+ * One academy season: an intake as often as the level allows over 22 match days, every junior
+ * sold at once to a computer club, upkeep with each match. First candidate: the average one.
+ */
+function academySeason(level: number): number {
+  const rules = academyLevel(level);
+  let fees = 0;
+  let count = 0;
+  for (let club = 0; club < 100; club += 1) {
+    for (let seq = 1; seq <= 10; seq += 1) {
+      fees += aiSaleAsk({
+        ...generateAcademyCandidates(`club-${club}`, seq, level)[0]!,
+        origin: 'academy',
+      });
+      count += 1;
+    }
+  }
+  return (22 / rules.intakeEveryDays) * (fees / count) - 22 * rules.upkeep;
+}
+
+describe('academy projection (LFE-ACADEMY-02 plan, section 4)', () => {
+  it('earns about the same on every level when all juniors are sold at once', () => {
+    const planned = [33_000, 28_000, 29_000, 32_000];
+    planned.forEach((plan, level) => {
+      const result = academySeason(level);
+      expect(result, `level ${level}`).toBeGreaterThanOrEqual(plan * 0.85);
+      expect(result, `level ${level}`).toBeLessThanOrEqual(plan * 1.15);
+    });
+  });
+
+  it('pays the academy back only with players who play', () => {
+    const extra = academySeason(3) - academySeason(0);
+    expect(extra).toBeLessThan(5_000);
+    const played = { skill: 62, age: 19, origin: 'academy', seniorMatches: 22 };
+    expect(aiSaleAsk(played)).toBeGreaterThan(55_000);
   });
 });
 

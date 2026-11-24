@@ -120,10 +120,10 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## PLANNED ⬜
 
-| Item                    | Zależność                                                                                                                     |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| LFE-ACADEMY-02          | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) · czeka na §26 |
-| LFE `/advanced` subpath | Owner GO · defer                                                                                                              |
+| Item                    | Zależność                                                                                    |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| LFE-ACADEMY-02          | **DONE** · D134 · [`game-design/LFE-ACADEMY-02-PLAN.md`](game-design/LFE-ACADEMY-02-PLAN.md) |
+| LFE `/advanced` subpath | Owner GO · defer                                                                             |
 
 ## FUTURE
 
@@ -136,7 +136,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | Individual training / XP / attribute DB | poza Thin Depth (D21/D22)                  |
 | Career Prime / Retirement / Youth Depth | po LFE-CAREER-DECLINE-01 (D124 foundation) |
 | World-age (AI clubs)                    | poza H-AGE club-only Thin                  |
-| Academy levels / cash-gate / youth OVR  | poza Thin A (D23)                          |
+| Youth OVR / auto-promote                | poza D134                                  |
 | Messages DB / mark-as-read / Accept     | poza Thin derive (D46)                     |
 | Multi-tier AI catalogs / baraże         | poza D123 Thin B / D94                     |
 | Sponsor marketplace / nego / Quest      | poza Sponsors Thin (D100)                  |
@@ -155,11 +155,11 @@ Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** za
 LFE-SPATIAL-EVENTS-01  ·  Retirement (Thin CLOSED)  ·  Career Prime ×1.1 (Owner GO)
 ```
 
-Academy 02 nie wraca do kolejki bez zmiany GDD §16 i liczb §26.
+Academy 02: DONE 2026-11-24 (D134).
 
 | EPIC                  | Notatka                                      |
 | --------------------- | -------------------------------------------- |
-| LFE-ACADEMY-02        | SCOPE LOCK · §26                             |
+| LFE-ACADEMY-02        | DONE · D134                                  |
 | LFE-SPATIAL-EVENTS-01 | `4377677`                                    |
 | LFE-RETIREMENT-01     | Thin farewell CLOSED · PLAN                  |
 | Career Prime          | GROWTH_COEFF_PRIME=1.1 · Owner GO 2026-11-17 |

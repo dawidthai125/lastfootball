@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { env } from '@/config/env';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { completeTransferBuy, completeTransferSell } from '@/lib/transfers/complete-deal';
 import type { TransferActionState } from '@/lib/transfers/action-types';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
@@ -288,7 +289,7 @@ export async function acceptLiveTransferOffer(
     if (!sellResult.ok) return { error: sellResult.error };
   } else {
     const active = await listClubPlayers(offer.buyer_club_id);
-    const activeMapped = active.map((p) => ({
+    const activeMapped = filterSeniorPlayers(active).map((p) => ({
       id: p.id,
       name: p.name,
       shirt_number: p.shirtNumber,

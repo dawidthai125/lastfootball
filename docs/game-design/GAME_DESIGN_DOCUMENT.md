@@ -6806,21 +6806,23 @@ Zamrozić filozofię rozbudowy bez auto-growth.
 
 ### 16.14 MVP Thin vs Future (tabela)
 
-| Element                         | Thin A | Future                |
-| ------------------------------- | ------ | --------------------- |
-| Intake                          | TAK    | pogłębiony            |
-| Promote                         | TAK    | auto-opcje?           |
-| Poziomy / gwiazdki / ośrodek    | NIE    | TAK                   |
-| Academy / youth OVR             | NIE    | NIE (zakaz)           |
-| Match PRIMARY po promocji       | TAK    | TAK                   |
-| Training SUPPORTING po promocji | TAK    | TAK                   |
-| Trening akademii                | NIE    | opcjonalnie           |
-| Koszty (liczby)                 | NIE    | §26                   |
-| Skauting §17                    | NIE    | TAK                   |
-| Staff / infrastruktura          | NIE    | decyzje ≠ auto-growth |
-| Implementacja UI / DB           | NIE*   | osobny EPIC           |
+| Element                         | Thin A | Academy 02 (D134) / Future          |
+| ------------------------------- | ------ | ----------------------------------- |
+| Intake                          | TAK    | **DONE:** 1 z N, co 7–4 dni         |
+| Promote                         | TAK    | auto-opcje?                         |
+| Poziomy / gwiazdki / ośrodek    | NIE    | **DONE:** poziomy 0–3; gwiazdki NIE |
+| Academy / youth OVR             | NIE    | NIE (zakaz)                         |
+| Match PRIMARY po promocji       | TAK    | TAK                                 |
+| Training SUPPORTING po promocji | TAK    | TAK                                 |
+| Trening akademii                | NIE    | **DONE:** 1 junior dziennie         |
+| Koszty (liczby)                 | NIE    | **DONE:** §26.8                     |
+| Skauting §17                    | NIE    | TAK                                 |
+| Staff / infrastruktura          | NIE    | decyzje ≠ auto-growth               |
+| Implementacja UI / DB           | NIE*   | osobny EPIC                         |
 
 \*Ten EPIC docs nie implementuje UI/DB; kod = osobny Owner GO później.
+
+**Academy 02 (Owner GO 2026-11-24 · D134):** poziom daje lepszy wybór, nie wzrost. Kandydatów widać po pozycji, wieku i paśmie potencjału. Trening podnosi jedną grupę atrybutów o 1 i nie rusza skill. Junior w wieku 19 lat gra ostatni sezon w akademii: bez promocji odchodzi przy starcie następnego (ostrzeżenie w Akademii i Wiadomościach). Liczby: §26.8.
 
 ---
 
@@ -9612,6 +9614,17 @@ Cele IV ligi: mistrz +60..+110 tys., środek −15..+10 tys., dół −70..−35
 - wykonane zadanie zarządu +0,5.
 
 Pasma: Nieznany 0–19 · Lokalny 20–39 · Rozpoznawalny 40–59 · Ceniony 60–79 · Wielki 80–100. Skutek: wycena sponsora przy odnowieniu × (1 + 10% × (prestiż − 10) / 90), od 0 do +10%, w pełnych 500 EUR.
+
+**Akademia (D134):** poziom zmienia miejsca, rytm naboru, wybór i skill startowy. Utrzymanie schodzi z każdym rozliczonym meczem po pensjach, z tego, co zostało; niedopłatę mówi księga, morale się nie zmienia.
+
+| Poziom | Budowa  | Utrzymanie / mecz | Miejsca | Nabór co | Kandydaci | Skill startowy | Sezon przy sprzedaży wszystkich |
+| ------ | ------- | ----------------- | ------- | -------- | --------- | -------------- | ------------------------------- |
+| 0      | —       | 0                 | 3       | 7 dni    | 1         | 40–52          | +35 131                         |
+| 1      | 30 000  | 500               | 4       | 6 dni    | 1 z 2     | 42–53          | +31 093                         |
+| 2      | 60 000  | 1 000             | 5       | 5 dni    | 1 z 2     | 44–54          | +29 946                         |
+| 3      | 110 000 | 1 500             | 6       | 4 dni    | 1 z 3     | 46–56          | +33 820                         |
+
+Odmowa wyboru nie skraca czekania. Trening juniora: 1 000 EUR, jeden junior na dzień (UTC) w klubie, +1 do grupy, do +6 na sezon, nigdy ponad potencjał, do 19 lat. Cena wychowanka od komputera: 10% do 9 meczów w jedenastce seniorów, 25% od 10, 50% od 22; wolny agent zawsze 10%. Wynik sezonu pilnuje `season-projection.test.ts`.
 
 ---
 

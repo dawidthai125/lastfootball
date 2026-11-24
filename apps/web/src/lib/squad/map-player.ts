@@ -36,6 +36,12 @@ export type PlayerDbRow = {
   energy_on?: string | null;
   origin?: string | null;
   joined_at?: string | null;
+  senior_matches?: number | null;
+  /** Not a column: set when the sale facts failed to load. */
+  sale_unknown?: boolean;
+  academy_trained_on?: string | null;
+  academy_gain?: number | null;
+  academy_gain_season?: number | null;
   form?: number | null;
   wage?: number | null;
   suspension_matches?: number | null;
@@ -90,6 +96,11 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
     promotedAt: row.promoted_at ?? null,
     origin: row.origin ?? null,
     joinedAt: row.joined_at ?? null,
+    seniorMatches: row.senior_matches ?? 0,
+    ...(row.sale_unknown === true ? { saleUnknown: true } : {}),
+    academyTrainedOn: row.academy_trained_on ?? null,
+    academyGain: row.academy_gain ?? 0,
+    academyGainSeason: row.academy_gain_season ?? null,
     groups: groupsFromRow(row),
     energy,
     form: typeof row.form === 'number' ? row.form : undefined,

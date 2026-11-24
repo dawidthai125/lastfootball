@@ -18,6 +18,18 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Akademia 02 (D134)
+
+### Product
+
+- Akademia ma poziomy 0–3: więcej miejsc, częstszy nabór i wybór jednego z pokazanych kandydatów. Utrzymanie schodzi z każdym meczem po pensjach.
+- Jeden junior dziennie trenuje za 1 000 EUR (+1 do grupy, do +6 na sezon). Junior w wieku 19 lat bez promocji odchodzi przy starcie sezonu; ostrzega Akademia i Wiadomości.
+- Wychowanek sprzedany komputerowi: 10%, 25% od 10 meczów, 50% od 22 meczów w seniorach.
+- Limity kadry liczą tylko seniorów, numery odeszłych zawodników są wolne, a wychowanek po zmianie klubu zostaje wychowankiem.
+- Migracja `20261124160000_academy_levels.sql` przed wdrożeniem.
+
+---
+
 ## [2026-11-24] — Powiadomienia push i e-mail (D132)
 
 ### Product

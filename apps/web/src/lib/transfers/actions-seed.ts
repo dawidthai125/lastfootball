@@ -1,7 +1,7 @@
 'use server';
 
 import { filterSeniorPlayers } from '@/lib/squad/types';
-import { aiSaleAsk, saleBlock } from '@/lib/transfers/fair-sale';
+import { aiSaleAsk, saleBlock, saleShownPriceError } from '@/lib/transfers/fair-sale';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -67,7 +67,7 @@ export async function buyTransferPlayer(
 
   const ask = marketFee(listing.skill, listing.age, listing.clubLabel);
   const active = await listClubPlayers(clubRow.id);
-  const activePlayers = active.map((p) => ({
+  const activePlayers = filterSeniorPlayers(active).map((p) => ({
     id: p.id,
     name: p.name,
     shirt_number: p.shirtNumber,
@@ -79,6 +79,7 @@ export async function buyTransferPlayer(
     status: p.status,
     departed_at: p.departedAt,
     origin: p.origin,
+    seniorMatches: p.seniorMatches,
   }));
 
   const settle = async (agreedAmount: number): Promise<TransferActionState> => {
@@ -209,6 +210,8 @@ export async function sellTransferPlayer(
   }
 
   const ask = aiSaleAsk(player);
+  const moved = saleShownPriceError(formData.get('ask'), ask);
+  if (moved) return { error: moved };
   const result = await completeTransferSell(supabase, {
     clubId: clubRow.id,
     cashBalance: clubRow.cash_balance,
@@ -227,6 +230,7 @@ export async function sellTransferPlayer(
       status: p.status,
       departed_at: p.departedAt,
       origin: p.origin,
+      seniorMatches: p.seniorMatches,
     })),
   });
 
@@ -297,6 +301,8 @@ export async function respondIncomingOffer(
   if (player.transferListedAt == null) {
     return { error: 'Zawodnik nie jest na liście transferowej.' };
   }
+  const blocked = saleBlock(player);
+  if (blocked) return { error: blocked };
   if (
     !isTransferSellEligible({
       transferWindowOpen: windowOpen,
@@ -308,6 +314,8 @@ export async function respondIncomingOffer(
   }
 
   const ask = aiSaleAsk(player);
+  const moved = saleShownPriceError(formData.get('ask'), ask);
+  if (moved) return { error: moved };
   const offers = resolveIncomingOffers({
     clubId: clubRow.id,
     transferWindowOpen: windowOpen,
@@ -346,6 +354,7 @@ export async function respondIncomingOffer(
         status: p.status,
         departed_at: p.departedAt,
         origin: p.origin,
+        seniorMatches: p.seniorMatches,
       })),
     });
     if (!result.ok) return { error: result.error };

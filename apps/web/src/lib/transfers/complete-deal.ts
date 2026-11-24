@@ -1,6 +1,7 @@
 import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { serverDb } from '@/lib/supabase/admin';
 import { CASH_STALE_ERROR, creditClubCash, writeClubCash } from '@/lib/finance/club-cash';
+import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
@@ -28,13 +29,6 @@ function nextBoughtId(clubId: string, existingIds: readonly string[]): string {
   return `${prefix}${max + 1}`;
 }
 
-function nextShirt(used: readonly number[]): number {
-  for (let n = 1; n <= 99; n++) {
-    if (!used.includes(n)) return n;
-  }
-  return 99;
-}
-
 export type CompleteBuyResult =
   { ok: true; playerId: string; amount: number } | { ok: false; error: string };
 
@@ -53,6 +47,7 @@ type ActivePlayer = {
   status: string;
   departed_at: string | null;
   origin?: string | null;
+  seniorMatches?: number;
 };
 
 type SeedBuyInput = {
@@ -224,19 +219,21 @@ export async function completeTransferBuy(
   }
 
   const allIds = input.activePlayers.map((p) => p.id);
-  const { data: departedRows } = await supabase
+  const { data: departedRows, error: rowsErr } = await supabase
     .from('players')
-    .select('id, shirt_number')
+    .select('id, shirt_number, departed_at')
     .eq('club_id', input.clubId);
+  if (rowsErr || !departedRows) return { ok: false, error: 'Nie udało się odczytać kadry.' };
 
-  const everyRow = (departedRows as { id: string; shirt_number: number }[] | null) ?? [];
+  const everyRow = departedRows as {
+    id: string;
+    shirt_number: number;
+    departed_at: string | null;
+  }[];
   const departedIds = everyRow.map((r) => r.id);
   const playerId = nextBoughtId(input.clubId, [...allIds, ...departedIds]);
-  const shirt = nextShirt([
-    ...input.activePlayers.map((p) => p.shirt_number),
-    // The number stays taken after a player leaves (unique per club).
-    ...everyRow.map((r) => r.shirt_number),
-  ]);
+  const shirt = freeShirt(everyRow);
+  if (shirt == null) return { ok: false, error: 'Brak wolnego numeru koszulki.' };
   const nextCash = input.cashBalance - agreedAmount;
 
   const written = await writeClubCash({

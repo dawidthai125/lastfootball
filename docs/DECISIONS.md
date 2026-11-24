@@ -798,6 +798,12 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** `club_season_history` i `club_board_task_claims` pisze tylko serwer, właściciel czyta. Prestiż 0..100 = pure derive (`resolvePrestige`) z historii, ligi, pucharu i zadań; działa wyłącznie na wycenę sponsora przy odnowieniu (0..+10%, `sponsorFromCrowd`), nigdy na mecz. Zadania: jedno na kolejki 1–5, 6–10, 11–15, 16–20, wybór i postęp = derive z meczów ligowych; porażka nic nie kosztuje. Wypłata = `claim_board_task` (claim + kasa + księga w jednej transakcji, service role). W przerwie odbiór wymaga 22 rozegranych meczów sezonu. `confirmStartNextSeason` bierze blokadę klubu (`club_season_starts`, wygasa po 5 min), wypłaca nieodebrane zadania, a `clear_season_fixtures` zapisuje sezon i kasuje terminarz w jednej transakcji; każdy błąd, także wypłaty, zatrzymuje start (zawęża D104). Powtórzony start bierze awans lub spadek z zapisanego sezonu, a niepełny terminarz nie zmienia ligi. Bez tabel ekrany ukrywają funkcję, a start sezonu czeka. Liczby: GDD §26.8.  
 **OUT:** Reputacja · wydawanie prestiżu · kary · losowanie zadań od nowa · zadanie jako Primary na Hubie.
 
+### D134 — Akademia 02: poziomy, wybór kandydata, trening · Owner GO 2026-11-24
+
+**Dlaczego:** Akademia bez kosztów i wyboru kończyła się hurtową sprzedażą juniorów. Zmienia liczby D23 i D133, zawęża „poza Thin” z D23.  
+**Zasada:** Liczby tylko w `lib/academy/levels.ts` (GDD §26.8). `clubs.academy_level` 0..3 pisze serwer (strażnik `lf_guard_academy_level`), rozbudowa = `upgrade_academy` (poziom z przycisku, kasa i księga w jednej transakcji). Nabór = wiersz `academy_intakes` (tylko serwer): kandydaci z klubu i numeru naboru, zapisani przy otwarciu, więc odświeżenie nic nie losuje; czas czekania liczy się od otwarcia, także po odmowie. `take_academy_candidate` sprawdza ofertę, miejsca i numery (też zajęte przez odeszłych) i dodaje juniora raz. `train_academy_junior`: kasa, księga i +1 do grupy w jednej transakcji; skill bez zmian, jak w treningu indywidualnym. Utrzymanie: `settle_fixture` czyta poziom pod blokadą klubu i bierze kwotę z `p_upkeep_by_level` (po pensjach, kasa nigdy poniżej 0). `players.senior_matches` rośnie w `apply_match_development` raz na mecz za występ w jedenastce; odrzucony wiersz cofa całość. Junior, który przed startem sezonu ma 19 lat, odchodzi (`openNextSeasonAfterDeparture`, z cofnięciem); `players.aged_for_season` pilnuje jednego roku na koniec sezonu. Limity kadry 22/18/bramkarz liczą seniorów, także w H2H i licytacji. Numer koszulki jest zajęty tylko, póki zawodnik jest w klubie; wracający dostaje wolny. Nieznane fakty ceny (`saleUnknown`) albo inna cena niż pokazana wstrzymują sprzedaż. `lf_stamp_player_move` zostawia `academy` i `free`. `aiSaleAsk`: 10 / 25 / 50% dla academy, 10% dla free. Pasmo wybranego juniora zostaje znane bez raportu skauta. Bez migracji działa stara akademia (poziom 0).  
+**OUT:** auto-promote · mecze młodzieżowe · academy OVR · gwiazdki · liczenie zmienników.
+
 ### D133 — Uczciwa sprzedaż i rytm naboru · Owner GO 2026-11-24
 
 **Dlaczego:** Darmowy nabór bez limitu i sprzedaż juniora, wolnego agenta lub wypożyczonego za pełną cenę dawały nieograniczoną kasę.  
@@ -805,7 +811,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D133 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D134 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

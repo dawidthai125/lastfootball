@@ -15,6 +15,7 @@ import { ticketIncome } from '@/lib/stadium/levels';
 import type { CompleteFixtureState } from '@/lib/fixtures/action-types';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
 import type { FixtureDto } from '@/lib/fixtures/types';
+import { settleFixture } from '@/lib/fixtures/settle-fixture';
 import { matchdayBlockReason } from '@/lib/fixtures/matchday-gate';
 import { applyMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
@@ -181,23 +182,19 @@ export async function completeFixture(
       : 0;
 
   // Result, cash, ledger and the next fixture land together or not at all.
-  const { data: settledRaw, error: settleErr } = await admin.rpc(
-    'settle_fixture' as never,
-    {
-      p_fixture_id: row.id,
-      p_club_id: clubId,
-      p_home: home,
-      p_away: away,
-      p_reward: reward?.amount ?? 0,
-      p_reward_label: reward?.label ?? '',
-      p_tickets: ticketTake,
-      p_wage_due: wageDue,
-      p_wage_label: WAGES_LABEL,
-      p_wage_short_label: WAGES_SHORT_LABEL,
-    } as never,
-  );
-  const settled = settledRaw as { applied: boolean; paid: number } | null;
-  if (settleErr || !settled) {
+  const settled = await settleFixture(admin, {
+    p_fixture_id: row.id,
+    p_club_id: clubId,
+    p_home: home,
+    p_away: away,
+    p_reward: reward?.amount ?? 0,
+    p_reward_label: reward?.label ?? '',
+    p_tickets: ticketTake,
+    p_wage_due: wageDue,
+    p_wage_label: WAGES_LABEL,
+    p_wage_short_label: WAGES_SHORT_LABEL,
+  });
+  if (!settled) {
     console.error('completeFixture: settlement failed', { fixtureId: row.id });
     return { error: 'Nie udało się rozliczyć meczu. Spróbuj ponownie.' };
   }
@@ -259,6 +256,7 @@ export async function completeFixture(
     // Growth goes to the players who played, not to a lineup changed meanwhile.
     activePlayers: xiIds ? players.map((p) => ({ ...p, starter: xiIds.has(p.id) })) : players,
     truthById,
+    startedIds: new Set(Object.keys(roleById).filter((id) => roleById[id] === 'xi')),
   });
   if (!dev.ok) {
     return { error: dev.error };

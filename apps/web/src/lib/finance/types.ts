@@ -49,7 +49,10 @@ export type FinanceMovementCategory =
   | 'ticket_income'
   | 'stadium_build'
   | 'coach_hire'
-  | 'board_task';
+  | 'board_task'
+  | 'academy_build'
+  | 'academy_upkeep'
+  | 'academy_training';
 
 export type MatchRewardOutcome = 'win' | 'draw' | 'loss';
 

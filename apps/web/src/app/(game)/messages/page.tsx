@@ -4,6 +4,8 @@ import { MessagesView } from '@/components/messages/MessagesView';
 import { loadBoardState } from '@/lib/board/load-board-state';
 import { resolveBoardTaskNote } from '@/lib/board/tasks';
 import { getManagerClub } from '@/lib/club/get-manager-club';
+import { juniorAgeNote } from '@/lib/academy/levels';
+import { loadAcademyUpkeep } from '@/lib/academy/read-level';
 import { resolveClubFinance } from '@/lib/finance';
 import { listClubFinanceMovements } from '@/lib/finance/get-movements';
 import { listClubFixtures } from '@/lib/fixtures/get-fixture';
@@ -20,7 +22,7 @@ import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { resolveIntlCallup } from '@/lib/squad/intl-callup';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { matchWageDue } from '@/lib/squad/truth';
-import { filterSeniorPlayers } from '@/lib/squad/types';
+import { filterSeniorPlayers, isAcademyProspect } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
@@ -35,7 +37,7 @@ export default async function MessagesPage() {
 
   const supabase = await createClient();
   const today = utcDateString();
-  const [activePlayers, h2hOffers, farewellFlash, movements, fixtures] = await Promise.all([
+  const [activePlayers, h2hOffers, farewellFlash, movements, fixtures, upkeep] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveH2hOffers(supabase, club.id),
     club.seasonPhase === 'in_season'
@@ -43,6 +45,7 @@ export default async function MessagesPage() {
       : Promise.resolve([]),
     listClubFinanceMovements(club.id),
     listClubFixtures(club.id),
+    loadAcademyUpkeep(supabase, club.id),
   ]);
   const board = await loadBoardState(club, fixtures);
 
@@ -65,7 +68,7 @@ export default async function MessagesPage() {
   const loanOffers = resolveIncomingLoanOffers({
     clubId: club.id,
     transferWindowOpen: club.transferWindowOpen,
-    rosterCount: activePlayers.length,
+    rosterCount: filterSeniorPlayers(activePlayers).length,
     today,
   });
 
@@ -112,9 +115,14 @@ export default async function MessagesPage() {
     intlCallup: intl ? { playerId: intl.playerId, subject: intl.subject } : null,
     seasonDeparture: seasonDeparture ? { summary: seasonDeparture.summary } : null,
     retirementFarewell: retirementFarewell ? { subject: retirementFarewell.subject } : null,
-    wageNote: resolveClubFinance(club, movements, matchWageDue(filterSeniorPlayers(activePlayers)))
-      .wageNote,
+    wageNote: resolveClubFinance(
+      club,
+      movements,
+      matchWageDue(filterSeniorPlayers(activePlayers)),
+      upkeep,
+    ).wageNote,
     boardTaskNote: board ? resolveBoardTaskNote(board.tasks) : null,
+    academyAgeNote: juniorAgeNote(activePlayers.filter(isAcademyProspect)),
   });
 
   return (

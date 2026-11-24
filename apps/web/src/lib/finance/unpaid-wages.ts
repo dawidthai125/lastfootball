@@ -19,6 +19,8 @@ export function unpaidWageMoraleDelta(due: number, paid: number): number {
 export function resolveWageNote(input: {
   readonly cash: number;
   readonly nextWage: number;
+  /** Academy upkeep charged with the same match (D134). */
+  readonly upkeep?: number;
   readonly movements: readonly FinanceMovementDto[];
 }): string | null {
   const last = input.movements
@@ -28,8 +30,11 @@ export function resolveWageNote(input: {
       null,
     );
   if (last?.label.startsWith(WAGES_SHORT_LABEL)) return ARREARS_NOTE;
-  if (input.nextWage > 0 && input.cash < input.nextWage * ECONOMY_THIN.WAGE_WARNING_MATCHES) {
-    return `Kasy starczy na mniej niż ${ECONOMY_THIN.WAGE_WARNING_MATCHES} mecze pensji (${formatMoney(input.nextWage)} za mecz).`;
+  const upkeep = input.nextWage > 0 ? Math.max(0, input.upkeep ?? 0) : 0;
+  const perMatch = input.nextWage + upkeep;
+  if (perMatch > 0 && input.cash < perMatch * ECONOMY_THIN.WAGE_WARNING_MATCHES) {
+    const what = upkeep > 0 ? 'pensji i utrzymania akademii' : 'pensji';
+    return `Kasy starczy na mniej niż ${ECONOMY_THIN.WAGE_WARNING_MATCHES} mecze ${what} (${formatMoney(perMatch)} za mecz).`;
   }
   return null;
 }

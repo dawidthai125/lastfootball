@@ -13,6 +13,7 @@ export function resolveClubFinance(
   club: { readonly id: string; readonly cashBalance: number },
   movements: readonly FinanceMovementDto[],
   nextWage = 0,
+  upkeep = 0,
 ): ClubFinanceDto {
   const sorted = [...movements].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   const recent = sorted.slice(0, RECENT_LIMIT);
@@ -25,7 +26,7 @@ export function resolveClubFinance(
     envelopeLabel: envelope.envelopeLabel,
     lastMovement: recent[0] ?? null,
     recentMovements: recent,
-    wageNote: resolveWageNote({ cash: club.cashBalance, nextWage, movements }),
+    wageNote: resolveWageNote({ cash: club.cashBalance, nextWage, upkeep, movements }),
   };
 }
 

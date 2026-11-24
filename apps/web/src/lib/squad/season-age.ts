@@ -6,6 +6,8 @@ export type SeasonAgePlayerSlice = {
   readonly age: number;
   readonly skill: number;
   readonly potential: number;
+  /** Season whose end already aged him. Undefined on a database without the marker. */
+  readonly agedForSeason?: number | null;
 };
 
 export type SeasonAgeResultSlice = {

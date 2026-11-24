@@ -8,6 +8,7 @@ import { countPlayedInList, ensureClubFixtures } from '@/lib/fixtures';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { listClubPlayers } from '@/lib/squad/get-players';
+import { filterSeniorPlayers } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
 import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
@@ -45,7 +46,7 @@ export default async function TransfersPage() {
   const loanOffers = resolveIncomingLoanOffers({
     clubId: club.id,
     transferWindowOpen: club.transferWindowOpen,
-    rosterCount: activePlayers.length,
+    rosterCount: filterSeniorPlayers(activePlayers).length,
     today: utcDateString(),
   });
 
