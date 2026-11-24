@@ -28,6 +28,24 @@ export async function hasOpenAuction(playerId: string): Promise<boolean> {
   return Boolean(error) || (data as unknown as unknown[] | null)?.length !== 0;
 }
 
+/** Seniors and goalkeepers already bound by open auctions. Null = the read failed. */
+export async function auctionReserved(
+  clubId: string,
+): Promise<{ readonly players: number; readonly keepers: number } | null> {
+  const admin = tryAdminClient();
+  if (!admin) return { players: 0, keepers: 0 };
+  const count = async (keepers: boolean): Promise<unknown> =>
+    (
+      await admin.rpc(
+        'auction_reserved' as never,
+        { p_club: clubId, p_except: null, p_keepers: keepers } as never,
+      )
+    ).data;
+  const [players, keepers] = await Promise.all([count(false), count(true)]);
+  if (typeof players !== 'number' || typeof keepers !== 'number') return null;
+  return { players, keepers };
+}
+
 /** Open auctions. Empty when the tables are not in the database yet. */
 export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
   const supabase = await createClient();

@@ -8,7 +8,7 @@ import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { marketFee } from '@/lib/transfers/market-fee';
 import { AUCTION_OPEN } from '@/lib/transfers/auction';
-import { hasOpenAuction } from '@/lib/transfers/load-auctions';
+import { auctionReserved, hasOpenAuction } from '@/lib/transfers/load-auctions';
 import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
 import { boughtPlayerId, seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
@@ -303,8 +303,17 @@ export async function completeTransferSell(
   if (!input.transferWindowOpen) {
     return { ok: false, error: 'Okno transferowe jest zamknięte.' };
   }
-  if (input.activePlayers.length <= TRANSFERS_THIN.MIN_ROSTER) {
-    return { ok: false, error: 'Nie można zejść poniżej 18 zawodników.' };
+  const reserved = await auctionReserved(input.clubId);
+  if (!reserved)
+    return { ok: false, error: 'Nie udało się sprawdzić licytacji. Spróbuj ponownie.' };
+  if (input.activePlayers.length - reserved.players <= TRANSFERS_THIN.MIN_ROSTER) {
+    return {
+      ok: false,
+      error:
+        reserved.players > 0
+          ? 'Z trwającymi licytacjami zszedłbyś poniżej 18 zawodników.'
+          : 'Nie można zejść poniżej 18 zawodników.',
+    };
   }
 
   const player = input.activePlayers.find((p) => p.id === input.playerId);
@@ -314,7 +323,7 @@ export async function completeTransferSell(
 
   const isGk = player.pos === 'BR' || player.role === 'GK';
   const gkCount = input.activePlayers.filter((p) => p.pos === 'BR' || p.role === 'GK').length;
-  if (isGk && gkCount <= 1) {
+  if (isGk && gkCount - reserved.keepers <= 1) {
     return { ok: false, error: 'Nie możesz sprzedać ostatniego bramkarza.' };
   }
 

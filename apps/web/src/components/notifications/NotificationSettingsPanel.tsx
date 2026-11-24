@@ -117,7 +117,8 @@ function ProveEmail() {
   return (
     <form action={action} className="space-y-1.5">
       <p className="m-0">
-        Najpierw potwierdź adres e-mail. Wyślemy link na adres konta, potem wróć tutaj.
+        Powiadomienia e-mail wymagają kliknięcia linku z listu. Wyślemy go na adres konta, potem
+        wróć tutaj.
       </p>
       <Button type="submit" size="md" disabled={pending}>
         {pending ? 'Wysyłam…' : 'Wyślij link'}

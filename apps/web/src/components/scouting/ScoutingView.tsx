@@ -166,10 +166,10 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
         )}
       </Panel>
 
-      <Panel title="Rynek (listed)" flush className="mb-3">
+      <Panel title="Wystawieni przez inne kluby" flush className="mb-3">
         {marketCandidates.length === 0 ? (
           <p className="px-2.5 py-3 text-[12px] text-[var(--lf-muted)]">
-            Brak żywych listingów H2H. Decyzje kupna wyłącznie w Transferach.
+            Żaden inny klub nie wystawił teraz zawodnika. Kupujesz w Transferach.
           </p>
         ) : (
           <ul className="divide-y divide-[var(--lf-border)]">
