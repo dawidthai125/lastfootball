@@ -26,12 +26,14 @@ export function fixtureStayForm(
   managerLog: string,
   formation: string,
   startedOn: string,
+  kickoffId: string | null,
 ): FormData {
   const data = new FormData();
   data.set('fixtureId', fixtureId);
   data.set('managerLog', managerLog);
   data.set('shape', formation);
   data.set('startedOn', startedOn);
+  if (kickoffId) data.set('kickoffId', kickoffId);
   data.set('stay', '1');
   return data;
 }

@@ -23,6 +23,7 @@ import { applyMatchSquadTruth, groupsFromSkill, matchWageDue } from '@/lib/squad
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { authoritativeHumanScore } from '@/lib/league/human-league-store';
 import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
+import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
 import { parseManagerLog } from '@/lib/match/manager-commands';
 import { tryAdminClient } from '@/lib/supabase/admin';
@@ -106,6 +107,8 @@ export async function completeFixture(
   const seniors = filterSeniorPlayers(players);
   const wageDue = matchWageDue(seniors);
 
+  const kickoff = await loadKickoff(formData.get('kickoffId'), row.id, clubId);
+
   let score: { home: number; away: number };
   if (row.status === 'played' && row.home_score != null && row.away_score != null) {
     // A repeated save: the stored result stands, only unfinished steps run again.
@@ -137,7 +140,7 @@ export async function completeFixture(
     const scored =
       row.competition === 'human'
         ? await authoritativeHumanScore(clubId, row.matchday)
-        : await authoritativeManagerScore(row.id, players, managerLog, shape, today);
+        : await authoritativeManagerScore(row.id, players, managerLog, shape, today, kickoff);
     if ('error' in scored) return scored;
     score = { home: scored.home, away: scored.away };
   }
@@ -185,10 +188,16 @@ export async function completeFixture(
   }
 
   // Idempotent by match key, so a repeated save finishes a development that failed before.
-  const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
+  // The players who started this match, even if the lineup changed while it was on.
+  const played = kickoff && row.competition !== 'human' ? kickoff : null;
+  const xiIds = played ? new Set(played.ourXi.map((p) => p.id)) : null;
+  const benchIds = new Set((played?.ourBench ?? resolveMatchBench(players)).map((p) => p.id));
   const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};
   for (const p of seniors) {
-    if (p.starter && p.status !== 'INJURED' && p.status !== 'SUSPENDED') roleById[p.id] = 'xi';
+    const started = xiIds
+      ? xiIds.has(p.id)
+      : p.starter && p.status !== 'INJURED' && p.status !== 'SUSPENDED';
+    if (started) roleById[p.id] = 'xi';
     else if (benchIds.has(p.id)) roleById[p.id] = 'bench';
     else roleById[p.id] = 'out';
   }
@@ -239,6 +248,7 @@ export async function completeFixture(
     return { error: dev.error };
   }
   if (settled.applied) await recordFanMood(clubId, result);
+  await clearKickoffs(row.id, clubId);
 
   // Also open window if already played earlier and threshold now met (idempotent).
   await ensureTransferWindow(supabase, clubId);

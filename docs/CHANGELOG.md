@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Zamrożony początek meczu i mocniejsi rywale (D130)
+
+### Product
+
+- Serwer zapisuje skład, formę i ustawienie w chwili wejścia na boisko i z tego liczy wynik. Trening, transfer czy zmiana składu w drugiej karcie nie zmienia meczu. Migracja `20261124120000_match_kickoffs.sql`.
+- Rywale: IV liga 47–63, III 53–69, II 59–75, I 66–82 (było 42–58, 50–66, 58–74, 66–82). Nowy klub w IV lidze wygrywa ok. połowy meczów.
+- Liga ludzi: zaległa kolejka mówi wprost, że można ją nadrobić.
+
+---
+
 ## [2026-11-24] — Podsumowanie po meczu
 
 ### Product

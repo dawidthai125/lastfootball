@@ -24,6 +24,7 @@ export function CompleteLeagueFixtureButton({
   managerLog,
   formation,
   startedOn,
+  kickoffId,
   state,
   pending,
   action,
@@ -35,6 +36,7 @@ export function CompleteLeagueFixtureButton({
   managerLog: string;
   formation: string;
   startedOn: string;
+  kickoffId: string | null;
   state: CompleteFixtureState;
   pending: boolean;
   action: (payload: FormData) => void;
@@ -46,8 +48,8 @@ export function CompleteLeagueFixtureButton({
       <>
         {differs && state.score ? (
           <p role="status" style={{ margin: '0 0 0.5rem' }}>
-            Oficjalny wynik: {state.score.home}:{state.score.away}. Skład zmienił się w trakcie
-            meczu.
+            Oficjalny wynik: {state.score.home}:{state.score.away}. Dane meczu zmieniły się w
+            trakcie meczu.
           </p>
         ) : null}
         <a href="/hub" style={buttonStyle}>
@@ -63,6 +65,7 @@ export function CompleteLeagueFixtureButton({
       <input type="hidden" name="managerLog" value={managerLog} />
       <input type="hidden" name="shape" value={formation} />
       <input type="hidden" name="startedOn" value={startedOn} />
+      {kickoffId ? <input type="hidden" name="kickoffId" value={kickoffId} /> : null}
       <input type="hidden" name="stay" value="1" />
       {state.error ? (
         <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: '0 0 0.5rem' }}>

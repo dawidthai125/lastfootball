@@ -781,9 +781,14 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 **Zasada:** Duch zawodnika = `70 + ((forma − 65) + (morale − 60)) / 2` (`teamSpiritFromSeed`), bez morale = 70 = `DEFAULT_PLAYER_CONDITION`. Silnik: ±6% ataku i gola przy ±30 pkt (`MATCH_BALANCE.MORALE_*`). Wszystko z tych samych seedów co `authoritativeManagerScore` (D127). Fakty meczowe = pure derive z fixture (`resolveMatchFacts`), bez wpływu na silnik i bez zapisu; liczbowa frekwencja ≤ miejsca zastępuje tu D113. Puchar AI↔AI = `scoreFromStrength` (seed: sezon + runda), min. 6 pkt przewagi klubu z wyższej ligi; rywal już wylosowany przez menedżera zachowuje awans. `buildStarterPlayerInserts` tylko permutuje skill w pozycji.  
 **OUT:** odpoczynek między kolejkami (energia) · migracje · istniejące kluby.
 
+### D130 — Zamrożony początek meczu · pasma rywali · Owner GO 2026-11-24
+
+**Dlaczego:** Serwer odtwarzał mecz ze stanu na koniec, więc zmiana kadry w trakcie dawała inny wynik niż na ekranie. Nowy klub w IV lidze wygrywał ok. 2/3 meczów.  
+**Zasada:** Strona live zapisuje `match_kickoffs` (tylko service role), klient odsyła samo `kickoffId`; `authoritativeManagerScore` odtwarza z kopii ważnej 3 h dla tego meczu i klubu, a role po meczu bierze z tej samej kopii. Bez kopii działa ścieżka D127. Liga ludzi zostaje na swoich zamkniętych składach. Pasma `LeagueStrengthProfile`: IV 47–63, III 53–69, II 59–75, I 66–82.
+
 ## Najważniejsze decyzje (meta)
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D129 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D130 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

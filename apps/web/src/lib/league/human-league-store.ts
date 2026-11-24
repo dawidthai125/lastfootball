@@ -41,6 +41,8 @@ export type HumanLeagueCard = {
   readonly round: number | null;
   readonly opponentName: string | null;
   readonly windowSentence: string | null;
+  /** The shared window is over; the round can still be caught up. */
+  readonly late: boolean;
   readonly fixtureId: string | null;
   readonly note: string | null;
 };
@@ -103,6 +105,7 @@ function previewCard(club: ClubDto, note: string): HumanLeagueCard {
     round: 1,
     opponentName: opponent?.name ?? null,
     windowSentence: 'Wspólny początek o 18:00 czasu warszawskiego.',
+    late: false,
     fixtureId: null,
     note,
   };
@@ -398,6 +401,7 @@ function cardFrom(
     round: extra.round ?? null,
     opponentName: extra.opponentName ?? null,
     windowSentence: extra.windowSentence ?? null,
+    late: extra.late ?? false,
     fixtureId: extra.fixtureId ?? null,
     note: extra.note ?? null,
   };
@@ -492,6 +496,7 @@ export async function loadHumanLeagueCard(
     round,
     opponentName: opponent.name,
     windowSentence: kickoffWindowSentence(window),
+    late: window === 'after',
     fixtureId,
   });
 }

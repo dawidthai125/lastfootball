@@ -19,6 +19,8 @@ import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
 import { prepareHumanLive } from '@/lib/league/human-league-store';
+import { storeKickoff } from '@/lib/match/kickoff-store';
+import { lineupProblem } from '@/lib/squad/lineup-problem';
 import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
 
@@ -109,6 +111,8 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     if (human?.block) {
       return <SquadError matchId={id} detail={human.block} />;
     }
+    const problem = human ? null : lineupProblem(club.id, players);
+    if (problem) return <SquadError matchId={id} detail={problem} />;
     const ourXi = human ? human.ourXi : resolveStartingXi(players);
     const ourBench = human ? [] : resolveMatchBench(players);
     const developmentNames = previewMatchDevelopment(players).skillUpNames;
@@ -124,9 +128,20 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
         : typeof (moodRow.data as { fan_mood?: number }).fan_mood === 'number'
           ? (moodRow.data as { fan_mood: number }).fan_mood
           : 60;
+    const kickoffId = human
+      ? null
+      : await storeKickoff({
+          club,
+          fixture: dto,
+          ourXi,
+          ourBench,
+          formation: ourFormation,
+          theirXi: rival?.xi ?? null,
+        });
     return (
       <LiveMatchShell playedHref={`/match/${id}`}>
         <LiveMatchFoundation
+          kickoffId={kickoffId}
           bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
           club={club}
           leagueFixture={human?.fixture ?? dto}

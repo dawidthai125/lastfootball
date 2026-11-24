@@ -54,6 +54,7 @@ export function LiveMatchFoundation({
   ourFormation = '4-4-2',
   theirXi = null,
   developmentNames = [],
+  kickoffId = null,
   fanMoodBefore = 60,
 }: {
   bundle: LiveMatchBundle;
@@ -66,6 +67,8 @@ export function LiveMatchFoundation({
   theirXi?: readonly RosterPlayerSeed[] | null;
   /** Post Match development signals (LFE-PLAYERS-02). */
   developmentNames?: readonly string[];
+  /** Server copy of what this match started from (D130). */
+  kickoffId?: string | null;
   /** Fan mood before settle — Post Match Δ line (Information Thin). */
   fanMoodBefore?: number;
 }) {
@@ -149,12 +152,14 @@ export function LiveMatchFoundation({
         runtime.serializeManagerLog(),
         ourFormation ?? '4-4-2',
         runtime.startedOn,
+        kickoffId ?? null,
       ),
     );
   }, [
     snapshot,
     runtime,
     ourFormation,
+    kickoffId,
     leagueFixture,
     firstMatch,
     finished,
@@ -335,6 +340,7 @@ export function LiveMatchFoundation({
               managerLog={runtime?.serializeManagerLog() ?? '[]'}
               formation={ourFormation ?? '4-4-2'}
               startedOn={runtime.startedOn}
+              kickoffId={kickoffId ?? null}
               state={fixtureSave}
               pending={fixtureSavePending}
               action={saveFixture}
