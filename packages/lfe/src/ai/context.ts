@@ -100,6 +100,7 @@ export function buildMatchAiContext(state: MatchState): MatchAiContext {
   return Object.freeze({
     phase: state.phase,
     displayMinute: state.clock.displayMinute,
+    ...(state.rules?.neutral ? { neutral: true } : {}),
     home: buildSide(state, 'home'),
     away: buildSide(state, 'away'),
   });

@@ -104,7 +104,7 @@ export function decidePossession(ctx: MatchAiContext): MatchAiPossessionDecision
   const awayMentality = a.tactics.mentality / 100;
   const awayPressing = a.tactics.pressing / 100;
   let homeChance =
-    MATCH_BALANCE.HOME_POSSESSION +
+    (ctx.neutral ? 0.5 : MATCH_BALANCE.HOME_POSSESSION) +
     (homeMentality - 0.5) * 0.04 +
     (homePressing - 0.5) * 0.06 -
     (awayMentality - 0.5) * 0.04 -
@@ -153,8 +153,8 @@ export function decideAction(ctx: MatchAiContext, side: PitchSide): MatchAiActio
   const tempo = t.tempo / 100 - 0.5;
   const mentality = t.mentality / 100 - 0.5;
   const pressing = t.pressing / 100;
-  const homeEdge =
-    side === 'home' ? MATCH_BALANCE.HOME_ATTACK_EDGE : -MATCH_BALANCE.HOME_ATTACK_EDGE;
+  const edge = ctx.neutral ? 0 : MATCH_BALANCE.HOME_ATTACK_EDGE;
+  const homeEdge = side === 'home' ? edge : -edge;
 
   const attackChance = clamp01(
     MATCH_BALANCE.ATTACK *

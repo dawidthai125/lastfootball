@@ -411,7 +411,8 @@ export class LiveMatchRuntime {
             : '';
         return kind !== 'lifecycle' && kind !== 'kickoff';
       })
-      .slice(-40)
+      // Goals, cards and changes stay for the whole match; the rest shows the last moments.
+      .filter(({ e }, at, all) => at >= all.length - 40 || LASTING_TYPES.has(String(e.type)))
       .map(({ e, i }) =>
         mapFeedItem(e, i, matchState.clock.displayMinute, matchState.players, {
           homeName: this.homeName,
@@ -555,7 +556,13 @@ export class LiveMatchRuntime {
     return this.playbackSource === 'live' && this.session.status !== 'stopped';
   }
 
+  /** Called once before the match is taken apart, while its state can still be read. */
+  onLeave: (() => void) | null = null;
+
   dispose(): void {
+    const leave = this.onLeave;
+    this.onLeave = null;
+    leave?.();
     this.stopSimulation();
     this.replay.dispose();
     this.canvasHost.unbind();
@@ -579,9 +586,12 @@ function formatClock(displayMinute: number): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
+const LASTING_TYPES: ReadonlySet<string> = new Set(['GOAL', 'CARD', 'INJURY', 'SUBSTITUTION']);
+
 function mapPeriod(phase: string, period: string): string {
   if (phase === 'FINISHED') return 'Koniec';
   if (phase === 'FULL_TIME') return 'Koniec regulaminowy';
+  if (phase === 'PENALTIES') return 'Karne';
   if (phase === 'PRE_MATCH' || period === 'pre_match') return 'Przed meczem';
   if (period === 'first_half' || phase === 'FIRST_HALF') return '1. połowa';
   if (period === 'second_half' || phase === 'SECOND_HALF') return '2. połowa';

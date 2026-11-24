@@ -1,6 +1,9 @@
+import { randomUUID } from 'node:crypto';
+
 import type { FormationCode } from '@lastfootball/lfe';
 import { notFound, redirect } from 'next/navigation';
 
+import { FreshEntry } from '@/components/match/FreshEntry';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
 import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
@@ -189,19 +192,21 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     }
     return (
       <LiveMatchShell playedHref={`/match/${id}`}>
-        <LiveMatchFoundation
-          bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
-          club={going?.snapshot.club ?? club}
-          leagueFixture={human?.fixture ?? going?.snapshot.fixture ?? dto}
-          ourXi={ourXi}
-          ourBench={ourBench}
-          ourFormation={going?.snapshot.formation ?? ourFormation}
-          theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
-          extra={extra}
-          resume={going ? { tick: going.tick, log: going.log } : null}
-          developmentNames={developmentNames}
-          fanMoodBefore={fanMoodBefore}
-        />
+        <FreshEntry token={randomUUID()}>
+          <LiveMatchFoundation
+            bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
+            club={going?.snapshot.club ?? club}
+            leagueFixture={human?.fixture ?? going?.snapshot.fixture ?? dto}
+            ourXi={ourXi}
+            ourBench={ourBench}
+            ourFormation={going?.snapshot.formation ?? ourFormation}
+            theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
+            extra={extra}
+            resume={going ? { tick: going.tick, log: going.log } : null}
+            developmentNames={developmentNames}
+            fanMoodBefore={fanMoodBefore}
+          />
+        </FreshEntry>
       </LiveMatchShell>
     );
   } catch (e) {

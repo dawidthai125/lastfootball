@@ -25,6 +25,8 @@ export type MatchAiSideContext = {
 export type MatchAiContext = {
   readonly phase: MatchPhase;
   readonly displayMinute: number;
+  /** Neutral ground: no home advantage. */
+  readonly neutral?: boolean;
   readonly home: MatchAiSideContext;
   readonly away: MatchAiSideContext;
 };

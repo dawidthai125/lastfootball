@@ -27,7 +27,7 @@ export function commentaryLine(
     case 'MATCH_START':
       return 'Zaczynamy. Piłka w grze.';
     case 'HALF_END':
-      return 'Koniec połowy.';
+      return halfEndLine(payload);
     case 'MATCH_END':
       return 'Koniec meczu.';
     case 'GOAL':
@@ -247,4 +247,16 @@ function readBool(payload: unknown, key: string): boolean {
 function readFinite(payload: unknown, key: string): number | null {
   const value = payloadOf(payload)?.[key];
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+/** 1 and 2 are the halves, 3 is the end of extra time. */
+export function halfEndLine(payload: unknown): string {
+  const half =
+    payload && typeof payload === 'object' && 'half' in payload
+      ? Number((payload as { half: unknown }).half)
+      : 0;
+  if (half === 1) return 'Koniec pierwszej połowy.';
+  if (half === 2) return 'Koniec drugiej połowy.';
+  if (half === 3) return 'Koniec dogrywki.';
+  return 'Koniec połowy.';
 }
