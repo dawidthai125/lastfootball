@@ -59,7 +59,6 @@ export function FinanceView({
         <p className="lf-fi__eyebrow">Finanse</p>
         <p className="lf-fi__cash">{finance.cashLabel}</p>
         <h1 className="lf-fi__question">Czy moja sytuacja finansowa wymaga dziś reakcji?</h1>
-        <p className="lf-fi__currency">{finance.currency}</p>
       </header>
 
       <div className="lf-fi__cta-wrap">
