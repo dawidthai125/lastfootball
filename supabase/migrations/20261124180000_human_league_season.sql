@@ -18,3 +18,7 @@ begin
   );
 end;
 $do$;
+
+-- Pitch and style of the home club, frozen with the line-ups. Both clubs and the saved score
+-- then use the same numbers, also when the second club watches days later.
+alter table public.human_broadcasts add column if not exists home_setup jsonb;

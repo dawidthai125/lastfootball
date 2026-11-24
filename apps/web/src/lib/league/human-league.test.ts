@@ -20,6 +20,7 @@ import {
   sharedHumanSeed,
   type HumanClubInput,
 } from './human-league';
+import { parseHomeSetup } from './human-home-setup';
 import { finishSharedSession } from './human-play';
 
 const bots = OPPONENT_CATALOG.map((bot) => ({
@@ -245,4 +246,48 @@ describe('human league', () => {
     expect(awayResult).toEqual(homeResult);
     expect(homeResult.homeAttempted + homeResult.awayAttempted).toBeGreaterThan(0);
   }, 20000);
+
+  it('a bot at home and set-piece takers give both views the same match', () => {
+    // Bots carry no energy and no form.
+    const bot = xi('bot', 60, 80).map(({ energy: _e, form: _f, ...p }) => p);
+    const taker = (side: string) =>
+      xi(side, 70, 60).map((p, i) => ({ ...p, setPiece: i === 9 ? true : undefined }));
+    for (const [homeXi, awayXi] of [
+      [bot, taker('away')],
+      [taker('home'), taker('away')],
+    ] as const) {
+      const seed = sharedHumanSeed('2026-11-12', 2, 'h', 'a');
+      const view = (isHome: boolean) =>
+        createSessionFromLeagueFixture(
+          club(isHome ? 'h' : 'a', isHome ? 'Dom' : 'Wyjazd', isHome ? 'DOM' : 'WYJ'),
+          fixture({
+            id: isHome ? 'fix-h' : 'fix-a',
+            isHome,
+            opponentId: isHome ? 'a' : 'h',
+            opponentName: isHome ? 'Wyjazd' : 'Dom',
+            opponentShort: isHome ? 'WYJ' : 'DOM',
+            seed,
+          }),
+          isHome ? homeXi : awayXi,
+          [],
+          '4-4-2',
+          isHome ? awayXi : homeXi,
+        );
+      expect(finishSharedSession(view(false))).toEqual(finishSharedSession(view(true)));
+    }
+  }, 60000);
+
+  it('reads only known home setup values', () => {
+    expect(parseHomeSetup(null)).toEqual({
+      homePitchLevel: 0,
+      homeStylePressing: 0,
+      homeStyleTempo: 0,
+      homeStyleWidth: 0,
+      homePressLine: 'mid',
+      homePressShape: 'flat',
+    });
+    expect(
+      parseHomeSetup({ homePitchLevel: 9, homeStyleTempo: 5, homePressLine: 'low', x: 1 }),
+    ).toMatchObject({ homePitchLevel: 3, homeStyleTempo: 5, homePressLine: 'low' });
+  });
 });

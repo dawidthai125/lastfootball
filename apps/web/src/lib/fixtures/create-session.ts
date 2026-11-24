@@ -62,6 +62,11 @@ function conditionForOpponent(p: RosterPlayerSeed) {
   return conditionFromSeed(p);
 }
 
+function sharedCondition(p: RosterPlayerSeed) {
+  const condition = conditionForOpponent(p);
+  return condition ? { condition } : {};
+}
+
 /** AI rival of this fixture. Also frozen in the kickoff copy (D130). */
 export function resolveOpponentXi(
   club: Pick<ClubDto, 'leagueTier'>,
@@ -131,7 +136,8 @@ export function createSessionFromLeagueFixture(
         p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
         ourSide === 'home' ? pitchBonus : 0,
       ),
-      condition: conditionFromSeed(p),
+      // A shared match must not depend on who watches: both sides follow the same rule.
+      ...(shared ? sharedCondition(p) : { condition: conditionFromSeed(p) }),
     });
   });
   const benchSource = shared ? [] : ourBench;
@@ -168,7 +174,7 @@ export function createSessionFromLeagueFixture(
         p.groups ? mapGroupsToLfeSkills(p.groups) : mapPlayerSkillToLfeSkills(p.skill),
         theirSide === 'home' ? pitchBonus : 0,
       ),
-      ...(conditionForOpponent(p) ? { condition: conditionForOpponent(p) } : {}),
+      ...sharedCondition(p),
     });
   });
 
@@ -184,8 +190,11 @@ export function createSessionFromLeagueFixture(
       ? ((ourCaptain as PlayerId | undefined) ?? homeIds[0]!)
       : homeIds[0]!;
   const ourSetPiece = (our.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null;
-  const homeSetPiece = fixture.isHome ? ourSetPiece : null;
-  const awaySetPiece = fixture.isHome ? null : ourSetPiece;
+  const theirSetPiece = shared
+    ? ((their.find((p) => p.setPiece)?.id as PlayerId | undefined) ?? null)
+    : null;
+  const homeSetPiece = fixture.isHome ? ourSetPiece : theirSetPiece;
+  const awaySetPiece = fixture.isHome ? theirSetPiece : ourSetPiece;
 
   const homeName = fixture.isHome ? club.name : fixture.opponent.name;
   const awayName = fixture.isHome ? fixture.opponent.name : club.name;

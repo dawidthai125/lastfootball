@@ -828,7 +828,7 @@ Decyzje poniżej obowiązują po LFE Architecture Freeze i GDD Faza 2 (część)
 
 ### D137 — Mecze Ligi ludzi nie znikają przy nowym sezonie klubu · 2026-11-24
 
-Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`keep_human_matches`), więc rozegranej kolejki nie da się zagrać ani rozliczyć drugi raz. Mecz Ligi ludzi nie zajmuje dnia ligi i pucharu. Zapowiedź końca kariery liczy wiek po starcie sezonu.
+Liga ludzi ma własny kalendarz. Start sezonu klubu zostawia jej mecze (`human_league_season`), więc rozegranej kolejki nie da się zagrać ani rozliczyć drugi raz. Oba kluby i zapis wyniku liczą ten sam mecz: jedna zasada energii, stałe fragmenty obu stron, boisko i styl gospodarza zamrożone ze składem (`human_broadcasts.home_setup`). Mecz Ligi ludzi nie zajmuje dnia ligi i pucharu. Zapowiedź końca kariery liczy wiek po starcie sezonu.
 
 Każde złamanie D1–D28 / D38 / D40–D52 / D63–D137 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  

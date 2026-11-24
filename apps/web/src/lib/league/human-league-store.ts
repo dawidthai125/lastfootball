@@ -28,6 +28,7 @@ import {
   type HumanPairing,
   type HumanSeat,
 } from './human-league';
+import { parseHomeSetup, type HumanHomeSetup } from '@/lib/league/human-home-setup';
 import { finishSharedSession } from './human-play';
 
 const PLAYER_SELECT =
@@ -63,6 +64,7 @@ type BroadcastRow = {
   home_score: number | null;
   away_score: number | null;
   locked_at: string | null;
+  home_setup: Json | null;
 };
 
 type SeatTable = {
@@ -277,7 +279,7 @@ async function readBroadcast(pair: HumanPairing): Promise<BroadcastRow | null> {
   const { data, error } = await admin
     .from('human_broadcasts')
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
     )
     .eq('matchday', pair.matchday)
     .eq('home_id', pair.home.id)
@@ -285,6 +287,34 @@ async function readBroadcast(pair: HumanPairing): Promise<BroadcastRow | null> {
     .maybeSingle();
   if (error || !data) return null;
   return data as BroadcastRow;
+}
+
+/** Everything of the home club that the match uses besides its line-up. */
+async function readHomeSetup(homeId: string): Promise<HumanHomeSetup> {
+  if (isBotClubId(homeId)) return parseHomeSetup(null);
+  const { data } = await createAdminClient()
+    .from('clubs')
+    .select('pitch_level, style_pressing, style_tempo, style_width, press_line, press_shape')
+    .eq('id', homeId)
+    .maybeSingle();
+  const row = data as Record<string, unknown> | null;
+  return parseHomeSetup(
+    row && {
+      homePitchLevel: row.pitch_level,
+      homeStylePressing: row.style_pressing,
+      homeStyleTempo: row.style_tempo,
+      homeStyleWidth: row.style_width,
+      homePressLine: row.press_line,
+      homePressShape: row.press_shape,
+    },
+  );
+}
+
+/** A broadcast locked before the column existed reads the club as it is now. */
+async function setupOf(broadcast: BroadcastRow): Promise<HumanHomeSetup> {
+  return broadcast.home_setup
+    ? parseHomeSetup(broadcast.home_setup)
+    : readHomeSetup(broadcast.home_id);
 }
 
 async function lockBroadcast(
@@ -313,6 +343,7 @@ async function lockBroadcast(
     kickoff_on: kickoffDate(table.seasonKey, pair.matchday),
     home_xi: (homeSnap ?? null) as Json | null,
     away_xi: (awaySnap ?? null) as Json | null,
+    home_setup: await readHomeSetup(pair.home.id),
     locked_at: now.toISOString(),
   };
 
@@ -322,7 +353,7 @@ async function lockBroadcast(
       .update(payload)
       .eq('id', existing.id)
       .select(
-        'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at',
+        'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
       )
       .maybeSingle();
     if (updated.error || !updated.data) return { error: 'Nie udało się zamknąć składów.' };
@@ -334,7 +365,7 @@ async function lockBroadcast(
     .from('human_broadcasts')
     .insert(payload)
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
     )
     .maybeSingle();
   if (inserted.error || !inserted.data) {
@@ -552,56 +583,9 @@ export async function prepareHumanLive(
       opponentClubId: opponent.id,
       opponent: { id: opponent.id, name: opponent.name, shortName: opponent.shortName },
       sharedSeed: Number(locked.seed),
+      ...(await setupOf(locked)),
     },
   };
-}
-
-async function homePitchLevel(
-  admin: ReturnType<typeof createAdminClient>,
-  homeId: string,
-): Promise<number> {
-  if (isBotClubId(homeId)) return 0;
-  const row = await admin.from('clubs').select('pitch_level').eq('id', homeId).maybeSingle();
-  if (row.error || !row.data) return 0;
-  const level = (row.data as { pitch_level?: number }).pitch_level;
-  if (typeof level !== 'number' || !Number.isFinite(level)) return 0;
-  return Math.max(0, Math.min(3, Math.trunc(level)));
-}
-
-async function homeStylePressing(
-  admin: ReturnType<typeof createAdminClient>,
-  homeId: string,
-): Promise<number> {
-  if (isBotClubId(homeId)) return 0;
-  const row = await admin.from('clubs').select('style_pressing').eq('id', homeId).maybeSingle();
-  if (row.error || !row.data) return 0;
-  const points = (row.data as { style_pressing?: number }).style_pressing;
-  if (typeof points !== 'number' || !Number.isFinite(points)) return 0;
-  return Math.max(0, Math.min(8, Math.trunc(points)));
-}
-
-async function homeStyleTempo(
-  admin: ReturnType<typeof createAdminClient>,
-  homeId: string,
-): Promise<number> {
-  if (isBotClubId(homeId)) return 0;
-  const row = await admin.from('clubs').select('style_tempo').eq('id', homeId).maybeSingle();
-  if (row.error || !row.data) return 0;
-  const points = (row.data as { style_tempo?: number }).style_tempo;
-  if (typeof points !== 'number' || !Number.isFinite(points)) return 0;
-  return Math.max(0, Math.min(8, Math.trunc(points)));
-}
-
-async function homeStyleWidth(
-  admin: ReturnType<typeof createAdminClient>,
-  homeId: string,
-): Promise<number> {
-  if (isBotClubId(homeId)) return 0;
-  const row = await admin.from('clubs').select('style_width').eq('id', homeId).maybeSingle();
-  if (row.error || !row.data) return 0;
-  const points = (row.data as { style_width?: number }).style_width;
-  if (typeof points !== 'number' || !Number.isFinite(points)) return 0;
-  return Math.max(0, Math.min(8, Math.trunc(points)));
 }
 
 export async function authoritativeHumanScore(
@@ -615,7 +599,7 @@ export async function authoritativeHumanScore(
   const found = await admin
     .from('human_broadcasts')
     .select(
-      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at',
+      'id, matchday, home_id, away_id, home_name, away_name, home_short, away_short, seed, kickoff_on, home_xi, away_xi, home_score, away_score, locked_at, home_setup',
     )
     .eq('matchday', round)
     .or(`home_id.eq.${clubId},away_id.eq.${clubId}`)
@@ -682,10 +666,7 @@ export async function authoritativeHumanScore(
       playedAt: null,
       createdAt: broadcast.kickoff_on,
       sharedSeed: Number(broadcast.seed),
-      homePitchLevel: await homePitchLevel(admin, broadcast.home_id),
-      homeStylePressing: await homeStylePressing(admin, broadcast.home_id),
-      homeStyleTempo: await homeStyleTempo(admin, broadcast.home_id),
-      homeStyleWidth: await homeStyleWidth(admin, broadcast.home_id),
+      ...(await setupOf(broadcast)),
     },
     homeXi,
     [],
