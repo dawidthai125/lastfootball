@@ -893,7 +893,11 @@ Treść w `/regulamin` i `/prywatnosc`, dane i terminy w `lib/legal.ts`. Każda 
 
 Pole „Mam ukończone 16 lat”, sprawdzane też na serwerze (`consentError`). Wieku nie zapisujemy.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D148 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D149 — Listy konta przez pocztę gry · 2026-11-24
+
+Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabase. Link z listu nic nie zużywa, dopóki człowiek nie kliknie w grze (skanery poczty). Reset ma hamulec `consume_reset_slot`; gdy hamulec nie odpowiada, listu nie ma.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D149 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

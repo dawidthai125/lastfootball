@@ -24,6 +24,8 @@ vi.mock('@/lib/supabase/admin', () => ({
   }),
 }));
 
+vi.mock('@/lib/notifications/email', () => ({ emailProvider: () => null }));
+
 type Row = Record<string, unknown>;
 let row: Row;
 let columnMissing = false;

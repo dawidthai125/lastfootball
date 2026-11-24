@@ -4,3 +4,5 @@ export type AuthActionState = {
 };
 
 export const AUTH_ACTION_INITIAL: AuthActionState = { error: null, info: null };
+
+export type ConfirmEmailState = { result: 'ok' | 'proved' | 'bad' | null };

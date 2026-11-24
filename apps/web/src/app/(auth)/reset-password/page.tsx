@@ -9,9 +9,16 @@ import { createClient } from '@/lib/supabase/server';
 export const metadata: Metadata = {
   title: 'Nowe hasło',
   robots: { index: false, follow: false },
+  referrer: 'no-referrer',
 };
 
-export default async function ResetPasswordPage() {
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string | string[]; ponow?: string }>;
+}) {
+  const params = await searchParams;
+  const token = typeof params.token === 'string' ? params.token : '';
   const supabase = env.isSupabaseConfigured ? await createClient() : null;
   const user = supabase ? (await supabase.auth.getUser()).data.user : null;
 
@@ -26,12 +33,12 @@ export default async function ResetPasswordPage() {
         <p className="lf-auth-form__error" role="alert">
           Auth wymaga skonfigurowanego Supabase (env).
         </p>
-      ) : !user ? (
+      ) : !user && !token ? (
         <p className="lf-auth-form__error" role="alert">
           Link wygasł albo sesja resetu nie doszła. Poproś o nowy link.
         </p>
       ) : (
-        <ResetPasswordForm />
+        <ResetPasswordForm token={token} retry={params.ponow === '1'} />
       )}
       <p className="lf-auth-form__switch">
         <Link href="/login" className="lf-auth-form__link">

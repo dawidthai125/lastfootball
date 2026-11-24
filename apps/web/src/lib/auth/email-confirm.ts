@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 
 import { env } from '@/config/env';
+import { accountMailReady, confirmLetter, sendAccountLetter } from '@/lib/auth/account-mail';
 import {
   deadlineFrom,
   emailGate,
@@ -130,6 +131,14 @@ export function hashConfirmToken(token: string): string {
 
 async function sendConfirmLetter(email: string, token: string): Promise<boolean> {
   const origin = env.appUrl ?? 'https://www.lastfootball.pl';
+  if (accountMailReady()) {
+    return sendAccountLetter(
+      email,
+      confirmLetter(origin, token),
+      `confirm-${hashConfirmToken(token).slice(0, 40)}`,
+    );
+  }
+  // Without the provider (local, previews): the built-in mailer of the database service.
   const next = `/auth/email-confirmed?token=${token}`;
   const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
   try {
