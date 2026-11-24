@@ -84,7 +84,7 @@ export function resolveClubAcademy(
   club: Pick<ClubDto, 'id'>,
   rows: readonly PlayerRowDto[],
   phase: HubPhase,
-  revealedIds?: ReadonlySet<string>,
+  revealedIds?: { has(id: string): boolean },
   state: AcademyState = OLD_ACADEMY,
 ): AcademyDto {
   const unlocked = phase === 'SEASON' || phase === 'PLAYOFF' || phase === 'OFFSEASON';

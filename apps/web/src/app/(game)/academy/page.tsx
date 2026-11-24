@@ -8,7 +8,7 @@ import { listClubFixtures } from '@/lib/fixtures';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { resolveHubPhase } from '@/lib/hub';
 import { listClubPlayers } from '@/lib/squad/get-players';
-import { loadRevealedPlayerIds } from '@/lib/scouting/load-reports';
+import { loadScoutReports } from '@/lib/scouting/load-reports';
 import { tryAdminClient } from '@/lib/supabase/admin';
 
 /**
@@ -23,7 +23,7 @@ export default async function AcademyPage() {
   const [fixtures, rows, revealed, records] = await Promise.all([
     listClubFixtures(club.id),
     listClubPlayers(club.id),
-    loadRevealedPlayerIds(club.id),
+    loadScoutReports(club.id),
     // The club above is the manager's own.
     admin ? loadAcademyRecords(admin, club.id, new Date()) : null,
   ]);

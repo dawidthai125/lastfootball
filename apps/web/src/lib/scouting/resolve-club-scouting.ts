@@ -1,9 +1,11 @@
 import type { ClubDto } from '@/lib/club/types';
 import type { HubPhase } from '@/lib/hub/types';
 import {
+  POTENTIAL_BAND_LABEL,
   potentialBandLabel,
   resolvePlayerPotential,
   resolvePotentialBand,
+  type PotentialBandId,
 } from '@/lib/squad/potential';
 import { filterSeniorPlayers, type PlayerRowDto } from '@/lib/squad/types';
 import type { TransferMarketDto } from '@/lib/transfers/types';
@@ -35,11 +37,15 @@ function fromOwnSenior(row: PlayerRowDto, onShortlist: boolean): ScoutingCandida
 function fromLiveListing(
   listing: TransferMarketDto['liveListings'][number],
   onShortlist: boolean,
-  revealed: boolean | null,
+  /** Null = reports could not be read here; undefined = not bought. */
+  report: PotentialBandId | null | undefined,
 ): ScoutingCandidateDto {
-  /** REUSE D22 helper — presentation band from existing skill/id/age (no second rating). */
-  const potential = resolvePlayerPotential(listing.skill, listing.playerId, listing.age);
-  const bandLabel = potentialBandLabel(potential);
+  // The bought band stays true when the player ages; the estimate does not (D155).
+  const revealed = report === null ? null : report !== undefined;
+  const band =
+    report ??
+    resolvePotentialBand(resolvePlayerPotential(listing.skill, listing.playerId, listing.age));
+  const bandLabel = POTENTIAL_BAND_LABEL[band];
   const ceiling =
     revealed === null
       ? { label: bandLabel, hidden: false }
@@ -49,7 +55,7 @@ function fromLiveListing(
     name: listing.playerName,
     pos: listing.pos,
     age: listing.age,
-    potentialBand: ceiling.hidden ? 'low' : resolvePotentialBand(potential),
+    potentialBand: ceiling.hidden ? 'low' : band,
     potentialLabel: ceiling.label,
     listed: true,
     source: 'market_listed',
@@ -70,7 +76,7 @@ export function resolveClubScouting(
   market: TransferMarketDto,
   shortlistIds: readonly string[],
   phase: HubPhase,
-  revealedIds?: ReadonlySet<string>,
+  reports?: ReadonlyMap<string, PotentialBandId>,
 ): ScoutingDto {
   const unlocked = phase === 'SEASON' || phase === 'PLAYOFF' || phase === 'OFFSEASON';
   const shortlistSet = new Set(shortlistIds);
@@ -82,10 +88,10 @@ export function resolveClubScouting(
     byId.set(row.id, fromOwnSenior(row, shortlistSet.has(row.id)));
   }
   for (const listing of market.liveListings) {
-    const revealed = revealedIds == null ? null : revealedIds.has(listing.playerId);
+    const report = reports == null ? null : reports.get(listing.playerId);
     byId.set(
       listing.playerId,
-      fromLiveListing(listing, shortlistSet.has(listing.playerId), revealed),
+      fromLiveListing(listing, shortlistSet.has(listing.playerId), report),
     );
   }
 
