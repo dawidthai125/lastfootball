@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { signUpWithPassword } from '@/lib/auth/actions';
 import { TurnstileField } from '@/components/auth/TurnstileField';
+import { MIN_PASSWORD } from '@/lib/auth/password-policy';
 import { LEGAL } from '@/lib/legal';
 import { Checkbox, Field, Input } from '@/components/ui/FormControls';
 
@@ -44,7 +45,7 @@ export function RegisterForm({ turnstileSiteKey }: { turnstileSiteKey: string | 
           type="password"
           autoComplete="new-password"
           required
-          minLength={6}
+          minLength={MIN_PASSWORD}
           disabled={pending}
         />
       </Field>

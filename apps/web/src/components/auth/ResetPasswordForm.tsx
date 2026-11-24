@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 
 import { updatePasswordFromRecovery } from '@/lib/auth/actions';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
+import { MIN_PASSWORD } from '@/lib/auth/password-policy';
 import { Field, Input } from '@/components/ui/FormControls';
 
 export function ResetPasswordForm({
@@ -31,7 +32,7 @@ export function ResetPasswordForm({
           type="password"
           autoComplete="new-password"
           required
-          minLength={6}
+          minLength={MIN_PASSWORD}
           disabled={pending}
         />
       </Field>
@@ -43,7 +44,7 @@ export function ResetPasswordForm({
           type="password"
           autoComplete="new-password"
           required
-          minLength={6}
+          minLength={MIN_PASSWORD}
           disabled={pending}
         />
       </Field>

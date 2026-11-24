@@ -63,7 +63,7 @@ export async function createClub(
   }
 
   // Database typings lag migrations in CI/local until regen — insert payload validated above.
-  const { data: created, error } = await supabase
+  const { data: created, error } = await serverDb(supabase)
     .from('clubs')
     .insert({
       owner_id: user.id,

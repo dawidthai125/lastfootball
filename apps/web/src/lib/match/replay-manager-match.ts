@@ -26,6 +26,30 @@ export function kickOffSession(session: MatchSession): void {
 }
 
 /**
+ * Plays to `untilTick`, with every decision on its own tick.
+ * A resumed match gets here the same way the official replay does.
+ */
+export function playToTick(
+  session: MatchSession,
+  side: PitchSide,
+  log: readonly ManagerLogEntry[],
+  untilTick: number,
+  afterStep?: () => void,
+): void {
+  let next = 0;
+  for (let step = 0; step < MAX_STEPS; step += 1) {
+    const tick = session.context().tick;
+    while (next < log.length && log[next]!.t <= tick) {
+      apply(session, side, log[next]!, tick);
+      next += 1;
+    }
+    if (tick >= untilTick || session.getMatchState().phase === 'FINISHED') return;
+    session.step();
+    afterStep?.();
+  }
+}
+
+/**
  * Official result of a manager match (D127). Seed, squads and decisions are replayed
  * on the server; the browser never states a score. Unknown or refused entries are
  * skipped exactly like a refused click in the live view.

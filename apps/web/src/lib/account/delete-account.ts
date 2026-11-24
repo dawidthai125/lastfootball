@@ -1,10 +1,10 @@
 'use server';
 
-import { createClient as createPlainClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { env } from '@/config/env';
+import { isOwnPassword } from '@/lib/account/check-password';
 import { tryAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
@@ -36,14 +36,7 @@ export async function deleteAccount(
   const admin = tryAdminClient();
   if (!admin) return { error: FAILED };
 
-  // A separate client: the check must not touch the session cookies.
-  const check = createPlainClient(env.supabaseUrl, env.supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const proven = await check.auth.signInWithPassword({ email: user.email, password });
-  if (proven.error || proven.data.user?.id !== user.id) {
-    return { error: 'Nieprawidłowe hasło.' };
-  }
+  if (!(await isOwnPassword(user, password))) return { error: 'Nieprawidłowe hasło.' };
 
   const club = await admin.rpc('delete_manager_club' as never, { p_user_id: user.id } as never);
   if (club.error) {

@@ -12,12 +12,13 @@ import type { FixtureDto } from '@/lib/fixtures/types';
 import {
   MANAGER_LOG_MAX,
   SUB_COMMAND,
+  continuesLog,
   managerCommand,
   managerSubstitution,
   parseManagerLog,
   type ManagerLogEntry,
 } from '@/lib/match/manager-commands';
-import { kickOffSession, replayManagerMatch } from '@/lib/match/replay-manager-match';
+import { kickOffSession, playToTick, replayManagerMatch } from '@/lib/match/replay-manager-match';
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 
 const ROLES = ['GK', 'RB', 'CB', 'CB', 'LB', 'CM', 'CM', 'RW', 'CM', 'ST', 'LW'] as const;
@@ -117,6 +118,54 @@ describe('replayManagerMatch', () => {
       { t: 12, c: SUB_COMMAND, o: 'nobody', i: 'ghost' },
     ]);
     expect(noisy).toEqual(clean);
+  });
+});
+
+describe('a resumed match (D150)', () => {
+  const log: ManagerLogEntry[] = [
+    { t: 60, c: 'attack' },
+    { t: 420, c: SUB_COMMAND, o: 'p-9', i: 'b-1' },
+    { t: 700, c: 'form-433' },
+  ];
+
+  it.each([1, 60, 421, 900])('goes on exactly as it was (tick %i)', { timeout: 60_000 }, (tick) => {
+    const stored = log.filter((entry) => entry.t <= tick);
+    const s = session('fx-r', true);
+    kickOffSession(s);
+    playToTick(s, 'home', stored, Math.max(tick, s.context().tick));
+    const late = log.filter((entry) => entry.t > tick);
+    for (let i = 0; i < 12_000 && s.getMatchState().phase !== 'FINISHED'; i += 1) {
+      const now = s.context().tick;
+      for (const entry of late.filter((e) => e.t === now)) {
+        s.dispatch(
+          entry.c === SUB_COMMAND
+            ? managerSubstitution(entry.o!, entry.i!, now, 'home')
+            : managerCommand(entry.c, now, 'home')!,
+        );
+        s.context().events.flush();
+      }
+      s.step();
+    }
+    const whole = replayManagerMatch(session('fx-r', true), 'home', log)!;
+    const { home, away } = s.getMatchState().score;
+    expect({ home, away }).toEqual({ home: whole.home, away: whole.away });
+  });
+
+  it('stops at the end of the match', { timeout: 60_000 }, () => {
+    const s = session('fx-r', true);
+    kickOffSession(s);
+    playToTick(s, 'home', [], 20_000);
+    expect(s.getMatchState().phase).toBe('FINISHED');
+  });
+
+  it('the stored part cannot be rewritten', () => {
+    const stored = log.slice(0, 2);
+    expect(continuesLog(500, stored, log)).toBe(true);
+    expect(continuesLog(500, stored, stored)).toBe(true);
+    expect(continuesLog(500, stored, log.slice(0, 1))).toBe(false);
+    expect(continuesLog(500, stored, [{ t: 60, c: 'defend' }, ...log.slice(1)])).toBe(false);
+    expect(continuesLog(500, stored, [...stored, { t: 450, c: 'press' }])).toBe(false);
+    expect(continuesLog(500, [], [{ t: 10, c: 'press' }])).toBe(false);
   });
 });
 

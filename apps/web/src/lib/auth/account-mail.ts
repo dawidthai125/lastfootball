@@ -53,6 +53,27 @@ export function resetLetter(origin: string, token: string): AccountLetter {
   });
 }
 
+export function emailChangeLetter(origin: string, token: string): AccountLetter {
+  return letter({
+    title: 'Nowy adres konta',
+    body: 'Otwórz link i potwierdź, że to Twój adres. Link działa 24 godziny.',
+    button: 'Potwierdź nowy adres',
+    link: `${origin}/auth/email-change?token=${encodeURIComponent(token)}`,
+    note: 'Jeśli to nie Ty zmieniasz adres konta w Last Football, nic nie rób.',
+  });
+}
+
+/** Plain notice with no token in it. */
+export function noticeLetter(origin: string, title: string, body: string): AccountLetter {
+  return letter({
+    title,
+    body,
+    button: 'Last Football',
+    link: origin,
+    note: 'Masz pytania albo się nie zgadzasz? Napisz na kontakt@lastfootball.pl.',
+  });
+}
+
 export function accountMailReady(): boolean {
   return emailProvider() !== null;
 }

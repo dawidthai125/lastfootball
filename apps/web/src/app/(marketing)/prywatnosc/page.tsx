@@ -47,6 +47,15 @@ export default function PrivacyPage() {
             miesięcy od zakończenia sprawy.
           </li>
           <li>
+            <strong>Zgłoszenia i blokady:</strong> który klub kogo zgłosił i dlaczego, powód blokady
+            lub zmiany nazwy. Do porządku w grze (uzasadniony interes, lit. f). Zgłoszenia i
+            dziennik działań do roku od zamknięcia, blokada do jej zdjęcia lub usunięcia konta.
+          </li>
+          <li>
+            <strong>Zmiana adresu:</strong> nowy e-mail czekający na potwierdzenie, około doby
+            (umowa, lit. b).
+          </li>
+          <li>
             <strong>Dzienniki techniczne:</strong> m.in. adres IP i czas zapytania w dziennikach
             dostawców serwerów. Do bezpieczeństwa i naprawy błędów (uzasadniony interes, lit. f).
             Przez czas ustawiony u dostawcy.

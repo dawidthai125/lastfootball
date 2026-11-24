@@ -11,6 +11,7 @@ import { accountMailReady } from '@/lib/auth/account-mail';
 import { consentError } from '@/lib/auth/consent';
 import { confirmEmailToken, issueConfirmLink } from '@/lib/auth/email-confirm';
 import { isResetToken, sendResetLetter, takeResetSlot } from '@/lib/auth/password-reset';
+import { MIN_PASSWORD, passwordProblem } from '@/lib/auth/password-policy';
 import { getAuthUser, getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
 import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate';
 import { takeSignupSlot } from '@/lib/auth/signup-throttle';
@@ -26,7 +27,11 @@ function mapAuthError(message: string): string {
   if (m.includes('invalid login credentials')) return 'Nieprawidłowy email lub hasło.';
   if (m.includes('already') && m.includes('register'))
     return 'Konto z tym emailem już istnieje. Zaloguj się.';
-  if (m.includes('password')) return 'Hasło nie spełnia wymagań (min. 6 znaków).';
+  if (m.includes('banned')) return 'Konto jest zablokowane. Napisz na kontakt@lastfootball.pl.';
+  if (m.includes('weak') || m.includes('pwned') || m.includes('leaked')) {
+    return 'To hasło jest zbyt łatwe albo wyciekło. Wybierz inne.';
+  }
+  if (m.includes('password')) return `Hasło nie spełnia wymagań (min. ${MIN_PASSWORD} znaków).`;
   if (m.includes('rate')) return 'Zbyt wiele prób. Spróbuj za chwilę.';
   if (m.includes('invalid') && m.includes('email')) return 'Podaj poprawny adres email.';
   return 'Nie udało się dokończyć. Spróbuj ponownie.';
@@ -80,9 +85,8 @@ export async function signUpWithPassword(
   if (!email || !password) {
     return { error: 'Podaj email i hasło.', info: null };
   }
-  if (password.length < 6) {
-    return { error: 'Hasło musi mieć co najmniej 6 znaków.', info: null };
-  }
+  const weak = passwordProblem(password);
+  if (weak) return { error: weak, info: null };
 
   const headerList = await headers();
   const ip = clientIpFromHeaders(headerList);
@@ -226,12 +230,8 @@ export async function updatePasswordFromRecovery(
   }
   const password = String(formData.get('password') ?? '');
   const confirm = String(formData.get('confirm') ?? '');
-  if (password.length < 6) {
-    return { error: 'Hasło musi mieć co najmniej 6 znaków.', info: null };
-  }
-  if (password !== confirm) {
-    return { error: 'Hasła muszą być takie same.', info: null };
-  }
+  const weak = passwordProblem(password, confirm);
+  if (weak) return { error: weak, info: null };
   const supabase = await createClient();
   const token = String(formData.get('token') ?? '');
   if (token) {

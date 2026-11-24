@@ -1,6 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 
+import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
+import { openMatchOf } from '@/lib/match/kickoff-store';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { PreMatchView } from '@/components/match/PreMatchView';
 import { Panel } from '@/components/ui/Panel';
@@ -155,6 +157,11 @@ export default async function PreMatchPage({ params, searchParams }: PageProps) 
 
   const blocked = await upcomingKickoffSentence(id);
   if (blocked) return <KickoffBlocked sentence={blocked} />;
+
+  if (dto.competition !== 'human') {
+    const open = await openMatchOf(club.id);
+    if (open) return <OpenMatchNotice fixtureId={open} other={open !== dto.id} />;
+  }
 
   try {
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;

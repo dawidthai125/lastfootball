@@ -12,6 +12,7 @@ const PUBLIC_PREFIXES = [
   '/auth',
   '/regulamin',
   '/prywatnosc',
+  '/jak-grac',
   '/status',
 ];
 

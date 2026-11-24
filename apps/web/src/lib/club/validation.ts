@@ -1,3 +1,5 @@
+import { isNameAllowed } from '@/lib/club/name-filter';
+
 const NAME_RE = /^[\p{L}0-9][\p{L}0-9 .'-]{1,22}[\p{L}0-9]$/u;
 const SHORT_RE = /^[A-Z0-9]{3,4}$/;
 const HEX_RE = /^#[0-9A-Fa-f]{6}$/;
@@ -48,6 +50,9 @@ export function validateClubIdentity(input: {
   }
   if (!SHORT_RE.test(shortName)) {
     return { ok: false, error: 'Skrót: 3–4 znaki A–Z / 0–9.' };
+  }
+  if (!isNameAllowed(name) || !isNameAllowed(shortName)) {
+    return { ok: false, error: 'Tej nazwy nie można użyć. Wybierz inną.' };
   }
   if (!HEX_RE.test(primaryColor) || !HEX_RE.test(secondaryColor)) {
     return { ok: false, error: 'Wybierz poprawne barwy klubu.' };

@@ -18,7 +18,7 @@ import {
   managerSubstitution,
   type ManagerLogEntry,
 } from '@/lib/match/manager-commands';
-import { kickOffSession } from '@/lib/match/replay-manager-match';
+import { kickOffSession, playToTick } from '@/lib/match/replay-manager-match';
 import { matchBooking } from '@/lib/squad/truth';
 import { createMatchCanvasHost, type MatchCanvasHost } from '@/gameplay/canvas-host';
 import type { MatchCanvasRendererApi } from '@/gameplay/canvas';
@@ -52,6 +52,9 @@ export type LiveMatchSnapshot = {
   readonly tactics: MatchState['tactics'];
   readonly replay: ReplayView;
 };
+
+/** Where a match that already went on continues (D150). */
+export type MatchResume = { readonly tick: number; readonly log: readonly ManagerLogEntry[] };
 
 /** Product window from GDD §9.10 while the manager is watching live. */
 export { LIVE_SUB_LIMIT };
@@ -97,6 +100,9 @@ export class LiveMatchRuntime {
   /** UTC day the match opened on; see kickoffDay(). */
   readonly startedOn = new Date().toISOString().slice(0, 10);
 
+  /** Minute the match went on from, or null for a match from the start. */
+  resumedMinute: number | null = null;
+
   private version = 0;
   private listeners = new Set<() => void>();
   private cachedSnapshot: LiveMatchSnapshot | null = null;
@@ -125,6 +131,7 @@ export class LiveMatchRuntime {
     ourBench?: readonly RosterPlayerSeed[] | null,
     ourFormation: FormationCode = '4-4-2',
     theirXi?: readonly RosterPlayerSeed[] | null,
+    resume?: MatchResume | null,
   ) {
     this.fixture = fixture;
     this.shell = shell;
@@ -164,7 +171,7 @@ export class LiveMatchRuntime {
       onChange: () => this.bump(),
       baseIntervalMs: 50,
     });
-    this.bootstrapMatch();
+    this.bootstrapMatch(resume ?? null);
   }
 
   /** Call from useEffect — never start timers during render/useMemo. */
@@ -193,10 +200,19 @@ export class LiveMatchRuntime {
     return snap;
   }
 
-  private bootstrapMatch(): void {
+  private bootstrapMatch(resume: MatchResume | null): void {
     kickOffSession(this.session);
     this.flushEvents();
     this.recordAndMaybePresentLive();
+    if (resume && resume.tick > 0) {
+      playToTick(this.session, this.managerSide, resume.log, resume.tick, () => {
+        this.flushEvents();
+        this.recordAndMaybePresentLive();
+      });
+      this.managerLog.push(...resume.log);
+      this.flushEvents();
+      this.resumedMinute = Math.floor(this.session.getMatchState().clock.displayMinute);
+    }
     this.bump();
   }
 
@@ -500,6 +516,11 @@ export class LiveMatchRuntime {
     this.recordAndMaybePresentLive();
     this.bump();
     return true;
+  }
+
+  /** For the server: how far this match is. */
+  progress(): { tick: number; log: readonly ManagerLogEntry[] } {
+    return { tick: this.session.context().tick, log: this.managerLog };
   }
 
   /** JSON for completeFixture. No score in it. */
