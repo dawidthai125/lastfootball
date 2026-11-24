@@ -144,6 +144,15 @@ describe('kickoff snapshot', () => {
     expect(parsePlayerLines(JSON.parse(JSON.stringify(played.players)))).toEqual(played.players);
   });
 
+  it('gives the armband to the best leader when the captain is not in the eleven', () => {
+    const led = xi.map((p, i) => ({ ...p, captain: undefined, leadership: i === 4 ? 85 : 50 }));
+    const session = createSessionFromLeagueFixture(club, fixture, led);
+    expect(session.getMatchState().awayLineup.captainPlayerId).toBe('p-4');
+    const chosen = led.map((p, i) => ({ ...p, captain: i === 7 || undefined }));
+    const other = createSessionFromLeagueFixture(club, { ...fixture, isHome: true }, chosen);
+    expect(other.getMatchState().homeLineup.captainPlayerId).toBe('p-7');
+  });
+
   it('refuses another fixture, another club and broken rows', () => {
     const raw = JSON.parse(JSON.stringify(snapshot));
     expect(readKickoffSnapshot(raw, 'fx-2', 'c1')).toBeNull();

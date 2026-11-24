@@ -39,6 +39,8 @@ export async function saveContractTalk(
     .select('id, wage, skill, age, morale, personality, contract_season')
     .eq('id', playerId)
     .eq('club_id', clubId)
+    .eq('loaned_in', false)
+    .eq('academy_track', false)
     .is('departed_at', null)
     .maybeSingle();
   if (readErr || !player) return { error: 'Nie udało się odczytać kontraktu.' };

@@ -1,5 +1,6 @@
 import { hashPlayerId, resolvePlayerPotential } from '@/lib/squad/potential';
-import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers, type PlayerRowDto } from '@/lib/squad/types';
+import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { academyLevel } from '@/lib/academy/levels';
 import { ACADEMY_THIN } from '@/lib/academy/types';
 
@@ -183,6 +184,12 @@ export function canPromoteProspect(
   }
   if (!player.academyTrack) {
     return { ok: false, error: 'Zawodnik nie jest w torze akademii.' };
+  }
+  if (filterSeniorPlayers(rows).length >= TRANSFERS_THIN.MAX_ROSTER) {
+    return {
+      ok: false,
+      error: `Kadra ma już ${TRANSFERS_THIN.MAX_ROSTER} zawodników. Zwolnij miejsce.`,
+    };
   }
   return { ok: true, player };
 }
