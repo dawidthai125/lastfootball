@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import type { AuthActionState } from '@/lib/auth/types';
+import { consentError } from '@/lib/auth/consent';
 import { issueConfirmLink } from '@/lib/auth/email-confirm';
 import { getAuthUser, getPostAuthPath, sanitizeNextPath } from '@/lib/auth/session';
 import { clientIpFromHeaders, signupBlockMessage } from '@/lib/auth/signup-gate';
@@ -70,11 +71,9 @@ export async function signUpWithPassword(
 
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
-  const terms = formData.get('terms') === 'on';
 
-  if (!terms) {
-    return { error: 'Zaakceptuj Regulamin i Politykę prywatności.', info: null };
-  }
+  const refused = consentError(formData);
+  if (refused) return { error: refused, info: null };
   if (!email || !password) {
     return { error: 'Podaj email i hasło.', info: null };
   }

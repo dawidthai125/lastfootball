@@ -889,7 +889,11 @@ Dawid nie chce przekazywać danych graczy dostawcom z USA. Notka po meczu to zda
 
 Treść w `/regulamin` i `/prywatnosc`, dane i terminy w `lib/legal.ts`. Każda nowa kategoria danych albo dostawca wymaga zmiany polityki w tym samym PR.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D147 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D148 — Wiek przy rejestracji · Owner GO 2026-11-24
+
+Pole „Mam ukończone 16 lat”, sprawdzane też na serwerze (`consentError`). Wieku nie zapisujemy.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D148 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
