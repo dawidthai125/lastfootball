@@ -1,0 +1,49 @@
+.lf-legal {
+  width: min(46rem, calc(100% - 2 * var(--lf-space-4)));
+  margin: var(--lf-space-6) auto;
+  padding: var(--lf-space-6);
+  background: var(--lf-color-bg-raised);
+  border: var(--lf-border-width-hair) solid var(--lf-color-border-subtle);
+  border-radius: var(--lf-radius-md);
+  text-align: left;
+  color: var(--lf-color-text-secondary);
+  font-size: var(--lf-type-body);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.lf-legal h1 {
+  margin: 0 0 var(--lf-space-5);
+  font-size: var(--lf-type-h1);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-legal h2 {
+  margin: var(--lf-space-5) 0 var(--lf-space-2);
+  font-size: var(--lf-type-h2, 1.125rem);
+  font-weight: 700;
+  color: var(--lf-color-text-primary);
+}
+
+.lf-legal p {
+  margin: 0 0 var(--lf-space-3);
+}
+
+.lf-legal ul {
+  margin: 0 0 var(--lf-space-3);
+  padding-left: 1.2em;
+  list-style: disc;
+}
+
+.lf-legal li {
+  margin-bottom: var(--lf-space-2);
+}
+
+.lf-legal a {
+  color: var(--lf-color-text-gold);
+}
+
+.lf-legal section:last-of-type {
+  margin-bottom: var(--lf-space-5);
+}
