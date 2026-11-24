@@ -70,8 +70,8 @@ function OpenBracket({
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[13px] text-[var(--lf-text)]">
-        Jedna drabinka, jeden mecz. Remis rozstrzyga dogrywka, a potem karne. Pary bez ciebie są
-        domknięte. Goście: {cup.guestOriginLabel}.
+        Jedna drabinka, jeden mecz. Remis rozstrzyga dogrywka, a potem karne. Wyniki innych par
+        poznasz, gdy runda się otworzy. Goście: {cup.guestOriginLabel}.
       </p>
       {tie && playFixtureId ? (
         <form action={openCupTie} className="flex items-center gap-2">
