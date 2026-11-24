@@ -99,7 +99,7 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
       homeName: club.name,
       awayShort: FIRST_MATCH_BOT.shortName,
       awayName: FIRST_MATCH_BOT.name,
-      meta: 'Pierwszy mecz · Kick-off',
+      meta: 'Pierwszy mecz',
       firstMatch: true,
       rivalLines: buildRivalCardLines(NO_RIVAL_FACTS),
     };

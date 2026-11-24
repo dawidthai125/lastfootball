@@ -1,3 +1,4 @@
+import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import { resolveLiveH2hOffers } from '@/lib/transfers/resolve-live-h2h-offers';
 import type { LiveH2hOfferDto } from '@/lib/transfers/types';
@@ -46,7 +47,7 @@ export async function fetchLiveH2hOffers(
   const playerIds = [...new Set(offers.map((o) => o.player_id))];
 
   const { data: players } = playerIds.length
-    ? await supabase.from('players').select('id, name, pos').in('id', playerIds)
+    ? await serverDb(supabase).from('players').select('id, name, pos').in('id', playerIds)
     : { data: [] as { id: string; name: string; pos: string }[] };
 
   const playerMap = new Map(

@@ -378,7 +378,7 @@ export function TrainingView({
 
       <header className="lf-tr__hero">
         <p className="lf-tr__status">Sesja dostępna</p>
-        <h2 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h2>
+        <h1 className="lf-tr__question">Jaki trening wykonujesz dzisiaj?</h1>
         <p className="lf-tr__meta">
           Rozegrane: {training.playedCount} · Dziś (UTC): {training.today}
         </p>

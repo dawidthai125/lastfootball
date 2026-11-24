@@ -227,9 +227,9 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
 
       <header className="mb-3 px-0.5">
         <p className="text-[11px] tracking-wide text-[var(--lf-muted)] uppercase">Akademia</p>
-        <h2 className="font-[family-name:var(--font-display)] text-[1.25rem] text-[var(--lf-text-strong)]">
+        <h1 className="font-[family-name:var(--font-display)] text-[1.25rem] text-[var(--lf-text-strong)]">
           Budujesz kadrę od młodzieży?
-        </h2>
+        </h1>
         <p className="mt-1 text-[12px] text-[var(--lf-muted)]">{intakeHint(academy)}</p>
       </header>
 

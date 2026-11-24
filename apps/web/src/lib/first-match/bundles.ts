@@ -125,7 +125,7 @@ export function buildFirstLiveBundle(
   return {
     fixture,
     clock: '00:00',
-    period: 'Kick-off',
+    period: 'Początek',
     homeScore: 0,
     awayScore: 0,
     viewers: '—',

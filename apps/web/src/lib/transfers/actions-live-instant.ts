@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
+import { serverDb } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { filterSeniorPlayers } from '@/lib/squad/types';
@@ -72,7 +73,7 @@ export async function buyLiveTransferPlayer(
   }
 
   // Re-verify owner still seller before settlement (AC).
-  const { data: playerRow, error: playerErr } = await supabase
+  const { data: playerRow, error: playerErr } = await serverDb(supabase)
     .from('players')
     .select('id, club_id, transfer_listed_at, departed_at, skill, age')
     .eq('id', playerId)

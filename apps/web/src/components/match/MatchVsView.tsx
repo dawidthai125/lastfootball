@@ -44,7 +44,7 @@ export function MatchVsView({
         <div className="lf-mp__veil" />
       </div>
       <div className="lf-mp__decision">
-        <p className="lf-mp__eyebrow">Kick-off</p>
+        <p className="lf-mp__eyebrow">Przed pierwszym gwizdkiem</p>
         <div className="lf-mp__vs-row" aria-label="Zestawienie">
           <div>
             <CrestMonogram initials={homeShort} label={homeName} />

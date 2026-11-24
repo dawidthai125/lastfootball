@@ -9,7 +9,7 @@ import type { ConfirmEmailState } from '@/lib/auth/types';
 const INITIAL: ConfirmEmailState = { result: null };
 
 const LEAD = {
-  ok: 'Rywalizacja jest otwarta. Premia 10 000 EUR wpada na konto klubu, a jeśli klubu jeszcze nie ma, dostaniesz ją przy jego założeniu.',
+  ok: 'Rywalizacja jest otwarta. Premia 10 000 € wpada na konto klubu, a jeśli klubu jeszcze nie ma, dostaniesz ją przy jego założeniu.',
   proved: 'Adres jest sprawdzony. E-maile z powiadomieniami włączysz w ustawieniach.',
   bad: 'Ten link wygasł albo został już użyty. Zaloguj się i wyślij nowy. Nowy link działa 24 godziny.',
 } as const;

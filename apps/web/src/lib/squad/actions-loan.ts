@@ -31,7 +31,7 @@ export async function savePlayerLoan(_prev: LoanState, formData: FormData): Prom
   if (!clubId) return { error: 'Nie znaleziono klubu.' };
   const { data: player, error: readErr } = await supabase
     .from('players')
-    .select('id, pos, starter, wage, on_loan, wage_bank')
+    .select('id, pos, starter, wage, on_loan, wage_bank, transfer_listed_at')
     .eq('id', playerId)
     .eq('club_id', clubId)
     .is('departed_at', null)
@@ -44,6 +44,7 @@ export async function savePlayerLoan(_prev: LoanState, formData: FormData): Prom
     wage: number | null;
     on_loan: boolean | null;
     wage_bank: number | null;
+    transfer_listed_at: string | null;
   };
   const current = typeof row.wage === 'number' ? row.wage : 0;
   if (intent === 'recall') {
@@ -66,6 +67,9 @@ export async function savePlayerLoan(_prev: LoanState, formData: FormData): Prom
       onLoan: row.on_loan === true,
     });
     if (blocked) return { error: blocked };
+    if (row.transfer_listed_at !== null) {
+      return { error: 'Zawodnik jest na liście transferowej. Najpierw go zdejmij.' };
+    }
     const { error } = await serverDb(supabase)
       .from('players')
       .update({

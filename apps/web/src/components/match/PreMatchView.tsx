@@ -50,7 +50,7 @@ export function PreMatchView({
       />
 
       <section className="lf-mp__decision" aria-label="Checklist przedmeczowa">
-        <p className="lf-mp__eyebrow">Pre-match</p>
+        <p className="lf-mp__eyebrow">Przed meczem</p>
         <h1 className="lf-mp__title">Gotowi do meczu?</h1>
         <ul className="lf-mp__checklist">
           <li className="lf-mp__check">
@@ -70,7 +70,7 @@ export function PreMatchView({
             <span className="lf-mp__check-status">OK</span>
           </li>
           <li className="lf-mp__check">
-            <span>Kick-off</span>
+            <span>Początek meczu</span>
             <span className="lf-mp__check-status">OK</span>
           </li>
         </ul>
@@ -118,7 +118,7 @@ export function PreMatchView({
         </div>
       </section>
 
-      <AtmosphereLayer aria-label="Kick-Off" className="lf-ko__hero">
+      <AtmosphereLayer aria-label="Przed meczem" className="lf-ko__hero">
         <div className="lf-ko__hero-inner">
           <p className="lf-ko__eyebrow">{fixture.competitionLabel}</p>
           <div className="lf-ko__matchup">

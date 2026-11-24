@@ -51,7 +51,7 @@ export function LandingUiCrops() {
               FW
             </span>
           </div>
-          <p className="lf-landing__crop-xi-label">4-3-3 · gotowy do kick-off</p>
+          <p className="lf-landing__crop-xi-label">4-3-3 · gotowy do gry</p>
         </div>
       </figure>
     </div>

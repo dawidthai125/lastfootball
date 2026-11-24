@@ -104,7 +104,7 @@ export function PostMatchView({
             onClick={onOpenReplay}
             disabled={replayFrames === 0}
           >
-            Otwórz Replay
+            Otwórz powtórkę
           </button>
           {onDismiss ? (
             <button type="button" className="lf-post__soft" onClick={onDismiss}>
@@ -112,7 +112,6 @@ export function PostMatchView({
             </button>
           ) : null}
         </div>
-        <p className="lf-post__meta">Bufor Replay · {replayFrames} klatek</p>
         <ol
           className="lf-post__reward"
           style={{ margin: 'var(--lf-space-3) 0 0', paddingLeft: '1.2em' }}

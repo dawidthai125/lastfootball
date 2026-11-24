@@ -183,7 +183,13 @@ export function contactDeps(): { readonly deps: ContactDeps; readonly to: string
           .gte('created_at', since);
         return error ? null : (count ?? 0);
       },
-      claim: async (id) => !(await table().insert({ email_id: id } as never)).error,
+      claim: async (id) => {
+        // A letter that was taken before returns no row, and no error in the database log.
+        const { data, error } = await table()
+          .upsert({ email_id: id } as never, { onConflict: 'email_id', ignoreDuplicates: true })
+          .select('email_id');
+        return !error && (data as unknown as unknown[] | null)?.length === 1;
+      },
       release: async (id) => {
         await table().delete().eq('email_id', id);
       },
