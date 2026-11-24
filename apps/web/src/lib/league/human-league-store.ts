@@ -203,7 +203,7 @@ async function lastSeason(season: number, clubId: string): Promise<HumanLeagueCa
   return { season: season - 1, champion: rows[0].name, place: place > 0 ? place : null };
 }
 
-async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null> {
+async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | 'empty' | null> {
   if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
   const admin = createAdminClient();
   const existing = await admin
@@ -267,6 +267,8 @@ async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | null>
     const rows = clubs.data as
       { id: string; name: string; short_name: string; created_at: string }[] | null;
     if (clubs.error || !rows) return null;
+    // Eleven bots: without one active club there is no league of twelve.
+    if (rows.length === 0) return 'empty';
     const seats = fillHumanSeats(
       rows.map((row) => ({
         id: row.id,
@@ -598,6 +600,17 @@ export async function loadHumanLeagueCard(
   now = new Date(),
 ): Promise<HumanLeagueCard> {
   const table = await ensureSeatTable(now);
+  if (table === 'empty') {
+    const note =
+      'Liga ludzi czeka na kluby, które grały albo trenowały w ostatnich 14 dniach. Zagraj mecz, a zajmiesz miejsce.';
+    return {
+      ...previewCard(club, note),
+      seats: [],
+      round: null,
+      opponentName: null,
+      windowSentence: null,
+    };
+  }
   if (table === null || table === 'missing') {
     return previewCard(
       club,
@@ -759,7 +772,7 @@ export async function prepareHumanLive(
   const round = humanRoundFromFixture(dto.matchday);
   if (!round) return blocked('To nie jest mecz ligi ludzi.');
   const table = await ensureSeatTable(now);
-  if (table === null || table === 'missing') {
+  if (table === null || table === 'missing' || table === 'empty') {
     return blocked('Liga ludzi nie jest jeszcze włączona na bazie.');
   }
   if (humanSeasonFromFixture(dto.matchday) !== table.season) {

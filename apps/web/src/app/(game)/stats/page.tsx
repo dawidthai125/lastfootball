@@ -46,7 +46,7 @@ export default async function StatsPage() {
         {!squad ? (
           <p className={NOTE}>Nie udało się wczytać statystyk. Odśwież stronę.</p>
         ) : squad.length === 0 ? (
-          <p className={NOTE}>Gole i asysty pojawią się po pierwszym meczu.</p>
+          <p className={NOTE}>Gole i asysty pojawią się po najbliższym meczu.</p>
         ) : (
           <Table<PlayerLine>
             rowKey={(r) => r.playerId}
