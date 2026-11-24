@@ -4,7 +4,12 @@ import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
-import { buildAcademyIntakeDraft, canPromoteProspect } from '@/lib/academy/intake';
+import {
+  buildAcademyIntakeDraft,
+  intakeWaitDays,
+  isAcademyId,
+  canPromoteProspect,
+} from '@/lib/academy/intake';
 import type { AcademyActionState } from '@/lib/academy/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { listClubFixtures } from '@/lib/fixtures';
@@ -45,11 +50,30 @@ export async function intakeAcademyProspect(
   if ('error' in gate) return { error: gate.error };
   const { club } = gate;
 
+  const supabase = await createClient();
   const rows = await listClubPlayers(club.id);
-  const draft = buildAcademyIntakeDraft(club.id, rows);
+  // Everyone who ever joined: numbers stay taken, and a promoted or sold junior still counts.
+  const { data: everyone, error: historyErr } = await serverDb(supabase)
+    .from('players')
+    .select('id, shirt_number, created_at')
+    .eq('club_id', club.id);
+  if (historyErr) return { error: 'Nie udało się sprawdzić naboru.' };
+  const history = (everyone ?? []) as { id: string; shirt_number: number; created_at: string }[];
+  const wait = intakeWaitDays(
+    history.filter((p) => isAcademyId(p.id, club.id)).map((p) => p.created_at),
+    new Date(),
+  );
+  if (wait > 0) {
+    return { error: `Następny nabór za ${wait} ${wait === 1 ? 'dzień' : 'dni'}.` };
+  }
+  const draft = buildAcademyIntakeDraft(
+    club.id,
+    rows,
+    Date.now(),
+    history.map((p) => p.shirt_number),
+  );
   if ('error' in draft) return { error: draft.error };
 
-  const supabase = await createClient();
   const { error } = await serverDb(supabase)
     .from('players')
     .insert({
@@ -68,6 +92,8 @@ export async function intakeAcademyProspect(
       nationality: 'POL',
       version: 1,
       academy_track: true,
+      origin: 'academy',
+      joined_at: new Date().toISOString(),
       promoted_at: null,
       transfer_listed_at: null,
     } as never);
@@ -103,6 +129,8 @@ export async function promoteAcademyProspect(
     .update({
       academy_track: false,
       promoted_at: now,
+      origin: 'academy',
+      joined_at: now,
       starter: false,
       transfer_listed_at: null,
     } as never)

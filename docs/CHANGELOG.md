@@ -18,6 +18,16 @@ Master handoff: [`AI/PROJECT_HANDOFF.md`](./AI/PROJECT_HANDOFF.md).
 
 ---
 
+## [2026-11-24] — Uczciwa sprzedaż (D133)
+
+### Product
+
+- Nabór do akademii jest raz na 7 dni. Wcześniej był darmowy i bez limitu, a juniora dało się od razu sprzedać za ponad 100 000 EUR.
+- Komputer płaci 10% ceny za juniora i wolnego agenta. Nowy zawodnik zostaje w klubie co najmniej 7 dni. Wypożyczonego nie można sprzedać ani wystawić.
+- Sprzedaż liczy tylko seniorów do limitu kadry. Migracja `20261124130000_player_origin.sql`.
+
+---
+
 ## [2026-11-24] — Zamrożony początek meczu i mocniejsi rywale (D130)
 
 ### Product

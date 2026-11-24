@@ -76,6 +76,9 @@ export type PlayerRowDto = {
   readonly version: number;
   readonly departedAt: string | null;
   /** When set — on club transfer list (LFE-TRANSFERS-04). */
+  /** academy · free · bought · loan; null = starting squad (D133). */
+  readonly origin?: string | null;
+  readonly joinedAt?: string | null;
   readonly transferListedAt: string | null;
   /** LFE-ACADEMY-01: true = prospect before Promote (excluded from senior resolvers). */
   readonly academyTrack: boolean;
