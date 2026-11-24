@@ -847,11 +847,15 @@ export function TransfersView({
                     <div className="lf-tx-actions">
                       <LiveBuyButton
                         listing={r}
-                        disabled={!canLive || market.envelopeBalance < r.ask}
+                        disabled={
+                          !canLive ||
+                          auctionByPlayer.has(r.playerId) ||
+                          market.envelopeBalance < r.ask
+                        }
                       />
                       <LiveOfferCreate
                         listing={r}
-                        disabled={!canLive}
+                        disabled={!canLive || auctionByPlayer.has(r.playerId)}
                         envelopeBalance={market.envelopeBalance}
                       />
                       <AuctionBidForm
@@ -896,11 +900,15 @@ export function TransfersView({
                         <div className="lf-tx-actions">
                           <LiveBuyButton
                             listing={r}
-                            disabled={!canLive || market.envelopeBalance < r.ask}
+                            disabled={
+                              !canLive ||
+                              auctionByPlayer.has(r.playerId) ||
+                              market.envelopeBalance < r.ask
+                            }
                           />
                           <LiveOfferCreate
                             listing={r}
-                            disabled={!canLive}
+                            disabled={!canLive || auctionByPlayer.has(r.playerId)}
                             envelopeBalance={market.envelopeBalance}
                           />
                           <AuctionBidForm

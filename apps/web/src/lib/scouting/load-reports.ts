@@ -1,12 +1,17 @@
+import { isScoutBand, type ScoutBand } from '@/lib/scouting/reveal';
 import { createClient } from '@/lib/supabase/server';
 
-/** Player ids whose band this club has already paid for. Empty when the table is missing. */
-export async function loadRevealedPlayerIds(clubId: string): Promise<ReadonlySet<string>> {
+/** Bands this club has paid for, by player id. Empty when the table is missing. */
+export async function loadScoutReports(clubId: string): Promise<ReadonlyMap<string, ScoutBand>> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('scout_reports')
-    .select('player_id')
+    .select('player_id, band')
     .eq('club_id', clubId);
-  if (error || !data) return new Set();
-  return new Set((data as { player_id: string }[]).map((row) => row.player_id));
+  if (error || !data) return new Map();
+  return new Map(
+    (data as { player_id: string; band: string }[]).flatMap((row) =>
+      isScoutBand(row.band) ? [[row.player_id, row.band] as const] : [],
+    ),
+  );
 }

@@ -8,7 +8,7 @@ export type ScoutBand = 'low' | 'medium' | 'high' | 'elite';
 
 const SCOUT_BANDS: readonly ScoutBand[] = ['low', 'medium', 'high', 'elite'];
 
-function isScoutBand(value: unknown): value is ScoutBand {
+export function isScoutBand(value: unknown): value is ScoutBand {
   return SCOUT_BANDS.some((band) => band === value);
 }
 

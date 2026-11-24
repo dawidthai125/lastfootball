@@ -5,7 +5,13 @@ import { planClubFixtures } from '@/lib/fixtures/plan-fixtures';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { fillHumanSeats, humanFixtureMatchday, pairingForClub } from '@/lib/league/human-league';
-import { humanAwards, humanPrizeLine, parseHumanAwards } from '@/lib/league/human-awards';
+import {
+  HUMAN_PRIZES,
+  humanAwards,
+  humanPrizeLine,
+  humanPrizes,
+  parseHumanAwards,
+} from '@/lib/league/human-awards';
 import { resolveHumanScorers } from '@/lib/league/human-scorers';
 import { resolveHumanTable, type HumanTableRow } from '@/lib/league/human-table';
 import { resolveLeagueTable } from '@/lib/league/resolve-league-table';
@@ -234,6 +240,15 @@ describe('human league awards', () => {
     ]);
     expect(parseHumanAwards(awards)).toEqual(awards);
     expect(parseHumanAwards(null)).toEqual([]);
+  });
+
+  it('pays less in a league with few player clubs (D155)', () => {
+    expect(humanPrizes(12)).toEqual(HUMAN_PRIZES);
+    expect(humanPrizes(8)).toEqual(HUMAN_PRIZES);
+    expect(humanPrizes(2)).toEqual([7_500, 5_000, 3_000, 1_500, 1_500, 1_500]);
+    expect(humanPrizes(0).every((amount) => amount === 0)).toBe(true);
+    const [award] = humanAwards([row('a', false)], new Map([['a', 22]]), humanPrizes(2));
+    expect(award!.amount).toBe(7_500);
   });
 
   it('describes the prizes once per amount', () => {

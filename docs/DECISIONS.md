@@ -934,7 +934,12 @@ Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabas
 3. Przed startem dwie niepełne ligi łączą się w jedną, liga bez aktywnego klubu znika, a liga, do której nikt nie przyszedł pierwszego dnia, startuje od nowa. Po pierwszym zamkniętym składzie miejsca są stałe do końca sezonu.
 4. Całość w `human_league_sync` pod jedną blokadą. Zablokowane konta nie biorą miejsca.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D154 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D155 — Nagrody Ligi ludzi i raport skauta · Owner GO 2026-11-24
+
+1. Nagrody Ligi ludzi rosną z liczbą klubów graczy w lidze: pełne od 8, niżej proporcjonalnie (`humanPrizes`). Sezon trwający przy zmianie (numer 1) zachowuje obiecane kwoty.
+2. Raport skauta czyta zapisany potencjał, a ekran pokazuje kupione pasmo. Wcześniej oba liczyły szacunek z bieżącego wieku, więc u starszego zawodnika mogły kłamać.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D155 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

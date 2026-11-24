@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { ContactLink, LegalPage, LegalSection } from '@/components/legal/LegalPage';
 import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
-import { HUMAN_AWARD_MIN_PLAYED, HUMAN_PRIZES } from '@/lib/league/human-awards';
+import {
+  HUMAN_AWARD_MIN_PLAYED,
+  HUMAN_FULL_PRIZE_CLUBS,
+  HUMAN_PRIZES,
+} from '@/lib/league/human-awards';
 import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
 import { TRAINING_THIN } from '@/lib/training/types';
 import { TRANSFER_WINDOWS } from '@/lib/transfers/window';
@@ -105,7 +109,8 @@ export default function HelpPage() {
             Liga ludzi: 12 klubów, wspólny początek o 18:00. Gdy przybywa graczy, kolejne ligi
             otwierają się same. Taktyka jest zamknięta, decyduje skład. Za miejsca 1–
             {HUMAN_PRIZES.length} są nagrody, jeśli rozegrasz co najmniej {HUMAN_AWARD_MIN_PLAYED} z
-            22 kolejek.
+            22 kolejek. Pełne nagrody są od {HUMAN_FULL_PRIZE_CLUBS} klubów graczy w lidze, przy
+            mniejszej liczbie są niższe.
           </li>
           <li>W Rankingu zobaczysz najlepszych graczy i profile ich klubów.</li>
           <li>Klub z niewłaściwą nazwą lub nieuczciwą grą zgłosisz w jego profilu.</li>

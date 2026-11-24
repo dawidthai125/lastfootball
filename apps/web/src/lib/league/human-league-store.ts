@@ -44,7 +44,7 @@ import {
 import { parseHomeSetup, type HumanHomeSetup } from '@/lib/league/human-home-setup';
 import { resolveHumanScorers } from '@/lib/league/human-scorers';
 import type { ScorerRow } from '@/lib/stats/scorers';
-import { humanAwards } from '@/lib/league/human-awards';
+import { HUMAN_PRIZES, humanAwards, humanPrizes } from '@/lib/league/human-awards';
 import { parsePlayerLines } from '@/lib/match/match-players';
 import type { ReplayedMatch } from '@/lib/match/replay-manager-match';
 import { finishSharedSession } from './human-play';
@@ -69,6 +69,7 @@ export type HumanLeagueCard = {
   readonly leagueId: number;
   readonly leagues: number;
   readonly clubs: number;
+  readonly prizes: readonly number[];
   /** Warsaw date when the next season may start. */
   readonly nextSeasonOn: string | null;
   readonly standings: readonly HumanTableRow[];
@@ -151,6 +152,7 @@ function previewCard(club: ClubDto, note: string): HumanLeagueCard {
     leagueId: 1,
     leagues: 0,
     clubs: 0,
+    prizes: [],
     nextSeasonOn: null,
     standings: [],
     lastSeason: null,
@@ -189,6 +191,15 @@ async function playedRoundsByClub(season: number): Promise<ReadonlyMap<string, n
   return new Map([...rounds].map(([id, days]) => [id, days.size]));
 }
 
+/** The season that ran when the rule came in keeps the prizes it promised (D155). */
+const FULL_PRIZE_SEASON = 1;
+
+function leaguePrizes(season: number, seats: readonly HumanSeat[]): readonly number[] {
+  return season === FULL_PRIZE_SEASON
+    ? HUMAN_PRIZES
+    : humanPrizes(seats.filter((seat) => seat.kind === 'human').length);
+}
+
 /**
  * Table of a season that closes now, with every missing match decided, and its awards.
  * Null = there is no full set of seats. 'error' = a failed read: the season closes later.
@@ -200,7 +211,7 @@ async function finalStandings(leagueId: number, season: number, seasonKey: strin
   if (!stored || !played) return 'error' as const;
   const results = [...stored, ...settleMissing({ seats, seasonKey, results: stored })];
   const standings = resolveHumanTable({ seats, seasonKey, results, now });
-  return { standings, awards: humanAwards(standings, played) };
+  return { standings, awards: humanAwards(standings, played, leaguePrizes(season, seats)) };
 }
 
 /** The season of this league before the running one, for the card. */
@@ -647,6 +658,7 @@ function cardFrom(
     leagueId: table.leagueId,
     leagues: state.leagues,
     clubs: state.clubs,
+    prizes: leaguePrizes(table.season, table.seats),
     nextSeasonOn: nextHumanSeasonStart(table.seasonKey),
     standings: extra.standings ?? [],
     lastSeason: extra.lastSeason ?? null,

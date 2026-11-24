@@ -87,11 +87,27 @@ describe('hidden ceiling on the academy and the market', () => {
       activePlayers: [senior],
       liveListings: [listing],
     });
-    const hidden = resolveClubScouting({ id: 'club-a' }, [senior], market, [], 'SEASON', new Set());
+    const hidden = resolveClubScouting({ id: 'club-a' }, [senior], market, [], 'SEASON', new Map());
     const marketRow = hidden.candidates.find((c) => c.playerId === 'live-1');
     const own = hidden.candidates.find((c) => c.playerId === 's-1');
     expect(marketRow?.potentialLabel).toBe('Sufit ukryty');
     expect(own?.potentialLabel).not.toBe('Sufit ukryty');
+    // The bought band, not an estimate from the age of today (D155).
+    for (const [band, label] of [
+      ['low', 'Niski'],
+      ['elite', 'Bardzo wysoki'],
+    ] as const) {
+      const shown = resolveClubScouting(
+        { id: 'club-a' },
+        [senior],
+        market,
+        [],
+        'SEASON',
+        new Map([['live-1', band]]),
+      ).candidates.find((c) => c.playerId === 'live-1');
+      expect(shown?.potentialLabel).toBe(label);
+      expect(shown?.potentialBand).toBe(band);
+    }
   });
 });
 
