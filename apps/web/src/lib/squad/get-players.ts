@@ -16,6 +16,8 @@ const DEPTH_SELECT =
 const LOAN_SELECT =
   'id, on_loan, loan_until, wage_bank, loaned_in, loan_partner_label, intl_absent_until';
 
+const CONTRACT_SELECT = 'id, contract_season';
+
 const ACADEMY_SELECT = 'id, senior_matches, academy_trained_on, academy_gain, academy_gain_season';
 
 const PLAYER_SELECT_LEGACY =
@@ -69,7 +71,7 @@ export async function listClubPlayers(
     }
   }
   const extras = await Promise.all(
-    [LOAN_SELECT, ACADEMY_SELECT].map((columns) =>
+    [LOAN_SELECT, ACADEMY_SELECT, CONTRACT_SELECT].map((columns) =>
       supabase.from('players').select(columns).eq('club_id', clubId).is('departed_at', null),
     ),
   );

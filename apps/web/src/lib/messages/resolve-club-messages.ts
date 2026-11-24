@@ -74,6 +74,8 @@ export type ResolveClubMessagesInput = {
   readonly boardTaskNote?: string | null;
   /** Juniors in their last academy season — REUSE juniorAgeNote. */
   readonly academyAgeNote?: string | null;
+  /** Last season of a contract, and contracts that ended today (D139). */
+  readonly contractNotes?: readonly string[];
 };
 
 const SEASON_DEPARTURE_SUBJECT = 'Zmiana w kadrze przy starcie sezonu';
@@ -186,6 +188,17 @@ export function resolveClubMessages(input: ResolveClubMessagesInput): ClubMessag
       subject: input.boardTaskNote,
       fromLabel: 'Zarząd',
       href: '/board',
+      priority: 'info',
+    });
+  }
+
+  for (const [index, note] of (input.contractNotes ?? []).entries()) {
+    items.push({
+      id: `msg:contract-${index}`,
+      kind: 'system',
+      subject: note.length <= 80 ? note : `${note.slice(0, 77).trimEnd()}…`,
+      fromLabel: 'Zarząd',
+      href: '/squad',
       priority: 'info',
     });
   }

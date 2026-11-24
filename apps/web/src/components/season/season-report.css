@@ -18,7 +18,7 @@
   margin: 0.25rem 0 0;
   font-size: 1.25rem;
   font-weight: 650;
-  color: var(--lf-color-text, #111);
+  color: var(--lf-color-text-primary);
 }
 
 .lf-season-report__subtitle,
@@ -52,7 +52,7 @@
   margin: 1rem 0 0;
   padding-left: 1.1rem;
   font-size: 0.9rem;
-  color: var(--lf-color-text, #111);
+  color: var(--lf-color-text-primary);
 }
 
 .lf-season-report__departure {
@@ -63,7 +63,7 @@
   margin: 0;
   font-size: 0.85rem;
   font-weight: 650;
-  color: var(--lf-color-text, #111);
+  color: var(--lf-color-text-primary);
 }
 
 .lf-season-report__departure-body {

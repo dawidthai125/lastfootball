@@ -97,6 +97,8 @@ export type RetirementFarewellPlayer = {
   readonly departedAt: string | null;
   readonly promotedAt: string | null;
   readonly status: string;
+  /** 'retired' or 'contract'. Absent in older callers. */
+  readonly reason?: string | null;
 };
 
 export type RetirementFarewell = {
@@ -123,6 +125,7 @@ export function resolveRetirementFarewell(
     .filter(
       (player) =>
         (player.status === 'DEPARTED' || player.departedAt != null) &&
+        player.reason !== 'contract' &&
         onUtcDay(player.departedAt, todayUtc),
     )
     .slice()
@@ -160,4 +163,15 @@ export function formatRetirementFarewell(
     ? `${retire} zakończył karierę. Z akademii / naboru wchodzi ${promote}.`
     : `${retire} zakończył karierę.`;
   return { retireName: retire, promoteName: promote, subject, summary };
+}
+
+/** Names of those whose contract ended today. */
+export function contractLeavers(
+  players: readonly RetirementFarewellPlayer[],
+  todayUtc: string,
+): string[] {
+  return players
+    .filter((player) => player.reason === 'contract' && onUtcDay(player.departedAt, todayUtc))
+    .map((player) => player.name)
+    .sort((a, b) => a.localeCompare(b, 'pl'));
 }

@@ -9,6 +9,7 @@ import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
 import { matchWageDue } from '@/lib/squad/truth';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { validateStartingXi } from '@/lib/squad/validate-starting-xi';
+import { contractPreview } from '@/lib/season/contract-expiry';
 import { createClient } from '@/lib/supabase/server';
 import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
 import {
@@ -78,7 +79,7 @@ export default async function HubPage() {
     listClubPlayers(club.id),
     phase === 'SEASON' ? listClubRetirementFlash(club.id, todayUtc) : Promise.resolve([]),
   ]);
-  const departurePreview =
+  const retirePreview =
     phase === 'OFFSEASON'
       ? resolveDeparturePreview(
           activePlayers.map((player) => ({
@@ -91,6 +92,16 @@ export default async function HubPage() {
           })),
         )
       : null;
+  const contractLine = retirePreview
+    ? contractPreview(
+        activePlayers.filter((player) => player.id !== retirePreview.retire?.id),
+        club.seasonNumber,
+      )
+    : null;
+  const departurePreview =
+    retirePreview && contractLine
+      ? { ...retirePreview, summary: `${retirePreview.summary} ${contractLine}` }
+      : retirePreview;
   const retirementFarewell =
     phase === 'SEASON' ? resolveRetirementFarewell(farewellFlash, todayUtc) : null;
   const dressingConflict = Boolean(

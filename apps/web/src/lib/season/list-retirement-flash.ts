@@ -16,8 +16,10 @@ export async function listClubRetirementFlash(
   const [departed, promoted] = await Promise.all([
     supabase
       .from('players')
-      .select('id, name, status, departed_at, promoted_at')
+      .select('id, name, status, departed_at, promoted_at, departed_reason')
       .eq('club_id', clubId)
+      // A sale or a loan that ended is not the end of a career.
+      .in('departed_reason', ['retired', 'contract'])
       // A junior who leaves the academy did not end a career.
       .eq('academy_track', false)
       .not('departed_at', 'is', null)
@@ -40,6 +42,7 @@ export async function listClubRetirementFlash(
       status: string;
       departed_at: string | null;
       promoted_at: string | null;
+      departed_reason?: string | null;
     }[]) {
       byId.set(row.id, {
         id: row.id,
@@ -47,6 +50,7 @@ export async function listClubRetirementFlash(
         status: row.status,
         departedAt: row.departed_at,
         promotedAt: row.promoted_at,
+        reason: row.departed_reason ?? null,
       });
     }
   }

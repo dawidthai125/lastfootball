@@ -7,8 +7,8 @@ const base = {
   offer: 1000,
   personality: 'spokojny' as const,
   morale: 40,
-  contractUntil: '2028-06-30',
-  today: '2026-11-17',
+  contractSeason: 2 as number | null,
+  season: 1,
 };
 
 describe('contract talk', () => {
@@ -49,18 +49,18 @@ describe('contract talk', () => {
     });
   });
 
-  it('year 2029 refuses with the already-extended sentence', () => {
-    expect(talkResult({ ...base, contractUntil: '2029-06-30', morale: 80 })).toEqual({
+  it('refuses before the last two seasons of the contract', () => {
+    expect(talkResult({ ...base, contractSeason: 3, morale: 80 })).toEqual({
       ok: false,
       reason: 'Kontrakt jest już przedłużony.',
     });
   });
 
-  it("success offer exactly demand, personality spokojny, morale 40, contractUntil '2028-06-30' returns ok wage and '2029-06-30'", () => {
+  it('agrees on exactly the demand and covers two more seasons', () => {
     expect(talkResult(base)).toEqual({
       ok: true,
       wage: 1000,
-      contractUntil: '2029-06-30',
+      contractSeason: 3,
     });
   });
 

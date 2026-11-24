@@ -45,6 +45,7 @@ export type SquadPlayerDto = {
   readonly contract: {
     readonly wage: number;
     readonly until: string;
+    readonly season?: number | null;
     readonly clause: number;
     readonly role: string;
   };
@@ -105,6 +106,8 @@ export type PlayerRowDto = {
   readonly morale?: number;
   readonly personality?: string;
   readonly contractUntil?: string | null;
+  /** Last club season the contract covers (D139). */
+  readonly contractSeason?: number | null;
   readonly releaseClause?: number;
   readonly setPiece?: boolean;
   readonly lastIndividualOn?: string | null;
