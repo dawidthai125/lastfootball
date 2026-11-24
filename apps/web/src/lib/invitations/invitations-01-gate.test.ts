@@ -24,8 +24,14 @@ describe('LFE-NOTIFICATIONS-01 invitation gate', () => {
     }
   });
 
-  it('no lib/notifications module', () => {
-    expect(existsSync(join(root, 'src/lib/notifications'))).toBe(false);
+  // D132 added lib/notifications for push and e-mail delivery only.
+  it('the invitation layer stays apart from lib/notifications', () => {
+    const files = readdirSync(invitationsDir).filter(
+      (f) => f.endsWith('.ts') && !f.endsWith('.test.ts'),
+    );
+    for (const file of files) {
+      expect(readFileSync(join(invitationsDir, file), 'utf8')).not.toContain('lib/notifications');
+    }
   });
 
   it('resolver exports Invitation naming', () => {

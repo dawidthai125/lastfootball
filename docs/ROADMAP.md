@@ -106,6 +106,7 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | **LFE-AUTH-UX-01**                                     | **CLOSED** · Login Modal · AuthStage `/login` `/register` · prior presentation `9dc834a`                                   |
 | **LFE-UI-MOTION-01**                                   | **CLOSED** · Presentation motion Thin · Hub/Match · Guide §8 · **`9fd14fc`** · CI GREEN · PRODUCTION VERIFIED              |
 | **LFE-NOTIFICATIONS-01**                               | **CLOSED** · In-App Invitation Layer · `resolveClubInvitations` · D125 · feat **`54ae7b3`** · style `cb1511e` · CI GREEN   |
+| **Kanał push / email (§22)**                           | **DONE** · web push · e-mail opt-in · D132 · e-mail czeka na klucz dostawcy                                                |
 | **LFE-RETIREMENT-01**                                  | **CLOSED** · Thin farewell after Confirm N+1 · PLAN · Owner GO 2026-11-17                                                  |
 | **Career Prime ×1.1**                                  | **CLOSED** · `GROWTH_COEFF_PRIME=1.1` · bonus skill delta · Owner GO 2026-11-17                                            |
 | **LFE-HANDOFF-01**                                     | **CLOSED** · master handoff AI · sync docs                                                                                 |
@@ -119,11 +120,10 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 
 ## PLANNED ⬜
 
-| Item                            | Zależność                                                                                                                     |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| LFE-ACADEMY-02                  | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) · czeka na §26 |
-| Kanał push / email (§22 Future) | Owner GO odłożony · najpierw liczby / provider                                                                                |
-| LFE `/advanced` subpath         | Owner GO · defer                                                                                                              |
+| Item                    | Zależność                                                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| LFE-ACADEMY-02          | **SCOPE LOCK** · bez kodu · [`implementation/LFE-ACADEMY-02-SCOPE.md`](implementation/LFE-ACADEMY-02-SCOPE.md) · czeka na §26 |
+| LFE `/advanced` subpath | Owner GO · defer                                                                                                              |
 
 ## FUTURE
 
@@ -142,7 +142,6 @@ GDD-§26A/B · LEAGUE-04 · LEAGUE-WORLD-02 · CAREER-DECLINE-01 · **NOTIFICATI
 | Sponsor marketplace / nego / Quest      | poza Sponsors Thin (D100)                  |
 | Reputacja / zarządzanie klubem z Board  | poza D131 (prestiż i zadania: DONE)        |
 | Stadium Ticket / expand / Match couple  | poza Stadium Thin (D112–D115)              |
-| Kanał push / email powiadomień          | po GDD-22 Thin · osobny EPIC               |
 
 ---
 
@@ -153,19 +152,18 @@ Owner GO 2026-11-09. **Canvas REUSE** closed in `759d49f`. **LFE-ACADEMY-02** za
 ### Oficjalna kolejność
 
 ```
-LFE-SPATIAL-EVENTS-01  ·  Retirement (Thin CLOSED)  ·  Career Prime ×1.1 (Owner GO)  ·  §22 push/email (later)
+LFE-SPATIAL-EVENTS-01  ·  Retirement (Thin CLOSED)  ·  Career Prime ×1.1 (Owner GO)
 ```
 
 Academy 02 nie wraca do kolejki bez zmiany GDD §16 i liczb §26.
 
-| EPIC                            | Notatka                                      |
-| ------------------------------- | -------------------------------------------- |
-| LFE-ACADEMY-02                  | SCOPE LOCK · §26                             |
-| LFE-SPATIAL-EVENTS-01           | `4377677`                                    |
-| LFE-RETIREMENT-01               | Thin farewell CLOSED · PLAN                  |
-| Career Prime                    | GROWTH_COEFF_PRIME=1.1 · Owner GO 2026-11-17 |
-| Kanał push / email (§22 Future) | odłożony                                     |
-| LFE `/advanced`                 | defer                                        |
+| EPIC                  | Notatka                                      |
+| --------------------- | -------------------------------------------- |
+| LFE-ACADEMY-02        | SCOPE LOCK · §26                             |
+| LFE-SPATIAL-EVENTS-01 | `4377677`                                    |
+| LFE-RETIREMENT-01     | Thin farewell CLOSED · PLAN                  |
+| Career Prime          | GROWTH_COEFF_PRIME=1.1 · Owner GO 2026-11-17 |
+| LFE `/advanced`       | defer                                        |
 
 **Alternatywy FUTURE:** Physics · Ticket Economy · multi-tier AI catalogs (Variant A) · Youth Depth.  
 Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTION **`9fd14fc`**.
@@ -207,7 +205,7 @@ Domain feat **`3c01baa`** · Presentation Invitation **`54ae7b3`** · Prior MOTI
 - **§18 Ranking Thin** = sezonowy ranking klubów; kod Thin = `resolveClubRanking` (D27); ≠ §6 / §10; table = input only.
 - **§19 Osiągnięcia Thin** = kamienie / historia; kod Thin = `resolveClubAchievements` (D26); ≠ §6 / §18; §20 hook ≠ katalog.
 - **§21 Wiadomości Thin** = in-app inbox · skutek zdarzenia · Transfery = SSOT ofert · kod Thin = `resolveClubMessages` (D40–D46); Overlay = ta sama DTO; brak DB/mocków.
-- **§22 Powiadomienia Thin** = polityka alertów (GDD-22 docs) · **in-app Invitation Layer CLOSED** (`resolveClubInvitations` · D125 · feat `54ae7b3`) · Overlay kind=`messages` (D43) · push/email/SDK/quiet hours = nadal Future.
+- **§22 Powiadomienia Thin** = polityka alertów (GDD-22 docs) · **in-app Invitation Layer CLOSED** (`resolveClubInvitations` · D125 · feat `54ae7b3`) · Overlay kind=`messages` (D43) · push · e-mail · quiet hours = D132 (2026-11-24).
 - **§26 = SSOT liczb**; **D18/D20 = SSOT implementacji**.
 - **UI P0** = presentation Night Pitch Office (IMPL-01…06); **MOTION-01** = shared CSS motion Thin (Guide §8); **NOTIFICATIONS-01** = Invitation Layer presentation tip `54ae7b3`; nie zmienia Domain tip.
 - **M2.5 PASS** = standard SSOT FIRST · REUSE · ZERO DUPLICATE · Presentation ≠ Domain · Thin IN/OUT · pełny workflow.

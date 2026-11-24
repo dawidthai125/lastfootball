@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 import { EmailConfirmSlot } from '@/components/auth/EmailConfirmSlot';
+import { SignOutForm } from '@/components/auth/SignOutForm';
 import { LandingCta } from '@/components/landing/LandingCta';
-import { signOut } from '@/lib/auth/actions';
 import { getAuthUser } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -36,11 +36,11 @@ export default async function WelcomePage() {
         </LandingCta>
       </div>
 
-      <form action={signOut} className="lf-auth-form__signout">
+      <SignOutForm className="lf-auth-form__signout">
         <button type="submit" className="lf-landing__cta lf-landing__cta--secondary">
           Wyloguj
         </button>
-      </form>
+      </SignOutForm>
     </div>
   );
 }

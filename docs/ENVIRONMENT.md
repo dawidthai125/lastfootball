@@ -29,6 +29,8 @@ Rules:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY`  | yes           | yes (when using SB) | Anon key (RLS applies)                              |
 | `SUPABASE_SERVICE_ROLE_KEY`      | **no**        | for admin/cron      | Bypasses RLS                                        |
 | `CRON_SECRET`                    | **no**        | when cron exists    | Authorize cron routes                               |
+| `RESEND_API_KEY`                 | **no**        | for e-mail          | Notification e-mail (D132). Set with `NOTIFY_FROM`  |
+| `NOTIFY_FROM`                    | **no**        | for e-mail          | Sender on a domain verified at the provider         |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | yes           | no                  | Signup bot check. Set with the secret, or omit both |
 | `TURNSTILE_SECRET_KEY`           | **no**        | no                  | Verifies the Turnstile token on the server          |
 | `NEXT_TELEMETRY_DISABLED`        | yes           | optional            | `1` recommended                                     |

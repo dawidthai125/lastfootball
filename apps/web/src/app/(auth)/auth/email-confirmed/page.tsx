@@ -17,16 +17,18 @@ export default async function EmailConfirmedPage({
 }) {
   const token = (await searchParams).token ?? '';
   const result = token ? await confirmEmailToken(token) : 'bad';
-  const ok = result === 'ok';
+  const ok = result !== 'bad';
 
   return (
     <div className="lf-landing__gate lf-landing__gate--auth">
       <p className="lf-landing__eyebrow">Konto</p>
       <h1>{ok ? 'Email potwierdzony' : 'Link nie działa'}</h1>
       <p className="lf-landing__gate-lead">
-        {ok
-          ? 'Rywalizacja jest otwarta. Premia 10 000 EUR wpada na konto klubu, a jeśli klubu jeszcze nie ma, dostaniesz ją przy jego założeniu.'
-          : 'Ten link wygasł albo został już użyty. Zaloguj się i wyślij nowy. Nowy link działa 24 godziny.'}
+        {result === 'proved'
+          ? 'Adres jest sprawdzony. E-maile z powiadomieniami włączysz w ustawieniach.'
+          : ok
+            ? 'Rywalizacja jest otwarta. Premia 10 000 EUR wpada na konto klubu, a jeśli klubu jeszcze nie ma, dostaniesz ją przy jego założeniu.'
+            : 'Ten link wygasł albo został już użyty. Zaloguj się i wyślij nowy. Nowy link działa 24 godziny.'}
       </p>
       <div className="lf-landing__cta-row">
         <Link href="/hub" className="lf-landing__cta lf-landing__cta--primary">

@@ -16,6 +16,9 @@ import {
   type OfferPreset,
 } from '@/lib/transfers/resolve-negotiation';
 
+/** Offers one buyer may make for one player, so a rejection is not a spam button. */
+const MAX_OFFER_ROUNDS = 5;
+
 type OfferAmountPreset = OfferPreset | 'counter';
 
 function parseOfferPreset(raw: string): OfferAmountPreset | null {
@@ -113,7 +116,19 @@ export async function createLiveTransferOffer(
     return { error: 'Zawodnik niedostępny.' };
   }
 
-  const idempotencyKey = `pending:${buyer.id}:${playerId}`;
+  // An answered offer keeps its key, so the next one needs its own number.
+  const { count: answered, error: countErr } = await supabase
+    .from('transfer_offers' as never)
+    .select('id', { count: 'exact', head: true })
+    .eq('buyer_club_id', buyer.id)
+    .eq('player_id', playerId)
+    .neq('status', 'pending');
+  if (countErr) return { error: 'Nie udało się złożyć oferty.' };
+  const round = answered ?? 0;
+  if (round >= MAX_OFFER_ROUNDS) {
+    return { error: 'Złożyłeś już kilka ofert za tego zawodnika.' };
+  }
+  const idempotencyKey = `pending:${buyer.id}:${playerId}${round > 0 ? `:${round}` : ''}`;
   const { error: insErr } = await supabase.from('transfer_offers' as never).insert({
     player_id: playerId,
     seller_club_id: sellerClubId,
@@ -132,6 +147,12 @@ export async function createLiveTransferOffer(
   if (insErr) {
     if (insErr.code === '23505') {
       return { ok: true };
+    }
+    if (insErr.code === '42501') {
+      return {
+        error:
+          'Tej oferty nie można złożyć. Masz za dużo otwartych ofert albo zawodnik zszedł z rynku.',
+      };
     }
     return { error: 'Nie udało się złożyć oferty.' };
   }

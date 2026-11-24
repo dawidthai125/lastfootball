@@ -3,10 +3,10 @@
 import Link from 'next/link';
 
 import { BrandLogo, ClubCrest, NavIcon, PlayerPortrait } from '@/components/assets';
+import { SignOutForm } from '@/components/auth/SignOutForm';
 import { useClub, useHasFixtures } from '@/components/club/ClubProvider';
 import { useOverlay } from '@/components/overlay/OverlayProvider';
 import { useShell } from '@/components/layout/ShellProvider';
-import { signOut } from '@/lib/auth/actions';
 import { formatMoney } from '@/lib/finance/format-money';
 import { resolveHubPhase } from '@/lib/hub';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -193,7 +193,7 @@ export function TopBar() {
           </span>
         </Link>
 
-        <form action={signOut}>
+        <SignOutForm>
           <button
             type="submit"
             aria-label="Wyloguj"
@@ -214,7 +214,7 @@ export function TopBar() {
           >
             Wyloguj
           </button>
-        </form>
+        </SignOutForm>
       </div>
     </header>
   );
