@@ -1,6 +1,7 @@
 'use server';
 
-import { restedEnergy } from '@/lib/squad/rest';
+import { restedEnergy, restedStatus } from '@/lib/squad/rest';
+import type { PlayerStatus } from '@/lib/squad/types';
 import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
@@ -133,7 +134,7 @@ export async function runIndividualSession(
   const { data: player, error } = await owned.supabase
     .from('players')
     .select(
-      'id, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
+      'id, status, energy, energy_on, potential, last_individual_on, attr_attack, attr_passing, attr_defense, attr_physical, attr_goalkeeping',
     )
     .eq('id', playerId)
     .eq('club_id', owned.club.id)
@@ -141,6 +142,7 @@ export async function runIndividualSession(
     .maybeSingle();
   if (error || !player) return { error: 'Nie znaleziono zawodnika.' };
   const row = player as {
+    status: PlayerStatus;
     energy: number;
     energy_on: string | null;
     potential: number;
@@ -152,8 +154,9 @@ export async function runIndividualSession(
     attr_goalkeeping: number;
   };
   const column = GROUP_COLUMN[group];
+  const rested = restedEnergy(row.energy, row.energy_on, utcDateString());
   const step = individualStep({
-    energy: restedEnergy(row.energy, row.energy_on, utcDateString()),
+    energy: rested,
     group: row[column],
     potential: row.potential,
     lastOn: row.last_individual_on,
@@ -169,6 +172,7 @@ export async function runIndividualSession(
     .update({
       [column]: step.group,
       energy: step.energy,
+      status: restedStatus(row.status, row.energy, rested),
       last_individual_on: utcDateString(),
     } as never)
     .eq('id', playerId)

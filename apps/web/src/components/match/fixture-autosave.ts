@@ -25,11 +25,13 @@ export function fixtureStayForm(
   fixtureId: string,
   managerLog: string,
   formation: string,
+  startedOn: string,
 ): FormData {
   const data = new FormData();
   data.set('fixtureId', fixtureId);
   data.set('managerLog', managerLog);
   data.set('shape', formation);
+  data.set('startedOn', startedOn);
   data.set('stay', '1');
   return data;
 }

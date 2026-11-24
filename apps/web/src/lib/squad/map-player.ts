@@ -79,7 +79,7 @@ export function mapPlayerRow(row: PlayerDbRow, today: string = utcDateString()):
       typeof row.potential === 'number' && row.potential >= 1
         ? Math.min(99, Math.max(row.skill, row.potential))
         : resolvePlayerPotential(row.skill, row.id, row.age),
-    status: energy === undefined ? status : restedStatus(status, energy),
+    status: energy === undefined ? status : restedStatus(status, row.energy ?? energy, energy),
     nationality: row.nationality,
     version: row.version,
     departedAt: row.departed_at,

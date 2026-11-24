@@ -23,6 +23,7 @@ export function CompleteLeagueFixtureButton({
   awayScore,
   managerLog,
   formation,
+  startedOn,
   state,
   pending,
   action,
@@ -33,6 +34,7 @@ export function CompleteLeagueFixtureButton({
   awayScore: number;
   managerLog: string;
   formation: string;
+  startedOn: string;
   state: CompleteFixtureState;
   pending: boolean;
   action: (payload: FormData) => void;
@@ -60,6 +62,7 @@ export function CompleteLeagueFixtureButton({
       <input type="hidden" name="fixtureId" value={fixtureId} />
       <input type="hidden" name="managerLog" value={managerLog} />
       <input type="hidden" name="shape" value={formation} />
+      <input type="hidden" name="startedOn" value={startedOn} />
       <input type="hidden" name="stay" value="1" />
       {state.error ? (
         <p role="alert" style={{ color: 'var(--lf-color-status-danger)', margin: '0 0 0.5rem' }}>

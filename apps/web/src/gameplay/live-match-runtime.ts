@@ -94,6 +94,8 @@ export class LiveMatchRuntime {
   readonly shell: LiveMatchBundle;
   readonly replayBuffer: ReplayBuffer;
   readonly replay: ReplayController;
+  /** UTC day the match opened on; see kickoffDay(). */
+  readonly startedOn = new Date().toISOString().slice(0, 10);
 
   private version = 0;
   private listeners = new Set<() => void>();

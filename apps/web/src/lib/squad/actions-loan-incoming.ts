@@ -68,11 +68,17 @@ export async function acceptIncomingLoan(
     today: utcDateString(),
   }).find((o) => o.offerId === offerId);
   if (!offer) return { error: 'Oferta wypożyczenia wygasła.' };
+  // Ids and numbers of players who left stay taken (unique per club).
+  const { data: everyone } = await supabase
+    .from('players')
+    .select('id, shirt_number')
+    .eq('club_id', clubRow.id);
+  const taken = (everyone as { id: string; shirt_number: number }[] | null) ?? rows;
   const playerId = nextLoanId(
     clubRow.id,
-    rows.map((r) => r.id),
+    taken.map((r) => r.id),
   );
-  const shirt = nextShirt(rows.map((r) => r.shirt_number));
+  const shirt = nextShirt(taken.map((r) => r.shirt_number));
   const { error } = await serverDb(supabase)
     .from('players')
     .insert({

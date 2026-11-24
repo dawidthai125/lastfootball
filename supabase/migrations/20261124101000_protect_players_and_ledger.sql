@@ -48,6 +48,20 @@ language plpgsql
 set search_path = ''
 as $$
 begin
+  if tg_op = 'INSERT' then
+    if current_user in ('authenticated', 'anon')
+      and (
+        new.last_training_on is not null
+        or new.style_pressing <> 0
+        or new.style_tempo <> 0
+        or new.style_width <> 0
+        or new.fan_mood <> 60
+      )
+    then
+      raise exception 'club starts from the starter state' using errcode = '42501';
+    end if;
+    return new;
+  end if;
   if current_user in ('authenticated', 'anon')
     and (
       new.first_match_completed_at is distinct from old.first_match_completed_at
@@ -65,5 +79,5 @@ $$;
 
 drop trigger if exists lf_guard_club_progress on public.clubs;
 create trigger lf_guard_club_progress
-  before update on public.clubs
+  before insert or update on public.clubs
   for each row execute function public.lf_guard_club_progress();

@@ -24,7 +24,10 @@ const PLAYER_SELECT_LEGACY =
  * Excludes DEPARTED / departed_at. Empty array if missing — no seed fallback.
  * Senior consumers must filter via resolveClubSquad / filterSeniorPlayers.
  */
-export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
+export async function listClubPlayers(
+  clubId: string,
+  restDay: string = utcDateString(),
+): Promise<PlayerRowDto[]> {
   if (!env.isSupabaseConfigured) return [];
   const supabase = await createClient();
   const full = await supabase
@@ -69,7 +72,7 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
 
   const today = utcDateString();
   const mapped = (result.data as PlayerDbRow[]).map((row) =>
-    mapPlayerRow({ ...row, ...depthById.get(row.id) }),
+    mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay),
   );
   const patches = reconcileExpiredLoans(
     mapped.map((row) => ({
@@ -126,7 +129,7 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
   }
 
   const afterLoans = (result.data as PlayerDbRow[])
-    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }))
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay))
     .filter((p) => p.status !== 'DEPARTED');
 
   const intlPatches = reconcileExpiredIntl(
@@ -149,6 +152,6 @@ export async function listClubPlayers(clubId: string): Promise<PlayerRowDto[]> {
   if (intlPatches.length === 0) return afterLoans;
 
   return (result.data as PlayerDbRow[])
-    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }))
+    .map((row) => mapPlayerRow({ ...row, ...depthById.get(row.id) }, restDay))
     .filter((p) => p.status !== 'DEPARTED');
 }

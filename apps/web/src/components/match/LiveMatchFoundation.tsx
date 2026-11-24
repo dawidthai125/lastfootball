@@ -144,7 +144,12 @@ export function LiveMatchFoundation({
     }
     fixtureSaveStarted.current = true;
     saveFixture(
-      fixtureStayForm(leagueFixture.id, runtime.serializeManagerLog(), ourFormation ?? '4-4-2'),
+      fixtureStayForm(
+        leagueFixture.id,
+        runtime.serializeManagerLog(),
+        ourFormation ?? '4-4-2',
+        runtime.startedOn,
+      ),
     );
   }, [
     snapshot,
@@ -329,6 +334,7 @@ export function LiveMatchFoundation({
               awayScore={snapshot.awayScore}
               managerLog={runtime?.serializeManagerLog() ?? '[]'}
               formation={ourFormation ?? '4-4-2'}
+              startedOn={runtime.startedOn}
               state={fixtureSave}
               pending={fixtureSavePending}
               action={saveFixture}

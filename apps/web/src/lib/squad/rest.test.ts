@@ -20,9 +20,10 @@ describe('rest', () => {
   });
 
   it('clears only tiredness', () => {
-    expect(restedStatus('TIRED', 60)).toBe('READY');
-    expect(restedStatus('TIRED', 59)).toBe('TIRED');
-    expect(restedStatus('INJURED', 90)).toBe('INJURED');
-    expect(restedStatus('SUSPENDED', 90)).toBe('SUSPENDED');
+    expect(restedStatus('TIRED', 50, 60)).toBe('READY');
+    expect(restedStatus('TIRED', 54, 59)).toBe('TIRED');
+    expect(restedStatus('TIRED', 66, 66)).toBe('TIRED');
+    expect(restedStatus('INJURED', 80, 90)).toBe('INJURED');
+    expect(restedStatus('SUSPENDED', 80, 90)).toBe('SUSPENDED');
   });
 });

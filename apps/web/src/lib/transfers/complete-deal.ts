@@ -224,12 +224,17 @@ export async function completeTransferBuy(
   const allIds = input.activePlayers.map((p) => p.id);
   const { data: departedRows } = await supabase
     .from('players')
-    .select('id')
+    .select('id, shirt_number')
     .eq('club_id', input.clubId);
 
-  const departedIds = ((departedRows as { id: string }[] | null) ?? []).map((r) => r.id);
+  const everyRow = (departedRows as { id: string; shirt_number: number }[] | null) ?? [];
+  const departedIds = everyRow.map((r) => r.id);
   const playerId = nextBoughtId(input.clubId, [...allIds, ...departedIds]);
-  const shirt = nextShirt(input.activePlayers.map((p) => p.shirt_number));
+  const shirt = nextShirt([
+    ...input.activePlayers.map((p) => p.shirt_number),
+    // The number stays taken after a player leaves (unique per club).
+    ...everyRow.map((r) => r.shirt_number),
+  ]);
   const nextCash = input.cashBalance - agreedAmount;
 
   const written = await writeClubCash({

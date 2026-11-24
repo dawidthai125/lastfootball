@@ -1,6 +1,6 @@
 import type { PlayerStatus } from '@/lib/squad/types';
 
-/** Energy a player regains for each day without a stored energy change. */
+/** Energy a player regains every night since the last match or training. */
 export const REST_PER_DAY = 5;
 const REST_READY_AT = 60;
 
@@ -21,7 +21,7 @@ export function restedEnergy(energy: number, energyOn: string | null | undefined
   return Math.min(100, Math.max(energy, energy + (to - from) * REST_PER_DAY));
 }
 
-/** Tired players who rested enough are ready again. Injuries and bans stay. */
-export function restedStatus(status: PlayerStatus, energy: number): PlayerStatus {
-  return status === 'TIRED' && energy >= REST_READY_AT ? 'READY' : status;
+/** Only rest clears tiredness, so training on the same day still tires. Injuries and bans stay. */
+export function restedStatus(status: PlayerStatus, stored: number, rested: number): PlayerStatus {
+  return status === 'TIRED' && rested > stored && rested >= REST_READY_AT ? 'READY' : status;
 }

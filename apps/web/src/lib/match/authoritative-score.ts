@@ -7,6 +7,7 @@ import { parseOurFormation } from '@/lib/match/our-formation';
 import { replayManagerMatch } from '@/lib/match/replay-manager-match';
 import { loadRivalSquad } from '@/lib/rivals/squad';
 import { resolveMatchBench, resolveStartingXi, SquadUnavailableError } from '@/lib/squad';
+import { lineupProblem } from '@/lib/squad/lineup-problem';
 import type { PlayerRowDto } from '@/lib/squad/types';
 
 /**
@@ -18,10 +19,14 @@ export async function authoritativeManagerScore(
   players: readonly PlayerRowDto[],
   log: readonly ManagerLogEntry[],
   shape: unknown,
+  today: string,
 ): Promise<{ home: number; away: number } | { error: string }> {
   const club = await getManagerClub();
   const dto = club ? await getFixtureByIdForClub(club.id, fixtureId) : null;
   if (!club || !dto) return { error: 'Nie znaleziono meczu.' };
+
+  const problem = lineupProblem(club.id, players, today);
+  if (problem) return { error: problem };
 
   try {
     const rival = dto.competition === 'challenge' ? await loadRivalSquad(dto.opponentClubId) : null;
