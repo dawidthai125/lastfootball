@@ -2,6 +2,7 @@ import { formatMoney } from '@/lib/finance/format-money';
 import { ECONOMY_THIN } from '@/lib/finance/types';
 import { displayPos } from '@/lib/transfers/display-pos';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
+import { talentLabels, talentsOf } from '@/lib/squad/talents';
 import type { LiveListingDto } from '@/lib/transfers/types';
 
 /** Raw row from list_live_transfer_listings RPC (or equivalent query). */
@@ -32,6 +33,7 @@ export function resolveLiveListings(rows: readonly LiveListingRow[]): readonly L
       role: r.role,
       age: r.age,
       skill: r.skill,
+      talents: talentLabels(talentsOf(r.player_id, r.pos)),
       ask,
       askLabel: formatMoney(ask, ECONOMY_THIN.CURRENCY),
       sellerClubId: r.seller_club_id,

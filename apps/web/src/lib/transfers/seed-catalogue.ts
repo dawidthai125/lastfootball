@@ -13,7 +13,7 @@ export type TransferCatalogueSeed = {
 
 /**
  * Deterministic free-agent / AI market catalogue for a club.
- * Market ids are `m-{tag}-{i}` — bought players become `t-{tag}-…`.
+ * Market ids are `m-{tag}-{i}`; a bought player is `boughtPlayerId` of it.
  */
 export function seedTransferCatalogue(clubId: string): readonly TransferCatalogueSeed[] {
   const tag = clubId.replace(/-/g, '').slice(0, 8) || 'club';
@@ -127,4 +127,12 @@ export function seedTransferCatalogue(clubId: string): readonly TransferCatalogu
     ...p,
     marketId: `m-${tag}-${i}`,
   }));
+}
+
+/**
+ * Id of the player behind a market row, known before he is bought, so his talents are the same on
+ * the market and in the squad (D153). Each row is sold once. Older purchases are `t-{tag}-{n}`.
+ */
+export function boughtPlayerId(marketId: string): string {
+  return marketId.replace(/^m-/, 't-').replace(/-(\d+)$/, '-m$1');
 }

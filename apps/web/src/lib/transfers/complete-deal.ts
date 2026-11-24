@@ -7,27 +7,13 @@ import type { createClient } from '@/lib/supabase/server';
 import { resolveTransferEnvelope } from '@/lib/finance/resolve-transfer-envelope';
 import { deriveTransferFee } from '@/lib/transfers/derive-fee';
 import { marketFee } from '@/lib/transfers/market-fee';
+import { AUCTION_OPEN } from '@/lib/transfers/auction';
+import { hasOpenAuction } from '@/lib/transfers/load-auctions';
 import { isAllowedAgreedAmount } from '@/lib/transfers/resolve-negotiation';
-import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
+import { boughtPlayerId, seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
 type AppSupabase = Awaited<ReturnType<typeof createClient>>;
-
-function clubTag(clubId: string): string {
-  return clubId.replace(/-/g, '').slice(0, 8) || 'club';
-}
-
-function nextBoughtId(clubId: string, existingIds: readonly string[]): string {
-  const tag = clubTag(clubId);
-  const prefix = `t-${tag}-`;
-  let max = -1;
-  for (const id of existingIds) {
-    if (!id.startsWith(prefix)) continue;
-    const n = Number(id.slice(prefix.length));
-    if (Number.isFinite(n)) max = Math.max(max, n);
-  }
-  return `${prefix}${max + 1}`;
-}
 
 export type CompleteBuyResult =
   { ok: true; playerId: string; amount: number } | { ok: false; error: string };
@@ -181,6 +167,7 @@ export async function completeTransferBuy(
       return { ok: false, error: 'Za mało środków w budżecie transferowym / kasie.' };
     }
 
+    if (await hasOpenAuction(input.playerId)) return { ok: false, error: AUCTION_OPEN };
     return invokeLiveH2hRpc(supabase, {
       buyerClubId: input.clubId,
       sellerClubId: input.sellerClubId,
@@ -226,7 +213,6 @@ export async function completeTransferBuy(
     return { ok: true, playerId: row.player_id, amount: row.amount };
   }
 
-  const allIds = input.activePlayers.map((p) => p.id);
   const { data: departedRows, error: rowsErr } = await supabase
     .from('players')
     .select('id, shirt_number, departed_at')
@@ -238,8 +224,7 @@ export async function completeTransferBuy(
     shirt_number: number;
     departed_at: string | null;
   }[];
-  const departedIds = everyRow.map((r) => r.id);
-  const playerId = nextBoughtId(input.clubId, [...allIds, ...departedIds]);
+  const playerId = boughtPlayerId(input.marketId);
   const shirt = freeShirt(everyRow);
   if (shirt == null) return { ok: false, error: 'Brak wolnego numeru koszulki.' };
 
@@ -305,6 +290,7 @@ export async function completeTransferSell(
       return { ok: false, error: 'Nie możesz kupić własnego zawodnika.' };
     }
 
+    if (await hasOpenAuction(input.playerId)) return { ok: false, error: AUCTION_OPEN };
     return invokeLiveH2hRpc(supabase, {
       buyerClubId: input.buyerClubId,
       sellerClubId: input.clubId,
@@ -336,6 +322,8 @@ export async function completeTransferSell(
   if (!isAllowedAgreedAmount(ask, input.agreedAmount)) {
     return { ok: false, error: 'Nieprawidłowa kwota sprzedaży.' };
   }
+
+  if (await hasOpenAuction(input.playerId)) return { ok: false, error: AUCTION_OPEN };
 
   const agreedAmount = input.agreedAmount;
   const idempotencyKey = `sell:${input.playerId}`;

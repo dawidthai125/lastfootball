@@ -75,8 +75,10 @@ function groupBy<T>(rows: readonly T[], key: (row: T) => string): Map<string, T[
 }
 
 type HumanFacts = {
-  readonly seasonKey: string;
-  readonly playedByClub: ReadonlyMap<string, { rounds: number[]; playedAt: string[] }>;
+  readonly playedByClub: ReadonlyMap<
+    string,
+    { seasonKey: string; rounds: number[]; playedAt: string[] }
+  >;
 };
 
 /** Null outside the 17:15 window, so the other runs of the day skip these reads. */
@@ -86,19 +88,22 @@ async function loadHumanFacts(
   now: Date,
 ): Promise<HumanFacts | null> {
   if (!isHumanWindow(now)) return null;
-  const league = await admin
-    .from('human_league')
-    .select('season_key, season_number')
-    .eq('id', 1)
-    .maybeSingle();
-  if (league.error || !league.data) return null;
+  const leagues = await admin.from('human_league').select('id, season_key, season_number');
+  if (leagues.error || !leagues.data) return null;
+  const leagueById = new Map(leagues.data.map((row) => [row.id, row]));
   const seats = await admin
     .from('human_league_seats')
-    .select('ref_id')
+    .select('ref_id, league_id')
     .eq('kind', 'human')
     .in('ref_id', [...clubIds]);
   if (seats.error || !seats.data || seats.data.length === 0) return null;
-  const seated = seats.data.map((row) => row.ref_id);
+  const leagueOf = new Map(
+    seats.data.flatMap((row) => {
+      const league = leagueById.get(row.league_id);
+      return league ? [[row.ref_id, league] as const] : [];
+    }),
+  );
+  const seated = [...leagueOf.keys()];
   const played = await admin
     .from('fixtures')
     .select('club_id, matchday, played_at')
@@ -107,17 +112,24 @@ async function loadHumanFacts(
     .eq('status', 'played');
   if (played.error || !played.data) return null;
   const playedByClub = new Map(
-    seated.map((id) => [id, { rounds: [] as number[], playedAt: [] as string[] }]),
+    seated.map((id) => [
+      id,
+      {
+        seasonKey: leagueOf.get(id)!.season_key,
+        rounds: [] as number[],
+        playedAt: [] as string[],
+      },
+    ]),
   );
   for (const row of played.data) {
     const club = playedByClub.get(row.club_id);
     const round = humanRoundFromFixture(row.matchday);
     if (!club || round == null) continue;
-    if (humanSeasonFromFixture(row.matchday) !== league.data.season_number) continue;
+    if (humanSeasonFromFixture(row.matchday) !== leagueOf.get(row.club_id)?.season_number) continue;
     club.rounds.push(round);
     if (row.played_at) club.playedAt.push(row.played_at);
   }
-  return { seasonKey: league.data.season_key, playedByClub };
+  return { playedByClub };
 }
 
 type PageContext = {
@@ -380,7 +392,7 @@ async function loadUsers(
       human:
         human && humanClub
           ? {
-              seasonKey: human.seasonKey,
+              seasonKey: humanClub.seasonKey,
               playedRounds: humanClub.rounds,
               playedToday: humanClub.playedAt.some((at) => warsawDateKey(new Date(at)) === today),
             }

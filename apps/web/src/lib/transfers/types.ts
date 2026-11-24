@@ -17,6 +17,7 @@ export type MarketListingDto = {
   readonly role: string;
   readonly age: number;
   readonly skill: number;
+  readonly talents: readonly string[];
   readonly fee: number;
   readonly feeLabel: string;
   readonly clubLabel: string;
@@ -62,6 +63,8 @@ export type LiveListingDto = {
   readonly role: string;
   readonly age: number;
   readonly skill: number;
+  /** Labels, e.g. "Egzekutor". Empty = none. */
+  readonly talents: readonly string[];
   /** Ask from deriveTransferFee. */
   readonly ask: number;
   readonly askLabel: string;

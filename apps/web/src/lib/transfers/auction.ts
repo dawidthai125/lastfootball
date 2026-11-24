@@ -1,3 +1,19 @@
+/** End of an auction in Polish time, e.g. "25.11, 18:05". The same on the server and in a browser. */
+export function auctionEndLabel(endsAt: string): string {
+  const at = new Date(endsAt);
+  if (Number.isNaN(at.getTime())) return '—';
+  const parts = new Intl.DateTimeFormat('pl-PL', {
+    timeZone: 'Europe/Warsaw',
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(at);
+  const part = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return `${part('day')}.${part('month')}, ${part('hour')}:${part('minute')}`;
+}
+
 /**
  * Manager-to-manager auction book.
  * Bid amounts are a separate path from negotiation presets
@@ -105,3 +121,5 @@ export function withdrawAuction(
     },
   };
 }
+
+export const AUCTION_OPEN = 'Trwa licytacja tego zawodnika. Skończy się sama.';

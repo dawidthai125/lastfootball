@@ -4,7 +4,7 @@ import type { Rng } from '../../rng';
 import { attackScaleForHalf } from '../../ai';
 
 import { advanceMatchClock, isHalfComplete } from './clock';
-import { autoSubstitutions, rollInjury } from './incidents';
+import { autoSubstitutions, rollInjury, rollShootOut } from './incidents';
 import { reconcileMinutesPlayed } from './minutes-played';
 import {
   resolvePossessionAction,
@@ -88,7 +88,8 @@ export function simulateMatchTick(
   // Shoot-out is one tick. The goal is only on the score, not in player stats,
   // matching the cup table (a draw becomes a one-goal winner, decidedBy extra).
   if (state.phase === 'PENALTIES') {
-    const side = input.rng.nextBool() ? 'home' : 'away';
+    const shootOut = state.rules ? rollShootOut(state, input.rng) : null;
+    const side = shootOut?.winner ?? (input.rng.nextBool() ? 'home' : 'away');
     next = Object.freeze({
       ...state,
       tick: input.tick,
@@ -99,7 +100,12 @@ export function simulateMatchTick(
     });
     emits.push({
       type: 'SYSTEM',
-      payload: { kind: 'penalty_decider', side, score: next.score },
+      payload: {
+        kind: 'penalty_decider',
+        side,
+        score: next.score,
+        ...(shootOut ? { shootOut: { home: shootOut.home, away: shootOut.away } } : {}),
+      },
     });
     lifecycle.push({ type: 'END_PENALTIES', tick: input.tick });
     queueFullTime(lifecycle, emits, next, input.tick);

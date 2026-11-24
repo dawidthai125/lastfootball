@@ -1,3 +1,4 @@
+import { tryAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 export type AuctionSnap = {
@@ -6,14 +7,33 @@ export type AuctionSnap = {
   readonly ask: number;
   readonly highAmount: number | null;
   readonly highClubId: string | null;
+  readonly endsAt: string;
 };
+
+/** Auctions past their end are settled first; the scheduler does the same every 10 minutes. */
+export async function settleDueAuctions(): Promise<void> {
+  await tryAdminClient()?.rpc('settle_due_auctions' as never);
+}
+
+/** Whether bids bind this player now. A failed read counts as yes: no sale on a guess. */
+export async function hasOpenAuction(playerId: string): Promise<boolean> {
+  const admin = tryAdminClient();
+  if (!admin) return false;
+  const { data, error } = await admin
+    .from('transfer_auctions' as never)
+    .select('id')
+    .eq('player_id', playerId)
+    .eq('status', 'open')
+    .limit(1);
+  return Boolean(error) || (data as unknown as unknown[] | null)?.length !== 0;
+}
 
 /** Open auctions. Empty when the tables are not in the database yet. */
 export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('transfer_auctions')
-    .select('id, player_id, seller_club_id, ask')
+    .select('id, player_id, seller_club_id, ask, ends_at')
     .eq('status', 'open');
   if (error || !data) return [];
   const auctions = data as {
@@ -21,6 +41,7 @@ export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
     player_id: string;
     seller_club_id: string;
     ask: number;
+    ends_at: string;
   }[];
   if (auctions.length === 0) return [];
 
@@ -50,6 +71,7 @@ export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
       ask: auction.ask,
       highAmount: high?.amount ?? null,
       highClubId: high?.club_id ?? null,
+      endsAt: auction.ends_at,
     };
   });
 }

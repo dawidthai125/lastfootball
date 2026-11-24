@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/server';
 type RpcRow = { ok?: boolean; error?: string };
 
 async function callAuction(
-  fn: 'place_auction_bid' | 'complete_auction_transfer' | 'withdraw_auction',
+  fn: 'place_auction_bid',
   args: Record<string, string | number>,
 ): Promise<TransferActionState> {
   if (!env.isSupabaseConfigured) return { error: 'Supabase nie jest skonfigurowany.' };
@@ -38,22 +38,4 @@ export async function placeAuctionBid(
   const amount = Number(formData.get('amount'));
   if (!playerId || !Number.isInteger(amount)) return { error: 'Podaj kwotę w pełnych euro.' };
   return callAuction('place_auction_bid', { p_player_id: playerId, p_amount: amount });
-}
-
-export async function settleAuctionBid(
-  _prev: TransferActionState,
-  formData: FormData,
-): Promise<TransferActionState> {
-  const playerId = String(formData.get('playerId') ?? '').trim();
-  if (!playerId) return { error: 'Brak zawodnika.' };
-  return callAuction('complete_auction_transfer', { p_player_id: playerId });
-}
-
-export async function withdrawAuctionBid(
-  _prev: TransferActionState,
-  formData: FormData,
-): Promise<TransferActionState> {
-  const playerId = String(formData.get('playerId') ?? '').trim();
-  if (!playerId) return { error: 'Brak zawodnika.' };
-  return callAuction('withdraw_auction', { p_player_id: playerId });
 }

@@ -130,6 +130,59 @@ export function penaltyGoalChance(state: MatchState, side: PitchSide, taker: Pla
   return clamp(FULL_RULES.PENALTY_GOAL + gap * 0.004, 0.55, 0.92);
 }
 
+export type ShootOut = {
+  readonly home: number;
+  readonly away: number;
+  readonly winner: PitchSide;
+};
+
+/** Best takers first, the chosen taker before them; the goalkeeper last. */
+function shootOutOrder(state: MatchState, side: PitchSide): readonly Player[] {
+  const lineup = lineupOf(state, side);
+  const rank = (slot: { role: PitchRole; playerId: PlayerId }, player: Player) =>
+    slot.playerId === lineup.setPiecePlayerId
+      ? Infinity
+      : slot.role === 'GK'
+        ? -1
+        : penaltyQuality(player);
+  return lineup.slots
+    .flatMap((slot) => {
+      const player = playerOf(state, slot.playerId);
+      return player ? [{ player, rank: rank(slot, player) }] : [];
+    })
+    .sort((a, b) => b.rank - a.rank || (a.player.id < b.player.id ? -1 : 1))
+    .map((row) => row.player);
+}
+
+/** Five kicks each, over as soon as it is decided, then pairs until one scores and one misses. */
+export function rollShootOut(state: MatchState, rng: Rng): ShootOut {
+  const order = { home: shootOutOrder(state, 'home'), away: shootOutOrder(state, 'away') };
+  const first: PitchSide = rng.nextBool() ? 'home' : 'away';
+  const second: PitchSide = first === 'home' ? 'away' : 'home';
+  const goals = { home: 0, away: 0 };
+  const kick = (side: PitchSide, round: number) => {
+    const taker = order[side][round % Math.max(1, order[side].length)];
+    const chance = taker ? penaltyGoalChance(state, side, taker) : 0.5;
+    if (rng.next() < chance) goals[side] += 1;
+  };
+  for (let round = 0; round < 40; round += 1) {
+    for (const side of [first, second]) {
+      kick(side, round);
+      if (round >= 5) continue;
+      const left = {
+        [first]: 4 - round,
+        [second]: side === first ? 5 - round : 4 - round,
+      } as Record<PitchSide, number>;
+      if (goals[first] > goals[second] + left[second]) return { ...goals, winner: first };
+      if (goals[second] > goals[first] + left[first]) return { ...goals, winner: second };
+    }
+    if (round >= 4 && goals.home !== goals.away) {
+      return { ...goals, winner: goals.home > goals.away ? 'home' : 'away' };
+    }
+  }
+  return { ...goals, winner: first };
+}
+
 export function freeKickGoalChance(state: MatchState, side: PitchSide, taker: Player): number {
   const gap = freeKickQuality(taker) - keeperQuality(state, side === 'home' ? 'away' : 'home');
   return clamp(FULL_RULES.FREE_KICK_GOAL * (1 + gap * 0.02), 0.015, 0.16);

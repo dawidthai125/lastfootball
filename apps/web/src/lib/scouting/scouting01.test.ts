@@ -60,6 +60,7 @@ function liveListing(playerId: string): LiveListingDto {
     age: 22,
     skill: 58,
     ask: 1000,
+    talents: [],
     askLabel: '1 000',
     sellerClubId: 'club-b',
     sellerClubLabel: 'Rival',
