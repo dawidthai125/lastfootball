@@ -14,7 +14,11 @@ export type TrophyDto = {
 /** Trophies of closed seasons, newest first. The running season is not in the history yet. */
 export function resolveTrophies(input: {
   readonly history: readonly SeasonHistory[];
-  readonly human: readonly { readonly season: number; readonly award: HumanAward }[];
+  readonly human: readonly {
+    readonly league: number;
+    readonly season: number;
+    readonly award: HumanAward;
+  }[];
 }): readonly TrophyDto[] {
   const league: TrophyDto[] = [...input.history]
     .sort((a, b) => b.seasonNumber - a.seasonNumber)
@@ -52,12 +56,11 @@ export function resolveTrophies(input: {
     });
   const human: TrophyDto[] = [...input.human]
     .filter((row) => row.award.place <= 3)
-    .sort((a, b) => b.season - a.season)
-    .map(({ season, award }) => ({
-      id: `human-${season}`,
+    .map(({ league, season, award }) => ({
+      id: `human-${league}-${season}`,
       kind: 'human',
       title: award.place === 1 ? 'Mistrzostwo Ligi ludzi' : `Liga ludzi: ${award.place}. miejsce`,
-      detail: `Sezon ${season} Ligi ludzi · rozegrane ${award.played} z 22`,
+      detail: `Liga ludzi ${league}, sezon ${season} · rozegrane ${award.played} z 22`,
     }));
   return [...league, ...human];
 }

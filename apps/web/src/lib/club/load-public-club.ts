@@ -70,7 +70,7 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
       .eq('academy_track', false),
     admin
       .from('human_league_history' as never)
-      .select('season, awards')
+      .select('league_id, cycle, awards')
       .order('season', { ascending: false })
       .limit(100),
     loadBoardRecords(admin, clubId),
@@ -88,12 +88,12 @@ export async function loadPublicClub(clubId: string): Promise<PublicClub | null 
     created_at: string;
   };
   const played = (matches.data as unknown as ClubMatchRow[]).map(fromClubMatchRow);
-  const awards = ((human.data ?? []) as unknown as { season: number; awards: unknown }[]).flatMap(
-    ({ season, awards: raw }) => {
-      const award = parseHumanAwards(raw).find((a) => a.club_id === clubId);
-      return award ? [{ season, award }] : [];
-    },
-  );
+  const awards = (
+    (human.data ?? []) as unknown as { league_id: number; cycle: number; awards: unknown }[]
+  ).flatMap(({ league_id: league, cycle: season, awards: raw }) => {
+    const award = parseHumanAwards(raw).find((a) => a.club_id === clubId);
+    return award ? [{ league, season, award }] : [];
+  });
   const order = (pos: string) => {
     const i = POS_ORDER.indexOf(pos);
     return i < 0 ? POS_ORDER.length : i;

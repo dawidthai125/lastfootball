@@ -7,7 +7,8 @@ import { filterSeniorPlayers } from '@/lib/squad/types';
 import { displayPos } from '@/lib/transfers/display-pos';
 import { marketFee } from '@/lib/transfers/market-fee';
 import { resolveIncomingOffers } from '@/lib/transfers/resolve-incoming-offers';
-import { seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
+import { talentLabels, talentsOf } from '@/lib/squad/talents';
+import { boughtPlayerId, seedTransferCatalogue } from '@/lib/transfers/seed-catalogue';
 import { listTransferSellEligiblePlayers } from '@/lib/transfers/sell-eligibility';
 import {
   TRANSFERS_THIN,
@@ -50,6 +51,7 @@ export function resolveTransferMarket(input: {
       role: s.role,
       age: s.age,
       skill: s.skill,
+      talents: talentLabels(talentsOf(boughtPlayerId(s.marketId), s.pos)),
       fee,
       feeLabel: formatMoney(fee, ECONOMY_THIN.CURRENCY),
       clubLabel: s.clubLabel,

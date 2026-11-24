@@ -5,6 +5,8 @@ import { serverDb } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
+import { AUCTION_OPEN } from '@/lib/transfers/auction';
+import { hasOpenAuction } from '@/lib/transfers/load-auctions';
 import { createClient } from '@/lib/supabase/server';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import type { TransferActionState } from '@/lib/transfers/action-types';
@@ -82,6 +84,8 @@ export async function setTransferListing(
   if (player.transferListedAt == null) {
     return { ok: true };
   }
+
+  if (await hasOpenAuction(playerId)) return { error: AUCTION_OPEN };
 
   const { data: unlistData, error: unlistErr } = await supabase.rpc(
     'unlist_transfer_player' as never,

@@ -196,10 +196,19 @@ function systemLine(payload: unknown, context: CommentaryContext): string {
     case 'resume':
       return 'Gra wznowiona.';
     case 'penalty_decider':
-      return `${teamName(readSide(payload), context)} wygrywa w karnych.`;
+      return `${teamName(readSide(payload), context)} wygrywa w karnych${shootOutScore(payload)}.`;
     default:
       return 'Sytuacja na boisku.';
   }
+}
+
+/** " 4:2" from the winner's side. Empty for a match from before the kicks were played. */
+export function shootOutScore(payload: unknown): string {
+  const kicks = payloadOf(payload)?.shootOut as { home?: unknown; away?: unknown } | undefined;
+  if (typeof kicks?.home !== 'number' || typeof kicks.away !== 'number') return '';
+  return readSide(payload) === 'away'
+    ? ` ${kicks.away}:${kicks.home}`
+    : ` ${kicks.home}:${kicks.away}`;
 }
 
 function teamName(side: 'home' | 'away' | null, context: CommentaryContext): string {

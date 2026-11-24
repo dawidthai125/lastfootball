@@ -74,6 +74,7 @@ describe('hidden ceiling on the academy and the market', () => {
       age: 18,
       skill: 55,
       ask: 40_000,
+      talents: [],
       askLabel: '40 000',
       sellerClubId: 'club-b',
       sellerClubLabel: 'Rywale',

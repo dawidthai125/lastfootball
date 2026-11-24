@@ -920,7 +920,21 @@ Potwierdzenie adresu i reset hasła wysyła Resend, nie domyślna poczta Supabas
 2. Ranking graczy: 30 dni, liga 3/1 razy waga ligi, puchar 4, Liga ludzi 6/2, wyzwania 0, zablokowani poza listą. RPC `player_ranking` tylko dla serwera.
 3. Profil klubu `/clubs/[id]`: nazwa, herb, liga, bilans, 5 meczów, trofea, nazwiska pierwszego składu. Bez kasy, taktyki, umiejętności i właściciela. Polityka prywatności, rozdział 4, uzupełniona.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D152 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D153 — Licytacja, karne, talenty na rynku · Owner GO 2026-11-24
+
+1. Licytacja trwa 24 godziny od pierwszej oferty, najmniej 15 minut od ostatniej. Rozlicza ją `settle_due_auctions` (cron `lf-auctions` co 10 minut i wejście na Transfery). Wygrywa najwyższa oferta, którą klub nadal może zapłacić. Zamknięte w międzyczasie okno nie zmienia wyniku. Sprzedający nie przyjmuje ani nie cofa.
+2. W trakcie licytacji zawodnika nie można sprzedać inaczej ani zdjąć z listy (`guard_auction_player`). Koniec umowy lub kariery kończy licytację bez sprzedaży.
+3. Karne po dogrywce: pięć kolejek i dogrywka karnych, szansa z umiejętności strzelca i bramkarza (`rollShootOut`). Wynik meczu jak wcześniej: jeden gol dla zwycięzcy.
+4. Id kupionego zawodnika wynika z pozycji rynku (`boughtPlayerId`), więc talenty widać przed zakupem.
+
+### D154 — Wiele Lig ludzi · Owner GO 2026-11-24
+
+1. Ligi otwierają się same: klub bez miejsca trafia do ligi, która jeszcze nie zaczęła, a gdy takiej nie ma, dwa czekające kluby otwierają nową (start następnego dnia). Resztę miejsc biorą boty.
+2. Każda liga ma własny kalendarz (`human_league.id`). `season_number` jest unikalny między ligami, `cycle` to sezon ligi widoczny dla gracza.
+3. Przed startem dwie niepełne ligi łączą się w jedną, liga bez aktywnego klubu znika, a liga, do której nikt nie przyszedł pierwszego dnia, startuje od nowa. Po pierwszym zamkniętym składzie miejsca są stałe do końca sezonu.
+4. Całość w `human_league_sync` pod jedną blokadą. Zablokowane konta nie biorą miejsca.
+
+Każde złamanie D1–D28 / D38 / D40–D52 / D63–D154 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
 **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
 **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
 **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

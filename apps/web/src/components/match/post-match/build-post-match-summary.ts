@@ -9,6 +9,7 @@ import type { LiveEventKind } from '@/data/fixtures';
 import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
+import { shootOutScore } from '@/lib/match/commentary';
 import { threeMatchSentences } from '@/lib/match/match-report';
 import { emptyPlayerName, lateDialFromEvents, whyLine } from '@/lib/match/why-line';
 
@@ -114,7 +115,7 @@ function shootoutLine(
   for (const event of events) {
     const payload = event.payload as { kind?: unknown; side?: unknown } | null | undefined;
     if (payload?.kind !== 'penalty_decider') continue;
-    return `Po dogrywce był remis. ${payload.side === 'home' ? homeName : awayName} wygrywa w karnych.`;
+    return `Po dogrywce był remis. ${payload.side === 'home' ? homeName : awayName} wygrywa w karnych${shootOutScore(payload)}.`;
   }
   return null;
 }

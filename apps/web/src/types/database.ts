@@ -621,23 +621,27 @@ export type Database = {
           id: number;
           season_key: string;
           frozen: boolean;
+          cycle: number;
         };
         Insert: {
           season_number?: number;
           id?: number;
           season_key: string;
           frozen?: boolean;
+          cycle?: number;
         };
         Update: {
           season_number?: number;
           id?: number;
           season_key?: string;
           frozen?: boolean;
+          cycle?: number;
         };
         Relationships: [];
       };
       human_league_seats: {
         Row: {
+          league_id: number;
           slot: number;
           kind: string;
           ref_id: string;
@@ -645,6 +649,7 @@ export type Database = {
           short_name: string;
         };
         Insert: {
+          league_id?: number;
           slot: number;
           kind: string;
           ref_id: string;
@@ -652,6 +657,7 @@ export type Database = {
           short_name: string;
         };
         Update: {
+          league_id?: number;
           slot?: number;
           kind?: string;
           ref_id?: string;
@@ -688,6 +694,8 @@ export type Database = {
       };
       human_league_history: {
         Row: {
+          league_id: number;
+          cycle: number;
           season: number;
           season_key: string;
           standings: Json;
@@ -695,6 +703,8 @@ export type Database = {
           closed_at: string;
         };
         Insert: {
+          league_id?: number;
+          cycle: number;
           season: number;
           season_key: string;
           standings: Json;
@@ -702,6 +712,8 @@ export type Database = {
           closed_at?: string;
         };
         Update: {
+          league_id?: number;
+          cycle?: number;
           season?: number;
           season_key?: string;
           standings?: Json;

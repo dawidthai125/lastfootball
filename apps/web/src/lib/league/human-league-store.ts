@@ -19,6 +19,7 @@ import {
   fillHumanSeats,
   dueHumanSeasonKey,
   HUMAN_ACTIVE_DAYS,
+  HUMAN_LEAGUE_SIZE,
   HUMAN_ROUND_COUNT,
   humanFixtureMatchday,
   humanSeasonFromFixture,
@@ -64,6 +65,10 @@ export type HumanLeagueCard = {
   readonly fixtureId: string | null;
   readonly note: string | null;
   readonly season: number;
+  /** Number of this league, and how many leagues and player clubs there are. */
+  readonly leagueId: number;
+  readonly leagues: number;
+  readonly clubs: number;
   /** Warsaw date when the next season may start. */
   readonly nextSeasonOn: string | null;
   readonly standings: readonly HumanTableRow[];
@@ -95,8 +100,12 @@ type BroadcastRow = {
 };
 
 type SeatTable = {
+  readonly leagueId: number;
   readonly seasonKey: string;
+  /** Unique across leagues: fixtures, broadcasts and history are keyed by it. */
   readonly season: number;
+  /** Season of this league, as people see it. */
+  readonly cycle: number;
   readonly frozen: boolean;
   readonly seats: readonly HumanSeat[];
 };
@@ -139,16 +148,20 @@ function previewCard(club: ClubDto, note: string): HumanLeagueCard {
     fixtureId: null,
     note,
     season: 1,
+    leagueId: 1,
+    leagues: 0,
+    clubs: 0,
     nextSeasonOn: null,
     standings: [],
     lastSeason: null,
   };
 }
 
-async function readSeats(): Promise<HumanSeat[] | null> {
+async function readSeats(leagueId: number): Promise<HumanSeat[] | null> {
   const { data, error } = await createAdminClient()
     .from('human_league_seats')
     .select('slot, kind, ref_id, display_name, short_name')
+    .eq('league_id', leagueId)
     .order('slot', { ascending: true });
   if (error || !data || data.length !== 12) return null;
   return data.map((row) => ({
@@ -180,8 +193,8 @@ async function playedRoundsByClub(season: number): Promise<ReadonlyMap<string, n
  * Table of a season that closes now, with every missing match decided, and its awards.
  * Null = there is no full set of seats. 'error' = a failed read: the season closes later.
  */
-async function finalStandings(season: number, seasonKey: string, now: Date) {
-  const seats = await readSeats();
+async function finalStandings(leagueId: number, season: number, seasonKey: string, now: Date) {
+  const seats = await readSeats(leagueId);
   if (!seats) return null;
   const [stored, played] = await Promise.all([storedResults(season), playedRoundsByClub(season)]);
   if (!stored || !played) return 'error' as const;
@@ -190,111 +203,137 @@ async function finalStandings(season: number, seasonKey: string, now: Date) {
   return { standings, awards: humanAwards(standings, played) };
 }
 
-/** The season before this one, for the card. */
-async function lastSeason(season: number, clubId: string): Promise<HumanLeagueCard['lastSeason']> {
-  if (season < 2) return null;
+/** The season of this league before the running one, for the card. */
+async function lastSeason(
+  table: SeatTable,
+  clubId: string,
+): Promise<HumanLeagueCard['lastSeason']> {
+  if (table.cycle < 2) return null;
   const { data } = await createAdminClient()
     .from('human_league_history')
-    .select('season, standings')
-    .eq('season', season - 1)
+    .select('standings')
+    .eq('league_id', table.leagueId)
+    .eq('cycle', table.cycle - 1)
+    .order('season', { ascending: false })
+    .limit(1)
     .maybeSingle();
   const rows = data?.standings as unknown as HumanTableRow[] | undefined;
   if (!Array.isArray(rows) || !rows[0]) return null;
   const place = rows.findIndex((row) => row.id === clubId) + 1;
-  return { season: season - 1, champion: rows[0].name, place: place > 0 ? place : null };
+  return { season: table.cycle - 1, champion: rows[0].name, place: place > 0 ? place : null };
 }
 
-async function ensureSeatTable(now: Date): Promise<SeatTable | 'missing' | 'empty' | null> {
-  if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
+type LeagueState = {
+  readonly leagues: number;
+  readonly clubs: number;
+  readonly table: SeatTable | null;
+};
+
+/** A call, not a read: Next remembers equal reads while it renders one page. */
+async function leagueState(clubId: string): Promise<LeagueState | 'missing' | null> {
+  const { data, error } = await createAdminClient().rpc(
+    'human_league_of' as never,
+    { p_club: clubId } as never,
+  );
+  if (error) return missingRelation(error) || error.code === 'PGRST202' ? 'missing' : null;
+  const state = data as unknown as {
+    leagues: number;
+    clubs: number;
+    league: {
+      id: number;
+      season_key: string;
+      season_number: number;
+      cycle: number;
+      frozen: boolean;
+      seats: HumanSeat[] | null;
+    } | null;
+  } | null;
+  if (!state) return null;
+  const league = state.league;
+  if (league && league.seats?.length !== HUMAN_LEAGUE_SIZE) return null;
+  return {
+    leagues: state.leagues,
+    clubs: state.clubs,
+    table: league
+      ? {
+          leagueId: league.id,
+          seasonKey: league.season_key,
+          season: league.season_number,
+          cycle: league.cycle,
+          frozen: league.frozen,
+          seats: league.seats!,
+        }
+      : null,
+  };
+}
+
+/** Closes every league season that is over. False = a failed read: it closes later. */
+async function closeDueLeagues(now: Date): Promise<boolean> {
   const admin = createAdminClient();
-  const existing = await admin
-    .from('human_league')
-    .select('season_key, season_number, frozen')
-    .eq('id', 1)
-    .maybeSingle();
-  if (missingRelation(existing.error)) return 'missing';
-  if (existing.error) return null;
-
-  let seasonKey = existing.data?.season_key;
-  let season = existing.data?.season_number ?? 1;
-  let frozen = existing.data?.frozen ?? false;
-  if (!seasonKey) {
-    seasonKey = warsawDateKey(now);
-    const inserted = await admin.from('human_league').insert({
-      id: 1,
-      season_key: seasonKey,
-      frozen: false,
-    });
-    if (missingRelation(inserted.error)) return 'missing';
-    if (inserted.error) {
-      const again = await admin
-        .from('human_league')
-        .select('season_key, season_number, frozen')
-        .eq('id', 1)
-        .maybeSingle();
-      if (!again.data) return null;
-      seasonKey = again.data.season_key;
-      season = again.data.season_number;
-      frozen = again.data.frozen;
-    }
-  }
-
-  const nextKey = dueHumanSeasonKey(seasonKey, now);
-  if (nextKey) {
-    const final = await finalStandings(season, seasonKey, now);
-    if (final === 'error') return null;
-    const rolled = await admin.rpc(
+  const due = await admin.rpc(
+    'human_leagues_due' as never,
+    { p_today: warsawDateKey(now) } as never,
+  );
+  if (due.error) return false;
+  const leagues = (due.data ?? []) as unknown as {
+    id: number;
+    season_key: string;
+    season_number: number;
+  }[];
+  for (const league of leagues) {
+    const nextKey = dueHumanSeasonKey(league.season_key, now);
+    if (!nextKey) continue;
+    const final = await finalStandings(league.id, league.season_number, league.season_key, now);
+    if (final === 'error') return false;
+    const closed = await admin.rpc(
       'close_human_season' as never,
       {
-        p_season: season,
+        p_season: league.season_number,
         p_key: nextKey,
         p_standings: final?.standings ?? null,
         p_awards: final?.awards ?? null,
       } as never,
     );
-    // Next remembers equal reads while it renders one page, so the call itself returns the state.
-    const state = rolled.data as unknown as {
-      season_key: string;
-      season_number: number;
-      frozen: boolean;
-    } | null;
-    if (rolled.error || !state) return null;
-    ({ season_key: seasonKey, season_number: season, frozen } = state);
+    if (closed.error) return false;
   }
+  return true;
+}
 
-  if (!frozen) {
-    const since = new Date(now.getTime() - HUMAN_ACTIVE_DAYS * 86_400_000).toISOString();
-    const clubs = await admin.rpc('human_league_clubs' as never, { p_since: since } as never);
-    const rows = clubs.data as
-      { id: string; name: string; short_name: string; created_at: string }[] | null;
-    if (clubs.error || !rows) return null;
-    // Eleven bots: without one active club there is no league of twelve.
-    if (rows.length === 0) return 'empty';
-    const seats = fillHumanSeats(
-      rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        shortName: row.short_name,
-        createdAt: row.created_at,
-      })),
-      bots(),
-    );
-    await admin.from('human_league_seats').delete().gte('slot', 0);
-    const saved = await admin.from('human_league_seats').insert(
-      seats.map((seat) => ({
-        slot: seat.slot,
-        kind: seat.kind,
-        ref_id: seat.id,
-        display_name: seat.name,
-        short_name: seat.shortName,
-      })),
-    );
-    if (saved.error) return null;
-    return { seasonKey, season, frozen: false, seats };
-  }
+/**
+ * The league of this club (D154). Leagues open and close by themselves: a club without a seat
+ * joins one that has not started, or a new league opens for the waiting clubs.
+ */
+async function ensureSeatTable(clubId: string, now: Date): Promise<LeagueState | 'missing' | null> {
+  if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
+  const first = await leagueState(clubId);
+  if (first === null || first === 'missing') return first;
+  const ended =
+    first.table !== null && warsawDateKey(now) >= nextHumanSeasonStart(first.table.seasonKey);
+  if (first.table?.frozen && !ended) return first;
 
-  const seats = await readSeats();
-  return seats ? { seasonKey, season, frozen: true, seats } : null;
+  if (!(await closeDueLeagues(now))) return null;
+  const synced = await createAdminClient().rpc(
+    'human_league_sync' as never,
+    {
+      p_since: new Date(now.getTime() - HUMAN_ACTIVE_DAYS * 86_400_000).toISOString(),
+      p_today: warsawDateKey(now),
+      p_start: kickoffDate(warsawDateKey(now), 2),
+      p_bots: bots(),
+    } as never,
+  );
+  return synced.error ? null : leagueState(clubId);
+}
+
+/** Closes the seats before the first line-up is locked, then reads them once more. */
+async function frozenTable(table: SeatTable, clubId: string): Promise<SeatTable | null> {
+  if (table.frozen) return table;
+  const frozen = await createAdminClient().rpc(
+    'freeze_human_league' as never,
+    { p_season: table.season } as never,
+  );
+  if (frozen.error) return null;
+  const state = await leagueState(clubId);
+  return state && state !== 'missing' && state.table?.season === table.season ? state.table : null;
 }
 
 function isGroups(value: unknown): value is AttrGroups {
@@ -448,15 +487,6 @@ function benchesOf(broadcast: BroadcastRow) {
   return home && away ? { home, away } : null;
 }
 
-/** Only its own season: a late request must not close the seats of the next one. */
-async function freezeSeats(season: number): Promise<void> {
-  await createAdminClient()
-    .from('human_league')
-    .update({ frozen: true })
-    .eq('id', 1)
-    .eq('season_number', season);
-}
-
 async function lockBroadcast(
   table: SeatTable,
   pair: HumanPairing,
@@ -503,7 +533,6 @@ async function lockBroadcast(
       )
       .maybeSingle();
     if (updated.error || !updated.data) return { error: 'Nie udało się zamknąć składów.' };
-    await freezeSeats(table.season);
     return updated.data as BroadcastRow;
   }
 
@@ -519,7 +548,6 @@ async function lockBroadcast(
     if (raced) return raced;
     return { error: 'Nie udało się zapisać meczu ligi ludzi.' };
   }
-  await freezeSeats(table.season);
   return inserted.data as BroadcastRow;
 }
 
@@ -598,6 +626,7 @@ async function storedResults(season: number): Promise<HumanResult[] | null> {
 
 function cardFrom(
   club: ClubDto,
+  state: LeagueState,
   table: SeatTable,
   extra: Partial<HumanLeagueCard>,
 ): HumanLeagueCard {
@@ -614,7 +643,10 @@ function cardFrom(
     late: extra.late ?? false,
     fixtureId: extra.fixtureId ?? null,
     note: extra.note ?? null,
-    season: table.season,
+    season: table.cycle,
+    leagueId: table.leagueId,
+    leagues: state.leagues,
+    clubs: state.clubs,
     nextSeasonOn: nextHumanSeasonStart(table.seasonKey),
     standings: extra.standings ?? [],
     lastSeason: extra.lastSeason ?? null,
@@ -625,26 +657,29 @@ export async function loadHumanLeagueCard(
   club: ClubDto,
   now = new Date(),
 ): Promise<HumanLeagueCard> {
-  const table = await ensureSeatTable(now);
-  if (table === 'empty') {
+  const state = await ensureSeatTable(club.id, now);
+  if (state === null || state === 'missing') {
+    return previewCard(
+      club,
+      state === 'missing'
+        ? 'Tabela ligi ludzi nie jest jeszcze na bazie.'
+        : 'Nie udało się wczytać Ligi ludzi. Odśwież stronę.',
+    );
+  }
+  if (!state.table) {
     const note =
-      'Liga ludzi czeka na kluby, które grały albo trenowały w ostatnich 14 dniach. Zagraj mecz, a zajmiesz miejsce.';
+      'Kolejna liga otworzy się sama, gdy będzie czekać drugi klub. Miejsce dostaje klub, który w ostatnich 14 dniach grał, trenował albo powstał.';
     return {
       ...previewCard(club, note),
       seats: [],
       round: null,
       opponentName: null,
       windowSentence: null,
+      leagues: state.leagues,
+      clubs: state.clubs,
     };
   }
-  if (table === null || table === 'missing') {
-    return previewCard(
-      club,
-      table === 'missing'
-        ? 'Tabela ligi ludzi nie jest jeszcze na bazie.'
-        : 'Liga ludzi włączy się, gdy baza przyjmie migrację.',
-    );
-  }
+  let table = state.table;
 
   const standings = resolveHumanTable({
     seats: table.seats,
@@ -652,20 +687,9 @@ export async function loadHumanLeagueCard(
     results: await seasonResults(table.season),
     now,
   });
-  const previous = await lastSeason(table.season, club.id);
+  const previous = await lastSeason(table, club.id);
   const card = (extra: Partial<HumanLeagueCard>) =>
-    cardFrom(club, table, { standings, lastSeason: previous, ...extra });
-
-  const mine = table.seats.find((seat) => seat.id === club.id);
-  if (!mine) {
-    return card({
-      note: !table.frozen
-        ? 'Miejsce dostaje klub, który grał albo trenował w ostatnich 14 dniach. Zagraj mecz przed 18:00 pierwszej kolejki, a zajmiesz wolne miejsce.'
-        : table.seats.some((seat) => seat.kind === 'bot')
-          ? `Miejsca w tym sezonie są zamknięte. Wejdziesz w nowym sezonie, od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}.`
-          : 'Liga ludzi ma już 12 klubów. Wchodzisz, gdy zwolni się miejsce.',
-    });
-  }
+    cardFrom(club, state, table, { standings, lastSeason: previous, ...extra });
 
   const admin = createAdminClient();
   const playedRows = await admin
@@ -696,15 +720,20 @@ export async function loadHumanLeagueCard(
       note: playedHumanToday
         ? 'Kolejka ludzi na dziś już rozegrana.'
         : today > kickoffDate(table.seasonKey, HUMAN_ROUND_COUNT)
-          ? `Sezon ${table.season} rozegrany. Nowy sezon od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}, wolne miejsca biorą nowe kluby.`
+          ? `Sezon ${table.cycle} rozegrany. Nowy sezon od ${dayLabel(nextHumanSeasonStart(table.seasonKey))}, wolne miejsca biorą nowe kluby.`
           : 'Sezon ligi ludzi nie ma teraz meczu do rozegrania.',
     });
   }
 
+  const window = kickoffWindowState(now, kickoffDate(table.seasonKey, round));
+  if (window !== 'before') {
+    const frozen = await frozenTable(table, club.id);
+    if (!frozen) return card({ round, note: 'Nie udało się zamknąć miejsc. Odśwież stronę.' });
+    table = frozen;
+  }
   const pair = pairingForClub(table.seats, round, club.id);
   if (!pair) return card({ round, note: 'Brak pary na tę kolejkę.' });
   const opponent = pair.home.id === club.id ? pair.away : pair.home;
-  const window = kickoffWindowState(now, kickoffDate(table.seasonKey, round));
   if (window === 'before') {
     return card({
       round,
@@ -753,20 +782,18 @@ export async function loadHumanScorers(
 ): Promise<readonly ScorerRow[] | null> {
   if (!env.isSupabaseConfigured || !env.supabaseServiceRoleKey) return null;
   const admin = createAdminClient();
-  const [league, seats] = await Promise.all([
-    admin.from('human_league').select('season_key, season_number').eq('id', 1).maybeSingle(),
-    readSeats(),
-  ]);
-  if (!league.data || !seats) return null;
+  const state = await leagueState(clubId);
+  if (!state || state === 'missing' || !state.table) return null;
+  const { table } = state;
   const { data, error } = await admin
     .from('human_broadcasts')
     .select('home_id, away_id, stats')
-    .eq('season', league.data.season_number)
+    .eq('season', table.season)
     .not('stats', 'is', null);
   if (error || !data) return null;
   return resolveHumanScorers({
-    seats,
-    seasonKey: league.data.season_key,
+    seats: table.seats,
+    seasonKey: table.seasonKey,
     broadcasts: data.map((row) => ({
       homeId: row.home_id,
       awayId: row.away_id,
@@ -803,10 +830,11 @@ export async function prepareHumanLive(
   });
   const round = humanRoundFromFixture(dto.matchday);
   if (!round) return blocked('To nie jest mecz ligi ludzi.');
-  const table = await ensureSeatTable(now);
-  if (table === null || table === 'missing' || table === 'empty') {
-    return blocked('Liga ludzi nie jest jeszcze włączona na bazie.');
+  const state = await ensureSeatTable(club.id, now);
+  if (state === null || state === 'missing' || !state.table) {
+    return blocked('Nie masz teraz miejsca w Lidze ludzi.');
   }
+  const { table } = state;
   if (humanSeasonFromFixture(dto.matchday) !== table.season) {
     return blocked('Ten sezon Ligi ludzi jest już zamknięty.');
   }
@@ -818,6 +846,7 @@ export async function prepareHumanLive(
       kickoffWindowSentence(window) ?? 'Wspólny początek o 18:00 czasu warszawskiego.',
     );
   }
+  if (!table.frozen) return blocked('Wejdź w mecz ze strony Ligi.');
   const locked = await lockBroadcast(table, pair, now);
   if ('error' in locked) return blocked(locked.error);
 

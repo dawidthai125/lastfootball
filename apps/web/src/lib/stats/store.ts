@@ -117,6 +117,8 @@ export async function loadBestMatch(
 }
 
 export type HumanSeasonAward = {
+  readonly league: number;
+  /** Season of that league. */
   readonly season: number;
   readonly closedAt: string;
   readonly award: HumanAward;
@@ -127,12 +129,19 @@ export async function loadHumanAwards(clubId: string): Promise<readonly HumanSea
   const supabase = await createClient();
   const { data } = await supabase
     .from('human_league_history')
-    .select('season, closed_at, awards')
+    .select('league_id, cycle, closed_at, awards')
     .order('season', { ascending: false })
     .limit(100);
-  const rows = (data ?? []) as unknown as { season: number; closed_at: string; awards: unknown }[];
+  const rows = (data ?? []) as unknown as {
+    league_id: number;
+    cycle: number;
+    closed_at: string;
+    awards: unknown;
+  }[];
   return rows.flatMap((row) => {
     const award = parseHumanAwards(row.awards).find((a) => a.club_id === clubId);
-    return award ? [{ season: row.season, closedAt: row.closed_at, award }] : [];
+    return award
+      ? [{ league: row.league_id, season: row.cycle, closedAt: row.closed_at, award }]
+      : [];
   });
 }

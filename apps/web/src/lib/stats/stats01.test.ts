@@ -178,11 +178,17 @@ describe('records and trophies', () => {
         },
       ],
       human: [
-        { season: 1, award },
-        { season: 2, award: { ...award, place: 4 } },
+        { league: 1, season: 1, award },
+        { league: 1, season: 2, award: { ...award, place: 4 } },
       ],
     });
-    expect(out.map((t) => t.id)).toEqual(['cup-2', 'league-1', 'cup-1', 'promotion-1', 'human-1']);
+    expect(out.map((t) => t.id)).toEqual([
+      'cup-2',
+      'league-1',
+      'cup-1',
+      'promotion-1',
+      'human-1-1',
+    ]);
     expect(out[0]!.kind).toBe('cup_final');
     expect(out[3]!.title).toContain('III');
   });
@@ -318,7 +324,13 @@ describe('match events in messages', () => {
     expect(events({ challenges: [{ ...challenge, playedAt: '2026-11-01T12:00:00Z' }] })).toEqual(
       [],
     );
-    const award = { season: 1, place: 2, amount: 20_000, closedAt: '2026-11-12T00:00:00Z' };
+    const award = {
+      league: 1,
+      season: 1,
+      place: 2,
+      amount: 20_000,
+      closedAt: '2026-11-12T00:00:00Z',
+    };
     expect(events({ award })[0]!.subject).toContain('2. miejsce, nagroda');
     expect(events({ award: { ...award, amount: 0 } })[0]!.subject).not.toContain('nagroda');
   });

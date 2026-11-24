@@ -10,7 +10,7 @@ import { resolveIncomingLoanOffers } from '@/lib/squad/incoming-loan';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
-import { loadOpenAuctions } from '@/lib/transfers/load-auctions';
+import { loadOpenAuctions, settleDueAuctions } from '@/lib/transfers/load-auctions';
 import { fetchLiveH2hOffers } from '@/lib/transfers/fetch-live-h2h-offers';
 import { fetchLiveListings } from '@/lib/transfers/fetch-live-listings';
 import { windowClosesSentence } from '@/lib/transfers/window';
@@ -25,6 +25,7 @@ export default async function TransfersPage() {
   if (!club) redirect('/welcome');
 
   const supabase = await createClient();
+  await settleDueAuctions();
   const [activePlayers, liveListings, h2hOffers, auctions, fixtures] = await Promise.all([
     listClubPlayers(club.id),
     fetchLiveListings(supabase, club.id),

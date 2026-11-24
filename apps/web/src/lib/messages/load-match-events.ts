@@ -46,11 +46,23 @@ async function loadChallenges(admin: Admin, clubId: string, now: Date) {
 
 /** Reads only: the league page opens rounds and seasons. Null = no seat or a failed read. */
 async function loadHumanNews(admin: Admin, clubId: string, now: Date): Promise<HumanNews | null> {
+  const mine = await admin
+    .from('human_league_seats')
+    .select('league_id')
+    .eq('kind', 'human')
+    .eq('ref_id', clubId)
+    .maybeSingle();
+  if (!mine.data) return null;
   const [league, seats, fixtures] = await Promise.all([
-    admin.from('human_league').select('season_key, season_number').eq('id', 1).maybeSingle(),
+    admin
+      .from('human_league')
+      .select('season_key, season_number')
+      .eq('id', mine.data.league_id)
+      .maybeSingle(),
     admin
       .from('human_league_seats')
       .select('slot, kind, ref_id, display_name, short_name')
+      .eq('league_id', mine.data.league_id)
       .order('slot', { ascending: true }),
     admin
       .from('fixtures')
@@ -111,6 +123,7 @@ export const loadMatchEvents = cache(
         human,
         award: latest
           ? {
+              league: latest.league,
               season: latest.season,
               place: latest.award.place,
               amount: latest.award.amount,

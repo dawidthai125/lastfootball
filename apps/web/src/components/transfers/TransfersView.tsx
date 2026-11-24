@@ -21,13 +21,9 @@ import {
   setTransferListing,
   withdrawLiveTransferOffer,
 } from '@/lib/transfers/actions';
-import {
-  placeAuctionBid,
-  settleAuctionBid,
-  withdrawAuctionBid,
-} from '@/lib/transfers/actions-auction';
+import { placeAuctionBid } from '@/lib/transfers/actions-auction';
 import type { AuctionSnap } from '@/lib/transfers/load-auctions';
-import { AUCTION_THIN } from '@/lib/transfers/auction';
+import { AUCTION_THIN, auctionEndLabel } from '@/lib/transfers/auction';
 import { TRANSFER_ACTION_INITIAL } from '@/lib/transfers/action-types';
 import {
   resolveCounterAmount,
@@ -557,51 +553,41 @@ type DecisionCase =
  * Transfer Command Center — LFE-UI-IMPL-03 / HF-XFR-01 · HF-XFR-03.
  * Actions / DTO / resolvers unchanged.
  */
-function AuctionSellerActions({ playerId, canSettle }: { playerId: string; canSettle: boolean }) {
-  const [settleState, settleAction, settlePending] = useActionState(
-    settleAuctionBid,
-    TRANSFER_ACTION_INITIAL,
-  );
-  const [withdrawState, withdrawAction, withdrawPending] = useActionState(
-    withdrawAuctionBid,
-    TRANSFER_ACTION_INITIAL,
-  );
-  const error = settleState.error || withdrawState.error;
+function NameWithTalents({ name, talents }: { name: string; talents: readonly string[] }) {
   return (
-    <div className="lf-tx-actions">
-      <form action={settleAction}>
-        <input type="hidden" name="playerId" value={playerId} />
-        <Button type="submit" variant="primary" disabled={!canSettle || settlePending}>
-          {settlePending ? '…' : 'Przyjmij'}
-        </Button>
-      </form>
-      <form action={withdrawAction}>
-        <input type="hidden" name="playerId" value={playerId} />
-        <Button type="submit" variant="default" disabled={withdrawPending}>
-          {withdrawPending ? '…' : 'Cofnij'}
-        </Button>
-      </form>
-      {error ? (
-        <span className="text-xs text-[var(--lf-danger)]" role="alert">
-          {error}
-        </span>
+    <>
+      {name}
+      {talents.length > 0 ? (
+        <span className="text-[11px] text-[var(--lf-gold)]"> · {talents.join(', ')}</span>
       ) : null}
-    </div>
+    </>
   );
+}
+
+function auctionLine(auction: AuctionSnap, clubId: string): string {
+  const lead =
+    auction.highAmount == null
+      ? 'brak ofert'
+      : `najwyżej ${formatMoney(auction.highAmount)}${auction.highClubId === clubId ? ', prowadzisz' : ''}`;
+  return `${lead} · koniec ${auctionEndLabel(auction.endsAt)}`;
 }
 
 function AuctionBidForm({
   playerId,
   ask,
-  high,
+  auction,
+  clubId,
   disabled,
 }: {
   playerId: string;
   ask: number;
-  high: number | null;
+  auction: AuctionSnap | undefined;
+  clubId: string;
   disabled: boolean;
 }) {
   const [state, action, pending] = useActionState(placeAuctionBid, TRANSFER_ACTION_INITIAL);
+  const high = auction?.highAmount ?? null;
+  const leading = auction?.highClubId === clubId;
   const min = high == null ? ask : Math.max(ask, high + AUCTION_THIN.STEP);
   return (
     <form action={action} className="lf-tx-actions">
@@ -615,9 +601,12 @@ function AuctionBidForm({
         className="w-24 text-[12px]"
         aria-label="Kwota licytacji"
       />
-      <Button type="submit" variant="default" disabled={disabled || pending}>
+      <Button type="submit" variant="default" disabled={disabled || pending || leading}>
         {pending ? '…' : 'Licytuj'}
       </Button>
+      {auction ? (
+        <span className="text-[11px] text-[var(--lf-muted)]">{auctionLine(auction, clubId)}</span>
+      ) : null}
       {state.error ? (
         <span className="text-xs text-[var(--lf-danger)]" role="alert">
           {state.error}
@@ -690,15 +679,9 @@ export function TransfersView({
                       ?.name ?? 'Zawodnik'}
                   </p>
                   <p className="lf-tx__case-meta">
-                    Cena {formatMoney(auction.ask)}
-                    {auction.highAmount != null
-                      ? ` · najwyżej ${formatMoney(auction.highAmount)}`
-                      : ' · brak ofert'}
+                    Cena {formatMoney(auction.ask)} · {auctionLine(auction, clubId)}. Zawodnik sam
+                    przejdzie do najlepszej oferty.
                   </p>
-                  <AuctionSellerActions
-                    playerId={auction.playerId}
-                    canSettle={auction.highAmount != null}
-                  />
                 </li>
               ))}
           </ul>
@@ -854,7 +837,9 @@ export function TransfersView({
                 const canLive = market.canBuy && r.sellerWindowOpen;
                 return (
                   <article key={r.playerId} className="lf-tx__card">
-                    <p className="lf-tx__case-title">{r.playerName}</p>
+                    <p className="lf-tx__case-title">
+                      <NameWithTalents name={r.playerName} talents={r.talents} />
+                    </p>
                     <p className="lf-tx__case-meta">
                       {r.pos} · {r.sellerClubLabel} ·{' '}
                       <span className="text-[var(--lf-gold)] tabular-nums">{r.askLabel}</span>
@@ -872,7 +857,8 @@ export function TransfersView({
                       <AuctionBidForm
                         playerId={r.playerId}
                         ask={r.ask}
-                        high={auctionByPlayer.get(r.playerId)?.highAmount ?? null}
+                        auction={auctionByPlayer.get(r.playerId)}
+                        clubId={clubId}
                         disabled={!canLive}
                       />
                     </div>
@@ -885,7 +871,11 @@ export function TransfersView({
                 rowKey={(r) => r.playerId}
                 rows={[...market.liveListings]}
                 columns={[
-                  { key: 'name', header: 'Zawodnik', render: (r) => r.playerName },
+                  {
+                    key: 'name',
+                    header: 'Zawodnik',
+                    render: (r) => <NameWithTalents name={r.playerName} talents={r.talents} />,
+                  },
                   { key: 'pos', header: 'Poz.', render: (r) => r.pos },
                   { key: 'club', header: 'Klub', render: (r) => r.sellerClubLabel },
                   {
@@ -916,7 +906,8 @@ export function TransfersView({
                           <AuctionBidForm
                             playerId={r.playerId}
                             ask={r.ask}
-                            high={auctionByPlayer.get(r.playerId)?.highAmount ?? null}
+                            auction={auctionByPlayer.get(r.playerId)}
+                            clubId={clubId}
                             disabled={!canLive}
                           />
                         </div>
@@ -933,7 +924,9 @@ export function TransfersView({
         <div className="lf-tx__cards md:hidden">
           {market.listings.map((r) => (
             <article key={r.marketId} className="lf-tx__card">
-              <p className="lf-tx__case-title">{r.name}</p>
+              <p className="lf-tx__case-title">
+                <NameWithTalents name={r.name} talents={r.talents} />
+              </p>
               <p className="lf-tx__case-meta">
                 {r.pos} · {r.age} lat · {r.clubLabel} ·{' '}
                 <span className="text-[var(--lf-gold)] tabular-nums">{r.feeLabel}</span>
@@ -952,7 +945,11 @@ export function TransfersView({
             rowKey={(r) => r.marketId}
             rows={[...market.listings]}
             columns={[
-              { key: 'name', header: 'Zawodnik', render: (r) => r.name },
+              {
+                key: 'name',
+                header: 'Zawodnik',
+                render: (r) => <NameWithTalents name={r.name} talents={r.talents} />,
+              },
               { key: 'pos', header: 'Poz.', render: (r) => r.pos },
               {
                 key: 'age',

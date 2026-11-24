@@ -55,6 +55,10 @@ export function talentsOf(id: string, pos: string): readonly Talent[] {
   return [first, rest[hash(`${id}|talent-2`) % rest.length]!];
 }
 
+export function talentLabels(talents: readonly Talent[]): readonly string[] {
+  return talents.map((talent) => TALENTS[talent].label);
+}
+
 export function isTalent(value: unknown): value is Talent {
   return typeof value === 'string' && Object.hasOwn(TALENTS, value);
 }

@@ -46,6 +46,7 @@ export function resolveMatchEvents(input: {
   readonly challenges: readonly ChallengeNews[];
   readonly human: HumanNews | null;
   readonly award: {
+    readonly league: number;
     readonly season: number;
     readonly place: number;
     readonly amount: number;
@@ -65,9 +66,9 @@ export function resolveMatchEvents(input: {
   const { award } = input;
   if (award && fresh(award.closedAt, AWARD_NEWS_MS)) {
     out.push({
-      id: `msg:human-award:${award.season}`,
+      id: `msg:human-award:${award.league}:${award.season}`,
       subject:
-        `Liga ludzi, sezon ${award.season}: ${award.place}. miejsce` +
+        `Liga ludzi ${award.league}, sezon ${award.season}: ${award.place}. miejsce` +
         (award.amount > 0 ? `, nagroda ${formatMoney(award.amount)}` : ''),
       fromLabel: 'Liga ludzi',
       href: '/achievements',

@@ -31,6 +31,7 @@ import {
   penaltyGoalChance,
   rollCard,
   rollInjury,
+  rollShootOut,
   setPieceTaker,
   penaltyQuality,
 } from './incidents';
@@ -313,6 +314,31 @@ describe('LFE-MATCH-RULES-01 (D151)', () => {
     expect(lead(30)).toBeLessThan(lead(50));
     const behind = { home: 0, away: 1 };
     expect(lead(90, behind) / lead(50, behind)).toBeGreaterThan(lead(90) / lead(50));
+  });
+
+  it('a shoot-out is decided by takers and goalkeepers, not by a coin', () => {
+    const strong = state({
+      edit: (p) =>
+        p.side === 'home'
+          ? {
+              ...p,
+              skills: { ...DEFAULT_PLAYER_SKILLS, finishing: 80, composure: 80, gkReflexes: 80 },
+            }
+          : p,
+    });
+    const wins = (s: MatchState) => {
+      let home = 0;
+      for (let seed = 1; seed <= 600; seed += 1) {
+        const out = rollShootOut(s, createRng(seed));
+        expect(out.home).not.toBe(out.away);
+        expect(out[out.winner]).toBeGreaterThan(out[out.winner === 'home' ? 'away' : 'home']);
+        if (out.winner === 'home') home += 1;
+      }
+      return home / 600;
+    };
+    expect(wins(state())).toBeGreaterThan(0.43);
+    expect(wins(state())).toBeLessThan(0.57);
+    expect(wins(strong)).toBeGreaterThan(0.6);
   });
 
   it('a player who left cannot come back, and a man down keeps a valid shape', () => {
