@@ -21,6 +21,7 @@ import { kickoffPressingWithLine } from '@/lib/training/press-line';
 import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
 import { isCupFinal } from '@/lib/cup/matchdays';
+import { resolveCupStrengthProfile } from '@/lib/league/league-strength-profile';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
 import { seedOpponentBench, seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -109,12 +110,11 @@ export function resolveOpponentXi(
   club: Pick<ClubDto, 'leagueTier'>,
   fixture: Pick<FixtureDto, 'competition' | 'opponentClubId'>,
 ): readonly RosterPlayerSeed[] {
-  return seedOpponentSquad(
-    fixture.opponentClubId,
-    fixture.competition === 'cup'
-      ? cupOpponentTier(fixture.opponentClubId, club.leagueTier)
-      : club.leagueTier,
-  );
+  if (fixture.competition !== 'cup') {
+    return seedOpponentSquad(fixture.opponentClubId, club.leagueTier);
+  }
+  const tier = cupOpponentTier(fixture.opponentClubId, club.leagueTier);
+  return seedOpponentSquad(fixture.opponentClubId, tier, resolveCupStrengthProfile(tier));
 }
 
 /** Bench of that rival (D151). */
@@ -122,12 +122,11 @@ export function resolveOpponentBench(
   club: Pick<ClubDto, 'leagueTier'>,
   fixture: Pick<FixtureDto, 'competition' | 'opponentClubId'>,
 ): readonly RosterPlayerSeed[] {
-  return seedOpponentBench(
-    fixture.opponentClubId,
-    fixture.competition === 'cup'
-      ? cupOpponentTier(fixture.opponentClubId, club.leagueTier)
-      : club.leagueTier,
-  );
+  if (fixture.competition !== 'cup') {
+    return seedOpponentBench(fixture.opponentClubId, club.leagueTier);
+  }
+  const tier = cupOpponentTier(fixture.opponentClubId, club.leagueTier);
+  return seedOpponentBench(fixture.opponentClubId, tier, resolveCupStrengthProfile(tier));
 }
 
 export type MatchExtra = {

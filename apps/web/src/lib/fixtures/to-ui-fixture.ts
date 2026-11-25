@@ -15,7 +15,8 @@ import {
   preMatchWeatherNote,
 } from '@/lib/fixtures/pre-match-copy';
 import { orderForFormation, pitchSlotsFor } from '@/lib/match/order-xi';
-import { seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
+import { resolveOpponentXi } from '@/lib/fixtures/create-session';
+import type { RosterPlayerSeed } from '@/lib/squad';
 import { kickoffPressingWithLine } from '@/lib/training/press-line';
 import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 
@@ -177,7 +178,7 @@ export function buildLeaguePreMatchBundle(
   const their =
     theirXi && theirXi.length === 11
       ? orderForFormation(theirXi, '4-4-2')
-      : seedOpponentSquad(dto.opponentClubId, club.leagueTier);
+      : resolveOpponentXi(club, dto);
 
   const facts = resolveMatchFacts(dto, matchGround(dto).stands);
 

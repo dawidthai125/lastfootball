@@ -1,6 +1,6 @@
 import { resolveCareerPhase } from '@/lib/squad/career-phase';
 import { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
-import { allowGrowthImpulse, resolveGrowthSkillDelta } from '@/lib/squad/growth-gate';
+import { allowGrowthImpulse, resolveGrowthSkillDelta, stableHash } from '@/lib/squad/growth-gate';
 
 export type MatchDevPlayerSlice = {
   readonly id: string;
@@ -32,26 +32,19 @@ export function applyMatchDevelopmentEffects(
   players: readonly MatchDevPlayerSlice[],
   impulseKey = 'match',
 ): MatchDevResultSlice[] {
+  // Another order in every match, so the same few players do not take all the growth.
   const eligible = players
     .filter((p) => p.starter && p.skill < p.potential && p.skill < 99 && p.potential >= 1)
-    .map((p) => p.id)
-    .sort();
+    .map((p) => ({ p, at: stableHash(`${p.id}:${impulseKey}:order`) }))
+    .sort((a, b) => a.at - b.at || (a.p.id < b.p.id ? -1 : 1))
+    .map(({ p }) => p);
 
-  const byId = new Map(players.map((p) => [p.id, p]));
   const toBoost = new Set<string>();
-  const step = 2;
-  for (
-    let i = 0;
-    i < eligible.length && toBoost.size < DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH;
-    i += step
-  ) {
-    const id = eligible[i];
-    if (!id) continue;
-    const row = byId.get(id);
-    if (!row) continue;
+  for (const row of eligible) {
+    if (toBoost.size >= DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH) break;
     const phase = resolveCareerPhase({ age: row.age });
-    if (!allowGrowthImpulse(id, impulseKey, phase)) continue;
-    toBoost.add(id);
+    if (!allowGrowthImpulse(row.id, impulseKey, phase)) continue;
+    toBoost.add(row.id);
   }
 
   return players.map((p) => {

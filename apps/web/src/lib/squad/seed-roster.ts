@@ -6,6 +6,7 @@ import type { LeagueTier } from '@/lib/league/league-tier';
 import {
   resolveLeagueStrengthProfile,
   resolveOpponentPlayerSkill,
+  type LeagueStrengthProfile,
 } from '@/lib/league/league-strength-profile';
 
 export type RosterPlayerSeed = {
@@ -104,9 +105,9 @@ export function seedBotSquad(): readonly RosterPlayerSeed[] {
 export function seedOpponentSquad(
   opponentClubId: string,
   tier: LeagueTier = 'iv',
+  profile: LeagueStrengthProfile = resolveLeagueStrengthProfile(tier),
 ): readonly RosterPlayerSeed[] {
   const tag = opponentClubId.replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'opp';
-  const profile = resolveLeagueStrengthProfile(tier);
   const names = opponentNames(opponentClubId);
   const roles: { pos: string; role: PitchRole; number: number }[] = [
     { pos: 'BR', role: 'GK', number: 1 },
@@ -136,9 +137,9 @@ export function seedOpponentSquad(
 export function seedOpponentBench(
   opponentClubId: string,
   tier: LeagueTier = 'iv',
+  profile: LeagueStrengthProfile = resolveLeagueStrengthProfile(tier),
 ): readonly RosterPlayerSeed[] {
   const tag = opponentClubId.replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'opp';
-  const profile = resolveLeagueStrengthProfile(tier);
   const names = opponentNames(opponentClubId, 16);
   const roles: { pos: string; role: PitchRole; number: number }[] = [
     { pos: 'BR', role: 'GK', number: 12 },

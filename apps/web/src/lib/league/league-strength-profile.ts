@@ -12,12 +12,24 @@ export type LeagueStrengthProfile = {
 
 const PROFILES: Record<LeagueTier, LeagueStrengthProfile> = {
   iv: Object.freeze({ minSkill: 47, maxSkill: 63 }),
+  iii: Object.freeze({ minSkill: 56, maxSkill: 72 }),
+  ii: Object.freeze({ minSkill: 65, maxSkill: 81 }),
+  i: Object.freeze({ minSkill: 74, maxSkill: 90 }),
+};
+
+/** The cup keeps the bands of D130, so a new club meets the same guests as before (D162). */
+const CUP_PROFILES: Record<LeagueTier, LeagueStrengthProfile> = {
+  iv: Object.freeze({ minSkill: 47, maxSkill: 63 }),
   iii: Object.freeze({ minSkill: 53, maxSkill: 69 }),
   ii: Object.freeze({ minSkill: 59, maxSkill: 75 }),
   i: Object.freeze({ minSkill: 66, maxSkill: 82 }),
 };
 
-/** Sole SSOT for tier → strength band. */
+export function resolveCupStrengthProfile(tier: LeagueTier): LeagueStrengthProfile {
+  return CUP_PROFILES[tier];
+}
+
+/** Sole SSOT for tier → strength band of a league. */
 export function resolveLeagueStrengthProfile(tier: LeagueTier): LeagueStrengthProfile {
   return PROFILES[tier];
 }

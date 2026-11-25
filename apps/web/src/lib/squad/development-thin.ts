@@ -6,7 +6,7 @@
 export const DEVELOPMENT_THIN = {
   SKILL_UP_MAX_PER_PLAYER: 1,
   /** Primary path — higher than training K=3. */
-  SKILL_UP_MAX_PER_MATCH: 5,
+  SKILL_UP_MAX_PER_MATCH: 3,
   /**
    * Soft skill regress / `decline` phase starts at this age after season age++ (H-AGE).
    * Aligns with resolveCareerPhase decline band.
