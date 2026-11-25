@@ -3,7 +3,7 @@
 .lf-fm {
   width: min(28rem, 100%);
   margin: 0 auto;
-  padding: var(--lf-space-6) 0 var(--lf-space-8);
+  padding: var(--lf-space-6) var(--lf-space-4) var(--lf-space-8);
   text-align: center;
 }
 
@@ -45,4 +45,33 @@
 
 .lf-fm .lf-landing__cta-row {
   justify-content: center;
+}
+
+.lf-fm .lf-landing__title {
+  margin: 0 0 var(--lf-space-3);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: var(--lf-type-h1);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--lf-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.lf-fm__skip {
+  min-height: 44px;
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border: 0;
+  background: none;
+  color: var(--lf-color-text-gold);
+  font: inherit;
+  font-size: var(--lf-type-caption);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.lf-fm__confirm p {
+  margin: var(--lf-space-3) 0 0;
+  color: var(--lf-color-text-muted);
+  font-size: var(--lf-type-caption);
 }

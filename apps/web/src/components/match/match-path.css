@@ -294,10 +294,11 @@
   .lf-mp__primary {
     width: auto;
     min-width: 16rem;
-    align-self: flex-start;
+    align-self: center;
   }
 
   .lf-mp__decision {
-    padding-inline: var(--lf-space-6);
+    padding-inline: max(var(--lf-space-6), calc((100% - 48rem) / 2));
+    text-align: center;
   }
 }

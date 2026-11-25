@@ -974,7 +974,13 @@ Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do
 2. „Powołaj juniora awaryjnego”, gdy nie ma 11 zdolnych albo bramkarza: za darmo, słaby, do końca sezonu, bez sprzedaży, wypożyczenia i przedłużenia, do 22 seniorów, poza limitem 18. Najpierw powrót z wypożyczeń.
 3. Liga ludzi: brakujące miejsca zajmują juniorzy tylko na ten mecz, rywal nie czeka (uzupełnia D136, D138.4).
 4. Kontuzjowany nie traci energii na treningu. Ostatni bramkarz nie kończy kariery.
-   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D160 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+
+### D161 — Pierwszy mecz: pominięcie i układ · 2026-11-25
+
+1. Intro pierwszego meczu: „Pomiń mecz” (z potwierdzeniem) rozgrywa go na serwerze bez decyzji, zapisuje i otwiera hub. „Od razu do składu” prowadzi do ekranu przed meczem.
+2. Ekrany drogi do meczu są wyśrodkowane. Na telefonie mecz się przewija, boisko ma pełną szerokość. W meczu widać herb wybrany dla klubu.
+3. Junior, który zastępuje kończącego karierę, ma umowę sezon + 2 (D139).
+   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D161 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
    **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
    **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
    **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

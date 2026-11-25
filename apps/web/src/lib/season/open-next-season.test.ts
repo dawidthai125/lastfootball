@@ -350,6 +350,7 @@ describe('openNextSeasonAfterDeparture', () => {
     expect(inserted && inserted.op === 'insert').toBe(true);
     if (!inserted || inserted.op !== 'insert') return;
     const insertedId = inserted.payload.id;
+    expect(inserted.payload.contract_season).toBe(4);
     expect(
       db.players.find((row) => row.id === insertedId && row.club_id === 'club-1'),
     ).toBeUndefined();

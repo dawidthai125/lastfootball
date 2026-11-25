@@ -39,7 +39,7 @@ export function MatchTunnelView({
       <div className="lf-mp__decision">
         <p className="lf-mp__eyebrow">Tunel</p>
         <h1 className="lf-mp__title">Wejdź na boisko</h1>
-        <p className="lf-mp__support">Immersyjne wejście w mecz · vs {opponentLabel}</p>
+        <p className="lf-mp__support">Rywal: {opponentLabel}</p>
         <Link href={matchVsPath(matchId)} className="lf-mp__primary">
           Wejdź
         </Link>

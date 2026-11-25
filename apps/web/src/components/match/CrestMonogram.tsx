@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-import { ClubCrest } from '@/components/assets/ClubCrest';
+import { MatchCrest } from '@/components/match/MatchCrest';
 import type { FormResult } from '@/data/fixtures';
 
 /**
@@ -16,7 +16,7 @@ export function CrestMonogram({
   label?: string;
   size?: 'md' | 'lg';
 }) {
-  return <ClubCrest shortName={initials} clubName={label} label={label} size={size} />;
+  return <MatchCrest shortName={initials} clubName={label} label={label} size={size} />;
 }
 
 export function FormPills({ form }: { form: FormResult[] }) {
