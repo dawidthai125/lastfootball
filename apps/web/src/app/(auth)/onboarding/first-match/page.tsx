@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { ClubCrest } from '@/components/assets/ClubCrest';
+import { SignOutForm } from '@/components/auth/SignOutForm';
 import { LandingCta } from '@/components/landing/LandingCta';
 import { SkipFirstMatch } from '@/components/onboarding/SkipFirstMatch';
 import { isFirstMatchCompleted } from '@/lib/club/types';
@@ -55,6 +56,11 @@ export default async function FirstMatchIntroPage() {
         <Link href={FIRST_MATCH_PATHS.prematch}>Od razu do składu →</Link>
       </p>
       <SkipFirstMatch />
+      <SignOutForm>
+        <button type="submit" className="lf-fm__skip">
+          Wyloguj
+        </button>
+      </SignOutForm>
     </div>
   );
 }
