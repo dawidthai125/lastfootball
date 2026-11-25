@@ -1,7 +1,6 @@
 import { parseManagerLog, type ManagerLogEntry } from '@/lib/match/manager-commands';
 import {
   KICKOFF_VALID_MS,
-  leftDuringMatch,
   readKickoffSnapshot,
   type KickoffSnapshot,
 } from '@/lib/match/kickoff-snapshot';
@@ -66,12 +65,11 @@ export type MatchEntry =
   | { readonly kind: 'other'; readonly fixtureId: string }
   | { readonly kind: 'error' };
 
-/** What entering this match means (D150). A match that went on is never started again. */
-export async function enterMatch(
-  clubId: string,
-  fixtureId: string,
-  seniors: readonly { readonly id: string }[],
-): Promise<MatchEntry> {
+/**
+ * What entering this match means (D150). A match that went on is never started again, also when
+ * one of its players left the club meanwhile (D164).
+ */
+export async function enterMatch(clubId: string, fixtureId: string): Promise<MatchEntry> {
   const row = await readOpenRow(clubId);
   if (row === 'error') return { kind: 'error' };
   if (!row || row.progress_tick <= 0) return { kind: 'new' };
@@ -89,7 +87,7 @@ export async function enterMatch(
       : { kind: 'new' };
   }
   const snapshot = readKickoffSnapshot(row.snapshot, fixtureId, clubId);
-  if (!snapshot || leftDuringMatch(snapshot, seniors)) {
+  if (!snapshot) {
     // Nobody can finish it, so it must not stand in the way of a new start.
     await admin
       ?.from('match_kickoffs' as never)
@@ -128,7 +126,7 @@ export const OPEN_MATCH_ERROR = 'Masz rozpoczęty mecz. Dokończ go najpierw.';
 export const OPEN_MATCH_PLAYER_ERROR =
   'Ten zawodnik gra w rozpoczętym meczu. Najpierw dokończ mecz.';
 
-/** Giving him away would drop the match and start it again from 0:0. */
+/** A sale to the AI or a returned loan waits for the end of his match. */
 export async function playsInOpenMatch(clubId: string, playerId: string): Promise<boolean> {
   const row = await readOpenRow(clubId);
   if (row === 'error') return true;

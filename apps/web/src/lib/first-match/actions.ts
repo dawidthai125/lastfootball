@@ -154,5 +154,6 @@ export async function completeFirstMatch(
   // LFE-LEAGUE-01: seed Thin A fixtures after Hub unlock (idempotent).
   await ensureClubFixtures(row.id);
 
+  if (formData.get('stay') === '1') return { error: null };
   redirect(FIRST_MATCH_PATHS.welcome);
 }

@@ -45,15 +45,16 @@ beforeEach(() => {
 });
 
 describe('a match that went on', () => {
-  it('resumes when a bench player is on loan', async () => {
-    const seniors = squad.map((p) => ({ ...p, onLoan: p.id === 'p11' }));
-    expect(await enterMatch('c1', 'f1', seniors)).toMatchObject({ kind: 'resume', tick: 1700 });
+  it('goes on with the squad it started with, whoever is in the club now (D164)', async () => {
+    const entry = await enterMatch('c1', 'f1');
+    expect(entry).toMatchObject({ kind: 'resume', tick: 1700 });
+    expect(entry.kind === 'resume' && entry.snapshot.ourBench.map((p) => p.id)).toEqual(['p11']);
     expect(deleted).toBe(0);
   });
 
-  it('is dropped only when a player left the club', async () => {
-    const seniors = squad.filter((p) => p.id !== 'p11');
-    expect(await enterMatch('c1', 'f1', seniors)).toEqual({ kind: 'new' });
+  it('is dropped only when its copy cannot be read', async () => {
+    tables.match_kickoffs = { ...tables.match_kickoffs, snapshot: {} };
+    expect(await enterMatch('c1', 'f1')).toEqual({ kind: 'new' });
     expect(deleted).toBe(1);
   });
 

@@ -1,10 +1,9 @@
 /**
  * When to persist a finished league, cup, challenge, or human fixture.
  * The post-match summary only shows this save; it must not start another one.
- * The first match keeps its own button.
+ * The first match is stored the same way (D164); its button only goes on.
  */
 export type FixtureAutoSaveInput = {
-  firstMatch: boolean;
   fixtureId: string | null;
   finished: boolean;
   finalOpen: boolean;
@@ -13,7 +12,7 @@ export type FixtureAutoSaveInput = {
 };
 
 export function shouldAutoSaveFinishedFixture(input: FixtureAutoSaveInput): boolean {
-  if (input.started || input.firstMatch || !input.fixtureId) return false;
+  if (input.started || !input.fixtureId) return false;
   if (!input.finished) return false;
   // Same moment as the whistle overlay. Also covers opening the summary on that frame,
   // before finalOpen flips, so the result is still stored once.

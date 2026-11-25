@@ -994,7 +994,13 @@ Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do
 2. „Ostatni mecz” na hubie to najnowszy mecz dowolnych rozgrywek, z ich nazwą.
 3. Profil zawodnika pokazuje „Forma w ostatnich meczach”, bo te liczby (wynik meczu i energia) nie są ocenami z raportu meczu.
 
-   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D163 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+### D164 — Rozpoczęty mecz trwa do końca · Owner GO 2026-11-25
+
+1. Rozpoczęty mecz wznawia się ze składem z początku, także gdy zawodnik odszedł w trakcie. Nie da się go zacząć od nowa transferem (zmienia D150). Skutki meczu dostają tylko zawodnicy, którzy są w klubie.
+2. Pierwszy mecz zapisuje się przy ostatnim gwizdku, tak jak ligowy. „Dalej” tylko przechodzi dalej.
+3. Junior awaryjny (D160) wchodzi także przy pełnej kadrze 22.
+
+   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D164 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
    **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
    **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
    **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

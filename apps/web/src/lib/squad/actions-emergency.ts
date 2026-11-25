@@ -14,6 +14,8 @@ import { tryAdminClient } from '@/lib/supabase/admin';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
 const RECALL = 'Najpierw ściągnij zawodników z wypożyczenia.';
+/** A full squad with nobody to field still gets an eleven: 11 over the usual limit (D164). */
+const EMERGENCY_MAX_ROSTER = TRANSFERS_THIN.MAX_ROSTER + 11;
 const NOT_NEEDED = 'Możesz już wystawić jedenastkę. Ustaw skład.';
 
 /** A free junior for a club that cannot field a legal eleven. The database checks it again. */
@@ -37,7 +39,7 @@ export async function callEmergencyJunior(): Promise<EmergencyJuniorState> {
     {
       p_club_id: club.id,
       p_player: { ...junior, ...role },
-      p_max_roster: TRANSFERS_THIN.MAX_ROSTER,
+      p_max_roster: EMERGENCY_MAX_ROSTER,
     } as never,
   );
   const result = data as { ok?: boolean; reason?: string; name?: string } | null;
@@ -48,7 +50,7 @@ export async function callEmergencyJunior(): Promise<EmergencyJuniorState> {
     return {
       error:
         result.reason === 'roster'
-          ? `Kadra ma już ${TRANSFERS_THIN.MAX_ROSTER} zawodników. Każdy dzień bez meczu skraca kontuzje i zawieszenia.`
+          ? `Kadra ma już ${EMERGENCY_MAX_ROSTER} zawodników. Każdy dzień bez meczu skraca kontuzje i zawieszenia.`
           : 'Nie ma wolnego numeru koszulki.',
     };
   }
