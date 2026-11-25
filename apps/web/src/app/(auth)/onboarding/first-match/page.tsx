@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { ClubCrest } from '@/components/assets/ClubCrest';
 import { LandingCta } from '@/components/landing/LandingCta';
+import { SkipFirstMatch } from '@/components/onboarding/SkipFirstMatch';
 import { isFirstMatchCompleted } from '@/lib/club/types';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { FIRST_MATCH_BOT, FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
@@ -51,8 +52,9 @@ export default async function FirstMatchIntroPage() {
       </div>
       <p className="lf-fm__footnote">
         Hub odblokuje się po zakończeniu meczu.{' '}
-        <Link href={FIRST_MATCH_PATHS.prematch}>Pomiń intro →</Link>
+        <Link href={FIRST_MATCH_PATHS.prematch}>Od razu do składu →</Link>
       </p>
+      <SkipFirstMatch />
     </div>
   );
 }

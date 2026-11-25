@@ -302,7 +302,7 @@
   }
 
   .lf-live__feed {
-    max-height: 7rem;
+    max-height: 22dvh;
   }
 
   .lf-live__panel {
@@ -417,8 +417,8 @@
   }
 }
 
-/* A low phone screen, also sideways, has no room for everything, so the screen scrolls. */
-@media (max-width: 1023px) and (max-height: 760px) {
+/* A phone, also sideways, has no room for everything, so the screen scrolls. */
+@media (max-width: 767px), (max-width: 1023px) and (max-height: 760px) {
   .lf-live {
     overflow-y: auto;
   }

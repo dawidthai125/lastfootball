@@ -416,6 +416,8 @@ async function applySeasonDeparture(
       // Home-grown as well: computer clubs pay by his senior matches (D134).
       origin: 'academy',
       joined_at: now,
+      // Like every senior contract of a junior: this season and two more (D139).
+      contract_season: seasonNumber + 2,
       ...(agingIsMarked ? { aged_for_season: seasonNumber } : {}),
       transfer_listed_at: null,
     } as never);

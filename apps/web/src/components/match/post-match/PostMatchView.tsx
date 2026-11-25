@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 
-import { ClubCrest, LiveEventIcon } from '@/components/assets';
+import { LiveEventIcon } from '@/components/assets';
+import { MatchCrest } from '@/components/match/MatchCrest';
 import type {
   PostMatchSummary,
   PostMatchTimelineItem,
@@ -378,7 +379,7 @@ function TeamBlock({
         minWidth: 0,
       }}
     >
-      <ClubCrest shortName={shortName} clubName={name} size="lg" />
+      <MatchCrest shortName={shortName} clubName={name} size="lg" />
       <div style={{ textAlign: align, minWidth: 0 }}>
         <div
           className="truncate font-[family-name:var(--font-ui)] font-semibold"

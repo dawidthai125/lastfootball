@@ -4,7 +4,8 @@ import type { FormationCode } from '@lastfootball/lfe';
 import Link from 'next/link';
 import { useActionState, useEffect, useRef, useState, type CSSProperties } from 'react';
 
-import { AtmosphereLayer, ClubCrest, LiveEventIcon } from '@/components/assets';
+import { AtmosphereLayer, LiveEventIcon } from '@/components/assets';
+import { MatchCrest } from '@/components/match/MatchCrest';
 import type { LiveEventKind, LiveMatchBundle } from '@/data/fixtures';
 import { describeFanMoodChange, fanResultFromScores } from '@/lib/club/fans';
 import type { ClubDto } from '@/lib/club/types';
@@ -486,7 +487,7 @@ export function LiveMatchFoundation({
             >
               {homeName}
             </span>
-            <ClubCrest shortName={homeShort} clubName={homeName} size="md" />
+            <MatchCrest shortName={homeShort} clubName={homeName} size="md" />
             <span
               className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
               style={{
@@ -551,7 +552,7 @@ export function LiveMatchFoundation({
             >
               {snapshot.awayScore}
             </span>
-            <ClubCrest shortName={awayShort} clubName={awayName} size="md" />
+            <MatchCrest shortName={awayShort} clubName={awayName} size="md" />
             <span
               className="truncate font-[family-name:var(--font-ui)] font-semibold"
               style={{ fontSize: 'var(--lf-type-h2)', color: 'var(--lf-color-text-primary)' }}
@@ -1174,7 +1175,7 @@ export function LiveMatchFoundation({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--lf-space-2)' }}>
-          <ClubCrest shortName={homeShort} clubName={homeName} size="sm" />
+          <MatchCrest shortName={homeShort} clubName={homeName} size="sm" />
           <span
             className="font-[family-name:var(--font-ui)] font-bold tabular-nums"
             style={{ color: 'var(--lf-color-status-danger)', fontSize: 'var(--lf-type-h2)' }}
@@ -1230,7 +1231,7 @@ export function LiveMatchFoundation({
           >
             {snapshot.possession.away}%
           </span>
-          <ClubCrest shortName={awayShort} clubName={awayName} size="sm" />
+          <MatchCrest shortName={awayShort} clubName={awayName} size="sm" />
         </div>
       </footer>
     </div>

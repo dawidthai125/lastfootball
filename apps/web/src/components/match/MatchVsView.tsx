@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { CrestMonogram } from '@/components/match/CrestMonogram';
+import { MatchCrest } from '@/components/match/MatchCrest';
 import { matchPrePath } from '@/lib/match/match-path';
 import { skipOrLineupLink } from '@/lib/match/xi-block-path';
 
@@ -47,12 +47,12 @@ export function MatchVsView({
         <p className="lf-mp__eyebrow">Przed pierwszym gwizdkiem</p>
         <div className="lf-mp__vs-row" aria-label="Zestawienie">
           <div>
-            <CrestMonogram initials={homeShort} label={homeName} />
+            <MatchCrest shortName={homeShort} clubName={homeName} size="lg" />
             <p className="lf-mp__side-name">{homeName}</p>
           </div>
           <p className="lf-mp__vs-mark">VS</p>
           <div>
-            <CrestMonogram initials={awayShort} label={awayName} />
+            <MatchCrest shortName={awayShort} clubName={awayName} size="lg" />
             <p className="lf-mp__side-name">{awayName}</p>
           </div>
         </div>
