@@ -958,38 +958,54 @@ Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do
 4. Awans z akademii wymaga miejsca w kadrze (22). Kontraktu nie negocjuje się z wypożyczonym ani juniorem.
 5. Pierwszy mecz: kartki i kontuzje z meczu, nie z losowania. Gdy kapitan nie gra, opaskę ma najlepszy przywódca jedenastki.
 
-Każde złamanie D1–D28 / D38 / D40–D52 / D63–D158 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
-**GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
-**LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
-**LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
-**LFE-TRANSFERS-03 (2026-07-25):** derived AI incoming offers; Accept → `completeTransferSell`; 100% ask.  
-**LFE-TRANSFERS-04 (2026-07-26):** `transfer_listed_at`; List/Unlist; Incoming tylko listed.  
-**LFE-TRANSFERS-05 (2026-07-26):** seller nego S2 na Incoming; `resolveSellerNegotiationStep`; `completeTransferSell(agreedAmount)`.  
-**LFE-TRANSFERS-06 (2026-07-26):** Live H2H Instant @ 100% ask; atomic RPC; `players.id` stałe.  
-**LFE-TRANSFERS-07 (2026-07-26):** Pending H2H `transfer_offers`; Thin presets; supersede; brak escrow/timeout.  
-**LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
-**LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
-**LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.  
-**LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.  
-**LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.  
-**LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
-**LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
-**LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
-**LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.  
-**LFE-NOTIFICATIONS-01 (2026-08-04):** `resolveClubInvitations` composition Thin (D125); Overlay kind → `messages`; feat `54ae7b3`.
-**LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
-**LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
-**GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
-**LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
-**GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
-**GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
-**GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
-**GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
-**LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
-**LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
-**LFE-AGE-01 (2026-08-03):** Season Age++ H-AGE wired Confirm N+1 (D122); Season Transition Pipeline step 1 · feat **`6a54722`** · PRODUCTION VERIFY.
-**LFE-LEAGUE-WORLD-02 (2026-08-03):** Tier-aware League Strength Profile + player skill→MatchSession map (D123); supersedes D92 · feat **`843bcfd`** · PRODUCTION VERIFY.
-**LFE-CAREER-DECLINE-01 (2026-08-03):** Career Phase derive + Growth Gate + banded seasonal regress (D124); feat **`3c01baa`** · PRODUCTION VERIFY.
+### D159 — Przegląd całej gry · Owner GO 2026-11-24
+
+1. Baza: sesja gracza zapisuje tylko skład, kapitana, stały fragment, numer, linię i kształt pressingu, ofertę i shortlistę. Resztę zapisuje serwer. Kup od razu = 100% ceny. Nazwy klubów i klucz oferty ustala baza. Transfer blokuje oba kluby. Zdjęcie z listy albo odejście zamyka oferty.
+2. Nowy zawodnik dostaje własną osobowość i klauzulę. Każda zmiana umiejętności przesuwa grupy cech, których używa silnik (`lf_move_groups`). Trening jednej grupy dalej nie zmienia umiejętności (D134). Wyzwanie buduje obie drużyny z grup.
+3. Murawa: poziom 1/2/3 daje gospodarzowi +1/+2/+3 do sześciu umiejętności z siły drużyny. Finał pucharu: boisko neutralne, bez przewagi gospodarza, murawy i biletów.
+4. Po meczu Ligi ludzi skutki dostaje zamrożona jedenastka. Jedna kolejka ludzi, jeden mecz ligi lub pucharu i jedno wyzwanie dziennie (dzień warszawski) pilnuje baza, także po starcie sezonu. Wypożyczenie nie otwiera meczu od nowa.
+5. Błąd odczytu nie jest pustą kadrą, brakiem klubu ani zerem. Zapis skutków meczu, który się urwał, kończy hub. Trening, rozwój i konferencja odmawiają, gdy zawodnik zmienił się od odczytu.
+6. Liga ludzi: gdy ktoś z miejscem był aktywny, pierwsza wizyta do 3 dni po terminie startuje ją według jej kalendarza (uzupełnia D154.3). Bez aktywności start przesuwa się jak w D154.
+7. Nazwa klubu z ł, kreator z „Wstecz”, formularze trzymają wpisane dane, polskie teksty, telefon niski i w poziomie.
+
+### D160 — Klub nigdy nie stoi bez składu · 2026-11-24
+
+1. Kontuzja i zawieszenie skraca mecz albo każdy dzień bez meczu klubu (dzień warszawski).
+2. „Powołaj juniora awaryjnego”, gdy nie ma 11 zdolnych albo bramkarza: za darmo, słaby, do końca sezonu, bez sprzedaży, wypożyczenia i przedłużenia, do 22 seniorów, poza limitem 18. Najpierw powrót z wypożyczeń.
+3. Liga ludzi: brakujące miejsca zajmują juniorzy tylko na ten mecz, rywal nie czeka (uzupełnia D136, D138.4).
+4. Kontuzjowany nie traci energii na treningu. Ostatni bramkarz nie kończy kariery.
+   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D160 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+   **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
+   **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
+   **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
+   **LFE-TRANSFERS-03 (2026-07-25):** derived AI incoming offers; Accept → `completeTransferSell`; 100% ask.  
+   **LFE-TRANSFERS-04 (2026-07-26):** `transfer_listed_at`; List/Unlist; Incoming tylko listed.  
+   **LFE-TRANSFERS-05 (2026-07-26):** seller nego S2 na Incoming; `resolveSellerNegotiationStep`; `completeTransferSell(agreedAmount)`.  
+   **LFE-TRANSFERS-06 (2026-07-26):** Live H2H Instant @ 100% ask; atomic RPC; `players.id` stałe.  
+   **LFE-TRANSFERS-07 (2026-07-26):** Pending H2H `transfer_offers`; Thin presets; supersede; brak escrow/timeout.  
+   **LFE-TRANSFERS-08 (2026-07-26):** 1× H2H Counter seller→buyer; `opening_amount` / `current_amount`; Accept auth by phase.  
+   **LFE-PLAYERS-02 (2026-07-29):** `players.potential` + match development Thin (D22); Training ceiling vs potential.  
+   **LFE-ACADEMY-01 (2026-07-30):** `academy_track` + Intake/Promote Thin (D23); senior filters; `resolveClubAcademy`.  
+   **LFE-SCOUTING-01 (2026-07-30):** `resolveClubScouting` + `scout_shortlist` refs only (D24); Information Thin.  
+   **LFE-DAILY-01 (2026-07-30):** `resolveClubDailyGoal` derive only (D25); Primary > Daily Goal.  
+   **LFE-ACHIEVEMENTS-01 (2026-07-30):** `resolveClubAchievements` Information Thin (D26); immutable history.
+   **LFE-RANKING-01 (2026-07-30):** `resolveClubRanking` Information Thin (D27); table input only.
+   **LFE-LEAGUE-04 (2026-07-30):** calendar 22 · double RR (D28); top-up MD12–22.
+   **LFE-MESSAGES-01 (2026-07-30):** `resolveClubMessages` derive E1–E3 (D40–D46); Overlay = ta sama DTO.  
+   **LFE-NOTIFICATIONS-01 (2026-08-04):** `resolveClubInvitations` composition Thin (D125); Overlay kind → `messages`; feat `54ae7b3`.
+   **LFE-CLUB-01 (2026-07-30):** `resolveClubProfile` identity Thin (D47–D51); brak silnika §6 / personelu.
+   **LFE-SOFTLOCK-01 (2026-07-30):** generyczny Route Gate + SoftLockState (D52 · D63–D67); strip Fake Production sponsors/board/stadium.
+   **GDD-SEASON-END-01 (2026-07-30):** Season End Thin kontrakt (D68–D77); SSOT `GDD-SEASON-END-01.md`; awans/spadek OUT.
+   **LFE-SEASON-END-01 (2026-07-31):** Season End Thin lifecycle kod (D78–D87); OFFSEASON · report · Confirm N+1 · feat `024e827`.
+   **GDD-PROMOTION-01 / LFE-PROMOTION-01 (2026-07-31):** Promotion Thin (D88–D94); `league_tier` · outcome derive · Confirm mutation · same AI world · feat `fa06c53` · PRODUCTION VERIFY.
+   **GDD-SPONSORS-01 / LFE-SPONSORS-01 (2026-07-31):** Sponsors Thin (D95–D101); `club_sponsor_contracts` · finance ledger · H-SPONSORS non-blocking · feat `17eb8ba` · PRODUCTION VERIFY.
+   **GDD-BOARD-01 / LFE-BOARD-01 (2026-07-31):** Board Information Thin (D102–D108); `resolveClubBoard` pure derive · no persist · H-BOARD non-blocking · feat `75c190d` · PRODUCTION VERIFY.
+   **GDD-STADIUM-01 / LFE-STADIUM-01 (2026-07-31):** Stadium Information Thin (D109–D115); `resolveClubStadium` pure derive · no persist · no Ticket Economy · no Match Engine · feat `82a164d` · PRODUCTION VERIFY.
+   **LFE-TRANSFERS-10 / TD-03+ (2026-07-31):** Transfer actions organizational split + `displayPos` sole helper (D116–D118); brak semantyki rynku / SQL / DTO / RPC · feat **`9424dd8`** · PRODUCTION VERIFY.
+   **LFE-PUBLIC-API-01 (2026-07-31):** Root barrel = Freeze PUBLIC only (D119–D121); `@lastfootball/lfe/testing` barrel · `/advanced` defer · feat **`ce00327`** · PRODUCTION VERIFY.
+   **LFE-AGE-01 (2026-08-03):** Season Age++ H-AGE wired Confirm N+1 (D122); Season Transition Pipeline step 1 · feat **`6a54722`** · PRODUCTION VERIFY.
+   **LFE-LEAGUE-WORLD-02 (2026-08-03):** Tier-aware League Strength Profile + player skill→MatchSession map (D123); supersedes D92 · feat **`843bcfd`** · PRODUCTION VERIFY.
+   **LFE-CAREER-DECLINE-01 (2026-08-03):** Career Phase derive + Growth Gate + banded seasonal regress (D124); feat **`3c01baa`** · PRODUCTION VERIFY.
 
 ## Powiązania
 

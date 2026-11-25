@@ -137,6 +137,7 @@ export function LiveMatchFoundation({
   const finalShown = useRef(false);
   useEffect(() => {
     if (!finished || postMatchOpen || finalShown.current) return;
+    setGoalOverlay(null);
     finalShown.current = true;
     setFinalOpen(true);
   }, [finished, postMatchOpen]);

@@ -15,6 +15,7 @@ import {
   hasPlayedUnlock,
   unlockPlayedCount,
 } from '@/lib/fixtures';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
@@ -83,13 +84,15 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const lastPlayedFixture = pickLastPlayed(leagueFixtures);
     const phase = resolveHubPhase(club, { hasFixtures });
     const hubSession = resolveHubSession(phase, nextFixture, lastPlayedFixture);
+    const supabase = await createClient();
+    const playedDay = await lastPlayedOf(supabase, club.id, fixtures);
     const primary = resolvePrimaryCta(phase, hubSession, {
       nextFixture,
       lastPlayedFixture,
+      lastPlayedAt: playedDay.match,
       hasFixtures,
     });
 
-    const supabase = await createClient();
     const today = utcDateString();
     const [activePlayers, h2hOffers, farewellFlash, movements, board, upkeep, matchEvents] =
       await Promise.all([

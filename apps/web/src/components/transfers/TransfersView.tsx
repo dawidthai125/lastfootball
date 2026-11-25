@@ -582,8 +582,9 @@ function NameWithTalents({ name, talents }: { name: string; talents: readonly st
 }
 
 function auctionLine(auction: AuctionSnap, clubId: string): string {
-  const lead =
-    auction.highAmount == null
+  const lead = auction.bidsUnknown
+    ? 'nie udało się odczytać ofert'
+    : auction.highAmount == null
       ? 'brak ofert'
       : `najwyżej ${formatMoney(auction.highAmount)}${auction.highClubId === clubId ? ', prowadzisz' : ''}`;
   return `${lead} · koniec ${auctionEndLabel(auction.endsAt)}`;
@@ -605,7 +606,9 @@ function AuctionBidForm({
   const [state, action, pending] = useActionState(placeAuctionBid, TRANSFER_ACTION_INITIAL);
   const high = auction?.highAmount ?? null;
   const leading = auction?.highClubId === clubId;
-  const min = high == null ? ask : Math.max(ask, high + AUCTION_THIN.STEP);
+  // The price of an open auction stays as it was at the first bid.
+  const floor = auction?.ask ?? ask;
+  const min = high == null ? floor : Math.max(floor, high + AUCTION_THIN.STEP);
   return (
     <form action={action} onSubmit={keepFields(action)} className="lf-tx-actions">
       <input type="hidden" name="playerId" value={playerId} />

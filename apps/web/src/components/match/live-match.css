@@ -417,8 +417,8 @@
   }
 }
 
-/* A phone held sideways has no room for the whole screen, so the screen scrolls. */
-@media (max-width: 1023px) and (max-height: 480px) and (orientation: landscape) {
+/* A low phone screen, also sideways, has no room for everything, so the screen scrolls. */
+@media (max-width: 1023px) and (max-height: 760px) {
   .lf-live {
     overflow-y: auto;
   }
@@ -435,7 +435,7 @@
   }
 
   .lf-live__canvas {
-    width: min(100%, 100dvh);
+    width: min(100%, 130dvh);
     height: auto;
   }
 

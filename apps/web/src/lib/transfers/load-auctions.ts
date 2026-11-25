@@ -1,4 +1,5 @@
 import { tryAdminClient } from '@/lib/supabase/admin';
+import { readPages } from '@/lib/supabase/read-pages';
 import { createClient } from '@/lib/supabase/server';
 
 export type AuctionSnap = {
@@ -8,6 +9,8 @@ export type AuctionSnap = {
   readonly highAmount: number | null;
   readonly highClubId: string | null;
   readonly endsAt: string;
+  /** The bids could not be read, so nobody may say there are none. */
+  readonly bidsUnknown?: boolean;
 };
 
 /** Auctions past their end are settled first; the scheduler does the same every 10 minutes. */
@@ -48,22 +51,22 @@ export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
   if (auctions.length === 0) return [];
 
   const ids = auctions.map((row) => row.id);
-  const bids = await supabase
-    .from('transfer_auction_bids')
-    .select('auction_id, club_id, amount, created_at')
-    .in('auction_id', ids);
-  const rows =
-    bids.error || !bids.data
-      ? []
-      : (bids.data as {
-          auction_id: string;
-          club_id: string;
-          amount: number;
-          created_at: string;
-        }[]);
+  const bids = await readPages<{
+    auction_id: string;
+    club_id: string;
+    amount: number;
+    created_at: string;
+  }>((from, to) =>
+    supabase
+      .from('transfer_auction_bids')
+      .select('auction_id, club_id, amount, created_at')
+      .in('auction_id', ids)
+      .order('id')
+      .range(from, to),
+  );
 
   return auctions.map((auction) => {
-    const mine = rows
+    const mine = (bids ?? [])
       .filter((bid) => bid.auction_id === auction.id)
       .sort((a, b) => b.amount - a.amount || (a.created_at < b.created_at ? 1 : -1));
     const high = mine[0];
@@ -74,6 +77,7 @@ export async function loadOpenAuctions(): Promise<readonly AuctionSnap[]> {
       highAmount: high?.amount ?? null,
       highClubId: high?.club_id ?? null,
       endsAt: auction.ends_at,
+      bidsUnknown: bids === null,
     };
   });
 }
