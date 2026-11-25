@@ -208,8 +208,8 @@ export function PostMatchView({
               (s) => (s.label === 'Żółte' || s.label === 'Czerwone') && (s.home > 0 || s.away > 0),
             ) ? (
               <p style={{ margin: 0, fontSize: '12px', color: 'var(--lf-muted)' }}>
-                Czerwona kartka zdejmuje z boiska i daje dwa mecze pauzy, druga żółta jeden. Co
-                czwarta żółta to też mecz pauzy.
+                Czerwona kartka zdejmuje z boiska i daje dwa mecze pauzy, druga żółta jeden. Po
+                zwykłej żółtej zawodnik pauzuje mecz w jednym przypadku na cztery.
               </p>
             ) : null}
           </div>
