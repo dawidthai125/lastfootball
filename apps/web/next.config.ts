@@ -33,7 +33,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // Set only by deploy.yml: a prebuilt deploy has no Vercel build, so Skew Protection needs our own id.
+  // Set only by deploy.yml: a prebuilt deploy has no Vercel build, so Skew Protection needs our own
+  // id. deploy.yml tells Vercel the same id, because Next does it itself only from 16.2.
   deploymentId: process.env.LF_DEPLOYMENT_ID || undefined,
   transpilePackages: ['@lastfootball/lfe', '@lastfootball/domain'],
   poweredByHeader: false,
