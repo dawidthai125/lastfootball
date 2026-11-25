@@ -83,9 +83,9 @@ export const UI_COPY = {
   rankingEyebrow: 'Sezon',
   rankingTitle: 'Ranking',
   rankingSubtitle: 'Jak wypada Twój klub wśród innych w tym sezonie',
-  rankingBandUpper: 'Górna część sezonu',
+  rankingBandUpper: 'Górna część tabeli',
   rankingBandMid: 'Środek stawki',
-  rankingBandLower: 'Dolna część sezonu',
+  rankingBandLower: 'Dolna część tabeli',
   rankingPlayerPositionPrefix: 'Twoja pozycja:',
 
   /** LFE-CLUB-01 — club identity card Thin (no §6 engine / staff) */

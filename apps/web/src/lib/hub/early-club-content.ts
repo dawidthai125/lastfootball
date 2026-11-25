@@ -37,6 +37,26 @@ export type HubLightStatus = {
   readonly cashLabel: string | null;
 };
 
+function matchLabel(fixture: FixtureDto): string {
+  if (fixture.competition === 'human') return 'Liga ludzi';
+  if (fixture.competition === 'cup') return 'Puchar';
+  if (fixture.competition === 'challenge') return 'Wyzwanie';
+  return `Kolejka ${fixture.matchday}`;
+}
+
+/** Newest played match of any competition. The league fixture is the fallback without dates. */
+export function newestPlayed(
+  fixtures: readonly FixtureDto[],
+  fallback: FixtureDto | null,
+): FixtureDto | null {
+  let best = fallback;
+  for (const fixture of fixtures) {
+    if (fixture.status !== 'played' || !fixture.playedAt) continue;
+    if (!best?.playedAt || Date.parse(fixture.playedAt) > Date.parse(best.playedAt)) best = fixture;
+  }
+  return best;
+}
+
 /** Qualitative / scored last-match strip from fixtures SSOT when available. */
 export function buildLastMatchStrip(
   club: ClubDto,
@@ -50,14 +70,14 @@ export function buildLastMatchStrip(
       const them = lastPlayed.isHome ? lastPlayed.awayScore : lastPlayed.homeScore;
       return {
         title: 'Ostatni mecz',
-        detail: `Kolejka ${lastPlayed.matchday} · ${club.name} ${us}:${them} ${lastPlayed.opponent.name}`,
+        detail: `${matchLabel(lastPlayed)} · ${club.name} ${us}:${them} ${lastPlayed.opponent.name}`,
         href,
         note,
       };
     }
     return {
       title: 'Ostatni mecz',
-      detail: `Kolejka ${lastPlayed.matchday} · ${club.name} vs ${lastPlayed.opponent.name}`,
+      detail: `${matchLabel(lastPlayed)} · ${club.name} vs ${lastPlayed.opponent.name}`,
       href,
       note,
     };

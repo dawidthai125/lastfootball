@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { ClubDto } from '@/lib/club/types';
 import type { FixtureDto } from '@/lib/fixtures/types';
-import { buildLastMatchStrip } from '@/lib/hub/early-club-content';
+import { buildLastMatchStrip, newestPlayed } from '@/lib/hub/early-club-content';
 
 function club(): ClubDto {
   return {
@@ -72,5 +72,21 @@ describe('buildLastMatchStrip', () => {
     expect(strip.note).toBeNull();
     expect(strip.detail).toContain('Pierwszy mecz');
     expect(strip.detail).not.toContain('/match/');
+  });
+});
+
+describe('newestPlayed', () => {
+  it('takes the newest match of any competition and names it', () => {
+    const league = played({ id: 'l', playedAt: '2026-11-25T07:00:00Z' });
+    const human = played({
+      id: 'h',
+      competition: 'human',
+      matchday: 301,
+      playedAt: '2026-11-25T09:00:00Z',
+    });
+    const newest = newestPlayed([human, league], league);
+    expect(newest?.id).toBe('h');
+    expect(buildLastMatchStrip(club(), newest).detail).toMatch(/^Liga ludzi · /);
+    expect(newestPlayed([], league)?.id).toBe('l');
   });
 });

@@ -74,7 +74,7 @@ function historyLines(row: PlayerRowDto): string[] {
   const notes = (row.recentRatings ?? []).filter((n) => Number.isFinite(n)).slice(-5);
   const lines: string[] = [];
   if (notes.length > 0) {
-    lines.push(`Ostatnie noty: ${notes.join(', ')}.`);
+    lines.push(`Forma w ostatnich meczach: ${notes.join(', ')}.`);
   }
   lines.push(row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.');
   if (row.onLoan) {

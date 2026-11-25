@@ -189,6 +189,7 @@ export default async function HubPage() {
         club={club}
         nextFixture={nextFixture}
         lastPlayedFixture={lastPlayed}
+        fixtures={fixtures}
         hasFixtures={hasFixtures}
         leaguePositionLabel={leaguePositionLabel}
         cashLabel={cashLabel}

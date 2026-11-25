@@ -10,14 +10,14 @@ import { SPONSOR_ACTION_INITIAL, type ClubSponsorsDto } from '@/lib/sponsors';
 import { formatMoney } from '@/lib/finance/format-money';
 import { UI_COPY } from '@/lib/ui/copy';
 
-function bonusStateLabel(state: ClubSponsorsDto['bonusState']): string {
+function bonusStateLabel(state: ClubSponsorsDto['bonusState'], seasonOver: boolean): string {
   switch (state) {
     case 'claimable':
       return 'Gotowy do odbioru';
     case 'claimed':
       return 'Odebrany';
     default:
-      return 'Niedostępny';
+      return seasonOver ? 'Nie zdobyty' : 'Rozstrzyga się na koniec sezonu';
   }
 }
 
@@ -86,7 +86,8 @@ export function SponsorsView({
           <p className="text-[var(--lf-text-strong)]">{sponsors.goal.label}</p>
           <p className="text-[12px] text-[var(--lf-muted)]">{sponsors.goal.progressLabel}</p>
           <p className="text-[12px] text-[var(--lf-muted)]">
-            Bonus {sponsors.bonusLabel} · {bonusStateLabel(sponsors.bonusState)}
+            Bonus {sponsors.bonusLabel} ·{' '}
+            {bonusStateLabel(sponsors.bonusState, sponsors.renewal != null)}
           </p>
           {sponsors.bonusState === 'claimable' ? (
             <form action={claimAction} className="pt-1">

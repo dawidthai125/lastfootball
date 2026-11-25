@@ -146,12 +146,14 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
     let ready = 0;
     let injured = 0;
     let tired = 0;
+    let suspended = 0;
     for (const p of players) {
       if (p.status === 'READY') ready += 1;
       else if (p.status === 'INJURED') injured += 1;
       else if (p.status === 'TIRED') tired += 1;
+      else if (p.status === 'SUSPENDED') suspended += 1;
     }
-    return { ready, injured, tired, total: players.length };
+    return { ready, injured, tired, suspended, total: players.length };
   }, [players]);
 
   const attention = useMemo(() => {
@@ -197,6 +199,8 @@ function SquadRoster({ players }: { players: readonly SquadPlayerDto[] }) {
             Kontuzje <strong>{squadCounts.injured}</strong>
             {' · '}
             Zmęczeni <strong>{squadCounts.tired}</strong>
+            {' · '}
+            Zawieszeni <strong>{squadCounts.suspended}</strong>
             {' · '}
             Razem <strong>{squadCounts.total}</strong>
           </p>

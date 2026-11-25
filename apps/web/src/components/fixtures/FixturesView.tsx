@@ -69,6 +69,13 @@ function gateCompetition(f: Fixture): KickoffCompetition {
   return 'league';
 }
 
+/** The competition label often already names the round. */
+function rowLabel(f: Fixture): string {
+  return f.competitionLabel.toLowerCase().includes(f.whenLabel.toLowerCase())
+    ? f.competitionLabel
+    : `${f.competitionLabel} · ${f.whenLabel}`;
+}
+
 function rowHref(
   f: Fixture,
   gate: {
@@ -136,7 +143,10 @@ export function FixturesView({
     return list.sort((a, b) => a.day - b.day);
   }, [fixtures, competition]);
 
-  const upcoming = rows.filter((f) => f.status !== 'played');
+  // Matches that can be played now come first, also the human league with its high day number.
+  const upcoming = rows
+    .filter((f) => f.status !== 'played')
+    .sort((a, b) => Number(a.status === 'scheduled') - Number(b.status === 'scheduled'));
   const played = rows.filter((f) => f.status === 'played').sort((a, b) => b.day - a.day);
 
   return (
@@ -327,7 +337,7 @@ function FixtureTable({
                       color: 'var(--lf-color-text-muted)',
                     }}
                   >
-                    {f.competitionLabel} · {f.whenLabel}
+                    {rowLabel(f)}
                   </p>
                   {f.status === 'played' && f.matchNote ? (
                     <p
