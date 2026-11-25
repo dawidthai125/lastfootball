@@ -72,15 +72,14 @@ jobs:
       - name: Publish on Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_DEPLOY_TOKEN }}
-          # Trial: a push is also published without the domains.
-          STAGED: ${{ github.event_name == 'push' || inputs.staged }}
+          STAGED: ${{ github.event_name == 'workflow_dispatch' && inputs.staged }}
         run: |
           args=(deploy --prebuilt --prod --yes)
           [ "$STAGED" = "true" ] && args+=(--skip-domain)
           url=$(npx -y "$VERCEL_CLI" "${args[@]}")
           echo "Deployment: $url" >> "$GITHUB_STEP_SUMMARY"
       - name: Smoke test
-        if: github.event_name == 'workflow_dispatch' && !inputs.staged
+        if: github.event_name == 'push' || !inputs.staged
         run: |
           for p in / /login /register /jak-grac /regulamin; do
             code=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 "https://www.lastfootball.pl$p")
