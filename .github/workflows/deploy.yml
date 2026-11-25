@@ -1,0 +1,77 @@
+name: Deploy (built on GitHub)
+
+# Vercel charges for build minutes, so the site is built here and Vercel only publishes the result.
+# Fallback: set git.deploymentEnabled.main to true in apps/web/vercel.json and Vercel builds main again.
+on:
+  workflow_dispatch:
+    inputs:
+      staged:
+        description: 'Publish without switching the domains'
+        type: boolean
+        default: true
+
+# A newer push replaces a build in progress.
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Only main can read this environment. The token works for this one Vercel project.
+    environment:
+      name: vercel-production
+      url: https://www.lastfootball.pl
+    env:
+      VERCEL_CLI: vercel@66.6.0
+      VERCEL_TELEMETRY_DISABLED: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      # The project settings of Vercel, without "vercel pull": server secrets stay in Vercel.
+      - name: Project settings
+        run: |
+          mkdir -p .vercel
+          cat > .vercel/project.json <<'JSON'
+          {"projectId":"prj_rngAYenrtO9AP5LFXWlsHwg1maXq","orgId":"team_Shg0MetflUcRu6VP37tXEKYK","projectName":"lastfootball","settings":{"framework":"nextjs","devCommand":null,"installCommand":"true","buildCommand":"npm run build","outputDirectory":null,"rootDirectory":"apps/web","directoryListing":false,"nodeVersion":"22.x"}}
+          JSON
+      - name: Build
+        env:
+          VERCEL_ENV: production
+          LF_DEPLOYMENT_ID: gh-${{ github.run_id }}-${{ github.run_attempt }}
+          NEXT_PUBLIC_APP_URL: https://www.lastfootball.pl
+          NEXT_PUBLIC_SUPABASE_URL: https://ewgllyswhtlkdtiqsqrt.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAAGQ9nRyDY9F6hGzZ
+        run: |
+          [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ] || { echo "::error::Missing NEXT_PUBLIC_SUPABASE_ANON_KEY"; exit 1; }
+          npx -y "$VERCEL_CLI" build --prod --yes
+      - name: Publish on Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_DEPLOY_TOKEN }}
+          STAGED: ${{ github.event_name == 'workflow_dispatch' && inputs.staged }}
+        run: |
+          args=(deploy --prebuilt --prod --yes)
+          [ "$STAGED" = "true" ] && args+=(--skip-domain)
+          url=$(npx -y "$VERCEL_CLI" "${args[@]}")
+          echo "Deployment: $url" >> "$GITHUB_STEP_SUMMARY"
+      - name: Smoke test
+        if: github.event_name == 'push' || !inputs.staged
+        run: |
+          for p in / /login /register /jak-grac /regulamin; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 "https://www.lastfootball.pl$p")
+            echo "$p $code"
+            [ "$code" = 200 ] || exit 1
+          done
