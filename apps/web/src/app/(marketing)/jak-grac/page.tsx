@@ -39,7 +39,8 @@ export default function HelpPage() {
           </li>
           <li>
             Gdy wyjdziesz w trakcie, mecz czeka. Po powrocie idzie dalej od miejsca, w którym
-            wyszedłeś. Nie da się go zacząć od nowa.
+            wyszedłeś. Nie da się go zacząć od nowa. Mecz Ligi ludzi to transmisja, po powrocie
+            oglądasz ją od początku z tym samym wynikiem.
           </li>
           <li>
             Na wynik działają umiejętności, energia, forma i morale zawodników oraz Twoje decyzje.

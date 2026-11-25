@@ -987,7 +987,14 @@ Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do
 2. Po meczu rośnie do 3 zawodników zamiast 5, w każdym meczu w innej kolejności, więc nie zawsze ci sami.
 3. Symulacja (10 klubów na wariant, 8 sezonów): trenujący klub jest w I lidze w 5. sezonie 0 z 10, w 8. sezonie 6 z 10.
 4. Junior awaryjny zostaje na dawnym poziomie ligi (47/53/59/66).
-   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D162 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+
+### D163 — „Dziś warto” po meczu dnia i ostatni mecz · 2026-11-25
+
+1. Gdy mecz dnia jest rozegrany, „Dziś warto” (D25) wskazuje czekającą rozmowę albo wolny trening. Zdanie o rozegranej kolejce zostaje, gdy nic nie czeka. Nadal tylko wyliczenie, bez zmian danych.
+2. „Ostatni mecz” na hubie to najnowszy mecz dowolnych rozgrywek, z ich nazwą.
+3. Profil zawodnika pokazuje „Forma w ostatnich meczach”, bo te liczby (wynik meczu i energia) nie są ocenami z raportu meczu.
+
+   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D163 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
    **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
    **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
    **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  

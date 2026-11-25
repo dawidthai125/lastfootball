@@ -85,7 +85,7 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
   // P1 — matchday: sync with Primary match path, unless kickoff is closed
   if (session === 'matchday' && nextFixture) {
     const blocked = blockedMatchLine(input, nextFixture);
-    if (blocked) return blocked;
+    if (blocked) return restOfDayGoal(input, primary) ?? blocked;
     if (input.lineupBlocked) {
       return goal('match', UI_COPY.dailyGoalLineup, lineupHref(nextFixture.id), primary);
     }
@@ -96,7 +96,7 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
   if (session === 'post_match') {
     if (nextFixture?.status === 'upcoming') {
       const blocked = blockedMatchLine(input, nextFixture);
-      if (blocked) return blocked;
+      if (blocked) return restOfDayGoal(input, primary) ?? blocked;
       if (input.lineupBlocked) {
         return goal('match', UI_COPY.dailyGoalLineup, lineupHref(nextFixture.id), primary);
       }
@@ -120,6 +120,17 @@ export function resolveClubDailyGoal(input: ResolveClubDailyGoalInput): ClubDail
   void input.hasFixtures;
   void input.lastPlayedFixture;
   return goal('squad', UI_COPY.dailyGoalSquad, '/squad', primary);
+}
+
+/** The match of the day is done. A waiting talk or the training of the day is still worth a click. */
+function restOfDayGoal(input: ResolveClubDailyGoalInput, primary: HubCta): ClubDailyGoalDto | null {
+  if (input.matchesBlocked) return null;
+  const desk = messagesDeskGoal(input, primary);
+  if (desk) return desk;
+  if (input.trainingUnlocked && input.lastTrainingOn !== input.todayUtc) {
+    return goal('training', UI_COPY.dailyGoalTraining, '/training', primary);
+  }
+  return null;
 }
 
 function messagesDeskGoal(

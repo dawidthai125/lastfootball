@@ -147,6 +147,7 @@ describe('resolveClubDailyGoal kickoff gate', () => {
     });
     const goal = resolveClubDailyGoal({
       ...base,
+      lastTrainingOn: base.todayUtc,
       session: 'matchday',
       primary,
       nextFixture: next,
@@ -158,6 +159,23 @@ describe('resolveClubDailyGoal kickoff gate', () => {
       href: '/matches',
       syncedWithPrimary: true,
     });
+  });
+
+  it('points at the open training when the match of the day is done', () => {
+    const next = fixture();
+    const primary = resolvePrimaryCta('SEASON', 'matchday', {
+      nextFixture: next,
+      lastPlayedAt: earlierToday,
+      now,
+    });
+    const goal = resolveClubDailyGoal({
+      ...base,
+      session: 'matchday',
+      primary,
+      nextFixture: next,
+      lastPlayedAt: earlierToday,
+    });
+    expect(goal).toMatchObject({ kind: 'training', href: '/training' });
   });
 
   it('keeps a defensive post-match upcoming link off the tunnel', () => {

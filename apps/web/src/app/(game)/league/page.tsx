@@ -100,7 +100,12 @@ export default async function LeaguePage() {
             <p style={{ margin: '0 0 var(--lf-space-3)' }}>
               <Link
                 href={`/match/${human.fixtureId}`}
-                style={{ color: 'var(--lf-color-text-gold)' }}
+                style={{
+                  display: 'inline-block',
+                  padding: 'var(--lf-space-2) 0',
+                  color: 'var(--lf-color-text-gold)',
+                  fontWeight: 600,
+                }}
               >
                 {human.late ? 'Zagraj zaległy mecz' : 'Wejdź w mecz'}
               </Link>

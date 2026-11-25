@@ -25,6 +25,7 @@ export {
 } from '@/lib/hub/resolve-club-daily-goal';
 export {
   buildLastMatchStrip,
+  newestPlayed,
   buildWelcomeMessage,
   buildLightStatus,
   type LastMatchStripModel,

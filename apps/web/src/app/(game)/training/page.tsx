@@ -66,11 +66,13 @@ export default async function TrainingPage() {
       styleWidth={build.styleWidth}
       physio={build.physio}
       assistantGroup={build.assistantGroup}
-      players={filterSeniorPlayers(activePlayers).map((player) => ({
-        id: player.id,
-        name: player.name,
-        energy: player.energy ?? 80,
-      }))}
+      players={filterSeniorPlayers(activePlayers)
+        .filter((player) => player.status !== 'INJURED')
+        .map((player) => ({
+          id: player.id,
+          name: player.name,
+          energy: player.energy ?? 80,
+        }))}
       pressFixtureId={pressRow?.id ?? null}
       pressDone={Boolean(pressRow?.press_tone)}
       pressLine={pressLine}

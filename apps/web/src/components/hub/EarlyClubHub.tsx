@@ -10,6 +10,7 @@ import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import {
   buildLastMatchStrip,
+  newestPlayed,
   buildLightStatus,
   buildWelcomeMessage,
   resolveClubDailyGoal,
@@ -38,6 +39,7 @@ import './hub-decision.css';
  * Unlock via resolveNavAccess — no new domain rules.
  */
 export function EarlyClubHub({
+  fixtures = [],
   club,
   nextFixture = null,
   lastPlayedFixture = null,
@@ -86,6 +88,8 @@ export function EarlyClubHub({
   cupLink?: HubCupLink | null;
   /** loadEmailGate().matchesBlocked — blocks the next kickoff after the deadline. */
   matchesBlocked?: boolean;
+  /** All matches of the season, for the last-match strip. */
+  fixtures?: readonly FixtureDto[];
   /** Newest played_at across competitions. Omitted falls back to the last league fixture. */
   lastPlayedAt?: string | null;
   starterPath?: StarterPath | null;
@@ -132,7 +136,7 @@ export function EarlyClubHub({
     transferWindowOpen: club.transferWindowOpen,
     playedCount,
   }).slice(0, 5);
-  const lastMatch = buildLastMatchStrip(club, lastPlayedFixture);
+  const lastMatch = buildLastMatchStrip(club, newestPlayed(fixtures, lastPlayedFixture));
   const status = buildLightStatus(club, nextFixture, leaguePositionLabel, cashLabel);
   const kickoffSentence = kickoffBlockReason({
     matchesBlocked,

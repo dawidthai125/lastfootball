@@ -106,7 +106,7 @@ describe('squad SSOT (LFE-PLAYERS-01)', () => {
     );
     expect(
       resolveClubSquad({ id: clubId }, withNotes).players.find((p) => p.starter)?.history,
-    ).toEqual(['Ostatnie noty: 80, 71, 64.', 'W zapisanej jedenastce.']);
+    ).toEqual(['Forma w ostatnich meczach: 80, 71, 64.', 'W zapisanej jedenastce.']);
     expect(squad.players.every((p) => p.history.join(' ').includes(clubId.slice(0, 8)))).toBe(
       false,
     );
