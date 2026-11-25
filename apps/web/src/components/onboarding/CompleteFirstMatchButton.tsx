@@ -5,8 +5,16 @@ import { useActionState } from 'react';
 import { COMPLETE_FIRST_MATCH_INITIAL } from '@/lib/first-match/action-types';
 import { completeFirstMatch } from '@/lib/first-match/actions';
 
-export function CompleteFirstMatchButton({ managerLog }: { readonly managerLog: string }) {
-  const [state, action, pending] = useActionState(completeFirstMatch, COMPLETE_FIRST_MATCH_INITIAL);
+/** The whistle already stored the match. This goes on, and stores it when that failed. */
+export function CompleteFirstMatchButton({
+  managerLog,
+  saving,
+}: {
+  readonly managerLog: string;
+  readonly saving: boolean;
+}) {
+  const [state, action, going] = useActionState(completeFirstMatch, COMPLETE_FIRST_MATCH_INITIAL);
+  const pending = going || saving;
 
   return (
     <form action={action} style={{ display: 'inline' }}>

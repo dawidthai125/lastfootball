@@ -68,15 +68,3 @@ export function sessionFromKickoff(s: KickoffSnapshot): MatchSession {
     { theirBench: s.theirBench ?? null, fullRules: s.rules === MATCH_RULES_VERSION },
   );
 }
-
-/**
- * Name of a player who started or sat on the bench and left the club, or null. One on loan or
- * called up is still ours and can be back at once, so his match goes on.
- */
-export function leftDuringMatch(
-  s: KickoffSnapshot,
-  seniors: readonly { readonly id: string }[],
-): string | null {
-  const here = new Set(seniors.map((p) => p.id));
-  return [...s.ourXi, ...s.ourBench].find((p) => !here.has(p.id))?.name ?? null;
-}

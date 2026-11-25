@@ -34,7 +34,6 @@ import {
   humanMatchLineup,
 } from '@/lib/league/human-league-store';
 import { authoritativeManagerScore } from '@/lib/match/authoritative-score';
-import { leftDuringMatch } from '@/lib/match/kickoff-snapshot';
 import { clearKickoffs, loadKickoff } from '@/lib/match/kickoff-store';
 import { kickoffDay } from '@/lib/match/kickoff-day';
 import { incidentsById, toStoredPlayers, type MatchPlayerLine } from '@/lib/match/match-players';
@@ -206,10 +205,6 @@ export async function completeFixture(
       }
       if (lookup.kind === 'found' && !continuesLog(lookup.tick, lookup.log, managerLog)) {
         return { error: 'Ten mecz poszedł dalej w innym oknie. Wejdź w mecz jeszcze raz.' };
-      }
-      const gone = kickoff ? leftDuringMatch(kickoff, seniors) : null;
-      if (gone) {
-        return { error: `${gone} odszedł w trakcie meczu. Wejdź w mecz jeszcze raz.` };
       }
     }
 

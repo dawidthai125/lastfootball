@@ -32,7 +32,6 @@ import {
 } from '@/lib/fixtures/create-session';
 import { MATCH_RULES_VERSION } from '@/lib/match/kickoff-snapshot';
 import { enterMatch, storeKickoff } from '@/lib/match/kickoff-store';
-import { filterSeniorPlayers } from '@/lib/squad/types';
 import { lineupProblem } from '@/lib/squad/lineup-problem';
 import { upcomingKickoffSentence } from '@/lib/match/upcoming-kickoff-block';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -79,7 +78,9 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
   if (id === FIRST_MATCH_ID) {
     const club = await getManagerClub();
     if (!club) redirect('/welcome');
-    if (isFirstMatchCompleted(club)) redirect('/hub');
+    if (isFirstMatchCompleted(club)) {
+      return <LiveMatchShell playedHref="/hub">{null}</LiveMatchShell>;
+    }
     try {
       const players = await listClubPlayers(club.id);
       const ourXi = resolveStartingXi(players);
@@ -103,15 +104,17 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
             ? (moodRow.data as { fan_mood: number }).fan_mood
             : 60;
       return (
-        <LiveMatchFoundation
-          bundle={buildFirstLiveBundle(club, build.levels)}
-          club={club}
-          firstMatch
-          ourXi={ourXi}
-          ourBench={ourBench}
-          developmentNames={developmentNames}
-          fanMoodBefore={fanMoodBefore}
-        />
+        <LiveMatchShell playedHref="/hub">
+          <LiveMatchFoundation
+            bundle={buildFirstLiveBundle(club, build.levels)}
+            club={club}
+            firstMatch
+            ourXi={ourXi}
+            ourBench={ourBench}
+            developmentNames={developmentNames}
+            fanMoodBefore={fanMoodBefore}
+          />
+        </LiveMatchShell>
       );
     } catch (e) {
       if (e instanceof SquadUnavailableError) {
@@ -135,7 +138,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     const players = await listClubPlayers(club.id);
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
     if (human?.block) return <KickoffBlocked sentence={human.block} />;
-    const entry = human ? null : await enterMatch(club.id, dto.id, filterSeniorPlayers(players));
+    const entry = human ? null : await enterMatch(club.id, dto.id);
     if (entry?.kind === 'error') {
       return <KickoffBlocked sentence="Nie udało się odczytać meczu. Odśwież stronę." />;
     }

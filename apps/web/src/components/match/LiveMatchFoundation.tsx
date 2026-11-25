@@ -2,7 +2,14 @@
 
 import type { FormationCode } from '@lastfootball/lfe';
 import Link from 'next/link';
-import { useActionState, useEffect, useRef, useState, type CSSProperties } from 'react';
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
 
 import { AtmosphereLayer, LiveEventIcon } from '@/components/assets';
 import { MatchCrest } from '@/components/match/MatchCrest';
@@ -37,6 +44,9 @@ import {
 } from '@/components/match/fixture-autosave';
 import { COMPLETE_FIXTURE_INITIAL } from '@/lib/fixtures/action-types';
 import { completeFixture } from '@/lib/fixtures/complete-fixture';
+import { COMPLETE_FIRST_MATCH_INITIAL } from '@/lib/first-match/action-types';
+import { completeFirstMatch } from '@/lib/first-match/actions';
+import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { LoadingFrame } from '@/components/ui';
 import type { MatchExtra } from '@/lib/fixtures/create-session';
 import type { FixtureDto } from '@/lib/fixtures/types';
@@ -148,14 +158,17 @@ export function LiveMatchFoundation({
     completeFixture,
     COMPLETE_FIXTURE_INITIAL,
   );
+  const [, saveFirst, firstSavePending] = useActionState(
+    completeFirstMatch,
+    COMPLETE_FIRST_MATCH_INITIAL,
+  );
   const fixtureSaveStarted = useRef(false);
 
   useEffect(() => {
-    if (!snapshot || !runtime || !leagueFixture) return;
+    if (!snapshot || !runtime) return;
     if (
       !shouldAutoSaveFinishedFixture({
-        firstMatch,
-        fixtureId: leagueFixture.id,
+        fixtureId: firstMatch ? FIRST_MATCH_ID : (leagueFixture?.id ?? null),
         finished,
         finalOpen,
         postMatchOpen,
@@ -165,6 +178,14 @@ export function LiveMatchFoundation({
       return;
     }
     fixtureSaveStarted.current = true;
+    if (firstMatch) {
+      const first = new FormData();
+      first.set('managerLog', runtime.serializeManagerLog());
+      first.set('stay', '1');
+      startTransition(() => saveFirst(first));
+      return;
+    }
+    if (!leagueFixture) return;
     saveFixture(
       fixtureStayForm(
         leagueFixture.id,
@@ -183,6 +204,7 @@ export function LiveMatchFoundation({
     finalOpen,
     postMatchOpen,
     saveFixture,
+    saveFirst,
   ]);
 
   useEffect(() => {
@@ -354,7 +376,10 @@ export function LiveMatchFoundation({
         developmentNames={developmentNames}
         continueSlot={
           firstMatch ? (
-            <CompleteFirstMatchButton managerLog={runtime?.serializeManagerLog() ?? '[]'} />
+            <CompleteFirstMatchButton
+              managerLog={runtime?.serializeManagerLog() ?? '[]'}
+              saving={firstSavePending}
+            />
           ) : leagueFixture ? (
             <CompleteLeagueFixtureButton
               fixtureId={leagueFixture.id}

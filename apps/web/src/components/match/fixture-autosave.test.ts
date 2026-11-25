@@ -7,7 +7,6 @@ import {
 } from '@/components/match/fixture-autosave';
 
 const ready: FixtureAutoSaveInput = {
-  firstMatch: false,
   fixtureId: 'fx-league',
   finished: true,
   finalOpen: true,
@@ -50,8 +49,7 @@ describe('shouldAutoSaveFinishedFixture', () => {
     ).toBe(false);
   });
 
-  it('leaves the first match and an unfinished or missing fixture alone', () => {
-    expect(shouldAutoSaveFinishedFixture({ ...ready, firstMatch: true })).toBe(false);
+  it('leaves an unfinished or missing fixture alone', () => {
     expect(shouldAutoSaveFinishedFixture({ ...ready, fixtureId: null })).toBe(false);
     expect(shouldAutoSaveFinishedFixture({ ...ready, fixtureId: '' })).toBe(false);
     expect(shouldAutoSaveFinishedFixture({ ...ready, finished: false })).toBe(false);
