@@ -59,7 +59,7 @@ export function resolveIncomingOffers(input: {
   const eligible = listTransferSellEligiblePlayers({
     transferWindowOpen: input.transferWindowOpen,
     activePlayers: input.activePlayers,
-  }).filter((p) => p.transferListedAt != null);
+  }).filter((p) => p.transferListedAt != null && p.aiOfferDeclined !== true);
 
   const sorted = eligible.slice().sort((a, b) => a.id.localeCompare(b.id));
   const preferred = sorted.filter((p) => stableHash([input.clubId, p.id]) % 3 === 0);

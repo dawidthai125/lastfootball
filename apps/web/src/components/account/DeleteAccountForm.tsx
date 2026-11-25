@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/FormControls';
+import { useKeptForm } from '@/components/ui/kept-form';
 import { deleteAccount, type DeleteAccountState } from '@/lib/account/delete-account';
 
 const INITIAL: DeleteAccountState = { error: null };
@@ -11,6 +12,7 @@ const INITIAL: DeleteAccountState = { error: null };
 export function DeleteAccountForm({ clubName }: { readonly clubName: string | null }) {
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(deleteAccount, INITIAL);
+  const form = useKeptForm(action, state);
 
   if (!open) {
     return (
@@ -20,7 +22,7 @@ export function DeleteAccountForm({ clubName }: { readonly clubName: string | nu
     );
   }
   return (
-    <form action={action} style={{ display: 'grid', gap: 'var(--lf-space-2)', maxWidth: '26rem' }}>
+    <form {...form} style={{ display: 'grid', gap: 'var(--lf-space-2)', maxWidth: '26rem' }}>
       <p style={{ margin: 0 }}>
         Usuniemy na zawsze konto, adres e-mail{clubName ? `, klub ${clubName}` : ''}, zawodników,
         wyniki i powiadomienia. Tego nie da się cofnąć. W tabelach innych graczy zostanie „Klub

@@ -73,7 +73,7 @@ export default async function MessagesPage() {
   const loanOffers = resolveIncomingLoanOffers({
     clubId: club.id,
     transferWindowOpen: club.transferWindowOpen,
-    rosterCount: filterSeniorPlayers(activePlayers).length,
+    roster: filterSeniorPlayers(activePlayers),
     today,
   });
 
@@ -88,6 +88,7 @@ export default async function MessagesPage() {
       starter: player.starter,
       onLoan: player.onLoan === true,
       loanedIn: player.loanedIn === true,
+      intlAbsentUntil: player.intlAbsentUntil ?? null,
     })),
     alreadyAbsentIds: activePlayers
       .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= today)
@@ -104,6 +105,7 @@ export default async function MessagesPage() {
             skill: player.skill,
             academyTrack: Boolean(player.academyTrack),
             departed: player.departedAt != null || player.status === 'DEPARTED',
+            goalkeeper: player.pos === 'BR',
           })),
         )
       : null;

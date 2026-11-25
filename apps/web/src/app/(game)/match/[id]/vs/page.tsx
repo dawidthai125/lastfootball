@@ -16,7 +16,7 @@ export default async function MatchVsPage({ params }: PageProps) {
   const ctx = await loadMatchPathContext(id);
   const club = await getManagerClub();
   let xiBlocked = false;
-  if (club) {
+  if (club && !ctx.lockedLineups) {
     try {
       await loadClubStartingXi(club);
     } catch (e) {

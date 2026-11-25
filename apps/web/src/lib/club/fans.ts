@@ -53,6 +53,18 @@ export function fanResultFromScores(
   return 'draw';
 }
 
+/** The match behind the stored mood: every competition of the club moves it. */
+export function lastMoodFixture<
+  T extends { readonly status: string; readonly playedAt: string | null },
+>(fixtures: readonly T[]): T | null {
+  let last: T | null = null;
+  for (const fixture of fixtures) {
+    if (fixture.status !== 'played' || !fixture.playedAt) continue;
+    if (!last || Date.parse(fixture.playedAt) > Date.parse(last.playedAt!)) last = fixture;
+  }
+  return last;
+}
+
 /** Played-recap line only for the club's latest settled fixture. */
 export function resolvePlayedFixtureFanLine(input: {
   readonly fixtureId: string;

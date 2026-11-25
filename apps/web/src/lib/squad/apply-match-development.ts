@@ -1,3 +1,4 @@
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import {
@@ -7,6 +8,7 @@ import {
 } from '@/lib/squad/match-development';
 import type { AttrGroups } from '@/lib/squad/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { seenState, SQUAD_MOVED_CODE, SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 
 export type MatchTruthPatch = {
@@ -36,10 +38,12 @@ export type ApplyMatchDevelopmentResult =
       changedCount: number;
       summary: MatchDevelopmentSummary;
     }
-  | { ok: false; error: string };
+  /** `moved`: a player changed since he was read, so read again and repeat. */
+  | { ok: false; error: string; moved?: boolean };
 
 /**
- * Atomic match development via RPC (skill only).
+ * Atomic match development via RPC. The database moves the groups with the skill
+ * (`lf_move_groups`), so the groups here stay as they were read.
  * Pure growth: applyMatchDevelopmentEffects — starters, K_MATCH=5, skill ≤ potential.
  */
 export async function applyMatchDevelopment(
@@ -72,9 +76,11 @@ export async function applyMatchDevelopment(
     const patch = input.truthById?.[next.id];
     const started = input.startedIds?.has(next.id) === true;
     if (next.skill === prev.skill && !patch && !started) continue;
+    const seen = seenState(seniors[i]!);
     updates.push({
       id: next.id,
       skill: next.skill,
+      ...(seen ? { seen } : {}),
       ...(started ? { played: true } : {}),
       ...(patch?.status ? { status: patch.status } : {}),
       ...(patch?.groups
@@ -97,15 +103,20 @@ export async function applyMatchDevelopment(
     });
   }
 
-  const { data, error } = await serverDb(supabase).rpc(
-    'apply_match_development' as never,
-    {
-      p_club_id: input.clubId,
-      p_match_key: input.matchKey,
-      p_updates: updates,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    serverDb(supabase).rpc(
+      'apply_match_development' as never,
+      {
+        p_club_id: input.clubId,
+        p_match_key: input.matchKey,
+        p_updates: updates,
+      } as never,
+    ),
   );
 
+  if (error?.code === SQUAD_MOVED_CODE) {
+    return { ok: false, error: SQUAD_MOVED_ERROR, moved: true };
+  }
   if (error) {
     // P0001: the function refused a row and rolled everything back.
     return {
@@ -139,19 +150,26 @@ export async function applyMatchDevelopment(
   };
 }
 
-/** Pure preview for Post Match UI (same rules as persist). Senior filter only. */
+/** What the save of this match will give, as "Name +1". Same rules, key and eleven as persist. */
 export function previewMatchDevelopment(
   activePlayers: readonly PlayerRowDto[],
-): MatchDevelopmentSummary {
+  matchKey: string,
+  startedIds: ReadonlySet<string>,
+): readonly string[] {
   const seniors = filterSeniorPlayers(activePlayers);
   const before = seniors.map((p) => ({
     id: p.id,
     name: p.name,
     skill: p.skill,
     potential: p.potential,
-    starter: p.starter,
+    starter: startedIds.has(p.id),
     age: p.age,
   }));
-  const after = applyMatchDevelopmentEffects(before, 'preview');
-  return summarizeMatchDevelopment(before, after);
+  const skillAfter = new Map(
+    applyMatchDevelopmentEffects(before, matchKey).map((p) => [p.id, p.skill]),
+  );
+  return before.flatMap((p) => {
+    const gain = (skillAfter.get(p.id) ?? p.skill) - p.skill;
+    return gain > 0 ? [`${p.name} +${gain}`] : [];
+  });
 }

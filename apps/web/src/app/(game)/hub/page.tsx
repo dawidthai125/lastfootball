@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation';
 
+import { FinishMatchSave } from '@/components/match/FinishMatchSave';
+import { findUnfinishedMatch } from '@/lib/fixtures/unfinished-match';
 import { EarlyClubHub } from '@/components/hub/EarlyClubHub';
 import { loadEmailGate } from '@/lib/auth/email-confirm';
-import { resolveHubFanLabel } from '@/lib/club/fans';
+import { lastMoodFixture, resolveHubFanLabel } from '@/lib/club/fans';
 import { resolveSeasonGoalProgressLine } from '@/lib/season/season-goal';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
@@ -13,7 +15,7 @@ import { resolveStarterPath } from '@/lib/starter/steps';
 import { loadStarterProgress } from '@/lib/starter/store';
 import { contractPreview } from '@/lib/season/contract-expiry';
 import { createClient } from '@/lib/supabase/server';
-import { latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
 import {
   countPlayedInList,
   ensureClubFixtures,
@@ -91,6 +93,7 @@ export default async function HubPage() {
             skill: player.skill,
             academyTrack: Boolean(player.academyTrack),
             departed: player.departedAt != null || player.status === 'DEPARTED',
+            goalkeeper: player.pos === 'BR',
           })),
         )
       : null;
@@ -129,6 +132,7 @@ export default async function HubPage() {
         starter: player.starter,
         onLoan: player.onLoan === true,
         loanedIn: player.loanedIn === true,
+        intlAbsentUntil: player.intlAbsentUntil ?? null,
       })),
       alreadyAbsentIds: activePlayers
         .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= todayUtc)
@@ -143,6 +147,7 @@ export default async function HubPage() {
       todayUtc,
     ).ok;
   const supabase = await createClient();
+  const playedDay = await lastPlayedOf(supabase, club.id, fixtures);
   const finance = resolveClubFinance(
     club,
     movements,
@@ -156,21 +161,13 @@ export default async function HubPage() {
     unlockPlayedCount(leaguePlayedCount, club.seasonNumber),
     TRAINING_THIN.UNLOCK_AFTER_PLAYED,
   );
-  const withCup = phase === 'OFFSEASON' ? fixtures : await ensurePlayerCupTie(club, fixtures);
-  const cupLink =
-    phase === 'OFFSEASON' ? null : resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
+  const withCup = await ensurePlayerCupTie(club, fixtures);
+  const cupLink = resolveHubCupLink(resolveNationalCup(club, withCup).playerTie);
   const mood = await supabase.from('clubs').select('fan_mood').eq('id', club.id).maybeSingle();
   const moodValue = mood.error || !mood.data ? null : (mood.data as { fan_mood?: number }).fan_mood;
   const fanLabel = resolveHubFanLabel(
     typeof moodValue === 'number' ? moodValue : null,
-    lastPlayed
-      ? {
-          id: lastPlayed.id,
-          homeScore: lastPlayed.homeScore,
-          awayScore: lastPlayed.awayScore,
-          isHome: lastPlayed.isHome,
-        }
-      : null,
+    lastMoodFixture(fixtures),
   );
   const starterPath =
     phase === 'SEASON' && club.seasonNumber <= 2
@@ -183,30 +180,35 @@ export default async function HubPage() {
     playedCount: leaguePlayedCount,
   });
 
+  const unfinished = await findUnfinishedMatch(club.id, fixtures);
+
   return (
-    <EarlyClubHub
-      club={club}
-      nextFixture={nextFixture}
-      lastPlayedFixture={lastPlayed}
-      hasFixtures={hasFixtures}
-      leaguePositionLabel={leaguePositionLabel}
-      cashLabel={cashLabel}
-      trainingUnlocked={trainingUnlocked}
-      seasonGoalLine={seasonGoalLine}
-      wageNote={phase === 'SEASON' ? finance.wageNote : null}
-      playedCount={leaguePlayedCount}
-      todayUtc={todayUtc}
-      seasonReport={seasonReport}
-      departurePreview={departurePreview}
-      retirementFarewell={retirementFarewell}
-      cupLink={cupLink}
-      fanLabel={fanLabel}
-      starterPath={starterPath}
-      matchesBlocked={emailGate.matchesBlocked}
-      lastPlayedAt={latestPlayedAt(fixtures)}
-      lineupBlocked={lineupBlocked}
-      dressingConflict={dressingConflict}
-      intlCallup={intlCallup}
-    />
+    <>
+      {unfinished ? <FinishMatchSave match={unfinished} /> : null}
+      <EarlyClubHub
+        club={club}
+        nextFixture={nextFixture}
+        lastPlayedFixture={lastPlayed}
+        hasFixtures={hasFixtures}
+        leaguePositionLabel={leaguePositionLabel}
+        cashLabel={cashLabel}
+        trainingUnlocked={trainingUnlocked}
+        seasonGoalLine={seasonGoalLine}
+        wageNote={phase === 'SEASON' ? finance.wageNote : null}
+        playedCount={leaguePlayedCount}
+        todayUtc={todayUtc}
+        seasonReport={seasonReport}
+        departurePreview={departurePreview}
+        retirementFarewell={retirementFarewell}
+        cupLink={cupLink}
+        fanLabel={fanLabel}
+        starterPath={starterPath}
+        matchesBlocked={emailGate.matchesBlocked}
+        lastPlayedAt={playedDay.match}
+        lineupBlocked={lineupBlocked}
+        dressingConflict={dressingConflict}
+        intlCallup={intlCallup}
+      />
+    </>
   );
 }

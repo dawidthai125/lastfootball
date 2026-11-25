@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/FormControls';
+import { keepFields } from '@/components/ui/kept-form';
 import { reportClub } from '@/lib/moderation/report';
 import { MODERATION_INITIAL, REPORT_REASONS } from '@/lib/moderation/types';
 
@@ -26,7 +27,11 @@ export function ReportClubForm({ clubId }: { readonly clubId: string }) {
     );
   }
   return (
-    <form action={action} style={{ display: 'grid', gap: 'var(--lf-space-2)', maxWidth: '22rem' }}>
+    <form
+      action={action}
+      onSubmit={keepFields(action)}
+      style={{ display: 'grid', gap: 'var(--lf-space-2)', maxWidth: '22rem' }}
+    >
       <input type="hidden" name="clubId" value={clubId} />
       <Select name="reason" aria-label="Powód zgłoszenia" defaultValue="name" disabled={pending}>
         {Object.entries(REPORT_REASONS).map(([value, label]) => (

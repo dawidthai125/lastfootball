@@ -20,6 +20,8 @@ export function matchPlayerLines(state: MatchState): readonly MatchPlayerLine[] 
     .filter(
       (row) =>
         row.minutesPlayed > 0 ||
+        // Off in the first minute: he played, for no full minute.
+        state.substitutions.some((s) => s.playerOutId === row.playerId) ||
         row.goals > 0 ||
         row.assists > 0 ||
         state.cards.some((c) => c.playerId === row.playerId) ||

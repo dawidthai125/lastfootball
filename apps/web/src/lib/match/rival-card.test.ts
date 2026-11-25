@@ -17,7 +17,7 @@ describe('buildRivalCardLines', () => {
         starterForms: null,
         ...blankStyle,
       }),
-    ).toEqual(['Pierwszy mecz']);
+    ).toEqual(['Pierwszy mecz w tym sezonie']);
   });
 
   it('formats the last home or away score, rounds starter form, and reuses the style sentence', () => {
@@ -59,7 +59,7 @@ describe('buildRivalCardLines', () => {
         styleTempo: 0,
         styleWidth: null,
       }),
-    ).toEqual(['Pierwszy mecz']);
+    ).toEqual(['Pierwszy mecz w tym sezonie']);
   });
 });
 

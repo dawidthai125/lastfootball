@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
@@ -9,6 +10,7 @@ import {
   generateAcademyCandidates,
   intakeWaitDays,
   isOldIntakeId,
+  rosterFullSentence,
   canPromoteProspect,
 } from '@/lib/academy/intake';
 import {
@@ -26,6 +28,7 @@ import { resolveHubPhase } from '@/lib/hub';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { isAcademyProspect, type PlayerRowDto } from '@/lib/squad/types';
 import { createClient } from '@/lib/supabase/server';
+import { TRANSFERS_THIN } from '@/lib/transfers/types';
 import { isCoachGroup } from '@/lib/training/coach';
 
 function revalidateAcademyPaths() {
@@ -40,7 +43,7 @@ async function requireSeasonClub() {
   if (!env.isSupabaseConfigured) {
     return { error: 'Supabase nie jest skonfigurowany.' } as const;
   }
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' } as const;
 
   const fixtures = await listClubFixtures(club.id);
@@ -126,7 +129,8 @@ export async function intakeAcademyProspect(
   if ('error' in gate) return { error: gate.error };
   const { club } = gate;
 
-  const rows = await listClubPlayers(club.id);
+  const rows = await listClubPlayers(club.id).catch(() => null);
+  if (!rows) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const admin = tryAdminClient();
   if (!admin) return { error: 'Nabór nie jest skonfigurowany na serwerze.' };
   const records = await loadAcademyRecords(admin, club.id, new Date());
@@ -321,34 +325,29 @@ export async function promoteAcademyProspect(
   const playerId = String(formData.get('playerId') ?? '');
   if (!playerId) return { error: 'Brak zawodnika.' };
 
-  const rows = await listClubPlayers(club.id);
+  const rows = await listClubPlayers(club.id).catch(() => null);
+  if (!rows) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const check = canPromoteProspect(rows, playerId, club.id);
   if (!check.ok) return { error: check.error };
 
-  const supabase = await createClient();
-  const now = new Date().toISOString();
-  const { data, error } = await serverDb(supabase)
-    .from('players')
-    .update({
-      academy_track: false,
-      promoted_at: now,
-      origin: 'academy',
-      joined_at: now,
-      starter: false,
-      transfer_listed_at: null,
-    } as never)
-    .eq('id', playerId)
-    .eq('club_id', club.id)
-    .eq('academy_track', true)
-    .is('departed_at', null)
-    .select('id, name')
-    .maybeSingle();
+  const failed = 'Nie udało się wypromować zawodnika.';
+  const admin = tryAdminClient();
+  if (!admin) return { error: failed };
+  // Counts the squad again under the club lock.
+  const { data, error } = await retryDeadlock(() =>
+    admin.rpc(
+      'promote_academy_player' as never,
+      {
+        p_club_id: club.id,
+        p_player_id: playerId,
+        p_max_roster: TRANSFERS_THIN.MAX_ROSTER,
+      } as never,
+    ),
+  );
+  const row = data as { ok?: boolean; reason?: string; name?: string } | null;
+  if (error || !row) return { error: failed };
+  if (row.ok !== true) return { error: row.reason === 'roster' ? rosterFullSentence() : failed };
 
-  if (error || !data) {
-    return { error: 'Nie udało się wypromować zawodnika.' };
-  }
-
-  const name = (data as { name: string }).name;
   revalidateAcademyPaths();
-  return { ok: true, message: `${name} trafił do kadry seniorów.` };
+  return { ok: true, message: `${row.name ?? 'Junior'} trafił do kadry seniorów.` };
 }

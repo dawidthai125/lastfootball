@@ -29,7 +29,11 @@ export function canAddToShortlist(
   if (shortlistIds.includes(playerId)) {
     return { ok: false, error: 'Zawodnik jest już na shortliście.' };
   }
-  if (shortlistIds.length >= SCOUTING_THIN.MAX_SHORTLIST) {
+  // Players sold or taken off the market are not on the screen, so they take no place.
+  const shown = shortlistIds.filter((id) =>
+    isEligibleShortlistTarget(id, ownPlayers, liveListings),
+  ).length;
+  if (shown >= SCOUTING_THIN.MAX_SHORTLIST) {
     return { ok: false, error: `Limit shortlisty: ${SCOUTING_THIN.MAX_SHORTLIST}.` };
   }
   if (!isEligibleShortlistTarget(playerId, ownPlayers, liveListings)) {

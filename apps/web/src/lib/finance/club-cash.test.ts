@@ -65,6 +65,22 @@ describe('club cash', () => {
     expect(row.cash_balance).toBe(150);
   });
 
+  it('counts a spend whose reply was lost as done only when the whole row landed', async () => {
+    const spend = { clubId: 'c1', expected: 100, next: 60, extra: { stands_level: 1 } };
+    const landed = { cash_balance: 100, stands_level: 0 };
+    expect(await writeClubCash(spend, fakeDb(landed, undefined, true))).toBe('ok');
+    const lost = { data: null, error: { message: 'reset' } };
+    const chain = { eq: () => chain, select: () => chain, maybeSingle: async () => lost };
+    const read = { data: { cash_balance: 100, stands_level: 0 }, error: null };
+    const refused = {
+      from: () => ({
+        select: () => ({ eq: () => ({ maybeSingle: async () => read }) }),
+        update: () => chain,
+      }),
+    };
+    expect(await writeClubCash(spend, refused as never)).toBe('error');
+  });
+
   it('reports an error without a server key', async () => {
     expect(await writeClubCash({ clubId: 'c1', expected: 1, next: 2 }, null)).toBe('error');
     expect(await creditClubCash('c1', 1, null)).toBeNull();

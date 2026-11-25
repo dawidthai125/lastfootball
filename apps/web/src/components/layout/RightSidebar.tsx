@@ -41,9 +41,11 @@ export function RightSidebar() {
 
   const leagueLabel = resolveLeagueTierLabel(club.leagueTier);
   const contextLine =
-    phase === 'SEASON' || phase === 'OFFSEASON'
+    phase === 'SEASON'
       ? `${leagueLabel} · prowadzisz sezon`
-      : `${leagueLabel} · poznaj skład i wróć na boisko`;
+      : phase === 'OFFSEASON'
+        ? `${leagueLabel} · przerwa między sezonami`
+        : `${leagueLabel} · poznaj skład i wróć na boisko`;
 
   return (
     <aside

@@ -1,6 +1,8 @@
+import type { LeagueTier } from '@/lib/league/league-tier';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
+import { emergencyJunior, missingRole } from '@/lib/squad/emergency-junior';
 import { resolveClubSquad } from '@/lib/squad/resolve-club-squad';
-import type { PlayerRowDto } from '@/lib/squad/types';
+import { filterSeniorPlayers, type PlayerRowDto } from '@/lib/squad/types';
 import {
   pickBestXi,
   replaceUnavailableStarters,
@@ -37,4 +39,55 @@ export function repairLineup(
     if (!lineupProblem(clubId, fixed, today)) return fixed;
   }
   return [...rows];
+}
+
+const STAND_IN = 'j-';
+
+/** A junior who plays one match for a squad too short for an eleven. Not a player of the club. */
+export function isStandIn(id: string): boolean {
+  return id.startsWith(STAND_IN);
+}
+
+/**
+ * A line-up that may play, always: the fit players, and juniors of the level of the league in
+ * the empty places. The other club must not wait for this one (D138.4). Nothing is saved.
+ */
+export function fillLineup(
+  clubId: string,
+  tier: LeagueTier,
+  rows: readonly PlayerRowDto[],
+  today: string = utcDateString(),
+): PlayerRowDto[] {
+  const squad = [...rows];
+  const worn = new Set(rows.map((row) => row.shirtNumber));
+  for (let i = 1; i <= 11; i += 1) {
+    const seniors = filterSeniorPlayers(squad);
+    const role = missingRole(
+      seniors.length > 0 ? resolveClubSquad({ id: clubId }, seniors).players : [],
+      today,
+    );
+    if (!role) break;
+    const shirtNumber = Array.from({ length: 99 }, (_, n) => 99 - n).find((n) => !worn.has(n))!;
+    worn.add(shirtNumber);
+    squad.push({
+      ...emergencyJunior(tier, `${clubId}:${STAND_IN}${i}`),
+      ...role,
+      id: `${STAND_IN}${clubId.replace(/-/g, '').slice(0, 8)}-${i}`,
+      clubId,
+      shirtNumber,
+      starter: false,
+      captain: false,
+      status: 'READY',
+      nationality: 'POL',
+      version: 1,
+      departedAt: null,
+      transferListedAt: null,
+      academyTrack: false,
+      promotedAt: null,
+      energy: 80,
+      form: 60,
+      morale: 60,
+    });
+  }
+  return repairLineup(clubId, squad, today);
 }

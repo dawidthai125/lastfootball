@@ -70,7 +70,7 @@ export type MatchEntry =
 export async function enterMatch(
   clubId: string,
   fixtureId: string,
-  seniors: readonly { readonly id: string; readonly onLoan?: boolean }[],
+  seniors: readonly { readonly id: string }[],
 ): Promise<MatchEntry> {
   const row = await readOpenRow(clubId);
   if (row === 'error') return { kind: 'error' };
@@ -108,18 +108,37 @@ export async function enterMatch(
   return { kind: 'resume', snapshot, tick: row.progress_tick, log: storedLog(row.manager_log) };
 }
 
-/** Open match that went on: this one, another one, or none. Reads only. */
+/** Open match that went on, or none. `unknown` = a read failed: whoever asks must not act. */
 export async function openMatchOf(clubId: string): Promise<string | null> {
   const row = await readOpenRow(clubId);
-  if (!row || row === 'error' || row.progress_tick <= 0) return null;
-  const { data } =
+  if (row === 'error') return 'unknown';
+  if (!row || row.progress_tick <= 0) return null;
+  const { data, error } =
     (await tryAdminClient()
       ?.from('fixtures')
       .select('status')
       .eq('id', row.fixture_id)
       .eq('club_id', clubId)
       .maybeSingle()) ?? {};
+  if (error) return 'unknown';
   return data?.status === 'upcoming' ? row.fixture_id : null;
+}
+
+export const OPEN_MATCH_ERROR = 'Masz rozpoczęty mecz. Dokończ go najpierw.';
+export const OPEN_MATCH_PLAYER_ERROR =
+  'Ten zawodnik gra w rozpoczętym meczu. Najpierw dokończ mecz.';
+
+/** Giving him away would drop the match and start it again from 0:0. */
+export async function playsInOpenMatch(clubId: string, playerId: string): Promise<boolean> {
+  const row = await readOpenRow(clubId);
+  if (row === 'error') return true;
+  if (!row) return false;
+  const snapshot = readKickoffSnapshot(row.snapshot, row.fixture_id, clubId);
+  if (![...(snapshot?.ourXi ?? []), ...(snapshot?.ourBench ?? [])].some((p) => p.id === playerId)) {
+    return false;
+  }
+  const open = await openMatchOf(clubId);
+  return open === row.fixture_id || open === 'unknown';
 }
 
 /** False when the copy is gone, another window is further, or an old decision was changed. */

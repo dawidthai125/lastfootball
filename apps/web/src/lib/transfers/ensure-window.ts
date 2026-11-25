@@ -20,6 +20,7 @@ export async function ensureTransferWindow(supabase: AppSupabase, clubId: string
   if (!club) return;
 
   const played = await countClubPlayedFixtures(supabase, clubId);
+  if (played == null) return;
   const open = isTransferWindowOpen({
     season: club.season_number ?? 1,
     offseason: club.season_phase === 'offseason',

@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/FormControls';
+import { keepFields, useKeptForm } from '@/components/ui/kept-form';
 import {
   blockAccount,
   closeReport,
@@ -50,11 +51,12 @@ export function ClubTools({
   const [renamed, rename, renaming] = useActionState(renameClub, MODERATION_INITIAL);
   const [locked, lock, locking] = useActionState(blockAccount, MODERATION_INITIAL);
   const [freed, free, freeing] = useActionState(unblockAccount, MODERATION_INITIAL);
+  const renameForm = useKeptForm(rename, renamed);
   return (
     <details>
       <summary>Działania</summary>
       <div style={{ display: 'grid', gap: 'var(--lf-space-3)', padding: 'var(--lf-space-2) 0' }}>
-        <form action={rename} style={FORM}>
+        <form {...renameForm} style={FORM}>
           <input type="hidden" name="clubId" value={clubId} />
           <Input name="name" aria-label="Nowa nazwa" defaultValue={name} required />
           <Input name="shortName" aria-label="Nowy skrót" defaultValue={shortName} required />
@@ -73,7 +75,7 @@ export function ClubTools({
             </Button>
           </form>
         ) : (
-          <form action={lock} style={FORM}>
+          <form action={lock} onSubmit={keepFields(lock)} style={FORM}>
             <input type="hidden" name="clubId" value={clubId} />
             <Input name="reason" aria-label="Powód blokady" placeholder="Powód" required />
             <Input name="confirm" aria-label="Potwierdzenie" placeholder="Wpisz BLOKUJ" required />

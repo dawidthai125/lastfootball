@@ -1,6 +1,8 @@
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { aiSaleAsk } from '@/lib/transfers/fair-sale';
 import { serverDb, tryAdminClient } from '@/lib/supabase/admin';
 import { creditClubCash } from '@/lib/finance/club-cash';
+import { OPEN_MATCH_PLAYER_ERROR, playsInOpenMatch } from '@/lib/match/kickoff-store';
 import { freeShirt } from '@/lib/squad/free-shirt';
 import { resolvePlayerPotential } from '@/lib/squad/potential';
 import type { createClient } from '@/lib/supabase/server';
@@ -109,24 +111,30 @@ async function invokeLiveH2hRpc(
     acceptOfferId?: string;
   },
 ): Promise<CompleteBuyResult> {
-  const { data, error } = await supabase.rpc(
-    'complete_live_h2h_transfer' as never,
-    {
-      p_buyer_club_id: input.buyerClubId,
-      p_seller_club_id: input.sellerClubId,
-      p_player_id: input.playerId,
-      p_agreed_amount: input.agreedAmount,
-      p_accept_offer_id: input.acceptOfferId ?? null,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    supabase.rpc(
+      'complete_live_h2h_transfer' as never,
+      {
+        p_buyer_club_id: input.buyerClubId,
+        p_seller_club_id: input.sellerClubId,
+        p_player_id: input.playerId,
+        p_agreed_amount: input.agreedAmount,
+        p_accept_offer_id: input.acceptOfferId ?? null,
+      } as never,
+    ),
   );
 
   if (error) {
-    return { ok: false, error: error.message || 'Transfer Live nieudany.' };
+    console.error('complete_live_h2h_transfer failed', { code: error.code });
+    return {
+      ok: false,
+      error: 'Transfer nie doszedł do skutku. Odśwież stronę i spróbuj ponownie.',
+    };
   }
 
   const row = data as LiveRpcResult | null;
   if (!row || row.ok !== true || !row.player_id || typeof row.amount !== 'number') {
-    return { ok: false, error: row?.error || 'Transfer Live nieudany.' };
+    return { ok: false, error: row?.error || 'Transfer nie doszedł do skutku.' };
   }
 
   return { ok: true, playerId: row.player_id, amount: row.amount };
@@ -285,6 +293,9 @@ export async function completeTransferSell(
   supabase: AppSupabase,
   input: InstantSellInput | LiveSellInput,
 ): Promise<CompleteSellResult> {
+  if (await playsInOpenMatch(input.clubId, input.playerId)) {
+    return { ok: false, error: OPEN_MATCH_PLAYER_ERROR };
+  }
   if (input.source === 'live') {
     if (!input.transferWindowOpen) {
       return { ok: false, error: 'Okno transferowe jest zamknięte.' };
@@ -325,14 +336,16 @@ export async function completeTransferSell(
 
   const admin = tryAdminClient();
   if (!admin) return { ok: false, error: SELL_NOT_SAVED };
-  const { data, error } = await admin.rpc(
-    'sell_market_player' as never,
-    {
-      p_club_id: input.clubId,
-      p_player_id: input.playerId,
-      p_amount: input.agreedAmount,
-      p_min_roster: TRANSFERS_THIN.MIN_ROSTER,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    admin.rpc(
+      'sell_market_player' as never,
+      {
+        p_club_id: input.clubId,
+        p_player_id: input.playerId,
+        p_amount: input.agreedAmount,
+        p_min_roster: TRANSFERS_THIN.MIN_ROSTER,
+      } as never,
+    ),
   );
   const row = data as { ok?: boolean; reason?: string; amount?: number } | null;
   if (error || !row) {

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 
 import { SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
 import { formatMoney } from '@/lib/finance/format-money';
@@ -80,19 +80,30 @@ function CandidateRow({
  * Organizes facts; never scores players. Domain only via resolveClubScouting.
  */
 export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
-  const [addState, addAction, addPending] = useActionState(
-    addScoutShortlist,
-    SCOUTING_ACTION_INITIAL,
-  );
-  const [removeState, removeAction, removePending] = useActionState(
+  const [last, setLast] = useState<'add' | 'remove' | 'report'>('add');
+  const [addState, add, addPending] = useActionState(addScoutShortlist, SCOUTING_ACTION_INITIAL);
+  const [removeState, remove, removePending] = useActionState(
     removeScoutShortlist,
     SCOUTING_ACTION_INITIAL,
   );
-  const [reportState, reportAction, reportPending] = useActionState(
+  const [reportState, report, reportPending] = useActionState(
     buyScoutReport,
     SCOUTING_ACTION_INITIAL,
   );
   const pending = addPending || removePending;
+  // Only the newest answer is shown.
+  const addAction = (payload: FormData) => {
+    setLast('add');
+    add(payload);
+  };
+  const removeAction = (payload: FormData) => {
+    setLast('remove');
+    remove(payload);
+  };
+  const reportAction = (payload: FormData) => {
+    setLast('report');
+    report(payload);
+  };
 
   if (!scouting.unlocked) {
     const art = resolveSoftLockIllustration('scouting');
@@ -109,12 +120,9 @@ export function ScoutingView({ scouting }: { scouting: ScoutingDto }) {
     );
   }
 
-  const err = addState.error || removeState.error || reportState.error;
-  const okMsg =
-    (addState.ok && addState.message) ||
-    (removeState.ok && removeState.message) ||
-    (reportState.ok && reportState.message) ||
-    null;
+  const shown = { add: addState, remove: removeState, report: reportState }[last];
+  const err = shown.error;
+  const okMsg = (shown.ok && shown.message) || null;
 
   const marketCandidates = scouting.candidates.filter((c) => c.source === 'market_listed');
   const ownCandidates = scouting.candidates.filter((c) => c.source === 'own_senior');

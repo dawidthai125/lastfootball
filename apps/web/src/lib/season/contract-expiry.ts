@@ -1,3 +1,4 @@
+import { loanWage } from '@/lib/squad/loan';
 import { demandWage, isTalkPersonality } from '@/lib/squad/contract-talk';
 
 /** The board keeps enough people to play: below this nobody else may leave (D139). */
@@ -55,11 +56,25 @@ export function planContractExpiry<T extends ContractPlayer>(
   return { leave, keep };
 }
 
-/** What the board pays a player it keeps: his own demand. */
-export function keptWage(player: Pick<ContractPlayer, 'wage' | 'personality'>): number | null {
+/**
+ * What the board pays a player it keeps: his own demand. During a loan the full wage waits in
+ * the bank and half of it is paid, so the demand starts from the full one.
+ */
+export function keptWage(
+  player: Pick<ContractPlayer, 'wage' | 'personality'> & {
+    readonly onLoan?: boolean;
+    readonly wageBank?: number;
+  },
+): { readonly wage: number; readonly bank?: number } | null {
   if (typeof player.wage !== 'number') return null;
   const personality = player.personality ?? '';
-  return demandWage(player.wage, isTalkPersonality(personality) ? personality : 'spokojny');
+  const ask = (wage: number) =>
+    demandWage(wage, isTalkPersonality(personality) ? personality : 'spokojny');
+  if (player.onLoan !== true || typeof player.wageBank !== 'number') {
+    return { wage: ask(player.wage) };
+  }
+  const bank = ask(player.wageBank);
+  return { wage: loanWage(bank), bank };
 }
 
 function names(players: readonly ContractPlayer[], max = 3): string {

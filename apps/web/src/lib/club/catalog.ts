@@ -34,6 +34,8 @@ export const COLOR_PRESETS: ColorPreset[] = [
 
 export function suggestShortName(name: string): string {
   const cleaned = name
+    // NFD does not split Ł.
+    .replace(/ł/gi, 'L')
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
     .toUpperCase()

@@ -5,12 +5,14 @@ import { useActionState } from 'react';
 import { requestPasswordReset } from '@/lib/auth/actions';
 import { AUTH_ACTION_INITIAL } from '@/lib/auth/types';
 import { Field, Input } from '@/components/ui/FormControls';
+import { useKeptForm } from '@/components/ui/kept-form';
 
 export function ForgotPasswordForm() {
   const [state, action, pending] = useActionState(requestPasswordReset, AUTH_ACTION_INITIAL);
+  const form = useKeptForm(action, state);
 
   return (
-    <form action={action} className="lf-auth-form">
+    <form {...form} className="lf-auth-form">
       {state.error ? (
         <p className="lf-auth-form__error" role="alert">
           {state.error}

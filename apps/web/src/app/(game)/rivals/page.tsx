@@ -30,7 +30,7 @@ export default async function RivalsPage() {
     <div>
       <SectionHeader
         title="Rywalizacja"
-        subtitle="Wyzwanie jest asynchroniczne: grasz obie kadry, rywal dostaje wynik. Jedno dziennie, bez nagród i pensji, nie zajmuje dnia ligi. Energia, kontuzje i kartki liczą się jak w meczu."
+        subtitle="Wyzwanie nie wymaga obecności rywala: grasz obie kadry, rywal dostaje wynik. Jedno dziennie, bez nagród i pensji, nie zajmuje dnia ligi. Energia, kontuzje i kartki liczą się jak w meczu."
       />
       <Panel title="Kluby">
         {rivals.length === 0 ? (

@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -53,14 +54,13 @@ export async function assignShirtNumber(
     return { error: 'Ten zawodnik nie jest w Twojej kadrze.' };
   }
 
-  for (const update of plan.updates) {
-    const { error: writeErr } = await supabase
-      .from('players')
-      .update({ shirt_number: update.shirtNumber } as never)
-      .eq('club_id', clubId)
-      .eq('id', update.id);
-    if (writeErr) return { error: 'Nie udało się zapisać numeru.' };
-  }
+  const { error: writeErr } = await retryDeadlock(() =>
+    supabase.rpc(
+      'save_shirt_numbers' as never,
+      { p_club_id: clubId, p_updates: plan.updates } as never,
+    ),
+  );
+  if (writeErr) return { error: 'Nie udało się zapisać numeru.' };
 
   revalidatePath('/squad');
   revalidatePath(`/players/${playerId}`);

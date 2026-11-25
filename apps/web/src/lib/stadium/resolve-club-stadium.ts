@@ -51,20 +51,17 @@ function attendanceCopy(
     case 'lively':
       return {
         label: 'Głośno',
-        summary:
-          'Ostatni mecz u siebie skończył się zwycięstwem — atmosfera domu brzmi żywo. To odczyt jakościowy, nie licznik widzów.',
+        summary: 'Ostatni mecz u siebie skończył się zwycięstwem. Na trybunach jest głośno.',
       };
     case 'steady':
       return {
         label: 'Solidnie',
-        summary:
-          'Ostatni remis u siebie — trybuny spokojne, ale obecne. Pasmo informacyjne, bez symulacji frekwencji.',
+        summary: 'Ostatni mecz u siebie skończył się remisem. Na trybunach jest spokojnie.',
       };
     case 'quiet':
       return {
         label: 'Spokojnie',
-        summary:
-          'Po porażce u siebie dom przycichł. Sygnał jakościowy dla menedżera — bez wpływu na silnik meczu.',
+        summary: 'Po porażce u siebie trybuny przycichły.',
       };
     default:
       return {
@@ -72,7 +69,7 @@ function attendanceCopy(
         summary:
           homePlayedCount < 1
             ? 'Jeszcze nie graliście u siebie w tym sezonie — frekwencja pozostaje nieznana.'
-            : 'Brak czytelnego odczytu ostatniego meczu domowego.',
+            : 'Nie znamy wyniku ostatniego meczu u siebie.',
       };
   }
 }

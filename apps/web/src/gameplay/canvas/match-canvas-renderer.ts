@@ -154,13 +154,18 @@ export function createMatchCanvasRenderer(
     },
   };
 
+  function size(el: HTMLElement) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = el.clientWidth || 640;
+    const h = el.clientHeight || 360;
+    return { dpr, w, h, pxW: Math.floor(w * dpr), pxH: Math.floor(h * dpr) };
+  }
+
   function resize() {
     if (!canvas || !root) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = root.clientWidth || 640;
-    const h = root.clientHeight || 360;
-    canvas.width = Math.max(1, Math.floor(w * dpr));
-    canvas.height = Math.max(1, Math.floor(h * dpr));
+    const { dpr, w, h, pxW, pxH } = size(root);
+    canvas.width = pxW;
+    canvas.height = pxH;
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -170,12 +175,8 @@ export function createMatchCanvasRenderer(
     if (!running) return;
     raf = requestAnimationFrame(loop);
     if (!ctx || !canvas || !root) return;
-    if (
-      canvas.width !==
-      Math.floor((root.clientWidth || 1) * Math.min(window.devicePixelRatio || 1, 2))
-    ) {
-      resize();
-    }
+    const { pxW, pxH } = size(root);
+    if (canvas.width !== pxW || canvas.height !== pxH) resize();
 
     const now = performance.now();
     if (from && to) {
@@ -279,7 +280,7 @@ function paint(
     ctx.font = 'bold 10px IBM Plex Sans, ui-sans-serif, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('REPLAY', ox + 44, oy + ph - 19);
+    ctx.fillText('POWTÓRKA', ox + 44, oy + ph - 19);
     ctx.restore();
   }
 }
@@ -536,20 +537,17 @@ function worldToCanvas(
   return { x: ox + p.x * sx, y: oy + p.y * sy };
 }
 
-function lerpFrame(a: VisualFrame, b: VisualFrame, t: number): VisualFrame {
-  const byId = new Map(b.players.map((p) => [p.playerId, p]));
-  const players = a.players.map((pa) => {
-    const pb = byId.get(pa.playerId) ?? pa;
+export function lerpFrame(a: VisualFrame, b: VisualFrame, t: number): VisualFrame {
+  const byId = new Map(a.players.map((p) => [p.playerId, p]));
+  // Only who is on the pitch now: a player who went off must not stay drawn.
+  const players = b.players.map((pb) => {
+    const pa = byId.get(pb.playerId) ?? pb;
     return {
       ...pb,
       x: lerp(pa.x, pb.x, t),
       y: lerp(pa.y, pb.y, t),
     };
   });
-  // Include any new players only in b
-  for (const pb of b.players) {
-    if (!a.players.some((p) => p.playerId === pb.playerId)) players.push(pb);
-  }
   return {
     tick: b.tick,
     phase: b.phase,

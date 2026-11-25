@@ -15,6 +15,7 @@ import {
   hasPlayedUnlock,
   unlockPlayedCount,
 } from '@/lib/fixtures';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { resolveHubPhase, resolveHubSession, resolvePrimaryCta } from '@/lib/hub';
 import { resolveClubInvitations, type ClubInvitationsDto } from '@/lib/invitations';
@@ -83,13 +84,15 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const lastPlayedFixture = pickLastPlayed(leagueFixtures);
     const phase = resolveHubPhase(club, { hasFixtures });
     const hubSession = resolveHubSession(phase, nextFixture, lastPlayedFixture);
+    const supabase = await createClient();
+    const playedDay = await lastPlayedOf(supabase, club.id, fixtures);
     const primary = resolvePrimaryCta(phase, hubSession, {
       nextFixture,
       lastPlayedFixture,
+      lastPlayedAt: playedDay.match,
       hasFixtures,
     });
 
-    const supabase = await createClient();
     const today = utcDateString();
     const [activePlayers, h2hOffers, farewellFlash, movements, board, upkeep, matchEvents] =
       await Promise.all([
@@ -120,7 +123,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
     const loanOffers = resolveIncomingLoanOffers({
       clubId: club.id,
       transferWindowOpen: club.transferWindowOpen,
-      rosterCount: filterSeniorPlayers(activePlayers).length,
+      roster: filterSeniorPlayers(activePlayers),
       today,
     });
     const intl = resolveIntlCallup({
@@ -134,6 +137,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
         starter: player.starter,
         onLoan: player.onLoan === true,
         loanedIn: player.loanedIn === true,
+        intlAbsentUntil: player.intlAbsentUntil ?? null,
       })),
       alreadyAbsentIds: activePlayers
         .filter((player) => player.intlAbsentUntil && player.intlAbsentUntil >= today)
@@ -149,6 +153,7 @@ export default async function GameLayout({ children }: { children: ReactNode }) 
               skill: player.skill,
               academyTrack: Boolean(player.academyTrack),
               departed: player.departedAt != null || player.status === 'DEPARTED',
+              goalkeeper: player.pos === 'BR',
             })),
           )
         : null;

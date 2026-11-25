@@ -16,11 +16,11 @@ export function LandingUiCrops() {
       </figure>
 
       <figure className="lf-landing__crop">
-        <figcaption className="lf-landing__crop-caption">Live · scorebug</figcaption>
+        <figcaption className="lf-landing__crop-caption">Mecz · na żywo</figcaption>
         <div className="lf-landing__crop-frame lf-landing__crop-frame--scorebug">
           <div className="lf-landing__crop-live">
             <span className="lf-landing__crop-live-dot" />
-            Live
+            Na żywo
           </div>
           <div className="lf-landing__crop-scoreline">
             <span>Twój klub</span>
@@ -32,23 +32,23 @@ export function LandingUiCrops() {
       </figure>
 
       <figure className="lf-landing__crop">
-        <figcaption className="lf-landing__crop-caption">XI · skład na mecz</figcaption>
+        <figcaption className="lf-landing__crop-caption">Skład na mecz</figcaption>
         <div className="lf-landing__crop-frame lf-landing__crop-frame--xi">
           <div className="lf-landing__crop-pitch">
             <span className="lf-landing__crop-slot" style={{ gridArea: 'gk' }}>
-              GK
+              BR
             </span>
             <span className="lf-landing__crop-slot" style={{ gridArea: 'df1' }}>
-              DF
+              ŚO
             </span>
             <span className="lf-landing__crop-slot" style={{ gridArea: 'df2' }}>
-              DF
+              ŚO
             </span>
             <span className="lf-landing__crop-slot" style={{ gridArea: 'mf' }}>
-              MF
+              ŚP
             </span>
             <span className="lf-landing__crop-slot" style={{ gridArea: 'fw' }}>
-              FW
+              N
             </span>
           </div>
           <p className="lf-landing__crop-xi-label">4-3-3 · gotowy do gry</p>
@@ -64,7 +64,7 @@ export function LandingScorebugCrop() {
     <div className="lf-landing__scorebug" aria-hidden>
       <span className="lf-landing__scorebug-chip">
         <span className="lf-landing__scorebug-dot" />
-        Live
+        Na żywo
       </span>
       <div className="lf-landing__scorebug-line">
         <span>Twój klub</span>

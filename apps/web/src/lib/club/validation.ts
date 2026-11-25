@@ -20,12 +20,16 @@ export function normalizeClubName(raw: string): string {
 }
 
 export function normalizeShortName(raw: string): string {
-  return raw
-    .normalize('NFD')
-    .replace(/\p{M}/gu, '')
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g, '')
-    .slice(0, 4);
+  return (
+    raw
+      // NFD does not split Ł.
+      .replace(/ł/gi, 'L')
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 4)
+  );
 }
 
 export function validateClubIdentity(input: {

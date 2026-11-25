@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 
 import { Input } from '@/components/ui/FormControls';
+import { keepFields } from '@/components/ui/kept-form';
 import { assignShirtNumber } from '@/lib/squad/actions-shirt';
 import { ASSIGN_SHIRT_INITIAL } from '@/lib/squad/shirt-action-state';
 
@@ -23,7 +24,7 @@ export function ShirtNumberForm({
     : null;
 
   return (
-    <form action={action} className="lf-sq-detail__shirt">
+    <form action={action} onSubmit={keepFields(action)} className="lf-sq-detail__shirt">
       <input type="hidden" name="playerId" value={playerId} />
       <label className="lf-sq-detail__shirt-field" htmlFor={`shirt-${playerId}`}>
         <span>Numer koszulki</span>

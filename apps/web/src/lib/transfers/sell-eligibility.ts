@@ -3,6 +3,11 @@ import type { PlayerRowDto } from '@/lib/squad/types';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { TRANSFERS_THIN } from '@/lib/transfers/types';
 
+/** Seniors the sale limits count. An emergency junior stands in for nobody (D160). */
+export function saleRoster(players: readonly PlayerRowDto[]): PlayerRowDto[] {
+  return filterSeniorPlayers(players).filter((p) => p.origin !== 'emergency');
+}
+
 /**
  * Shared sell-side qualification (LFE-TRANSFERS-04).
  * Used by List, Instant Sell, Incoming Offers (and Unlist when eligibility applies).
@@ -15,7 +20,7 @@ export function isTransferSellEligible(input: {
 }): boolean {
   if (!input.transferWindowOpen) return false;
 
-  const active = filterSeniorPlayers(input.activePlayers);
+  const active = saleRoster(input.activePlayers);
   if (active.length <= TRANSFERS_THIN.MIN_ROSTER) return false;
 
   const player = active.find((p) => p.id === input.playerId);
@@ -34,7 +39,7 @@ export function listTransferSellEligiblePlayers(input: {
   readonly activePlayers: readonly PlayerRowDto[];
 }): readonly PlayerRowDto[] {
   if (!input.transferWindowOpen) return [];
-  const active = filterSeniorPlayers(input.activePlayers);
+  const active = saleRoster(input.activePlayers);
   if (active.length <= TRANSFERS_THIN.MIN_ROSTER) return [];
 
   return active.filter((p) =>

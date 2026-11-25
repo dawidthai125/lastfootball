@@ -28,7 +28,7 @@ export function LiveEventIcon({ kind, size = 14, highlight = false, title }: Liv
     <span
       role="img"
       aria-hidden={title ? undefined : true}
-      title={title ?? kind}
+      title={title}
       style={{
         display: 'inline-block',
         width: size,

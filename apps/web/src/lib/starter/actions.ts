@@ -13,7 +13,7 @@ export async function claimStarterReward(
   _formData: FormData,
 ): Promise<StarterRewardState> {
   void _formData;
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
   const admin = tryAdminClient();
   if (!admin) return { error: 'Nagroda jest teraz niedostępna.' };

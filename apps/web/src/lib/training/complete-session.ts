@@ -1,3 +1,4 @@
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { serverDb } from '@/lib/supabase/admin';
 import type { createClient } from '@/lib/supabase/server';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
@@ -12,6 +13,7 @@ import type {
   TrainingSessionSummary,
 } from '@/lib/training/types';
 import type { PlayerRowDto } from '@/lib/squad/types';
+import { seenState, SQUAD_MOVED_CODE, SQUAD_MOVED_ERROR } from '@/lib/squad/seen-state';
 import { filterSeniorPlayers } from '@/lib/squad/types';
 import { groupKeyForFocus } from '@/lib/squad/truth';
 import { applyCoachYield, isCoachGroup, type CoachGroup } from '@/lib/training/coach';
@@ -32,11 +34,13 @@ export type CompleteTrainingResult =
       changedCount: number;
       summary: TrainingSessionSummary;
     }
-  | { ok: false; error: string };
+  /** `moved`: a player changed since he was read, so read again and repeat. */
+  | { ok: false; error: string; moved?: boolean };
 
 /**
  * Atomic team session via RPC: status + skill + clubs.last_training_on.
- * Growth rules: pure applyTrainingSessionEffects (TS SSOT).
+ * Growth rules: pure applyTrainingSessionEffects (TS SSOT). The database moves every group with
+ * the skill (`lf_move_groups`), on top of the trained one.
  */
 export async function completeTrainingSession(
   supabase: AppSupabase,
@@ -54,7 +58,8 @@ export async function completeTrainingSession(
   },
 ): Promise<CompleteTrainingResult> {
   const today = input.today ?? utcDateString();
-  const seniors = filterSeniorPlayers(input.activePlayers);
+  // A player on loan trains with the other club, as in the individual session (D158).
+  const seniors = filterSeniorPlayers(input.activePlayers).filter((p) => p.onLoan !== true);
   const resolved = resolveClubTraining({
     clubId: input.clubId,
     playedCount: input.playedCount,
@@ -123,6 +128,7 @@ export async function completeTrainingSession(
     attr_physical?: number;
     attr_goalkeeping?: number;
     energy?: number;
+    seen?: Record<string, unknown>;
   }[] = [];
   for (let i = 0; i < after.length; i++) {
     const next = after[i]!;
@@ -143,6 +149,7 @@ export async function completeTrainingSession(
     ) {
       continue;
     }
+    const seen = seenState(seniors[i]!);
     updates.push({
       id: next.id,
       status: next.status,
@@ -157,20 +164,25 @@ export async function completeTrainingSession(
           }
         : {}),
       ...(typeof next.energy === 'number' ? { energy: next.energy } : {}),
+      ...(seen ? { seen } : {}),
     });
   }
 
-  const { data, error } = await serverDb(supabase).rpc(
-    'complete_training_session' as never,
-    {
-      p_club_id: input.clubId,
-      p_training_on: today,
-      p_updates: updates,
-    } as never,
+  const { data, error } = await retryDeadlock(() =>
+    serverDb(supabase).rpc(
+      'complete_training_session' as never,
+      {
+        p_club_id: input.clubId,
+        p_training_on: today,
+        p_updates: updates,
+      } as never,
+    ),
   );
 
   if (error) {
-    return { ok: false, error: error.message || 'Nie udało się zapisać treningu.' };
+    return error.code === SQUAD_MOVED_CODE
+      ? { ok: false, error: SQUAD_MOVED_ERROR, moved: true }
+      : { ok: false, error: 'Nie udało się zapisać treningu. Spróbuj ponownie.' };
   }
 
   const row = data as RpcResult | null;

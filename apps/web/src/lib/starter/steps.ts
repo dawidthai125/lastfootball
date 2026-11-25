@@ -33,7 +33,7 @@ export function resolveStarterPath(progress: StarterProgress | null): StarterPat
       id: 'match-1',
       label: 'Rozegraj pierwszy mecz ligowy',
       why: 'Jeden mecz dziennie. Wygrana daje 13 000 €, a każdy mecz kosztuje pensje.',
-      href: '/hub',
+      href: '/matches',
       done: progress.played >= 1,
     },
     {

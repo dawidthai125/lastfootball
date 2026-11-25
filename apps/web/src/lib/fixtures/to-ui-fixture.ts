@@ -90,12 +90,8 @@ export function toUiFixture(dto: FixtureDto, club: ClubDto): Fixture {
         : dto.competition === 'human'
           ? 'Liga ludzi'
           : dto.competition === 'cup'
-            ? dto.status === 'upcoming'
-              ? 'Dziś'
-              : cupLabel
-            : dto.status === 'upcoming'
-              ? 'Dziś'
-              : `Kolejka ${dto.matchday}`,
+            ? cupLabel
+            : `Kolejka ${dto.matchday}`,
     dateLabel:
       dto.competition === 'challenge'
         ? 'Wyzwanie'
@@ -139,11 +135,34 @@ function matchGround(dto: FixtureDto): { stands: number; pitch: number } {
 }
 
 /** Average stored energy of the XI — the same number the engine starts from. */
-function teamCondition(xi: readonly RosterPlayerSeed[]): { label: string; value: number } {
+export function teamCondition(xi: readonly RosterPlayerSeed[]): { label: string; value: number } {
   const value =
     xi.length === 0 ? 80 : Math.round(xi.reduce((sum, p) => sum + (p.energy ?? 80), 0) / xi.length);
   const label = value >= 70 ? 'Gotowa' : value >= 45 ? 'Podmęczona' : 'Zmęczona';
   return { label, value };
+}
+
+/** Stored numbers of one line-up row. */
+export function lineupFacts(p: RosterPlayerSeed) {
+  return {
+    rating: p.skill ?? 60,
+    condition: Math.max(1, Math.min(5, Math.round((p.energy ?? 80) / 20))),
+    captain: p.captain,
+  };
+}
+
+/** A challenge has no round, and a cup round has a name instead of a number. */
+function roundStake(dto: FixtureDto): { id: string; label: string; value: string }[] {
+  if (dto.competition === 'challenge') return [];
+  if (dto.competition === 'cup') {
+    const round = cupRoundForMatchday(dto.matchday);
+    return round ? [{ id: 'md', label: 'Runda', value: cupRoundLabel(round) }] : [];
+  }
+  const round =
+    dto.competition === 'human'
+      ? (humanRoundFromFixture(dto.matchday) ?? dto.matchday)
+      : dto.matchday;
+  return [{ id: 'md', label: 'Kolejka', value: String(round) }];
 }
 
 export function buildLeaguePreMatchBundle(
@@ -191,19 +210,11 @@ export function buildLeaguePreMatchBundle(
         label: 'Rozgrywki',
         value: preMatchStakeValue(dto.competition, resolveLeagueTierLabel(club.leagueTier)),
       },
-      {
-        id: 'md',
-        label: 'Kolejka',
-        value: String(
-          dto.competition === 'human'
-            ? (humanRoundFromFixture(dto.matchday) ?? dto.matchday)
-            : dto.matchday,
-        ),
-      },
+      ...roundStake(dto),
       {
         id: 'venue',
         label: 'Stadion',
-        value: dto.isHome ? STARTER_PACKAGE.stadiumLabel(club.name) : dto.opponent.name,
+        value: fixture.stadium,
       },
     ],
     h2h: [],
@@ -221,10 +232,8 @@ export function buildLeaguePreMatchBundle(
       pos: p.pos,
       name: p.name,
       number: p.number,
-      rating: p.skill ?? 60,
-      condition: Math.max(1, Math.min(5, Math.round((p.energy ?? 80) / 20))),
+      ...lineupFacts(p),
       id: p.id,
-      captain: p.captain,
     })),
     theirLineup: their.map((p) => ({
       pos: p.pos,
@@ -237,8 +246,10 @@ export function buildLeaguePreMatchBundle(
       dto.competition === 'cup'
         ? `${club.name} · Puchar Krajowy vs ${dto.opponent.name}.`
         : dto.competition === 'human'
-          ? `${club.name} · Liga ludzi vs ${dto.opponent.name}. Jeden mecz z jednego seeda.`
-          : `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
+          ? `${club.name} · Liga ludzi vs ${dto.opponent.name}. Oba kluby oglądają ten sam mecz.`
+          : dto.competition === 'challenge'
+            ? `${club.name} · Wyzwanie vs ${dto.opponent.name}.`
+            : `${club.name} · kolejka ${dto.matchday} vs ${dto.opponent.name}.`,
     decisions: [
       {
         id: 'lineup',
@@ -274,7 +285,6 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
       { label: 'Rożne', home: 0, away: 0 },
       { label: 'Żółte', home: 0, away: 0 },
     ],
-    momentum: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
     events: [
       {
         id: 'e0',
@@ -285,7 +295,9 @@ export function buildLeagueLiveBundle(club: ClubDto, dto: FixtureDto): LiveMatch
             ? `Puchar: ${club.name} vs ${dto.opponent.name}.`
             : dto.competition === 'human'
               ? `Liga ludzi: ${club.name} vs ${dto.opponent.name}. Taktyka jest zamknięta.`
-              : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
+              : dto.competition === 'challenge'
+                ? `Wyzwanie: ${club.name} vs ${dto.opponent.name}.`
+                : `Kolejka ${dto.matchday}: ${club.name} vs ${dto.opponent.name}.`,
       },
     ],
     commands:

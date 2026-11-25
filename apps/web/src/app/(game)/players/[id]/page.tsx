@@ -11,6 +11,7 @@ import {
   PlayerStatus,
   PlayerTalents,
 } from '@/components/squad/PlayerDetail';
+import { UnlistPlayer } from '@/components/transfers/UnlistPlayer';
 import { ShirtNumberForm } from '@/components/squad/ShirtNumberForm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { getSquadPlayerById, resolveClubSquad, SquadUnavailableError } from '@/lib/squad';
@@ -51,6 +52,9 @@ export default async function PlayerDetailPage({ params }: PageProps) {
       {/* M4: Hero → decyzja → status → atrybuty → kontekst */}
       <PlayerHero player={player} club={club} />
       <ShirtNumberForm playerId={player.id} shirtNumber={player.shirtNumber} />
+      {rows.some((row) => row.id === player.id && row.transferListedAt != null) ? (
+        <UnlistPlayer playerId={player.id} />
+      ) : null}
       <PlayerActions player={player} />
       <PlayerStatus player={player} />
       <PlayerAttributes player={player} />

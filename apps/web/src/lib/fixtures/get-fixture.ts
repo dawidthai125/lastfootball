@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { env } from '@/config/env';
+import { isCupFinal } from '@/lib/cup/matchdays';
 import { mapFixtureRow } from '@/lib/fixtures/map-fixture';
 import { humanRoundFromFixture, humanSeasonFromFixture } from '@/lib/league/human-league';
 import type { FixtureDto, FixtureRow } from '@/lib/fixtures/types';
@@ -128,7 +129,8 @@ async function attachHomeGround(
     if (!id || !ground) return fixture;
     return {
       ...fixture,
-      homePitchLevel: ground.pitch,
+      // The cup final is on neutral ground (GDD 11.7).
+      homePitchLevel: isCupFinal(fixture) ? 0 : ground.pitch,
       homeStandsLevel: ground.stands,
       homeFanMood: moods.get(id),
     };

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { suggestShortName } from '@/lib/club/catalog';
+import { normalizeShortName, validateClubIdentity } from '@/lib/club/validation';
 import { resolveClubProfile } from '@/lib/club/resolve-club-profile';
 import type { ClubDto } from '@/lib/club/types';
 import { STARTER_PACKAGE } from '@/lib/club/types';
@@ -106,6 +108,24 @@ describe('resolveClubProfile (LFE-CLUB-01)', () => {
     expect(dto.styleLabel).toBe(
       'Styl sezonu: pressing 2/8 (start 54), tempo 0/8 (start 50), szerokość 4/8 (start 58).',
     );
+  });
+
+  it('keeps Ł in a short name', () => {
+    expect(suggestShortName('Wisła')).toBe('WISL');
+    expect(suggestShortName('Łódź')).toBe('LODZ');
+    expect(normalizeShortName('łks')).toBe('LKS');
+  });
+
+  it('refuses a character the save would refuse', () => {
+    const checked = validateClubIdentity({
+      name: 'Bóbrka & Co',
+      shortName: 'BOB',
+      primaryColor: '#111111',
+      secondaryColor: '#222222',
+      crestTemplateId: 'a',
+      allowedCrestIds: ['a'],
+    });
+    expect(checked.ok).toBe(false);
   });
 
   it('exposes deep-links without staff', () => {

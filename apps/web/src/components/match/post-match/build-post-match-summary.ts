@@ -9,7 +9,7 @@ import type { LiveEventKind } from '@/data/fixtures';
 import type { MatchCanvasReadModel } from '@/gameplay/canvas-host';
 import type { ReplayBuffer } from '@/gameplay/replay';
 
-import { shootOutScore } from '@/lib/match/commentary';
+import { halfEndLine, shootOutScore } from '@/lib/match/commentary';
 import { threeMatchSentences } from '@/lib/match/match-report';
 import { emptyPlayerName, lateDialFromEvents, whyLine } from '@/lib/match/why-line';
 
@@ -186,7 +186,8 @@ export function buildPostMatchSummary(input: BuildPostMatchInput): PostMatchSumm
     dial
       ? goals.some((goal) => {
           const at = minuteNumber(goal.minute);
-          return at !== null && at >= dial.minute;
+          // The dials belong to one side, so a goal of the other one says nothing about them.
+          return goal.side === matchState.tacticsSide && at !== null && at >= dial.minute;
         })
       : false;
 
@@ -405,7 +406,7 @@ function humanize(
     case 'MATCH_START':
       return 'Zaczynamy. Piłka w grze.';
     case 'HALF_END':
-      return 'Koniec połowy.';
+      return halfEndLine(e.payload);
     case 'MATCH_END':
       return 'Koniec meczu.';
     case 'GOAL': {

@@ -63,17 +63,13 @@ describe('kickoff snapshot', () => {
     );
   });
 
-  it('names a player who was sold or loaned out meanwhile', () => {
+  it('names a player who left the club, not one on loan or called up', () => {
     const stored = readKickoffSnapshot(JSON.parse(JSON.stringify(snapshot)), 'fx-1', 'c1')!;
     const squad = xi.map((p) => ({ id: p.id, onLoan: false }));
     expect(leftDuringMatch(stored, squad)).toBeNull();
     expect(leftDuringMatch(stored, squad.slice(1))).toBe('P0');
-    expect(
-      leftDuringMatch(
-        stored,
-        squad.map((p) => ({ ...p, onLoan: p.id === 'p-3' })),
-      ),
-    ).toBe('P3');
+    const away = squad.map((p) => ({ ...p, onLoan: true, intlAbsentUntil: '2026-12-30' }));
+    expect(leftDuringMatch(stored, away)).toBeNull();
   });
 
   it('freezes the AI rival without changing the match', { timeout: 60_000 }, () => {
@@ -90,6 +86,7 @@ describe('kickoff snapshot', () => {
   });
 
   it('ends a match opened before full rules under its own rules', { timeout: 60_000 }, () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { rules: _rules, ...old } = snapshot;
     const stored = readKickoffSnapshot(JSON.parse(JSON.stringify(old)), 'fx-1', 'c1')!;
     const session = sessionFromKickoff(stored);

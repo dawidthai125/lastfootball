@@ -18,6 +18,8 @@ export type MatchPathContext = {
   awayName: string;
   meta: string;
   firstMatch: boolean;
+  /** Both line-ups of a Liga ludzi match are locked, so the current one does not matter. */
+  lockedLineups: boolean;
   rivalLines: readonly string[];
 };
 
@@ -101,6 +103,7 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
       awayName: FIRST_MATCH_BOT.name,
       meta: 'Pierwszy mecz',
       firstMatch: true,
+      lockedLineups: false,
       rivalLines: buildRivalCardLines(NO_RIVAL_FACTS),
     };
   }
@@ -130,8 +133,11 @@ export async function loadMatchPathContext(matchId: string): Promise<MatchPathCo
         ? `Puchar · ${dto.matchday === 104 ? 'Neutralny' : dto.isHome ? 'U siebie' : 'Wyjazd'}`
         : dto.competition === 'human'
           ? `Liga ludzi · Kolejka ${humanRoundFromFixture(dto.matchday) ?? dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`
-          : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
+          : dto.competition === 'challenge'
+            ? `Wyzwanie · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`
+            : `Kolejka ${dto.matchday} · ${dto.isHome ? 'U siebie' : 'Wyjazd'}`,
     firstMatch: false,
+    lockedLineups: dto.competition === 'human',
     rivalLines: await rivalLinesFor(club.id, dto.opponentClubId),
   };
 }

@@ -16,7 +16,7 @@ export async function settleFixture(
   db: SettleDb,
   args: Readonly<Record<string, unknown>>,
   players: ReturnType<typeof toStoredPlayers> = [],
-): Promise<Settlement | null> {
+): Promise<Settlement | 'day_taken' | null> {
   const full = {
     ...args,
     p_upkeep_by_level: args.p_upkeep_by_level ?? ACADEMY_UPKEEP,
@@ -28,6 +28,8 @@ export async function settleFixture(
   if (result.error?.code === 'PGRST202') {
     result = await db.rpc('settle_fixture' as never, full as never);
   }
+  // Another match of this day was saved while this one was replayed.
+  if (result.error?.code === 'LFDAY') return 'day_taken';
   if (result.error) console.error('settleFixture failed', { code: result.error.code });
   return result.error ? null : (result.data as Settlement | null);
 }

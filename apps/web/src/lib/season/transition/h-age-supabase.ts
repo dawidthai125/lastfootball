@@ -7,6 +7,7 @@ type PlayersClient = Awaited<ReturnType<typeof createClient>>;
 
 /**
  * Supabase port for H-AGE — club players only (incl. academy_track; excl. departed).
+ * The groups follow the skill in the database (`lf_move_groups`), also when a tick is reverted.
  */
 export function createHAgeSupabasePort(supabase: PlayersClient): HAgePlayersPort {
   return {

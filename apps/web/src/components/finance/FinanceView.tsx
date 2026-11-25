@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { EmptyState, LocationHero } from '@/components/ui';
 import { formatMoney, type ClubFinanceDto, type FinanceMovementDto } from '@/lib/finance';
 import { resolveFinanceTransferEntry } from '@/lib/finance/transfer-entry';
+import { polishDay } from '@/lib/ui/polish-day';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './finance-decision.css';
@@ -104,7 +105,7 @@ export function FinanceView({
             <ul className="lf-fi__cards">
               {movements.map((m) => (
                 <li key={m.id} className="lf-fi__card">
-                  <span className="lf-fi__card-when">{m.createdAt.slice(0, 10)}</span>
+                  <span className="lf-fi__card-when">{polishDay(m.createdAt)}</span>
                   <span className="lf-fi__card-desc">{m.label}</span>
                   <span className={`lf-fi__card-amount ${amountClass(m.amount)}`}>
                     {formatSignedAmount(m.amount)}
@@ -126,7 +127,7 @@ export function FinanceView({
                   {movements.map((m) => (
                     <tr key={m.id}>
                       <td className="tabular-nums" style={{ color: 'var(--lf-color-text-faint)' }}>
-                        {m.createdAt.slice(0, 10)}
+                        {polishDay(m.createdAt)}
                       </td>
                       <td>{m.label}</td>
                       <td className={`tabular-nums ${amountClass(m.amount)}`}>

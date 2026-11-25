@@ -69,7 +69,7 @@ export function PlayerHero({
   club,
 }: {
   player: SquadPlayer;
-  club: { name: string; shortName: string };
+  club: { name: string; shortName: string; crestTemplateId?: string | null };
 }) {
   const tone = statusTone(player.status);
 
@@ -86,7 +86,12 @@ export function PlayerHero({
       >
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--lf-space-2)' }}>
           <PlayerPortrait playerId={player.id} name={player.name} size="lg" />
-          <ClubCrest shortName={club.shortName} clubName={club.name} size="sm" />
+          <ClubCrest
+            shortName={club.shortName}
+            clubName={club.name}
+            crestTemplateId={club.crestTemplateId}
+            size="sm"
+          />
         </div>
 
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>
@@ -200,6 +205,9 @@ export function PlayerStatus({ player }: { player: SquadPlayer }) {
           {playerStatusLabel(player.status, player.suspensionMatches, player.injuryMatches)}
         </strong>
       </span>
+      {player.status === 'INJURED' || player.status === 'SUSPENDED' ? (
+        <span>Pauzę skraca o jeden każdy mecz klubu i każdy dzień bez meczu.</span>
+      ) : null}
     </div>
   );
 }
@@ -304,19 +312,31 @@ export function PlayerContract({ player, season }: { player: SquadPlayer; season
           active={player.setPiece === true}
           goalkeeper={player.position === 'BR'}
         />
-        <ContractTalkForm
-          playerId={player.id}
-          demand={demandWage(c.wage, talkPersonality(player.personality))}
-          extended={!contractTalkOpen(c.season ?? null, season)}
-          untilSeason={renewedContractSeason(season)}
-        />
-        <LoanButton
-          playerId={player.id}
-          position={player.position}
-          starter={player.starter}
-          onLoan={player.onLoan === true}
-          loanedIn={player.loanedIn === true}
-        />
+        {player.emergency === true ? (
+          <p style={{ margin: '0.5rem 0 0' }}>
+            Junior awaryjny. Ma kontrakt do końca sezonu, nie można go sprzedać ani wypożyczyć.
+          </p>
+        ) : player.loanedIn === true ? null : player.onLoan === true ? (
+          <p style={{ margin: '0.5rem 0 0' }}>
+            O kontrakcie porozmawiasz po powrocie z wypożyczenia.
+          </p>
+        ) : (
+          <ContractTalkForm
+            playerId={player.id}
+            demand={demandWage(c.wage, talkPersonality(player.personality))}
+            extended={!contractTalkOpen(c.season ?? null, season)}
+            untilSeason={renewedContractSeason(season)}
+          />
+        )}
+        {player.emergency === true ? null : (
+          <LoanButton
+            playerId={player.id}
+            position={player.position}
+            starter={player.starter}
+            onLoan={player.onLoan === true}
+            loanedIn={player.loanedIn === true}
+          />
+        )}
       </div>
     </SectionShell>
   );

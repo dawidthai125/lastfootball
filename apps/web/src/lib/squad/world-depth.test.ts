@@ -38,13 +38,13 @@ describe('world depth', () => {
     const open = resolveIncomingLoanOffers({
       clubId: '1be439c0-9530-400a-a437-ceaccf61d482',
       transferWindowOpen: true,
-      rosterCount: 18,
+      roster: [],
       today: '2026-11-17',
     });
     const closed = resolveIncomingLoanOffers({
       clubId: '1be439c0-9530-400a-a437-ceaccf61d482',
       transferWindowOpen: false,
-      rosterCount: 18,
+      roster: [],
       today: '2026-11-17',
     });
     expect(closed).toEqual([]);
@@ -52,6 +52,60 @@ describe('world depth', () => {
     expect(incomingLoanBlock({ rosterCount: 22, alreadyLoanedIn: 0 })).toBe(
       'Kadra jest pełna (max 22).',
     );
+  });
+
+  it('hides a loan offer while its player is in the club, and all of them at two', () => {
+    const clubId = ['a', 'b', 'c', 'd', 'e', 'f'].find(
+      (id) =>
+        resolveIncomingLoanOffers({
+          clubId: id,
+          transferWindowOpen: true,
+          roster: [],
+          today: '2026-11-24',
+        }).length === 2,
+    )!;
+    const read = (roster: Parameters<typeof resolveIncomingLoanOffers>[0]['roster']) =>
+      resolveIncomingLoanOffers({ clubId, transferWindowOpen: true, roster, today: '2026-11-24' });
+    const [first, second] = read([]);
+    const taken = { name: first!.name, loanedIn: true, loanPartnerLabel: first!.partnerLabel };
+    expect(read([taken]).map((o) => o.offerId)).toEqual([second!.offerId]);
+    expect(read([{ ...taken, loanedIn: false }])).toHaveLength(2);
+    expect(read([taken, { name: 'X', loanedIn: true }])).toEqual([]);
+    expect(read(Array.from({ length: 22 }, () => ({ name: 'X' })))).toEqual([]);
+  });
+
+  it('gives one call-up a day, also after it was accepted', () => {
+    const players = ['p1', 'p2'].map((id) => ({
+      id,
+      name: id,
+      skill: 70,
+      nationality: 'POL',
+      starter: true,
+      onLoan: false,
+      loanedIn: false,
+    }));
+    const day = Array.from(
+      { length: 28 },
+      (_, i) => `2026-11-${String(i + 1).padStart(2, '0')}`,
+    ).find((today) =>
+      resolveIntlCallup({ clubId: 'club-abc', today, players, alreadyAbsentIds: [] }),
+    )!;
+    const first = resolveIntlCallup({
+      clubId: 'club-abc',
+      today: day,
+      players,
+      alreadyAbsentIds: [],
+    })!;
+    expect(
+      resolveIntlCallup({
+        clubId: 'club-abc',
+        today: day,
+        players: players.map((p) =>
+          p.id === first.playerId ? { ...p, starter: false, intlAbsentUntil: first.until } : p,
+        ),
+        alreadyAbsentIds: [first.playerId],
+      }),
+    ).toBeNull();
   });
 
   it('finds a dressing conflict for two explosive starters', () => {

@@ -1,5 +1,6 @@
 'use server';
 
+import { retryDeadlock } from '@/lib/supabase/retry-deadlock';
 import { revalidatePath } from 'next/cache';
 
 import { env } from '@/config/env';
@@ -19,7 +20,7 @@ async function callAuction(
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Sesja wygasła.' };
 
-  const { data, error } = await supabase.rpc(fn as never, args as never);
+  const { data, error } = await retryDeadlock(() => supabase.rpc(fn as never, args as never));
   if (error) return { error: 'Licytacja nie jest jeszcze włączona.' };
   const row = data as RpcRow | null;
   if (!row?.ok) return { error: row?.error || 'Licytacja nieudana.' };

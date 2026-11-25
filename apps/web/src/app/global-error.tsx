@@ -1,6 +1,6 @@
 'use client';
 
-export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
+export default function GlobalError() {
   return (
     <html lang="pl">
       <body
@@ -15,7 +15,7 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
       >
         <h1>Coś poszło nie tak</h1>
         <p>Spróbuj jeszcze raz za chwilę.</p>
-        <button type="button" onClick={reset}>
+        <button type="button" onClick={() => window.location.reload()}>
           Spróbuj ponownie
         </button>
       </body>

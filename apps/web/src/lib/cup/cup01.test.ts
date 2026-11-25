@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { FixtureDto } from '@/lib/fixtures/types';
 import { OPPONENT_CATALOG } from '@/lib/fixtures/opponent-catalog';
-import { CUP_UNLOCK_AFTER_MATCHDAY, resolveNationalCup } from '@/lib/cup';
+import { CUP_UNLOCK_AFTER_MATCHDAY, playerWonCup, resolveNationalCup } from '@/lib/cup';
 import type { CupTieDto } from '@/lib/cup';
 import { aiTableStrength } from '@/lib/league/simulate-ai-results';
 
@@ -144,6 +144,32 @@ describe('resolveNationalCup', () => {
     expect(won.playerTie?.round).toBe(2);
     expect(won.playerTie?.due).toBe(false);
     expect(won.playerTie?.matchday).toBe(102);
+  });
+
+  it('tells a won final from a lost one', () => {
+    const play = (lostRound: number | null) => {
+      const fixtures = played(22);
+      for (;;) {
+        const tie = resolveNationalCup(club, fixtures).playerTie;
+        if (!tie) return resolveNationalCup(club, fixtures);
+        const won = tie.round !== lostRound;
+        fixtures.push({
+          ...fixtures[0]!,
+          id: `cup-${tie.round}`,
+          matchday: tie.matchday,
+          competition: 'cup',
+          opponentClubId: tie.opponentId,
+          opponent: { id: tie.opponentId, name: tie.opponentName, shortName: tie.opponentShort },
+          isHome: tie.isHome,
+          homeScore: tie.isHome === won ? 2 : 0,
+          awayScore: tie.isHome === won ? 0 : 2,
+        });
+      }
+    };
+    expect(playerWonCup(play(null))).toBe(true);
+    expect(playerWonCup(play(4))).toBe(false);
+    expect(playerWonCup(play(2))).toBe(false);
+    expect(playerWonCup(resolveNationalCup(club, played(7)))).toBe(false);
   });
 
   it('drops the player after a cup loss and finishes the other ties', () => {

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import type { AchievementCategory, ClubAchievementsDto } from '@/lib/achievements';
 import { UI_COPY } from '@/lib/ui/copy';
+import { polishDay } from '@/lib/ui/polish-day';
 
 import './achievements.css';
 
@@ -22,10 +23,7 @@ function categoryLabel(category: AchievementCategory): string {
 
 function formatOccurredAt(value: string | null): string | null {
   if (!value) return null;
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return d.toISOString().slice(0, 10);
+  return polishDay(value) || value;
 }
 
 /**

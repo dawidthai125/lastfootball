@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 
 import { LocationHero, SoftLockState, StateBanner, Panel, Button } from '@/components/ui';
+import { keepFields } from '@/components/ui/kept-form';
 import {
   declineAcademyIntake,
   intakeAcademyProspect,
@@ -160,6 +161,7 @@ function JuniorTraining({
   return (
     <form
       action={action}
+      onSubmit={keepFields(action)}
       className="flex w-full flex-wrap items-center gap-2 text-[11px] text-[var(--lf-muted)]"
     >
       <input type="hidden" name="playerId" value={junior.id} />
@@ -274,7 +276,7 @@ export function AcademyView({ academy }: { academy: AcademyDto }) {
         </form>
         {!academy.canIntake && academy.intakeBlockedReason === 'slots_full' ? (
           <p className="mt-1.5 text-[11px] text-[var(--lf-faint)]">
-            Maksymalnie {academy.maxProspects} perspektywy naraz.
+            Maksymalna liczba perspektyw naraz: {academy.maxProspects}.
           </p>
         ) : null}
       </section>

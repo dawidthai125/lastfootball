@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 
+import { useRetry } from '@/components/ui/use-retry';
+
 import '@/components/legal/legal.css';
 
 export default function ErrorPage({ reset }: { error: Error; reset: () => void }) {
+  const retry = useRetry(reset);
   return (
     <article className="lf-legal" role="alert">
       <h1>Coś poszło nie tak</h1>
       <p>Spróbuj jeszcze raz. Jeśli to się powtarza, napisz na kontakt@lastfootball.pl.</p>
       <p>
-        <button type="button" onClick={reset}>
+        <button type="button" onClick={retry}>
           Spróbuj ponownie
         </button>{' '}
         <Link href="/">Strona główna</Link>

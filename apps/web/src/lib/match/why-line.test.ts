@@ -100,7 +100,7 @@ describe('whyLine', () => {
         firstGoalMinute: null,
         latePress: { minute: 76, value: 70, goalAfter: false },
       }),
-    ).toBe('Pressing 70 od 76. minuty nie zmienił wyniku.');
+    ).toBe('Pressing 70 od 76. minuty nie dał gola.');
   });
 
   it('says a late tempo produced a goal when pressing stayed put', () => {
@@ -130,7 +130,7 @@ describe('whyLine', () => {
         firstGoalMinute: null,
         lateWidth: { minute: 77, value: 60, goalAfter: false },
       }),
-    ).toBe('Szerokość 60 od 77. minuty nie zmieniła wyniku.');
+    ).toBe('Szerokość 60 od 77. minuty nie dała gola.');
   });
 
   it('keeps the pressing sentence when tempo and width also changed late', () => {
@@ -147,7 +147,7 @@ describe('whyLine', () => {
         lateTempo: { minute: 81, value: 64, goalAfter: true },
         lateWidth: { minute: 82, value: 60, goalAfter: true },
       }),
-    ).toBe('Pressing 75 od 80. minuty nie zmienił wyniku.');
+    ).toBe('Pressing 75 od 80. minuty nie dał gola.');
   });
 
   it('names the emptiest player only when shots and passes show no edge', () => {

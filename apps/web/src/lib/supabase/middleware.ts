@@ -19,6 +19,8 @@ export async function updateSession(request: NextRequest): Promise<{
   hasClub: boolean;
   firstMatchCompleted: boolean;
   configured: boolean;
+  /** Signed in, but the club read failed. */
+  clubUnknown: boolean;
 }> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -33,6 +35,7 @@ export async function updateSession(request: NextRequest): Promise<{
       hasClub: false,
       firstMatchCompleted: false,
       configured: false,
+      clubUnknown: false,
     };
   }
 
@@ -45,6 +48,7 @@ export async function updateSession(request: NextRequest): Promise<{
       hasClub: false,
       firstMatchCompleted: false,
       configured: true,
+      clubUnknown: false,
     };
   }
 
@@ -71,6 +75,7 @@ export async function updateSession(request: NextRequest): Promise<{
 
   let hasClub = false;
   let firstMatchCompleted = false;
+  let clubUnknown = false;
   if (user) {
     const { data, error } = await supabase
       .from('clubs')
@@ -78,6 +83,7 @@ export async function updateSession(request: NextRequest): Promise<{
       .eq('owner_id', user.id)
       .maybeSingle();
     const clubRow = data as { id: string; first_match_completed_at: string | null } | null;
+    clubUnknown = Boolean(error);
     const fromTable = !error && Boolean(clubRow?.id);
     firstMatchCompleted = Boolean(clubRow?.first_match_completed_at);
 
@@ -89,9 +95,17 @@ export async function updateSession(request: NextRequest): Promise<{
 
     hasClub = fromTable || metaFallback;
     if (metaFallback && !fromTable) {
+      clubUnknown = false;
       firstMatchCompleted = true;
     }
   }
 
-  return { response, userId: user?.id ?? null, hasClub, firstMatchCompleted, configured: true };
+  return {
+    response,
+    userId: user?.id ?? null,
+    hasClub,
+    firstMatchCompleted,
+    configured: true,
+    clubUnknown,
+  };
 }

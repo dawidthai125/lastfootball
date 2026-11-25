@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
+import type { PlayerRowDto } from '@/lib/squad/types';
 import { DEVELOPMENT_THIN } from '@/lib/squad/development-thin';
 import {
   applyMatchDevelopmentEffects,
@@ -47,6 +49,28 @@ describe('LFE-PLAYERS-02 potential (wariant B)', () => {
 });
 
 describe('LFE-PLAYERS-02 match development', () => {
+  it('previews exactly what the save of that match gives', () => {
+    const rows = Array.from({ length: 14 }, (_, i) => ({
+      id: `pv-${String(i).padStart(2, '0')}`,
+      name: `P${i}`,
+      skill: 55,
+      potential: 80,
+      age: 18 + i,
+      starter: false,
+      status: 'READY',
+      departedAt: null,
+      academyTrack: false,
+    })) as unknown as PlayerRowDto[];
+    const started = new Set(rows.slice(0, 11).map((p) => p.id));
+    for (const key of ['fx-1', 'fx-2', 'fx-3']) {
+      const before = rows.map((p) => ({ ...p, starter: started.has(p.id) }));
+      const saved = applyMatchDevelopmentEffects(before, key).flatMap((p, i) =>
+        p.skill > before[i]!.skill ? [`${before[i]!.name} +${p.skill - before[i]!.skill}`] : [],
+      );
+      expect(previewMatchDevelopment(rows, key, started)).toEqual(saved);
+    }
+  });
+
   const starters = [
     { id: 'a', name: 'A', skill: 60, potential: 80, starter: true, age: 24 },
     { id: 'b', name: 'B', skill: 60, potential: 80, starter: true, age: 24 },

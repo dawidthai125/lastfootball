@@ -103,7 +103,9 @@ export function buildLightStatus(
     ? `Kolejka ${nextFixture.matchday}`
     : club.seasonPhase === 'offseason'
       ? 'Przerwa'
-      : 'Dzień 1';
+      : club.firstMatchCompletedAt
+        ? 'Sezon trwa'
+        : 'Dzień 1';
   return {
     league: resolveLeagueTierLabel(club.leagueTier),
     stadium: STARTER_PACKAGE.stadiumLabel(club.name),

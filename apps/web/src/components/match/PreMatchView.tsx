@@ -12,6 +12,7 @@ import {
   matchVsPath,
   matchXiPath,
 } from '@/lib/match/match-path';
+import { withShape } from '@/lib/match/our-formation';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './prematch-kickoff.css';
@@ -38,6 +39,8 @@ export function PreMatchView({
     .join(' · ');
   const tacticPreview = bundle.tactics.slice(0, 3);
   const checklistReady = bundle.ourLineup.length >= 11;
+  // Both clubs of a Liga ludzi match play the locked line-ups in the same shape.
+  const locked = fixture.kickoffCompetition === 'human';
 
   return (
     <div className="lf-ko" data-lf-impl="LFE-UI-IMPL-02" data-mch="SCR-MCH-03">
@@ -74,18 +77,14 @@ export function PreMatchView({
             <span className="lf-mp__check-status">OK</span>
           </li>
         </ul>
-        {firstMatch ? null : (
+        {firstMatch || locked ? null : (
           <div className="lf-ko__shapes" role="group" aria-label="Układ na ten mecz">
             {(['4-4-2', '4-3-3'] as const).map((code) => {
               const selected = bundle.formation === code;
               return (
                 <Link
                   key={code}
-                  href={
-                    code === '4-3-3'
-                      ? `${matchPrePath(fixture.id)}?shape=4-3-3`
-                      : matchPrePath(fixture.id)
-                  }
+                  href={withShape(matchPrePath(fixture.id), code)}
                   className={selected ? 'lf-mp__shape lf-mp__shape--on' : 'lf-mp__shape'}
                   aria-current={selected ? 'true' : undefined}
                 >
@@ -99,9 +98,9 @@ export function PreMatchView({
           {checklistReady ? (
             <Link
               href={
-                !firstMatch && bundle.formation === '4-3-3'
-                  ? `${matchLivePath(fixture.id)}?shape=4-3-3`
-                  : matchLivePath(fixture.id)
+                firstMatch
+                  ? matchLivePath(fixture.id)
+                  : withShape(matchLivePath(fixture.id), bundle.formation)
               }
               className="lf-mp__primary"
             >
@@ -112,9 +111,20 @@ export function PreMatchView({
               {UI_COPY.playMatch}
             </span>
           )}
-          <Link href={matchXiPath(fixture.id)} className="lf-mp__soft">
-            {UI_COPY.setLineup}
-          </Link>
+          {locked ? (
+            <p className="lf-mp__soft">Składy tego meczu są już zamknięte.</p>
+          ) : (
+            <Link
+              href={
+                firstMatch
+                  ? matchXiPath(fixture.id)
+                  : withShape(matchXiPath(fixture.id), bundle.formation)
+              }
+              className="lf-mp__soft"
+            >
+              {UI_COPY.setLineup}
+            </Link>
+          )}
         </div>
       </section>
 

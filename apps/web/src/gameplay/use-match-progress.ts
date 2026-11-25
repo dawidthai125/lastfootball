@@ -41,11 +41,15 @@ export function useMatchProgress(runtime: LiveMatchRuntime | null, fixtureId: st
     const timer = setInterval(() => send(false), CHECK_MS);
     window.addEventListener('pagehide', onHide);
     document.addEventListener('visibilitychange', onVisibility);
+    // Leaving the page takes the runtime apart before this hook cleans up.
+    runtime.onLeave = () => send(true);
     return () => {
       clearInterval(timer);
       window.removeEventListener('pagehide', onHide);
       document.removeEventListener('visibilitychange', onVisibility);
-      send(true);
+      const leave = runtime.onLeave;
+      runtime.onLeave = null;
+      leave?.();
     };
   }, [runtime, fixtureId]);
 }

@@ -60,7 +60,7 @@ export function resolveClubTraining(input: ResolveClubTrainingInput): TrainingDt
   const seniors = filterSeniorPlayers(input.activePlayers);
   const today = input.today ?? utcDateString();
   const unlocked = hasPlayedUnlock(input.playedCount, TRAINING_THIN.UNLOCK_AFTER_PLAYED);
-  const readiness = readinessOf(seniors);
+  const readiness = readinessOf(seniors.filter((p) => p.onLoan !== true));
 
   let lockReason: TrainingLockReason = null;
   if (!unlocked) {

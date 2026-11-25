@@ -57,10 +57,19 @@ export default async function LeaguePage() {
         {seasonGoalLine}
       </p>
       {human ? (
-        <Panel title={`Liga ludzi ${human.leagueId} · Sezon ${human.season}`}>
+        <Panel
+          title={
+            human.leagueId != null && human.season != null
+              ? `Liga ludzi ${human.leagueId} · Sezon ${human.season}`
+              : 'Liga ludzi'
+          }
+        >
           <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>
             12 miejsc, wolne zajmują boty. Oba kluby oglądają ten sam mecz. Gdy przybywa klubów,
-            kolejna liga otwiera się sama. Lig: {human.leagues}, klubów graczy: {human.clubs}.
+            kolejna liga otwiera się sama.
+            {human.leagues != null && human.clubs != null
+              ? ` Lig: ${human.leagues}, klubów graczy: ${human.clubs}.`
+              : ''}
           </p>
           {human.prizes.some((amount) => amount > 0) ? (
             <p style={{ margin: '0 0 var(--lf-space-2)', color: 'var(--lf-color-text-muted)' }}>

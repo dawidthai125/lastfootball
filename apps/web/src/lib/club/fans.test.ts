@@ -6,6 +6,7 @@ import {
   fanMoodLabel,
   fanResultFromScores,
   nextFanMood,
+  lastMoodFixture,
   resolveHubFanLabel,
   resolvePlayedFixtureFanLine,
 } from '@/lib/club/fans';
@@ -59,6 +60,16 @@ describe('fans', () => {
         storedMood: 54,
       }),
     ).toBeNull();
+  });
+
+  it('lastMoodFixture takes the latest match of any competition', () => {
+    const rows = [
+      { id: 'l', status: 'played', playedAt: '2026-11-20T10:00:00Z' },
+      { id: 'c', status: 'played', playedAt: '2026-11-21T10:00:00Z' },
+      { id: 'u', status: 'upcoming', playedAt: null },
+    ];
+    expect(lastMoodFixture(rows)?.id).toBe('c');
+    expect(lastMoodFixture([])).toBeNull();
   });
 
   it('resolveHubFanLabel reuses the played-fixture Kibice line', () => {

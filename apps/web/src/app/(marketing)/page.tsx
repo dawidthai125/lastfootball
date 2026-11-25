@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { LandingPage } from '@/components/landing/LandingPage';
 
 export const metadata: Metadata = {
-  title: 'LastFootball',
+  title: { absolute: 'LastFootball' },
   description: 'Załóż klub. Prowadź go przez ligę. Każdy mecz jest Twój.',
 };
 

@@ -10,11 +10,14 @@ export interface MatchRules {
   readonly autoSides: readonly PitchSide[];
   /** Substitutions per side. */
   readonly maxSubstitutions: number;
+  /** Neutral ground: neither side is at home. Absent = the first side hosts. */
+  readonly neutral?: boolean;
 }
 
 export function createMatchRules(input: Partial<MatchRules>): MatchRules {
   return Object.freeze({
     autoSides: Object.freeze([...(input.autoSides ?? [])]),
     maxSubstitutions: input.maxSubstitutions ?? 3,
+    ...(input.neutral ? { neutral: true } : {}),
   });
 }

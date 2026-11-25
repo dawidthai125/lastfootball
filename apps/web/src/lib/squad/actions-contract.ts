@@ -7,6 +7,8 @@ import { env } from '@/config/env';
 import { isTalkPersonality, talkResult } from '@/lib/squad/contract-talk';
 import { createClient } from '@/lib/supabase/server';
 
+const LISTED = 'Najpierw zdejmij go z listy transferowej.';
+
 export type ContractTalkState = { readonly error?: string; readonly ok?: boolean };
 
 function fallbackWage(skill: number, age: number): number {
@@ -36,7 +38,9 @@ export async function saveContractTalk(
   if (!clubId) return { error: 'Nie znaleziono klubu.' };
   const { data: player, error: readErr } = await supabase
     .from('players')
-    .select('id, wage, skill, age, morale, personality, contract_season')
+    .select(
+      'id, wage, skill, age, morale, personality, contract_season, on_loan, transfer_listed_at, origin',
+    )
     .eq('id', playerId)
     .eq('club_id', clubId)
     .eq('loaned_in', false)
@@ -51,7 +55,17 @@ export async function saveContractTalk(
     morale: number | null;
     personality: string | null;
     contract_season: number | null;
+    on_loan: boolean | null;
+    transfer_listed_at: string | null;
+    origin: string | null;
   };
+  if (row.origin === 'emergency') {
+    return { error: 'Junior awaryjny ma kontrakt tylko do końca sezonu.' };
+  }
+  // Half of the pay sits in wage_bank during a loan, so the talk would start from a false wage.
+  if (row.on_loan === true) return { error: 'Najpierw ściągnij go z wypożyczenia.' };
+  // The buyer takes the wage over and bids without seeing it.
+  if (row.transfer_listed_at) return { error: LISTED };
   const rawPersonality = row.personality ?? '';
   const personality = isTalkPersonality(rawPersonality) ? rawPersonality : 'spokojny';
   const wage = typeof row.wage === 'number' ? row.wage : fallbackWage(row.skill, row.age);
@@ -64,12 +78,15 @@ export async function saveContractTalk(
     season: clubRow?.season_number ?? 1,
   });
   if (!decision.ok) return { error: decision.reason };
-  const { error } = await serverDb(supabase)
+  const { data: saved, error } = await serverDb(supabase)
     .from('players')
     .update({ wage: decision.wage, contract_season: decision.contractSeason } as never)
     .eq('id', playerId)
-    .eq('club_id', clubId);
+    .eq('club_id', clubId)
+    .is('transfer_listed_at', null)
+    .select('id');
   if (error) return { error: 'Nie udało się zapisać kontraktu.' };
+  if (!saved || (saved as unknown[]).length === 0) return { error: LISTED };
   revalidatePath('/squad');
   revalidatePath(`/players/${playerId}`);
   return { ok: true };

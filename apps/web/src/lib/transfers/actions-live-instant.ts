@@ -102,7 +102,8 @@ export async function buyLiveTransferPlayer(
     return { error: 'Ask nieaktualny — odśwież Transfery.' };
   }
 
-  const active = await listClubPlayers(buyer.id);
+  const active = await listClubPlayers(buyer.id).catch(() => null);
+  if (!active) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   const activeMapped = filterSeniorPlayers(active).map((p) => ({
     id: p.id,
     name: p.name,

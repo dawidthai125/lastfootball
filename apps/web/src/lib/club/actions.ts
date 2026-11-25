@@ -1,5 +1,6 @@
 'use server';
 
+import { recordMovement } from '@/lib/finance/record-movement';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -94,14 +95,12 @@ export async function createClub(
       await serverDb(supabase).from('clubs').delete().eq('id', clubId).eq('owner_id', user.id);
       return { error: 'Nie udało się przygotować kadry. Spróbuj ponownie.' };
     }
-    await serverDb(supabase)
-      .from('finance_movements')
-      .insert({
-        club_id: clubId,
-        category: 'starter',
-        label: 'Kapitał startowy',
-        amount: ECONOMY_THIN.STARTER_CASH,
-      } as never);
+    await recordMovement({
+      club_id: clubId,
+      category: 'starter',
+      label: 'Kapitał startowy',
+      amount: ECONOMY_THIN.STARTER_CASH,
+    });
     // LFE-SPONSORS-01: seed Thin contract · no base payout at create (Owner LOCK 2).
     await tryAdminClient()
       ?.from('club_sponsor_contracts')

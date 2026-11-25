@@ -1,7 +1,23 @@
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 
 import { AtmosphereLayer } from '@/components/assets';
 import type { Fixture } from '@/data/fixtures';
+import { openCupTie } from '@/lib/cup/open-cup-tie';
+
+const ctaStyle: CSSProperties = {
+  borderWidth: 'var(--lf-border-width-hair)',
+  borderStyle: 'solid',
+  borderColor: 'var(--lf-color-border-gold)',
+  background: 'var(--lf-color-gold-soft)',
+  color: 'var(--lf-color-gold-base)',
+  fontFamily: 'var(--font-ui)',
+  fontWeight: 600,
+  fontSize: 'var(--lf-type-body)',
+  padding: 'var(--lf-space-2) var(--lf-space-4)',
+  borderRadius: 'var(--lf-radius-sm)',
+  textDecoration: 'none',
+};
 
 type NextMatchHeroProps = {
   fixture: Fixture;
@@ -89,22 +105,15 @@ export function NextMatchHero({
           >
             {kickoffSentence}
           </p>
-        ) : fixture.status === 'upcoming' || fixture.status === 'scheduled' ? (
-          <Link
-            href={`/match/${fixture.id}/tunnel`}
-            className="font-[family-name:var(--font-ui)] font-semibold"
-            style={{
-              borderWidth: 'var(--lf-border-width-hair)',
-              borderStyle: 'solid',
-              borderColor: 'var(--lf-color-border-gold)',
-              background: 'var(--lf-color-gold-soft)',
-              color: 'var(--lf-color-gold-base)',
-              fontSize: 'var(--lf-type-body)',
-              padding: 'var(--lf-space-2) var(--lf-space-4)',
-              borderRadius: 'var(--lf-radius-sm)',
-              textDecoration: 'none',
-            }}
-          >
+        ) : fixture.kickoffCompetition === 'cup' && fixture.status !== 'played' ? (
+          <form action={openCupTie}>
+            <input type="hidden" name="fixtureId" value={fixture.id} />
+            <button type="submit" style={{ ...ctaStyle, cursor: 'pointer' }}>
+              Przygotuj mecz
+            </button>
+          </form>
+        ) : fixture.status === 'upcoming' ? (
+          <Link href={`/match/${fixture.id}/tunnel`} style={ctaStyle}>
             Przygotuj mecz
           </Link>
         ) : null}

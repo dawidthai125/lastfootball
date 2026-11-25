@@ -193,6 +193,9 @@ export function energyAfterTraining(input: {
     return { energy: Math.min(100, energy + 10), status };
   }
 
+  // The injured sit out the load, like the individual session (D158).
+  if (status === 'INJURED') return { energy, status };
+
   const drop = intensity === 'high' ? 14 : 6;
   const next = Math.max(0, energy - drop);
   const tired = next < 34 && status === 'READY' ? 'TIRED' : status;

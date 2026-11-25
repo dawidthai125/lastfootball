@@ -67,7 +67,8 @@ export async function completeFirstMatch(
       if (!managerLog) {
         return { error: 'Nie da się odtworzyć decyzji z meczu. Wejdź w mecz jeszcze raz.' };
       }
-      const players = await listClubPlayers(row.id);
+      const players = await listClubPlayers(row.id).catch(() => null);
+      if (!players) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
       const score = await authoritativeFirstMatchScore(players, managerLog);
       if ('error' in score) return score;
       const result = clubHomeResult(score.home, score.away);
@@ -76,6 +77,7 @@ export async function completeFirstMatch(
       }
 
       const build = await readClubBuild(supabase, row.id);
+      if (build.readFailed) return { error: 'Nie udało się odczytać klubu. Spróbuj ponownie.' };
       const seniors = filterSeniorPlayers(players);
       const benchIds = new Set(resolveMatchBench(players).map((p) => p.id));
       const roleById: Record<string, 'xi' | 'bench' | 'out'> = {};

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { isFirstMatchTunnelPath, FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { safeNextPath } from '@/lib/auth/safe-next';
 import { updateSession } from '@/lib/supabase/middleware';
 
 const PUBLIC_PREFIXES = [
@@ -52,10 +53,6 @@ function startsWithAny(pathname: string, prefixes: string[]): boolean {
   return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
-function isSafeNext(path: string | null): path is string {
-  return Boolean(path && path.startsWith('/') && !path.startsWith('//'));
-}
-
 function postAuthPath(hasClub: boolean, firstMatchCompleted: boolean): string {
   if (!hasClub) return '/welcome';
   if (!firstMatchCompleted) return FIRST_MATCH_PATHS.intro;
@@ -64,7 +61,7 @@ function postAuthPath(hasClub: boolean, firstMatchCompleted: boolean): string {
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  const { response, userId, hasClub, firstMatchCompleted, configured } =
+  const { response, userId, hasClub, firstMatchCompleted, configured, clubUnknown } =
     await updateSession(request);
 
   const isPublic = pathname === '/' || startsWithAny(pathname, PUBLIC_PREFIXES);
@@ -72,6 +69,9 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = pathname === '/login' || pathname === '/register';
   const isOnboarding = pathname === '/welcome' || pathname.startsWith('/onboarding');
   const onFirstMatchTunnel = isFirstMatchTunnelPath(pathname);
+
+  // The club read failed. Nothing is known, so nobody is sent to the club wizard or out of a page.
+  if (clubUnknown) return response;
 
   // Landing: session → skip marketing
   if (pathname === '/' && userId) {
@@ -83,8 +83,8 @@ export async function middleware(request: NextRequest) {
   // Auth pages: already signed in → continue journey
   if (isAuthPage && userId) {
     const url = request.nextUrl.clone();
-    const next = searchParams.get('next');
-    if (hasClub && firstMatchCompleted && isSafeNext(next)) {
+    const next = safeNextPath(searchParams.get('next'));
+    if (hasClub && firstMatchCompleted && next) {
       url.pathname = next;
       url.search = '';
       return NextResponse.redirect(url);

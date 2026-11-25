@@ -1,6 +1,5 @@
 'use client';
 
-import { isNameAllowed } from '@/lib/club/name-filter';
 import { useActionState, useEffect, useMemo, useState } from 'react';
 
 import { ClubCrest } from '@/components/assets/ClubCrest';
@@ -14,6 +13,7 @@ import {
   normalizeClubName,
   normalizeShortName,
   suggestShortName,
+  validateClubIdentity,
   STARTER_PACKAGE,
   CLUB_WIZARD_DRAFT_KEY,
   type ClubWizardDraft,
@@ -95,7 +95,8 @@ export function ClubWizard() {
       secondaryColor,
       crestTemplateId,
     });
-  }, [hydrated, step, name, shortName, primaryColor, secondaryColor, crestTemplateId]);
+    // `state`: a refused save puts back the draft that the submit cleared.
+  }, [hydrated, step, name, shortName, primaryColor, secondaryColor, crestTemplateId, state]);
 
   const previewShort = useMemo(() => {
     if (shortTouched && shortName) return normalizeShortName(shortName);
@@ -107,16 +108,17 @@ export function ClubWizard() {
     if (step === 1) {
       const n = normalizeClubName(name);
       const s = shortTouched ? normalizeShortName(shortName) : suggestShortName(n);
-      if (n.length < 3 || n.length > 24) {
-        setLocalError('Nazwa klubu: 3–24 znaki.');
-        return;
-      }
-      if (!/^[A-Z0-9]{3,4}$/.test(s)) {
-        setLocalError('Skrót: 3–4 znaki A–Z / 0–9.');
-        return;
-      }
-      if (!isNameAllowed(n) || !isNameAllowed(s)) {
-        setLocalError('Tej nazwy nie można użyć. Wybierz inną.');
+      // The same rules as the save, so a refusal comes here and not on the last step.
+      const checked = validateClubIdentity({
+        name: n,
+        shortName: s,
+        primaryColor: COLOR_PRESETS[0]!.primary,
+        secondaryColor: COLOR_PRESETS[0]!.secondary,
+        crestTemplateId: CREST_TEMPLATES[0]!.id,
+        allowedCrestIds: CREST_TEMPLATES.map((t) => t.id),
+      });
+      if (!checked.ok) {
+        setLocalError(checked.error);
         return;
       }
       setName(n);
@@ -366,19 +368,20 @@ export function ClubWizard() {
             </section>
           )}
 
-          {step < 4 && (
-            <div className="lf-wizard__nav">
-              {step > 1 ? (
-                <button
-                  type="button"
-                  className="lf-landing__cta lf-landing__cta--secondary"
-                  onClick={goBack}
-                >
-                  Wstecz
-                </button>
-              ) : (
-                <span />
-              )}
+          <div className="lf-wizard__nav">
+            {step > 1 ? (
+              <button
+                type="button"
+                className="lf-landing__cta lf-landing__cta--secondary"
+                onClick={goBack}
+                disabled={pending}
+              >
+                Wstecz
+              </button>
+            ) : (
+              <span />
+            )}
+            {step < 4 ? (
               <button
                 type="button"
                 className="lf-landing__cta lf-landing__cta--primary"
@@ -386,8 +389,8 @@ export function ClubWizard() {
               >
                 Dalej
               </button>
-            </div>
-          )}
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

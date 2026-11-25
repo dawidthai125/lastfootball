@@ -2,7 +2,9 @@ import { loadEmailGate } from '@/lib/auth/email-confirm';
 import { getManagerClub } from '@/lib/club/get-manager-club';
 import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { getFixtureByIdForClub, listClubFixtures } from '@/lib/fixtures';
-import { kickoffBlockReason, latestPlayedAt } from '@/lib/fixtures/kickoff-gate';
+import { kickoffBlockReason } from '@/lib/fixtures/kickoff-gate';
+import { lastPlayedOf } from '@/lib/fixtures/last-played';
+import { createClient } from '@/lib/supabase/server';
 
 /** Sentence for an upcoming fixture entry. Played fixtures and the scripted first match stay open. */
 export async function upcomingKickoffSentence(matchId: string): Promise<string | null> {
@@ -19,11 +21,13 @@ export async function upcomingKickoffSentence(matchId: string): Promise<string |
     listClubFixtures(club.id),
   ]);
 
+  const last = await lastPlayedOf(await createClient(), club.id, fixtures);
+
   return kickoffBlockReason({
     matchesBlocked: gate.matchesBlocked,
     competition: fixture.competition,
-    lastPlayedAt: latestPlayedAt(fixtures),
-    lastChallengeAt: latestPlayedAt(fixtures, 'challenge'),
+    lastPlayedAt: last.match,
+    lastChallengeAt: last.challenge,
     now: new Date(),
   });
 }

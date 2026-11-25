@@ -18,4 +18,8 @@ export {
   cupRoundForMatchday,
   cupRoundLabel,
 } from '@/lib/cup/matchdays';
-export { CUP_UNLOCK_AFTER_MATCHDAY, resolveNationalCup } from '@/lib/cup/resolve-national-cup';
+export {
+  CUP_UNLOCK_AFTER_MATCHDAY,
+  playerWonCup,
+  resolveNationalCup,
+} from '@/lib/cup/resolve-national-cup';

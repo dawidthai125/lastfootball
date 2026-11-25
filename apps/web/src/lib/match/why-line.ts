@@ -86,16 +86,16 @@ function dialSentence(
   if (kind === 'pressing') {
     return dial.goalAfter
       ? `Pressing ${value} od ${at}. minuty dał gola.`
-      : `Pressing ${value} od ${at}. minuty nie zmienił wyniku.`;
+      : `Pressing ${value} od ${at}. minuty nie dał gola.`;
   }
   if (kind === 'tempo') {
     return dial.goalAfter
       ? `Tempo ${value} od ${at}. minuty dało gola.`
-      : `Tempo ${value} od ${at}. minuty nie zmieniło wyniku.`;
+      : `Tempo ${value} od ${at}. minuty nie dało gola.`;
   }
   return dial.goalAfter
     ? `Szerokość ${value} od ${at}. minuty dała gola.`
-    : `Szerokość ${value} od ${at}. minuty nie zmieniła wyniku.`;
+    : `Szerokość ${value} od ${at}. minuty nie dała gola.`;
 }
 
 function asInt(value: number): number {

@@ -30,5 +30,5 @@ export function preMatchWeatherNote(competition: FixtureDto['competition']): str
         : competition === 'cup'
           ? 'Puchar'
           : 'Mecz ligowy';
-  return `${kind} — bez wpływu pogody na silnik (Thin A)`;
+  return `${kind} — pogoda nie wpływa na wynik`;
 }

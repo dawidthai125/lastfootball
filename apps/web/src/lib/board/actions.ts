@@ -21,7 +21,7 @@ export async function collectTaskReward(
   const block = parseBoardTaskBlock(formData.get('block'));
   if (!block) return { error: 'Nie znaleziono zadania.' };
 
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
   const admin = tryAdminClient();
   if (!admin) return { error: 'Nagroda jest chwilowo niedostępna.' };

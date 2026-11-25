@@ -20,6 +20,7 @@ import { homePitchBonus } from '@/lib/stadium/levels';
 import { kickoffPressingWithLine } from '@/lib/training/press-line';
 import { kickoffTempo, kickoffWidth } from '@/lib/training/style';
 import { mapGroupsToLfeSkills } from '@/lib/squad/truth';
+import { isCupFinal } from '@/lib/cup/matchdays';
 import { cupOpponentTier } from '@/lib/cup/cup-guests';
 import { LIVE_SUB_LIMIT } from '@/lib/match/manager-commands';
 import { seedOpponentBench, seedOpponentSquad, type RosterPlayerSeed } from '@/lib/squad';
@@ -55,9 +56,23 @@ function conditionFromSeed(p: RosterPlayerSeed) {
 }
 
 /** Level 0 returns the same skills object, so old sims stay put. */
-function withHomePitch<T extends { reactions: number }>(skills: T, bonus: number): T {
+const PITCH_SKILLS = [
+  'finishing',
+  'ballControl',
+  'shortPassing',
+  'tackling',
+  'composure',
+  'positioning',
+] as const;
+
+function withHomePitch<T extends Readonly<Record<(typeof PITCH_SKILLS)[number], number>>>(
+  skills: T,
+  bonus: number,
+): T {
   if (bonus <= 0) return skills;
-  return { ...skills, reactions: clampSkill(skills.reactions + bonus) };
+  const better = { ...skills } as Record<string, number>;
+  for (const key of PITCH_SKILLS) better[key] = clampSkill(skills[key] + bonus);
+  return better as T;
 }
 
 /** Opponent condition only when the seed actually carries it, so AI matches stay put. */
@@ -321,6 +336,7 @@ export function createSessionFromLeagueFixture(
             // Nobody leads a shared match live, so the engine makes both sides' changes.
             autoSides: shared ? (['home', 'away'] as const) : [theirSide],
             maxSubstitutions: LIVE_SUB_LIMIT,
+            ...(isCupFinal(fixture) ? { neutral: true } : {}),
           },
         }
       : {}),

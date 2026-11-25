@@ -2,7 +2,7 @@ import { utcDateString } from '@/lib/fixtures/played-unlock';
 import type { PitchRole } from '@lastfootball/lfe';
 
 import type { ClubDto } from '@/lib/club/types';
-import { clauseFromSkill, contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
+import { contractUntilLabel, personalityFromId } from '@/lib/squad/depth';
 import { leadershipOf, talentsOf } from '@/lib/squad/talents';
 import { attributeBars, groupsFromSkill } from '@/lib/squad/truth';
 import { careerPhaseLabel, resolveCareerPhase } from '@/lib/squad/career-phase';
@@ -10,6 +10,7 @@ import { potentialBandLabel, resolvePotentialBand } from '@/lib/squad/potential'
 import type { RosterPlayerSeed } from '@/lib/squad/seed-roster';
 import type { PlayerRowDto, SquadDto, SquadPlayerDto } from '@/lib/squad/types';
 import { filterSeniorPlayers, SquadUnavailableError } from '@/lib/squad/types';
+import { polishDay } from '@/lib/ui/polish-day';
 
 /** Display/filter position — group CBs/LB into OB for squad filters. */
 function displayPosition(pos: string): string {
@@ -77,18 +78,18 @@ function historyLines(row: PlayerRowDto): string[] {
   }
   lines.push(row.starter ? 'W zapisanej jedenastce.' : 'Poza zapisaną jedenastką.');
   if (row.onLoan) {
-    lines.push(row.loanUntil ? `Wypożyczony do ${row.loanUntil}.` : 'Wypożyczony.');
+    lines.push(row.loanUntil ? `Wypożyczony do ${polishDay(row.loanUntil)}.` : 'Wypożyczony.');
   }
   if (row.loanedIn) {
     const partner = row.loanPartnerLabel ? ` z ${row.loanPartnerLabel}` : '';
     lines.push(
       row.loanUntil
-        ? `Wypożyczony do nas${partner} do ${row.loanUntil}.`
+        ? `Wypożyczony do nas${partner} do ${polishDay(row.loanUntil)}.`
         : `Wypożyczony do nas${partner}.`,
     );
   }
   if (row.intlAbsentUntil) {
-    lines.push(`Powołanie do ${row.intlAbsentUntil}.`);
+    lines.push(`Powołanie do ${polishDay(row.intlAbsentUntil)}.`);
   }
   return lines;
 }
@@ -121,14 +122,18 @@ function toDto(row: PlayerRowDto): SquadPlayerDto {
     setPiece: row.setPiece === true,
     onLoan: row.onLoan === true,
     loanedIn: row.loanedIn === true,
+    emergency: row.origin === 'emergency',
     intlAbsentUntil: row.intlAbsentUntil ?? null,
     nationality: row.nationality,
     attributes: attributeBars(row.groups ?? groupsFromSkill(skill)),
     contract: {
       wage: typeof row.wage === 'number' ? row.wage : displayWage(skill, row.age),
-      until: row.contractSeason
-        ? `koniec sezonu ${row.contractSeason}`
-        : contractUntilLabel(row.contractUntil),
+      until:
+        row.loanedIn && row.loanUntil
+          ? `${contractUntilLabel(row.loanUntil)} (wypożyczenie)`
+          : row.contractSeason
+            ? `koniec sezonu ${row.contractSeason}`
+            : contractUntilLabel(row.contractUntil),
       season: row.contractSeason ?? null,
       clause: typeof row.releaseClause === 'number' ? row.releaseClause : displayClause(skill),
       role: roleLabel(row.pos, row.captain),
@@ -203,7 +208,10 @@ export function resolveStartingXi(rows: readonly PlayerRowDto[]): readonly Roste
     ...traits(r),
   }));
   if (xi.length !== 11) {
-    throw new SquadUnavailableError(clubId, `Starting XI incomplete (${xi.length}/11)`);
+    throw new SquadUnavailableError(
+      clubId,
+      `W jedenastce jest ${xi.length} z 11 zawodników. Uzupełnij skład.`,
+    );
   }
   return xi;
 }

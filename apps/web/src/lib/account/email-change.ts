@@ -37,7 +37,7 @@ export async function startEmailChange(userId: string, newEmail: string): Promis
   );
 }
 
-export type EmailChangeResult = 'ok' | 'bad' | 'taken';
+export type EmailChangeResult = 'ok' | 'bad' | 'taken' | 'retry';
 
 export async function finishEmailChange(token: string): Promise<EmailChangeResult> {
   if (!TOKEN_PATTERN.test(token)) return 'bad';
@@ -48,17 +48,29 @@ export async function finishEmailChange(token: string): Promise<EmailChangeResul
     .delete()
     .eq('token_hash', hashOf(token))
     .gt('expires_at', new Date().toISOString())
-    .select('user_id, new_email')
+    .select('user_id, new_email, token_hash, expires_at')
     .maybeSingle();
-  const row = claimed.data as unknown as { user_id: string; new_email: string } | null;
-  if (claimed.error || !row) return 'bad';
+  const row = claimed.data as unknown as {
+    user_id: string;
+    new_email: string;
+    token_hash: string;
+    expires_at: string;
+  } | null;
+  if (claimed.error) return 'retry';
+  if (!row) return 'bad';
 
   const before = await admin.auth.admin.getUserById(row.user_id);
   const changed = await admin.auth.admin.updateUserById(row.user_id, {
     email: row.new_email,
     email_confirm: true,
   });
-  if (changed.error) return 'taken';
+  if (changed.error) {
+    const { status } = changed.error;
+    if (status !== undefined && status >= 400 && status < 500 && status !== 429) return 'taken';
+    // An outage, not the address: the link works again.
+    await admin.from('email_changes' as never).insert(row as never);
+    return 'retry';
+  }
 
   // The click proved the new address: the same as a confirmation.
   const now = new Date().toISOString();

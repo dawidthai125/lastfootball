@@ -8,6 +8,7 @@ import type {
   PostMatchSummary,
   PostMatchTimelineItem,
 } from '@/components/match/post-match/build-post-match-summary';
+import { roleLabel } from '@/lib/match/role-label';
 import type { PlayerRatingView } from '@/components/match/post-match/player-ratings';
 import { LocationHero } from '@/components/ui';
 import { UI_COPY } from '@/lib/ui/copy';
@@ -76,7 +77,7 @@ export function PostMatchView({
         ) : null}
         {developmentNames.length > 0 ? (
           <p className="lf-post__reward" aria-label="Rozwój po meczu">
-            Rozwój: {developmentNames.join(', ')} (+1 umiejętność)
+            Rozwój umiejętności: {developmentNames.join(', ')}
           </p>
         ) : null}
 
@@ -172,7 +173,7 @@ export function PostMatchView({
                         fontSize: 'var(--lf-type-label)',
                       }}
                     >
-                      REPLAY →
+                      POWTÓRKA →
                     </span>
                   </button>
                 </li>
@@ -314,7 +315,7 @@ function RatingsColumn({
                   letterSpacing: 'var(--lf-type-tracking-label)',
                 }}
               >
-                {p.role}
+                {roleLabel(p.role)}
                 {p.isMvp ? ' · MVP' : ''}
                 {' · '}
                 {p.goals}G · {p.assists}A · {p.minutesPlayed} min{' '}

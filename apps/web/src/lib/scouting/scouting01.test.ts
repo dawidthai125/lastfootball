@@ -162,8 +162,20 @@ describe('LFE-SCOUTING-01 contracts', () => {
     );
     const ids = rows.map((r) => r.id);
     expect(canAddToShortlist(ids, 'p0', rows, []).ok).toBe(false);
-    const full = Array.from({ length: SCOUTING_THIN.MAX_SHORTLIST }, (_, i) => `x${i}`);
-    expect(canAddToShortlist(full, 'p0', rows, []).ok).toBe(false);
+    const many = Array.from({ length: SCOUTING_THIN.MAX_SHORTLIST + 1 }, (_, i) =>
+      mapPlayerRow(seniorRow({ id: `x${i}`, club_id: CLUB.id, shirt_number: i + 1 })),
+    );
+    const full = many.slice(1).map((r) => r.id);
+    expect(canAddToShortlist(full, 'x0', many, []).ok).toBe(false);
+    // Players who left the screen cannot be removed there, so they do not count.
+    expect(
+      canAddToShortlist(
+        full.map((id) => `gone-${id}`),
+        'x0',
+        many,
+        [],
+      ).ok,
+    ).toBe(true);
   });
 
   it('soft-locks before SEASON', () => {

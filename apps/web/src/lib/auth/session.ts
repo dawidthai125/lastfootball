@@ -2,6 +2,7 @@ import type { User } from '@supabase/supabase-js';
 
 import { env } from '@/config/env';
 import { FIRST_MATCH_PATHS } from '@/lib/first-match/constants';
+import { safeNextPath } from '@/lib/auth/safe-next';
 import { createClient } from '@/lib/supabase/server';
 
 export async function getAuthUser(): Promise<User | null> {
@@ -13,7 +14,8 @@ export async function getAuthUser(): Promise<User | null> {
   return user;
 }
 
-export async function userHasClub(userId: string): Promise<boolean> {
+/** Null when the read failed: that is not the same as a manager without a club. */
+export async function userHasClub(userId: string): Promise<boolean | null> {
   if (!env.isSupabaseConfigured) return false;
   const supabase = await createClient();
 
@@ -33,12 +35,12 @@ export async function userHasClub(userId: string): Promise<boolean> {
     .select('id')
     .eq('owner_id', userId)
     .maybeSingle();
-  if (error) return false;
+  if (error) return null;
   const clubRow = data as { id: string } | null;
   return Boolean(clubRow?.id);
 }
 
-export async function userFirstMatchCompleted(userId: string): Promise<boolean> {
+export async function userFirstMatchCompleted(userId: string): Promise<boolean | null> {
   if (!env.isSupabaseConfigured) return false;
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -46,7 +48,7 @@ export async function userFirstMatchCompleted(userId: string): Promise<boolean> 
     .select('first_match_completed_at')
     .eq('owner_id', userId)
     .maybeSingle();
-  if (error) return false;
+  if (error) return null;
   const row = data as { first_match_completed_at: string | null } | null;
   return Boolean(row?.first_match_completed_at);
 }
@@ -55,14 +57,11 @@ export async function userFirstMatchCompleted(userId: string): Promise<boolean> 
 export async function getPostAuthPath(
   userId: string,
 ): Promise<'/hub' | '/welcome' | '/onboarding/first-match'> {
-  if (!(await userHasClub(userId))) return '/welcome';
-  if (!(await userFirstMatchCompleted(userId))) return FIRST_MATCH_PATHS.intro;
+  if ((await userHasClub(userId)) === false) return '/welcome';
+  if ((await userFirstMatchCompleted(userId)) === false) return FIRST_MATCH_PATHS.intro;
   return '/hub';
 }
 
 export function sanitizeNextPath(next: string | null | undefined, fallback: string): string {
-  if (next && next.startsWith('/') && !next.startsWith('//')) {
-    return next;
-  }
-  return fallback;
+  return safeNextPath(next) ?? fallback;
 }

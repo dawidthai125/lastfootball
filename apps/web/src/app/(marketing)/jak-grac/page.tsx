@@ -26,7 +26,8 @@ export default function HelpPage() {
       <LegalSection title="W skrócie">
         <p>
           Prowadzisz klub od IV ligi w górę. Codziennie grasz jeden mecz ligowy albo pucharowy i
-          jedno towarzyskie wyzwanie. Nowy dzień zaczyna się o północy czasu polskiego.
+          jedno towarzyskie wyzwanie. Nowy dzień meczowy zaczyna się o północy czasu polskiego.
+          Trening i powołania do reprezentacji mają nowy dzień od 1:00, a w czasie letnim od 2:00.
         </p>
       </LegalSection>
       <LegalSection title="Mecz">
@@ -58,6 +59,11 @@ export default function HelpPage() {
           <li>Mecz zabiera energię. Wraca ona z każdą nocą i przy regeneracji na treningu.</li>
           <li>
             Zmęczeni częściej łapią kontuzje. Kartki i kontuzje oznaczają pauzę w kolejnych meczach.
+            Pauzę skraca o jeden każdy mecz klubu i każdy dzień bez meczu.
+          </li>
+          <li>
+            Gdy nie da się wystawić jedenastki, powołasz za darmo juniora awaryjnego. Ma kontrakt do
+            końca sezonu i nie można go sprzedać.
           </li>
           <li>
             Część zawodników ma talenty, na przykład Egzekutor albo Żelazne płuca. Widać je w

@@ -1,5 +1,10 @@
+import { randomUUID } from 'node:crypto';
+
+import type { FormationCode } from '@lastfootball/lfe';
 import { notFound, redirect } from 'next/navigation';
 
+import { EmergencyJuniorOffer } from '@/components/squad/EmergencyJuniorOffer';
+import { FreshEntry } from '@/components/match/FreshEntry';
 import { KickoffBlocked } from '@/components/match/KickoffBlocked';
 import { LiveMatchFoundation } from '@/components/match/LiveMatchFoundation';
 import { OpenMatchNotice } from '@/components/match/OpenMatchNotice';
@@ -14,7 +19,7 @@ import { FIRST_MATCH_ID } from '@/lib/first-match/constants';
 import { buildLeagueLiveBundle, getFixtureByIdForClub } from '@/lib/fixtures';
 import { matchPrePath } from '@/lib/match/match-path';
 import { lineupEditorHref } from '@/lib/match/xi-block-path';
-import { parseOurFormation } from '@/lib/match/our-formation';
+import { parseOurFormation, withShape } from '@/lib/match/our-formation';
 import { previewMatchDevelopment } from '@/lib/squad/apply-match-development';
 import { listClubPlayers } from '@/lib/squad/get-players';
 import { loadRivalSquad } from '@/lib/rivals/squad';
@@ -37,7 +42,15 @@ type PageProps = {
   searchParams: Promise<{ shape?: string | string[] }>;
 };
 
-function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
+function SquadError({
+  matchId,
+  detail,
+  formation = '4-4-2',
+}: {
+  matchId: string;
+  detail?: string;
+  formation?: FormationCode;
+}) {
   return (
     <div data-lf-impl="LFE-UI-IMPL-06" data-mch="SCR-MCH-04">
       <LocationHero waId="HERO-003" src="/assets/world-art/hero-003-pitch-night.png" priority />
@@ -47,11 +60,12 @@ function SquadError({ matchId, detail }: { matchId: string; detail?: string }) {
         title="Kadra niedostępna"
         body={detail ?? 'Nie można rozpocząć meczu — brak składu. Wróć do przedmeczu i ustaw XI.'}
         links={[
-          { href: lineupEditorHref(matchId), label: 'Popraw skład' },
-          { href: matchPrePath(matchId), label: UI_COPY.backToPrematch },
+          { href: withShape(lineupEditorHref(matchId), formation), label: 'Popraw skład' },
+          { href: withShape(matchPrePath(matchId), formation), label: UI_COPY.backToPrematch },
           { href: '/squad', label: UI_COPY.squadNav },
         ]}
       />
+      <EmergencyJuniorOffer />
     </div>
   );
 }
@@ -70,7 +84,11 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
       const players = await listClubPlayers(club.id);
       const ourXi = resolveStartingXi(players);
       const ourBench = resolveMatchBench(players);
-      const developmentNames = previewMatchDevelopment(players).skillUpNames;
+      const developmentNames = previewMatchDevelopment(
+        players,
+        'first-match',
+        new Set(ourXi.map((p) => p.id)),
+      );
       const supabase = await createClient();
       const build = await readClubBuild(supabase, club.id);
       const moodRow = await supabase
@@ -116,9 +134,7 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
   try {
     const players = await listClubPlayers(club.id);
     const human = dto.competition === 'human' ? await prepareHumanLive(club, dto) : null;
-    if (human?.block) {
-      return <SquadError matchId={id} detail={human.block} />;
-    }
+    if (human?.block) return <KickoffBlocked sentence={human.block} />;
     const entry = human ? null : await enterMatch(club.id, dto.id, filterSeniorPlayers(players));
     if (entry?.kind === 'error') {
       return <KickoffBlocked sentence="Nie udało się odczytać meczu. Odśwież stronę." />;
@@ -126,12 +142,16 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     if (entry?.kind === 'other') return <OpenMatchNotice fixtureId={entry.fixtureId} other />;
     const going = entry?.kind === 'resume' ? entry : null;
     const problem = human || going ? null : lineupProblem(club.id, players);
-    if (problem) return <SquadError matchId={id} detail={problem} />;
+    if (problem) return <SquadError matchId={id} detail={problem} formation={ourFormation} />;
     const ourXi = human ? human.ourXi : (going?.snapshot.ourXi ?? resolveStartingXi(players));
     const ourBench = human
       ? human.ourBench
       : (going?.snapshot.ourBench ?? resolveMatchBench(players));
-    const developmentNames = previewMatchDevelopment(players).skillUpNames;
+    const developmentNames = previewMatchDevelopment(
+      players,
+      dto.id,
+      new Set(ourXi.map((p) => p.id)),
+    );
     const rival =
       dto.competition === 'challenge' && !going ? await loadRivalSquad(dto.opponentClubId) : null;
     if (dto.competition === 'challenge' && !going && !rival) {
@@ -168,19 +188,21 @@ export default async function LiveMatchPage({ params, searchParams }: PageProps)
     }
     return (
       <LiveMatchShell playedHref={`/match/${id}`}>
-        <LiveMatchFoundation
-          bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
-          club={going?.snapshot.club ?? club}
-          leagueFixture={human?.fixture ?? going?.snapshot.fixture ?? dto}
-          ourXi={ourXi}
-          ourBench={ourBench}
-          ourFormation={going?.snapshot.formation ?? ourFormation}
-          theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
-          extra={extra}
-          resume={going ? { tick: going.tick, log: going.log } : null}
-          developmentNames={developmentNames}
-          fanMoodBefore={fanMoodBefore}
-        />
+        <FreshEntry token={randomUUID()}>
+          <LiveMatchFoundation
+            bundle={buildLeagueLiveBundle(club, human?.fixture ?? dto)}
+            club={going?.snapshot.club ?? club}
+            leagueFixture={human?.fixture ?? going?.snapshot.fixture ?? dto}
+            ourXi={ourXi}
+            ourBench={ourBench}
+            ourFormation={going?.snapshot.formation ?? ourFormation}
+            theirXi={human?.theirXi ?? going?.snapshot.theirXi ?? rival?.xi ?? null}
+            extra={extra}
+            resume={going ? { tick: going.tick, log: going.log } : null}
+            developmentNames={developmentNames}
+            fanMoodBefore={fanMoodBefore}
+          />
+        </FreshEntry>
       </LiveMatchShell>
     );
   } catch (e) {

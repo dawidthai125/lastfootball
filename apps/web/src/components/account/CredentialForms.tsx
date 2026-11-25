@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/FormControls';
+import { useKeptForm } from '@/components/ui/kept-form';
 import { changePassword, requestEmailChange } from '@/lib/account/credentials';
 import { MIN_PASSWORD } from '@/lib/auth/password-policy';
 import { AUTH_ACTION_INITIAL, type AuthActionState } from '@/lib/auth/types';
@@ -28,8 +29,9 @@ const FORM = { display: 'grid', gap: 'var(--lf-space-2)', maxWidth: '26rem' } as
 
 function PasswordForm() {
   const [state, action, pending] = useActionState(changePassword, AUTH_ACTION_INITIAL);
+  const form = useKeptForm(action, state);
   return (
-    <form action={action} style={FORM}>
+    <form {...form} style={FORM}>
       <Field label="Obecne hasło" htmlFor="pw-current">
         <Input
           id="pw-current"
@@ -72,8 +74,9 @@ function PasswordForm() {
 
 function EmailForm({ email }: { email: string }) {
   const [state, action, pending] = useActionState(requestEmailChange, AUTH_ACTION_INITIAL);
+  const form = useKeptForm(action, state);
   return (
-    <form action={action} style={FORM}>
+    <form {...form} style={FORM}>
       <p style={{ margin: 0 }}>Obecny adres: {email}</p>
       <Field label="Nowy adres e-mail" htmlFor="em-next">
         <Input

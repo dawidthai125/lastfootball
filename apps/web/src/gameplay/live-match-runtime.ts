@@ -9,6 +9,7 @@ import { createSessionFromLeagueFixture, type MatchExtra } from '@/lib/fixtures/
 import type { FixtureDto } from '@/lib/fixtures/types';
 import type { ClubDto } from '@/lib/club/types';
 import { commentaryLine } from '@/lib/match/commentary';
+import { momentumFromEvents } from '@/lib/match/momentum';
 import type { RosterPlayerSeed } from '@/lib/squad';
 import {
   LIVE_SUB_LIMIT,
@@ -50,6 +51,8 @@ export type LiveMatchSnapshot = {
     highlight?: boolean;
   }[];
   readonly tactics: MatchState['tactics'];
+  /** Home share of the attacking play, 12 windows. */
+  readonly momentum: readonly number[];
   readonly replay: ReplayView;
 };
 
@@ -408,7 +411,8 @@ export class LiveMatchRuntime {
             : '';
         return kind !== 'lifecycle' && kind !== 'kickoff';
       })
-      .slice(-40)
+      // Goals, cards and changes stay for the whole match; the rest shows the last moments.
+      .filter(({ e }, at, all) => at >= all.length - 40 || LASTING_TYPES.has(String(e.type)))
       .map(({ e, i }) =>
         mapFeedItem(e, i, matchState.clock.displayMinute, matchState.players, {
           homeName: this.homeName,
@@ -465,6 +469,7 @@ export class LiveMatchRuntime {
       ],
       feed,
       tactics: matchState.tactics,
+      momentum: momentumFromEvents(events),
       replay: replayView,
     };
   }
@@ -484,6 +489,8 @@ export class LiveMatchRuntime {
         ? createResumeMatchCommand({ tick, source: 'ui' })
         : createPauseMatchCommand({ tick, source: 'ui' });
     this.session.dispatch(command);
+    // Leaving a replay during a pause leaves no timer behind.
+    if (this.session.status === 'running') this.startSimulation();
     this.bump();
   }
 
@@ -491,7 +498,7 @@ export class LiveMatchRuntime {
     if (this.sharedWatch) {
       return {
         ok: false,
-        error: 'W lidze ludzi mecz idzie z jednego seeda. Taktyka jest zamknięta.',
+        error: 'W Lidze ludzi oba kluby oglądają ten sam mecz. Nie prowadzisz go na żywo.',
       };
     }
     if (!this.watchingLive()) {
@@ -549,7 +556,13 @@ export class LiveMatchRuntime {
     return this.playbackSource === 'live' && this.session.status !== 'stopped';
   }
 
+  /** Called once before the match is taken apart, while its state can still be read. */
+  onLeave: (() => void) | null = null;
+
   dispose(): void {
+    const leave = this.onLeave;
+    this.onLeave = null;
+    leave?.();
     this.stopSimulation();
     this.replay.dispose();
     this.canvasHost.unbind();
@@ -573,9 +586,12 @@ function formatClock(displayMinute: number): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
+const LASTING_TYPES: ReadonlySet<string> = new Set(['GOAL', 'CARD', 'INJURY', 'SUBSTITUTION']);
+
 function mapPeriod(phase: string, period: string): string {
   if (phase === 'FINISHED') return 'Koniec';
   if (phase === 'FULL_TIME') return 'Koniec regulaminowy';
+  if (phase === 'PENALTIES') return 'Karne';
   if (phase === 'PRE_MATCH' || period === 'pre_match') return 'Przed meczem';
   if (period === 'first_half' || phase === 'FIRST_HALF') return '1. połowa';
   if (period === 'second_half' || phase === 'SECOND_HALF') return '2. połowa';
@@ -602,7 +618,9 @@ function mapFeedItem(
     ? rawMinute
     : e.type === 'MATCH_START'
       ? 0
-      : minute;
+      : isSecondHalfStart(e)
+        ? 45
+        : minute;
   return {
     id: `ev-${index}-${e.type}-${e.tick}`,
     minute: `${Math.floor(payloadMinute)}'`,
@@ -610,6 +628,13 @@ function mapFeedItem(
     text: humanizeEvent(e, players, teams),
     highlight: e.type === 'GOAL',
   };
+}
+
+function isSecondHalfStart(e: EngineEvent): boolean {
+  return (
+    e.type === 'SYSTEM' &&
+    (e.payload as { readonly kind?: unknown } | undefined)?.kind === 'second_half_start'
+  );
 }
 
 function eventKind(type: string): LiveEventKind {

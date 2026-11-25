@@ -125,3 +125,28 @@ describe('match facts', () => {
     expect(resolveMatchFacts(home, 1)).toEqual(resolveMatchFacts(away, 1));
   });
 });
+
+describe('round of a match', () => {
+  const pre = (over: Partial<FixtureDto>) =>
+    buildLeaguePreMatchBundle(
+      club,
+      { ...played(null), status: 'upcoming', homeScore: null, awayScore: null, ...over },
+      seedOpponentSquad('xi'),
+    );
+
+  it('has no number for a challenge and a name for a cup round', () => {
+    const challenge = pre({ competition: 'challenge', matchday: 201 });
+    expect(JSON.stringify(challenge.stakes)).not.toContain('201');
+    expect(challenge.ticker).not.toContain('201');
+    const cup = pre({ competition: 'cup', matchday: 103 });
+    expect(cup.stakes.find((s) => s.id === 'md')).toMatchObject({
+      label: 'Runda',
+      value: 'Półfinał',
+    });
+    expect(pre({}).stakes.find((s) => s.id === 'md')).toMatchObject({ value: '3' });
+  });
+
+  it('does not call a later match "Dziś"', () => {
+    expect(pre({}).fixture.whenLabel).toBe('Kolejka 3');
+  });
+});

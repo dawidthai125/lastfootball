@@ -223,6 +223,7 @@ export function EarlyClubHub({
         ) : null}
         {club.seasonGoalNote ? (
           <p className="lf-hub__daily" data-season-goal-note="">
+            {club.seasonGoalPaidFor ? `Sezon ${club.seasonGoalPaidFor}: ` : 'Poprzedni sezon: '}
             {club.seasonGoalNote}
           </p>
         ) : null}

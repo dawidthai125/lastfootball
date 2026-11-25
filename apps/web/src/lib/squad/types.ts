@@ -43,6 +43,8 @@ export type SquadPlayerDto = {
   readonly setPiece?: boolean;
   readonly onLoan?: boolean;
   readonly loanedIn?: boolean;
+  /** Called up because no legal eleven was left (D160). */
+  readonly emergency?: boolean;
   readonly intlAbsentUntil?: string | null;
   readonly nationality: string;
   readonly attributes: readonly { label: string; value: number }[];
@@ -83,13 +85,11 @@ export type PlayerRowDto = {
   readonly version: number;
   readonly departedAt: string | null;
   /** When set — on club transfer list (LFE-TRANSFERS-04). */
-  /** academy · free · bought · loan; null = starting squad (D133). */
+  /** academy · free · bought · loan · emergency; null = starting squad (D133). */
   readonly origin?: string | null;
   readonly joinedAt?: string | null;
   /** Matches in the starting eleven since he joined the seniors (D134). */
   readonly seniorMatches?: number;
-  /** Origin or matches could not be read, so his price is unknown: no sale now. */
-  readonly saleUnknown?: boolean;
   /** UTC day of the last academy training. */
   readonly academyTrainedOn?: string | null;
   readonly academyGain?: number;
@@ -102,6 +102,14 @@ export type PlayerRowDto = {
   /** Stored groups. Absent on old test fixtures — UI then derives from skill. */
   readonly groups?: AttrGroups;
   readonly energy?: number;
+  /** As stored, before the nights and the days without a match since. */
+  readonly stored?: {
+    readonly energy: number;
+    readonly energyOn: string | null;
+    readonly status: string;
+    readonly injuryMatches?: number;
+    readonly suspensionMatches?: number;
+  };
   readonly form?: number;
   readonly wage?: number;
   readonly recentRatings?: readonly number[];
@@ -121,6 +129,8 @@ export type PlayerRowDto = {
   readonly loanedIn?: boolean;
   readonly loanPartnerLabel?: string | null;
   readonly intlAbsentUntil?: string | null;
+  /** The computer club's offer was rejected; a new listing asks again. */
+  readonly aiOfferDeclined?: boolean;
 };
 
 export const POSITION_FILTERS = ['ALL', 'BR', 'OB', 'ŚP', 'PO', 'PN', 'N'] as const;

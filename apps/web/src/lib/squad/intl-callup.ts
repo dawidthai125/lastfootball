@@ -13,6 +13,7 @@ export type IntlCandidate = {
   readonly starter: boolean;
   readonly onLoan: boolean;
   readonly loanedIn: boolean;
+  readonly intlAbsentUntil?: string | null;
 };
 
 function addDays(iso: string, days: number): string {
@@ -28,6 +29,7 @@ function addDays(iso: string, days: number): string {
 /**
  * Thin national call-up: at most one Polish starter with skill ≥ 66 per day hash.
  * Pure — absence is stored when the manager accepts the message action.
+ * A call-up accepted today already used the day: it is the only one that ends in three days.
  */
 export function resolveIntlCallup(input: {
   readonly clubId: string;
@@ -35,6 +37,8 @@ export function resolveIntlCallup(input: {
   readonly players: readonly IntlCandidate[];
   readonly alreadyAbsentIds: readonly string[];
 }): IntlCallup | null {
+  const until = addDays(input.today, 3);
+  if (input.players.some((p) => p.intlAbsentUntil?.slice(0, 10) === until)) return null;
   const pool = input.players
     .filter(
       (p) =>
@@ -53,7 +57,6 @@ export function resolveIntlCallup(input: {
   for (let i = 0; i < key.length; i++) hash = (hash * 33 + key.charCodeAt(i)) >>> 0;
   if (hash % 5 !== 0) return null;
   const pick = pool[hash % pool.length]!;
-  const until = addDays(input.today, 3);
   return {
     playerId: pick.id,
     playerName: pick.name,

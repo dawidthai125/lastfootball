@@ -48,7 +48,8 @@ export async function saveStartingXi(
   if (clubErr || !club) return { error: 'Nie znaleziono klubu.' };
   const clubId = (club as { id: string }).id;
 
-  const rows = await listClubPlayers(clubId);
+  const rows = await listClubPlayers(clubId).catch(() => null);
+  if (!rows) return { error: 'Nie udało się odczytać kadry. Spróbuj ponownie.' };
   let squad;
   try {
     squad = resolveClubSquad({ id: clubId }, rows);
@@ -67,21 +68,11 @@ export async function saveStartingXi(
     return { error: validation.errors[0] ?? 'Skład XI jest nieprawidłowy.' };
   }
 
-  const { error: clearErr } = await supabase
-    .from('players')
-    .update({ starter: false } as never)
-    .eq('club_id', clubId)
-    .is('departed_at', null);
-
-  if (clearErr) return { error: 'Nie udało się zaktualizować składu.' };
-
-  const { error: setErr } = await supabase
-    .from('players')
-    .update({ starter: true } as never)
-    .eq('club_id', clubId)
-    .in('id', starterIds);
-
-  if (setErr) return { error: 'Nie udało się zapisać XI.' };
+  const { error: saveErr } = await supabase.rpc(
+    'save_starting_xi' as never,
+    { p_club_id: clubId, p_player_ids: starterIds } as never,
+  );
+  if (saveErr) return { error: 'Nie udało się zapisać XI. Spróbuj ponownie.' };
 
   revalidatePath('/squad');
   revalidatePath(`/match/${matchId}`);

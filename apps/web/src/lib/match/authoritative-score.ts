@@ -31,7 +31,7 @@ export async function authoritativeManagerScore(
     return score ?? { error: 'Nie udało się policzyć wyniku. Spróbuj ponownie.' };
   }
 
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   const dto = club ? await getFixtureByIdForClub(club.id, fixtureId) : null;
   if (!club || !dto) return { error: 'Nie znaleziono meczu.' };
 
@@ -66,7 +66,7 @@ export async function authoritativeFirstMatchScore(
   players: readonly PlayerRowDto[],
   log: readonly ManagerLogEntry[],
 ): Promise<ReplayedMatch | { error: string }> {
-  const club = await getManagerClub();
+  const club = await getManagerClub().catch(() => null);
   if (!club) return { error: 'Nie znaleziono klubu.' };
   try {
     const session = createSessionFromFirstMatch(

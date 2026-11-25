@@ -58,5 +58,5 @@ export const STARTER_PACKAGE = {
   stadiumLabel: (clubName: string) => `Arena ${clubName}`,
   stadiumCapacity: '4 200 miejsc',
   squad: 'XI + ławka (skład startowy)',
-  coach: 'Trener: Marek Nowak · zrównoważony',
+  coach: 'Bez trenera. Zatrudnisz go w Treningu.',
 } as const;

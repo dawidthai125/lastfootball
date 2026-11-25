@@ -23,7 +23,8 @@ export async function refreshSquadForSeason(db: RefreshDb, clubId: string): Prom
         .eq('status', 'INJURED')
         .gt('suspension_matches', 0),
     () => squad({ ...rested, status: 'READY' }).in('status', ['INJURED', 'TIRED']),
-    () => squad(rested),
+    // Energy only: a write of injury_matches starts the count of the days of a ban anew.
+    () => squad({ energy: 100 }),
   ];
   for (const step of steps) {
     const { error } = await step();

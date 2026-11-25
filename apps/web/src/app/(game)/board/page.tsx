@@ -35,6 +35,7 @@ export default async function BoardPage() {
           skill: player.skill,
           academyTrack: Boolean(player.academyTrack),
           departed: player.departedAt != null || player.status === 'DEPARTED',
+          goalkeeper: player.pos === 'BR',
         })),
       )
     : null;

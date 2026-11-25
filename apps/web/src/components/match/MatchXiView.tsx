@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { PlayerPortrait } from '@/components/assets';
+import { EmergencyJunior } from '@/components/squad/EmergencyJunior';
 import { LocationHero, StateBanner } from '@/components/ui';
 import { saveStartingXi } from '@/lib/squad/actions';
 import { SAVE_XI_INITIAL } from '@/lib/squad/xi-action-state';
+import { emergencyNeed } from '@/lib/squad/emergency-junior';
 import { STATUS_LABEL, type SquadPlayerDto } from '@/lib/squad';
 import {
   applyXiSelection,
@@ -18,6 +20,7 @@ import {
 } from '@/lib/squad/validate-starting-xi';
 import { utcDateString } from '@/lib/fixtures/played-unlock';
 import { matchLivePath, matchPrePath } from '@/lib/match/match-path';
+import { withShape } from '@/lib/match/our-formation';
 import { UI_COPY } from '@/lib/ui/copy';
 
 import './match-xi.css';
@@ -29,11 +32,14 @@ export function MatchXiView({
   matchId,
   players: initialPlayers,
   todayUtc = utcDateString(),
+  shape = '4-4-2',
 }: {
   matchId: string;
   players: readonly SquadPlayerDto[];
   /** Inject for tests; defaults to UTC today (intl gate parity with save). */
   todayUtc?: string;
+  /** Shape chosen on the pre-match screen. */
+  shape?: string;
 }) {
   const router = useRouter();
   const [players, setPlayers] = useState(() => initialPlayers.map((p) => ({ ...p })));
@@ -52,9 +58,9 @@ export function MatchXiView({
 
   useEffect(() => {
     if (state.ok) {
-      router.push(matchLivePath(matchId));
+      router.push(withShape(matchLivePath(matchId), shape));
     }
-  }, [state.ok, matchId, router]);
+  }, [state.ok, matchId, shape, router]);
 
   const repaired = useMemo(
     () => replaceUnavailableStarters(players, todayUtc),
@@ -64,6 +70,8 @@ export function MatchXiView({
 
   const best = useMemo(() => pickBestXi(players, todayUtc), [players, todayUtc]);
   const canImprove = best.some((p, i) => p.starter !== players[i]?.starter);
+
+  const need = useMemo(() => emergencyNeed(players, todayUtc), [players, todayUtc]);
 
   function onBest() {
     setPlayers(best);
@@ -103,6 +111,8 @@ export function MatchXiView({
       ) : null}
       {state.error ? <StateBanner tone="error">{state.error}</StateBanner> : null}
 
+      {need ? <EmergencyJunior need={need} /> : null}
+
       <form action={action} className="lf-xi__cta">
         <input type="hidden" name="matchId" value={matchId} />
         <input type="hidden" name="starterIds" value={starters.map((p) => p.id).join(',')} />
@@ -119,7 +129,7 @@ export function MatchXiView({
             {UI_COPY.bestXi}
           </button>
         ) : null}
-        <Link href={matchPrePath(matchId)} className="lf-xi__soft">
+        <Link href={withShape(matchPrePath(matchId), shape)} className="lf-xi__soft">
           {UI_COPY.backToChecklist}
         </Link>
       </form>

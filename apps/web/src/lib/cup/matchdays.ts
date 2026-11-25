@@ -28,6 +28,14 @@ export function cupRoundForMatchday(matchday: number): CupRoundIndex | null {
   return null;
 }
 
+/** The final is played on neutral ground. */
+export function isCupFinal(fixture: {
+  readonly competition: string;
+  readonly matchday: number;
+}): boolean {
+  return fixture.competition === 'cup' && cupRoundForMatchday(fixture.matchday) === 4;
+}
+
 export function cupRoundLabel(round: CupRoundIndex): string {
   return ROUND_LABEL[round];
 }

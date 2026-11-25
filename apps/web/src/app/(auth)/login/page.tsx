@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { AuthStage } from '@/components/auth/AuthStage';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { env } from '@/config/env';
+import { safeNextPath } from '@/lib/auth/safe-next';
 
 export const metadata: Metadata = {
   title: 'Zaloguj się',
@@ -15,10 +16,7 @@ type LoginPageProps = {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
-  const nextPath =
-    params.next && params.next.startsWith('/') && !params.next.startsWith('//')
-      ? params.next
-      : undefined;
+  const nextPath = safeNextPath(params.next) ?? undefined;
 
   let bannerError: string | null = null;
   if (params.error === 'supabase_unconfigured' || !env.isSupabaseConfigured) {

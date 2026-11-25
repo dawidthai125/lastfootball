@@ -100,7 +100,8 @@ export function resolveClubAchievements(input: ResolveClubAchievementsInput): Cl
       category: 'career',
       title: UI_COPY.achievementFirstTrainingTitle,
       detail: UI_COPY.achievementFirstTrainingDetail,
-      occurredAt: club.lastTrainingOn,
+      // Only the last session is stored, so the first one has no date.
+      occurredAt: null,
     });
   }
 
