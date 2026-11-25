@@ -40,6 +40,7 @@ jobs:
       url: https://www.lastfootball.pl
     env:
       VERCEL_CLI: vercel@66.6.0
+      LF_DEPLOYMENT_ID: gh-${{ github.run_id }}-${{ github.run_attempt }}
       VERCEL_TELEMETRY_DISABLED: '1'
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
@@ -61,7 +62,6 @@ jobs:
       - name: Build
         env:
           VERCEL_ENV: production
-          LF_DEPLOYMENT_ID: gh-${{ github.run_id }}-${{ github.run_attempt }}
           NEXT_PUBLIC_APP_URL: https://www.lastfootball.pl
           NEXT_PUBLIC_SUPABASE_URL: https://ewgllyswhtlkdtiqsqrt.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -69,6 +69,11 @@ jobs:
         run: |
           [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ] || { echo "::error::Missing NEXT_PUBLIC_SUPABASE_ANON_KEY"; exit 1; }
           npx -y "$VERCEL_CLI" build --prod --yes
+      # Next below 16.2 does not hand its deploymentId over, and then Vercel sends an open page of
+      # an older version to the newest one (Skew Protection).
+      - name: Deployment id for Vercel
+        run: |
+          node -e "const fs=require('fs'),f='.vercel/output/config.json',c=JSON.parse(fs.readFileSync(f,'utf8'));c.deploymentId=process.env.LF_DEPLOYMENT_ID;fs.writeFileSync(f,JSON.stringify(c))"
       - name: Publish on Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_DEPLOY_TOKEN }}
