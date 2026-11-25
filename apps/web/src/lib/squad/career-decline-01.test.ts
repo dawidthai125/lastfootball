@@ -89,7 +89,7 @@ describe('LFE-CAREER-DECLINE-01 Growth Gate', () => {
     const lateUps = applyMatchDevelopmentEffects(late, 'gate-cmp').filter(
       (p, i) => p.skill > late[i]!.skill,
     );
-    expect(risingUps.length).toBe(5);
+    expect(risingUps.length).toBe(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
     expect(lateUps.length).toBeLessThanOrEqual(risingUps.length);
   });
 });

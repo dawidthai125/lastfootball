@@ -1,5 +1,4 @@
 import type { LeagueTier } from '@/lib/league/league-tier';
-import { resolveLeagueStrengthProfile } from '@/lib/league/league-strength-profile';
 import { opponentNames } from '@/lib/squad/opponent-names';
 import type { SquadPlayerDto } from '@/lib/squad/types';
 import { isAvailable, isGoalkeeper } from '@/lib/squad/validate-starting-xi';
@@ -53,9 +52,12 @@ export function emergencyNeed(
   );
 }
 
-/** A junior just under the level of the league. He may grow only to its floor. */
+/** What a free junior may grow to. Not the rivals' floor: a stronger league gives no better gift. */
+const JUNIOR_POTENTIAL: Readonly<Record<LeagueTier, number>> = { iv: 47, iii: 53, ii: 59, i: 66 };
+
+/** A junior well under the level of the league. */
 export function emergencyJunior(tier: LeagueTier, nameSeed: string) {
-  const potential = resolveLeagueStrengthProfile(tier).minSkill;
+  const potential = JUNIOR_POTENTIAL[tier];
   return {
     name: opponentNames(nameSeed, 1)[0]!,
     age: 17,

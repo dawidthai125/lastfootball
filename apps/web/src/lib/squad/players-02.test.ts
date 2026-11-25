@@ -86,11 +86,11 @@ describe('LFE-PLAYERS-02 match development', () => {
     { id: 'bench', name: 'Bench', skill: 60, potential: 80, starter: false, age: 24 },
   ];
 
-  it('caps at K_MATCH=5 and +1; only starters; never above potential', () => {
+  it('caps at K_MATCH and +1; only starters; never above potential', () => {
     const after = applyMatchDevelopmentEffects(starters);
     const ups = after.filter((p, i) => p.skill > starters[i]!.skill);
     expect(ups.length).toBeLessThanOrEqual(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
-    expect(ups.length).toBe(5);
+    expect(ups.length).toBe(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
     for (const p of ups) {
       const prev = starters.find((s) => s.id === p.id)!;
       expect(prev.starter).toBe(true);
@@ -113,8 +113,8 @@ describe('LFE-PLAYERS-02 match development', () => {
   it('summarize lists skill-up names', () => {
     const after = applyMatchDevelopmentEffects(starters);
     const summary = summarizeMatchDevelopment(starters, after);
-    expect(summary.skillUp).toBe(5);
-    expect(summary.skillUpNames).toHaveLength(5);
+    expect(summary.skillUp).toBe(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
+    expect(summary.skillUpNames).toHaveLength(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
   });
 });
 
@@ -179,5 +179,25 @@ describe('LFE-PLAYERS-02 transfer fee unchanged', () => {
     const fee = deriveTransferFee(70, 24);
     expect(fee).toBe(deriveTransferFee(70, 24));
     expect(typeof fee).toBe('number');
+  });
+});
+
+describe('who grows after a match', () => {
+  it('changes between matches, so nobody takes all the growth', () => {
+    const xi = Array.from({ length: 11 }, (_, i) => ({
+      id: `p${String(i).padStart(2, '0')}`,
+      skill: 50,
+      potential: 90,
+      starter: true,
+      age: 22,
+    }));
+    const grown = new Set<string>();
+    for (let match = 0; match < 30; match += 1) {
+      const after = applyMatchDevelopmentEffects(xi, `match-${match}`);
+      const ids = after.filter((p) => p.skill > 50).map((p) => p.id);
+      expect(ids).toHaveLength(DEVELOPMENT_THIN.SKILL_UP_MAX_PER_MATCH);
+      ids.forEach((id) => grown.add(id));
+    }
+    expect(grown.size).toBe(11);
   });
 });

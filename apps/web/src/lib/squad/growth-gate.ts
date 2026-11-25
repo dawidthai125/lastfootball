@@ -69,7 +69,7 @@ export function resolveGrowthSkillDelta(
   return roll < threshold ? safeBase + 1 : safeBase;
 }
 
-function stableHash(key: string): number {
+export function stableHash(key: string): number {
   let h = 2166136261;
   for (let i = 0; i < key.length; i += 1) {
     h ^= key.charCodeAt(i);

@@ -980,7 +980,14 @@ Zawodnik w licytacji liczy się jak sprzedany (`auction_reserved`): sprzedaż do
 1. Intro pierwszego meczu: „Pomiń mecz” (z potwierdzeniem) rozgrywa go na serwerze bez decyzji, zapisuje i otwiera hub. „Od razu do składu” prowadzi do ekranu przed meczem.
 2. Ekrany drogi do meczu są wyśrodkowane. Na telefonie mecz się przewija, boisko ma pełną szerokość. W meczu widać herb wybrany dla klubu.
 3. Junior, który zastępuje kończącego karierę, ma umowę sezon + 2 (D139).
-   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D161 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
+
+### D162 — Wolniejsze awanse · Owner GO 2026-11-25
+
+1. Siła rywali: IV 47–63 bez zmian, III 56–72, II 65–81, I 74–90 (zmienia D130). Rywale w pucharze zostają na pasmach z D130.
+2. Po meczu rośnie do 3 zawodników zamiast 5, w każdym meczu w innej kolejności, więc nie zawsze ci sami.
+3. Symulacja (10 klubów na wariant, 8 sezonów): trenujący klub jest w I lidze w 5. sezonie 0 z 10, w 8. sezonie 6 z 10.
+4. Junior awaryjny zostaje na dawnym poziomie ligi (47/53/59/66).
+   Każde złamanie D1–D28 / D38 / D40–D52 / D63–D162 wymaga **AUDIT** i aktualizacji tego pliku + freeze/GDD/platform docs.
    **GDD-§26B (2026-07-25):** kod zsynchronizowany ze §26 (`ECONOMY_THIN` + `TRANSFER_FEE` + jedno CURRENCY).  
    **LFE-TRANSFERS-02-E1 (2026-07-25):** envelope = derive (`resolveTransferEnvelope`, ratio 1); cash = SSOT.  
    **LFE-TRANSFERS-02-N1 (2026-07-25):** stateless buy negotiation Thin; `resolveNegotiationStep` pure; settlement na `agreedAmount`.  
