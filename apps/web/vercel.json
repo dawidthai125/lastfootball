@@ -3,7 +3,7 @@
   "regions": ["fra1"],
   "git": {
     "deploymentEnabled": {
-      "main": true,
+      "main": false,
       "*": false,
       "*/*": false,
       "**": false

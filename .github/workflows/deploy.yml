@@ -3,6 +3,17 @@ name: Deploy (built on GitHub)
 # Vercel charges for build minutes, so the site is built here and Vercel only publishes the result.
 # Fallback: set git.deploymentEnabled.main to true in apps/web/vercel.json and Vercel builds main again.
 on:
+  push:
+    branches: [main]
+    # What does not change the site is not published.
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!supabase/**'
+      - '!**/*.md'
+      - '!**/*.test.*'
+      - '!.github/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
     inputs:
       staged:
@@ -61,14 +72,15 @@ jobs:
       - name: Publish on Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_DEPLOY_TOKEN }}
-          STAGED: ${{ github.event_name == 'workflow_dispatch' && inputs.staged }}
+          # Trial: a push is also published without the domains.
+          STAGED: ${{ github.event_name == 'push' || inputs.staged }}
         run: |
           args=(deploy --prebuilt --prod --yes)
           [ "$STAGED" = "true" ] && args+=(--skip-domain)
           url=$(npx -y "$VERCEL_CLI" "${args[@]}")
           echo "Deployment: $url" >> "$GITHUB_STEP_SUMMARY"
       - name: Smoke test
-        if: github.event_name == 'push' || !inputs.staged
+        if: github.event_name == 'workflow_dispatch' && !inputs.staged
         run: |
           for p in / /login /register /jak-grac /regulamin; do
             code=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 "https://www.lastfootball.pl$p")
